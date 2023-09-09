@@ -1,0 +1,27 @@
+Current:
+
+Since this ECDH variant exports directly the the x-coordinate of the shared point, we need to mask it with a KDF prior to combining it with the other shared secret.
+
+
+Mike:
+"Note: some definitions of ECC ECDH, such as [SEC1], include a KDF within the ECDH primitive, in which case the extra KDF at the composite level is uncessary. This draft defines and provides test vectors for the NIST variant as defined here."
+
+Scott:
+"Because ECDH outputs the X coordinate, we apply a hash function to make the shared secret indistinguishable from random
+
+
+Serge:
+"Because ECDH outputs the X coordinate, we apply a hash function to extract a uniformly random secret from it
+
+
+
+Kyber512: shake128/256
+Kyber768: shake256/384
+Kyber1024 shake256/512
+
+[x] Fix id-Kyber768-X25519-shake256: X25519 does not need a KDF
+[x] Add to the P256 sections: 
+[x] Jan is going to provide a link to the BSI definition of ECDH.
+    I think this is what are you looking for. Its abbreviation is ECKA-DH and
+    they require using a KDF.
+    https://www.bsi.bund.de/SharedDocs/Downloads/EN/BSI/Publications/TechGuidelines/TR03111/BSI-TR-03111_V-2-1_pdf.pdf?__blob=publicationFile&v=1

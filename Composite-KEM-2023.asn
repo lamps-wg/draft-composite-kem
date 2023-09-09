@@ -1,0 +1,169 @@
+
+Composite-KEM-2023
+           {iso(1) identified-organization(3) dod(6) internet(1) security(5)
+       mechanisms(5) pkix(7) id-mod(0) id-mod-composite-kems(TBD)}
+
+DEFINITIONS IMPLICIT TAGS ::= BEGIN
+
+EXPORTS ALL;
+
+IMPORTS
+
+AlgorithmIdentifier{}
+    FROM AlgorithmInformation-2009  -- RFC 5912 [X509ASN1]
+      { iso(1) identified-organization(3) dod(6) internet(1)
+        security(5) mechanisms(5) pkix(7) id-mod(0)
+        id-mod-algorithmInformation-02(58) }
+
+KEM-ALGORITHM, KEMAlgSet
+    FROM KEMAlgorithmInformation-2023
+    { iso(1) identified-organization(3) dod(6) internet(1)
+      security(5) mechanisms(5) pkix(7) id-mod(0)
+          id-mod-kemAlgorithmInformation-2023(99) }
+
+id-rsa-kem, GenericHybridParameters
+    FROM CMS-RSA-KEM
+      { iso(1) member-body(2) us(840) rsadsi(113549) pkcs(1)
+        pkcs-9(9) smime(16) modules(0) cms-rsa-kem(21) }
+
+id-RSASSA-PSS, RSASSA-PSS-Params
+    FROM PKCS-1 {
+       iso(1) member-body(2) us(840) rsadsi(113549) pkcs(1) pkcs-1(1)
+       modules(0) pkcs-1(1)
+   }
+
+id-Kyber512-ECDH-P256-KMAC128,
+pk-Kyber512-ECDH-P256-KMAC128,
+id-Kyber512-ECDH-brainpoolP256r1-KMAC128,
+pk-Kyber512-ECDH-brainpoolP256r1-KMAC128,
+id-Kyber512-X25519-KMAC128,
+pk-Kyber512-X25519-KMAC128,
+id-Kyber768-RSA-KMAC256,
+pk-Kyber768-RSA-KMAC256,
+id-Kyber768-ECDH-P256-KMAC256,
+pk-Kyber768-ECDH-P256-KMAC256,
+id-Kyber768-ECDH-brainpoolP256r1-KMAC256,
+pk-Kyber768-ECDH-brainpoolP256r1-KMAC256,
+id-Kyber768-X25519-KMAC256,
+pk-Kyber768-X25519-KMAC256,
+id-Kyber1024-ECDH-P384-KMAC256,
+pk-Kyber1024-ECDH-P384-KMAC256,
+id-Kyber1024-ECDH-brainpoolP384r1-KMAC256,
+pk-Kyber1024-ECDH-brainpoolP384r1-KMAC256,
+id-Kyber1024-X448-KMAC256,
+pk-Kyber1024-X448-KMAC256
+    FROM CompositeKeys-2023
+           {iso(1) identified-organization(3) dod(6) internet(1) security(5)
+       mechanisms(5) pkix(7) id-mod(0) id-mod-composite-keys(98)};
+
+
+
+--
+-- Composite structures
+--
+
+CompositeCiphertextValue ::= SEQUENCE SIZE (2..MAX) OF OCTET STRING
+
+CompositeKemParams ::= SEQUENCE SIZE (2..MAX) OF AlgorithmIdentifier{
+    KEM-ALGORITHM, {KEMAlgSet} }
+
+ExplicitCompositeKemParams{KEM-ALGORITHM:FirstKemAlg, 
+   KEM-ALGORITHM:SecondKemAlg}  ::=     
+      SEQUENCE {
+        kemAlgorithm1   AlgorithmIdentifier
+                        { KEM-ALGORITHM, {FirstKemAlg}},
+	    kemAlgorithm2   AlgorithmIdentifier
+                        { KEM-ALGORITHM, {SecondKemAlg}} }								 
+							
+
+kema-explicitCompositeKEM{OBJECT IDENTIFIER:id, PUBLIC-KEY:publicKeyObject, 
+    CompositeKemParams} KEM-ALGORITHM ::=  {
+         IDENTIFIER id
+         VALUE CompositeCiphertextValue
+         PARAMS TYPE CompositeKemParams ARE required
+         PUBLIC-KEYS {publicKeyObject} }
+
+
+
+-- Explicit Composite KEMs
+
+
+kema-Kyber512-ECDH-P256-KMAC128 KEM-ALGORITHM ::= 
+    kema-explicitCompositeKEM{id-Kyber512-ECDH-P256-KMAC128, 
+    pk-Kyber512-ECDH-P256-KMAC128,
+    ExplicitCompositeKemParams{{kema-Kyber512TBD}, {kema-ecdh-p256}} }
+
+--TODO: `kema-ecdh-p256` does not actually exist yet.
+
+
+kema-Kyber512-ECDH-brainpoolP256r1-KMAC128 KEM-ALGORITHM ::= 
+    kema-explicitCompositeKEM{id-Kyber512-ECDH-brainpoolP256r1-KMAC128, 
+    pk-Kyber512-ECDH-brainpoolP256r1-KMAC128,
+    ExplicitCompositeKemParams{{kema-Kyber512TBD}, {kema-ecdh-brainpoolp256r1}} }
+
+--TODO: `kema-ecdh-brainpoolp256r1` does not actually exist yet.
+
+
+kema-Kyber512-X25519-KMAC128 KEM-ALGORITHM ::= 
+    kema-explicitCompositeKEM{id-Kyber512-X25519-KMAC128, 
+    pk-Kyber512-X25519-KMAC128,
+    ExplicitCompositeKemParams{{kema-Kyber512TBD}, {kema-x25519}} }
+
+--TODO: `kema-x25519` does not actually exist yet.
+
+
+kema-Kyber768-RSA-KMAC256 KEM-ALGORITHM ::=
+    kema-explicitCompositeKEM{id-Kyber768-RSA-KMAC256, 
+    pk-Kyber768-RSA-KMAC256,
+    ExplicitCompositeKemParams{{kema-Kyber512TBD}, {kema-kem-rsa}} }
+
+
+kema-Kyber768-ECDH-P256-KMAC256 KEM-ALGORITHM ::= 
+    kema-explicitCompositeKEM{id-Kyber768-ECDH-P256-KMAC256, 
+    pk-Kyber768-ECDH-P256-KMAC256,
+    ExplicitCompositeKemParams{{kema-Kyber768TBD}, {kema-ecdh-p256}} }
+
+--TODO: `kema-ecdh-p256` does not actually exist yet.
+
+
+
+kema-Kyber768-ECDH-brainpoolP256r1-KMAC256 KEM-ALGORITHM ::= 
+    kema-explicitCompositeKEM{id-Kyber768-ECDH-brainpoolP256r1-KMAC256, 
+    pk-Kyber768-ECDH-brainpoolP256r1-KMAC256,
+    ExplicitCompositeKemParams{{kema-Kyber768TBD}, {kema-ecdh-brainpoolp256r1}} }
+
+--TODO: `kema-ecdh-brainpoolp256r1` does not actually exist yet.
+
+
+kema-Kyber768-X25519-KMAC256 KEM-ALGORITHM ::= 
+    kema-explicitCompositeKEM{id-Kyber768-X25519-KMAC256, 
+    pk-Kyber768-X25519-KMAC256,
+    ExplicitCompositeKemParams{{kema-Kyber768TBD}, {kema-x25519}} }
+
+--TODO: `kema-x25519` does not actually exist yet.
+
+
+kema-Kyber1024-ECDH-P384-KMAC256 KEM-ALGORITHM ::= 
+    kema-explicitCompositeKEM{id-Kyber1024-ECDH-P384-KMAC256, 
+    pk-Kyber1024-ECDH-P384-KMAC256,
+    ExplicitCompositeKemParams{{kema-Kyber1024TBD}, {kema-ecdh-p384}} }
+
+--TODO: `kema-ecdh-p384` does not actually exist yet.
+
+
+kema-Kyber1024-ECDH-brainpoolP384r1-KMAC256 KEM-ALGORITHM ::= 
+    kema-explicitCompositeKEM{id-Kyber1024-ECDH-brainpoolP384r1-KMAC256, 
+    pk-Kyber1024-ECDH-brainpoolP384r1-KMAC256,
+    ExplicitCompositeKemParams{{kema-Kyber1024TBD}, {kema-ecdh-brainpoolp384r1}}}
+
+--TODO: `kema-ecdh-brainpoolp384r1` does not actually exist yet.
+
+
+kema-Kyber1024-X448-KMAC256 KEM-ALGORITHM ::= 
+    kema-explicitCompositeKEM{id-Kyber1024-X448-KMAC256, 
+    pk-Kyber1024-X448-KMAC256,
+    ExplicitCompositeKemParams{{kema-Kyber1024TBD}, {kema-x448}} }
+
+--TODO: `kema-x448` does not actually exist yet.
+
+END
