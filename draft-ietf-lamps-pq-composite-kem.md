@@ -1,7 +1,7 @@
 ---
 title: Composite KEM For Use In Internet PKI
 abbrev: PQ Composite Keys
-docname: draft-ietf-lamps-pq-composite-kem-00
+docname: draft-ietf-lamps-pq-composite-kem-latest
 
 # <!-- stand_alone: true -->
 ipr: trust200902
@@ -55,7 +55,7 @@ normative:
   I-D.draft-ietf-lamps-kyber-certificates-00:
   SHA3:
     title: "SHA-3 Standard: Permutation-Based Hash and Extendable-Output Functions, FIPS PUB 202, DOI 10.6028/NIST.FIPS.202"
-    author: 
+    author:
       org: "National Institute of Standards and Technology (NIST)"
     date: August 2015
     target: https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.202.pdf\
@@ -80,7 +80,7 @@ normative:
   SP.800-56Ar3:
     title: "Recommendation for Pair-Wise Key-Establishment Schemes Using Discrete Logarithm Cryptography"
     date: April 2018
-    author: 
+    author:
       org: "National Institute of Standards and Technology (NIST)"
     target: https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-56Ar3.pdf
 
@@ -154,7 +154,7 @@ The composite algorithm combinations defined in this document were chosen accord
 1. NIST level 1 candidates (Falcon512 and Kyber512) are provided, matched with 256-bit elliptic curves, intended for constrained use cases.
 The authors wish to note that although all the composite structures defined in this and the companion documents {{I-D.ounsworth-pq-composite-keys}} and {{I-D.ounsworth-pq-composite-sigs}} pecifications are defined in such a way as to easily allow 3 or more component algorithms, it was decided to only specify explicit pairs. This also does not preclude future specification of explicit combinations with three or more components.
 
-To maximize interoperability, use of the specific algorithm combinations specified in this document is encouraged.  If other combinations are needed, a separate specification should be submitted to the IETF LAMPS working group.  To ease implementation, these specifications are encouraged to follow the construction pattern of the algorithms specified in this document.  
+To maximize interoperability, use of the specific algorithm combinations specified in this document is encouraged.  If other combinations are needed, a separate specification should be submitted to the IETF LAMPS working group.  To ease implementation, these specifications are encouraged to follow the construction pattern of the algorithms specified in this document.
 
 
 <!-- End of Introduction section -->
@@ -188,7 +188,7 @@ PKI:
           Public Key Infrastructure, as defined in [RFC5280].
 
 SHARED SECRET:
-        A value established between two communicating parties for use as cryptographic key material, but which cannot be learned by an active or 
+        A value established between two communicating parties for use as cryptographic key material, but which cannot be learned by an active or
         passive adversary. This document is concerned with shared secrets established via public key cryptagraphic operations.
 
 
@@ -212,7 +212,7 @@ We borrow here the definition of a key encapsulation mechanism (KEM) from {{I-D.
 
 This document is not concerned with the KeyGen() algorithm of a KEM, but it is included above for completeness.
 
-The KEM interface defined above differs from both traditional key transport mechanism (for example for use with KeyTransRecipientInfo defined in {{RFC5652}}), and key agreement (for example for use with KeyAgreeRecipientInfo defined in {{RFC5652}}). 
+The KEM interface defined above differs from both traditional key transport mechanism (for example for use with KeyTransRecipientInfo defined in {{RFC5652}}), and key agreement (for example for use with KeyAgreeRecipientInfo defined in {{RFC5652}}).
 
 The KEM interface was chosen as the interface for a composite key exchange because it allows for arbitrary combinations of component algorithm types since both key transport and key agreement mechanisms can be promoted into KEMs in the following ways:
 
@@ -246,16 +246,16 @@ kema-CompositeKEM KEM-ALGORITHM ::= {
 ~~~
 
 
-The following is an explanation how KEM-ALGORITHM elements are used 
+The following is an explanation how KEM-ALGORITHM elements are used
 to create Composite KEMs:
 
-| SIGNATURE-ALGORITHM element | Definition | 
+| SIGNATURE-ALGORITHM element | Definition |
 | ---------                   | ---------- |
-| IDENTIFIER                  | The Object ID used to identify the composite Signature Algorithm | 
-| VALUE                       | The Sequence of BIT STRINGS for each component signature value | 
-| PARAMS                      | Parameters of type CompositeKemParams may be provided when required | 
-| PUBLIC-KEYS                 | The composite key required to produce the composite signature | 
-| SMIME_CAPS                  | Not needed for composite | 
+| IDENTIFIER                  | The Object ID used to identify the composite Signature Algorithm |
+| VALUE                       | The Sequence of BIT STRINGS for each component signature value |
+| PARAMS                      | Parameters of type CompositeKemParams may be provided when required |
+| PUBLIC-KEYS                 | The composite key required to produce the composite signature |
+| SMIME_CAPS                  | Not needed for composite |
 
 
 ## Composite Keys
@@ -265,13 +265,13 @@ A composite KEM MAY be associated with a composite public key as defined in [I-D
 
 ### Key Usage Bits
 
-When using composite KEM keys in a structure which defines a key usage (such as in an 
+When using composite KEM keys in a structure which defines a key usage (such as in an
 X509Certificate as defined in [RFC5280]), the following key usage MUST be used.
 
 ~~~
   keyEncipherment
 ~~~
-   
+
 Additional key usages SHOULD not be used.
 
 
@@ -294,7 +294,7 @@ CompositeKemParams ::= SEQUENCE SIZE (2..MAX) OF AlgorithmIdentifier{
     KEM-ALGORITHM, {KEMAlgSet} }
 ~~~
 
-The KEM's `CompositeKemParams` sequence MUST contain the same component algorithms listed in the same order as in the associated CompositePublicKey.  
+The KEM's `CompositeKemParams` sequence MUST contain the same component algorithms listed in the same order as in the associated CompositePublicKey.
 
 For explicit composite algorithms, it is required in cases where one or both of the components themselves have parameters that need to be carried, however the authors have chosen to always carry it in order to simplify parsers. Implementation SHOULD NOT rely directly on the algorithmIDs contained in the `CompositeKemParams` and SHOULD verify that they match the algorithms expected from the overall composite AlgorithmIdentifier.
 
@@ -365,14 +365,14 @@ these choices are somewhat arbitrary but aiming to match security level of the i
 For example, the KEM combiner instantiation of the first entry of {{tab-kem-algs}} would be:
 
 ~~~
-ss = KMAC128("id-Kyber512-ECDH-P256-KMAC128", 
+ss = KMAC128("id-Kyber512-ECDH-P256-KMAC128",
     0x00000001 || SHA3-256(ss_1 || ct_1) || SHA3-256(ss_2 || ct_2) || fixedInfo,
     256, "")
 ~~~
 
 # Algorithm Identifiers {#sec-alg-ids}
 
-This table summarizes the list of explicit composite Signature algorithms by the key and signature OID and the two component algorithms which make up the explicit composite algorithm.  These are denoted by First Signature Alg, and Second Signature Alg.  
+This table summarizes the list of explicit composite Signature algorithms by the key and signature OID and the two component algorithms which make up the explicit composite algorithm.  These are denoted by First Signature Alg, and Second Signature Alg.
 
 The OID referenced are TBD and MUST be used only for prototyping and replaced with the final IANA-assigned OIDS. The following prefix is used for each: replace &lt;CompKEM&gt; with the String "2.16.840.1.114027.80.5.2"
 
@@ -395,7 +395,7 @@ The "KEM Combiner" column refers to the definitions in {{sec-kem-combiner}}.
 {: #tab-kem-algs title="Composite KEM key types"}
 
 
-The table above contains everything needed to implement the listed explicit composite algorithms, with the exception of some special notes found below in this section. See the ASN.1 module in section {{sec-asn1-module}} for the explicit definitions of the above Composite signature algorithms.   
+The table above contains everything needed to implement the listed explicit composite algorithms, with the exception of some special notes found below in this section. See the ASN.1 module in section {{sec-asn1-module}} for the explicit definitions of the above Composite signature algorithms.
 
 Full specifications for the referenced algorithms can be found as follows:
 
@@ -483,7 +483,7 @@ TODO
 
 Traditionally, a public key, certificate, or signature contains a single cryptographic algorithm. If and when an algorithm becomes deprecated (for example, RSA-512, or SHA1), it is obvious that structures using that algorithm are implicitly revoked.
 
-In the composite model this is less obvious since implementers may decide that certain cryptographic algorithms have complementary security properties and are acceptable in combination even though one or both algorithms are deprecated for individual use. As such, a single composite public key, certificate, signature, or ciphertext may contain a mixture of deprecated and non-deprecated algorithms. 
+In the composite model this is less obvious since implementers may decide that certain cryptographic algorithms have complementary security properties and are acceptable in combination even though one or both algorithms are deprecated for individual use. As such, a single composite public key, certificate, signature, or ciphertext may contain a mixture of deprecated and non-deprecated algorithms.
 
 Specifying behaviour in these cases is beyond the scope of this document, but should be considered by Implementers and potentially in additional standards.
 
@@ -553,7 +553,7 @@ This would mean that the sender (encrypter) uses all N of the component keys wit
 
 We present the term "Parallel PKI" to refer to the setup where a PKI end entity possesses two or more distinct public keys or certificates for the same identity (name), but containing keys for different cryptographic algorithms. One could imagine a set of parallel PKIs where an existing PKI using legacy algorithms (RSA, ECC) is left operational during the post-quantum migration but is shadowed by one or more parallel PKIs using pure post quantum algorithms or composite algorithms (legacy and post-quantum).
 
-Equipped with a set of parallel public keys in this way, a client would have the flexibility to choose which public key(s) or certificate(s) to use in a given signature operation. 
+Equipped with a set of parallel public keys in this way, a client would have the flexibility to choose which public key(s) or certificate(s) to use in a given signature operation.
 
 For negotiated protocols, the client could choose which public key(s) or certificate(s) to use based on the negotiated algorithms.
 
