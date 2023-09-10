@@ -1055,12 +1055,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <table class="ears">
 <thead><tr>
 <td class="left">Internet-Draft</td>
-<td class="center">PQ Composite Keys</td>
+<td class="center">Composite KEMs</td>
 <td class="right">September 2023</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Ounsworth &amp; Gray</td>
-<td class="center">Expires 12 March 2024</td>
+<td class="center">Expires 13 March 2024</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1073,12 +1073,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-lamps-pq-composite-kem-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2023-09-09" class="published">9 September 2023</time>
+<time datetime="2023-09-10" class="published">10 September 2023</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2024-03-12">12 March 2024</time></dd>
+<dd class="expires"><time datetime="2024-03-13">13 March 2024</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1120,7 +1120,7 @@ structure define in <span>[<a href="#I-D.ounsworth-pq-composite-keys" class="cit
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 12 March 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 13 March 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1372,8 +1372,8 @@ secret ss, or in some cases a distinguished error value.<a href="#section-3.1-2.
 <p id="section-3.1-3">This document is not concerned with the KeyGen() algorithm of a KEM, but it is included above for completeness.<a href="#section-3.1-3" class="pilcrow">¶</a></p>
 <p id="section-3.1-4">The KEM interface defined above differs from both traditional key transport mechanism (for example for use with KeyTransRecipientInfo defined in <span>[<a href="#RFC5652" class="cite xref">RFC5652</a>]</span>), and key agreement (for example for use with KeyAgreeRecipientInfo defined in <span>[<a href="#RFC5652" class="cite xref">RFC5652</a>]</span>).<a href="#section-3.1-4" class="pilcrow">¶</a></p>
 <p id="section-3.1-5">The KEM interface was chosen as the interface for a composite key exchange because it allows for arbitrary combinations of component algorithm types since both key transport and key agreement mechanisms can be promoted into KEMs in the following ways:<a href="#section-3.1-5" class="pilcrow">¶</a></p>
-<p id="section-3.1-6">A key transport mechanism can be transformed into a KEM.Encaps(pk) by generating a random shared secret ss and performing KeyTrans.Encrypt(pk, ss) -&gt; ct; and into a KEM.Decaps(sk, ct) by KeyTrans.Decrypt(sk, ct) -&gt; ss. This follows the pattern of RSA-KEM <span>[<a href="#RFC5990" class="cite xref">RFC5990</a>]</span>.<a href="#section-3.1-6" class="pilcrow">¶</a></p>
-<p id="section-3.1-7">A key agreement mechanism can be transformed into a KEM.Encaps(pk) by generating an ephemeral key pair (pk_e, sk_e), and performing KeyAgree(pk, sk_e) -&gt; (ss, pk_e); and into a KEM.Decaps(sk, ct) by completing the key agreement as KeyAgree(pk_e, sk) -&gt; ss.<a href="#section-3.1-7" class="pilcrow">¶</a></p>
+<p id="section-3.1-6">A key transport mechanism can be transformed into a <code>KEM.Encaps(pk)</code> by generating a random shared secret ss and performing <code>KeyTrans.Encrypt(pk, ss) -&gt; ct</code>; and into a <code>KEM.Decaps(sk, ct)</code> by <code>KeyTrans.Decrypt(sk, ct) -&gt; ss</code>. This follows the pattern of RSA-KEM <span>[<a href="#RFC5990" class="cite xref">RFC5990</a>]</span>.<a href="#section-3.1-6" class="pilcrow">¶</a></p>
+<p id="section-3.1-7">A key agreement mechanism can be transformed into a <code>KEM.Encaps(pk)</code> by generating an ephemeral key pair <code>(pk_e, sk_e)</code>, and performing <code>KeyAgree(pk, sk_e) -&gt; (ss, pk_e)</code> and into a <code>KEM.Decaps(sk, ct)</code> by completing the key agreement as <code>KeyAgree(pk_e, sk) -&gt; ss</code>.<a href="#section-3.1-7" class="pilcrow">¶</a></p>
 <p id="section-3.1-8">A composite KEM allows two or more underlying key transport, key agreement, or KEM algorithms to be combined into a single cryptographic operation by performing each operation, transformed to a KEM as outline above, and using a specified combiner function to combine the two or more component shared secrets into a single shared secret.<a href="#section-3.1-8" class="pilcrow">¶</a></p>
 <p id="section-3.1-9">The main security property for KEMs is indistinguishability under
 adaptive chosen ciphertext attack (IND-CCA2), which means that shared
@@ -1774,11 +1774,179 @@ RsaKemParameters ::= {
       <h2 id="name-asn1-module">
 <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-asn1-module" class="section-name selfRef">ASN.1 Module</a>
       </h2>
-<div class="lang-ASN.1 sourcecode" id="section-5-1">
+<div class="breakable lang-ASN.1 sourcecode" id="section-5-1">
 <pre>
 &lt;CODE STARTS&gt;
 
-!!Composite-KEM-2023.asn
+
+Composite-KEM-2023
+           {iso(1) identified-organization(3) dod(6) internet(1) security(5)
+       mechanisms(5) pkix(7) id-mod(0) id-mod-composite-kems(TBD)}
+
+DEFINITIONS IMPLICIT TAGS ::= BEGIN
+
+EXPORTS ALL;
+
+IMPORTS
+
+AlgorithmIdentifier{}
+    FROM AlgorithmInformation-2009  -- RFC 5912 [X509ASN1]
+      { iso(1) identified-organization(3) dod(6) internet(1)
+        security(5) mechanisms(5) pkix(7) id-mod(0)
+        id-mod-algorithmInformation-02(58) }
+
+KEM-ALGORITHM, KEMAlgSet
+    FROM KEMAlgorithmInformation-2023
+    { iso(1) identified-organization(3) dod(6) internet(1)
+      security(5) mechanisms(5) pkix(7) id-mod(0)
+          id-mod-kemAlgorithmInformation-2023(99) }
+
+id-rsa-kem, GenericHybridParameters
+    FROM CMS-RSA-KEM
+      { iso(1) member-body(2) us(840) rsadsi(113549) pkcs(1)
+        pkcs-9(9) smime(16) modules(0) cms-rsa-kem(21) }
+
+id-RSASSA-PSS, RSASSA-PSS-Params
+    FROM PKCS-1 {
+       iso(1) member-body(2) us(840) rsadsi(113549) pkcs(1) pkcs-1(1)
+       modules(0) pkcs-1(1)
+   }
+
+id-Kyber512-ECDH-P256-KMAC128,
+pk-Kyber512-ECDH-P256-KMAC128,
+id-Kyber512-ECDH-brainpoolP256r1-KMAC128,
+pk-Kyber512-ECDH-brainpoolP256r1-KMAC128,
+id-Kyber512-X25519-KMAC128,
+pk-Kyber512-X25519-KMAC128,
+id-Kyber768-RSA-KMAC256,
+pk-Kyber768-RSA-KMAC256,
+id-Kyber768-ECDH-P256-KMAC256,
+pk-Kyber768-ECDH-P256-KMAC256,
+id-Kyber768-ECDH-brainpoolP256r1-KMAC256,
+pk-Kyber768-ECDH-brainpoolP256r1-KMAC256,
+id-Kyber768-X25519-KMAC256,
+pk-Kyber768-X25519-KMAC256,
+id-Kyber1024-ECDH-P384-KMAC256,
+pk-Kyber1024-ECDH-P384-KMAC256,
+id-Kyber1024-ECDH-brainpoolP384r1-KMAC256,
+pk-Kyber1024-ECDH-brainpoolP384r1-KMAC256,
+id-Kyber1024-X448-KMAC256,
+pk-Kyber1024-X448-KMAC256
+    FROM CompositeKeys-2023
+           {iso(1) identified-organization(3) dod(6) internet(1) security(5)
+       mechanisms(5) pkix(7) id-mod(0) id-mod-composite-keys(98)};
+
+
+
+--
+-- Composite structures
+--
+
+CompositeCiphertextValue ::= SEQUENCE SIZE (2..MAX) OF OCTET STRING
+
+CompositeKemParams ::= SEQUENCE SIZE (2..MAX) OF AlgorithmIdentifier{
+    KEM-ALGORITHM, {KEMAlgSet} }
+
+ExplicitCompositeKemParams{KEM-ALGORITHM:FirstKemAlg,
+   KEM-ALGORITHM:SecondKemAlg}  ::=
+      SEQUENCE {
+        kemAlgorithm1   AlgorithmIdentifier
+                        { KEM-ALGORITHM, {FirstKemAlg}},
+            kemAlgorithm2   AlgorithmIdentifier
+                        { KEM-ALGORITHM, {SecondKemAlg}} }
+
+
+kema-explicitCompositeKEM{OBJECT IDENTIFIER:id, PUBLIC-KEY:publicKeyObject,
+    CompositeKemParams} KEM-ALGORITHM ::=  {
+         IDENTIFIER id
+         VALUE CompositeCiphertextValue
+         PARAMS TYPE CompositeKemParams ARE required
+         PUBLIC-KEYS {publicKeyObject} }
+
+
+
+-- Explicit Composite KEMs
+
+
+kema-Kyber512-ECDH-P256-KMAC128 KEM-ALGORITHM ::=
+    kema-explicitCompositeKEM{id-Kyber512-ECDH-P256-KMAC128,
+    pk-Kyber512-ECDH-P256-KMAC128,
+    ExplicitCompositeKemParams{{kema-Kyber512TBD}, {kema-ecdh-p256}} }
+
+--TODO: `kema-ecdh-p256` does not actually exist yet.
+
+
+kema-Kyber512-ECDH-brainpoolP256r1-KMAC128 KEM-ALGORITHM ::=
+    kema-explicitCompositeKEM{id-Kyber512-ECDH-brainpoolP256r1-KMAC128,
+    pk-Kyber512-ECDH-brainpoolP256r1-KMAC128,
+    ExplicitCompositeKemParams{{kema-Kyber512TBD}, {kema-ecdh-brainpoolp256r1}} }
+
+--TODO: `kema-ecdh-brainpoolp256r1` does not actually exist yet.
+
+
+kema-Kyber512-X25519-KMAC128 KEM-ALGORITHM ::=
+    kema-explicitCompositeKEM{id-Kyber512-X25519-KMAC128,
+    pk-Kyber512-X25519-KMAC128,
+    ExplicitCompositeKemParams{{kema-Kyber512TBD}, {kema-x25519}} }
+
+--TODO: `kema-x25519` does not actually exist yet.
+
+
+kema-Kyber768-RSA-KMAC256 KEM-ALGORITHM ::=
+    kema-explicitCompositeKEM{id-Kyber768-RSA-KMAC256,
+    pk-Kyber768-RSA-KMAC256,
+    ExplicitCompositeKemParams{{kema-Kyber512TBD}, {kema-kem-rsa}} }
+
+
+kema-Kyber768-ECDH-P256-KMAC256 KEM-ALGORITHM ::=
+    kema-explicitCompositeKEM{id-Kyber768-ECDH-P256-KMAC256,
+    pk-Kyber768-ECDH-P256-KMAC256,
+    ExplicitCompositeKemParams{{kema-Kyber768TBD}, {kema-ecdh-p256}} }
+
+--TODO: `kema-ecdh-p256` does not actually exist yet.
+
+
+
+kema-Kyber768-ECDH-brainpoolP256r1-KMAC256 KEM-ALGORITHM ::=
+    kema-explicitCompositeKEM{id-Kyber768-ECDH-brainpoolP256r1-KMAC256,
+    pk-Kyber768-ECDH-brainpoolP256r1-KMAC256,
+    ExplicitCompositeKemParams{{kema-Kyber768TBD}, {kema-ecdh-brainpoolp256r1}} }
+
+--TODO: `kema-ecdh-brainpoolp256r1` does not actually exist yet.
+
+
+kema-Kyber768-X25519-KMAC256 KEM-ALGORITHM ::=
+    kema-explicitCompositeKEM{id-Kyber768-X25519-KMAC256,
+    pk-Kyber768-X25519-KMAC256,
+    ExplicitCompositeKemParams{{kema-Kyber768TBD}, {kema-x25519}} }
+
+--TODO: `kema-x25519` does not actually exist yet.
+
+
+kema-Kyber1024-ECDH-P384-KMAC256 KEM-ALGORITHM ::=
+    kema-explicitCompositeKEM{id-Kyber1024-ECDH-P384-KMAC256,
+    pk-Kyber1024-ECDH-P384-KMAC256,
+    ExplicitCompositeKemParams{{kema-Kyber1024TBD}, {kema-ecdh-p384}} }
+
+--TODO: `kema-ecdh-p384` does not actually exist yet.
+
+
+kema-Kyber1024-ECDH-brainpoolP384r1-KMAC256 KEM-ALGORITHM ::=
+    kema-explicitCompositeKEM{id-Kyber1024-ECDH-brainpoolP384r1-KMAC256,
+    pk-Kyber1024-ECDH-brainpoolP384r1-KMAC256,
+    ExplicitCompositeKemParams{{kema-Kyber1024TBD}, {kema-ecdh-brainpoolp384r1}}}
+
+--TODO: `kema-ecdh-brainpoolp384r1` does not actually exist yet.
+
+
+kema-Kyber1024-X448-KMAC256 KEM-ALGORITHM ::=
+    kema-explicitCompositeKEM{id-Kyber1024-X448-KMAC256,
+    pk-Kyber1024-X448-KMAC256,
+    ExplicitCompositeKemParams{{kema-Kyber1024TBD}, {kema-x448}} }
+
+--TODO: `kema-x448` does not actually exist yet.
+
+END
 
 &lt;CODE ENDS&gt;
 
