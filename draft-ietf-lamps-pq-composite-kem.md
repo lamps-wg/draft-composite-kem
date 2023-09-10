@@ -8,8 +8,20 @@ ipr: trust200902
 area: Security
 stream: IETF
 wg: LAMPS
-kw: Internet-Draft
+keyword:
+ - X.509
+ - CMS
+ - Post-Quantum
+ - KEM
 cat: std
+
+venue:
+  group: LAMPS
+  type: Working Group
+  mail: spams@ietf.org
+  arch: https://datatracker.ietf.org/wg/lamps/about/
+  github: lamps-wg/draft-composite-kem
+  latest: https://lamps-wg.github.io/draft-composite-kem/draft-ietf-lamps-pq-composite-kem.html#name-asn1-module
 
 coding: us-ascii
 pi:    # can use array (if all yes) or hash here
@@ -122,10 +134,17 @@ structure define in {{I-D.ounsworth-pq-composite-keys}} and the CMS KEMRecipient
 
 --- middle
 
-# Changes in version -02
+# Changes in version -01
 
-* Removed all references to generic composite.
-* Added selection criteria note about requesting new explicit combinations.
+* Refactored to use MartinThomson github template.
+
+  [ ] Make draft-composite-kems standalone by folding in the minimum necessary content from composite-keys and dropping the reference to composite-sigs.
+  [ ] Re-work wire format and ASN.1 to remove vestiges of Generics.
+  [ ] Make RSA keys fixed-length.
+  [ ] Compress the public key format by not carrying redundant algID OIDs.
+  [ ] Re-work section 4.1 (id-Kyber768-RSA-KMAC256) to Reference 5990bis and its updated structures.
+  [ ] Remove RSA-KEM KDF params and make them implied by the OID; ie provide a profile of 5990bis.
+  [ ] We need PEM samples … 118 hackathon? OQS friends? David @ BC?
 
 
 # Introduction {#sec-intro}
