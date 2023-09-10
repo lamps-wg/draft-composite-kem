@@ -43,6 +43,24 @@ Abstract
    structure define in [I-D.ounsworth-pq-composite-keys] and the CMS
    KEMRecipientInfo mechanism in [I-D.housley-lamps-cms-kemri].
 
+About This Document
+
+   This note is to be removed before publishing as an RFC.
+
+   The latest revision of this draft can be found at https://lamps-
+   wg.github.io/draft-composite-kem/draft-ietf-lamps-pq-composite-
+   kem.html#name-asn1-module.  Status information for this document may
+   be found at https://datatracker.ietf.org/doc/draft-ietf-lamps-pq-
+   composite-kem/.
+
+   Discussion of this document takes place on the LAMPS Working Group
+   mailing list (mailto:spams@ietf.org), which is archived at
+   https://datatracker.ietf.org/wg/lamps/about/.  Subscribe at
+   https://www.ietf.org/mailman/listinfo/spams/.
+
+   Source for this draft and an issue tracker can be found at
+   https://github.com/lamps-wg/draft-composite-kem.
+
 Status of This Memo
 
    This Internet-Draft is submitted in full conformance with the
@@ -76,7 +94,7 @@ Copyright Notice
 
 Table of Contents
 
-   1.  Changes in version -02
+   1.  Changes in version -01
    2.  Introduction
      2.1.  Algorithm Selection Criteria
      2.2.  Terminology
@@ -110,12 +128,19 @@ Table of Contents
      D.1.  Making contributions
    Authors' Addresses
 
-1.  Changes in version -02
+1.  Changes in version -01
 
-   *  Removed all references to generic composite.
+   *  Refactored to use MartinThomson github template.
 
-   *  Added selection criteria note about requesting new explicit
-      combinations.
+      [ ] Make draft-composite-kems standalone by folding in the minimum
+      necessary content from composite-keys and dropping the reference
+      to composite-sigs. [ ] Re-work wire format and ASN.1 to remove
+      vestiges of Generics. [ ] Make RSA keys fixed-length. [ ] Compress
+      the public key format by not carrying redundant algID OIDs. [ ]
+      Re-work section 4.1 (id-Kyber768-RSA-KMAC256) to Reference 5990bis
+      and its updated structures. [ ] Remove RSA-KEM KDF params and make
+      them implied by the OID; ie provide a profile of 5990bis. [ ] We
+      need PEM samples ... 118 hackathon?  OQS friends?  David @ BC?
 
 2.  Introduction
 
