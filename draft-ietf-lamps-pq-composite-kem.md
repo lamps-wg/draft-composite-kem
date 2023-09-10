@@ -1,6 +1,6 @@
 ---
 title: Composite KEM For Use In Internet PKI
-abbrev: PQ Composite Keys
+abbrev: Composite KEMs
 docname: draft-ietf-lamps-pq-composite-kem-latest
 
 # <!-- stand_alone: true -->
@@ -216,9 +216,9 @@ The KEM interface defined above differs from both traditional key transport mech
 
 The KEM interface was chosen as the interface for a composite key exchange because it allows for arbitrary combinations of component algorithm types since both key transport and key agreement mechanisms can be promoted into KEMs in the following ways:
 
-A key transport mechanism can be transformed into a KEM.Encaps(pk) by generating a random shared secret ss and performing KeyTrans.Encrypt(pk, ss) -> ct; and into a KEM.Decaps(sk, ct) by KeyTrans.Decrypt(sk, ct) -> ss. This follows the pattern of RSA-KEM [RFC5990].
+A key transport mechanism can be transformed into a `KEM.Encaps(pk)` by generating a random shared secret ss and performing `KeyTrans.Encrypt(pk, ss) -> ct`; and into a `KEM.Decaps(sk, ct)` by `KeyTrans.Decrypt(sk, ct) -> ss`. This follows the pattern of RSA-KEM [RFC5990].
 
-A key agreement mechanism can be transformed into a KEM.Encaps(pk) by generating an ephemeral key pair (pk_e, sk_e), and performing KeyAgree(pk, sk_e) -> (ss, pk_e); and into a KEM.Decaps(sk, ct) by completing the key agreement as KeyAgree(pk_e, sk) -> ss.
+A key agreement mechanism can be transformed into a `KEM.Encaps(pk)` by generating an ephemeral key pair `(pk_e, sk_e)`, and performing `KeyAgree(pk, sk_e) -> (ss, pk_e)` and into a `KEM.Decaps(sk, ct)` by completing the key agreement as `KeyAgree(pk_e, sk) -> ss`.
 
 A composite KEM allows two or more underlying key transport, key agreement, or KEM algorithms to be combined into a single cryptographic operation by performing each operation, transformed to a KEM as outline above, and using a specified combiner function to combine the two or more component shared secrets into a single shared secret.
 
@@ -459,7 +459,7 @@ TODO: there must be a way to put all this the ASN.1 Module rather than just spec
 
 <CODE STARTS>
 
-!!Composite-KEM-2023.asn
+{::include Composite-KEM-2023.asn}
 
 <CODE ENDS>
 
