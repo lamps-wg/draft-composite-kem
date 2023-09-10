@@ -1,0 +1,87 @@
+{
+  "magic": "E!vIA5L86J2I",
+  "timestamp": "2023-09-10T01:17:22.811362+00:00",
+  "repo": "lamps-wg/draft-composite-kem",
+  "labels": [
+    {
+      "name": "bug",
+      "description": "Something isn't working",
+      "color": "d73a4a"
+    },
+    {
+      "name": "documentation",
+      "description": "Improvements or additions to documentation",
+      "color": "0075ca"
+    },
+    {
+      "name": "duplicate",
+      "description": "This issue or pull request already exists",
+      "color": "cfd3d7"
+    },
+    {
+      "name": "enhancement",
+      "description": "New feature or request",
+      "color": "a2eeef"
+    },
+    {
+      "name": "good first issue",
+      "description": "Good for newcomers",
+      "color": "7057ff"
+    },
+    {
+      "name": "help wanted",
+      "description": "Extra attention is needed",
+      "color": "008672"
+    },
+    {
+      "name": "invalid",
+      "description": "This doesn't seem right",
+      "color": "e4e669"
+    },
+    {
+      "name": "question",
+      "description": "Further information is requested",
+      "color": "d876e3"
+    },
+    {
+      "name": "wontfix",
+      "description": "This will not be worked on",
+      "color": "ffffff"
+    }
+  ],
+  "issues": [
+    {
+      "number": 1,
+      "id": "I_kwDOKRPFO85wlqLV",
+      "title": "Comments from Stephen Ferrell",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/1",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "(June 20, 2023)\r\n\r\nA couple of specific comments in case those help:\r\n\r\n    the title refers to \"Internet PKI\" so I don't know if it\r\n    will in fact be possible to usefully unwind this from the\r\n    other composite drafts\r\n\r\n[[MO]] We haven't changed the title since draft-ounsworth-pq-composite-sigs-00 in 2019. Happy to change that.\r\n\r\n    describing this as layering seems wrong\r\n\r\n    kema-CompositeKEM and the other ASN.1 structures seem very\r\n    complex and overly-generic\r\n    [[MO]] It's really just machinery to make the ASN.1 module shorter. Without it, the module would be many hundreds of lines longer. We can unroll it if that's the will of the WG.\r\n\r\n    PUBLIC-KEYS in table 1 refers to signatures, I didn't get\r\n    why?\r\n    [[MO]] copy&paste error. Thanks.\r\n\r\n    section 7.2 (\"OR\" modes) seems odd\r\n    [[MO]] OR modes are now covered by draft-pala-klaussner-composite-kofn; that section should have been removed.\r\n\r\n    appendix C confused me: this I-D has no IPR declaration\r\n    but states that an IPR declaration \"relates\" to this\r\n    draft\r\n    [[MO]] There's IPR on draft-ounsworth-pq-composite-sigs, which probably applies to all three drafts.\r\n",
+      "createdAt": "2023-08-23T21:04:10Z",
+      "updatedAt": "2023-09-10T00:53:02Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 2,
+      "id": "I_kwDOKRPFO85wlqMj",
+      "title": "Remove Informative reference to draft-cfrg-kem-combiners",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/2",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This is a procedural issue: this draft is adopted by LAMPS, but it depends Informatively on draft-ounsworth-cfrg-kem-combiners, which is not yet adopted by CFRG. That will cause a problem at WGLC.\r\n\r\nI propose to leave this issue for now and revisit it as we approach WGLC.",
+      "createdAt": "2023-08-23T21:03:13Z",
+      "updatedAt": "2023-09-10T00:53:29Z",
+      "closedAt": null,
+      "comments": []
+    }
+  ],
+  "pulls": []
+}
