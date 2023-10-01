@@ -170,10 +170,10 @@ For use within CMS, this document is intended to be coupled with the CMS KEMReci
 TODO:
   `[ ]` Get Russ' approval that I've used RFC5990bis correctly. Email sent. Waiting for a reply.
   `[ ]` Make a proper IANA Considerations section
-  `l ]` Pass over Security Considerations
+  `l ]` Review the Security Considerations
   `[ ]` Shorten the abstract (move some content into Intro)
   `[ ]` Rename "Kyber" to "ML-KEM"
-  `[ ]` Top-to-bottom read
+  `[ ]` Top-to-bottom read, especially looking for redundancies or references to signatures from merging in the more generic Keys content.
 
   Still to do in a future version:
   * I need an ASN.1 expert to help me fix how it references ECC named curves.
