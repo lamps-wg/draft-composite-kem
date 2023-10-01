@@ -168,11 +168,17 @@ For use within CMS, this document is intended to be coupled with the CMS KEMReci
 * Aligned with draft-ounsworth-cfrg-kem-combiners-04
 
 TODO:
+
   `[ ]` Get Russ' approval that I've used RFC5990bis correctly. Email sent. Waiting for a reply.
+
   `[ ]` Make a proper IANA Considerations section
+
   `l ]` Review the Security Considerations
+
   `[ ]` Shorten the abstract (move some content into Intro)
+
   `[ ]` Rename "Kyber" to "ML-KEM"
+
   `[ ]` Top-to-bottom read, especially looking for redundancies or references to signatures from merging in the more generic Keys content.
 
   Still to do in a future version:
