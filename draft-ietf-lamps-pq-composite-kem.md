@@ -63,6 +63,7 @@ normative:
   RFC8410:
   RFC8411:
   I-D.draft-housley-lamps-cms-kemri-02:
+  I-D.draft-ietf-lamps-rfc5990bis-01:
   I-D.draft-ounsworth-lamps-cms-dhkem-00:
   SHA3:
     title: "SHA-3 Standard: Permutation-Based Hash and Extendable-Output Functions, FIPS PUB 202, DOI 10.6028/NIST.FIPS.202"
@@ -144,6 +145,8 @@ For use within CMS, this document is intended to be coupled with the CMS KEMReci
   * Changed the definition of `CompositeKEMPublicKey` from `SEQUENCE OF SubjectPublicKeyInfo` to `SEQUENCE OF BIT STRING` since with complete removal of Generic Composites, there is no longer any need to carry the component AlgorithmIdentifiers.
   * Add a paragraph describing how to reconstitute component SPKIs.
 * Added an Implementation Consideration about FIPS validation where only one component algorithm is FIPS-approved
+* Defined `KeyGen()`, `Encaps()`, and `Decaps()` for a composite KEM algorithm.
+* Removed the discussion of KeyTrans -> KEM and KeyAgree -> KEM promotions, and instead simply referenced [I-D.ietf-lamps-rfc5990bis] and [I-D.ounsworth-lamps-cms-dhkem].
 
 TODO:
   `[ ]` Make RSA keys fixed-length.
@@ -154,6 +157,7 @@ TODO:
   `l ]` Pass over Security Considerations
   `[ ]` Shorten the abstract (move some content into Intro)
   `[ ]` Fix all the warnings so the build is clean.
+  `[ ]` Top-to-bottom read
 
   Still to do in a future version:
   * I need an ASN.1 expert to help me fix how it references ECC named curves.
@@ -288,26 +292,23 @@ When the CompositePublicKey must be provided in octet string or bit string forma
 
 This section provides an encoding for composite private keys intended for PKIX protocols and other applications that require an interoperable format for transmitting private keys, such as PKCS #12 [RFC7292] or CMP / CRMF [RFC4210], [RFC4211]. It is not intended to dictate a storage format in implementations not requiring interoperability of private key formats.
 
-In some cases the private keys that comprise a composite key may not be represented in a single structure or even be contained in a single cryptographic module. The establishment of correspondence between public keys in a CompositePublicKey and private keys not represented in a single composite structure is beyond the scope of this document.
+In some cases the private keys that comprise a composite key may not be represented in a single structure or even be contained in a single cryptographic module; for example if one component is within the FIPS boundary of a cryptographic module and the other is not; see {sec-fips} for more discussion. The establishment of correspondence between public keys in a CompositePublicKey and private keys not represented in a single composite structure is beyond the scope of this document.
 
 
-The composite private key data is represented by the following structure:
+Usecases that require an interoperable encodingn for composite private keys MUST use the following structure.
 
 ~~~ ASN.1
 CompositePrivateKey ::= SEQUENCE SIZE (2) OF OneAsymmetricKey
 ~~~
 {: artwork-name="CompositePrivateKey-asn.1-structures"}
 
-Each element is a OneAsymmetricKey [RFC5958] object for a component private key.
+Each element is a `OneAsymmetricKey`` [RFC5958] object for a component private key.
 
 The parameters field MUST be absent.
 
-A CompositePrivateKey MUST contain at least two component private keys, and the order of the component keys is the same as the order defined in {{sec-composite-pub-keys}} for the components of CompositePublicKey.
+The order of the component keys is the same as the order defined in {{sec-composite-pub-keys}} for the components of CompositePublicKey.
 
-
-## As a PrivateKeyInfo or OneAsymmetricKey {#sec-as-one-asymmetric-key}
-
-A CompositePrivateKey can be stored in a OneAsymmetricKey structure (version 1 of which is also known as PrivateKeyInfo) [RFC5958]. When this is done, the privateKeyAlgorithm field SHALL be set to the corresponding composite algorithm identifier defined according to {{sec-alg-ids}}, the privateKey field SHALL contain the CompositePrivateKey, and the publicKey field MUST NOT be present. Associated public key material MAY be present in the CompositePrivateKey.
+When a `CompositeProviteKey` is conveyed inside a OneAsymmetricKey structure (version 1 of which is also known as PrivateKeyInfo) [RFC5958], the privateKeyAlgorithm field SHALL be set to the corresponding composite algorithm identifier defined according to {{sec-alg-ids}}, the privateKey field SHALL contain the CompositePrivateKey, and the publicKey field MUST NOT be present. Associated public key material MAY be present in the CompositePrivateKey.
 
 
 ## Encoding Rules {#sec-encoding-rules}
@@ -329,8 +330,6 @@ CompositePublicKeyBs ::= BIT STRING (CONTAINING CompositePublicKey ENCODED BY de
 
 
 
-
-
 # Composite KEM Structures
 
 ## Key Encapsulation Mechanisms (KEMs) {#sec-kems}
@@ -348,28 +347,63 @@ We borrow here the definition of a key encapsulation mechanism (KEM) from {{I-D.
       input a secret key sk and ciphertext ct and outputs a shared
       secret ss, or in some cases a distinguished error value.
 
-
-This document is not concerned with the KeyGen() algorithm of a KEM, but it is included above for completeness.
-
 The KEM interface defined above differs from both traditional key transport mechanism (for example for use with KeyTransRecipientInfo defined in {{RFC5652}}), and key agreement (for example for use with KeyAgreeRecipientInfo defined in {{RFC5652}}).
 
-The KEM interface was chosen as the interface for a composite key exchange because it allows for arbitrary combinations of component algorithm types since both key transport and key agreement mechanisms can be promoted into KEMs in the following ways:
-
-A key transport mechanism can be transformed into a `KEM.Encaps(pk)` by generating a random shared secret ss and performing `KeyTrans.Encrypt(pk, ss) -> ct`; and into a `KEM.Decaps(sk, ct)` by `KeyTrans.Decrypt(sk, ct) -> ss`. This follows the pattern of RSA-KEM [RFC5990].
-
-A key agreement mechanism can be transformed into a `KEM.Encaps(pk)` by generating an ephemeral key pair `(pk_e, sk_e)`, and performing `KeyAgree(pk, sk_e) -> (ss, pk_e)` and into a `KEM.Decaps(sk, ct)` by completing the key agreement as `KeyAgree(pk_e, sk) -> ss`.
+The KEM interface was chosen as the interface for a composite key exchange because it allows for arbitrary combinations of component algorithm types since both key transport and key agreement mechanisms can be promoted into KEMs. This document relies on the RSA-KEM construction defined in {{I-D.ietf-lamps-rfc5990bis}} and the Elliptic Curve DHKEM defined in {{I-D.ounsworth-lamps-cms-dhkem}}.
 
 A composite KEM allows two or more underlying key transport, key agreement, or KEM algorithms to be combined into a single cryptographic operation by performing each operation, transformed to a KEM as outline above, and using a specified combiner function to combine the two or more component shared secrets into a single shared secret.
 
 
+### Composite KeyGen
 
-The main security property for KEMs is indistinguishability under
-adaptive chosen ciphertext attack (IND-CCA2), which means that shared
-secret values should be indistinguishable from random strings even
-given the ability to have other arbitrary ciphertexts decapsulated.
-By using the KEM combiner defined in {{I-D.ounsworth-cfrg-kem-combiners}}, the composite KEMs defined in this document inherit the IND-CCA2 security from the general combiner.
+The `KeyGen() -> (pk, sk)` of a composite KEM algorithm will perform the `KeyGen()` of the respective component KEM algorithms and it produces a composite public key `pk` as per {sec-composite-pub-keys} and a composite secret key `sk` is per {sec-priv-key}.
 
-TODO: needs more formal analysis that the methods of transforming KeyTrans and KeyAgree meet this.
+### Composite Encaps
+
+The `Encaps(pk) -> (ct, ss)` of a composite KEM algorithm is defined as:
+
+~~~
+Encaps(pk):
+  # Split the component public keys
+  pk1 = pk[0]
+  pk2 = pk[1]
+
+  # Perform the respective component Encaps operations
+  (ct1, ss1) = ComponentKEM1.Encaps(pk1)
+  (ct2, ss2) = ComponentKEM2.Encaps(pk2)
+
+  # combine
+  ct = CompositeCiphertextValue(ct1, ct2)
+  ss = Combiner(ss1, ss2)
+
+  return (ct, ss)
+~~~
+{: #alg-composite-encaps title="Composite Encaps(pk)"}
+
+where `Combiner(k1, k2)` is defined in {sec-kem-combiner} and `CompositeCiphertextValue` is defined in {sec-CompositeCiphertextValue}.
+
+### Composite Decaps
+
+The `Decaps(sk, ct) -> ss` of a composite KEM algorithm is defined as:
+
+~~~
+Decaps(sk, ct):
+  # Sptil the component ciphertexts
+  ct1 = ct[0]
+  ct2 = ct[1]
+
+  # Perform the respective component Decaps operations
+  ss1 = ComponentKEM1.Encaps(sk1, ct1)
+  ss2 = ComponentKEM2.Encaps(sk2, ct2)
+
+  # combine
+  ss = Combiner(ss1, ss2)
+
+  return ss
+~~~
+{: #alg-composite-decaps title="Composite Decaps(sk, ct)"}
+
+where `Combiner(k1, k2)` is defined in {sec-kem-combiner}.
 
 ## kema-CompositeKEM {#sec-kema-CompositeKEM}
 
@@ -434,7 +468,7 @@ TODO: as per https://www.enisa.europa.eu/publications/post-quantum-cryptography-
 This document follows the construction of {{I-D.ounsworth-cfrg-kem-combiners}}, which is repeated here for clarity:
 
 ~~~
-KDF(counter || k_1 || ... || k_n || fixedInfo, outputBits)
+Combiner(k1, k2) = KDF(counter || k_1 || k_2 || fixedInfo, outputBits)
 
 where
 k_i = H(ss_i || ct_i)
@@ -626,7 +660,7 @@ TBD
 
 # Implementation Considerations {#sec-in-pract}
 
-## FIPS certification
+## FIPS certification {#sec-fips}
 
 One of the primary design goals of the specification is for the overall composite algorithm to be able to considered FIPS-approved even when one of the component algorithms is not. The combiner presented in {{sec-kem-combiner}} was chosen to align with NIST SP 800-56Cr2 for this reason.
 
