@@ -1,7 +1,9 @@
+-- command for easily copying it into a compiler (ubuntu with xclip)
+-- cat ASN1ModuleIncludes.asn Composite-Keys-2023.asn | xclip -sel clip
 
 Composite-KEM-2023
            {iso(1) identified-organization(3) dod(6) internet(1) security(5)
-       mechanisms(5) pkix(7) id-mod(0) id-mod-composite-kems(TBD)}
+       mechanisms(5) pkix(7) id-mod(0) id-mod-composite-kems(TBDMOD) }
 
 DEFINITIONS IMPLICIT TAGS ::= BEGIN
 
@@ -9,7 +11,7 @@ EXPORTS ALL;
 
 IMPORTS
 
-AlgorithmIdentifier{}
+PUBLIC-KEY, SIGNATURE-ALGORITHM, ParamOptions, AlgorithmIdentifier{}
     FROM AlgorithmInformation-2009  -- RFC 5912 [X509ASN1]
       { iso(1) identified-organization(3) dod(6) internet(1)
         security(5) mechanisms(5) pkix(7) id-mod(0)
@@ -17,9 +19,35 @@ AlgorithmIdentifier{}
 
 KEM-ALGORITHM, KEMAlgSet
     FROM KEMAlgorithmInformation-2023
-    { iso(1) identified-organization(3) dod(6) internet(1)
-      security(5) mechanisms(5) pkix(7) id-mod(0)
-          id-mod-kemAlgorithmInformation-2023(99) }
+      { iso(1) identified-organization(3) dod(6) internet(1)
+        security(5) mechanisms(5) pkix(7) id-mod(0)
+        id-mod-kemAlgorithmInformation-2023(99) }
+
+SubjectPublicKeyInfo
+    FROM PKIX1Explicit-2009
+      { iso(1) identified-organization(3) dod(6) internet(1)
+        security(5) mechanisms(5) pkix(7) id-mod(0)
+        id-mod-pkix1-explicit-02(51) }
+
+OneAsymmetricKey
+    FROM AsymmetricKeyPackageModuleV1
+      { iso(1) member-body(2) us(840) rsadsi(113549) pkcs(1)
+        pkcs-9(9) smime(16) modules(0)
+        id-mod-asymmetricKeyPkgV1(50) }
+
+
+NamedCurve
+    FROM PKIXAlgs-2009 
+      { iso(1) identified-organization(3) dod(6)
+        internet(1) security(5) mechanisms(5) pkix(7) id-mod(0)
+        id-mod-pkix1-algorithms2008-02(56) }
+
+
+pk-Ed25519, pk-X25519, pk-X448
+    FROM Safecurves-pkix-18
+      { iso(1) identified-organization(3) dod(6) internet(1)
+        security(5) mechanisms(5) pkix(7) id-mod(0)
+        id-mod-safecurves-pkix(93) } 
 
 id-rsa-kem, GenericHybridParameters
     FROM CMS-RSA-KEM
@@ -27,40 +55,220 @@ id-rsa-kem, GenericHybridParameters
         pkcs-9(9) smime(16) modules(0) cms-rsa-kem(21) }
 
 id-RSASSA-PSS, RSASSA-PSS-Params
-    FROM PKCS-1 {
-       iso(1) member-body(2) us(840) rsadsi(113549) pkcs(1) pkcs-1(1)
-       modules(0) pkcs-1(1)
-   }
+    FROM PKCS-1 
+      { iso(1) member-body(2) us(840) rsadsi(113549) pkcs(1) pkcs-1(1)
+       modules(0) pkcs-1(1) }
+;
 
-id-Kyber512-ECDH-P256-KMAC128,
-pk-Kyber512-ECDH-P256-KMAC128,
-id-Kyber512-ECDH-brainpoolP256r1-KMAC128,
-pk-Kyber512-ECDH-brainpoolP256r1-KMAC128,
-id-Kyber512-X25519-KMAC128,
-pk-Kyber512-X25519-KMAC128,
-id-Kyber768-RSA-KMAC256,
-pk-Kyber768-RSA-KMAC256,
-id-Kyber768-ECDH-P256-KMAC256,
-pk-Kyber768-ECDH-P256-KMAC256,
-id-Kyber768-ECDH-brainpoolP256r1-KMAC256,
-pk-Kyber768-ECDH-brainpoolP256r1-KMAC256,
-id-Kyber768-X25519-KMAC256,
-pk-Kyber768-X25519-KMAC256,
-id-Kyber1024-ECDH-P384-KMAC256,
-pk-Kyber1024-ECDH-P384-KMAC256,
-id-Kyber1024-ECDH-brainpoolP384r1-KMAC256,
-pk-Kyber1024-ECDH-brainpoolP384r1-KMAC256,
-id-Kyber1024-X448-KMAC256,
-pk-Kyber1024-X448-KMAC256
-    FROM CompositeKeys-2023
-           {iso(1) identified-organization(3) dod(6) internet(1) security(5)
-       mechanisms(5) pkix(7) id-mod(0) id-mod-composite-keys(98)};
+
+--
+-- Object Identifiers
+--
+
+-- Defined in ITU-T X.690
+der OBJECT IDENTIFIER ::=
+  {joint-iso-itu-t asn1(1) ber-derived(2) distinguished-encoding(1)}
 
 
 
 --
--- Composite structures
+-- Composite KEM Public Keys
 --
+
+CompositeKEMPublicKey ::= SEQUENCE SIZE (2..MAX) OF SubjectPublicKeyInfo
+
+CompositeKEMPublicKeyOs ::= OCTET STRING (CONTAINING CompositePublicKey ENCODED BY der)
+
+CompositeKEMPublicKeyBs ::= BIT STRING (CONTAINING CompositePublicKey ENCODED BY der)
+
+CompositeKEMPrivateKey ::= SEQUENCE SIZE (2..MAX) OF OneAsymmetricKey
+
+
+pk-explicitCompositeKEM{OBJECT IDENTIFIER:id, PUBLIC-KEY:firstPublicKey,
+  FirstPublicKeyType, PUBLIC-KEY:secondPublicKey, SecondPublicKeyType}
+  PUBLIC-KEY ::= {
+    IDENTIFIER id
+    KEY ExplicitCompositePublicKey{firstPublicKey, FirstPublicKeyType,
+      secondPublicKey, SecondPublicKeyType}
+    PARAMS ARE absent
+    CERT-KEY-USAGE { keyEncipherment }
+}
+
+
+-- TODO this is one possible way to reference specific named curves.
+-- But I don't think this compiles.
+
+--pk-ECDH-P256 PUBLIC-KEY ::= {
+--  IDENTIFIER id-ecPublicKey
+--  KEY ECPoint
+--  PARAMS TYPE NamedCurve.secp256r1 ARE required }
+--
+--pk-ECDH-brainpoolP256r1 PUBLIC-KEY ::= {
+--  IDENTIFIER id-ecPublicKey
+--  KEY ECPoint
+--  PARAMS NamedCurve{brainpoolP256r1} }
+--
+--pk-ECDH-P384 PUBLIC-KEY ::= {
+--  IDENTIFIER id-ecPublicKey
+--  KEY ECPoint
+--  PARAMS TYPE NamedCurve{secp384r1} }
+--
+--pk-ECDH-brainpoolP384r1 PUBLIC-KEY ::= {
+--  IDENTIFIER id-ecPublicKey
+--  KEY ECPoint
+--  PARAMS NamedCurve{brainpoolP384r1} }
+
+
+
+-- Explicit Composite KEM Keys
+
+
+-- TODO: To be replaced by IANA
+id-Kyber512-ECDH-P256-KMAC128 OBJECT IDENTIFIER ::= {
+  joint-iso-itu-t(2) country(16) us(840) organization(1) entrust(114027)
+  algorithm(80) explicitcomposite(5) explicitcomposite-kem(2) id-kyber512-ecdh-p256(1) }
+
+pk-Kyber512-ECDH-P256-KMAC128 PUBLIC-KEY ::= 
+  pk-explicitCompositeKEM{id-Kyber512-ECDH-P256-KMAC128, 
+  pk-Kyber512TBD, OCTET STRING, pk-ec, ECPoint}
+
+--TODO: this is missing `PARAMS secp256r1`
+
+
+-- TODO: To be replaced by IANA
+id-Kyber512-ECDH-brainpoolP256r1-KMAC128 OBJECT IDENTIFIER ::= {
+  joint-iso-itu-t(2) country(16) us(840) organization(1) entrust(114027)
+  algorithm(80) explicitcomposite(5) explicitcomposite-kem(2) id-kyber512-ecdh-brainpoolp256r1(2) }
+
+pk-Kyber512-ECDH-brainpoolP256r1-KMAC128 PUBLIC-KEY ::= 
+  pk-explicitCompositeKEM{id-Kyber512-ECDH-brainpoolP256r1-KMAC128, 
+  pk-Kyber512TBD, OCTET STRING, pk-ec, ECPoint}
+
+--TODO: this is missing `PARAMS brainpoolp256r1`
+
+
+-- TODO: To be replaced by IANA
+id-Kyber512-X25519-KMAC128 OBJECT IDENTIFIER ::= {
+  joint-iso-itu-t(2) country(16) us(840) organization(1) entrust(114027)
+  algorithm(80) explicitcomposite(5) kem(2)
+  id-kyber512-x25519(3) }
+
+pk-Kyber512-X25519-KMAC128 PUBLIC-KEY ::= 
+  pk-explicitCompositeKEM{id-Kyber512-X25519-KMAC128, 
+  pk-Kyber512TBD, OCTET STRING, pk-X25519, OCTET STRING}
+
+
+-- TODO: To be replaced by IANA
+id-Kyber768-RSA-KMAC256 OBJECT IDENTIFIER ::= {
+  joint-iso-itu-t(2) country(16) us(840) organization(1) entrust(114027)
+  algorithm(80) explicitcomposite(5) kem(2)
+  id-kyber768-rsa(4) }
+
+pk-Kyber768-RSA-KMAC256 PUBLIC-KEY ::= 
+  pk-explicitCompositeKEM{id-Kyber768-RSA-KMAC256, 
+  pk-Kyber768TBD, OCTET STRING, pk-rsa, RSAPublicKey}
+
+
+-- TODO: To be replaced by IANA
+id-Kyber768-ECDH-P256-KMAC256 OBJECT IDENTIFIER ::= {
+  joint-iso-itu-t(2) country(16) us(840) organization(1) entrust(114027)
+  algorithm(80) explicitcomposite(5) kem(2)
+  id-kyber768-ecdh-p256(5) }
+
+pk-Kyber768-ECDH-P256-KMAC256 PUBLIC-KEY ::= 
+  pk-explicitCompositeKEM{id-Kyber768-ECDH-P256-KMAC256, 
+  pk-Kyber768TBD, OCTET STRING, pk-ec, ECPoint}
+
+--TODO: this is missing `PARAMS secp256r1`
+
+
+id-Kyber768-ECDH-brainpoolP256r1-KMAC256 OBJECT IDENTIFIER ::= {
+  joint-iso-itu-t(2) country(16) us(840) organization(1) entrust(114027)
+  algorithm(80) explicitcomposite(5) kem(2)
+  id-kyber768-ecdh-p256(6) }
+
+pk-Kyber768-ECDH-brainpoolP256r1-KMAC256 PUBLIC-KEY ::= 
+  pk-explicitCompositeKEM{id-Kyber768-ECDH-brainpoolP256r1-KMAC256, 
+  pk-Kyber768TBD, OCTET STRING, pk-ec, ECPoint}
+
+--TODO: this is missing `PARAMS brainpoolp256r1`
+
+
+-- TODO: To be replaced by IANA
+id-Kyber768-X25519-KMAC256 OBJECT IDENTIFIER ::= {
+  joint-iso-itu-t(2) country(16) us(840) organization(1) entrust(114027)
+  algorithm(80) explicitcomposite(5) kem(2)
+  id-kyber768-x25519(7) }
+
+pk-Kyber768-X25519-KMAC256 PUBLIC-KEY ::= 
+  pk-explicitCompositeKEM{id-Kyber768-X25519-KMAC256, 
+  pk-Kyber768TBD, OCTET STRING, pk-X25519, OCTET STRING}
+
+
+
+-- TODO: To be replaced by IANA
+id-Kyber1024-ECDH-P384-KMAC256 OBJECT IDENTIFIER ::= {
+  joint-iso-itu-t(2) country(16) us(840) organization(1) entrust(114027)
+  algorithm(80) explicitcomposite(5) kem(2)
+  id-kyber1024-ecdh-p384(8) }
+
+pk-Kyber1024-ECDH-P384-KMAC256 PUBLIC-KEY ::= 
+  pk-explicitCompositeKEM{id-Kyber1024-ECDH-P384-KMAC256, 
+  pk-Kyber1024TBD, OCTET STRING, pk-ec, ECPoint}
+
+--TODO: this is missing `PARAMS secp384r1`
+
+
+-- TODO: To be replaced by IANA
+id-Kyber1024-ECDH-brainpoolP384r1-KMAC256 OBJECT IDENTIFIER ::= {
+  joint-iso-itu-t(2) country(16) us(840) organization(1) entrust(114027)
+  algorithm(80) explicitcomposite(5) kem(2)
+  id-kyber1024-ecdh-brainpoolp384r1(9) }
+
+pk-Kyber1024-ECDH-brainpoolP384r1-KMAC256 PUBLIC-KEY ::= 
+  pk-explicitCompositeKEM{id-Kyber1024-ECDH-brainpoolP384r1-KMAC256, 
+  pk-Kyber1024TBD, OCTET STRING, pk-ec, ECPoint}
+
+--TODO: this is missing `PARAMS brainpoolp384r1`
+
+
+-- TODO: To be replaced by IANA
+id-Kyber1024-X448-KMAC256 OBJECT IDENTIFIER ::= {
+  joint-iso-itu-t(2) country(16) us(840) organization(1) entrust(114027)
+  algorithm(80) explicitcomposite(5) kem(2)
+  id-kyber1024-x448(10) }
+
+pk-Kyber1024-X448-KMAC256 PUBLIC-KEY ::= 
+  pk-explicitCompositeKEM{id-Kyber1024-X448-KMAC256, 
+  pk-Kyber1024TBD, OCTET STRING, pk-X448, OCTET STRING}
+
+
+
+
+--
+-- Composite KEM structures
+--
+
+
+
+--  COMPOSITE-KEM-ALGORITHM
+--
+--  Describes the basic properties of a composite KEM algorithm
+--
+--  &id - contains the OID identifying the composite algorithm
+--  &Params - if present, contains the type for the algorithm
+--               parameters; if absent, implies no parameters
+--  &paramPresence - parameter presence requirement
+--
+
+COMPOSITE-KEM-ALGORITHM ::= CLASS {
+    &id             OBJECT IDENTIFIER UNIQUE,
+    &Params         OPTIONAL,
+    &paramPresence  ParamOptions DEFAULT absent
+} WITH SYNTAX {
+    IDENTIFIER &id
+    [PARAMS [TYPE &Params] ARE &paramPresence ]
+}
 
 CompositeCiphertextValue ::= SEQUENCE SIZE (2..MAX) OF OCTET STRING
 

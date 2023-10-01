@@ -62,7 +62,6 @@ normative:
   RFC8174:
   RFC8410:
   RFC8411:
-  I-D.draft-ounsworth-pq-composite-keys-04:
   I-D.draft-housley-lamps-cms-kemri-02:
   I-D.draft-ietf-lamps-kyber-certificates-00:
   SHA3:
@@ -107,7 +106,6 @@ informative:
   RFC7748:
   RFC8446:
   RFC8551:
-  I-D.draft-ounsworth-pq-composite-sigs-08:
   I-D.draft-ietf-tls-hybrid-design-04:
   I-D.draft-driscoll-pqt-hybrid-terminology-01:
   I-D.draft-ounsworth-cfrg-kem-combiners-03:
@@ -145,6 +143,9 @@ structure define in {{I-D.ounsworth-pq-composite-keys}} and the CMS KEMRecipient
   [ ] Re-work section 4.1 (id-Kyber768-RSA-KMAC256) to Reference 5990bis and its updated structures.
   [ ] Remove RSA-KEM KDF params and make them implied by the OID; ie provide a profile of 5990bis.
   [ ] We need PEM samples … 118 hackathon? OQS friends? David @ BC?
+
+  Still to do in a future version:
+  * Fix the ASN.1 in how it references ECC named curves.
 
 
 # Introduction {#sec-intro}
@@ -209,6 +210,40 @@ PKI:
 SHARED SECRET:
         A value established between two communicating parties for use as cryptographic key material, but which cannot be learned by an active or
         passive adversary. This document is concerned with shared secrets established via public key cryptagraphic operations.
+
+# Composite Key Structures {#sec-composite-keys}
+
+In order to represent public keys and private keys that are composed of multiple algorithms, we define encodings consisting of a sequence of public key or private key primitives (aka "components") such that these structures can be used directly in existing public key fields such as those found in PKCS#10 [RFC2986], CMP [RFC4210], X.509 [RFC5280], CMS [RFC5652], and the Trust Anchor Format [RFC5914].
+
+{{I-D.driscoll-pqt-hybrid-terminology}} defines composites as:
+
+>   *Composite Cryptographic Element*:  A cryptographic element that
+>      incorporates multiple component cryptographic elements of the same
+>      type in a multi-algorithm scheme.
+
+Composite keys as defined here follow this definition and should be regarded as a single key that performs a single cryptographic operation such key generation, signing, verifying, encapsulating, or decapsulating -- using its encapsulated sequence of component keys as if it was a single key. This generally means that the complexity of combining algorithms can and should be ignored by application and protocol layers and deferred to the cryptographic library layer.
+
+## pk-Composite
+
+The following ASN.1 Information Object Class is a template to be used in defining all composite key types, with suitable replacements for the ASN.1 identifier `pk-Composite` and the OID `id-composite-key` as appropriate. See the ASN.1 Module in {{sec-asn1-module}} for parmeterized as well as signature and KEM versions.
+
+TODO: remove the `id-composite-key` and make it an information class that is used to 
+
+~~~ ASN.1
+pk-Composite-KEM PUBLIC-KEY ::= {
+    id id-composite-key
+    KeyValue CompositePublicKey
+    Params ARE ABSENT
+    PrivateKey CompositePrivateKey
+}
+~~~
+{: artwork-name="CompositeAlgorithmObject-asn.1-structures"}
+
+`keyUsage` is omitted here because composites may be formed for keys of any type, provided that any key usage specified MUST apply to all component keys. Composites MAY NOT be used to combine key types, for example to make a "dual-usage" key by combining a signing key with a KEM key.
+
+
+
+
 
 
 # Composite KEM Structures
