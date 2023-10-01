@@ -147,9 +147,9 @@ For use within CMS, this document is intended to be coupled with the CMS KEMReci
 * Added an Implementation Consideration about FIPS validation where only one component algorithm is FIPS-approved
 * Defined `KeyGen()`, `Encaps()`, and `Decaps()` for a composite KEM algorithm.
 * Removed the discussion of KeyTrans -> KEM and KeyAgree -> KEM promotions, and instead simply referenced [I-D.ietf-lamps-rfc5990bis] and [I-D.ounsworth-lamps-cms-dhkem].
+* Made RSA keys fixed-length at 3072.
 
 TODO:
-  `[ ]` Make RSA keys fixed-length.
   `[ ]` Re-work section 4.1 (id-Kyber768-RSA-KMAC256) to Reference 5990bis and its updated structures.
   `[ ]` Remove RSA-KEM KDF params and make them implied by the OID; ie provide a profile of 5990bis.
   `[ ]` Square this up with draft-ounsworth-cfrg-kem-combiners
@@ -157,6 +157,7 @@ TODO:
   `l ]` Pass over Security Considerations
   `[ ]` Shorten the abstract (move some content into Intro)
   `[ ]` Fix all the warnings so the build is clean.
+  `[ ]` Rename to ML-KEM
   `[ ]` Top-to-bottom read
 
   Still to do in a future version:
@@ -405,6 +406,7 @@ Decaps(sk, ct):
 
 where `Combiner(k1, k2)` is defined in {sec-kem-combiner}.
 
+
 ## kema-CompositeKEM {#sec-kema-CompositeKEM}
 
 The ASN.1 algorithm object for a composite KEM is:
@@ -431,11 +433,6 @@ to create Composite KEMs:
 | SMIME_CAPS                  | Not needed for composite |
 
 
-## Composite Keys
-
-A composite KEM MAY be associated with a composite KEM public key, but MAY also be associated with multiple public keys from different sources, for example multiple X.509 certificates, or multiple cryptographic modules. In the latter case, composite KEMs MAY be used as the mechanism for carrying multiple ciphertexts in a non-composite hybrid encryption equivalent of those described for digital signatures in {{I-D.becker-guthrie-noncomposite-hybrid-auth}}.
-
-
 
 ## CompositeCiphertextValue {#sec-CompositeCiphertextValue}
 
@@ -445,6 +442,8 @@ underlying component algorithms.  It is represented in ASN.1 as follows:
 ~~~
 CompositeCiphertextValue ::= SEQUENCE SIZE (2) OF OCTET STRING
 ~~~
+
+A composite KEM and `CompositeCipherTextValue` MAY be associated with a composite KEM public key, but MAY also be associated with multiple public keys from different sources, for example multiple X.509 certificates, or multiple cryptographic modules. In the latter case, composite KEMs MAY be used as the mechanism for carrying multiple ciphertexts, for example, in a non-composite hybrid encryption equivalent of those described for digital signatures in {{I-D.becker-guthrie-noncomposite-hybrid-auth}}.
 
 
 ## CompositKemParameters {#sec-compositeKemParameters}
@@ -531,18 +530,18 @@ Therefore &lt;CompKEM&gt;.1 is equal to 2.16.840.1.114027.80.5.2.1
 
 The "KEM Combiner" column refers to the definitions in {{sec-kem-combiner}}.
 
-| KEM Type OID                                     | OID                | First Algorithm   | Second Algorithm |  KEM Combiner     |
-|---------                                    | -----------------  | ----------      | ----------     | ----------    |
-| id-Kyber512-ECDH-P256-KMAC128              | &lt;CompKEM&gt;.1  | Kyber512        | ECDH-P256      | KMAC128/256  |
-| id-Kyber512-ECDH-brainpoolP256r1-KMAC128   | &lt;CompKEM&gt;.2  | Kyber512        | ECDH-brainpoolp256r1 | KMAC128/256 |
-| id-Kyber512-X25519-KMAC128                 | &lt;CompKEM&gt;.3  | Kyber512        | X25519         | KMAC128/256 |
-| id-Kyber768-RSA-KMAC256                    | &lt;CompKEM&gt;.4  | Kyber768        | RSA-KEM        | KMAC256/384 |
-| id-Kyber768-ECDH-P256-KMAC256              | &lt;CompKEM&gt;.5  | Kyber768        | ECDH-P256      | KMAC256/384 |
-| id-Kyber768-ECDH-brainpoolP256r1-KMAC256   | &lt;CompKEM&gt;.6  | Kyber768        | ECDH-brainpoolp256r1 | KMAC256/384 |
-| id-Kyber768-X25519-KMAC256                 | &lt;CompKEM&gt;.7  | Kyber768        | X25519         | KMAC256/384 |
-| id-Kyber1024-ECDH-P384-KMAC256             | &lt;CompKEM&gt;.8  | Kyber1024       | ECDH-P384     | KMAC256/512 |
-| id-Kyber1024-ECDH-brainpoolP384r1-KMAC256  | &lt;CompKEM&gt;.9  | Kyber1024       | ECDH-brainpoolP384r1 | KMAC256/512 |
-| id-Kyber1024-X448-KMAC256                  | &lt;CompKEM&gt;.10 | Kyber1024       | X448          | KMAC256/512 |
+| KEM Type OID                              | OID                | First Algorithm | Second Algorithm |  KEM Combiner     |
+|---------                                  | -----------------  | ----------      | ----------     | ----------    |
+| id-Kyber512-ECDH-P256-KMAC128             | &lt;CompKEM&gt;.1  | Kyber512        | ECDH-P256      | KMAC128/256  |
+| id-Kyber512-ECDH-brainpoolP256r1-KMAC128  | &lt;CompKEM&gt;.2  | Kyber512        | ECDH-brainpoolp256r1 | KMAC128/256 |
+| id-Kyber512-X25519-KMAC128                | &lt;CompKEM&gt;.3  | Kyber512        | X25519         | KMAC128/256 |
+| id-Kyber768-RSA-3072-KMAC256              | &lt;CompKEM&gt;.4  | Kyber768        | RSA-KEM 3072   | KMAC256/384 |
+| id-Kyber768-ECDH-P256-KMAC256             | &lt;CompKEM&gt;.5  | Kyber768        | ECDH-P256      | KMAC256/384 |
+| id-Kyber768-ECDH-brainpoolP256r1-KMAC256  | &lt;CompKEM&gt;.6  | Kyber768        | ECDH-brainpoolp256r1 | KMAC256/384 |
+| id-Kyber768-X25519-KMAC256                | &lt;CompKEM&gt;.7  | Kyber768        | X25519         | KMAC256/384 |
+| id-Kyber1024-ECDH-P384-KMAC256            | &lt;CompKEM&gt;.8  | Kyber1024       | ECDH-P384     | KMAC256/512 |
+| id-Kyber1024-ECDH-brainpoolP384r1-KMAC256 | &lt;CompKEM&gt;.9  | Kyber1024       | ECDH-brainpoolP384r1 | KMAC256/512 |
+| id-Kyber1024-X448-KMAC256                 | &lt;CompKEM&gt;.10 | Kyber1024       | X448          | KMAC256/512 |
 {: #tab-kem-algs title="Composite KEM key types"}
 
 
@@ -554,16 +553,20 @@ Full specifications for the referenced algorithms can be found as follows:
   * _ECDH NIST_: SHALL be Elliptic Curve Cryptography Cofactor Diffie-Hellman (ECC CDH) as defined in section 5.7.1.2 of [SP.800-56Ar3].
   * _ECDH BSI / brainpool_: SHALL be Elliptic Curve Key Agreement algorithm (ECKA) as defined in section 4.3.1 of [BSI-ECC]
 * _Kyber_: {{I-D.ietf-lamps-kyber-certificates}}
-* _RSA-KEM_: [RFC5990]
+* _RSA-KEM_: {{I-D.ietf-lamps-rfc5990bis}}
 * _X25519 / X448_: [RFC8410]
+
+Note that all ECDH as well as X25519 and X448 algorithms MUST be prometed into KEMs according to {{I-D.ounsworth-lamps-cms-dhkem}}.
 
 EDNOTE: I believe that [SP.800-56Ar3] and [BSI-ECC] give equivalent and interoperable algorithms, so maybe this is extranuous detail to include?
 
 
 
-## Notes on id-Kyber768-RSA-KMAC256
+## Notes on id-Kyber768-RSA-3072-KMAC256
 
-Use of RSA-KEM [RFC5990] deserves a special explanation.
+Use of RSA-KEM {{I-D.ietf-lamps-rfc5990bis}} deserves a special explanation.
+
+The RSA component keys MUST be generated at the 3072-bit security level in order to match security level with Kyber768. Parsers SHOULD be flexible since RSA keys generated at the 3072-bit security level may not be exactly 3072 bits in length due to dropped leading zeros.
 
 
 `GenericHybridParameters` is defined in [RFC5990], repeated here for clarity:
