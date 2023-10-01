@@ -75,13 +75,13 @@ der OBJECT IDENTIFIER ::=
 -- Composite KEM Public Keys
 --
 
-CompositeKEMPublicKey ::= SEQUENCE SIZE (2..MAX) OF SubjectPublicKeyInfo
+CompositeKEMPublicKey ::= SEQUENCE SIZE (2) OF BIT STRING
 
 CompositeKEMPublicKeyOs ::= OCTET STRING (CONTAINING CompositePublicKey ENCODED BY der)
 
 CompositeKEMPublicKeyBs ::= BIT STRING (CONTAINING CompositePublicKey ENCODED BY der)
 
-CompositeKEMPrivateKey ::= SEQUENCE SIZE (2..MAX) OF OneAsymmetricKey
+CompositeKEMPrivateKey ::= SEQUENCE SIZE (2) OF OneAsymmetricKey
 
 
 pk-explicitCompositeKEM{OBJECT IDENTIFIER:id, PUBLIC-KEY:firstPublicKey,
@@ -270,9 +270,9 @@ COMPOSITE-KEM-ALGORITHM ::= CLASS {
     [PARAMS [TYPE &Params] ARE &paramPresence ]
 }
 
-CompositeCiphertextValue ::= SEQUENCE SIZE (2..MAX) OF OCTET STRING
+CompositeCiphertextValue ::= SEQUENCE SIZE (2) OF OCTET STRING
 
-CompositeKemParams ::= SEQUENCE SIZE (2..MAX) OF AlgorithmIdentifier{
+CompositeKemParams ::= SEQUENCE SIZE (2) OF AlgorithmIdentifier{
     KEM-ALGORITHM, {KEMAlgSet} }
 
 ExplicitCompositeKemParams{KEM-ALGORITHM:FirstKemAlg, 
