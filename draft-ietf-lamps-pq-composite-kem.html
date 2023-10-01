@@ -7,17 +7,14 @@
 <title>Composite KEM For Use In Internet PKI</title>
 <meta content="Mike Ounsworth" name="author">
 <meta content="John Gray" name="author">
-<meta content='
-       The migration to post-quantum cryptography is unique in the history of modern digital cryptography in that neither the old outgoing nor the new incoming algorithms are fully trusted to protect data for the required data lifetimes. The outgoing algorithms, such as RSA and elliptic curve, may fall to quantum cryptalanysis, while the incoming post-quantum algorithms face uncertainty about both the underlying mathematics as well as hardware and software implementations that have not had sufficient maturing time to rule out classical cryptanalytic attacks and implementation bugs. 
-       Cautious implementers may wish to combine cryptographic algorithms such that an attacker would need to break all of them in order to compromise the data being protected by using a Post-Quantum / Traditional Hybrid. This document defines a specific instantiation of hybrid paradigm called "composite" where multiple cryptographic algorithms are combined to form a single key encapsulation mechanism (KEM) key and ciphertext such that they can be treated as a single atomic algorithm at the protocol level. 
-       This document defines composite public key types for a range of Post-Quantum / Traditional combinations as well as the structure CompositeCiphertextValue which is a sequence of the respective ciphertexts for each component algorithm. The explicit pairings of algorithms which are provided should meet most Internet needs. For the purpose of combining KEMs, the combiner function from   is used. 
-       This document assumes that all component algorithms are KEMs, and therefore it depends on   and   in order to promote RSA and ECDH respectively into KEMs. 
-       For use within CMS, this document is intended to be coupled with the CMS KEMRecipientInfo mechanism in  . 
+<meta content="
+       This document defines Post-Quantum / Traditional composite Key Encapsulation Mechanism (KEM) algorithms suitable for use within X.509 and PKIX and CMS protocols. Explicit pairings of algorithms are provided which should meet most Internet needs. 
+       This document assumes that all component algorithms are KEMs, and therefore it depends on   and   in order to promote RSA and ECDH respectively into KEMs. For the purpose of combining KEMs, the combiner function from   is used. For use within CMS, this document is intended to be coupled with the CMS KEMRecipientInfo mechanism in  . 
        
 
 
 
-    ' name="description">
+    " name="description">
 <meta content="xml2rfc 3.18.0" name="generator">
 <meta content="X.509" name="keyword">
 <meta content="CMS" name="keyword">
@@ -1076,11 +1073,8 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <h1 id="title">Composite KEM For Use In Internet PKI</h1>
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
-<p id="section-abstract-1">The migration to post-quantum cryptography is unique in the history of modern digital cryptography in that neither the old outgoing nor the new incoming algorithms are fully trusted to protect data for the required data lifetimes. The outgoing algorithms, such as RSA and elliptic curve, may fall to quantum cryptalanysis, while the incoming post-quantum algorithms face uncertainty about both the underlying mathematics as well as hardware and software implementations that have not had sufficient maturing time to rule out classical cryptanalytic attacks and implementation bugs.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
-<p id="section-abstract-2">Cautious implementers may wish to combine cryptographic algorithms such that an attacker would need to break all of them in order to compromise the data being protected by using a Post-Quantum / Traditional Hybrid. This document defines a specific instantiation of hybrid paradigm called "composite" where multiple cryptographic algorithms are combined to form a single key encapsulation mechanism (KEM) key and ciphertext such that they can be treated as a single atomic algorithm at the protocol level.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
-<p id="section-abstract-3">This document defines composite public key types for a range of Post-Quantum / Traditional combinations as well as the structure CompositeCiphertextValue which is a sequence of the respective ciphertexts for each component algorithm. The explicit pairings of algorithms which are provided should meet most Internet needs. For the purpose of combining KEMs, the combiner function from <span>[<a href="#I-D.ounsworth-cfrg-kem-combiners" class="cite xref">I-D.ounsworth-cfrg-kem-combiners</a>]</span> is used.<a href="#section-abstract-3" class="pilcrow">¶</a></p>
-<p id="section-abstract-4">This document assumes that all component algorithms are KEMs, and therefore it depends on <span>[<a href="#RFC5990" class="cite xref">RFC5990</a>]</span> and <span>[<a href="#I-D.ounsworth-lamps-cms-dhkem" class="cite xref">I-D.ounsworth-lamps-cms-dhkem</a>]</span> in order to promote RSA and ECDH respectively into KEMs.<a href="#section-abstract-4" class="pilcrow">¶</a></p>
-<p id="section-abstract-5">For use within CMS, this document is intended to be coupled with the CMS KEMRecipientInfo mechanism in <span>[<a href="#I-D.housley-lamps-cms-kemri" class="cite xref">I-D.housley-lamps-cms-kemri</a>]</span>.<a href="#section-abstract-5" class="pilcrow">¶</a></p>
+<p id="section-abstract-1">This document defines Post-Quantum / Traditional composite Key Encapsulation Mechanism (KEM) algorithms suitable for use within X.509 and PKIX and CMS protocols. Explicit pairings of algorithms are provided which should meet most Internet needs.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+<p id="section-abstract-2">This document assumes that all component algorithms are KEMs, and therefore it depends on <span>[<a href="#RFC5990" class="cite xref">RFC5990</a>]</span> and <span>[<a href="#I-D.ounsworth-lamps-cms-dhkem" class="cite xref">I-D.ounsworth-lamps-cms-dhkem</a>]</span> in order to promote RSA and ECDH respectively into KEMs. For the purpose of combining KEMs, the combiner function from <span>[<a href="#I-D.ounsworth-cfrg-kem-combiners" class="cite xref">I-D.ounsworth-cfrg-kem-combiners</a>]</span> is used. For use within CMS, this document is intended to be coupled with the CMS KEMRecipientInfo mechanism in <span>[<a href="#I-D.housley-lamps-cms-kemri" class="cite xref">I-D.housley-lamps-cms-kemri</a>]</span>.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-about-this-document">
@@ -1226,13 +1220,10 @@ svg :is([fill="white"], [fill^="#fff"]) {
             <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1">
-                <p id="section-toc.1-1.8.2.1.1"><a href="#section-8.1" class="auto internal xref">8.1</a>.  <a href="#name-reuse-of-keys-in-a-composit" class="internal xref">Reuse of keys in a Composite public key</a></p>
+                <p id="section-toc.1-1.8.2.1.1"><a href="#section-8.1" class="auto internal xref">8.1</a>.  <a href="#name-policy-for-deprecated-and-a" class="internal xref">Policy for Deprecated and Acceptable Algorithms</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.2">
-                <p id="section-toc.1-1.8.2.2.1"><a href="#section-8.2" class="auto internal xref">8.2</a>.  <a href="#name-policy-for-deprecated-and-a" class="internal xref">Policy for Deprecated and Acceptable Algorithms</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.3">
-                <p id="section-toc.1-1.8.2.3.1"><a href="#section-8.3" class="auto internal xref">8.3</a>.  <a href="#name-kem-combiner-2" class="internal xref">KEM Combiner</a></p>
+                <p id="section-toc.1-1.8.2.2.1"><a href="#section-8.2" class="auto internal xref">8.2</a>.  <a href="#name-kem-combiner-2" class="internal xref">KEM Combiner</a></p>
 </li>
             </ul>
 </li>
@@ -1289,49 +1280,55 @@ svg :is([fill="white"], [fill^="#fff"]) {
       <h2 id="name-changes-in-version-01">
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-changes-in-version-01" class="section-name selfRef">Changes in version -01</a>
       </h2>
+<p id="section-1-1">Changes affecting interoperability:<a href="#section-1-1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-1-1.1">Refactored to use MartinThomson github template.<a href="#section-1-1.1" class="pilcrow">¶</a>
-</li>
-        <li class="normal" id="section-1-1.2">Made this document standalone by folding in the minimum necessary content from composite-keys and dropping the cross-reference to composite-sigs.<a href="#section-1-1.2" class="pilcrow">¶</a>
-</li>
-        <li class="normal" id="section-1-1.3">
-          <p id="section-1-1.3.1">Re-worked wire format and ASN.1 to remove vestiges of Generics.<a href="#section-1-1.3.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-1-2.1">
+          <p id="section-1-2.1.1">Re-worked wire format and ASN.1 to remove vestiges of Generics.<a href="#section-1-2.1.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-1-1.3.2.1">Changed all <code>SEQUENCE OF SIZE (2..MAX)</code> to <code>SEQUENCE OF SIZE (2)</code>.<a href="#section-1-1.3.2.1" class="pilcrow">¶</a>
+<li class="normal" id="section-1-2.1.2.1">Changed all <code>SEQUENCE OF SIZE (2..MAX)</code> to <code>SEQUENCE OF SIZE (2)</code>.<a href="#section-1-2.1.2.1" class="pilcrow">¶</a>
 </li>
-            <li class="normal" id="section-1-1.3.2.2">Changed the definition of <code>CompositeKEMPublicKey</code> from <code>SEQUENCE OF SubjectPublicKeyInfo</code> to <code>SEQUENCE OF BIT STRING</code> since with complete removal of Generic Composites, there is no longer any need to carry the component AlgorithmIdentifiers.<a href="#section-1-1.3.2.2" class="pilcrow">¶</a>
+            <li class="normal" id="section-1-2.1.2.2">Changed the definition of <code>CompositeKEMPublicKey</code> from <code>SEQUENCE OF SubjectPublicKeyInfo</code> to <code>SEQUENCE OF BIT STRING</code> since with complete removal of Generic Composites, there is no longer any need to carry the component AlgorithmIdentifiers.<a href="#section-1-2.1.2.2" class="pilcrow">¶</a>
 </li>
-            <li class="normal" id="section-1-1.3.2.3">Added a paragraph describing how to reconstitute component SPKIs.<a href="#section-1-1.3.2.3" class="pilcrow">¶</a>
+            <li class="normal" id="section-1-2.1.2.3">Added a paragraph describing how to reconstitute component SPKIs.<a href="#section-1-2.1.2.3" class="pilcrow">¶</a>
 </li>
           </ul>
 </li>
-        <li class="normal" id="section-1-1.4">Added an Implementation Consideration about FIPS validation where only one component algorithm is FIPS-approved<a href="#section-1-1.4" class="pilcrow">¶</a>
+        <li class="normal" id="section-1-2.2">Defined <code>KeyGen()</code>, <code>Encaps()</code>, and <code>Decaps()</code> for a composite KEM algorithm.<a href="#section-1-2.2" class="pilcrow">¶</a>
 </li>
-        <li class="normal" id="section-1-1.5">Defined <code>KeyGen()</code>, <code>Encaps()</code>, and <code>Decaps()</code> for a composite KEM algorithm.<a href="#section-1-1.5" class="pilcrow">¶</a>
+        <li class="normal" id="section-1-2.3">Removed the discussion of KeyTrans -&gt; KEM and KeyAgree -&gt; KEM promotions, and instead simply referenced <span>[<a href="#I-D.ietf-lamps-rfc5990bis" class="cite xref">I-D.ietf-lamps-rfc5990bis</a>]</span> and <span>[<a href="#I-D.ounsworth-lamps-cms-dhkem" class="cite xref">I-D.ounsworth-lamps-cms-dhkem</a>]</span>.<a href="#section-1-2.3" class="pilcrow">¶</a>
 </li>
-        <li class="normal" id="section-1-1.6">Removed the discussion of KeyTrans -&gt; KEM and KeyAgree -&gt; KEM promotions, and instead simply referenced <span>[<a href="#I-D.ietf-lamps-rfc5990bis" class="cite xref">I-D.ietf-lamps-rfc5990bis</a>]</span> and <span>[<a href="#I-D.ounsworth-lamps-cms-dhkem" class="cite xref">I-D.ounsworth-lamps-cms-dhkem</a>]</span>.<a href="#section-1-1.6" class="pilcrow">¶</a>
+        <li class="normal" id="section-1-2.4">Made RSA keys fixed-length at 3072.<a href="#section-1-2.4" class="pilcrow">¶</a>
 </li>
-        <li class="normal" id="section-1-1.7">Made RSA keys fixed-length at 3072.<a href="#section-1-1.7" class="pilcrow">¶</a>
+        <li class="normal" id="section-1-2.5">Re-worked section 4.1 (id-Kyber768-RSA3072-KMAC256) to Reference 5990bis and its updated structures.<a href="#section-1-2.5" class="pilcrow">¶</a>
 </li>
-        <li class="normal" id="section-1-1.8">Re-worked section 4.1 (id-Kyber768-RSA3072-KMAC256) to Reference 5990bis and its updated structures.<a href="#section-1-1.8" class="pilcrow">¶</a>
+        <li class="normal" id="section-1-2.6">Removed RSA-KEM KDF params and make them implied by the OID; ie provide a profile of 5990bis.<a href="#section-1-2.6" class="pilcrow">¶</a>
 </li>
-        <li class="normal" id="section-1-1.9">Removed RSA-KEM KDF params and make them implied by the OID; ie provide a profile of 5990bis.<a href="#section-1-1.9" class="pilcrow">¶</a>
-</li>
-        <li class="normal" id="section-1-1.10">Aligned with draft-ounsworth-cfrg-kem-combiners-04<a href="#section-1-1.10" class="pilcrow">¶</a>
+        <li class="normal" id="section-1-2.7">Aligned combiner with draft-ounsworth-cfrg-kem-combiners-04.<a href="#section-1-2.7" class="pilcrow">¶</a>
 </li>
       </ul>
-<p id="section-1-2">TODO:<a href="#section-1-2" class="pilcrow">¶</a></p>
-<p id="section-1-3"><code>[ ]</code> Get Russ' approval that I've used RFC5990bis correctly. Email sent. Waiting for a reply.<a href="#section-1-3" class="pilcrow">¶</a></p>
-<p id="section-1-4"><code>[ ]</code> Make a proper IANA Considerations section<a href="#section-1-4" class="pilcrow">¶</a></p>
-<p id="section-1-5"><code>l ]</code> Review the Security Considerations<a href="#section-1-5" class="pilcrow">¶</a></p>
-<p id="section-1-6"><code>[ ]</code> Shorten the abstract (move some content into Intro)<a href="#section-1-6" class="pilcrow">¶</a></p>
-<p id="section-1-7"><code>[ ]</code> Rename "Kyber" to "ML-KEM"<a href="#section-1-7" class="pilcrow">¶</a></p>
-<p id="section-1-8"><code>[ ]</code> Top-to-bottom read, especially looking for redundancies or references to signatures from merging in the more generic Keys content.<a href="#section-1-8" class="pilcrow">¶</a></p>
-<p id="section-1-9">Still to do in a future version:<a href="#section-1-9" class="pilcrow">¶</a></p>
+<p id="section-1-3">Editorial changes:<a href="#section-1-3" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-1-10.1">I need an ASN.1 expert to help me fix how it references ECC named curves.<a href="#section-1-10.1" class="pilcrow">¶</a>
+<li class="normal" id="section-1-4.1">Refactored to use MartinThomson github template.<a href="#section-1-4.1" class="pilcrow">¶</a>
 </li>
-        <li class="normal" id="section-1-10.2">We need PEM samples ... 118 hackathon? OQS friends? David @ BC?<a href="#section-1-10.2" class="pilcrow">¶</a>
+        <li class="normal" id="section-1-4.2">Made this document standalone by folding in the minimum necessary content from composite-keys and dropping the cross-reference to composite-sigs.<a href="#section-1-4.2" class="pilcrow">¶</a>
+</li>
+        <li class="normal" id="section-1-4.3">Added an Implementation Consideration about FIPS validation where only one component algorithm is FIPS-approved.<a href="#section-1-4.3" class="pilcrow">¶</a>
+</li>
+        <li class="normal" id="section-1-4.4">Shortened the abstract (moved some content into Intro).<a href="#section-1-4.4" class="pilcrow">¶</a>
+</li>
+        <li class="normal" id="section-1-4.5">Brushed up the Security Considerations.<a href="#section-1-4.5" class="pilcrow">¶</a>
+</li>
+      </ul>
+<p id="section-1-5">TODO:<a href="#section-1-5" class="pilcrow">¶</a></p>
+<p id="section-1-6"><code>[ ]</code> Get Russ' approval that I've used RFC5990bis correctly. Email sent. Waiting for a reply.<a href="#section-1-6" class="pilcrow">¶</a></p>
+<p id="section-1-7"><code>[ ]</code> Make a proper IANA Considerations section<a href="#section-1-7" class="pilcrow">¶</a></p>
+<p id="section-1-8"><code>[ ]</code> Rename "Kyber" to "ML-KEM"<a href="#section-1-8" class="pilcrow">¶</a></p>
+<p id="section-1-9"><code>[ ]</code> Top-to-bottom read, especially looking for redundancies or references to signatures from merging in the more generic Keys content.<a href="#section-1-9" class="pilcrow">¶</a></p>
+<p id="section-1-10">Still to do in a future version:<a href="#section-1-10" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-1-11.1">I need an ASN.1 expert to help me fix how it references ECC named curves.<a href="#section-1-11.1" class="pilcrow">¶</a>
+</li>
+        <li class="normal" id="section-1-11.2">We need PEM samples ... 118 hackathon? OQS friends? David @ BC?<a href="#section-1-11.2" class="pilcrow">¶</a>
 </li>
       </ul>
 </section>
@@ -1341,16 +1338,17 @@ svg :is([fill="white"], [fill^="#fff"]) {
       <h2 id="name-introduction">
 <a href="#section-2" class="section-number selfRef">2. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
-<p id="section-2-1">During the transition to post-quantum cryptography, there will be uncertainty as to the strength of cryptographic algorithms; we will no longer fully trust traditional cryptography such as RSA, Diffie-Hellman, DSA and their elliptic curve variants, while we may also not fully trust their post-quantum replacements until they have had sufficient scrutiny and time to discover and fix implementation bugs. Unlike previous cryptographic algorithm migrations, the choice of when to migrate and which algorithms to migrate to, is not so clear. Even after the migration period, it may be advantageous for an entity's cryptographic identity to be composed of multiple public-key algorithms.<a href="#section-2-1" class="pilcrow">¶</a></p>
-<p id="section-2-2">The deployment of composite public keys and composite encryption using post-quantum algorithms will face two challenges<a href="#section-2-2" class="pilcrow">¶</a></p>
+<p id="section-2-1">The migration to post-quantum cryptography is unique in the history of modern digital cryptography in that neither the old outgoing nor the new incoming algorithms are fully trusted to protect data for the required data lifetimes. The outgoing algorithms, such as RSA and elliptic curve, may fall to quantum cryptalanysis, while the incoming post-quantum algorithms face uncertainty about both the underlying mathematics as well as hardware and software implementations that have not had sufficient maturing time to rule out classical cryptanalytic attacks and implementation bugs. Unlike previous cryptographic algorithm migrations, the choice of when to migrate and which algorithms to migrate to, is not so clear.<a href="#section-2-1" class="pilcrow">¶</a></p>
+<p id="section-2-2">Cautious implementers may wish to combine cryptographic algorithms such that an attacker would need to break all of them in order to compromise the data being protected by using a Post-Quantum / Traditional Hybrid. This document defines a specific instantiation of hybrid paradigm called "composite" where multiple cryptographic algorithms are combined to form a single key encapsulation mechanism (KEM) key and ciphertext such that they can be treated as a single atomic algorithm at the protocol level.<a href="#section-2-2" class="pilcrow">¶</a></p>
+<p id="section-2-3">The deployment of composite public keys and composite encryption using post-quantum algorithms will face two challenges<a href="#section-2-3" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-2-3.1">Algorithm strength uncertainty: During the transition period, some post-quantum signature and encryption algorithms will not be fully trusted, while also the trust in legacy public key algorithms will start to erode.  A relying party may learn some time after deployment that a public key algorithm has become untrustworthy, but in the interim, they may not know which algorithm an adversary has compromised.<a href="#section-2-3.1" class="pilcrow">¶</a>
+<li class="normal" id="section-2-4.1">Algorithm strength uncertainty: During the transition period, some post-quantum signature and encryption algorithms will not be fully trusted, while also the trust in legacy public key algorithms will start to erode.  A relying party may learn some time after deployment that a public key algorithm has become untrustworthy, but in the interim, they may not know which algorithm an adversary has compromised.<a href="#section-2-4.1" class="pilcrow">¶</a>
 </li>
-        <li class="normal" id="section-2-3.2">Migration: During the transition period, systems will require mechanisms that allow for staged migrations from fully classical to fully post-quantum-aware cryptography.<a href="#section-2-3.2" class="pilcrow">¶</a>
+        <li class="normal" id="section-2-4.2">Migration: During the transition period, systems will require mechanisms that allow for staged migrations from fully classical to fully post-quantum-aware cryptography.<a href="#section-2-4.2" class="pilcrow">¶</a>
 </li>
       </ul>
-<p id="section-2-4">This document provides a mechanism to address algorithm strength uncertainty by providing the format and process for combining multiple cryptographic algorithms into a single key encapsulation operation. Backwards compatibility is not directly covered in this document, but is the subject of <a href="#sec-backwards-compat" class="auto internal xref">Appendix B.2</a>.<a href="#section-2-4" class="pilcrow">¶</a></p>
-<p id="section-2-5">This document is intended for general applicability anywhere that key establishment or enveloped content encryption is used within PKIX or CMS structures.<a href="#section-2-5" class="pilcrow">¶</a></p>
+<p id="section-2-5">This document provides a mechanism to address algorithm strength uncertainty by providing the format and procedures for combining multiple KEM algorithms into a single composite KEM algorithm. Backwards compatibility is not directly covered in this document, but is the subject of <a href="#sec-backwards-compat" class="auto internal xref">Appendix B.2</a>.<a href="#section-2-5" class="pilcrow">¶</a></p>
+<p id="section-2-6">This document is intended for general applicability anywhere that key establishment or enveloped content encryption is used within PKIX or CMS structures.<a href="#section-2-6" class="pilcrow">¶</a></p>
 <div id="sec-terminology">
 <section id="section-2.1">
         <h3 id="name-terminology">
@@ -2396,31 +2394,23 @@ END
       <h2 id="name-security-considerations">
 <a href="#section-8" class="section-number selfRef">8. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
-<div id="sec-secCons-keyReuse">
-<section id="section-8.1">
-        <h3 id="name-reuse-of-keys-in-a-composit">
-<a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-reuse-of-keys-in-a-composit" class="section-name selfRef">Reuse of keys in a Composite public key</a>
-        </h3>
-<p id="section-8.1-1">There is an additional security consideration that some use cases such as signatures remain secure against downgrade attacks if and only if component keys are never used outside of their composite context and therefore it is RECOMMENDED that component keys in a composite key are not to be re-used in other contexts. In particular, the components of a composite key SHOULD NOT also appear in single-key certificates. This is particularly relevant for protocols that use composite keys in a logical AND mode since the appearance of the same component keys in single-key contexts undermines the binding of the component keys into a single composite key by allowing messages signed in a multi-key AND mode to be presented as if they were signed in a single key mode in what is known as a "stripping attack".<a href="#section-8.1-1" class="pilcrow">¶</a></p>
-</section>
-</div>
 <div id="policy-for-deprecated-and-acceptable-algorithms">
-<section id="section-8.2">
+<section id="section-8.1">
         <h3 id="name-policy-for-deprecated-and-a">
-<a href="#section-8.2" class="section-number selfRef">8.2. </a><a href="#name-policy-for-deprecated-and-a" class="section-name selfRef">Policy for Deprecated and Acceptable Algorithms</a>
+<a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-policy-for-deprecated-and-a" class="section-name selfRef">Policy for Deprecated and Acceptable Algorithms</a>
         </h3>
-<p id="section-8.2-1">Traditionally, a public key, certificate, or signature contains a single cryptographic algorithm. If and when an algorithm becomes deprecated (for example, RSA-512, or SHA1), it is obvious that structures using that algorithm are implicitly revoked.<a href="#section-8.2-1" class="pilcrow">¶</a></p>
-<p id="section-8.2-2">In the composite model this is less obvious since implementers may decide that certain cryptographic algorithms have complementary security properties and are acceptable in combination even though one or both algorithms are deprecated for individual use. As such, a single composite public key, certificate, signature, or ciphertext may contain a mixture of deprecated and non-deprecated algorithms.<a href="#section-8.2-2" class="pilcrow">¶</a></p>
-<p id="section-8.2-3">Specifying behaviour in these cases is beyond the scope of this document, but should be considered by Implementers and potentially in additional standards.<a href="#section-8.2-3" class="pilcrow">¶</a></p>
-<p id="section-8.2-4">EDNOTE: Max is working on a CRL mechanism to accomplish this.<a href="#section-8.2-4" class="pilcrow">¶</a></p>
+<p id="section-8.1-1">Traditionally, a public key or certificate contains a single cryptographic algorithm. If and when an algorithm becomes deprecated (for example, RSA-512, or SHA1), it is obvious that the public keys or certificates using that algorithm are to be considered revoked.<a href="#section-8.1-1" class="pilcrow">¶</a></p>
+<p id="section-8.1-2">In the composite model this is less obvious since implementers may decide that certain cryptographic algorithms have complementary security properties and are acceptable in combination even though one or both algorithms are deprecated for individual use. As such, a single composite public key or certificate may contain a mixture of deprecated and non-deprecated algorithms.<a href="#section-8.1-2" class="pilcrow">¶</a></p>
+<p id="section-8.1-3">Since composite algorithms are registered independently of their component algorithms, their deprecation can be handled indpendently from that of their component algorithms. For example a cryptographic policy might continue to allow <code>id-Kyber512-ECDH-P256-KMAC128</code> even after ECDH-P256 is deprecated.<a href="#section-8.1-3" class="pilcrow">¶</a></p>
+<p id="section-8.1-4">The composite KEM design specified in this document, and especially that of the KEM combiner specified in <a href="#sec-kem-combiner" class="auto internal xref">Section 4.5</a> means that the overall composite KEM algorithm should be considered to have the security strength of the strongest of its component algorithms; ie as long as one component algorithm remains strong, then the overall composite algorithm remains strong.<a href="#section-8.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="kem-combiner">
-<section id="section-8.3">
+<section id="section-8.2">
         <h3 id="name-kem-combiner-2">
-<a href="#section-8.3" class="section-number selfRef">8.3. </a><a href="#name-kem-combiner-2" class="section-name selfRef">KEM Combiner</a>
+<a href="#section-8.2" class="section-number selfRef">8.2. </a><a href="#name-kem-combiner-2" class="section-name selfRef">KEM Combiner</a>
         </h3>
-<p id="section-8.3-1">This document uses directly the KEM Combiner defined in <span>[<a href="#I-D.ounsworth-cfrg-kem-combiners" class="cite xref">I-D.ounsworth-cfrg-kem-combiners</a>]</span> and therefore inherits all of its security considerations, which the authors believe have all been addressed in the concrete choices for explicit composites.<a href="#section-8.3-1" class="pilcrow">¶</a></p>
+<p id="section-8.2-1">This document uses directly the KEM Combiner defined in <span>[<a href="#I-D.ounsworth-cfrg-kem-combiners" class="cite xref">I-D.ounsworth-cfrg-kem-combiners</a>]</span> and therefore inherits all of its security considerations, which the authors believe have all been addressed by the concrete instantiations of KEM algorithms and combiner parameters specified in this document.<a href="#section-8.2-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
