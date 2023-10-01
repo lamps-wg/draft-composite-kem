@@ -139,15 +139,16 @@ For use within CMS, this document is intended to be coupled with the CMS KEMReci
 
 * Refactored to use MartinThomson github template.
 * Made this document standalone by folding in the minimum necessary content from composite-keys and dropping the cross-reference to composite-sigs.
-* Changed the definition of `CompositeKEMPublicKey` from `SEQUENCE OF SubjectPublicKeyInfo` to `SEQUENCE OF BIT STRING` since with complete removal of Generic Composites, there is no longer any need to carry the component AlgorithmIdentifiers.
+* Re-worked wire format and ASN.1 to remove vestiges of Generics.
+  * Changed all `SEQUENCE OF SIZE (2..MAX)` to `SEQUENCE OF SIZE (2)`.
+  * Changed the definition of `CompositeKEMPublicKey` from `SEQUENCE OF SubjectPublicKeyInfo` to `SEQUENCE OF BIT STRING` since with complete removal of Generic Composites, there is no longer any need to carry the component AlgorithmIdentifiers.
+  * Add a paragraph describing how to reconstitute component SPKIs.
+* Added an Implementation Consideration about FIPS validation where only one component algorithm is FIPS-approved
 
 TODO:
-  `[ ]` Re-work wire format and ASN.1 to remove vestiges of Generics.
   `[ ]` Make RSA keys fixed-length.
-  `[ ]` Add a section describing how to reconstitute component SPKIs; including providing a mapping table of component AldIDs and params.
   `[ ]` Re-work section 4.1 (id-Kyber768-RSA-KMAC256) to Reference 5990bis and its updated structures.
   `[ ]` Remove RSA-KEM KDF params and make them implied by the OID; ie provide a profile of 5990bis.
-  `[ ]` We need PEM samples … 118 hackathon? OQS friends? David @ BC?
   `[ ]` Square this up with draft-ounsworth-cfrg-kem-combiners
   `[ ]` Make a proper IANA Considerations section
   `l ]` Pass over Security Considerations
@@ -156,6 +157,7 @@ TODO:
 
   Still to do in a future version:
   * I need an ASN.1 expert to help me fix how it references ECC named curves.
+  * We need PEM samples … 118 hackathon? OQS friends? David @ BC?
 
 
 # Introduction {#sec-intro}
@@ -277,17 +279,9 @@ CompositePublicKey ::= SEQUENCE SIZE (2) OF BIT STRING
 
 A composite key MUST contain two component public keys. The order of the component keys is determined by the definition of the corresponding algorithm identifier as defined in section {{sec-alg-ids}}.
 
-TODO - FIXME -- the next paragraph is about to become incorrect when we remove the nested OIDs.
-
-Some applications may need to reconstruct the `SubjectPublicKeyInfo` objects corresponding to each component public key. {{sec-alg-ids}} provides the necessary algorithm identifiers and parameters for doing this reconstruction.
+Some applications may need to reconstruct the `SubjectPublicKeyInfo` objects corresponding to each component public key. {{tab-kem-algs}} in {{sec-alg-ids}} provides the necessary mapping between composite and their component algorithms for doing this reconstruction.
 
 When the CompositePublicKey must be provided in octet string or bit string format, the data structure is encoded as specified in {{sec-encoding-rules}}.
-
-### Key Usage {#sec-keyusage}
-
-Protocols such as X.509 [RFC5280] that specify a key usage along with the public key. For composite keys, a single key usage is specified for the entire public key and it MUST apply to all component keys. For example if a composite key is marked with a key usage of digitalSignature, then all component keys MUST be capable of producing digital signatures and handled with policies appropriate for digital signature keys. The composite mechanism MUST NOT be used to implement mixed-usage keys, for example, where a digitalSignature and a keyEncipherment key are combined together into a single composite key.
-
-Specifications of explicit composite key types must specify allowable key usages for that type based on the types of the components.
 
 
 ## CompositePrivateKey {#sec-priv-key}
