@@ -154,7 +154,8 @@ Table of Contents
          complete removal of Generic Composites, there is no longer any
          need to carry the component AlgorithmIdentifiers.
 
-      -  Add a paragraph describing how to reconstitute component SPKIs.
+      -  Added a paragraph describing how to reconstitute component
+         SPKIs.
 
    *  Added an Implementation Consideration about FIPS validation where
       only one component algorithm is FIPS-approved
@@ -168,10 +169,10 @@ Table of Contents
 
    *  Made RSA keys fixed-length at 3072.
 
-   *  Re-work section 4.1 (id-Kyber768-RSA3072-KMAC256) to Reference
+   *  Re-worked section 4.1 (id-Kyber768-RSA3072-KMAC256) to Reference
       5990bis and its updated structures.
 
-   *  Remove RSA-KEM KDF params and make them implied by the OID; ie
+   *  Removed RSA-KEM KDF params and make them implied by the OID; ie
       provide a profile of 5990bis.
 
    *  Aligned with draft-ounsworth-cfrg-kem-combiners-04
@@ -489,7 +490,7 @@ Table of Contents
 
      # combine
      ct = CompositeCiphertextValue(ct1, ct2)
-     ss = Combiner(ss1, ss2)
+     ss = Combiner(ss1, ss2, algName)
 
      return (ct, ss)
 
@@ -513,13 +514,13 @@ Table of Contents
      ss2 = ComponentKEM2.Encaps(sk2, ct2)
 
      # combine
-     ss = Combiner(ss1, ss2)
+     ss = Combiner(ss1, ss2, algName)
 
      return ss
 
                      Figure 2: Composite Decaps(sk, ct)
 
-   where Combiner(k1, k2) is defined in {sec-kem-combiner}.
+   where Combiner(k1, k2, fixedInfo) is defined in {sec-kem-combiner}.
 
 4.2.  kema-CompositeKEM
 
