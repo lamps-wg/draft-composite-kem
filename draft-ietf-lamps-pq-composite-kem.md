@@ -134,17 +134,9 @@ informative:
 
 --- abstract
 
-The migration to post-quantum cryptography is unique in the history of modern digital cryptography in that neither the old outgoing nor the new incoming algorithms are fully trusted to protect data for the required data lifetimes. The outgoing algorithms, such as RSA and elliptic curve, may fall to quantum cryptalanysis, while the incoming post-quantum algorithms face uncertainty about both the underlying mathematics as well as hardware and software implementations that have not had sufficient maturing time to rule out classical cryptanalytic attacks and implementation bugs.
+This document defines Post-Quantum / Traditional composite Key Encapsulation Mechanism (KEM) algorithms suitable for use within X.509 and PKIX and CMS protocols. Explicit pairings of algorithms are provided which should meet most Internet needs.
 
-Cautious implementers may wish to combine cryptographic algorithms such that an attacker would need to break all of them in order to compromise the data being protected by using a Post-Quantum / Traditional Hybrid. This document defines a specific instantiation of hybrid paradigm called "composite" where multiple cryptographic algorithms are combined to form a single key encapsulation mechanism (KEM) key and ciphertext such that they can be treated as a single atomic algorithm at the protocol level.
-
-
-This document defines composite public key types for a range of Post-Quantum / Traditional combinations as well as the structure CompositeCiphertextValue which is a sequence of the respective ciphertexts for each component algorithm. The explicit pairings of algorithms which are provided should meet most Internet needs. For the purpose of combining KEMs, the combiner function from {{I-D.ounsworth-cfrg-kem-combiners}} is used.
-
-This document assumes that all component algorithms are KEMs, and therefore it depends on [RFC5990] and {{I-D.ounsworth-lamps-cms-dhkem}} in order to promote RSA and ECDH respectively into KEMs.
-
-For use within CMS, this document is intended to be coupled with the CMS KEMRecipientInfo mechanism in {{I-D.housley-lamps-cms-kemri}}.
-
+This document assumes that all component algorithms are KEMs, and therefore it depends on [RFC5990] and {{I-D.ounsworth-lamps-cms-dhkem}} in order to promote RSA and ECDH respectively into KEMs. For the purpose of combining KEMs, the combiner function from {{I-D.ounsworth-cfrg-kem-combiners}} is used. For use within CMS, this document is intended to be coupled with the CMS KEMRecipientInfo mechanism in {{I-D.housley-lamps-cms-kemri}}.
 
 <!-- End of Abstract -->
 
@@ -153,19 +145,25 @@ For use within CMS, this document is intended to be coupled with the CMS KEMReci
 
 # Changes in version -01
 
-* Refactored to use MartinThomson github template.
-* Made this document standalone by folding in the minimum necessary content from composite-keys and dropping the cross-reference to composite-sigs.
+Changes affecting interoperability:
+
 * Re-worked wire format and ASN.1 to remove vestiges of Generics.
   * Changed all `SEQUENCE OF SIZE (2..MAX)` to `SEQUENCE OF SIZE (2)`.
   * Changed the definition of `CompositeKEMPublicKey` from `SEQUENCE OF SubjectPublicKeyInfo` to `SEQUENCE OF BIT STRING` since with complete removal of Generic Composites, there is no longer any need to carry the component AlgorithmIdentifiers.
   * Added a paragraph describing how to reconstitute component SPKIs.
-* Added an Implementation Consideration about FIPS validation where only one component algorithm is FIPS-approved
 * Defined `KeyGen()`, `Encaps()`, and `Decaps()` for a composite KEM algorithm.
 * Removed the discussion of KeyTrans -> KEM and KeyAgree -> KEM promotions, and instead simply referenced {{I-D.ietf-lamps-rfc5990bis}} and {{I-D.ounsworth-lamps-cms-dhkem}}.
 * Made RSA keys fixed-length at 3072.
 * Re-worked section 4.1 (id-Kyber768-RSA3072-KMAC256) to Reference 5990bis and its updated structures.
 * Removed RSA-KEM KDF params and make them implied by the OID; ie provide a profile of 5990bis.
-* Aligned with draft-ounsworth-cfrg-kem-combiners-04
+* Aligned combiner with draft-ounsworth-cfrg-kem-combiners-04.
+
+Editorial changes:
+
+* Refactored to use MartinThomson github template.
+* Made this document standalone by folding in the minimum necessary content from composite-keys and dropping the cross-reference to composite-sigs.
+* Added an Implementation Consideration about FIPS validation where only one component algorithm is FIPS-approved.
+* Shortened the abstract (moved some content into Intro).
 
 TODO:
 
@@ -174,8 +172,6 @@ TODO:
   `[ ]` Make a proper IANA Considerations section
 
   `l ]` Review the Security Considerations
-
-  `[ ]` Shorten the abstract (move some content into Intro)
 
   `[ ]` Rename "Kyber" to "ML-KEM"
 
@@ -189,7 +185,10 @@ TODO:
 
 # Introduction {#sec-intro}
 
-During the transition to post-quantum cryptography, there will be uncertainty as to the strength of cryptographic algorithms; we will no longer fully trust traditional cryptography such as RSA, Diffie-Hellman, DSA and their elliptic curve variants, while we may also not fully trust their post-quantum replacements until they have had sufficient scrutiny and time to discover and fix implementation bugs. Unlike previous cryptographic algorithm migrations, the choice of when to migrate and which algorithms to migrate to, is not so clear. Even after the migration period, it may be advantageous for an entity's cryptographic identity to be composed of multiple public-key algorithms.
+
+The migration to post-quantum cryptography is unique in the history of modern digital cryptography in that neither the old outgoing nor the new incoming algorithms are fully trusted to protect data for the required data lifetimes. The outgoing algorithms, such as RSA and elliptic curve, may fall to quantum cryptalanysis, while the incoming post-quantum algorithms face uncertainty about both the underlying mathematics as well as hardware and software implementations that have not had sufficient maturing time to rule out classical cryptanalytic attacks and implementation bugs. Unlike previous cryptographic algorithm migrations, the choice of when to migrate and which algorithms to migrate to, is not so clear.
+
+Cautious implementers may wish to combine cryptographic algorithms such that an attacker would need to break all of them in order to compromise the data being protected by using a Post-Quantum / Traditional Hybrid. This document defines a specific instantiation of hybrid paradigm called "composite" where multiple cryptographic algorithms are combined to form a single key encapsulation mechanism (KEM) key and ciphertext such that they can be treated as a single atomic algorithm at the protocol level.
 
 The deployment of composite public keys and composite encryption using post-quantum algorithms will face two challenges
 
@@ -197,8 +196,7 @@ The deployment of composite public keys and composite encryption using post-quan
 - Algorithm strength uncertainty: During the transition period, some post-quantum signature and encryption algorithms will not be fully trusted, while also the trust in legacy public key algorithms will start to erode.  A relying party may learn some time after deployment that a public key algorithm has become untrustworthy, but in the interim, they may not know which algorithm an adversary has compromised.
 - Migration: During the transition period, systems will require mechanisms that allow for staged migrations from fully classical to fully post-quantum-aware cryptography.
 
-
-This document provides a mechanism to address algorithm strength uncertainty by providing the format and process for combining multiple cryptographic algorithms into a single key encapsulation operation. Backwards compatibility is not directly covered in this document, but is the subject of {{sec-backwards-compat}}.
+This document provides a mechanism to address algorithm strength uncertainty by providing the format and procedures for combining multiple KEM algorithms into a single composite KEM algorithm. Backwards compatibility is not directly covered in this document, but is the subject of {{sec-backwards-compat}}.
 
 
 This document is intended for general applicability anywhere that key establishment or enveloped content encryption is used within PKIX or CMS structures.
