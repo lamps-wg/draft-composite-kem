@@ -5,7 +5,7 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 13 March 2024                                 10 September 2023
+Expires: 3 April 2024                                     1 October 2023
 
 
                  Composite KEM For Use In Internet PKI
@@ -23,25 +23,25 @@ Abstract
    have not had sufficient maturing time to rule out classical
    cryptanalytic attacks and implementation bugs.
 
-   Cautious implementers may wish to layer cryptographic algorithms such
-   that an attacker would need to break all of them in order to
-   compromise the data being protected using either a Post-Quantum /
-   Traditional Hybrid, Post-Quantum / Post-Quantum Hybrid, or
-   combinations thereof.  This document, and its companions, defines a
-   specific instantiation of hybrid paradigm called "composite" where
-   multiple cryptographic algorithms are combined to form a single key,
-   signature, or key encapsulation mechanism (KEM) such that they can be
-   treated as a single atomic object at the protocol level.
+   Cautious implementers may wish to combine cryptographic algorithms
+   such that an attacker would need to break all of them in order to
+   compromise the data being protected by using a Post-Quantum /
+   Traditional Hybrid.  This document defines a specific instantiation
+   of hybrid paradigm called "composite" where multiple cryptographic
+   algorithms are combined to form a single key encapsulation mechanism
+   (KEM) key and ciphertext such that they can be treated as a single
+   atomic algorithm at the protocol level.
 
-   This document defines the structure CompositeCiphertextValue which is
-   a sequence of the respective ciphertexts for each component
-   algorithm.  Explicit pairings of algorithms are defined which should
-   meet most Internet needs.  For the purpose of combining KEMs, the
-   combiner function from [I-D.ounsworth-cfrg-kem-combiners] is used.
+   This document defines composite public key types for a range of Post-
+   Quantum / Traditional combinations as well as the structure
+   CompositeCiphertextValue which is a sequence of the respective
+   ciphertexts for each component algorithm.  The explicit pairings of
+   algorithms which are provided should meet most Internet needs.  For
+   the purpose of combining KEMs, the combiner function from
+   [I-D.ounsworth-cfrg-kem-combiners] is used.
 
-   This document is intended to be coupled with the composite keys
-   structure define in [I-D.ounsworth-pq-composite-keys] and the CMS
-   KEMRecipientInfo mechanism in [I-D.housley-lamps-cms-kemri].
+   This document is intended to be coupled with the CMS KEMRecipientInfo
+   mechanism in [I-D.housley-lamps-cms-kemri].
 
 About This Document
 
@@ -76,7 +76,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 13 March 2024.
+   This Internet-Draft will expire on 3 April 2024.
 
 Copyright Notice
 
@@ -98,26 +98,28 @@ Table of Contents
    2.  Introduction
      2.1.  Algorithm Selection Criteria
      2.2.  Terminology
-   3.  Composite KEM Structures
-     3.1.  Key Encapsulation Mechanisms (KEMs)
-     3.2.  kema-CompositeKEM
-     3.3.  Composite Keys
-       3.3.1.  Key Usage Bits
-     3.4.  CompositeCiphertextValue
-     3.5.  CompositKemParameters
-     3.6.  Encoding Rules
-     3.7.  KEM Combiner
-   4.  Algorithm Identifiers
-     4.1.  Notes on id-Kyber768-RSA-KMAC256
-   5.  ASN.1 Module
-   6.  IANA Considerations
-   7.  Security Considerations
-     7.1.  Policy for Deprecated and Acceptable Algorithms
-     7.2.  OR Modes
-     7.3.  KEM Combiner
-   8.  References
-     8.1.  Normative References
-     8.2.  Informative References
+   3.  Composite Key Structures
+     3.1.  pk-Composite
+   4.  Composite KEM Structures
+     4.1.  Key Encapsulation Mechanisms (KEMs)
+     4.2.  kema-CompositeKEM
+     4.3.  Composite Keys
+       4.3.1.  Key Usage Bits
+     4.4.  CompositeCiphertextValue
+     4.5.  CompositKemParameters
+     4.6.  Encoding Rules
+     4.7.  KEM Combiner
+   5.  Algorithm Identifiers
+     5.1.  Notes on id-Kyber768-RSA-KMAC256
+   6.  ASN.1 Module
+   7.  IANA Considerations
+   8.  Security Considerations
+     8.1.  Policy for Deprecated and Acceptable Algorithms
+     8.2.  OR Modes
+     8.3.  KEM Combiner
+   9.  References
+     9.1.  Normative References
+     9.2.  Informative References
    Appendix A.  Samples
    Appendix B.  Implementation Considerations
      B.1.  Backwards Compatibility
@@ -132,15 +134,20 @@ Table of Contents
 
    *  Refactored to use MartinThomson github template.
 
-      [ ] Make draft-composite-kems standalone by folding in the minimum
-      necessary content from composite-keys and dropping the reference
-      to composite-sigs. [ ] Re-work wire format and ASN.1 to remove
-      vestiges of Generics. [ ] Make RSA keys fixed-length. [ ] Compress
-      the public key format by not carrying redundant algID OIDs. [ ]
-      Re-work section 4.1 (id-Kyber768-RSA-KMAC256) to Reference 5990bis
-      and its updated structures. [ ] Remove RSA-KEM KDF params and make
-      them implied by the OID; ie provide a profile of 5990bis. [ ] We
-      need PEM samples ... 118 hackathon?  OQS friends?  David @ BC?
+   *  Made this document standalone by folding in the minimum necessary
+      content from composite-keys and dropping the cross-reference to
+      composite-sigs.
+
+      [ ] Re-work wire format and ASN.1 to remove vestiges of Generics.
+      [ ] Make RSA keys fixed-length. [ ] Compress the public key format
+      by not carrying redundant algID OIDs. [ ] Re-work section 4.1 (id-
+      Kyber768-RSA-KMAC256) to Reference 5990bis and its updated
+      structures. [ ] Remove RSA-KEM KDF params and make them implied by
+      the OID; ie provide a profile of 5990bis. [ ] We need PEM samples
+      ... 118 hackathon?  OQS friends?  David @ BC?
+
+      Still to do in a future version: * Fix the ASN.1 in how it
+      references ECC named curves.
 
 2.  Introduction
 
@@ -172,11 +179,10 @@ Table of Contents
       to fully post-quantum-aware cryptography.
 
    This document provides a mechanism to address algorithm strength
-   uncertainty by building on [I-D.ounsworth-pq-composite-keys] by
-   providing the format and process for combining multiple cryptographic
-   algorithms into a single key encapsulation operation.  Backwards
-   compatibility is not directly covered in this document, but is the
-   subject of Appendix B.1.
+   uncertainty by providing the format and process for combining
+   multiple cryptographic algorithms into a single key encapsulation
+   operation.  Backwards compatibility is not directly covered in this
+   document, but is the subject of Appendix B.1.
 
    This document is intended for general applicability anywhere that key
    establishment or enveloped content encryption is used within PKIX or
@@ -202,9 +208,7 @@ Table of Contents
    3.  NIST level 1 candidates (Falcon512 and Kyber512) are provided,
        matched with 256-bit elliptic curves, intended for constrained
        use cases.  The authors wish to note that although all the
-       composite structures defined in this and the companion documents
-       [I-D.ounsworth-pq-composite-keys] and
-       [I-D.ounsworth-pq-composite-sigs] pecifications are defined in
+       composite structures defined in this specification are defined in
        such a way as to easily allow 3 or more component algorithms, it
        was decided to only specify explicit pairs.  This also does not
        preclude future specification of explicit combinations with three
@@ -239,7 +243,7 @@ Table of Contents
    combined into a single shared secret.  DER: Distinguished Encoding
    Rules as defined in [X.690].
 
-   KEM: A key encapsulation mechanism as defined in Section 3.1.
+   KEM: A key encapsulation mechanism as defined in Section 4.1.
 
    PKI: Public Key Infrastructure, as defined in [RFC5280].
 
@@ -248,9 +252,56 @@ Table of Contents
    an active or passive adversary.  This document is concerned with
    shared secrets established via public key cryptagraphic operations.
 
-3.  Composite KEM Structures
+3.  Composite Key Structures
 
-3.1.  Key Encapsulation Mechanisms (KEMs)
+   In order to represent public keys and private keys that are composed
+   of multiple algorithms, we define encodings consisting of a sequence
+   of public key or private key primitives (aka "components") such that
+   these structures can be used directly in existing public key fields
+   such as those found in PKCS#10 [RFC2986], CMP [RFC4210], X.509
+   [RFC5280], CMS [RFC5652], and the Trust Anchor Format [RFC5914].
+
+   [I-D.driscoll-pqt-hybrid-terminology] defines composites as:
+
+      _Composite Cryptographic Element_: A cryptographic element that
+      incorporates multiple component cryptographic elements of the same
+      type in a multi-algorithm scheme.
+
+   Composite keys as defined here follow this definition and should be
+   regarded as a single key that performs a single cryptographic
+   operation such key generation, signing, verifying, encapsulating, or
+   decapsulating -- using its encapsulated sequence of component keys as
+   if it was a single key.  This generally means that the complexity of
+   combining algorithms can and should be ignored by application and
+   protocol layers and deferred to the cryptographic library layer.
+
+3.1.  pk-Composite
+
+   The following ASN.1 Information Object Class is a template to be used
+   in defining all composite key types, with suitable replacements for
+   the ASN.1 identifier pk-Composite and the OID id-composite-key as
+   appropriate.  See the ASN.1 Module in Section 6 for parmeterized as
+   well as signature and KEM versions.
+
+   TODO: remove the id-composite-key and make it an information class
+   that is used to
+
+   pk-Composite-KEM PUBLIC-KEY ::= {
+       id id-composite-key
+       KeyValue CompositePublicKey
+       Params ARE ABSENT
+       PrivateKey CompositePrivateKey
+   }
+
+   keyUsage is omitted here because composites may be formed for keys of
+   any type, provided that any key usage specified MUST apply to all
+   component keys.  Composites MAY NOT be used to combine key types, for
+   example to make a "dual-usage" key by combining a signing key with a
+   KEM key.
+
+4.  Composite KEM Structures
+
+4.1.  Key Encapsulation Mechanisms (KEMs)
 
    We borrow here the definition of a key encapsulation mechanism (KEM)
    from [I-D.ietf-tls-hybrid-design], in which a KEM is a cryptographic
@@ -310,7 +361,7 @@ Table of Contents
    TODO: needs more formal analysis that the methods of transforming
    KeyTrans and KeyAgree meet this.
 
-3.2.  kema-CompositeKEM
+4.2.  kema-CompositeKEM
 
    The ASN.1 algorithm object for a composite KEM is:
 
@@ -345,18 +396,17 @@ Table of Contents
 
                                   Table 1
 
-3.3.  Composite Keys
+4.3.  Composite Keys
 
-   A composite KEM MAY be associated with a composite public key as
-   defined in [I-D.ounsworth-pq-composite-keys], but MAY also be
-   associated with multiple public keys from different sources, for
-   example multiple X.509 certificates, or multiple cryptographic
-   modules.  In the latter case, composite KEMs MAY be used as the
-   mechanism for carrying multiple ciphertexts in a non-composite hybrid
-   encryption equivalent of those described for digital signatures in
-   [I-D.becker-guthrie-noncomposite-hybrid-auth].
+   A composite KEM MAY be associated with a composite KEM public key,
+   but MAY also be associated with multiple public keys from different
+   sources, for example multiple X.509 certificates, or multiple
+   cryptographic modules.  In the latter case, composite KEMs MAY be
+   used as the mechanism for carrying multiple ciphertexts in a non-
+   composite hybrid encryption equivalent of those described for digital
+   signatures in [I-D.becker-guthrie-noncomposite-hybrid-auth].
 
-3.3.1.  Key Usage Bits
+4.3.1.  Key Usage Bits
 
    When using composite KEM keys in a structure which defines a key
    usage (such as in an X509Certificate as defined in [RFC5280]), the
@@ -366,7 +416,7 @@ Table of Contents
 
    Additional key usages SHOULD not be used.
 
-3.4.  CompositeCiphertextValue
+4.4.  CompositeCiphertextValue
 
    The compositeCipherTextValue is a concatenation of the ciphertexts of
    the underlying component algorithms.  It is represented in ASN.1 as
@@ -374,7 +424,7 @@ Table of Contents
 
    CompositeCiphertextValue ::= SEQUENCE SIZE (2..MAX) OF OCTET STRING
 
-3.5.  CompositKemParameters
+4.5.  CompositKemParameters
 
    Composite KEM parameters are defined as follows and MAY be included
    when a composite KEM algorithm is used with an AlgorithmIdentifier:
@@ -394,7 +444,7 @@ Table of Contents
    that they match the algorithms expected from the overall composite
    AlgorithmIdentifier.
 
-3.6.  Encoding Rules
+4.6.  Encoding Rules
 
    Many protocol specifications will require that composite KEM data
    structures be represented by an octet string or bit string.
@@ -416,7 +466,7 @@ Table of Contents
    implementations that parse these structures MAY accept both BER and
    DER.
 
-3.7.  KEM Combiner
+4.7.  KEM Combiner
 
    TODO: as per https://www.enisa.europa.eu/publications/post-quantum-
    cryptography-integration-study section 4.2, might need to specify
@@ -492,7 +542,7 @@ ss = KMAC128("id-Kyber512-ECDH-P256-KMAC128",
     0x00000001 || SHA3-256(ss_1 || ct_1) || SHA3-256(ss_2 || ct_2) || fixedInfo,
     256, "")
 
-4.  Algorithm Identifiers
+5.  Algorithm Identifiers
 
    This table summarizes the list of explicit composite Signature
    algorithms by the key and signature OID and the two component
@@ -506,7 +556,7 @@ ss = KMAC128("id-Kyber512-ECDH-P256-KMAC128",
 
    Therefore <CompKEM>.1 is equal to 2.16.840.1.114027.80.5.2.1
 
-   The "KEM Combiner" column refers to the definitions in Section 3.7.
+   The "KEM Combiner" column refers to the definitions in Section 4.7.
 
    +=======================+============+=========+===============+===========+
    |KEM Type OID           |OID         |First    |Second         |KEM        |
@@ -547,7 +597,7 @@ ss = KMAC128("id-Kyber512-ECDH-P256-KMAC128",
    The table above contains everything needed to implement the listed
    explicit composite algorithms, with the exception of some special
    notes found below in this section.  See the ASN.1 module in section
-   Section 5 for the explicit definitions of the above Composite
+   Section 6 for the explicit definitions of the above Composite
    signature algorithms.
 
    Full specifications for the referenced algorithms can be found as
@@ -573,7 +623,7 @@ ss = KMAC128("id-Kyber512-ECDH-P256-KMAC128",
    and interoperable algorithms, so maybe this is extranuous detail to
    include?
 
-4.1.  Notes on id-Kyber768-RSA-KMAC256
+5.1.  Notes on id-Kyber768-RSA-KMAC256
 
    Use of RSA-KEM [RFC5990] deserves a special explanation.
 
@@ -614,14 +664,16 @@ ss = KMAC128("id-Kyber512-ECDH-P256-KMAC128",
    TODO: there must be a way to put all this the ASN.1 Module rather
    than just specifying it as text?
 
-5.  ASN.1 Module
+6.  ASN.1 Module
 
    <CODE STARTS>
 
+   -- command for easily copying it into a compiler (ubuntu with xclip)
+   -- cat ASN1ModuleIncludes.asn Composite-Keys-2023.asn | xclip -sel clip
 
    Composite-KEM-2023
               {iso(1) identified-organization(3) dod(6) internet(1) security(5)
-          mechanisms(5) pkix(7) id-mod(0) id-mod-composite-kems(TBD)}
+          mechanisms(5) pkix(7) id-mod(0) id-mod-composite-kems(TBDMOD) }
 
    DEFINITIONS IMPLICIT TAGS ::= BEGIN
 
@@ -629,7 +681,7 @@ ss = KMAC128("id-Kyber512-ECDH-P256-KMAC128",
 
    IMPORTS
 
-   AlgorithmIdentifier{}
+   PUBLIC-KEY, SIGNATURE-ALGORITHM, ParamOptions, AlgorithmIdentifier{}
        FROM AlgorithmInformation-2009  -- RFC 5912 [X509ASN1]
          { iso(1) identified-organization(3) dod(6) internet(1)
            security(5) mechanisms(5) pkix(7) id-mod(0)
@@ -637,9 +689,35 @@ ss = KMAC128("id-Kyber512-ECDH-P256-KMAC128",
 
    KEM-ALGORITHM, KEMAlgSet
        FROM KEMAlgorithmInformation-2023
-       { iso(1) identified-organization(3) dod(6) internet(1)
-         security(5) mechanisms(5) pkix(7) id-mod(0)
-             id-mod-kemAlgorithmInformation-2023(99) }
+         { iso(1) identified-organization(3) dod(6) internet(1)
+           security(5) mechanisms(5) pkix(7) id-mod(0)
+           id-mod-kemAlgorithmInformation-2023(99) }
+
+   SubjectPublicKeyInfo
+       FROM PKIX1Explicit-2009
+         { iso(1) identified-organization(3) dod(6) internet(1)
+           security(5) mechanisms(5) pkix(7) id-mod(0)
+           id-mod-pkix1-explicit-02(51) }
+
+   OneAsymmetricKey
+       FROM AsymmetricKeyPackageModuleV1
+         { iso(1) member-body(2) us(840) rsadsi(113549) pkcs(1)
+           pkcs-9(9) smime(16) modules(0)
+           id-mod-asymmetricKeyPkgV1(50) }
+
+
+   NamedCurve
+       FROM PKIXAlgs-2009
+         { iso(1) identified-organization(3) dod(6)
+           internet(1) security(5) mechanisms(5) pkix(7) id-mod(0)
+           id-mod-pkix1-algorithms2008-02(56) }
+
+
+   pk-Ed25519, pk-X25519, pk-X448
+       FROM Safecurves-pkix-18
+         { iso(1) identified-organization(3) dod(6) internet(1)
+           security(5) mechanisms(5) pkix(7) id-mod(0)
+           id-mod-safecurves-pkix(93) }
 
    id-rsa-kem, GenericHybridParameters
        FROM CMS-RSA-KEM
@@ -647,40 +725,220 @@ ss = KMAC128("id-Kyber512-ECDH-P256-KMAC128",
            pkcs-9(9) smime(16) modules(0) cms-rsa-kem(21) }
 
    id-RSASSA-PSS, RSASSA-PSS-Params
-       FROM PKCS-1 {
-          iso(1) member-body(2) us(840) rsadsi(113549) pkcs(1) pkcs-1(1)
-          modules(0) pkcs-1(1)
-      }
+       FROM PKCS-1
+         { iso(1) member-body(2) us(840) rsadsi(113549) pkcs(1) pkcs-1(1)
+          modules(0) pkcs-1(1) }
+   ;
 
-   id-Kyber512-ECDH-P256-KMAC128,
-   pk-Kyber512-ECDH-P256-KMAC128,
-   id-Kyber512-ECDH-brainpoolP256r1-KMAC128,
-   pk-Kyber512-ECDH-brainpoolP256r1-KMAC128,
-   id-Kyber512-X25519-KMAC128,
-   pk-Kyber512-X25519-KMAC128,
-   id-Kyber768-RSA-KMAC256,
-   pk-Kyber768-RSA-KMAC256,
-   id-Kyber768-ECDH-P256-KMAC256,
-   pk-Kyber768-ECDH-P256-KMAC256,
-   id-Kyber768-ECDH-brainpoolP256r1-KMAC256,
-   pk-Kyber768-ECDH-brainpoolP256r1-KMAC256,
-   id-Kyber768-X25519-KMAC256,
-   pk-Kyber768-X25519-KMAC256,
-   id-Kyber1024-ECDH-P384-KMAC256,
-   pk-Kyber1024-ECDH-P384-KMAC256,
-   id-Kyber1024-ECDH-brainpoolP384r1-KMAC256,
-   pk-Kyber1024-ECDH-brainpoolP384r1-KMAC256,
-   id-Kyber1024-X448-KMAC256,
-   pk-Kyber1024-X448-KMAC256
-       FROM CompositeKeys-2023
-              {iso(1) identified-organization(3) dod(6) internet(1) security(5)
-          mechanisms(5) pkix(7) id-mod(0) id-mod-composite-keys(98)};
+
+   --
+   -- Object Identifiers
+   --
+
+   -- Defined in ITU-T X.690
+   der OBJECT IDENTIFIER ::=
+     {joint-iso-itu-t asn1(1) ber-derived(2) distinguished-encoding(1)}
 
 
 
    --
-   -- Composite structures
+   -- Composite KEM Public Keys
    --
+
+   CompositeKEMPublicKey ::= SEQUENCE SIZE (2..MAX) OF SubjectPublicKeyInfo
+
+   CompositeKEMPublicKeyOs ::= OCTET STRING (CONTAINING CompositePublicKey ENCODED BY der)
+
+   CompositeKEMPublicKeyBs ::= BIT STRING (CONTAINING CompositePublicKey ENCODED BY der)
+
+   CompositeKEMPrivateKey ::= SEQUENCE SIZE (2..MAX) OF OneAsymmetricKey
+
+
+   pk-explicitCompositeKEM{OBJECT IDENTIFIER:id, PUBLIC-KEY:firstPublicKey,
+     FirstPublicKeyType, PUBLIC-KEY:secondPublicKey, SecondPublicKeyType}
+     PUBLIC-KEY ::= {
+       IDENTIFIER id
+       KEY ExplicitCompositePublicKey{firstPublicKey, FirstPublicKeyType,
+         secondPublicKey, SecondPublicKeyType}
+       PARAMS ARE absent
+       CERT-KEY-USAGE { keyEncipherment }
+   }
+
+
+   -- TODO this is one possible way to reference specific named curves.
+   -- But I don't think this compiles.
+
+   --pk-ECDH-P256 PUBLIC-KEY ::= {
+   -- IDENTIFIER id-ecPublicKey
+   --  KEY ECPoint
+   --  PARAMS TYPE NamedCurve.secp256r1 ARE required }
+   --
+   --pk-ECDH-brainpoolP256r1 PUBLIC-KEY ::= {
+   -- IDENTIFIER id-ecPublicKey
+   --  KEY ECPoint
+   --  PARAMS NamedCurve{brainpoolP256r1} }
+   --
+   --pk-ECDH-P384 PUBLIC-KEY ::= {
+   -- IDENTIFIER id-ecPublicKey
+   --  KEY ECPoint
+   --  PARAMS TYPE NamedCurve{secp384r1} }
+   --
+   --pk-ECDH-brainpoolP384r1 PUBLIC-KEY ::= {
+   -- IDENTIFIER id-ecPublicKey
+   --  KEY ECPoint
+   --  PARAMS NamedCurve{brainpoolP384r1} }
+
+
+
+   -- Explicit Composite KEM Keys
+
+
+   -- TODO: To be replaced by IANA
+   id-Kyber512-ECDH-P256-KMAC128 OBJECT IDENTIFIER ::= {
+     joint-iso-itu-t(2) country(16) us(840) organization(1) entrust(114027)
+     algorithm(80) explicitcomposite(5) explicitcomposite-kem(2) id-kyber512-ecdh-p256(1) }
+
+   pk-Kyber512-ECDH-P256-KMAC128 PUBLIC-KEY ::=
+     pk-explicitCompositeKEM{id-Kyber512-ECDH-P256-KMAC128,
+     pk-Kyber512TBD, OCTET STRING, pk-ec, ECPoint}
+
+   --TODO: this is missing `PARAMS secp256r1`
+
+
+   -- TODO: To be replaced by IANA
+   id-Kyber512-ECDH-brainpoolP256r1-KMAC128 OBJECT IDENTIFIER ::= {
+     joint-iso-itu-t(2) country(16) us(840) organization(1) entrust(114027)
+     algorithm(80) explicitcomposite(5) explicitcomposite-kem(2) id-kyber512-ecdh-brainpoolp256r1(2) }
+
+   pk-Kyber512-ECDH-brainpoolP256r1-KMAC128 PUBLIC-KEY ::=
+     pk-explicitCompositeKEM{id-Kyber512-ECDH-brainpoolP256r1-KMAC128,
+     pk-Kyber512TBD, OCTET STRING, pk-ec, ECPoint}
+
+   --TODO: this is missing `PARAMS brainpoolp256r1`
+
+
+   -- TODO: To be replaced by IANA
+   id-Kyber512-X25519-KMAC128 OBJECT IDENTIFIER ::= {
+     joint-iso-itu-t(2) country(16) us(840) organization(1) entrust(114027)
+     algorithm(80) explicitcomposite(5) kem(2)
+     id-kyber512-x25519(3) }
+
+   pk-Kyber512-X25519-KMAC128 PUBLIC-KEY ::=
+     pk-explicitCompositeKEM{id-Kyber512-X25519-KMAC128,
+     pk-Kyber512TBD, OCTET STRING, pk-X25519, OCTET STRING}
+
+
+   -- TODO: To be replaced by IANA
+   id-Kyber768-RSA-KMAC256 OBJECT IDENTIFIER ::= {
+     joint-iso-itu-t(2) country(16) us(840) organization(1) entrust(114027)
+     algorithm(80) explicitcomposite(5) kem(2)
+     id-kyber768-rsa(4) }
+
+   pk-Kyber768-RSA-KMAC256 PUBLIC-KEY ::=
+     pk-explicitCompositeKEM{id-Kyber768-RSA-KMAC256,
+     pk-Kyber768TBD, OCTET STRING, pk-rsa, RSAPublicKey}
+
+
+   -- TODO: To be replaced by IANA
+   id-Kyber768-ECDH-P256-KMAC256 OBJECT IDENTIFIER ::= {
+     joint-iso-itu-t(2) country(16) us(840) organization(1) entrust(114027)
+     algorithm(80) explicitcomposite(5) kem(2)
+     id-kyber768-ecdh-p256(5) }
+
+   pk-Kyber768-ECDH-P256-KMAC256 PUBLIC-KEY ::=
+     pk-explicitCompositeKEM{id-Kyber768-ECDH-P256-KMAC256,
+     pk-Kyber768TBD, OCTET STRING, pk-ec, ECPoint}
+
+   --TODO: this is missing `PARAMS secp256r1`
+
+
+   id-Kyber768-ECDH-brainpoolP256r1-KMAC256 OBJECT IDENTIFIER ::= {
+     joint-iso-itu-t(2) country(16) us(840) organization(1) entrust(114027)
+     algorithm(80) explicitcomposite(5) kem(2)
+     id-kyber768-ecdh-p256(6) }
+
+   pk-Kyber768-ECDH-brainpoolP256r1-KMAC256 PUBLIC-KEY ::=
+     pk-explicitCompositeKEM{id-Kyber768-ECDH-brainpoolP256r1-KMAC256,
+     pk-Kyber768TBD, OCTET STRING, pk-ec, ECPoint}
+
+   --TODO: this is missing `PARAMS brainpoolp256r1`
+
+
+   -- TODO: To be replaced by IANA
+   id-Kyber768-X25519-KMAC256 OBJECT IDENTIFIER ::= {
+     joint-iso-itu-t(2) country(16) us(840) organization(1) entrust(114027)
+     algorithm(80) explicitcomposite(5) kem(2)
+     id-kyber768-x25519(7) }
+
+   pk-Kyber768-X25519-KMAC256 PUBLIC-KEY ::=
+     pk-explicitCompositeKEM{id-Kyber768-X25519-KMAC256,
+     pk-Kyber768TBD, OCTET STRING, pk-X25519, OCTET STRING}
+
+
+
+   -- TODO: To be replaced by IANA
+   id-Kyber1024-ECDH-P384-KMAC256 OBJECT IDENTIFIER ::= {
+     joint-iso-itu-t(2) country(16) us(840) organization(1) entrust(114027)
+     algorithm(80) explicitcomposite(5) kem(2)
+     id-kyber1024-ecdh-p384(8) }
+
+   pk-Kyber1024-ECDH-P384-KMAC256 PUBLIC-KEY ::=
+     pk-explicitCompositeKEM{id-Kyber1024-ECDH-P384-KMAC256,
+     pk-Kyber1024TBD, OCTET STRING, pk-ec, ECPoint}
+
+   --TODO: this is missing `PARAMS secp384r1`
+
+
+   -- TODO: To be replaced by IANA
+   id-Kyber1024-ECDH-brainpoolP384r1-KMAC256 OBJECT IDENTIFIER ::= {
+     joint-iso-itu-t(2) country(16) us(840) organization(1) entrust(114027)
+     algorithm(80) explicitcomposite(5) kem(2)
+     id-kyber1024-ecdh-brainpoolp384r1(9) }
+
+   pk-Kyber1024-ECDH-brainpoolP384r1-KMAC256 PUBLIC-KEY ::=
+     pk-explicitCompositeKEM{id-Kyber1024-ECDH-brainpoolP384r1-KMAC256,
+     pk-Kyber1024TBD, OCTET STRING, pk-ec, ECPoint}
+
+   --TODO: this is missing `PARAMS brainpoolp384r1`
+
+
+   -- TODO: To be replaced by IANA
+   id-Kyber1024-X448-KMAC256 OBJECT IDENTIFIER ::= {
+     joint-iso-itu-t(2) country(16) us(840) organization(1) entrust(114027)
+     algorithm(80) explicitcomposite(5) kem(2)
+     id-kyber1024-x448(10) }
+
+   pk-Kyber1024-X448-KMAC256 PUBLIC-KEY ::=
+     pk-explicitCompositeKEM{id-Kyber1024-X448-KMAC256,
+     pk-Kyber1024TBD, OCTET STRING, pk-X448, OCTET STRING}
+
+
+
+
+   --
+   -- Composite KEM structures
+   --
+
+
+
+   --  COMPOSITE-KEM-ALGORITHM
+   --
+   --  Describes the basic properties of a composite KEM algorithm
+   --
+   --  &id - contains the OID identifying the composite algorithm
+   --  &Params - if present, contains the type for the algorithm
+   --               parameters; if absent, implies no parameters
+   --  &paramPresence - parameter presence requirement
+   --
+
+   COMPOSITE-KEM-ALGORITHM ::= CLASS {
+       &id             OBJECT IDENTIFIER UNIQUE,
+       &Params         OPTIONAL,
+       &paramPresence  ParamOptions DEFAULT absent
+   } WITH SYNTAX {
+       IDENTIFIER &id
+       [PARAMS [TYPE &Params] ARE &paramPresence ]
+   }
 
    CompositeCiphertextValue ::= SEQUENCE SIZE (2..MAX) OF OCTET STRING
 
@@ -692,9 +950,8 @@ ss = KMAC128("id-Kyber512-ECDH-P256-KMAC128",
          SEQUENCE {
            kemAlgorithm1   AlgorithmIdentifier
                            { KEM-ALGORITHM, {FirstKemAlg}},
-               kemAlgorithm2   AlgorithmIdentifier
+           kemAlgorithm2   AlgorithmIdentifier
                            { KEM-ALGORITHM, {SecondKemAlg}} }
-
 
    kema-explicitCompositeKEM{OBJECT IDENTIFIER:id, PUBLIC-KEY:publicKeyObject,
        CompositeKemParams} KEM-ALGORITHM ::=  {
@@ -790,7 +1047,7 @@ ss = KMAC128("id-Kyber512-ECDH-P256-KMAC128",
 
    <CODE ENDS>
 
-6.  IANA Considerations
+7.  IANA Considerations
 
    The following need to be assigned by IANA:
 
@@ -798,9 +1055,9 @@ ss = KMAC128("id-Kyber512-ECDH-P256-KMAC128",
 
    TODO
 
-7.  Security Considerations
+8.  Security Considerations
 
-7.1.  Policy for Deprecated and Acceptable Algorithms
+8.1.  Policy for Deprecated and Acceptable Algorithms
 
    Traditionally, a public key, certificate, or signature contains a
    single cryptographic algorithm.  If and when an algorithm becomes
@@ -820,21 +1077,21 @@ ss = KMAC128("id-Kyber512-ECDH-P256-KMAC128",
 
    EDNOTE: Max is working on a CRL mechanism to accomplish this.
 
-7.2.  OR Modes
+8.2.  OR Modes
 
    TODO -- we'll need security consideration analysis of whatever OR
    modes we choose.
 
-7.3.  KEM Combiner
+8.3.  KEM Combiner
 
    This document uses directly the KEM Combiner defined in
    [I-D.ounsworth-cfrg-kem-combiners] and therefore inherits all of its
    security considerations, which the authors believe have all been
    addressed in the concrete choices for explicit composites.
 
-8.  References
+9.  References
 
-8.1.  Normative References
+9.1.  Normative References
 
    [BSI-ECC]  Federal Office for Information Security (BSI), "Technical
               Guideline BSI TR-03111: Elliptic Curve Cryptography.
@@ -848,22 +1105,6 @@ ss = KMAC128("id-Kyber512-ECDH-P256-KMAC128",
               February 2023, <https://datatracker.ietf.org/doc/html/
               draft-housley-lamps-cms-kemri-02>.
 
-   [I-D.ietf-lamps-kyber-certificates]
-              Turner, S., Kampanakis, P., Massimo, J., and B.
-              Westerbaan, "Internet X.509 Public Key Infrastructure -
-              Algorithm Identifiers for Kyber", Work in Progress,
-              Internet-Draft, draft-ietf-lamps-kyber-certificates-00, 26
-              September 2022, <https://datatracker.ietf.org/doc/html/
-              draft-ietf-lamps-kyber-certificates-00>.
-
-   [I-D.ounsworth-pq-composite-keys]
-              Ounsworth, M., Gray, J., Pala, M., and J. Klaußner,
-              "Composite Public and Private Keys For Use In Internet
-              PKI", Work in Progress, Internet-Draft, draft-ounsworth-
-              pq-composite-keys-04, 13 March 2023,
-              <https://datatracker.ietf.org/doc/html/draft-ounsworth-pq-
-              composite-keys-04>.
-
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
@@ -875,11 +1116,6 @@ ss = KMAC128("id-Kyber512-ECDH-P256-KMAC128",
               (CRL) Profile", RFC 5280, DOI 10.17487/RFC5280, May 2008,
               <https://www.rfc-editor.org/info/rfc5280>.
 
-   [RFC5480]  Turner, S., Brown, D., Yiu, K., Housley, R., and T. Polk,
-              "Elliptic Curve Cryptography Subject Public Key
-              Information", RFC 5480, DOI 10.17487/RFC5480, March 2009,
-              <https://www.rfc-editor.org/info/rfc5480>.
-
    [RFC5652]  Housley, R., "Cryptographic Message Syntax (CMS)", STD 70,
               RFC 5652, DOI 10.17487/RFC5652, September 2009,
               <https://www.rfc-editor.org/info/rfc5652>.
@@ -889,11 +1125,6 @@ ss = KMAC128("id-Kyber512-ECDH-P256-KMAC128",
               Cryptographic Message Syntax (CMS)", RFC 5990,
               DOI 10.17487/RFC5990, September 2010,
               <https://www.rfc-editor.org/info/rfc5990>.
-
-   [RFC8017]  Moriarty, K., Ed., Kaliski, B., Jonsson, J., and A. Rusch,
-              "PKCS #1: RSA Cryptography Specifications Version 2.2",
-              RFC 8017, DOI 10.17487/RFC8017, November 2016,
-              <https://www.rfc-editor.org/info/rfc8017>.
 
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
@@ -936,7 +1167,15 @@ ss = KMAC128("id-Kyber512-ECDH-P256-KMAC128",
               Encoding Rules (CER) and Distinguished Encoding Rules
               (DER)", ISO/IEC 8825-1:2015, November 2015.
 
-8.2.  Informative References
+9.2.  Informative References
+
+   [I-D.becker-guthrie-noncomposite-hybrid-auth]
+              Becker, A., Guthrie, R., and M. J. Jenkins, "Non-Composite
+              Hybrid Authentication in PKIX and Applications to Internet
+              Protocols", Work in Progress, Internet-Draft, draft-
+              becker-guthrie-noncomposite-hybrid-auth-00, 22 March 2022,
+              <https://datatracker.ietf.org/doc/html/draft-becker-
+              guthrie-noncomposite-hybrid-auth-00>.
 
    [I-D.driscoll-pqt-hybrid-terminology]
               D, F., "Terminology for Post-Quantum Traditional Hybrid
@@ -944,6 +1183,14 @@ ss = KMAC128("id-Kyber512-ECDH-P256-KMAC128",
               driscoll-pqt-hybrid-terminology-01, 20 October 2022,
               <https://datatracker.ietf.org/doc/html/draft-driscoll-pqt-
               hybrid-terminology-01>.
+
+   [I-D.ietf-lamps-kyber-certificates]
+              Turner, S., Kampanakis, P., Massimo, J., and B.
+              Westerbaan, "Internet X.509 Public Key Infrastructure -
+              Algorithm Identifiers for Kyber", Work in Progress,
+              Internet-Draft, draft-ietf-lamps-kyber-certificates-01, 28
+              March 2023, <https://datatracker.ietf.org/doc/html/draft-
+              ietf-lamps-kyber-certificates-01>.
 
    [I-D.ietf-tls-hybrid-design]
               Stebila, D., Fluhrer, S., and S. Gueron, "Hybrid key
@@ -960,17 +1207,25 @@ ss = KMAC128("id-Kyber512-ECDH-P256-KMAC128",
               <https://datatracker.ietf.org/doc/html/draft-ounsworth-
               cfrg-kem-combiners-03>.
 
-   [I-D.ounsworth-pq-composite-sigs]
-              Ounsworth, M., Gray, J., and M. Pala, "Composite
-              Signatures For Use In Internet PKI", Work in Progress,
-              Internet-Draft, draft-ounsworth-pq-composite-sigs-08, 13
-              March 2023, <https://datatracker.ietf.org/doc/html/draft-
-              ounsworth-pq-composite-sigs-08>.
+   [RFC2986]  Nystrom, M. and B. Kaliski, "PKCS #10: Certification
+              Request Syntax Specification Version 1.7", RFC 2986,
+              DOI 10.17487/RFC2986, November 2000,
+              <https://www.rfc-editor.org/info/rfc2986>.
+
+   [RFC4210]  Adams, C., Farrell, S., Kause, T., and T. Mononen,
+              "Internet X.509 Public Key Infrastructure Certificate
+              Management Protocol (CMP)", RFC 4210,
+              DOI 10.17487/RFC4210, September 2005,
+              <https://www.rfc-editor.org/info/rfc4210>.
 
    [RFC5639]  Lochter, M. and J. Merkle, "Elliptic Curve Cryptography
               (ECC) Brainpool Standard Curves and Curve Generation",
               RFC 5639, DOI 10.17487/RFC5639, March 2010,
               <https://www.rfc-editor.org/info/rfc5639>.
+
+   [RFC5914]  Housley, R., Ashmore, S., and C. Wallace, "Trust Anchor
+              Format", RFC 5914, DOI 10.17487/RFC5914, June 2010,
+              <https://www.rfc-editor.org/info/rfc5914>.
 
    [RFC6090]  McGrew, D., Igoe, K., and M. Salter, "Fundamental Elliptic
               Curve Cryptography Algorithms", RFC 6090,
@@ -1103,10 +1358,10 @@ B.1.2.  Parallel PKIs
    compatibility will vary by protocol, but for example in CMS
    [RFC5652].
 
-   EDNOTE: I copied and pruned this text from
-   [I-D.ounsworth-pq-composite-sigs].  It probably needs to be fleshed
-   out more as we better understand the implementation concerns around
-   composite encryption.
+   EDNOTE: I copied and pruned this text from I-D.ounsworth-pq-
+   composite-sigs.  It probably needs to be fleshed out more as we
+   better understand the implementation concerns around composite
+   encryption.
 
 Appendix C.  Intellectual Property Considerations
 
