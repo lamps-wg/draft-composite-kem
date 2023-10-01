@@ -47,11 +47,6 @@ pk-Ed25519, pk-X25519, pk-X448
         security(5) mechanisms(5) pkix(7) id-mod(0)
         id-mod-safecurves-pkix(93) } 
 
-id-rsa-kem, GenericHybridParameters
-  FROM CMS-RSA-KEM
-      { iso(1) member-body(2) us(840) rsadsi(113549) pkcs(1)
-        pkcs-9(9) smime(16) modules(0) cms-rsa-kem(21) }
-
 id-RSASSA-PSS, RSASSA-PSS-Params
   FROM PKCS-1 
     { iso(1) member-body(2) us(840) rsadsi(113549) pkcs(1) pkcs-1(1)
@@ -162,7 +157,7 @@ pk-Kyber512-X25519-KMAC128 PUBLIC-KEY ::=
 
 
 -- TODO: To be replaced by IANA
-id-Kyber768-3072-KMAC256 OBJECT IDENTIFIER ::= {
+id-Kyber768-RSA3072-KMAC256 OBJECT IDENTIFIER ::= {
   joint-iso-itu-t(2) country(16) us(840) organization(1) 
   entrust(114027) algorithm(80) explicitcomposite(5) kem(2)
   id-kyber768-rsa(4) }
@@ -184,7 +179,7 @@ pk-Kyber768-ECDH-P256-KMAC256 PUBLIC-KEY ::=
 
 --TODO: this is missing `PARAMS secp256r1`
 
-
+-- TODO: To be replaced by IANA
 id-Kyber768-ECDH-brainpoolP256r1-KMAC256 OBJECT IDENTIFIER ::= {
   joint-iso-itu-t(2) country(16) us(840) organization(1) 
   entrust(114027) algorithm(80) explicitcomposite(5) kem(2)

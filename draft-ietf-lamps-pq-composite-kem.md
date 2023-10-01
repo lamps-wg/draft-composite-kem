@@ -165,12 +165,11 @@ Editorial changes:
 * Added an Implementation Consideration about FIPS validation where only one component algorithm is FIPS-approved.
 * Shortened the abstract (moved some content into Intro).
 * Brushed up the Security Considerations.
+* Made a proper IANA Considerations section.
 
 TODO:
 
   `[ ]` Get Russ' approval that I've used RFC5990bis correctly. Email sent. Waiting for a reply.
-
-  `[ ]` Make a proper IANA Considerations section
 
   `[ ]` Rename "Kyber" to "ML-KEM"
 
@@ -540,7 +539,9 @@ Combiner(ss1, ss2, "id-Kyber512-ECDH-P256-KMAC128") =
 
 This table summarizes the list of explicit composite Signature algorithms by the key and signature OID and the two component algorithms which make up the explicit composite algorithm.  These are denoted by First Signature Alg, and Second Signature Alg.
 
-EDNOTE: The OID referenced are TBD and MUST be used only for prototyping and replaced with the final IANA-assigned OIDS. The following prefix is used for each: replace &lt;CompKEM&gt; with the String "2.16.840.1.114027.80.5.2"
+EDNOTE: The OID referenced are TBD and MUST be used only for prototyping and replaced with the final IANA-assigned OIDS. The following prefix is used for each: replace &lt;CompKEM&gt; with the String "2.16.840.1.114027.80.5.2".
+
+TODO: OIDs to be replaced by IANA.
 
 Therefore &lt;CompKEM&gt;.1 is equal to 2.16.840.1.114027.80.5.2.1
 
@@ -614,11 +615,68 @@ where:
 
 
 # IANA Considerations {#sec-iana}
-The following need to be assigned by IANA:
 
-* The OID for the ASN.1 module `Composite-KEM-2023`
+##  Object Identifier Allocations
 
-TODO
+EDNOTE to IANA: OIDs will need to be replaced in both the ASN.1 module and in {{tab-kem-algs}}.
+
+###  Module Registration - SMI Security for PKIX Module Identifier
+
+-  Decimal: IANA Assigned - **Replace TBDMOD**
+-  Description: Composite-KEM-2023 - id-mod-composite-kems
+-  References: This Document
+
+###  Object Identifier Registrations - SMI Security for PKIX Algorithms
+
+- id-Kyber512-ECDH-P256-KMAC128
+  - Decimal: IANA Assigned
+  - Description: id-Kyber512-ECDH-P256-KMAC128
+  - References: This Document
+
+- id-Kyber512-ECDH-brainpoolP256r1-KMAC128
+  - Decimal: IANA Assigned
+  - Description: id-Kyber512-ECDH-brainpoolP256r1-KMAC128
+  - References: This Document
+
+- id-Kyber512-X25519-KMAC128
+  - Decimal: IANA Assigned
+  - Description: id-Kyber512-X25519-KMAC128
+  - References: This Document
+
+- id-Kyber768-RSA3072-KMAC256
+  - Decimal: IANA Assigned
+  - Description: id-Kyber768-3072-KMAC256
+  - References: This Document
+
+- id-Kyber768-ECDH-P256-KMAC256
+  - Decimal: IANA Assigned
+  - Description: id-Kyber768-ECDH-P256-KMAC256
+  - References: This Document
+
+- id-Kyber768-ECDH-brainpoolP256r1-KMAC256
+  - Decimal: IANA Assigned
+  - Description: id-Kyber768-ECDH-brainpoolP256r1-KMAC256
+  - References: This Document
+
+- id-Kyber768-X25519-KMAC256
+  - Decimal: IANA Assigned
+  - Description: id-Kyber768-X25519-KMAC256
+  - References: This Document
+
+- id-Kyber1024-ECDH-P384-KMAC256
+  - Decimal: IANA Assigned
+  - Description: id-Kyber1024-ECDH-P384-KMAC256
+  - References: This Document
+
+- id-Kyber1024-ECDH-brainpoolP384r1-KMAC256
+  - Decimal: IANA Assigned
+  - Description: id-Kyber1024-ECDH-brainpoolP384r1-KMAC256
+  - References: This Document
+
+- id-Kyber1024-X448-KMAC256
+  - Decimal: IANA Assigned
+  - Description: id-Kyber1024-X448-KMAC256
+  - References: This Document
 
 <!-- End of IANA Considerations section -->
 
