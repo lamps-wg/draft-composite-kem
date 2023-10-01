@@ -166,7 +166,6 @@ TODO:
   `[ ]` Make a proper IANA Considerations section
   `l ]` Pass over Security Considerations
   `[ ]` Shorten the abstract (move some content into Intro)
-  `[ ]` Fix all the "line too long" warnings so the build is clean.
   `[ ]` Rename "Kyber" to "ML-KEM"
   `[ ]` Top-to-bottom read
 
@@ -258,14 +257,14 @@ In order to represent public keys and private keys that are composed of multiple
 The following ASN.1 Information Object Class is a template to be used in defining all composite KEM public key types.
 
 ~~~ ASN.1
-pk-explicitCompositeKEM{OBJECT IDENTIFIER:id, PUBLIC-KEY:firstPublicKey,
-  FirstPublicKeyType, PUBLIC-KEY:secondPublicKey, SecondPublicKeyType}
-  PUBLIC-KEY ::= {
-    IDENTIFIER id
-    KEY ExplicitCompositePublicKey{firstPublicKey, FirstPublicKeyType,
+pk-explicitCompositeKEM{OBJECT IDENTIFIER:id,
+  PUBLIC-KEY:firstPublicKey, FirstPublicKeyType,
+  PUBLIC-KEY:secondPublicKey, SecondPublicKeyType} PUBLIC-KEY ::= {
+  IDENTIFIER id
+  KEY ExplicitCompositePublicKey{firstPublicKey, FirstPublicKeyType,
       secondPublicKey, SecondPublicKeyType}
-    PARAMS ARE absent
-    CERT-KEY-USAGE { keyEncipherment }
+  PARAMS ARE absent
+  CERT-KEY-USAGE { keyEncipherment }
 }
 ~~~
 {: artwork-name="CompositeKeyObject-asn.1-structures"}
@@ -544,7 +543,7 @@ The "KEM Combiner" column refers to the definitions in {{sec-kem-combiner}}.
 | id-Kyber512-ECDH-P256-KMAC128             | &lt;CompKEM&gt;.1  | Kyber512        | ECDH-P256      | KMAC128/256  |
 | id-Kyber512-ECDH-brainpoolP256r1-KMAC128  | &lt;CompKEM&gt;.2  | Kyber512        | ECDH-brainpoolp256r1 | KMAC128/256 |
 | id-Kyber512-X25519-KMAC128                | &lt;CompKEM&gt;.3  | Kyber512        | X25519         | KMAC128/256 |
-| id-Kyber768-RSA3072-KMAC256              | &lt;CompKEM&gt;.4  | Kyber768        | RSA-KEM 3072   | KMAC256/384 |
+| id-Kyber768-RSA3072-KMAC256               | &lt;CompKEM&gt;.4  | Kyber768        | RSA-KEM 3072   | KMAC256/384 |
 | id-Kyber768-ECDH-P256-KMAC256             | &lt;CompKEM&gt;.5  | Kyber768        | ECDH-P256      | KMAC256/384 |
 | id-Kyber768-ECDH-brainpoolP256r1-KMAC256  | &lt;CompKEM&gt;.6  | Kyber768        | ECDH-brainpoolp256r1 | KMAC256/384 |
 | id-Kyber768-X25519-KMAC256                | &lt;CompKEM&gt;.7  | Kyber768        | X25519         | KMAC256/384 |
@@ -579,7 +578,7 @@ The RSA component keys MUST be generated at the 3072-bit security level in order
 
 As with the other composite KEM algorithms, when `id-Kyber768-RSA3072-KMAC256` is used in an AlgorithmIdentifier, the parameters MUST be absent. `id-Kyber768-RSA3072-KMAC256` SHALL instantiate RSA-KEM with the following parameters:
 
-| RSA-KEM Parameter          | Value                       |
+| RSA-KEM Parameter          | Value                      |
 | -------------------------- | -------------------------- |
 | keyDerivationFunction      | kda-kdf3 with mda-shake256 |
 | keyLength                  | 256                        |
