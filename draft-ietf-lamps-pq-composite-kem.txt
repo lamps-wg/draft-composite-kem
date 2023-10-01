@@ -114,10 +114,10 @@ Table of Contents
        4.1.3.  Composite Decaps
      4.2.  kema-CompositeKEM
      4.3.  CompositeCiphertextValue
-     4.4.  CompositKemParameters
+     4.4.  CompositeKemParameters
      4.5.  KEM Combiner
    5.  Algorithm Identifiers
-     5.1.  Notes on id-Kyber768-RSA-3072-KMAC256
+     5.1.  id-Kyber768-RSA3072-KMAC256 Parameters
    6.  ASN.1 Module
    7.  IANA Considerations
    8.  Security Considerations
@@ -163,19 +163,24 @@ Table of Contents
       algorithm.
 
    *  Removed the discussion of KeyTrans -> KEM and KeyAgree -> KEM
-      promotions, and instead simply referenced [I-D.ietf-lamps-
-      rfc5990bis] and [I-D.ounsworth-lamps-cms-dhkem].
+      promotions, and instead simply referenced
+      [I-D.ietf-lamps-rfc5990bis] and [I-D.ounsworth-lamps-cms-dhkem].
 
    *  Made RSA keys fixed-length at 3072.
 
-   TODO: [ ] Re-work section 4.1 (id-Kyber768-RSA-KMAC256) to Reference
-   5990bis and its updated structures.  [ ] Remove RSA-KEM KDF params
-   and make them implied by the OID; ie provide a profile of 5990bis.  [
-   ] Square this up with draft-ounsworth-cfrg-kem-combiners [ ] Make a
-   proper IANA Considerations section l ] Pass over Security
-   Considerations [ ] Shorten the abstract (move some content into
-   Intro) [ ] Fix all the warnings so the build is clean.  [ ] Rename to
-   ML-KEM [ ] Top-to-bottom read
+   *  Re-work section 4.1 (id-Kyber768-RSA3072-KMAC256) to Reference
+      5990bis and its updated structures.
+
+   *  Remove RSA-KEM KDF params and make them implied by the OID; ie
+      provide a profile of 5990bis.
+
+   TODO: [ ] Get Russ' approval that I've used RFC5990bis correctly.
+   Email sent.  Waiting for a reply.  [ ] Square this up with draft-
+   ounsworth-cfrg-kem-combiners [ ] Make a proper IANA Considerations
+   section l ] Pass over Security Considerations [ ] Shorten the
+   abstract (move some content into Intro) [ ] Fix all the "line too
+   long" warnings so the build is clean.  [ ] Rename "Kyber" to "ML-KEM"
+   [ ] Top-to-bottom read
 
    Still to do in a future version: * I need an ASN.1 expert to help me
    fix how it references ECC named curves.  * We need PEM samples ...
@@ -232,31 +237,25 @@ Table of Contents
    [I-D.driscoll-pqt-hybrid-terminology].  In addition, the following
    terms are used in this document:
 
-  BER:
-    Basic Encoding Rules (BER) as defined in [X.690].
+   *BER:* Basic Encoding Rules (BER) as defined in [X.690].
 
-  CLIENT:
-    Any software that is making use of a cryptographic key.
-    This includes a signer, verifier, encrypter, decrypter.
+   *CLIENT:* Any software that is making use of a cryptographic key.
+   This includes a signer, verifier, encrypter, decrypter.
 
-  COMBINER:
-    A combiner specifies how multiple shared secrets are combined into
-    a single shared secret.
+   *COMBINER:* A combiner specifies how multiple shared secrets are
+   combined into a single shared secret.
 
-  DER:
-    Distinguished Encoding Rules as defined in [X.690].
+   *DER:* Distinguished Encoding Rules as defined in [X.690].
 
-  KEM:
-     A key encapsulation mechanism as defined in {{sec-kems}}.
+   *KEM:* A key encapsulation mechanism as defined in Section 4.1.
 
-  PKI:
-    Public Key Infrastructure, as defined in [RFC5280].
+   *PKI:* Public Key Infrastructure, as defined in [RFC5280].
 
-  SHARED SECRET:
-    A value established between two communicating parties for use as
-    cryptographic key material, but which cannot be learned by an active
-    or passive adversary. This document is concerned with shared
-    secrets established via public key cryptagraphic operations.
+   *SHARED SECRET:* A value established between two communicating
+   parties for use as cryptographic key material, but which cannot be
+   learned by an active or passive adversary.  This document is
+   concerned with shared secrets established via public key
+   cryptagraphic operations.
 
 2.2.  Algorithm Selection Criteria
 
@@ -560,7 +559,7 @@ Table of Contents
    equivalent of those described for digital signatures in
    [I-D.becker-guthrie-noncomposite-hybrid-auth].
 
-4.4.  CompositKemParameters
+4.4.  CompositeKemParameters
 
    Composite KEM parameters are defined as follows and MAY be included
    when a composite KEM algorithm is used with an AlgorithmIdentifier:
@@ -636,7 +635,7 @@ Table of Contents
 
    *  S: empty string.
 
-   ~~~ BEGIN EDNOTE ~~~
+   BEGIN EDNOTE
 
    these choices are somewhat arbitrary but aiming to match security
    level of the input KEMs.  Feedback welcome.
@@ -647,7 +646,7 @@ Table of Contents
 
    *  Kyber1024 KMAC256/512
 
-   ~~~ END EDNOTE ~~~
+   END EDNOTE
 
    For example, the KEM combiner instantiation of the first entry of
    Table 3 would be:
@@ -672,40 +671,40 @@ ss = KMAC128("id-Kyber512-ECDH-P256-KMAC128",
 
    The "KEM Combiner" column refers to the definitions in Section 4.5.
 
-   +=======================+============+=========+===============+===========+
-   |KEM Type OID           |OID         |First    |Second         |KEM        |
-   |                       |            |Algorithm|Algorithm      |Combiner   |
-   +=======================+============+=========+===============+===========+
-   |id-Kyber512-ECDH-      |<CompKEM>.1 |Kyber512 |ECDH-P256      |KMAC128/256|
-   |P256-KMAC128           |            |         |               |           |
-   +-----------------------+------------+---------+---------------+-----------+
-   |id-Kyber512-ECDH-      |<CompKEM>.2 |Kyber512 |ECDH-          |KMAC128/256|
-   |brainpoolP256r1-KMAC128|            |         |brainpoolp256r1|           |
-   +-----------------------+------------+---------+---------------+-----------+
-   |id-                    |<CompKEM>.3 |Kyber512 |X25519         |KMAC128/256|
-   |Kyber512-X25519-KMAC128|            |         |               |           |
-   +-----------------------+------------+---------+---------------+-----------+
-   |id-Kyber768-RSA-       |<CompKEM>.4 |Kyber768 |RSA-KEM 3072   |KMAC256/384|
-   |3072-KMAC256           |            |         |               |           |
-   +-----------------------+------------+---------+---------------+-----------+
-   |id-Kyber768-ECDH-      |<CompKEM>.5 |Kyber768 |ECDH-P256      |KMAC256/384|
-   |P256-KMAC256           |            |         |               |           |
-   +-----------------------+------------+---------+---------------+-----------+
-   |id-Kyber768-ECDH-      |<CompKEM>.6 |Kyber768 |ECDH-          |KMAC256/384|
-   |brainpoolP256r1-KMAC256|            |         |brainpoolp256r1|           |
-   +-----------------------+------------+---------+---------------+-----------+
-   |id-                    |<CompKEM>.7 |Kyber768 |X25519         |KMAC256/384|
-   |Kyber768-X25519-KMAC256|            |         |               |           |
-   +-----------------------+------------+---------+---------------+-----------+
-   |id-Kyber1024-ECDH-     |<CompKEM>.8 |Kyber1024|ECDH-P384      |KMAC256/512|
-   |P384-KMAC256           |            |         |               |           |
-   +-----------------------+------------+---------+---------------+-----------+
-   |id-Kyber1024-ECDH-     |<CompKEM>.9 |Kyber1024|ECDH-          |KMAC256/512|
-   |brainpoolP384r1-KMAC256|            |         |brainpoolP384r1|           |
-   +-----------------------+------------+---------+---------------+-----------+
-   |id-                    |<CompKEM>.10|Kyber1024|X448           |KMAC256/512|
-   |Kyber1024-X448-KMAC256 |            |         |               |           |
-   +-----------------------+------------+---------+---------------+-----------+
+   +========================+============+=========+===============+===========+
+   |KEM Type OID            |OID         |First    |Second         |KEM        |
+   |                        |            |Algorithm|Algorithm      |Combiner   |
+   +========================+============+=========+===============+===========+
+   |id-Kyber512-ECDH-       |<CompKEM>.1 |Kyber512 |ECDH-P256      |KMAC128/256|
+   |P256-KMAC128            |            |         |               |           |
+   +------------------------+------------+---------+---------------+-----------+
+   |id-Kyber512-ECDH-       |<CompKEM>.2 |Kyber512 |ECDH-          |KMAC128/256|
+   |brainpoolP256r1-KMAC128 |            |         |brainpoolp256r1|           |
+   +------------------------+------------+---------+---------------+-----------+
+   |id-                     |<CompKEM>.3 |Kyber512 |X25519         |KMAC128/256|
+   |Kyber512-X25519-KMAC128 |            |         |               |           |
+   +------------------------+------------+---------+---------------+-----------+
+   |id-                     |<CompKEM>.4 |Kyber768 |RSA-KEM 3072   |KMAC256/384|
+   |Kyber768-RSA3072-KMAC256|            |         |               |           |
+   +------------------------+------------+---------+---------------+-----------+
+   |id-Kyber768-ECDH-       |<CompKEM>.5 |Kyber768 |ECDH-P256      |KMAC256/384|
+   |P256-KMAC256            |            |         |               |           |
+   +------------------------+------------+---------+---------------+-----------+
+   |id-Kyber768-ECDH-       |<CompKEM>.6 |Kyber768 |ECDH-          |KMAC256/384|
+   |brainpoolP256r1-KMAC256 |            |         |brainpoolp256r1|           |
+   +------------------------+------------+---------+---------------+-----------+
+   |id-                     |<CompKEM>.7 |Kyber768 |X25519         |KMAC256/384|
+   |Kyber768-X25519-KMAC256 |            |         |               |           |
+   +------------------------+------------+---------+---------------+-----------+
+   |id-Kyber1024-ECDH-      |<CompKEM>.8 |Kyber1024|ECDH-P384      |KMAC256/512|
+   |P384-KMAC256            |            |         |               |           |
+   +------------------------+------------+---------+---------------+-----------+
+   |id-Kyber1024-ECDH-      |<CompKEM>.9 |Kyber1024|ECDH-          |KMAC256/512|
+   |brainpoolP384r1-KMAC256 |            |         |brainpoolP384r1|           |
+   +------------------------+------------+---------+---------------+-----------+
+   |id-                     |<CompKEM>.10|Kyber1024|X448           |KMAC256/512|
+   |Kyber1024-X448-KMAC256  |            |         |               |           |
+   +------------------------+------------+---------+---------------+-----------+
 
                       Table 3: Composite KEM key types
 
@@ -741,52 +740,36 @@ ss = KMAC128("id-Kyber512-ECDH-P256-KMAC128",
    and interoperable algorithms, so maybe this is extranuous detail to
    include?
 
-5.1.  Notes on id-Kyber768-RSA-3072-KMAC256
+5.1.  id-Kyber768-RSA3072-KMAC256 Parameters
 
-   Use of RSA-KEM [I-D.ietf-lamps-rfc5990bis] deserves a special
-   explanation.
+   Use of RSA-KEM [I-D.ietf-lamps-rfc5990bis] requires additional
+   specification.
 
    The RSA component keys MUST be generated at the 3072-bit security
    level in order to match security level with Kyber768.  Parsers SHOULD
    be flexible since RSA keys generated at the 3072-bit security level
    may not be exactly 3072 bits in length due to dropped leading zeros.
 
-   GenericHybridParameters is defined in [RFC5990], repeated here for
-   clarity:
+   As with the other composite KEM algorithms, when id-
+   Kyber768-RSA3072-KMAC256 is used in an AlgorithmIdentifier, the
+   parameters MUST be absent. id-Kyber768-RSA3072-KMAC256 SHALL
+   instantiate RSA-KEM with the following parameters:
 
-   GenericHybridParameters ::= {
-       kem  KeyEncapsulationMechanism,
-       dem  DataEncapsulationMechanism
-   }
+        +============================+============================+
+        | RSA-KEM Parameter          | Value                      |
+        +============================+============================+
+        | keyDerivationFunction      | kda-kdf3 with mda-shake256 |
+        +----------------------------+----------------------------+
+        | keyLength                  | 256                        |
+        +----------------------------+----------------------------+
+        | DataEncapsulationMechanism | kwa-aes256-wrap            |
+        +----------------------------+----------------------------+
 
-   The GenericHybridParameters.kem MUST be id-kem-rsa as defined in
-   [RFC5990]:
+                        Table 4: RSA-KEM Parameters
 
-   id-kem-rsa OID ::= {
-       is18033-2 key-encapsulation-mechanism(2) rsa(4)
-   }
-
-   The associated parameters for id-kem-rsa have type RsaKemParameters:
-
-   RsaKemParameters ::= {
-       keyDerivationFunction  KeyDerivationFunction,
-       keyLength              KeyLength
-   }
-
-   For use with id-Kyber768-RSA-KMAC256, the keyDerivationFunction SHALL
-   be id-sha3-384 and keyLength SHALL be 384.
-
-   EDNOTE: I'm borrowing id-sha3-384 from draft-turner-lamps-adding-
-   sha3-to-pkix-00, which looks ilke was abandoned.  Do we have PKIX
-   OIDs for SHA3?
-
-   EDNOTE: Since the crypto is fixed, we could omit the parameters
-   entirely and expect implementations to re-constitute the params
-   structures as necessary in order to call into lower-level crypto
-   libraries.
-
-   TODO: there must be a way to put all this the ASN.1 Module rather
-   than just specifying it as text?
+   where: * kda-kdf3 is defined in [I-D.ietf-lamps-rfc5990bis] which
+   references it from [ANS-X9.44]. * kwa-aes256-wrap is defined in
+   [I-D.ietf-lamps-rfc5990bis] * mda-shake256 is defined in [RFC8692].
 
 6.  ASN.1 Module
 
@@ -953,13 +936,13 @@ ss = KMAC128("id-Kyber512-ECDH-P256-KMAC128",
 
 
    -- TODO: To be replaced by IANA
-   id-Kyber768-RSA-KMAC256 OBJECT IDENTIFIER ::= {
+   id-Kyber768-3072-KMAC256 OBJECT IDENTIFIER ::= {
      joint-iso-itu-t(2) country(16) us(840) organization(1) entrust(114027)
      algorithm(80) explicitcomposite(5) kem(2)
      id-kyber768-rsa(4) }
 
-   pk-Kyber768-RSA-KMAC256 PUBLIC-KEY ::=
-     pk-explicitCompositeKEM{id-Kyber768-RSA-KMAC256,
+   pk-Kyber768-RSA3072-KMAC256 PUBLIC-KEY ::=
+     pk-explicitCompositeKEM{id-Kyber768-RSA3072-KMAC256,
      pk-Kyber768TBD, OCTET STRING, pk-rsa, RSAPublicKey}
 
 
@@ -1113,9 +1096,9 @@ ss = KMAC128("id-Kyber512-ECDH-P256-KMAC128",
    --TODO: `kema-x25519` does not actually exist yet.
 
 
-   kema-Kyber768-RSA-KMAC256 KEM-ALGORITHM ::=
-       kema-explicitCompositeKEM{id-Kyber768-RSA-KMAC256,
-       pk-Kyber768-RSA-KMAC256,
+   kema-Kyber768-RSA3072-KMAC256 KEM-ALGORITHM ::=
+       kema-explicitCompositeKEM{id-Kyber768-RSA3072-KMAC256,
+       pk-Kyber768-RSA3072-KMAC256,
        ExplicitCompositeKemParams{{kema-Kyber512TBD}, {kema-kem-rsa}} }
 
 
@@ -1228,6 +1211,12 @@ ss = KMAC128("id-Kyber512-ECDH-P256-KMAC128",
 
 9.1.  Normative References
 
+   [ANS-X9.44]
+              American National Standards Institute, "Public Key
+              Cryptography for the Financial Services Industry -- Key
+              Establishment Using Integer Factorization Cryptography",
+              American National Standard X9.44 , 2007.
+
    [BSI-ECC]  Federal Office for Information Security (BSI), "Technical
               Guideline BSI TR-03111: Elliptic Curve Cryptography.
               Version 2.10", 1 June 2018.
@@ -1295,12 +1284,11 @@ ss = KMAC128("id-Kyber512-ECDH-P256-KMAC128",
               RFC 8411, DOI 10.17487/RFC8411, August 2018,
               <https://www.rfc-editor.org/info/rfc8411>.
 
-   [SHA3]     National Institute of Standards and Technology (NIST),
-              "SHA-3 Standard: Permutation-Based Hash and Extendable-
-              Output Functions, FIPS PUB 202, DOI 10.6028/
-              NIST.FIPS.202", August 2015,
-              <https://nvlpubs.nist.gov/nistpubs/FIPS/
-              NIST.FIPS.202.pdf\>.
+   [RFC8692]  Kampanakis, P. and Q. Dang, "Internet X.509 Public Key
+              Infrastructure: Additional Algorithm Identifiers for
+              RSASSA-PSS and ECDSA Using SHAKEs", RFC 8692,
+              DOI 10.17487/RFC8692, December 2019,
+              <https://www.rfc-editor.org/info/rfc8692>.
 
    [SP.800-56Ar3]
               National Institute of Standards and Technology (NIST),
