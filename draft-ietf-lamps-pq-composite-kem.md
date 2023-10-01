@@ -164,14 +164,13 @@ Editorial changes:
 * Made this document standalone by folding in the minimum necessary content from composite-keys and dropping the cross-reference to composite-sigs.
 * Added an Implementation Consideration about FIPS validation where only one component algorithm is FIPS-approved.
 * Shortened the abstract (moved some content into Intro).
+* Brushed up the Security Considerations.
 
 TODO:
 
   `[ ]` Get Russ' approval that I've used RFC5990bis correctly. Email sent. Waiting for a reply.
 
   `[ ]` Make a proper IANA Considerations section
-
-  `l ]` Review the Security Considerations
 
   `[ ]` Rename "Kyber" to "ML-KEM"
 
@@ -626,25 +625,20 @@ TODO
 
 # Security Considerations
 
-## Reuse of keys in a Composite public key {#sec-secCons-keyReuse}
-
-There is an additional security consideration that some use cases such as signatures remain secure against downgrade attacks if and only if component keys are never used outside of their composite context and therefore it is RECOMMENDED that component keys in a composite key are not to be re-used in other contexts. In particular, the components of a composite key SHOULD NOT also appear in single-key certificates. This is particularly relevant for protocols that use composite keys in a logical AND mode since the appearance of the same component keys in single-key contexts undermines the binding of the component keys into a single composite key by allowing messages signed in a multi-key AND mode to be presented as if they were signed in a single key mode in what is known as a "stripping attack".
-
-
 ## Policy for Deprecated and Acceptable Algorithms
 
-Traditionally, a public key, certificate, or signature contains a single cryptographic algorithm. If and when an algorithm becomes deprecated (for example, RSA-512, or SHA1), it is obvious that structures using that algorithm are implicitly revoked.
+Traditionally, a public key or certificate contains a single cryptographic algorithm. If and when an algorithm becomes deprecated (for example, RSA-512, or SHA1), it is obvious that the public keys or certificates using that algorithm are to be considered revoked.
 
-In the composite model this is less obvious since implementers may decide that certain cryptographic algorithms have complementary security properties and are acceptable in combination even though one or both algorithms are deprecated for individual use. As such, a single composite public key, certificate, signature, or ciphertext may contain a mixture of deprecated and non-deprecated algorithms.
+In the composite model this is less obvious since implementers may decide that certain cryptographic algorithms have complementary security properties and are acceptable in combination even though one or both algorithms are deprecated for individual use. As such, a single composite public key or certificate may contain a mixture of deprecated and non-deprecated algorithms.
 
-Specifying behaviour in these cases is beyond the scope of this document, but should be considered by Implementers and potentially in additional standards.
+Since composite algorithms are registered independently of their component algorithms, their deprecation can be handled indpendently from that of their component algorithms. For example a cryptographic policy might continue to allow `id-Kyber512-ECDH-P256-KMAC128` even after ECDH-P256 is deprecated.
 
-EDNOTE: Max is working on a CRL mechanism to accomplish this.
+The composite KEM design specified in this document, and especially that of the KEM combiner specified in {{sec-kem-combiner}} means that the overall composite KEM algorithm should be considered to have the security strength of the strongest of its component algorithms; ie as long as one component algorithm remains strong, then the overall composite algorithm remains strong.
 
 
 ## KEM Combiner
 
-This document uses directly the KEM Combiner defined in {{I-D.ounsworth-cfrg-kem-combiners}} and therefore inherits all of its security considerations, which the authors believe have all been addressed in the concrete choices for explicit composites.
+This document uses directly the KEM Combiner defined in {{I-D.ounsworth-cfrg-kem-combiners}} and therefore inherits all of its security considerations, which the authors believe have all been addressed by the concrete instantiations of KEM algorithms and combiner parameters specified in this document.
 
 <!-- End of Security Considerations section -->
 
