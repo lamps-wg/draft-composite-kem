@@ -159,13 +159,13 @@ pk-Kyber512-X25519-KMAC128 PUBLIC-KEY ::=
 
 
 -- TODO: To be replaced by IANA
-id-Kyber768-RSA-KMAC256 OBJECT IDENTIFIER ::= {
+id-Kyber768-3072-KMAC256 OBJECT IDENTIFIER ::= {
   joint-iso-itu-t(2) country(16) us(840) organization(1) entrust(114027)
   algorithm(80) explicitcomposite(5) kem(2)
   id-kyber768-rsa(4) }
 
-pk-Kyber768-RSA-KMAC256 PUBLIC-KEY ::= 
-  pk-explicitCompositeKEM{id-Kyber768-RSA-KMAC256, 
+pk-Kyber768-RSA3072-KMAC256 PUBLIC-KEY ::= 
+  pk-explicitCompositeKEM{id-Kyber768-RSA3072-KMAC256, 
   pk-Kyber768TBD, OCTET STRING, pk-rsa, RSAPublicKey}
 
 
@@ -319,9 +319,9 @@ kema-Kyber512-X25519-KMAC128 KEM-ALGORITHM ::=
 --TODO: `kema-x25519` does not actually exist yet.
 
 
-kema-Kyber768-RSA-KMAC256 KEM-ALGORITHM ::=
-    kema-explicitCompositeKEM{id-Kyber768-RSA-KMAC256, 
-    pk-Kyber768-RSA-KMAC256,
+kema-Kyber768-RSA3072-KMAC256 KEM-ALGORITHM ::=
+    kema-explicitCompositeKEM{id-Kyber768-RSA3072-KMAC256, 
+    pk-Kyber768-RSA3072-KMAC256,
     ExplicitCompositeKemParams{{kema-Kyber512TBD}, {kema-kem-rsa}} }
 
 

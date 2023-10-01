@@ -62,15 +62,24 @@ normative:
   RFC8174:
   RFC8410:
   RFC8411:
+  RFC8692:
   I-D.draft-housley-lamps-cms-kemri-02:
   I-D.draft-ietf-lamps-rfc5990bis-01:
   I-D.draft-ounsworth-lamps-cms-dhkem-00:
-  SHA3:
-    title: "SHA-3 Standard: Permutation-Based Hash and Extendable-Output Functions, FIPS PUB 202, DOI 10.6028/NIST.FIPS.202"
+  ANS-X9.44:
+    title: "Public Key
+              Cryptography for the Financial Services Industry -- Key
+              Establishment Using Integer Factorization Cryptography"
     author:
-      org: "National Institute of Standards and Technology (NIST)"
-    date: August 2015
-    target: https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.202.pdf\
+      org: "American National Standards Institute"
+    date: 2007
+    seriesinfo: American National Standard X9.44
+  # SHA3:
+  #   title: "SHA-3 Standard: Permutation-Based Hash and Extendable-Output Functions, FIPS PUB 202, DOI 10.6028/NIST.FIPS.202"
+  #   author:
+  #     org: "National Institute of Standards and Technology (NIST)"
+  #   date: August 2015
+  #   target: https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.202.pdf
   SP800-185:
     title: "SHA-3 Derived Functions: cSHAKE, KMAC, TupleHash and ParallelHash"
     author:
@@ -146,18 +155,19 @@ For use within CMS, this document is intended to be coupled with the CMS KEMReci
   * Add a paragraph describing how to reconstitute component SPKIs.
 * Added an Implementation Consideration about FIPS validation where only one component algorithm is FIPS-approved
 * Defined `KeyGen()`, `Encaps()`, and `Decaps()` for a composite KEM algorithm.
-* Removed the discussion of KeyTrans -> KEM and KeyAgree -> KEM promotions, and instead simply referenced [I-D.ietf-lamps-rfc5990bis] and [I-D.ounsworth-lamps-cms-dhkem].
+* Removed the discussion of KeyTrans -> KEM and KeyAgree -> KEM promotions, and instead simply referenced {{I-D.ietf-lamps-rfc5990bis}} and {{I-D.ounsworth-lamps-cms-dhkem}}.
 * Made RSA keys fixed-length at 3072.
+* Re-work section 4.1 (id-Kyber768-RSA3072-KMAC256) to Reference 5990bis and its updated structures.
+* Remove RSA-KEM KDF params and make them implied by the OID; ie provide a profile of 5990bis.
 
 TODO:
-  `[ ]` Re-work section 4.1 (id-Kyber768-RSA-KMAC256) to Reference 5990bis and its updated structures.
-  `[ ]` Remove RSA-KEM KDF params and make them implied by the OID; ie provide a profile of 5990bis.
+  `[ ]` Get Russ' approval that I've used RFC5990bis correctly. Email sent. Waiting for a reply.
   `[ ]` Square this up with draft-ounsworth-cfrg-kem-combiners
   `[ ]` Make a proper IANA Considerations section
   `l ]` Pass over Security Considerations
   `[ ]` Shorten the abstract (move some content into Intro)
-  `[ ]` Fix all the warnings so the build is clean.
-  `[ ]` Rename to ML-KEM
+  `[ ]` Fix all the "line too long" warnings so the build is clean.
+  `[ ]` Rename "Kyber" to "ML-KEM"
   `[ ]` Top-to-bottom read
 
   Still to do in a future version:
@@ -188,33 +198,32 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 This document is consistent with all terminology from {{I-D.driscoll-pqt-hybrid-terminology}}.
 In addition, the following terms are used in this document:
 
-~~~
-BER:
+**BER:**
   Basic Encoding Rules (BER) as defined in [X.690].
 
-CLIENT:
+**CLIENT:**
   Any software that is making use of a cryptographic key.
   This includes a signer, verifier, encrypter, decrypter.
 
-COMBINER:
+**COMBINER:**
   A combiner specifies how multiple shared secrets are combined into
   a single shared secret.
 
-DER:
+**DER:**
   Distinguished Encoding Rules as defined in [X.690].
 
-KEM:
+**KEM:**
    A key encapsulation mechanism as defined in {{sec-kems}}.
 
-PKI:
+**PKI:**
   Public Key Infrastructure, as defined in [RFC5280].
 
-SHARED SECRET:
+**SHARED SECRET:**
   A value established between two communicating parties for use as
   cryptographic key material, but which cannot be learned by an active
   or passive adversary. This document is concerned with shared
   secrets established via public key cryptagraphic operations.
-~~~
+
 
 ## Algorithm Selection Criteria {#sec-selection-criteria}
 
@@ -446,7 +455,7 @@ CompositeCiphertextValue ::= SEQUENCE SIZE (2) OF OCTET STRING
 A composite KEM and `CompositeCipherTextValue` MAY be associated with a composite KEM public key, but MAY also be associated with multiple public keys from different sources, for example multiple X.509 certificates, or multiple cryptographic modules. In the latter case, composite KEMs MAY be used as the mechanism for carrying multiple ciphertexts, for example, in a non-composite hybrid encryption equivalent of those described for digital signatures in {{I-D.becker-guthrie-noncomposite-hybrid-auth}}.
 
 
-## CompositKemParameters {#sec-compositeKemParameters}
+## CompositeKemParameters {#sec-compositeKemParameters}
 
 Composite KEM parameters are defined as follows and MAY be included when a composite KEM algorithm is used with an AlgorithmIdentifier:
 
@@ -500,7 +509,7 @@ KMAC is defined in NIST SP 800-185 [SP800-185]. The `KMAC(K, X, L, S)` parameter
 * `L`: integer representation of `outputBits`.
 * `S`: empty string.
 
-~~~ BEGIN EDNOTE ~~~
+BEGIN EDNOTE
 
 these choices are somewhat arbitrary but aiming to match security level of the input KEMs. Feedback welcome.
 
@@ -508,7 +517,7 @@ these choices are somewhat arbitrary but aiming to match security level of the i
 * Kyber768: KMAC256/384
 * Kyber1024 KMAC256/512
 
-~~~ END EDNOTE ~~~
+END EDNOTE
 
 
 For example, the KEM combiner instantiation of the first entry of {{tab-kem-algs}} would be:
@@ -535,7 +544,7 @@ The "KEM Combiner" column refers to the definitions in {{sec-kem-combiner}}.
 | id-Kyber512-ECDH-P256-KMAC128             | &lt;CompKEM&gt;.1  | Kyber512        | ECDH-P256      | KMAC128/256  |
 | id-Kyber512-ECDH-brainpoolP256r1-KMAC128  | &lt;CompKEM&gt;.2  | Kyber512        | ECDH-brainpoolp256r1 | KMAC128/256 |
 | id-Kyber512-X25519-KMAC128                | &lt;CompKEM&gt;.3  | Kyber512        | X25519         | KMAC128/256 |
-| id-Kyber768-RSA-3072-KMAC256              | &lt;CompKEM&gt;.4  | Kyber768        | RSA-KEM 3072   | KMAC256/384 |
+| id-Kyber768-RSA3072-KMAC256              | &lt;CompKEM&gt;.4  | Kyber768        | RSA-KEM 3072   | KMAC256/384 |
 | id-Kyber768-ECDH-P256-KMAC256             | &lt;CompKEM&gt;.5  | Kyber768        | ECDH-P256      | KMAC256/384 |
 | id-Kyber768-ECDH-brainpoolP256r1-KMAC256  | &lt;CompKEM&gt;.6  | Kyber768        | ECDH-brainpoolp256r1 | KMAC256/384 |
 | id-Kyber768-X25519-KMAC256                | &lt;CompKEM&gt;.7  | Kyber768        | X25519         | KMAC256/384 |
@@ -562,48 +571,25 @@ EDNOTE: I believe that [SP.800-56Ar3] and [BSI-ECC] give equivalent and interope
 
 
 
-## Notes on id-Kyber768-RSA-3072-KMAC256
+## id-Kyber768-RSA3072-KMAC256 Parameters
 
-Use of RSA-KEM {{I-D.ietf-lamps-rfc5990bis}} deserves a special explanation.
+Use of RSA-KEM {{I-D.ietf-lamps-rfc5990bis}} requires additional specification.
 
 The RSA component keys MUST be generated at the 3072-bit security level in order to match security level with Kyber768. Parsers SHOULD be flexible since RSA keys generated at the 3072-bit security level may not be exactly 3072 bits in length due to dropped leading zeros.
 
+As with the other composite KEM algorithms, when `id-Kyber768-RSA3072-KMAC256` is used in an AlgorithmIdentifier, the parameters MUST be absent. `id-Kyber768-RSA3072-KMAC256` SHALL instantiate RSA-KEM with the following parameters:
 
-`GenericHybridParameters` is defined in [RFC5990], repeated here for clarity:
+| RSA-KEM Parameter          | Value                       |
+| -------------------------- | -------------------------- |
+| keyDerivationFunction      | kda-kdf3 with mda-shake256 |
+| keyLength                  | 256                        |
+| DataEncapsulationMechanism | kwa-aes256-wrap            |
+{: #rsa-kem-params title="RSA-KEM Parameters"}
 
-~~~
-GenericHybridParameters ::= {
-    kem  KeyEncapsulationMechanism,
-    dem  DataEncapsulationMechanism
-}
-~~~
-
-The `GenericHybridParameters.kem` MUST be `id-kem-rsa` as defined in [RFC5990]:
-
-~~~
-id-kem-rsa OID ::= {
-    is18033-2 key-encapsulation-mechanism(2) rsa(4)
-}
-~~~
-
-The associated parameters for id-kem-rsa have type
-RsaKemParameters:
-
-~~~
-RsaKemParameters ::= {
-    keyDerivationFunction  KeyDerivationFunction,
-    keyLength              KeyLength
-}
-~~~
-
-
-For use with `id-Kyber768-RSA-KMAC256`, the `keyDerivationFunction` SHALL be `id-sha3-384` and `keyLength` SHALL be `384`.
-
-EDNOTE: I'm borrowing `id-sha3-384` from draft-turner-lamps-adding-sha3-to-pkix-00, which looks ilke was abandoned. Do we have PKIX OIDs for SHA3?
-
-EDNOTE: Since the crypto is fixed, we could omit the parameters entirely and expect implementations to re-constitute the params structures as necessary in order to call into lower-level crypto libraries.
-
-TODO: there must be a way to put all this the ASN.1 Module rather than just specifying it as text?
+where:
+* `kda-kdf3` is defined in {{I-D.ietf-lamps-rfc5990bis}} which references it from [ANS-X9.44].
+* `kwa-aes256-wrap` is defined in {{I-D.ietf-lamps-rfc5990bis}}
+* `mda-shake256` is defined in [RFC8692].
 
 
 
