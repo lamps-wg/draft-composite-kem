@@ -1254,10 +1254,13 @@ svg :is([fill="white"], [fill^="#fff"]) {
             <p id="section-toc.1-1.11.1"><a href="#appendix-B" class="auto internal xref">Appendix B</a>.  <a href="#name-implementation-consideratio" class="internal xref">Implementation Considerations</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.1">
-                <p id="section-toc.1-1.11.2.1.1"><a href="#appendix-B.1" class="auto internal xref">B.1</a>.  <a href="#name-backwards-compatibility" class="internal xref">Backwards Compatibility</a></p>
+                <p id="section-toc.1-1.11.2.1.1"><a href="#appendix-B.1" class="auto internal xref">B.1</a>.  <a href="#name-fips-certification" class="internal xref">FIPS certification</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.2">
+                <p id="section-toc.1-1.11.2.2.1"><a href="#appendix-B.2" class="auto internal xref">B.2</a>.  <a href="#name-backwards-compatibility" class="internal xref">Backwards Compatibility</a></p>
 <ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.1.2.1">
-                    <p id="section-toc.1-1.11.2.1.2.1.1"><a href="#appendix-B.1.1" class="auto internal xref">B.1.1</a>.  <a href="#name-parallel-pkis" class="internal xref">Parallel PKIs</a></p>
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.2.2.1">
+                    <p id="section-toc.1-1.11.2.2.2.1.1"><a href="#appendix-B.2.1" class="auto internal xref">B.2.1</a>.  <a href="#name-parallel-pkis" class="internal xref">Parallel PKIs</a></p>
 </li>
                 </ul>
 </li>
@@ -1323,7 +1326,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         <li class="normal" id="section-2-3.2">Migration: During the transition period, systems will require mechanisms that allow for staged migrations from fully classical to fully post-quantum-aware cryptography.<a href="#section-2-3.2" class="pilcrow">¶</a>
 </li>
       </ul>
-<p id="section-2-4">This document provides a mechanism to address algorithm strength uncertainty by providing the format and process for combining multiple cryptographic algorithms into a single key encapsulation operation. Backwards compatibility is not directly covered in this document, but is the subject of <a href="#sec-backwards-compat" class="auto internal xref">Appendix B.1</a>.<a href="#section-2-4" class="pilcrow">¶</a></p>
+<p id="section-2-4">This document provides a mechanism to address algorithm strength uncertainty by providing the format and process for combining multiple cryptographic algorithms into a single key encapsulation operation. Backwards compatibility is not directly covered in this document, but is the subject of <a href="#sec-backwards-compat" class="auto internal xref">Appendix B.2</a>.<a href="#section-2-4" class="pilcrow">¶</a></p>
 <p id="section-2-5">This document is intended for general applicability anywhere that key establishment or enveloped content encryption is used within PKIX or CMS structures.<a href="#section-2-5" class="pilcrow">¶</a></p>
 <div id="sec-terminology">
 <section id="section-2.1">
@@ -2499,25 +2502,35 @@ END
       <h2 id="name-implementation-consideratio">
 <a href="#appendix-B" class="section-number selfRef">Appendix B. </a><a href="#name-implementation-consideratio" class="section-name selfRef">Implementation Considerations</a>
       </h2>
-<div id="sec-backwards-compat">
+<div id="fips-certification">
 <section id="appendix-B.1">
-        <h3 id="name-backwards-compatibility">
-<a href="#appendix-B.1" class="section-number selfRef">B.1. </a><a href="#name-backwards-compatibility" class="section-name selfRef">Backwards Compatibility</a>
+        <h3 id="name-fips-certification">
+<a href="#appendix-B.1" class="section-number selfRef">B.1. </a><a href="#name-fips-certification" class="section-name selfRef">FIPS certification</a>
         </h3>
-<p id="appendix-B.1-1">As noted in the introduction, the post-quantum cryptographic migration will face challenges in both ensuring cryptographic strength against adversaries of unknown capabilities, as well as providing ease of migration. The composite mechanisms defined in this document primarily address cryptographic strength, however this section contains notes on how backwards compatibility may be obtained.<a href="#appendix-B.1-1" class="pilcrow">¶</a></p>
-<p id="appendix-B.1-2">The term "ease of migration" is used here to mean that existing systems can be gracefully transitioned to the new technology without requiring large service disruptions or expensive upgrades. The term "backwards compatibility" is used here to mean something more specific; that existing systems as they are deployed today can interoperate with the upgraded systems of the future.<a href="#appendix-B.1-2" class="pilcrow">¶</a></p>
-<p id="appendix-B.1-3">These migration and interoperability concerns need to be thought about in the context of various types of protocols that make use of X.509 and PKIX with relation to key establishment and content encryption, from online negotiated protocols such as TLS 1.3 <span>[<a href="#RFC8446" class="cite xref">RFC8446</a>]</span> and IKEv2 <span>[<a href="#RFC7296" class="cite xref">RFC7296</a>]</span>, to non-negotiated asynchronous protocols such as S/MIME signed email <span>[<a href="#RFC8551" class="cite xref">RFC8551</a>]</span>, as well as myriad other standardized and proprietary protocols and applications that leverage CMS <span>[<a href="#RFC5652" class="cite xref">RFC5652</a>]</span> encrypted structures.<a href="#appendix-B.1-3" class="pilcrow">¶</a></p>
+<p id="appendix-B.1-1">One of the primary design goals of the specification is for the overall composite algorithm to be able to considered FIPS-approved even when one of the component algorithms is not. The combiner presented in <a href="#sec-kem-combiner" class="auto internal xref">Section 4.6</a> was chosen to align with NIST SP 800-56Cr2 for this reason.<a href="#appendix-B.1-1" class="pilcrow">¶</a></p>
+<p id="appendix-B.1-2">Implementors seeking FIPS certification of a composite KEM algorithm where only one of the component algorithms has been FIPS-validated or FIPS-approved should credit the FIPS-validated component algorithm with full security strength, the non-FIPS-validated component algorith with zero security, and the overall composite should be considered full strength and thus FIPS-approved.<a href="#appendix-B.1-2" class="pilcrow">¶</a></p>
+<p id="appendix-B.1-3">The authors wish to note that this gives composite algorithms great future utility both for future cryptographic migrations as well as bridging across jurisdictions; for example defining composite algorithms which combine FIPS cryptography with cryptography from a different national standards body.<a href="#appendix-B.1-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="sec-backwards-compat">
+<section id="appendix-B.2">
+        <h3 id="name-backwards-compatibility">
+<a href="#appendix-B.2" class="section-number selfRef">B.2. </a><a href="#name-backwards-compatibility" class="section-name selfRef">Backwards Compatibility</a>
+        </h3>
+<p id="appendix-B.2-1">As noted in the introduction, the post-quantum cryptographic migration will face challenges in both ensuring cryptographic strength against adversaries of unknown capabilities, as well as providing ease of migration. The composite mechanisms defined in this document primarily address cryptographic strength, however this section contains notes on how backwards compatibility may be obtained.<a href="#appendix-B.2-1" class="pilcrow">¶</a></p>
+<p id="appendix-B.2-2">The term "ease of migration" is used here to mean that existing systems can be gracefully transitioned to the new technology without requiring large service disruptions or expensive upgrades. The term "backwards compatibility" is used here to mean something more specific; that existing systems as they are deployed today can interoperate with the upgraded systems of the future.<a href="#appendix-B.2-2" class="pilcrow">¶</a></p>
+<p id="appendix-B.2-3">These migration and interoperability concerns need to be thought about in the context of various types of protocols that make use of X.509 and PKIX with relation to key establishment and content encryption, from online negotiated protocols such as TLS 1.3 <span>[<a href="#RFC8446" class="cite xref">RFC8446</a>]</span> and IKEv2 <span>[<a href="#RFC7296" class="cite xref">RFC7296</a>]</span>, to non-negotiated asynchronous protocols such as S/MIME signed email <span>[<a href="#RFC8551" class="cite xref">RFC8551</a>]</span>, as well as myriad other standardized and proprietary protocols and applications that leverage CMS <span>[<a href="#RFC5652" class="cite xref">RFC5652</a>]</span> encrypted structures.<a href="#appendix-B.2-3" class="pilcrow">¶</a></p>
 <div id="parallel-pkis">
-<section id="appendix-B.1.1">
+<section id="appendix-B.2.1">
           <h4 id="name-parallel-pkis">
-<a href="#appendix-B.1.1" class="section-number selfRef">B.1.1. </a><a href="#name-parallel-pkis" class="section-name selfRef">Parallel PKIs</a>
+<a href="#appendix-B.2.1" class="section-number selfRef">B.2.1. </a><a href="#name-parallel-pkis" class="section-name selfRef">Parallel PKIs</a>
           </h4>
-<p id="appendix-B.1.1-1">EDNOTE: remove this section?<a href="#appendix-B.1.1-1" class="pilcrow">¶</a></p>
-<p id="appendix-B.1.1-2">We present the term "Parallel PKI" to refer to the setup where a PKI end entity possesses two or more distinct public keys or certificates for the same identity (name), but containing keys for different cryptographic algorithms. One could imagine a set of parallel PKIs where an existing PKI using legacy algorithms (RSA, ECC) is left operational during the post-quantum migration but is shadowed by one or more parallel PKIs using pure post quantum algorithms or composite algorithms (legacy and post-quantum).<a href="#appendix-B.1.1-2" class="pilcrow">¶</a></p>
-<p id="appendix-B.1.1-3">Equipped with a set of parallel public keys in this way, a client would have the flexibility to choose which public key(s) or certificate(s) to use in a given signature operation.<a href="#appendix-B.1.1-3" class="pilcrow">¶</a></p>
-<p id="appendix-B.1.1-4">For negotiated protocols, the client could choose which public key(s) or certificate(s) to use based on the negotiated algorithms.<a href="#appendix-B.1.1-4" class="pilcrow">¶</a></p>
-<p id="appendix-B.1.1-5">For non-negotiated protocols, the details for obtaining backwards compatibility will vary by protocol, but for example in CMS <span>[<a href="#RFC5652" class="cite xref">RFC5652</a>]</span>.<a href="#appendix-B.1.1-5" class="pilcrow">¶</a></p>
-<p id="appendix-B.1.1-6">EDNOTE: I copied and pruned this text from I-D.ounsworth-pq-composite-sigs. It probably needs to be fleshed out more as we better understand the implementation concerns around composite encryption.<a href="#appendix-B.1.1-6" class="pilcrow">¶</a></p>
+<p id="appendix-B.2.1-1">EDNOTE: remove this section?<a href="#appendix-B.2.1-1" class="pilcrow">¶</a></p>
+<p id="appendix-B.2.1-2">We present the term "Parallel PKI" to refer to the setup where a PKI end entity possesses two or more distinct public keys or certificates for the same identity (name), but containing keys for different cryptographic algorithms. One could imagine a set of parallel PKIs where an existing PKI using legacy algorithms (RSA, ECC) is left operational during the post-quantum migration but is shadowed by one or more parallel PKIs using pure post quantum algorithms or composite algorithms (legacy and post-quantum).<a href="#appendix-B.2.1-2" class="pilcrow">¶</a></p>
+<p id="appendix-B.2.1-3">Equipped with a set of parallel public keys in this way, a client would have the flexibility to choose which public key(s) or certificate(s) to use in a given signature operation.<a href="#appendix-B.2.1-3" class="pilcrow">¶</a></p>
+<p id="appendix-B.2.1-4">For negotiated protocols, the client could choose which public key(s) or certificate(s) to use based on the negotiated algorithms.<a href="#appendix-B.2.1-4" class="pilcrow">¶</a></p>
+<p id="appendix-B.2.1-5">For non-negotiated protocols, the details for obtaining backwards compatibility will vary by protocol, but for example in CMS <span>[<a href="#RFC5652" class="cite xref">RFC5652</a>]</span>.<a href="#appendix-B.2.1-5" class="pilcrow">¶</a></p>
+<p id="appendix-B.2.1-6">EDNOTE: I copied and pruned this text from I-D.ounsworth-pq-composite-sigs. It probably needs to be fleshed out more as we better understand the implementation concerns around composite encryption.<a href="#appendix-B.2.1-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>

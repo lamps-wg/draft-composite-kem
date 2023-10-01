@@ -129,8 +129,9 @@ Table of Contents
      9.2.  Informative References
    Appendix A.  Samples
    Appendix B.  Implementation Considerations
-     B.1.  Backwards Compatibility
-       B.1.1.  Parallel PKIs
+     B.1.  FIPS certification
+     B.2.  Backwards Compatibility
+       B.2.1.  Parallel PKIs
    Appendix C.  Intellectual Property Considerations
    Appendix D.  Contributors and Acknowledgements
      D.1.  Making contributions
@@ -198,7 +199,7 @@ Table of Contents
    uncertainty by providing the format and process for combining
    multiple cryptographic algorithms into a single key encapsulation
    operation.  Backwards compatibility is not directly covered in this
-   document, but is the subject of Appendix B.1.
+   document, but is the subject of Appendix B.2.
 
    This document is intended for general applicability anywhere that key
    establishment or enveloped content encryption is used within PKIX or
@@ -1376,7 +1377,28 @@ Appendix A.  Samples
 
 Appendix B.  Implementation Considerations
 
-B.1.  Backwards Compatibility
+B.1.  FIPS certification
+
+   One of the primary design goals of the specification is for the
+   overall composite algorithm to be able to considered FIPS-approved
+   even when one of the component algorithms is not.  The combiner
+   presented in Section 4.6 was chosen to align with NIST SP 800-56Cr2
+   for this reason.
+
+   Implementors seeking FIPS certification of a composite KEM algorithm
+   where only one of the component algorithms has been FIPS-validated or
+   FIPS-approved should credit the FIPS-validated component algorithm
+   with full security strength, the non-FIPS-validated component
+   algorith with zero security, and the overall composite should be
+   considered full strength and thus FIPS-approved.
+
+   The authors wish to note that this gives composite algorithms great
+   future utility both for future cryptographic migrations as well as
+   bridging across jurisdictions; for example defining composite
+   algorithms which combine FIPS cryptography with cryptography from a
+   different national standards body.
+
+B.2.  Backwards Compatibility
 
    As noted in the introduction, the post-quantum cryptographic
    migration will face challenges in both ensuring cryptographic
@@ -1402,7 +1424,7 @@ B.1.  Backwards Compatibility
    other standardized and proprietary protocols and applications that
    leverage CMS [RFC5652] encrypted structures.
 
-B.1.1.  Parallel PKIs
+B.2.1.  Parallel PKIs
 
    EDNOTE: remove this section?
 
