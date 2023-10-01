@@ -110,7 +110,12 @@ normative:
     author:
       org: "National Institute of Standards and Technology (NIST)"
     target: https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-56Cr2.pdf
-
+  FIPS.203-ipd:
+    title: "Module-Lattice-based Key-Encapsulation Mechanism Standard"
+    date: August 2023
+    author:
+      org: "National Institute of Standards and Technology (NIST)"
+    target: https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.203.ipd.pdf
 
 
 informative:
@@ -134,7 +139,7 @@ informative:
 
 --- abstract
 
-This document defines Post-Quantum / Traditional composite Key Encapsulation Mechanism (KEM) algorithms suitable for use within X.509 and PKIX and CMS protocols. Explicit pairings of algorithms are provided which should meet most Internet needs.
+This document defines Post-Quantum / Traditional composite Key Encapsulation Mechanism (KEM) algorithms suitable for use within X.509 and PKIX and CMS protocols. Composite algorithms are provided which combine ML-KEM with RSA-KEM and ECDH-KEM. The provided set of composite algorithms should meet most Internet needs.
 
 This document assumes that all component algorithms are KEMs, and therefore it depends on [RFC5990] and {{I-D.ounsworth-lamps-cms-dhkem}} in order to promote RSA and ECDH respectively into KEMs. For the purpose of combining KEMs, the combiner function from {{I-D.ounsworth-cfrg-kem-combiners}} is used. For use within CMS, this document is intended to be coupled with the CMS KEMRecipientInfo mechanism in {{I-D.housley-lamps-cms-kemri}}.
 
@@ -154,7 +159,7 @@ Changes affecting interoperability:
 * Defined `KeyGen()`, `Encaps()`, and `Decaps()` for a composite KEM algorithm.
 * Removed the discussion of KeyTrans -> KEM and KeyAgree -> KEM promotions, and instead simply referenced {{I-D.ietf-lamps-rfc5990bis}} and {{I-D.ounsworth-lamps-cms-dhkem}}.
 * Made RSA keys fixed-length at 3072.
-* Re-worked section 4.1 (id-Kyber768-RSA3072-KMAC256) to Reference 5990bis and its updated structures.
+* Re-worked section 4.1 (id-MLKEM768-RSA3072-KMAC256) to Reference 5990bis and its updated structures.
 * Removed RSA-KEM KDF params and make them implied by the OID; ie provide a profile of 5990bis.
 * Aligned combiner with draft-ounsworth-cfrg-kem-combiners-04.
 
@@ -166,12 +171,11 @@ Editorial changes:
 * Shortened the abstract (moved some content into Intro).
 * Brushed up the Security Considerations.
 * Made a proper IANA Considerations section.
+* Rename "Kyber" to "ML-KEM".
 
 TODO:
 
   `[ ]` Get Russ' approval that I've used RFC5990bis correctly. Email sent. Waiting for a reply.
-
-  `[ ]` Rename "Kyber" to "ML-KEM"
 
   `[ ]` Top-to-bottom read, especially looking for redundancies or references to signatures from merging in the more generic Keys content.
 
@@ -194,7 +198,7 @@ The deployment of composite public keys and composite encryption using post-quan
 - Algorithm strength uncertainty: During the transition period, some post-quantum signature and encryption algorithms will not be fully trusted, while also the trust in legacy public key algorithms will start to erode.  A relying party may learn some time after deployment that a public key algorithm has become untrustworthy, but in the interim, they may not know which algorithm an adversary has compromised.
 - Migration: During the transition period, systems will require mechanisms that allow for staged migrations from fully classical to fully post-quantum-aware cryptography.
 
-This document provides a mechanism to address algorithm strength uncertainty by providing the format and procedures for combining multiple KEM algorithms into a single composite KEM algorithm. Backwards compatibility is not directly covered in this document, but is the subject of {{sec-backwards-compat}}.
+This document provides a mechanism to address algorithm strength uncertainty by providing the format and procedures for combining multiple KEM algorithms into a single composite KEM algorithm. Concrete instantiations are provided based on ML-KEM, RSA-KEM and ECDH-KEM Backwards compatibility is not directly covered in this document, but is the subject of {{sec-backwards-compat}}.
 
 
 This document is intended for general applicability anywhere that key establishment or enveloped content encryption is used within PKIX or CMS structures.
@@ -278,12 +282,12 @@ pk-explicitCompositeKEM{OBJECT IDENTIFIER:id,
 ~~~
 {: artwork-name="CompositeKeyObject-asn.1-structures"}
 
-As an example, the public key type `pk-Kyber512-ECDH-P256-KMAC128` is defined as:
+As an example, the public key type `pk-MLKEM512-ECDH-P256-KMAC128` is defined as:
 
 ~~~
-pk-Kyber512-ECDH-P256-KMAC128 PUBLIC-KEY ::=
-  pk-explicitCompositeKEM{id-Kyber512-ECDH-P256-KMAC128,
-  pk-Kyber512TBD, OCTET STRING, pk-ec, ECPoint}
+pk-MLKEM512-ECDH-P256-KMAC128 PUBLIC-KEY ::=
+  pk-explicitCompositeKEM{id-MLKEM512-ECDH-P256-KMAC128,
+  pk-MLKEM512TBD, OCTET STRING, pk-ec, ECPoint}
 ~~~
 
 The full set of key types defined by this specification can be found in the ASN.1 Module in {{sec-asn1-module}}.
@@ -367,7 +371,7 @@ We borrow here the definition of a key encapsulation mechanism (KEM) from {{I-D.
 
 The KEM interface defined above differs from both traditional key transport mechanism (for example for use with KeyTransRecipientInfo defined in {{RFC5652}}), and key agreement (for example for use with KeyAgreeRecipientInfo defined in {{RFC5652}}).
 
-The KEM interface was chosen as the interface for a composite key exchange because it allows for arbitrary combinations of component algorithm types since both key transport and key agreement mechanisms can be promoted into KEMs. This document relies on the RSA-KEM construction defined in {{I-D.ietf-lamps-rfc5990bis}} and the Elliptic Curve DHKEM defined in {{I-D.ounsworth-lamps-cms-dhkem}}.
+The KEM interface was chosen as the interface for a composite key exchange because it allows for arbitrary combinations of component algorithm types since both key transport and key agreement mechanisms can be promoted into KEMs. This specification uses the Post-Quantum KEM ML-KEM as specified in {{I-D.ietf-lamps-kyber-certificates}} and [FIPS.203-ipd]. For Traditional KEMs, this document relies on the RSA-KEM construction defined in {{I-D.ietf-lamps-rfc5990bis}} and the Elliptic Curve DHKEM defined in {{I-D.ounsworth-lamps-cms-dhkem}}.
 
 A composite KEM allows two or more underlying key transport, key agreement, or KEM algorithms to be combined into a single cryptographic operation by performing each operation, transformed to a KEM as outline above, and using a specified combiner function to combine the two or more component shared secrets into a single shared secret.
 
@@ -519,19 +523,19 @@ BEGIN EDNOTE
 
 these choices are somewhat arbitrary but aiming to match security level of the input KEMs. Feedback welcome.
 
-* Kyber512: KMAC128/256
-* Kyber768: KMAC256/384
-* Kyber1024 KMAC256/512
+* ML-KEM-512: KMAC128/256
+* ML-KEM-768: KMAC256/384
+* ML-KEM-1024 KMAC256/512
 
 END EDNOTE
 
 
-For example, the KEM combiner used with the first entry of {{tab-kem-algs}}, `id-Kyber512-ECDH-P256-KMAC128` would be:
+For example, the KEM combiner used with the first entry of {{tab-kem-algs}}, `id-MLKEM512-ECDH-P256-KMAC128` would be:
 
 ~~~
-Combiner(ss1, ss2, "id-Kyber512-ECDH-P256-KMAC128") =
+Combiner(ss1, ss2, "id-MLKEM512-ECDH-P256-KMAC128") =
            KMAC128( 0x00000001 || ss_1 || ss_2 ||
-              "id-Kyber512-ECDH-P256-KMAC128", 256, "")
+              "id-MLKEM512-ECDH-P256-KMAC128", 256, "")
 ~~~
 
 
@@ -549,16 +553,16 @@ The "KEM Combiner" column refers to the definitions in {{sec-kem-combiner}}.
 
 | KEM Type OID                              | OID                | First Algorithm | Second Algorithm |  KEM Combiner     |
 |---------                                  | -----------------  | ----------      | ----------     | ----------    |
-| id-Kyber512-ECDH-P256-KMAC128             | &lt;CompKEM&gt;.1  | Kyber512        | ECDH-P256      | KMAC128/256  |
-| id-Kyber512-ECDH-brainpoolP256r1-KMAC128  | &lt;CompKEM&gt;.2  | Kyber512        | ECDH-brainpoolp256r1 | KMAC128/256 |
-| id-Kyber512-X25519-KMAC128                | &lt;CompKEM&gt;.3  | Kyber512        | X25519         | KMAC128/256 |
-| id-Kyber768-RSA3072-KMAC256               | &lt;CompKEM&gt;.4  | Kyber768        | RSA-KEM 3072   | KMAC256/384 |
-| id-Kyber768-ECDH-P256-KMAC256             | &lt;CompKEM&gt;.5  | Kyber768        | ECDH-P256      | KMAC256/384 |
-| id-Kyber768-ECDH-brainpoolP256r1-KMAC256  | &lt;CompKEM&gt;.6  | Kyber768        | ECDH-brainpoolp256r1 | KMAC256/384 |
-| id-Kyber768-X25519-KMAC256                | &lt;CompKEM&gt;.7  | Kyber768        | X25519         | KMAC256/384 |
-| id-Kyber1024-ECDH-P384-KMAC256            | &lt;CompKEM&gt;.8  | Kyber1024       | ECDH-P384     | KMAC256/512 |
-| id-Kyber1024-ECDH-brainpoolP384r1-KMAC256 | &lt;CompKEM&gt;.9  | Kyber1024       | ECDH-brainpoolP384r1 | KMAC256/512 |
-| id-Kyber1024-X448-KMAC256                 | &lt;CompKEM&gt;.10 | Kyber1024       | X448          | KMAC256/512 |
+| id-MLKEM512-ECDH-P256-KMAC128             | &lt;CompKEM&gt;.1  | MLKEM512        | ECDH-P256      | KMAC128/256  |
+| id-MLKEM512-ECDH-brainpoolP256r1-KMAC128  | &lt;CompKEM&gt;.2  | MLKEM512        | ECDH-brainpoolp256r1 | KMAC128/256 |
+| id-MLKEM512-X25519-KMAC128                | &lt;CompKEM&gt;.3  | MLKEM512        | X25519         | KMAC128/256 |
+| id-MLKEM768-RSA3072-KMAC256               | &lt;CompKEM&gt;.4  | MLKEM768        | RSA-KEM 3072   | KMAC256/384 |
+| id-MLKEM768-ECDH-P256-KMAC256             | &lt;CompKEM&gt;.5  | MLKEM768        | ECDH-P256      | KMAC256/384 |
+| id-MLKEM768-ECDH-brainpoolP256r1-KMAC256  | &lt;CompKEM&gt;.6  | MLKEM768        | ECDH-brainpoolp256r1 | KMAC256/384 |
+| id-MLKEM768-X25519-KMAC256                | &lt;CompKEM&gt;.7  | MLKEM768        | X25519         | KMAC256/384 |
+| id-MLKEM1024-ECDH-P384-KMAC256            | &lt;CompKEM&gt;.8  | MLKEM1024       | ECDH-P384     | KMAC256/512 |
+| id-MLKEM1024-ECDH-brainpoolP384r1-KMAC256 | &lt;CompKEM&gt;.9  | MLKEM1024       | ECDH-brainpoolP384r1 | KMAC256/512 |
+| id-MLKEM1024-X448-KMAC256                 | &lt;CompKEM&gt;.10 | MLKEM1024       | X448          | KMAC256/512 |
 {: #tab-kem-algs title="Composite KEM key types"}
 
 
@@ -569,7 +573,7 @@ Full specifications for the referenced algorithms can be found as follows:
 * _ECDH_: There does not appear to be a single IETF definition of ECDH, so we refer to the following:
   * _ECDH NIST_: SHALL be Elliptic Curve Cryptography Cofactor Diffie-Hellman (ECC CDH) as defined in section 5.7.1.2 of [SP.800-56Ar3].
   * _ECDH BSI / brainpool_: SHALL be Elliptic Curve Key Agreement algorithm (ECKA) as defined in section 4.3.1 of [BSI-ECC]
-* _Kyber_: {{I-D.ietf-lamps-kyber-certificates}}
+* _ML-KEM_: {{I-D.ietf-lamps-kyber-certificates}} and [FIPS.203-ipd]
 * _RSA-KEM_: {{I-D.ietf-lamps-rfc5990bis}}
 * _X25519 / X448_: [RFC8410]
 
@@ -579,13 +583,13 @@ EDNOTE: I believe that [SP.800-56Ar3] and [BSI-ECC] give equivalent and interope
 
 
 
-## id-Kyber768-RSA3072-KMAC256 Parameters
+## id-MLKEM768-RSA3072-KMAC256 Parameters
 
 Use of RSA-KEM {{I-D.ietf-lamps-rfc5990bis}} requires additional specification.
 
-The RSA component keys MUST be generated at the 3072-bit security level in order to match security level with Kyber768. Parsers SHOULD be flexible since RSA keys generated at the 3072-bit security level may not be exactly 3072 bits in length due to dropped leading zeros.
+The RSA component keys MUST be generated at the 3072-bit security level in order to match security level with ML-KEM-768. Parsers SHOULD be flexible since RSA keys generated at the 3072-bit security level may not be exactly 3072 bits in length due to dropped leading zeros.
 
-As with the other composite KEM algorithms, when `id-Kyber768-RSA3072-KMAC256` is used in an AlgorithmIdentifier, the parameters MUST be absent. `id-Kyber768-RSA3072-KMAC256` SHALL instantiate RSA-KEM with the following parameters:
+As with the other composite KEM algorithms, when `id-MLKEM768-RSA3072-KMAC256` is used in an AlgorithmIdentifier, the parameters MUST be absent. `id-MLKEM768-RSA3072-KMAC256` SHALL instantiate RSA-KEM with the following parameters:
 
 | RSA-KEM Parameter          | Value                      |
 | -------------------------- | -------------------------- |
@@ -628,54 +632,54 @@ EDNOTE to IANA: OIDs will need to be replaced in both the ASN.1 module and in {{
 
 ###  Object Identifier Registrations - SMI Security for PKIX Algorithms
 
-- id-Kyber512-ECDH-P256-KMAC128
+- id-MLKEM512-ECDH-P256-KMAC128
   - Decimal: IANA Assigned
-  - Description: id-Kyber512-ECDH-P256-KMAC128
+  - Description: id-MLKEM512-ECDH-P256-KMAC128
   - References: This Document
 
-- id-Kyber512-ECDH-brainpoolP256r1-KMAC128
+- id-MLKEM512-ECDH-brainpoolP256r1-KMAC128
   - Decimal: IANA Assigned
-  - Description: id-Kyber512-ECDH-brainpoolP256r1-KMAC128
+  - Description: id-MLKEM512-ECDH-brainpoolP256r1-KMAC128
   - References: This Document
 
-- id-Kyber512-X25519-KMAC128
+- id-MLKEM512-X25519-KMAC128
   - Decimal: IANA Assigned
-  - Description: id-Kyber512-X25519-KMAC128
+  - Description: id-MLKEM512-X25519-KMAC128
   - References: This Document
 
-- id-Kyber768-RSA3072-KMAC256
+- id-MLKEM768-RSA3072-KMAC256
   - Decimal: IANA Assigned
-  - Description: id-Kyber768-3072-KMAC256
+  - Description: id-MLKEM768-3072-KMAC256
   - References: This Document
 
-- id-Kyber768-ECDH-P256-KMAC256
+- id-MLKEM768-ECDH-P256-KMAC256
   - Decimal: IANA Assigned
-  - Description: id-Kyber768-ECDH-P256-KMAC256
+  - Description: id-MLKEM768-ECDH-P256-KMAC256
   - References: This Document
 
-- id-Kyber768-ECDH-brainpoolP256r1-KMAC256
+- id-MLKEM768-ECDH-brainpoolP256r1-KMAC256
   - Decimal: IANA Assigned
-  - Description: id-Kyber768-ECDH-brainpoolP256r1-KMAC256
+  - Description: id-MLKEM768-ECDH-brainpoolP256r1-KMAC256
   - References: This Document
 
-- id-Kyber768-X25519-KMAC256
+- id-MLKEM768-X25519-KMAC256
   - Decimal: IANA Assigned
-  - Description: id-Kyber768-X25519-KMAC256
+  - Description: id-MLKEM768-X25519-KMAC256
   - References: This Document
 
-- id-Kyber1024-ECDH-P384-KMAC256
+- id-MLKEM1024-ECDH-P384-KMAC256
   - Decimal: IANA Assigned
-  - Description: id-Kyber1024-ECDH-P384-KMAC256
+  - Description: id-MLKEM1024-ECDH-P384-KMAC256
   - References: This Document
 
-- id-Kyber1024-ECDH-brainpoolP384r1-KMAC256
+- id-MLKEM1024-ECDH-brainpoolP384r1-KMAC256
   - Decimal: IANA Assigned
-  - Description: id-Kyber1024-ECDH-brainpoolP384r1-KMAC256
+  - Description: id-MLKEM1024-ECDH-brainpoolP384r1-KMAC256
   - References: This Document
 
-- id-Kyber1024-X448-KMAC256
+- id-MLKEM1024-X448-KMAC256
   - Decimal: IANA Assigned
-  - Description: id-Kyber1024-X448-KMAC256
+  - Description: id-MLKEM1024-X448-KMAC256
   - References: This Document
 
 <!-- End of IANA Considerations section -->
@@ -689,7 +693,7 @@ Traditionally, a public key or certificate contains a single cryptographic algor
 
 In the composite model this is less obvious since implementers may decide that certain cryptographic algorithms have complementary security properties and are acceptable in combination even though one or both algorithms are deprecated for individual use. As such, a single composite public key or certificate may contain a mixture of deprecated and non-deprecated algorithms.
 
-Since composite algorithms are registered independently of their component algorithms, their deprecation can be handled indpendently from that of their component algorithms. For example a cryptographic policy might continue to allow `id-Kyber512-ECDH-P256-KMAC128` even after ECDH-P256 is deprecated.
+Since composite algorithms are registered independently of their component algorithms, their deprecation can be handled indpendently from that of their component algorithms. For example a cryptographic policy might continue to allow `id-MLKEM512-ECDH-P256-KMAC128` even after ECDH-P256 is deprecated.
 
 The composite KEM design specified in this document, and especially that of the KEM combiner specified in {{sec-kem-combiner}} means that the overall composite KEM algorithm should be considered to have the security strength of the strongest of its component algorithms; ie as long as one component algorithm remains strong, then the overall composite algorithm remains strong.
 
