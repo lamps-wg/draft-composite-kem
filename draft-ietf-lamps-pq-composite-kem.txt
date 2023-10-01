@@ -113,12 +113,11 @@ Table of Contents
        4.1.2.  Composite Encaps
        4.1.3.  Composite Decaps
      4.2.  kema-CompositeKEM
-     4.3.  Composite Keys
-     4.4.  CompositeCiphertextValue
-     4.5.  CompositKemParameters
-     4.6.  KEM Combiner
+     4.3.  CompositeCiphertextValue
+     4.4.  CompositKemParameters
+     4.5.  KEM Combiner
    5.  Algorithm Identifiers
-     5.1.  Notes on id-Kyber768-RSA-KMAC256
+     5.1.  Notes on id-Kyber768-RSA-3072-KMAC256
    6.  ASN.1 Module
    7.  IANA Considerations
    8.  Security Considerations
@@ -167,14 +166,16 @@ Table of Contents
       promotions, and instead simply referenced [I-D.ietf-lamps-
       rfc5990bis] and [I-D.ounsworth-lamps-cms-dhkem].
 
-   TODO: [ ] Make RSA keys fixed-length.  [ ] Re-work section 4.1 (id-
-   Kyber768-RSA-KMAC256) to Reference 5990bis and its updated
-   structures.  [ ] Remove RSA-KEM KDF params and make them implied by
-   the OID; ie provide a profile of 5990bis.  [ ] Square this up with
-   draft-ounsworth-cfrg-kem-combiners [ ] Make a proper IANA
-   Considerations section l ] Pass over Security Considerations [ ]
-   Shorten the abstract (move some content into Intro) [ ] Fix all the
-   warnings so the build is clean.  [ ] Top-to-bottom read
+   *  Made RSA keys fixed-length at 3072.
+
+   TODO: [ ] Re-work section 4.1 (id-Kyber768-RSA-KMAC256) to Reference
+   5990bis and its updated structures.  [ ] Remove RSA-KEM KDF params
+   and make them implied by the OID; ie provide a profile of 5990bis.  [
+   ] Square this up with draft-ounsworth-cfrg-kem-combiners [ ] Make a
+   proper IANA Considerations section l ] Pass over Security
+   Considerations [ ] Shorten the abstract (move some content into
+   Intro) [ ] Fix all the warnings so the build is clean.  [ ] Rename to
+   ML-KEM [ ] Top-to-bottom read
 
    Still to do in a future version: * I need an ASN.1 expert to help me
    fix how it references ECC named curves.  * We need PEM samples ...
@@ -542,17 +543,7 @@ Table of Contents
 
                                   Table 1
 
-4.3.  Composite Keys
-
-   A composite KEM MAY be associated with a composite KEM public key,
-   but MAY also be associated with multiple public keys from different
-   sources, for example multiple X.509 certificates, or multiple
-   cryptographic modules.  In the latter case, composite KEMs MAY be
-   used as the mechanism for carrying multiple ciphertexts in a non-
-   composite hybrid encryption equivalent of those described for digital
-   signatures in [I-D.becker-guthrie-noncomposite-hybrid-auth].
-
-4.4.  CompositeCiphertextValue
+4.3.  CompositeCiphertextValue
 
    The compositeCipherTextValue is a concatenation of the ciphertexts of
    the underlying component algorithms.  It is represented in ASN.1 as
@@ -560,7 +551,16 @@ Table of Contents
 
    CompositeCiphertextValue ::= SEQUENCE SIZE (2) OF OCTET STRING
 
-4.5.  CompositKemParameters
+   A composite KEM and CompositeCipherTextValue MAY be associated with a
+   composite KEM public key, but MAY also be associated with multiple
+   public keys from different sources, for example multiple X.509
+   certificates, or multiple cryptographic modules.  In the latter case,
+   composite KEMs MAY be used as the mechanism for carrying multiple
+   ciphertexts, for example, in a non-composite hybrid encryption
+   equivalent of those described for digital signatures in
+   [I-D.becker-guthrie-noncomposite-hybrid-auth].
+
+4.4.  CompositKemParameters
 
    Composite KEM parameters are defined as follows and MAY be included
    when a composite KEM algorithm is used with an AlgorithmIdentifier:
@@ -580,7 +580,7 @@ Table of Contents
    that they match the algorithms expected from the overall composite
    AlgorithmIdentifier.
 
-4.6.  KEM Combiner
+4.5.  KEM Combiner
 
    TODO: as per https://www.enisa.europa.eu/publications/post-quantum-
    cryptography-integration-study section 4.2, might need to specify
@@ -670,7 +670,7 @@ ss = KMAC128("id-Kyber512-ECDH-P256-KMAC128",
 
    Therefore <CompKEM>.1 is equal to 2.16.840.1.114027.80.5.2.1
 
-   The "KEM Combiner" column refers to the definitions in Section 4.6.
+   The "KEM Combiner" column refers to the definitions in Section 4.5.
 
    +=======================+============+=========+===============+===========+
    |KEM Type OID           |OID         |First    |Second         |KEM        |
@@ -685,7 +685,8 @@ ss = KMAC128("id-Kyber512-ECDH-P256-KMAC128",
    |id-                    |<CompKEM>.3 |Kyber512 |X25519         |KMAC128/256|
    |Kyber512-X25519-KMAC128|            |         |               |           |
    +-----------------------+------------+---------+---------------+-----------+
-   |id-Kyber768-RSA-KMAC256|<CompKEM>.4 |Kyber768 |RSA-KEM        |KMAC256/384|
+   |id-Kyber768-RSA-       |<CompKEM>.4 |Kyber768 |RSA-KEM 3072   |KMAC256/384|
+   |3072-KMAC256           |            |         |               |           |
    +-----------------------+------------+---------+---------------+-----------+
    |id-Kyber768-ECDH-      |<CompKEM>.5 |Kyber768 |ECDH-P256      |KMAC256/384|
    |P256-KMAC256           |            |         |               |           |
@@ -729,17 +730,26 @@ ss = KMAC128("id-Kyber512-ECDH-P256-KMAC128",
 
    *  _Kyber_: [I-D.ietf-lamps-kyber-certificates]
 
-   *  _RSA-KEM_: [RFC5990]
+   *  _RSA-KEM_: [I-D.ietf-lamps-rfc5990bis]
 
    *  _X25519 / X448_: [RFC8410]
+
+   Note that all ECDH as well as X25519 and X448 algorithms MUST be
+   prometed into KEMs according to [I-D.ounsworth-lamps-cms-dhkem].
 
    EDNOTE: I believe that [SP.800-56Ar3] and [BSI-ECC] give equivalent
    and interoperable algorithms, so maybe this is extranuous detail to
    include?
 
-5.1.  Notes on id-Kyber768-RSA-KMAC256
+5.1.  Notes on id-Kyber768-RSA-3072-KMAC256
 
-   Use of RSA-KEM [RFC5990] deserves a special explanation.
+   Use of RSA-KEM [I-D.ietf-lamps-rfc5990bis] deserves a special
+   explanation.
+
+   The RSA component keys MUST be generated at the 3072-bit security
+   level in order to match security level with Kyber768.  Parsers SHOULD
+   be flexible since RSA keys generated at the 3072-bit security level
+   may not be exactly 3072 bits in length due to dropped leading zeros.
 
    GenericHybridParameters is defined in [RFC5990], repeated here for
    clarity:
@@ -1415,7 +1425,7 @@ B.1.  FIPS certification
    One of the primary design goals of the specification is for the
    overall composite algorithm to be able to considered FIPS-approved
    even when one of the component algorithms is not.  The combiner
-   presented in Section 4.6 was chosen to align with NIST SP 800-56Cr2
+   presented in Section 4.5 was chosen to align with NIST SP 800-56Cr2
    for this reason.
 
    Implementors seeking FIPS certification of a composite KEM algorithm
