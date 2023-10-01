@@ -104,6 +104,12 @@ normative:
     author:
       org: "National Institute of Standards and Technology (NIST)"
     target: https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-56Ar3.pdf
+  SP.800-56Cr2:
+    title: "Recommendation for Key-Derivation Methods in Key-Establishment Schemes"
+    date: August 2020
+    author:
+      org: "National Institute of Standards and Technology (NIST)"
+    target: https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-56Cr2.pdf
 
 
 
@@ -121,7 +127,7 @@ informative:
   RFC8551:
   I-D.draft-ietf-tls-hybrid-design-04:
   I-D.draft-driscoll-pqt-hybrid-terminology-01:
-  I-D.draft-ounsworth-cfrg-kem-combiners-03:
+  I-D.draft-ounsworth-cfrg-kem-combiners-04:
   I-D.draft-ietf-lamps-kyber-certificates-01:
   I-D.draft-becker-guthrie-noncomposite-hybrid-auth-00:
 
@@ -159,10 +165,10 @@ For use within CMS, this document is intended to be coupled with the CMS KEMReci
 * Made RSA keys fixed-length at 3072.
 * Re-work section 4.1 (id-Kyber768-RSA3072-KMAC256) to Reference 5990bis and its updated structures.
 * Remove RSA-KEM KDF params and make them implied by the OID; ie provide a profile of 5990bis.
+* Aligned with draft-ounsworth-cfrg-kem-combiners-04
 
 TODO:
   `[ ]` Get Russ' approval that I've used RFC5990bis correctly. Email sent. Waiting for a reply.
-  `[ ]` Square this up with draft-ounsworth-cfrg-kem-combiners
   `[ ]` Make a proper IANA Considerations section
   `l ]` Pass over Security Considerations
   `[ ]` Shorten the abstract (move some content into Intro)
@@ -472,39 +478,37 @@ For explicit composite algorithms, it is required in cases where one or both of 
 
 TODO: as per https://www.enisa.europa.eu/publications/post-quantum-cryptography-integration-study section 4.2, might need to specify behaviour in light of KEMs with a non-zero failure probility.
 
-This document follows the construction of {{I-D.ounsworth-cfrg-kem-combiners}}, which is repeated here for clarity:
+This document follows the construction of {{I-D.ounsworth-cfrg-kem-combiners}}, which is repeated here for clarity and simplified to take two imput shared secrets:
 
 ~~~
-Combiner(k1, k2) = KDF(counter || k_1 || k_2 || fixedInfo, outputBits)
-
-where
-k_i = H(ss_i || ct_i)
+Combiner(ss1, ss2, fixedInfo) = KDF(counter || ss1 || ss2 || fixedInfo,
+                                      outputBits)
 ~~~
+{: #code-generic-kem-combiner title="Generic KEM combiner construction"}
 
 where:
 
-* `KDF` and `H`, and `outputBits` represent a hash functions suitable to the chosen KEMs,
-* `fixedInfo` any additional context string provided by the protocol,
-* `counter` is fixed to the 32-bit value `0x00000001`,
+* `KDF(message, outputBits)` represents a hash function suitable to the chosen KEMs according to {tab-kem-combiners}.
+* `fixedInfo` SHALL be the ASCII-encoded string name of the composite KEM algorithm as listed in {{tab-kem-algs}}.
+* `counter` SHALL be the fixed 32-bit value `0x00000001` which is placed here soly for the purposes of easy compliance with [SP.800-56Cr2].
 * `||` represents concatenation.
 
 Each registered composite KEM algorithm must specify the exact KEM combiner construction that is to be used.
 
 
+This specification uses the following KMAC-based instantiations of the generic KEM combiner:
 
-For convenience we define the following KMAC-based instantiations of KEM combiner:
-
-| KEM Combiner | KDF | H   | outputBits |
-| ---          | --- |---  |---         |
-| KMAC128/256  | KMAC128   | SHA3-256 | 256 |
-| KMAC256/384  | KMAC256   | SHA3-512 | 384 |
-| KMAC256/512  | KMAC256   | SHA3-512 | 512 |
+| KEM Combiner Name | KDF     | outputBits |
+| ---               | ------- |---         |
+| KMAC128/256       | KMAC128 | 256 |
+| KMAC256/384       | KMAC256 | 384 |
+| KMAC256/512       | KMAC256 | 512 |
 {: #tab-kem-combiners title="KEM Combiners"}
 
 KMAC is defined in NIST SP 800-185 [SP800-185]. The `KMAC(K, X, L, S)` parameters are instantiated as follows:
 
 * `K`: the ASCI value of the name of the Kem Type OID.
-* `X`: the value "`0x00000001 || k_1 || ... || k_n || fixedInfo`", where `k_i = H(ss_i || ct_i)`, as defined above.
+* `X`: the message input to `KDF()`, as defined above.
 * `L`: integer representation of `outputBits`.
 * `S`: empty string.
 
@@ -519,12 +523,12 @@ these choices are somewhat arbitrary but aiming to match security level of the i
 END EDNOTE
 
 
-For example, the KEM combiner instantiation of the first entry of {{tab-kem-algs}} would be:
+For example, the KEM combiner used with the first entry of {{tab-kem-algs}}, `id-Kyber512-ECDH-P256-KMAC128` would be:
 
 ~~~
-ss = KMAC128("id-Kyber512-ECDH-P256-KMAC128",
-    0x00000001 || SHA3-256(ss_1 || ct_1) || SHA3-256(ss_2 || ct_2) || fixedInfo,
-    256, "")
+Combiner(ss1, ss2, "id-Kyber512-ECDH-P256-KMAC128") =
+           KMAC128( 0x00000001 || ss_1 || ss_2 ||
+              "id-Kyber512-ECDH-P256-KMAC128", 256, "")
 ~~~
 
 
@@ -532,7 +536,7 @@ ss = KMAC128("id-Kyber512-ECDH-P256-KMAC128",
 
 This table summarizes the list of explicit composite Signature algorithms by the key and signature OID and the two component algorithms which make up the explicit composite algorithm.  These are denoted by First Signature Alg, and Second Signature Alg.
 
-The OID referenced are TBD and MUST be used only for prototyping and replaced with the final IANA-assigned OIDS. The following prefix is used for each: replace &lt;CompKEM&gt; with the String "2.16.840.1.114027.80.5.2"
+EDNOTE: The OID referenced are TBD and MUST be used only for prototyping and replaced with the final IANA-assigned OIDS. The following prefix is used for each: replace &lt;CompKEM&gt; with the String "2.16.840.1.114027.80.5.2"
 
 Therefore &lt;CompKEM&gt;.1 is equal to 2.16.840.1.114027.80.5.2.1
 
@@ -650,7 +654,7 @@ TBD
 
 ## FIPS certification {#sec-fips}
 
-One of the primary design goals of the specification is for the overall composite algorithm to be able to considered FIPS-approved even when one of the component algorithms is not. The combiner presented in {{sec-kem-combiner}} was chosen to align with NIST SP 800-56Cr2 for this reason.
+One of the primary design goals of the specification is for the overall composite algorithm to be able to considered FIPS-approved even when one of the component algorithms is not. The combiner presented in {{sec-kem-combiner}} was chosen to align with [SP.800-56Cr2] for this reason.
 
 Implementors seeking FIPS certification of a composite KEM algorithm where only one of the component algorithms has been FIPS-validated or FIPS-approved should credit the FIPS-validated component algorithm with full security strength, the non-FIPS-validated component algorith with zero security, and the overall composite should be considered full strength and thus FIPS-approved.
 
