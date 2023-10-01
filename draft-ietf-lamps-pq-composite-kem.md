@@ -55,15 +55,13 @@ author:
 normative:
   RFC2119:
   RFC5280:
-  RFC5480:
   RFC5652:
   RFC5990:
-  RFC8017:
+  # RFC8017: # RSA v2.2
   RFC8174:
   RFC8410:
   RFC8411:
   I-D.draft-housley-lamps-cms-kemri-02:
-  I-D.draft-ietf-lamps-kyber-certificates-00:
   SHA3:
     title: "SHA-3 Standard: Permutation-Based Hash and Extendable-Output Functions, FIPS PUB 202, DOI 10.6028/NIST.FIPS.202"
     author:
@@ -100,7 +98,10 @@ normative:
 # <!-- EDNOTE: full syntax for this defined here: https://github.com/cabo/kramdown-rfc2629 -->
 
 informative:
+  RFC2986:
+  RFC4210:
   RFC5639:
+  RFC5914:
   RFC6090:
   RFC7296:
   RFC7748:
@@ -109,22 +110,21 @@ informative:
   I-D.draft-ietf-tls-hybrid-design-04:
   I-D.draft-driscoll-pqt-hybrid-terminology-01:
   I-D.draft-ounsworth-cfrg-kem-combiners-03:
-
-
+  I-D.draft-ietf-lamps-kyber-certificates-01:
+  I-D.draft-becker-guthrie-noncomposite-hybrid-auth-00:
 
 
 --- abstract
 
 The migration to post-quantum cryptography is unique in the history of modern digital cryptography in that neither the old outgoing nor the new incoming algorithms are fully trusted to protect data for the required data lifetimes. The outgoing algorithms, such as RSA and elliptic curve, may fall to quantum cryptalanysis, while the incoming post-quantum algorithms face uncertainty about both the underlying mathematics as well as hardware and software implementations that have not had sufficient maturing time to rule out classical cryptanalytic attacks and implementation bugs.
 
-Cautious implementers may wish to layer cryptographic algorithms such that an attacker would need to break all of them in order to compromise the data being protected using either a Post-Quantum / Traditional Hybrid, Post-Quantum / Post-Quantum Hybrid, or combinations thereof. This document, and its companions, defines a specific instantiation of hybrid paradigm called "composite" where multiple cryptographic algorithms are combined to form a single key, signature, or key encapsulation mechanism (KEM) such that they can be treated as a single atomic object at the protocol level.
+Cautious implementers may wish to combine cryptographic algorithms such that an attacker would need to break all of them in order to compromise the data being protected by using a Post-Quantum / Traditional Hybrid. This document defines a specific instantiation of hybrid paradigm called "composite" where multiple cryptographic algorithms are combined to form a single key encapsulation mechanism (KEM) key and ciphertext such that they can be treated as a single atomic algorithm at the protocol level.
 
 
-This document defines the structure CompositeCiphertextValue which is a sequence of the respective ciphertexts for each component algorithm. Explicit pairings of algorithms are defined which should meet most Internet needs. For the purpose of combining KEMs, the combiner function from {{I-D.ounsworth-cfrg-kem-combiners}} is used.
+This document defines composite public key types for a range of Post-Quantum / Traditional combinations as well as the structure CompositeCiphertextValue which is a sequence of the respective ciphertexts for each component algorithm. The explicit pairings of algorithms which are provided should meet most Internet needs. For the purpose of combining KEMs, the combiner function from {{I-D.ounsworth-cfrg-kem-combiners}} is used.
 
 
-This document is intended to be coupled with the composite keys
-structure define in {{I-D.ounsworth-pq-composite-keys}} and the CMS KEMRecipientInfo mechanism in {{I-D.housley-lamps-cms-kemri}}.
+This document is intended to be coupled with the CMS KEMRecipientInfo mechanism in {{I-D.housley-lamps-cms-kemri}}.
 
 
 <!-- End of Abstract -->
@@ -135,14 +135,14 @@ structure define in {{I-D.ounsworth-pq-composite-keys}} and the CMS KEMRecipient
 # Changes in version -01
 
 * Refactored to use MartinThomson github template.
+* Made this document standalone by folding in the minimum necessary content from composite-keys and dropping the cross-reference to composite-sigs.
 
-  [ ] Make draft-composite-kems standalone by folding in the minimum necessary content from composite-keys and dropping the reference to composite-sigs.
-  [ ] Re-work wire format and ASN.1 to remove vestiges of Generics.
-  [ ] Make RSA keys fixed-length.
-  [ ] Compress the public key format by not carrying redundant algID OIDs.
-  [ ] Re-work section 4.1 (id-Kyber768-RSA-KMAC256) to Reference 5990bis and its updated structures.
-  [ ] Remove RSA-KEM KDF params and make them implied by the OID; ie provide a profile of 5990bis.
-  [ ] We need PEM samples … 118 hackathon? OQS friends? David @ BC?
+  `[ ]` Re-work wire format and ASN.1 to remove vestiges of Generics.
+  `[ ]` Make RSA keys fixed-length.
+  `[ ]` Compress the public key format by not carrying redundant algID OIDs.
+  `[ ]` Re-work section 4.1 (id-Kyber768-RSA-KMAC256) to Reference 5990bis and its updated structures.
+  `[ ]` Remove RSA-KEM KDF params and make them implied by the OID; ie provide a profile of 5990bis.
+  `[ ]` We need PEM samples … 118 hackathon? OQS friends? David @ BC?
 
   Still to do in a future version:
   * Fix the ASN.1 in how it references ECC named curves.
@@ -159,7 +159,7 @@ The deployment of composite public keys and composite encryption using post-quan
 - Migration: During the transition period, systems will require mechanisms that allow for staged migrations from fully classical to fully post-quantum-aware cryptography.
 
 
-This document provides a mechanism to address algorithm strength uncertainty by building on {{I-D.ounsworth-pq-composite-keys}} by providing the format and process for combining multiple cryptographic algorithms into a single key encapsulation operation. Backwards compatibility is not directly covered in this document, but is the subject of {{sec-backwards-compat}}.
+This document provides a mechanism to address algorithm strength uncertainty by providing the format and process for combining multiple cryptographic algorithms into a single key encapsulation operation. Backwards compatibility is not directly covered in this document, but is the subject of {{sec-backwards-compat}}.
 
 
 This document is intended for general applicability anywhere that key establishment or enveloped content encryption is used within PKIX or CMS structures.
@@ -172,7 +172,7 @@ The composite algorithm combinations defined in this document were chosen accord
 1. A single RSA combination is provided (but RSA modulus size not mandated), matched with NIST PQC Level 3 algorithms.
 1. Elliptic curve algorithms are provided with combinations on each of the NIST [RFC6090], Brainpool [RFC5639], and Edwards [RFC7748] curves. NIST PQC Levels 1 - 3 algorithms are matched with 256-bit curves, while NIST levels 4 - 5 are matched with 384-bit elliptic curves. This provides a balance between matching classical security levels of post-quantum and traditional algorithms, and also selecting elliptic curves which already have wide adoption.
 1. NIST level 1 candidates (Falcon512 and Kyber512) are provided, matched with 256-bit elliptic curves, intended for constrained use cases.
-The authors wish to note that although all the composite structures defined in this and the companion documents {{I-D.ounsworth-pq-composite-keys}} and {{I-D.ounsworth-pq-composite-sigs}} pecifications are defined in such a way as to easily allow 3 or more component algorithms, it was decided to only specify explicit pairs. This also does not preclude future specification of explicit combinations with three or more components.
+The authors wish to note that although all the composite structures defined in this specification are defined in such a way as to easily allow 3 or more component algorithms, it was decided to only specify explicit pairs. This also does not preclude future specification of explicit combinations with three or more components.
 
 To maximize interoperability, use of the specific algorithm combinations specified in this document is encouraged.  If other combinations are needed, a separate specification should be submitted to the IETF LAMPS working group.  To ease implementation, these specifications are encouraged to follow the construction pattern of the algorithms specified in this document.
 
@@ -227,7 +227,7 @@ Composite keys as defined here follow this definition and should be regarded as 
 
 The following ASN.1 Information Object Class is a template to be used in defining all composite key types, with suitable replacements for the ASN.1 identifier `pk-Composite` and the OID `id-composite-key` as appropriate. See the ASN.1 Module in {{sec-asn1-module}} for parmeterized as well as signature and KEM versions.
 
-TODO: remove the `id-composite-key` and make it an information class that is used to 
+TODO: remove the `id-composite-key` and make it an information class that is used to
 
 ~~~ ASN.1
 pk-Composite-KEM PUBLIC-KEY ::= {
@@ -314,7 +314,7 @@ to create Composite KEMs:
 
 ## Composite Keys
 
-A composite KEM MAY be associated with a composite public key as defined in [I-D.ounsworth-pq-composite-keys], but MAY also be associated with multiple public keys from different sources, for example multiple X.509 certificates, or multiple cryptographic modules. In the latter case, composite KEMs MAY be used as the mechanism for carrying multiple ciphertexts in a non-composite hybrid encryption equivalent of those described for digital signatures in [I-D.becker-guthrie-noncomposite-hybrid-auth].
+A composite KEM MAY be associated with a composite KEM public key, but MAY also be associated with multiple public keys from different sources, for example multiple X.509 certificates, or multiple cryptographic modules. In the latter case, composite KEMs MAY be used as the mechanism for carrying multiple ciphertexts in a non-composite hybrid encryption equivalent of those described for digital signatures in {{I-D.becker-guthrie-noncomposite-hybrid-auth}}.
 
 
 ### Key Usage Bits
@@ -613,7 +613,7 @@ For negotiated protocols, the client could choose which public key(s) or certifi
 
 For non-negotiated protocols, the details for obtaining backwards compatibility will vary by protocol, but for example in CMS [RFC5652].
 
-EDNOTE: I copied and pruned this text from {{I-D.ounsworth-pq-composite-sigs}}. It probably needs to be fleshed out more as we better understand the implementation concerns around composite encryption.
+EDNOTE: I copied and pruned this text from I-D.ounsworth-pq-composite-sigs. It probably needs to be fleshed out more as we better understand the implementation concerns around composite encryption.
 
 <!-- End of Implementation Considerations section -->
 

@@ -280,9 +280,8 @@ ExplicitCompositeKemParams{KEM-ALGORITHM:FirstKemAlg,
       SEQUENCE {
         kemAlgorithm1   AlgorithmIdentifier
                         { KEM-ALGORITHM, {FirstKemAlg}},
-	    kemAlgorithm2   AlgorithmIdentifier
-                        { KEM-ALGORITHM, {SecondKemAlg}} }								 
-							
+        kemAlgorithm2   AlgorithmIdentifier
+                        { KEM-ALGORITHM, {SecondKemAlg}} }
 
 kema-explicitCompositeKEM{OBJECT IDENTIFIER:id, PUBLIC-KEY:publicKeyObject, 
     CompositeKemParams} KEM-ALGORITHM ::=  {
