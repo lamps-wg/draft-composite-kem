@@ -158,13 +158,13 @@ For use within CMS, this document is intended to be coupled with the CMS KEMReci
 * Re-worked wire format and ASN.1 to remove vestiges of Generics.
   * Changed all `SEQUENCE OF SIZE (2..MAX)` to `SEQUENCE OF SIZE (2)`.
   * Changed the definition of `CompositeKEMPublicKey` from `SEQUENCE OF SubjectPublicKeyInfo` to `SEQUENCE OF BIT STRING` since with complete removal of Generic Composites, there is no longer any need to carry the component AlgorithmIdentifiers.
-  * Add a paragraph describing how to reconstitute component SPKIs.
+  * Added a paragraph describing how to reconstitute component SPKIs.
 * Added an Implementation Consideration about FIPS validation where only one component algorithm is FIPS-approved
 * Defined `KeyGen()`, `Encaps()`, and `Decaps()` for a composite KEM algorithm.
 * Removed the discussion of KeyTrans -> KEM and KeyAgree -> KEM promotions, and instead simply referenced {{I-D.ietf-lamps-rfc5990bis}} and {{I-D.ounsworth-lamps-cms-dhkem}}.
 * Made RSA keys fixed-length at 3072.
-* Re-work section 4.1 (id-Kyber768-RSA3072-KMAC256) to Reference 5990bis and its updated structures.
-* Remove RSA-KEM KDF params and make them implied by the OID; ie provide a profile of 5990bis.
+* Re-worked section 4.1 (id-Kyber768-RSA3072-KMAC256) to Reference 5990bis and its updated structures.
+* Removed RSA-KEM KDF params and make them implied by the OID; ie provide a profile of 5990bis.
 * Aligned with draft-ounsworth-cfrg-kem-combiners-04
 
 TODO:
@@ -396,7 +396,7 @@ Encaps(pk):
 
   # combine
   ct = CompositeCiphertextValue(ct1, ct2)
-  ss = Combiner(ss1, ss2)
+  ss = Combiner(ss1, ss2, algName)
 
   return (ct, ss)
 ~~~
@@ -419,13 +419,13 @@ Decaps(sk, ct):
   ss2 = ComponentKEM2.Encaps(sk2, ct2)
 
   # combine
-  ss = Combiner(ss1, ss2)
+  ss = Combiner(ss1, ss2, algName)
 
   return ss
 ~~~
 {: #alg-composite-decaps title="Composite Decaps(sk, ct)"}
 
-where `Combiner(k1, k2)` is defined in {sec-kem-combiner}.
+where `Combiner(k1, k2, fixedInfo)` is defined in {sec-kem-combiner}.
 
 
 ## kema-CompositeKEM {#sec-kema-CompositeKEM}
