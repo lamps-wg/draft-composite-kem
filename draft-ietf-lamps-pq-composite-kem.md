@@ -177,11 +177,12 @@ TODO:
 
   `[ ]` Get Russ' approval that I've used RFC5990bis correctly. Email sent. Waiting for a reply.
 
-  `[ ]` Top-to-bottom read, especially looking for redundancies or references to signatures from merging in the more generic Keys content.
 
 Still to do in a future version:
 
   `[ ]` I need an ASN.1 expert to help me fix how it references ECC named curves.
+
+  `[ ]` We're getting rid of CompositeKemParams entirely, right? If so, then I might not need an ASN.1 expert because we're ripping it all out anyway.
 
   `[ ]` We need PEM samples … 118 hackathon? OQS friends? David @ BC? The right format for samples is probably to follow the hackathon ... a Dilithium or ECDSA trust anchor certificate, a composite KEM end entity certificate, and a CMS EnvolepedData sample encrypted for that composite KEM certificate.
 
@@ -257,7 +258,7 @@ We borrow here the definition of a key encapsulation mechanism (KEM) from {{I-D.
 
 The KEM interface defined above differs from both traditional key transport mechanism (for example for use with KeyTransRecipientInfo defined in {{RFC5652}}), and key agreement (for example for use with KeyAgreeRecipientInfo defined in {{RFC5652}}).
 
-The KEM interface was chosen as the interface for a composite key exchange because it allows for arbitrary combinations of component algorithm types since both key transport and key agreement mechanisms can be promoted into KEMs. This specification uses the Post-Quantum KEM ML-KEM as specified in {{I-D.ietf-lamps-kyber-certificates}} and [FIPS.203-ipd]. For Traditional KEMs, this document relies on the RSA-KEM construction defined in {{I-D.ietf-lamps-rfc5990bis}} and the Elliptic Curve DHKEM defined in {{I-D.ounsworth-lamps-cms-dhkem}}.
+The KEM interface was chosen as the interface for a composite key establishment because it allows for arbitrary combinations of component algorithm types since both key transport and key agreement mechanisms can be promoted into KEMs. This specification uses the Post-Quantum KEM ML-KEM as specified in {{I-D.ietf-lamps-kyber-certificates}} and [FIPS.203-ipd]. For Traditional KEMs, this document relies on the RSA-KEM construction defined in {{I-D.ietf-lamps-rfc5990bis}} and the Elliptic Curve DHKEM defined in {{I-D.ounsworth-lamps-cms-dhkem}}.
 
 A composite KEM allows two or more underlying key transport, key agreement, or KEM algorithms to be combined into a single cryptographic operation by performing each operation, transformed to a KEM as outline above, and using a specified combiner function to combine the two or more component shared secrets into a single shared secret.
 
@@ -424,12 +425,15 @@ CompositeKEMPublicKeyBs ::= BIT STRING (CONTAINING CompositeKEMPublicKey ENCODED
 The ASN.1 algorithm object for a composite KEM is:
 
 ~~~
-kema-CompositeKEM KEM-ALGORITHM ::= {
-    IDENTIFIER TYPE OBJECT IDENTIFIER
-    VALUE CompositeCiphertextValue
-    PARAMS TYPE CompositeKemParams ARE required
-    PUBLIC-KEYS { pk-Composite }
-    SMIME-CAPS { IDENTIFIED BY id-alg-composite } }
+kema-CompositeKEM{
+  OBJECT IDENTIFIER:id,
+    PUBLIC-KEY:publicKeyObject, CompositeKemParams} KEM-ALGORITHM
+      ::= {
+         IDENTIFIER id
+         VALUE CompositeCiphertextValue
+         PARAMS TYPE CompositeKemParams ARE required
+         PUBLIC-KEYS { publicKeyObject }
+        }
 ~~~
 
 
@@ -438,11 +442,10 @@ to create Composite KEMs:
 
 | SIGNATURE-ALGORITHM element | Definition |
 | ---------                   | ---------- |
-| IDENTIFIER                  | The Object ID used to identify the composite Signature Algorithm |
-| VALUE                       | The Sequence of BIT STRINGS for each component signature value |
+| IDENTIFIER                  | The Object ID used to identify the composite Signature Algorithm as defined in {{tab-kem-algs}} |
+| VALUE                       | A CompositeCiphertextValue |
 | PARAMS                      | Parameters of type CompositeKemParams may be provided when required |
 | PUBLIC-KEYS                 | The composite key required to produce the composite signature |
-| SMIME_CAPS                  | Not needed for composite |
 
 
 
@@ -568,7 +571,7 @@ Full specifications for the referenced algorithms can be found as follows:
 * _RSA-KEM_: {{I-D.ietf-lamps-rfc5990bis}}
 * _X25519 / X448_: [RFC8410]
 
-Note that all ECDH as well as X25519 and X448 algorithms MUST be prometed into KEMs according to {{I-D.ounsworth-lamps-cms-dhkem}}.
+Note that all ECDH as well as X25519 and X448 algorithms MUST be promoted into KEMs according to {{I-D.ounsworth-lamps-cms-dhkem}}.
 
 EDNOTE: I believe that [SP.800-56Ar3] and [BSI-ECC] give equivalent and interoperable algorithms, so maybe this is extranuous detail to include?
 
@@ -590,6 +593,7 @@ As with the other composite KEM algorithms, when `id-MLKEM768-RSA3072-KMAC256` i
 {: #rsa-kem-params title="RSA-KEM Parameters"}
 
 where:
+
 * `kda-kdf3` is defined in {{I-D.ietf-lamps-rfc5990bis}} which references it from [ANS-X9.44].
 * `kwa-aes256-wrap` is defined in {{I-D.ietf-lamps-rfc5990bis}}
 * `mda-shake256` is defined in [RFC8692].

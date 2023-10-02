@@ -274,10 +274,10 @@ COMPOSITE-KEM-ALGORITHM ::= CLASS {
 
 CompositeCiphertextValue ::= SEQUENCE SIZE (2) OF OCTET STRING
 
-CompositeKemParams ::= SEQUENCE SIZE (2) OF AlgorithmIdentifier{
+CompositeKEMParams ::= SEQUENCE SIZE (2) OF AlgorithmIdentifier{
     KEM-ALGORITHM, {KEMAlgSet} }
 
-ExplicitCompositeKemParams{KEM-ALGORITHM:FirstKemAlg, 
+CompositeKEMParams{ KEM-ALGORITHM:FirstKemAlg, 
    KEM-ALGORITHM:SecondKemAlg}  ::=     
       SEQUENCE {
         kemAlgorithm1   AlgorithmIdentifier
@@ -285,13 +285,15 @@ ExplicitCompositeKemParams{KEM-ALGORITHM:FirstKemAlg,
         kemAlgorithm2   AlgorithmIdentifier
                         { KEM-ALGORITHM, {SecondKemAlg}} }
 
-kema-explicitCompositeKEM{OBJECT IDENTIFIER:id, 
+kema-CompositeKEM{
+  OBJECT IDENTIFIER:id, 
     PUBLIC-KEY:publicKeyObject, CompositeKemParams} KEM-ALGORITHM 
       ::= {
          IDENTIFIER id
          VALUE CompositeCiphertextValue
          PARAMS TYPE CompositeKemParams ARE required
-         PUBLIC-KEYS {publicKeyObject} }
+         PUBLIC-KEYS { publicKeyObject } 
+        }
 
 
 
