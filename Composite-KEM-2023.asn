@@ -71,10 +71,10 @@ der OBJECT IDENTIFIER ::=
 CompositeKEMPublicKey ::= SEQUENCE SIZE (2) OF BIT STRING
 
 CompositeKEMPublicKeyOs ::= OCTET STRING (CONTAINING 
-                                CompositePublicKey ENCODED BY der)
+                                CompositeKEMPublicKey ENCODED BY der)
 
 CompositeKEMPublicKeyBs ::= BIT STRING (CONTAINING 
-                                CompositePublicKey ENCODED BY der)
+                                CompositeKEMPublicKey ENCODED BY der)
 
 CompositeKEMPrivateKey ::= SEQUENCE SIZE (2) OF OneAsymmetricKey
 
@@ -117,17 +117,16 @@ pk-CompositeKEM{
 
 
 
--- Explicit Composite KEM Keys
+-- Composite KEM Keys
 
 
 -- TODO: To be replaced by IANA
 id-MLKEM512-ECDH-P256-KMAC128 OBJECT IDENTIFIER ::= {
   joint-iso-itu-t(2) country(16) us(840) organization(1) 
-  entrust(114027) algorithm(80) explicitcomposite(5) 
-  explicitcomposite-kem(2) id-mlkem512-ecdh-p256(1) }
+  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 1 }
 
 pk-MLKEM512-ECDH-P256-KMAC128 PUBLIC-KEY ::= 
-  pk-explicitCompositeKEM{ id-MLKEM512-ECDH-P256-KMAC128, 
+  pk-CompositeKEM{ id-MLKEM512-ECDH-P256-KMAC128, 
   pk-MLKEM512TBD, OCTET STRING, pk-ec, ECPoint}
 
 --TODO: this is missing `PARAMS secp256r1`
@@ -136,11 +135,10 @@ pk-MLKEM512-ECDH-P256-KMAC128 PUBLIC-KEY ::=
 -- TODO: To be replaced by IANA
 id-MLKEM512-ECDH-brainpoolP256r1-KMAC128 OBJECT IDENTIFIER ::= {
   joint-iso-itu-t(2) country(16) us(840) organization(1) 
-  entrust(114027) algorithm(80) explicitcomposite(5) 
-  explicitcomposite-kem(2) id-mlkem512-ecdh-brainpoolp256r1(2) }
+  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 2 }
 
 pk-MLKEM512-ECDH-brainpoolP256r1-KMAC128 PUBLIC-KEY ::= 
-  pk-explicitCompositeKEM{
+  pk-CompositeKEM{
     id-MLKEM512-ECDH-brainpoolP256r1-KMAC128, 
     pk-MLKEM512TBD, OCTET STRING, pk-ec, ECPoint}
 
@@ -150,33 +148,30 @@ pk-MLKEM512-ECDH-brainpoolP256r1-KMAC128 PUBLIC-KEY ::=
 -- TODO: To be replaced by IANA
 id-MLKEM512-X25519-KMAC128 OBJECT IDENTIFIER ::= {
   joint-iso-itu-t(2) country(16) us(840) organization(1) 
-  entrust(114027) algorithm(80) explicitcomposite(5) kem(2)
-  id-mlkem512-x25519(3) }
+  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 3 }
 
 pk-MLKEM512-X25519-KMAC128 PUBLIC-KEY ::= 
-  pk-explicitCompositeKEM{id-MLKEM512-X25519-KMAC128, 
+  pk-CompositeKEM{id-MLKEM512-X25519-KMAC128, 
   pk-MLKEM512TBD, OCTET STRING, pk-X25519, OCTET STRING}
 
 
 -- TODO: To be replaced by IANA
 id-MLKEM768-RSA3072-KMAC256 OBJECT IDENTIFIER ::= {
   joint-iso-itu-t(2) country(16) us(840) organization(1) 
-  entrust(114027) algorithm(80) explicitcomposite(5) kem(2)
-  id-mlkem768-rsa(4) }
+  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 4 }
 
 pk-MLKEM768-RSA3072-KMAC256 PUBLIC-KEY ::= 
-  pk-explicitCompositeKEM{id-MLKEM768-RSA3072-KMAC256, 
+  pk-CompositeKEM{id-MLKEM768-RSA3072-KMAC256, 
   pk-MLKEM768TBD, OCTET STRING, pk-rsa, RSAPublicKey}
 
 
 -- TODO: To be replaced by IANA
 id-MLKEM768-ECDH-P256-KMAC256 OBJECT IDENTIFIER ::= {
   joint-iso-itu-t(2) country(16) us(840) organization(1) 
-  entrust(114027) algorithm(80) explicitcomposite(5) kem(2)
-  id-mlkem768-ecdh-p256(5) }
+  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 5 }
 
 pk-MLKEM768-ECDH-P256-KMAC256 PUBLIC-KEY ::= 
-  pk-explicitCompositeKEM{id-MLKEM768-ECDH-P256-KMAC256, 
+  pk-CompositeKEM{id-MLKEM768-ECDH-P256-KMAC256, 
   pk-MLKEM768TBD, OCTET STRING, pk-ec, ECPoint}
 
 --TODO: this is missing `PARAMS secp256r1`
@@ -184,11 +179,10 @@ pk-MLKEM768-ECDH-P256-KMAC256 PUBLIC-KEY ::=
 -- TODO: To be replaced by IANA
 id-MLKEM768-ECDH-brainpoolP256r1-KMAC256 OBJECT IDENTIFIER ::= {
   joint-iso-itu-t(2) country(16) us(840) organization(1) 
-  entrust(114027) algorithm(80) explicitcomposite(5) kem(2)
-  id-mlkem768-ecdh-p256(6) }
+  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 6 }
 
 pk-MLKEM768-ECDH-brainpoolP256r1-KMAC256 PUBLIC-KEY ::= 
-  pk-explicitCompositeKEM{
+  pk-CompositeKEM{
     id-MLKEM768-ECDH-brainpoolP256r1-KMAC256, 
     pk-MLKEM768TBD, OCTET STRING, pk-ec, ECPoint}
 
@@ -198,11 +192,10 @@ pk-MLKEM768-ECDH-brainpoolP256r1-KMAC256 PUBLIC-KEY ::=
 -- TODO: To be replaced by IANA
 id-MLKEM768-X25519-KMAC256 OBJECT IDENTIFIER ::= {
   joint-iso-itu-t(2) country(16) us(840) organization(1)
-  entrust(114027) algorithm(80) explicitcomposite(5) kem(2)
-  id-mlkem768-x25519(7) }
+  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 7 }
 
 pk-MLKEM768-X25519-KMAC256 PUBLIC-KEY ::= 
-  pk-explicitCompositeKEM{id-MLKEM768-X25519-KMAC256, 
+  pk-CompositeKEM{id-MLKEM768-X25519-KMAC256, 
   pk-MLKEM768TBD, OCTET STRING, pk-X25519, OCTET STRING}
 
 
@@ -210,11 +203,10 @@ pk-MLKEM768-X25519-KMAC256 PUBLIC-KEY ::=
 -- TODO: To be replaced by IANA
 id-MLKEM1024-ECDH-P384-KMAC256 OBJECT IDENTIFIER ::= {
   joint-iso-itu-t(2) country(16) us(840) organization(1)
-  entrust(114027) algorithm(80) explicitcomposite(5) kem(2)
-  id-mlkem1024-ecdh-p384(8) }
+  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 8 }
 
 pk-MLKEM1024-ECDH-P384-KMAC256 PUBLIC-KEY ::= 
-  pk-explicitCompositeKEM{id-MLKEM1024-ECDH-P384-KMAC256, 
+  pk-CompositeKEM{id-MLKEM1024-ECDH-P384-KMAC256, 
   pk-MLKEM1024TBD, OCTET STRING, pk-ec, ECPoint}
 
 --TODO: this is missing `PARAMS secp384r1`
@@ -223,11 +215,10 @@ pk-MLKEM1024-ECDH-P384-KMAC256 PUBLIC-KEY ::=
 -- TODO: To be replaced by IANA
 id-MLKEM1024-ECDH-brainpoolP384r1-KMAC256 OBJECT IDENTIFIER ::= {
   joint-iso-itu-t(2) country(16) us(840) organization(1) 
-  entrust(114027) algorithm(80) explicitcomposite(5) kem(2)
-  id-mlkem1024-ecdh-brainpoolp384r1(9) }
+  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 9 }
 
 pk-MLKEM1024-ECDH-brainpoolP384r1-KMAC256 PUBLIC-KEY ::= 
-  pk-explicitCompositeKEM{
+  pk-CompositeKEM{
     id-MLKEM1024-ECDH-brainpoolP384r1-KMAC256, 
     pk-MLKEM1024TBD, OCTET STRING, pk-ec, ECPoint}
 
@@ -237,11 +228,10 @@ pk-MLKEM1024-ECDH-brainpoolP384r1-KMAC256 PUBLIC-KEY ::=
 -- TODO: To be replaced by IANA
 id-MLKEM1024-X448-KMAC256 OBJECT IDENTIFIER ::= {
   joint-iso-itu-t(2) country(16) us(840) organization(1) 
-  entrust(114027) algorithm(80) explicitcomposite(5) kem(2)
-  id-mlkem1024-x448(10) }
+  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 10 }
 
 pk-MLKEM1024-X448-KMAC256 PUBLIC-KEY ::= 
-  pk-explicitCompositeKEM{id-MLKEM1024-X448-KMAC256, 
+  pk-CompositeKEM{id-MLKEM1024-X448-KMAC256, 
   pk-MLKEM1024TBD, OCTET STRING, pk-X448, OCTET STRING}
 
 
@@ -274,9 +264,6 @@ COMPOSITE-KEM-ALGORITHM ::= CLASS {
 
 CompositeCiphertextValue ::= SEQUENCE SIZE (2) OF OCTET STRING
 
-CompositeKEMParams ::= SEQUENCE SIZE (2) OF AlgorithmIdentifier{
-    KEM-ALGORITHM, {KEMAlgSet} }
-
 CompositeKEMParams{ KEM-ALGORITHM:FirstKemAlg, 
    KEM-ALGORITHM:SecondKemAlg}  ::=     
       SEQUENCE {
@@ -297,52 +284,52 @@ kema-CompositeKEM{
 
 
 
--- Explicit Composite KEMs
+-- Composite KEMs
 
 
 kema-MLKEM512-ECDH-P256-KMAC128 KEM-ALGORITHM ::= 
-    kema-explicitCompositeKEM{
+    kema-CompositeKEM{
       id-MLKEM512-ECDH-P256-KMAC128, 
       pk-MLKEM512-ECDH-P256-KMAC128,
-      ExplicitCompositeKemParams{{kema-MLKEM512TBD}, 
+      CompositeKemParams{{kema-MLKEM512TBD}, 
         {kema-ecdh-p256}} }
 
 --TODO: `kema-ecdh-p256` does not actually exist yet.
 
 
 kema-MLKEM512-ECDH-brainpoolP256r1-KMAC128 KEM-ALGORITHM ::= 
-    kema-explicitCompositeKEM{
+    kema-CompositeKEM{
       id-MLKEM512-ECDH-brainpoolP256r1-KMAC128, 
       pk-MLKEM512-ECDH-brainpoolP256r1-KMAC128,
-      ExplicitCompositeKemParams{{kema-MLKEM512TBD}, 
+      CompositeKemParams{{kema-MLKEM512TBD}, 
         {kema-ecdh-brainpoolp256r1}} }
 
 --TODO: `kema-ecdh-brainpoolp256r1` does not actually exist yet.
 
 
 kema-MLKEM512-X25519-KMAC128 KEM-ALGORITHM ::= 
-    kema-explicitCompositeKEM{
+    kema-CompositeKEM{
       id-MLKEM512-X25519-KMAC128, 
       pk-MLKEM512-X25519-KMAC128,
-      ExplicitCompositeKemParams{{kema-MLKEM512TBD}, 
+      CompositeKemParams{{kema-MLKEM512TBD}, 
         {kema-x25519}} }
 
 --TODO: `kema-x25519` does not actually exist yet.
 
 
 kema-MLKEM768-RSA3072-KMAC256 KEM-ALGORITHM ::=
-    kema-explicitCompositeKEM{
+    kema-CompositeKEM{
       id-MLKEM768-RSA3072-KMAC256, 
       pk-MLKEM768-RSA3072-KMAC256,
-      ExplicitCompositeKemParams{{kema-MLKEM512TBD},
+      CompositeKemParams{{kema-MLKEM512TBD},
         {kema-kem-rsa}} }
 
 
 kema-MLKEM768-ECDH-P256-KMAC256 KEM-ALGORITHM ::= 
-    kema-explicitCompositeKEM{
+    kema-CompositeKEM{
       id-MLKEM768-ECDH-P256-KMAC256, 
       pk-MLKEM768-ECDH-P256-KMAC256,
-      ExplicitCompositeKemParams{{kema-MLKEM768TBD},
+      CompositeKemParams{{kema-MLKEM768TBD},
         {kema-ecdh-p256}} }
 
 --TODO: `kema-ecdh-p256` does not actually exist yet.
@@ -350,50 +337,50 @@ kema-MLKEM768-ECDH-P256-KMAC256 KEM-ALGORITHM ::=
 
 
 kema-MLKEM768-ECDH-brainpoolP256r1-KMAC256 KEM-ALGORITHM ::= 
-    kema-explicitCompositeKEM{
+    kema-CompositeKEM{
       id-MLKEM768-ECDH-brainpoolP256r1-KMAC256, 
       pk-MLKEM768-ECDH-brainpoolP256r1-KMAC256,
-      ExplicitCompositeKemParams{{kema-MLKEM768TBD}, 
+      CompositeKemParams{{kema-MLKEM768TBD}, 
         {kema-ecdh-brainpoolp256r1}} }
 
 --TODO: `kema-ecdh-brainpoolp256r1` does not actually exist yet.
 
 
 kema-MLKEM768-X25519-KMAC256 KEM-ALGORITHM ::= 
-    kema-explicitCompositeKEM{
+    kema-CompositeKEM{
       id-MLKEM768-X25519-KMAC256, 
       pk-MLKEM768-X25519-KMAC256,
-      ExplicitCompositeKemParams{{kema-MLKEM768TBD}, 
+      CompositeKemParams{{kema-MLKEM768TBD}, 
         {kema-x25519}} }
 
 --TODO: `kema-x25519` does not actually exist yet.
 
 
 kema-MLKEM1024-ECDH-P384-KMAC256 KEM-ALGORITHM ::= 
-    kema-explicitCompositeKEM{
+    kema-CompositeKEM{
       id-MLKEM1024-ECDH-P384-KMAC256, 
       pk-MLKEM1024-ECDH-P384-KMAC256,
-      ExplicitCompositeKemParams{{kema-MLKEM1024TBD}, 
+      CompositeKemParams{{kema-MLKEM1024TBD}, 
         {kema-ecdh-p384}} }
 
 --TODO: `kema-ecdh-p384` does not actually exist yet.
 
 
 kema-MLKEM1024-ECDH-brainpoolP384r1-KMAC256 KEM-ALGORITHM ::= 
-    kema-explicitCompositeKEM{
+    kema-CompositeKEM{
       id-MLKEM1024-ECDH-brainpoolP384r1-KMAC256, 
       pk-MLKEM1024-ECDH-brainpoolP384r1-KMAC256,
-      ExplicitCompositeKemParams{{kema-MLKEM1024TBD}, 
+      CompositeKemParams{{kema-MLKEM1024TBD}, 
         {kema-ecdh-brainpoolp384r1}}}
 
 --TODO: `kema-ecdh-brainpoolp384r1` does not actually exist yet.
 
 
 kema-MLKEM1024-X448-KMAC256 KEM-ALGORITHM ::= 
-    kema-explicitCompositeKEM{
+    kema-CompositeKEM{
       id-MLKEM1024-X448-KMAC256, 
       pk-MLKEM1024-X448-KMAC256,
-      ExplicitCompositeKemParams{{kema-MLKEM1024TBD}, 
+      CompositeKemParams{{kema-MLKEM1024TBD}, 
         {kema-x448}} }
 
 --TODO: `kema-x448` does not actually exist yet.

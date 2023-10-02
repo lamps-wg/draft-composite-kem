@@ -64,7 +64,7 @@ normative:
   RFC8411:
   I-D.draft-ietf-lamps-rfc5990bis-01:
   I-D.draft-ounsworth-lamps-cms-dhkem-00:
-  I-D.draft-housley-lamps-cms-sha3-hash-00:
+  I-D.draft-housley-lamps-cms-sha3-hash-01:
   ANS-X9.44:
     title: "Public Key
               Cryptography for the Financial Services Industry -- Key
@@ -265,7 +265,7 @@ A composite KEM allows two or more underlying key transport, key agreement, or K
 
 ### Composite KeyGen
 
-The `KeyGen() -> (pk, sk)` of a composite KEM algorithm will perform the `KeyGen()` of the respective component KEM algorithms and it produces a composite public key `pk` as per {sec-composite-pub-keys} and a composite secret key `sk` is per {sec-priv-key}.
+The `KeyGen() -> (pk, sk)` of a composite KEM algorithm will perform the `KeyGen()` of the respective component KEM algorithms and it produces a composite public key `pk` as per {{sec-composite-pub-keys}} and a composite secret key `sk` is per {{sec-priv-key}}.
 
 ### Composite Encaps
 
@@ -289,7 +289,7 @@ Encaps(pk):
 ~~~
 {: #alg-composite-encaps title="Composite Encaps(pk)"}
 
-where `Combiner(k1, k2)` is defined in {sec-kem-combiner} and `CompositeCiphertextValue` is defined in {sec-CompositeCiphertextValue}.
+where `Combiner(k1, k2, fixedInfo)` is defined in {{sec-kem-combiner}} and `CompositeCiphertextValue` is defined in {{sec-CompositeCiphertextValue}}.
 
 ### Composite Decaps
 
@@ -710,7 +710,7 @@ TBD
 
 ## FIPS certification {#sec-fips}
 
-One of the primary design goals of the specification is for the overall composite algorithm to be able to considered FIPS-approved even when one of the component algorithms is not. The combiner presented in {{sec-kem-combiner}} was chosen to align with [SP.800-56Cr2] for this reason.
+One of the primary design goals of this specification is for the overall composite algorithm to be able to be considered FIPS-approved even when one of the component algorithms is not. The combiner presented in {{sec-kem-combiner}} was chosen to align with [SP.800-56Cr2] for this reason.
 
 Implementors seeking FIPS certification of a composite KEM algorithm where only one of the component algorithms has been FIPS-validated or FIPS-approved should credit the FIPS-validated component algorithm with full security strength, the non-FIPS-validated component algorith with zero security, and the overall composite should be considered full strength and thus FIPS-approved.
 
