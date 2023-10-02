@@ -63,7 +63,6 @@ normative:
   RFC8410:
   RFC8411:
   RFC8692:
-  I-D.draft-housley-lamps-cms-kemri-02:
   I-D.draft-ietf-lamps-rfc5990bis-01:
   I-D.draft-ounsworth-lamps-cms-dhkem-00:
   ANS-X9.44:
@@ -135,6 +134,7 @@ informative:
   I-D.draft-ounsworth-cfrg-kem-combiners-04:
   I-D.draft-ietf-lamps-kyber-certificates-01:
   I-D.draft-becker-guthrie-noncomposite-hybrid-auth-00:
+  I-D.draft-housley-lamps-cms-kemri-02:
 
 
 --- abstract
