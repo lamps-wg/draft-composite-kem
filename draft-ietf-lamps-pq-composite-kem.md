@@ -155,7 +155,7 @@ Changes affecting interoperability:
 * Re-worked wire format and ASN.1 to remove vestiges of Generics.
   * Changed all `SEQUENCE OF SIZE (2..MAX)` to `SEQUENCE OF SIZE (2)`.
   * Changed the definition of `CompositeKEMPublicKey` from `SEQUENCE OF SubjectPublicKeyInfo` to `SEQUENCE OF BIT STRING` since with complete removal of Generic Composites, there is no longer any need to carry the component AlgorithmIdentifiers.
-  * Added a paragraph describing how to reconstitute component SPKIs.
+  * Removed CompositeKEMParams since all params are now explicit in the OID.
 * Defined `KeyGen()`, `Encaps()`, and `Decaps()` for a composite KEM algorithm.
 * Removed the discussion of KeyTrans -> KEM and KeyAgree -> KEM promotions, and instead simply referenced {{I-D.ietf-lamps-rfc5990bis}} and {{I-D.ounsworth-lamps-cms-dhkem}}.
 * Made RSA keys fixed-length at 3072.
@@ -167,6 +167,7 @@ Editorial changes:
 
 * Refactored to use MartinThomson github template.
 * Made this document standalone by folding in the minimum necessary content from composite-keys and dropping the cross-reference to composite-sigs.
+* Added a paragraph describing how to reconstitute component SPKIs.
 * Added an Implementation Consideration about FIPS validation where only one component algorithm is FIPS-approved.
 * Shortened the abstract (moved some content into Intro).
 * Brushed up the Security Considerations.
