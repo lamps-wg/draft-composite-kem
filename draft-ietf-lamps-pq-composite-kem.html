@@ -1932,7 +1932,7 @@ Combiner(ss1, ss2, "id-MLKEM512-ECDH-P256-KMAC128") =
 <a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-id-mlkem768-rsa3072-kmac256" class="section-name selfRef">id-MLKEM768-RSA3072-KMAC256 Parameters</a>
         </h3>
 <p id="section-5.1-1">Use of RSA-KEM <span>[<a href="#I-D.ietf-lamps-rfc5990bis" class="cite xref">I-D.ietf-lamps-rfc5990bis</a>]</span> requires additional specification.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
-<p id="section-5.1-2">The RSA component keys MUST be generated at the 3072-bit security level in order to match security level with ML-KEM-768. Parsers SHOULD be flexible since RSA keys generated at the 3072-bit security level may not be exactly 3072 bits in length due to dropped leading zeros.<a href="#section-5.1-2" class="pilcrow">¶</a></p>
+<p id="section-5.1-2">The RSA component keys MUST be generated at the 3072-bit security level in order to match security level with ML-KEM-768.<a href="#section-5.1-2" class="pilcrow">¶</a></p>
 <p id="section-5.1-3">As with the other composite KEM algorithms, when <code>id-MLKEM768-RSA3072-KMAC256</code> is used in an AlgorithmIdentifier, the parameters MUST be absent. <code>id-MLKEM768-RSA3072-KMAC256</code> SHALL instantiate RSA-KEM with the following parameters:<a href="#section-5.1-3" class="pilcrow">¶</a></p>
 <span id="name-rsa-kem-parameters"></span><div id="rsa-kem-params">
 <table class="center" id="table-4">

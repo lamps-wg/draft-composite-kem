@@ -768,10 +768,7 @@ Table of Contents
    specification.
 
    The RSA component keys MUST be generated at the 3072-bit security
-   level in order to match security level with ML-KEM-768.  Parsers
-   SHOULD be flexible since RSA keys generated at the 3072-bit security
-   level may not be exactly 3072 bits in length due to dropped leading
-   zeros.
+   level in order to match security level with ML-KEM-768.
 
    As with the other composite KEM algorithms, when id-
    MLKEM768-RSA3072-KMAC256 is used in an AlgorithmIdentifier, the
