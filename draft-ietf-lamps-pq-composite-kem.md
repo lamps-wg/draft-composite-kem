@@ -62,7 +62,6 @@ normative:
   RFC8174:
   RFC8410:
   RFC8411:
-  RFC8692:
   I-D.draft-ietf-lamps-rfc5990bis-01:
   I-D.draft-ounsworth-lamps-cms-dhkem-00:
   I-D.draft-housley-lamps-cms-sha3-hash-00:
