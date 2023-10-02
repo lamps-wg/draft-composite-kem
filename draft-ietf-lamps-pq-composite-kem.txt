@@ -1422,12 +1422,6 @@ Table of Contents
               RFC 8411, DOI 10.17487/RFC8411, August 2018,
               <https://www.rfc-editor.org/info/rfc8411>.
 
-   [RFC8692]  Kampanakis, P. and Q. Dang, "Internet X.509 Public Key
-              Infrastructure: Additional Algorithm Identifiers for
-              RSASSA-PSS and ECDSA Using SHAKEs", RFC 8692,
-              DOI 10.17487/RFC8692, December 2019,
-              <https://www.rfc-editor.org/info/rfc8692>.
-
    [SP.800-56Ar3]
               National Institute of Standards and Technology (NIST),
               "Recommendation for Pair-Wise Key-Establishment Schemes
