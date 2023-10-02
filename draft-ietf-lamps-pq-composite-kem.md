@@ -765,11 +765,5 @@ been inadvertently omitted from this list.
 This document borrows text from similar documents, including those referenced below. Thanks go to the authors of those
    documents.  "Copying always makes things easier and less error prone" - [RFC8411].
 
-## Making contributions
-
-Additional contributions to this draft are welcome. Please see the working copy of this draft at, as well as open issues at:
-
-https://github.com/EntrustCorporation/draft-composite-kem/
-
 
 <!-- End of Contributors section -->
