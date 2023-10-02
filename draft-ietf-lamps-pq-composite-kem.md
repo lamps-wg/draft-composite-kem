@@ -65,6 +65,7 @@ normative:
   RFC8692:
   I-D.draft-ietf-lamps-rfc5990bis-01:
   I-D.draft-ounsworth-lamps-cms-dhkem-00:
+  I-D.draft-housley-lamps-cms-sha3-hash-00:
   ANS-X9.44:
     title: "Public Key
               Cryptography for the Financial Services Industry -- Key
@@ -587,7 +588,7 @@ As with the other composite KEM algorithms, when `id-MLKEM768-RSA3072-KMAC256` i
 
 | RSA-KEM Parameter          | Value                      |
 | -------------------------- | -------------------------- |
-| keyDerivationFunction      | kda-kdf3 with mda-shake256 |
+| keyDerivationFunction      | kda-kdf3 with id-sha3-384  |
 | keyLength                  | 256                        |
 | DataEncapsulationMechanism | kwa-aes256-wrap            |
 {: #rsa-kem-params title="RSA-KEM Parameters"}
@@ -596,7 +597,7 @@ where:
 
 * `kda-kdf3` is defined in {{I-D.ietf-lamps-rfc5990bis}} which references it from [ANS-X9.44].
 * `kwa-aes256-wrap` is defined in {{I-D.ietf-lamps-rfc5990bis}}
-* `mda-shake256` is defined in [RFC8692].
+* `mda-shake256` is defined in {{I-D.housley-lamps-cms-sha3-hash}}.
 
 
 
