@@ -79,15 +79,17 @@ CompositeKEMPublicKeyBs ::= BIT STRING (CONTAINING
 CompositeKEMPrivateKey ::= SEQUENCE SIZE (2) OF OneAsymmetricKey
 
 
-pk-CompositeKEM{OBJECT IDENTIFIER:id, 
+pk-CompositeKEM{
+  OBJECT IDENTIFIER:id, 
   PUBLIC-KEY:firstPublicKey, FirstPublicKeyType, 
-  PUBLIC-KEY:secondPublicKey, SecondPublicKeyType} PUBLIC-KEY ::= {
-  IDENTIFIER id
-  KEY CompositeKEMPublicKey{firstPublicKey, FirstPublicKeyType,
-      secondPublicKey, SecondPublicKeyType}
-  PARAMS ARE absent
-  CERT-KEY-USAGE { keyEncipherment }
-}
+  PUBLIC-KEY:secondPublicKey, SecondPublicKeyType} PUBLIC-KEY ::= 
+  {
+    IDENTIFIER id
+    KEY CompositeKEMPublicKey{ firstPublicKey, FirstPublicKeyType,
+        secondPublicKey, SecondPublicKeyType}
+    PARAMS ARE absent
+    CERT-KEY-USAGE { keyEncipherment }
+  }
 
 
 -- TODO this is one possible way to reference specific named curves.
@@ -125,7 +127,7 @@ id-MLKEM512-ECDH-P256-KMAC128 OBJECT IDENTIFIER ::= {
   explicitcomposite-kem(2) id-mlkem512-ecdh-p256(1) }
 
 pk-MLKEM512-ECDH-P256-KMAC128 PUBLIC-KEY ::= 
-  pk-explicitCompositeKEM{id-MLKEM512-ECDH-P256-KMAC128, 
+  pk-explicitCompositeKEM{ id-MLKEM512-ECDH-P256-KMAC128, 
   pk-MLKEM512TBD, OCTET STRING, pk-ec, ECPoint}
 
 --TODO: this is missing `PARAMS secp256r1`

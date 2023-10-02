@@ -239,113 +239,8 @@ In addition, the following terms are used in this document:
 
 Composite keys as defined here follow this definition and should be regarded as a single key that performs a single cryptographic operation such key generation, signing, verifying, encapsulating, or decapsulating -- using its internal sequence of component keys as if they form a single key. This generally means that the complexity of combining algorithms can and should be handled by the cryptographic library or cryptographic module, and the single composite public key, private key, and ciphertext can be carried in existing fields in protocols such as PKCS#10 [RFC2986], CMP [RFC4210], X.509 [RFC5280], CMS [RFC5652], and the Trust Anchor Format [RFC5914]. In this way, composites achieve "protocol backwards-compatibility" in that they will drop cleanly into any protocol that accepts KEM algorithms without requiring any modification of the protocol to handle multiple keys.
 
-## Algorithm Selection Criteria {#sec-selection-criteria}
 
-The composite algorithm combinations defined in this document were chosen according to the following guidelines:
-
-1. A single RSA combination is provided at a key size of 3072 bits, matched with NIST PQC Level 3 algorithms.
-1. Elliptic curve algorithms are provided with combinations on each of the NIST [RFC6090], Brainpool [RFC5639], and Edwards [RFC7748] curves. NIST PQC Levels 1 - 3 algorithms are matched with 256-bit curves, while NIST levels 4 - 5 are matched with 384-bit elliptic curves. This provides a balance between matching classical security levels of post-quantum and traditional algorithms, and also selecting elliptic curves which already have wide adoption.
-1. NIST level 1 candidates are provided, matched with 256-bit elliptic curves, intended for constrained use cases.
-
-If other combinations are needed, a separate specification should be submitted to the IETF LAMPS working group.  To ease implementation, these specifications are encouraged to follow the construction pattern of the algorithms specified in this document.
-
-The composite structures defined in this specification allow only for pairs of algorithms. This also does not preclude future specification from extending these structures to define combinations with three or more components.
-
-<!-- End of Introduction section -->
-
-
-# Composite Key Structures {#sec-composite-keys}
-
-## pk-CompositeKEM
-
-The following ASN.1 Information Object Class is a template to be used in defining all composite KEM public key types.
-
-~~~ ASN.1
-pk-CompositeKEM{OBJECT IDENTIFIER:id,
-  PUBLIC-KEY:firstPublicKey, FirstPublicKeyType,
-  PUBLIC-KEY:secondPublicKey, SecondPublicKeyType} PUBLIC-KEY ::= {
-  IDENTIFIER id
-  KEY CompositeKEMPublicKey{firstPublicKey, FirstPublicKeyType,
-      secondPublicKey, SecondPublicKeyType}
-  PARAMS ARE absent
-  CERT-KEY-USAGE { keyEncipherment }
-}
-~~~
-{: artwork-name="CompositeKeyObject-asn.1-structures"}
-
-As an example, the public key type `pk-MLKEM512-ECDH-P256-KMAC128` is defined as:
-
-~~~
-pk-MLKEM512-ECDH-P256-KMAC128 PUBLIC-KEY ::=
-  pk-explicitCompositeKEM{id-MLKEM512-ECDH-P256-KMAC128,
-  pk-MLKEM512TBD, OCTET STRING, pk-ec, ECPoint}
-~~~
-
-The full set of key types defined by this specification can be found in the ASN.1 Module in {{sec-asn1-module}}.
-
-
-## CompositeKEMPublicKey {#sec-composite-pub-keys}
-
-Composite public key data is represented by the following structure:
-
-~~~ ASN.1
-CompositeKEMPublicKey ::= SEQUENCE SIZE (2) OF BIT STRING
-~~~
-{: artwork-name="CompositeKEMPublicKey-asn.1-structures"}
-
-
-A composite key MUST contain two component public keys. The order of the component keys is determined by the definition of the corresponding algorithm identifier as defined in section {{sec-alg-ids}}.
-
-Some applications may need to reconstruct the `SubjectPublicKeyInfo` objects corresponding to each component public key. {{tab-kem-algs}} in {{sec-alg-ids}} provides the necessary mapping between composite and their component algorithms for doing this reconstruction.
-
-When the CompositeKEMPublicKey must be provided in octet string or bit string format, the data structure is encoded as specified in {{sec-encoding-rules}}.
-
-
-## CompositeKEMPrivateKey {#sec-priv-key}
-
-This section provides an encoding for composite private keys intended for PKIX protocols and other applications that require an interoperable format for transmitting private keys, such as PKCS #12 [RFC7292] or CMP / CRMF [RFC4210], [RFC4211]. It is not intended to dictate a storage format in implementations not requiring interoperability of private key formats.
-
-In some cases the private keys that comprise a composite key may not be represented in a single structure or even be contained in a single cryptographic module; for example if one component is within the FIPS boundary of a cryptographic module and the other is not; see {sec-fips} for more discussion. The establishment of correspondence between public keys in a CompositeKEMPublicKey and private keys not represented in a single composite structure is beyond the scope of this document.
-
-
-Usecases that require an interoperable encodingn for composite private keys MUST use the following structure.
-
-~~~ ASN.1
-CompositeKEMPrivateKey ::= SEQUENCE SIZE (2) OF OneAsymmetricKey
-~~~
-{: artwork-name="CompositeKEMPrivateKey-asn.1-structures"}
-
-Each element is a `OneAsymmetricKey`` [RFC5958] object for a component private key.
-
-The parameters field MUST be absent.
-
-The order of the component keys is the same as the order defined in {{sec-composite-pub-keys}} for the components of CompositeKEMPublicKey.
-
-When a `CompositeProviteKey` is conveyed inside a OneAsymmetricKey structure (version 1 of which is also known as PrivateKeyInfo) [RFC5958], the privateKeyAlgorithm field SHALL be set to the corresponding composite algorithm identifier defined according to {{sec-alg-ids}}, the privateKey field SHALL contain the CompositeKEMPrivateKey, and the publicKey field MUST NOT be present. Associated public key material MAY be present in the CompositeKEMPrivateKey.
-
-
-## Encoding Rules {#sec-encoding-rules}
-<!-- EDNOTE 7: Examples of how other specifications specify how a data structure is converted to a bit string can be found in RFC 2313, section 10.1.4, 3279 section 2.3.5, and RFC 4055, section 3.2. -->
-
-Many protocol specifications will require that the composite public key and composite private key data structures be represented by an octet string or bit string.
-
-When an octet string is required, the DER encoding of the composite data structure SHALL be used directly.
-
-~~~ ASN.1
-CompositeKEMPublicKeyOs ::= OCTET STRING (CONTAINING CompositeKEMPublicKey ENCODED BY der)
-~~~
-
-When a bit string is required, the octets of the DER encoded composite data structure SHALL be used as the bits of the bit string, with the most significant bit of the first octet becoming the first bit, and so on, ending with the least significant bit of the last octet becoming the last bit of the bit string.
-
-~~~ ASN.1
-CompositeKEMPublicKeyBs ::= BIT STRING (CONTAINING CompositeKEMPublicKey ENCODED BY der)
-~~~
-
-
-
-# Composite KEM Structures
-
-## Key Encapsulation Mechanisms (KEMs) {#sec-kems}
+## Composite Key Encapsulation Mechanisms (KEMs) {#sec-kems}
 
 We borrow here the definition of a key encapsulation mechanism (KEM) from {{I-D.ietf-tls-hybrid-design}}, in which a KEM is a cryptographic primitive that consists of three algorithms:
 
@@ -418,6 +313,111 @@ Decaps(sk, ct):
 
 where `Combiner(k1, k2, fixedInfo)` is defined in {sec-kem-combiner}.
 
+
+## Component Algorithm Selection Criteria {#sec-selection-criteria}
+
+The composite algorithm combinations defined in this document were chosen according to the following guidelines:
+
+1. A single RSA combination is provided at a key size of 3072 bits, matched with NIST PQC Level 3 algorithms.
+1. Elliptic curve algorithms are provided with combinations on each of the NIST [RFC6090], Brainpool [RFC5639], and Edwards [RFC7748] curves. NIST PQC Levels 1 - 3 algorithms are matched with 256-bit curves, while NIST levels 4 - 5 are matched with 384-bit elliptic curves. This provides a balance between matching classical security levels of post-quantum and traditional algorithms, and also selecting elliptic curves which already have wide adoption.
+1. NIST level 1 candidates are provided, matched with 256-bit elliptic curves, intended for constrained use cases.
+
+If other combinations are needed, a separate specification should be submitted to the IETF LAMPS working group.  To ease implementation, these specifications are encouraged to follow the construction pattern of the algorithms specified in this document.
+
+The composite structures defined in this specification allow only for pairs of algorithms. This also does not preclude future specification from extending these structures to define combinations with three or more components.
+
+<!-- End of Introduction section -->
+
+
+# Composite Key Structures {#sec-composite-keys}
+
+## pk-CompositeKEM
+
+The following ASN.1 Information Object Class is a template to be used in defining all composite KEM public key types.
+
+~~~ ASN.1
+pk-CompositeKEM{
+  OBJECT IDENTIFIER:id,
+  PUBLIC-KEY:firstPublicKey, FirstPublicKeyType,
+  PUBLIC-KEY:secondPublicKey, SecondPublicKeyType} PUBLIC-KEY ::=
+  {
+    IDENTIFIER id
+    KEY CompositeKEMPublicKey{ firstPublicKey, FirstPublicKeyType,
+        secondPublicKey, SecondPublicKeyType}
+    PARAMS ARE absent
+    CERT-KEY-USAGE { keyEncipherment }
+  }
+~~~
+{: artwork-name="CompositeKeyObject-asn.1-structures"}
+
+As an example, the public key type `pk-MLKEM512-ECDH-P256-KMAC128` is defined as:
+
+~~~
+pk-MLKEM512-ECDH-P256-KMAC128 PUBLIC-KEY ::=
+  pk-explicitCompositeKEM{ id-MLKEM512-ECDH-P256-KMAC128,
+  pk-MLKEM512TBD, OCTET STRING, pk-ec, ECPoint}
+~~~
+
+The full set of key types defined by this specification can be found in the ASN.1 Module in {{sec-asn1-module}}.
+
+
+## CompositeKEMPublicKey {#sec-composite-pub-keys}
+
+Composite public key data is represented by the following structure:
+
+~~~ ASN.1
+CompositeKEMPublicKey ::= SEQUENCE SIZE (2) OF BIT STRING
+~~~
+{: artwork-name="CompositeKEMPublicKey-asn.1-structures"}
+
+
+A composite key MUST contain two component public keys. The order of the component keys is determined by the definition of the corresponding algorithm identifier as defined in section {{sec-alg-ids}}.
+
+Some applications may need to reconstruct the `SubjectPublicKeyInfo` objects corresponding to each component public key. {{tab-kem-algs}} in {{sec-alg-ids}} provides the necessary mapping between composite and their component algorithms for doing this reconstruction. This also motivates the design choice of `SEQUENCE OF BIT STRING` instead of `SEQUENCE OF OCTET STRING`; using `BIT STRING` allows for easier transcription between CompositeKEMPublicKey and SubjectPublicKeyInfo.
+
+When the CompositeKEMPublicKey must be provided in octet string or bit string format, the data structure is encoded as specified in {{sec-encoding-rules}}.
+
+
+## CompositeKEMPrivateKey {#sec-priv-key}
+
+Usecases that require an interoperable encoding for composite private keys, such as when private keys are carried in PKCS #12 [RFC7292], CMP [RFC4210] or CRMF [RFC4211] MUST use the following structure.
+
+~~~ ASN.1
+CompositeKEMPrivateKey ::= SEQUENCE SIZE (2) OF OneAsymmetricKey
+~~~
+{: artwork-name="CompositeKEMPrivateKey-asn.1-structures"}
+
+Each element is a `OneAsymmetricKey`` [RFC5958] object for a component private key.
+
+The parameters field MUST be absent.
+
+The order of the component keys is the same as the order defined in {{sec-composite-pub-keys}} for the components of CompositeKEMPublicKey.
+
+When a `CompositePrivateKey` is conveyed inside a OneAsymmetricKey structure (version 1 of which is also known as PrivateKeyInfo) [RFC5958], the privateKeyAlgorithm field SHALL be set to the corresponding composite algorithm identifier defined according to {{sec-alg-ids}}, the privateKey field SHALL contain the CompositeKEMPrivateKey, and the publicKey field MUST NOT be present. Associated public key material MAY be present in the CompositeKEMPrivateKey.
+
+In some usecases the private keys that comprise a composite key may not be represented in a single structure or even be contained in a single cryptographic module; for example if one component is within the FIPS boundary of a cryptographic module and the other is not; see {sec-fips} for more discussion. The establishment of correspondence between public keys in a CompositeKEMPublicKey and private keys not represented in a single composite structure is beyond the scope of this document.
+
+
+## Encoding Rules {#sec-encoding-rules}
+<!-- EDNOTE 7: Examples of how other specifications specify how a data structure is converted to a bit string can be found in RFC 2313, section 10.1.4, 3279 section 2.3.5, and RFC 4055, section 3.2. -->
+
+Many protocol specifications will require that the composite public key and composite private key data structures be represented by an octet string or bit string.
+
+When an octet string is required, the DER encoding of the composite data structure SHALL be used directly.
+
+~~~ ASN.1
+CompositeKEMPublicKeyOs ::= OCTET STRING (CONTAINING CompositeKEMPublicKey ENCODED BY der)
+~~~
+
+When a bit string is required, the octets of the DER encoded composite data structure SHALL be used as the bits of the bit string, with the most significant bit of the first octet becoming the first bit, and so on, ending with the least significant bit of the last octet becoming the last bit of the bit string.
+
+~~~ ASN.1
+CompositeKEMPublicKeyBs ::= BIT STRING (CONTAINING CompositeKEMPublicKey ENCODED BY der)
+~~~
+
+
+
+# Composite KEM Structures
 
 ## kema-CompositeKEM {#sec-kema-CompositeKEM}
 
@@ -744,7 +744,7 @@ The following IPR Disclosure relates to this draft:
 
 https://datatracker.ietf.org/ipr/3588/
 
-EDNOTE:   I don't think this applies to this draft.
+EDNOTE TODO: Check with Max Pala whether this IPR actually applies to this draft.
 
 
 
