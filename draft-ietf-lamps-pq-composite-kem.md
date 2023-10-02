@@ -581,7 +581,7 @@ EDNOTE: I believe that [SP.800-56Ar3] and [BSI-ECC] give equivalent and interope
 
 Use of RSA-KEM {{I-D.ietf-lamps-rfc5990bis}} requires additional specification.
 
-The RSA component keys MUST be generated at the 3072-bit security level in order to match security level with ML-KEM-768. Parsers SHOULD be flexible since RSA keys generated at the 3072-bit security level may not be exactly 3072 bits in length due to dropped leading zeros.
+The RSA component keys MUST be generated at the 3072-bit security level in order to match security level with ML-KEM-768.
 
 As with the other composite KEM algorithms, when `id-MLKEM768-RSA3072-KMAC256` is used in an AlgorithmIdentifier, the parameters MUST be absent. `id-MLKEM768-RSA3072-KMAC256` SHALL instantiate RSA-KEM with the following parameters:
 
