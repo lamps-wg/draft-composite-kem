@@ -176,14 +176,10 @@ Editorial changes:
 
 TODO:
 
-  `[ ]` Get Russ' approval that I've used RFC5990bis correctly. Email sent. Waiting for a reply.
+  `[ ]` Add a id-MLKEM512-RSA2048-KMAC128
 
 
 Still to do in a future version:
-
-  `[ ]` I need an ASN.1 expert to help me fix how it references ECC named curves.
-
-  `[ ]` We're getting rid of CompositeKemParams entirely, right? If so, then I might not need an ASN.1 expert because we're ripping it all out anyway.
 
   `[ ]` We need PEM samples … 118 hackathon? OQS friends? David @ BC? The right format for samples is probably to follow the hackathon ... a Dilithium or ECDSA trust anchor certificate, a composite KEM end entity certificate, and a CMS EnvolepedData sample encrypted for that composite KEM certificate.
 
@@ -426,29 +422,16 @@ CompositeKEMPublicKeyBs ::= BIT STRING (CONTAINING CompositeKEMPublicKey ENCODED
 The ASN.1 algorithm object for a composite KEM is:
 
 ~~~
-kema-CompositeKEM{
-  OBJECT IDENTIFIER:id,
-    PUBLIC-KEY:publicKeyObject, CompositeKemParams} KEM-ALGORITHM
-      ::= {
+kema-CompositeKEM {
+  OBJECT IDENTIFIER:id, 
+    PUBLIC-KEY:publicKeyType } 
+    KEM-ALGORITHM ::= {
          IDENTIFIER id
          VALUE CompositeCiphertextValue
-         PARAMS TYPE CompositeKemParams ARE required
-         PUBLIC-KEYS { publicKeyObject }
+         PARAMS ARE absent
+         PUBLIC-KEYS { publicKeyType } 
         }
 ~~~
-
-
-The following is an explanation how KEM-ALGORITHM elements are used
-to create Composite KEMs:
-
-| SIGNATURE-ALGORITHM element | Definition |
-| ---------                   | ---------- |
-| IDENTIFIER                  | The Object ID used to identify the composite Signature Algorithm as defined in {{tab-kem-algs}} |
-| VALUE                       | A CompositeCiphertextValue |
-| PARAMS                      | Parameters of type CompositeKemParams may be provided when required |
-| PUBLIC-KEYS                 | The composite key required to produce the composite signature |
-
-
 
 ## CompositeCiphertextValue {#sec-CompositeCiphertextValue}
 
@@ -460,20 +443,6 @@ CompositeCiphertextValue ::= SEQUENCE SIZE (2) OF OCTET STRING
 ~~~
 
 A composite KEM and `CompositeCipherTextValue` MAY be associated with a composite KEM public key, but MAY also be associated with multiple public keys from different sources, for example multiple X.509 certificates, or multiple cryptographic modules. In the latter case, composite KEMs MAY be used as the mechanism for carrying multiple ciphertexts, for example, in a non-composite hybrid encryption equivalent of those described for digital signatures in {{I-D.becker-guthrie-noncomposite-hybrid-auth}}.
-
-
-## CompositeKemParameters {#sec-compositeKemParameters}
-
-Composite KEM parameters are defined as follows and MAY be included when a composite KEM algorithm is used with an AlgorithmIdentifier:
-
-~~~ asn.1
-CompositeKemParams ::= SEQUENCE SIZE (2) OF AlgorithmIdentifier{
-    KEM-ALGORITHM, {KEMAlgSet} }
-~~~
-
-The KEM's `CompositeKemParams` sequence MUST contain the same component algorithms listed in the same order as in the associated CompositeKEMPublicKey.
-
-For explicit composite algorithms, it is required in cases where one or both of the components themselves have parameters that need to be carried, however the authors have chosen to always carry it in order to simplify parsers. Implementation SHOULD NOT rely directly on the algorithmIDs contained in the `CompositeKemParams` and SHOULD verify that they match the algorithms expected from the overall composite AlgorithmIdentifier.
 
 
 ## KEM Combiner {#sec-kem-combiner}
