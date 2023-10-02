@@ -775,17 +775,17 @@ Table of Contents
    parameters MUST be absent. id-MLKEM768-RSA3072-KMAC256 SHALL
    instantiate RSA-KEM with the following parameters:
 
-        +============================+============================+
-        | RSA-KEM Parameter          | Value                      |
-        +============================+============================+
-        | keyDerivationFunction      | kda-kdf3 with mda-shake256 |
-        +----------------------------+----------------------------+
-        | keyLength                  | 256                        |
-        +----------------------------+----------------------------+
-        | DataEncapsulationMechanism | kwa-aes256-wrap            |
-        +----------------------------+----------------------------+
+        +============================+===========================+
+        | RSA-KEM Parameter          | Value                     |
+        +============================+===========================+
+        | keyDerivationFunction      | kda-kdf3 with id-sha3-384 |
+        +----------------------------+---------------------------+
+        | keyLength                  | 256                       |
+        +----------------------------+---------------------------+
+        | DataEncapsulationMechanism | kwa-aes256-wrap           |
+        +----------------------------+---------------------------+
 
-                        Table 4: RSA-KEM Parameters
+                       Table 4: RSA-KEM Parameters
 
    where:
 
@@ -794,7 +794,7 @@ Table of Contents
 
    *  kwa-aes256-wrap is defined in [I-D.ietf-lamps-rfc5990bis]
 
-   *  mda-shake256 is defined in [RFC8692].
+   *  mda-shake256 is defined in [I-D.housley-lamps-cms-sha3-hash].
 
 6.  ASN.1 Module
 
@@ -1359,6 +1359,13 @@ Table of Contents
               Standard", August 2023,
               <https://nvlpubs.nist.gov/nistpubs/FIPS/
               NIST.FIPS.203.ipd.pdf>.
+
+   [I-D.housley-lamps-cms-sha3-hash]
+              Housley, R., "Use of the SHA3 One-way Hash Functions in
+              the Cryptographic Message Syntax (CMS)", Work in Progress,
+              Internet-Draft, draft-housley-lamps-cms-sha3-hash-00, 27
+              March 2017, <https://datatracker.ietf.org/doc/html/draft-
+              housley-lamps-cms-sha3-hash-00>.
 
    [I-D.ietf-lamps-rfc5990bis]
               Housley, R. and S. Turner, "Use of the RSA-KEM Algorithm
