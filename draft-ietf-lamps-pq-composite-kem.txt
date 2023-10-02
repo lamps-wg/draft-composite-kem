@@ -119,7 +119,6 @@ Table of Contents
        B.2.1.  Parallel PKIs
    Appendix C.  Intellectual Property Considerations
    Appendix D.  Contributors and Acknowledgements
-     D.1.  Making contributions
    Authors' Addresses
 
 1.  Changes in version -01
@@ -1663,13 +1662,6 @@ Appendix D.  Contributors and Acknowledgements
    referenced below.  Thanks go to the authors of those documents.
    "Copying always makes things easier and less error prone" -
    [RFC8411].
-
-D.1.  Making contributions
-
-   Additional contributions to this draft are welcome.  Please see the
-   working copy of this draft at, as well as open issues at:
-
-   https://github.com/EntrustCorporation/draft-composite-kem/
 
 Authors' Addresses
 
