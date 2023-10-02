@@ -179,26 +179,26 @@ TODO:
 
   `[ ]` Top-to-bottom read, especially looking for redundancies or references to signatures from merging in the more generic Keys content.
 
-  Still to do in a future version:
+Still to do in a future version:
 
-  * I need an ASN.1 expert to help me fix how it references ECC named curves.
-  * We need PEM samples … 118 hackathon? OQS friends? David @ BC?
+  `[ ]` I need an ASN.1 expert to help me fix how it references ECC named curves.
+
+  `[ ]` We need PEM samples … 118 hackathon? OQS friends? David @ BC? The right format for samples is probably to follow the hackathon ... a Dilithium or ECDSA trust anchor certificate, a composite KEM end entity certificate, and a CMS EnvolepedData sample encrypted for that composite KEM certificate.
 
 
 # Introduction {#sec-intro}
 
 
-The migration to post-quantum cryptography is unique in the history of modern digital cryptography in that neither the old outgoing nor the new incoming algorithms are fully trusted to protect data for the required data lifetimes. The outgoing algorithms, such as RSA and elliptic curve, may fall to quantum cryptalanysis, while the incoming post-quantum algorithms face uncertainty about both the underlying mathematics as well as hardware and software implementations that have not had sufficient maturing time to rule out classical cryptanalytic attacks and implementation bugs. Unlike previous cryptographic algorithm migrations, the choice of when to migrate and which algorithms to migrate to, is not so clear.
+The migration to post-quantum cryptography is unique in the history of modern digital cryptography in that neither the old outgoing nor the new incoming algorithms are fully trusted to protect data for long data lifetimes. The outgoing algorithms, such as RSA and elliptic curve, may fall to quantum cryptalanysis, while the incoming post-quantum algorithms face uncertainty about both the underlying mathematics falling to classical algorithmic attacks as well as hardware and software implementations that have not had sufficient maturing time to rule out catestrophic implementation bugs. Unlike previous cryptographic algorithm migrations, the choice of when to migrate and which algorithms to migrate to, is not so clear.
 
-Cautious implementers may wish to combine cryptographic algorithms such that an attacker would need to break all of them in order to compromise the data being protected by using a Post-Quantum / Traditional Hybrid. This document defines a specific instantiation of hybrid paradigm called "composite" where multiple cryptographic algorithms are combined to form a single key encapsulation mechanism (KEM) key and ciphertext such that they can be treated as a single atomic algorithm at the protocol level.
+Cautious implementers may wish to combine cryptographic algorithms such that an attacker would need to break all of them in order to compromise the data being protected. Such mechanisms are referred to as Post-Quantum / Traditional Hybrids {{I-D.driscoll-pqt-hybrid-terminology}}.
 
-The deployment of composite public keys and composite encryption using post-quantum algorithms will face two challenges
-
+PQ/T Hybrid cryptography can, in general, provide solutions to two migration problems:
 
 - Algorithm strength uncertainty: During the transition period, some post-quantum signature and encryption algorithms will not be fully trusted, while also the trust in legacy public key algorithms will start to erode.  A relying party may learn some time after deployment that a public key algorithm has become untrustworthy, but in the interim, they may not know which algorithm an adversary has compromised.
-- Migration: During the transition period, systems will require mechanisms that allow for staged migrations from fully classical to fully post-quantum-aware cryptography.
+- Ease-of-migration: During the transition period, systems will require mechanisms that allow for staged migrations from fully classical to fully post-quantum-aware cryptography.
 
-This document provides a mechanism to address algorithm strength uncertainty by providing the format and procedures for combining multiple KEM algorithms into a single composite KEM algorithm. Concrete instantiations are provided based on ML-KEM, RSA-KEM and ECDH-KEM Backwards compatibility is not directly covered in this document, but is the subject of {{sec-backwards-compat}}.
+This document defines a specific instantiation of the PQ/T Hybrid paradigm called "composite" where multiple cryptographic algorithms are combined to form a single key encapsulation mechanism (KEM) key and ciphertext such that they can be treated as a single atomic algorithm at the protocol level. Composite algorithms address algorithm strength uncertainty because the composite algorithm remains strong so long as one of its components remains strong. Concrete instantiations of composite KEM algorithms are provided based on ML-KEM, RSA-KEM and ECDH-KEM. Backwards compatibility is not directly covered in this document, but is the subject of {{sec-backwards-compat}}.
 
 
 This document is intended for general applicability anywhere that key establishment or enveloped content encryption is used within PKIX or CMS structures.
@@ -209,13 +209,6 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 This document is consistent with all terminology from {{I-D.driscoll-pqt-hybrid-terminology}}.
 In addition, the following terms are used in this document:
-
-**BER:**
-  Basic Encoding Rules (BER) as defined in [X.690].
-
-**CLIENT:**
-  Any software that is making use of a cryptographic key.
-  This includes a signer, verifier, encrypter, decrypter.
 
 **COMBINER:**
   A combiner specifies how multiple shared secrets are combined into
@@ -236,6 +229,15 @@ In addition, the following terms are used in this document:
   or passive adversary. This document is concerned with shared
   secrets established via public key cryptagraphic operations.
 
+## Composite Design Philosophy
+
+{{I-D.driscoll-pqt-hybrid-terminology}} defines composites as:
+
+>   *Composite Cryptographic Element*:  A cryptographic element that
+>      incorporates multiple component cryptographic elements of the same
+>      type in a multi-algorithm scheme.
+
+Composite keys as defined here follow this definition and should be regarded as a single key that performs a single cryptographic operation such key generation, signing, verifying, encapsulating, or decapsulating -- using its internal sequence of component keys as if they form a single key. This generally means that the complexity of combining algorithms can and should be handled by the cryptographic library or cryptographic module, and the single composite public key, private key, and ciphertext can be carried in existing fields in protocols such as PKCS#10 [RFC2986], CMP [RFC4210], X.509 [RFC5280], CMS [RFC5652], and the Trust Anchor Format [RFC5914]. In this way, composites achieve "protocol backwards-compatibility" in that they will drop cleanly into any protocol that accepts KEM algorithms without requiring any modification of the protocol to handle multiple keys.
 
 ## Algorithm Selection Criteria {#sec-selection-criteria}
 
@@ -254,27 +256,16 @@ The composite structures defined in this specification allow only for pairs of a
 
 # Composite Key Structures {#sec-composite-keys}
 
-{{I-D.driscoll-pqt-hybrid-terminology}} defines composites as:
-
->   *Composite Cryptographic Element*:  A cryptographic element that
->      incorporates multiple component cryptographic elements of the same
->      type in a multi-algorithm scheme.
-
-Composite keys as defined here follow this definition and should be regarded as a single key that performs a single cryptographic operation such key generation, signing, verifying, encapsulating, or decapsulating -- using its encapsulated sequence of component keys as if it was a single key. This generally means that the complexity of combining algorithms can and should be ignored by application and protocol layers and deferred to the cryptographic library layer.
-
-In order to represent public keys and private keys that are composed of multiple algorithms, we define encodings consisting of a sequence of public key or private key primitives (aka "components") such that these structures can be used directly in existing public key and private fields such as those found in PKCS#10 [RFC2986], CMP [RFC4210], X.509 [RFC5280], CMS [RFC5652], and the Trust Anchor Format [RFC5914].
-
-
-## pk-explicitCompositeKEM
+## pk-CompositeKEM
 
 The following ASN.1 Information Object Class is a template to be used in defining all composite KEM public key types.
 
 ~~~ ASN.1
-pk-explicitCompositeKEM{OBJECT IDENTIFIER:id,
+pk-CompositeKEM{OBJECT IDENTIFIER:id,
   PUBLIC-KEY:firstPublicKey, FirstPublicKeyType,
   PUBLIC-KEY:secondPublicKey, SecondPublicKeyType} PUBLIC-KEY ::= {
   IDENTIFIER id
-  KEY ExplicitCompositePublicKey{firstPublicKey, FirstPublicKeyType,
+  KEY CompositeKEMPublicKey{firstPublicKey, FirstPublicKeyType,
       secondPublicKey, SecondPublicKeyType}
   PARAMS ARE absent
   CERT-KEY-USAGE { keyEncipherment }
@@ -293,44 +284,44 @@ pk-MLKEM512-ECDH-P256-KMAC128 PUBLIC-KEY ::=
 The full set of key types defined by this specification can be found in the ASN.1 Module in {{sec-asn1-module}}.
 
 
-## CompositePublicKey {#sec-composite-pub-keys}
+## CompositeKEMPublicKey {#sec-composite-pub-keys}
 
 Composite public key data is represented by the following structure:
 
 ~~~ ASN.1
-CompositePublicKey ::= SEQUENCE SIZE (2) OF BIT STRING
+CompositeKEMPublicKey ::= SEQUENCE SIZE (2) OF BIT STRING
 ~~~
-{: artwork-name="CompositePublicKey-asn.1-structures"}
+{: artwork-name="CompositeKEMPublicKey-asn.1-structures"}
 
 
 A composite key MUST contain two component public keys. The order of the component keys is determined by the definition of the corresponding algorithm identifier as defined in section {{sec-alg-ids}}.
 
 Some applications may need to reconstruct the `SubjectPublicKeyInfo` objects corresponding to each component public key. {{tab-kem-algs}} in {{sec-alg-ids}} provides the necessary mapping between composite and their component algorithms for doing this reconstruction.
 
-When the CompositePublicKey must be provided in octet string or bit string format, the data structure is encoded as specified in {{sec-encoding-rules}}.
+When the CompositeKEMPublicKey must be provided in octet string or bit string format, the data structure is encoded as specified in {{sec-encoding-rules}}.
 
 
-## CompositePrivateKey {#sec-priv-key}
+## CompositeKEMPrivateKey {#sec-priv-key}
 
 This section provides an encoding for composite private keys intended for PKIX protocols and other applications that require an interoperable format for transmitting private keys, such as PKCS #12 [RFC7292] or CMP / CRMF [RFC4210], [RFC4211]. It is not intended to dictate a storage format in implementations not requiring interoperability of private key formats.
 
-In some cases the private keys that comprise a composite key may not be represented in a single structure or even be contained in a single cryptographic module; for example if one component is within the FIPS boundary of a cryptographic module and the other is not; see {sec-fips} for more discussion. The establishment of correspondence between public keys in a CompositePublicKey and private keys not represented in a single composite structure is beyond the scope of this document.
+In some cases the private keys that comprise a composite key may not be represented in a single structure or even be contained in a single cryptographic module; for example if one component is within the FIPS boundary of a cryptographic module and the other is not; see {sec-fips} for more discussion. The establishment of correspondence between public keys in a CompositeKEMPublicKey and private keys not represented in a single composite structure is beyond the scope of this document.
 
 
 Usecases that require an interoperable encodingn for composite private keys MUST use the following structure.
 
 ~~~ ASN.1
-CompositePrivateKey ::= SEQUENCE SIZE (2) OF OneAsymmetricKey
+CompositeKEMPrivateKey ::= SEQUENCE SIZE (2) OF OneAsymmetricKey
 ~~~
-{: artwork-name="CompositePrivateKey-asn.1-structures"}
+{: artwork-name="CompositeKEMPrivateKey-asn.1-structures"}
 
 Each element is a `OneAsymmetricKey`` [RFC5958] object for a component private key.
 
 The parameters field MUST be absent.
 
-The order of the component keys is the same as the order defined in {{sec-composite-pub-keys}} for the components of CompositePublicKey.
+The order of the component keys is the same as the order defined in {{sec-composite-pub-keys}} for the components of CompositeKEMPublicKey.
 
-When a `CompositeProviteKey` is conveyed inside a OneAsymmetricKey structure (version 1 of which is also known as PrivateKeyInfo) [RFC5958], the privateKeyAlgorithm field SHALL be set to the corresponding composite algorithm identifier defined according to {{sec-alg-ids}}, the privateKey field SHALL contain the CompositePrivateKey, and the publicKey field MUST NOT be present. Associated public key material MAY be present in the CompositePrivateKey.
+When a `CompositeProviteKey` is conveyed inside a OneAsymmetricKey structure (version 1 of which is also known as PrivateKeyInfo) [RFC5958], the privateKeyAlgorithm field SHALL be set to the corresponding composite algorithm identifier defined according to {{sec-alg-ids}}, the privateKey field SHALL contain the CompositeKEMPrivateKey, and the publicKey field MUST NOT be present. Associated public key material MAY be present in the CompositeKEMPrivateKey.
 
 
 ## Encoding Rules {#sec-encoding-rules}
@@ -341,13 +332,13 @@ Many protocol specifications will require that the composite public key and comp
 When an octet string is required, the DER encoding of the composite data structure SHALL be used directly.
 
 ~~~ ASN.1
-CompositePublicKeyOs ::= OCTET STRING (CONTAINING CompositePublicKey ENCODED BY der)
+CompositeKEMPublicKeyOs ::= OCTET STRING (CONTAINING CompositeKEMPublicKey ENCODED BY der)
 ~~~
 
 When a bit string is required, the octets of the DER encoded composite data structure SHALL be used as the bits of the bit string, with the most significant bit of the first octet becoming the first bit, and so on, ending with the least significant bit of the last octet becoming the last bit of the bit string.
 
 ~~~ ASN.1
-CompositePublicKeyBs ::= BIT STRING (CONTAINING CompositePublicKey ENCODED BY der)
+CompositeKEMPublicKeyBs ::= BIT STRING (CONTAINING CompositeKEMPublicKey ENCODED BY der)
 ~~~
 
 
@@ -476,7 +467,7 @@ CompositeKemParams ::= SEQUENCE SIZE (2) OF AlgorithmIdentifier{
     KEM-ALGORITHM, {KEMAlgSet} }
 ~~~
 
-The KEM's `CompositeKemParams` sequence MUST contain the same component algorithms listed in the same order as in the associated CompositePublicKey.
+The KEM's `CompositeKemParams` sequence MUST contain the same component algorithms listed in the same order as in the associated CompositeKEMPublicKey.
 
 For explicit composite algorithms, it is required in cases where one or both of the components themselves have parameters that need to be carried, however the authors have chosen to always carry it in order to simplify parsers. Implementation SHOULD NOT rely directly on the algorithmIDs contained in the `CompositeKemParams` and SHOULD verify that they match the algorithms expected from the overall composite AlgorithmIdentifier.
 

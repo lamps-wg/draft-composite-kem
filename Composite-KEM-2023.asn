@@ -79,11 +79,11 @@ CompositeKEMPublicKeyBs ::= BIT STRING (CONTAINING
 CompositeKEMPrivateKey ::= SEQUENCE SIZE (2) OF OneAsymmetricKey
 
 
-pk-explicitCompositeKEM{OBJECT IDENTIFIER:id, 
+pk-CompositeKEM{OBJECT IDENTIFIER:id, 
   PUBLIC-KEY:firstPublicKey, FirstPublicKeyType, 
   PUBLIC-KEY:secondPublicKey, SecondPublicKeyType} PUBLIC-KEY ::= {
   IDENTIFIER id
-  KEY ExplicitCompositePublicKey{firstPublicKey, FirstPublicKeyType,
+  KEY CompositeKEMPublicKey{firstPublicKey, FirstPublicKeyType,
       secondPublicKey, SecondPublicKeyType}
   PARAMS ARE absent
   CERT-KEY-USAGE { keyEncipherment }
