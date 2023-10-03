@@ -162,6 +162,7 @@ Changes affecting interoperability:
 * Re-worked section 4.1 (id-MLKEM768-RSA3072-KMAC256) to Reference 5990bis and its updated structures.
 * Removed RSA-KEM KDF params and make them implied by the OID; ie provide a profile of 5990bis.
 * Aligned combiner with draft-ounsworth-cfrg-kem-combiners-04.
+* Added id-MLKEM512-RSA2048-KMAC128 so that we have an RSA 2048 option.
 
 Editorial changes:
 
