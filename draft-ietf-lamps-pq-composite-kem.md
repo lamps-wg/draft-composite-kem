@@ -423,13 +423,13 @@ The ASN.1 algorithm object for a composite KEM is:
 
 ~~~
 kema-CompositeKEM {
-  OBJECT IDENTIFIER:id, 
-    PUBLIC-KEY:publicKeyType } 
+  OBJECT IDENTIFIER:id,
+    PUBLIC-KEY:publicKeyType }
     KEM-ALGORITHM ::= {
          IDENTIFIER id
          VALUE CompositeCiphertextValue
          PARAMS ARE absent
-         PUBLIC-KEYS { publicKeyType } 
+         PUBLIC-KEYS { publicKeyType }
         }
 ~~~
 
