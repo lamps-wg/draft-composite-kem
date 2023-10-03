@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2023-10-01T01:23:50.162877+00:00",
+  "timestamp": "2023-10-03T01:15:18.637100+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -83,5 +83,80 @@
       "comments": []
     }
   ],
-  "pulls": []
+  "pulls": [
+    {
+      "number": 3,
+      "id": "PR_kwDOKRPFO85bsBcD",
+      "title": "Adding a ML-KEM512_RSA2048 combo",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/3",
+      "state": "CLOSED",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-10-02T15:59:27Z",
+      "updatedAt": "2023-10-02T22:53:29Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "8ecdef1572329af10c78e3ebb26ed087116dd22e",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mlkem512-rsa2048",
+      "headRefOid": "fc99e0e2f27f08b26cc5c858b17cbbf901122c3e",
+      "closedAt": "2023-10-02T22:53:29Z",
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I have changed the ASN.1 substantially enough in #4 that it's easier to just start this PR over again once that PR is merged.",
+          "createdAt": "2023-10-02T22:53:29Z",
+          "updatedAt": "2023-10-02T22:53:29Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 4,
+      "id": "PR_kwDOKRPFO85buNe6",
+      "title": "Removing CompositeKEMParams",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/4",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-10-02T22:17:04Z",
+      "updatedAt": "2023-10-03T00:02:33Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "e18c3c43c266b1c703dc03e6e438d5b2ef91046d",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mike_asn1_remove_params",
+      "headRefOid": "3a3f3d3b7616acd3df431d86386a8a70986a9dad",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO85ikr5T",
+          "commit": {
+            "abbreviatedOid": "3a3f3d3"
+          },
+          "author": "johngray-dev",
+          "authorAssociation": "NONE",
+          "state": "APPROVED",
+          "body": "Looks good!   Other than needing to define the ASN.1 module OID:\r\nid-mod-composite-kems\r\n\r\nI was able to compile the ASN.1, so that is great!",
+          "createdAt": "2023-10-03T00:02:33Z",
+          "updatedAt": "2023-10-03T00:02:33Z",
+          "comments": []
+        }
+      ]
+    }
+  ]
 }
