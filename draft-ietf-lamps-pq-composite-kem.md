@@ -64,7 +64,7 @@ normative:
   RFC8411:
   I-D.draft-ietf-lamps-rfc5990bis-01:
   I-D.draft-ounsworth-lamps-cms-dhkem-00:
-  I-D.draft-housley-lamps-cms-sha3-hash-00:
+  I-D.draft-housley-lamps-cms-sha3-hash-01:
   ANS-X9.44:
     title: "Public Key
               Cryptography for the Financial Services Industry -- Key
@@ -155,7 +155,7 @@ Changes affecting interoperability:
 * Re-worked wire format and ASN.1 to remove vestiges of Generics.
   * Changed all `SEQUENCE OF SIZE (2..MAX)` to `SEQUENCE OF SIZE (2)`.
   * Changed the definition of `CompositeKEMPublicKey` from `SEQUENCE OF SubjectPublicKeyInfo` to `SEQUENCE OF BIT STRING` since with complete removal of Generic Composites, there is no longer any need to carry the component AlgorithmIdentifiers.
-  * Added a paragraph describing how to reconstitute component SPKIs.
+  * Removed CompositeKEMParams since all params are now explicit in the OID.
 * Defined `KeyGen()`, `Encaps()`, and `Decaps()` for a composite KEM algorithm.
 * Removed the discussion of KeyTrans -> KEM and KeyAgree -> KEM promotions, and instead simply referenced {{I-D.ietf-lamps-rfc5990bis}} and {{I-D.ounsworth-lamps-cms-dhkem}}.
 * Made RSA keys fixed-length at 3072.
@@ -167,6 +167,7 @@ Editorial changes:
 
 * Refactored to use MartinThomson github template.
 * Made this document standalone by folding in the minimum necessary content from composite-keys and dropping the cross-reference to composite-sigs.
+* Added a paragraph describing how to reconstitute component SPKIs.
 * Added an Implementation Consideration about FIPS validation where only one component algorithm is FIPS-approved.
 * Shortened the abstract (moved some content into Intro).
 * Brushed up the Security Considerations.
@@ -175,14 +176,10 @@ Editorial changes:
 
 TODO:
 
-  `[ ]` Get Russ' approval that I've used RFC5990bis correctly. Email sent. Waiting for a reply.
+  `[ ]` Add a id-MLKEM512-RSA2048-KMAC128
 
 
 Still to do in a future version:
-
-  `[ ]` I need an ASN.1 expert to help me fix how it references ECC named curves.
-
-  `[ ]` We're getting rid of CompositeKemParams entirely, right? If so, then I might not need an ASN.1 expert because we're ripping it all out anyway.
 
   `[ ]` We need PEM samples … 118 hackathon? OQS friends? David @ BC? The right format for samples is probably to follow the hackathon ... a Dilithium or ECDSA trust anchor certificate, a composite KEM end entity certificate, and a CMS EnvolepedData sample encrypted for that composite KEM certificate.
 
@@ -265,7 +262,7 @@ A composite KEM allows two or more underlying key transport, key agreement, or K
 
 ### Composite KeyGen
 
-The `KeyGen() -> (pk, sk)` of a composite KEM algorithm will perform the `KeyGen()` of the respective component KEM algorithms and it produces a composite public key `pk` as per {sec-composite-pub-keys} and a composite secret key `sk` is per {sec-priv-key}.
+The `KeyGen() -> (pk, sk)` of a composite KEM algorithm will perform the `KeyGen()` of the respective component KEM algorithms and it produces a composite public key `pk` as per {{sec-composite-pub-keys}} and a composite secret key `sk` is per {{sec-priv-key}}.
 
 ### Composite Encaps
 
@@ -289,7 +286,7 @@ Encaps(pk):
 ~~~
 {: #alg-composite-encaps title="Composite Encaps(pk)"}
 
-where `Combiner(k1, k2)` is defined in {sec-kem-combiner} and `CompositeCiphertextValue` is defined in {sec-CompositeCiphertextValue}.
+where `Combiner(k1, k2, fixedInfo)` is defined in {{sec-kem-combiner}} and `CompositeCiphertextValue` is defined in {{sec-CompositeCiphertextValue}}.
 
 ### Composite Decaps
 
@@ -425,29 +422,16 @@ CompositeKEMPublicKeyBs ::= BIT STRING (CONTAINING CompositeKEMPublicKey ENCODED
 The ASN.1 algorithm object for a composite KEM is:
 
 ~~~
-kema-CompositeKEM{
+kema-CompositeKEM {
   OBJECT IDENTIFIER:id,
-    PUBLIC-KEY:publicKeyObject, CompositeKemParams} KEM-ALGORITHM
-      ::= {
+    PUBLIC-KEY:publicKeyType }
+    KEM-ALGORITHM ::= {
          IDENTIFIER id
          VALUE CompositeCiphertextValue
-         PARAMS TYPE CompositeKemParams ARE required
-         PUBLIC-KEYS { publicKeyObject }
+         PARAMS ARE absent
+         PUBLIC-KEYS { publicKeyType }
         }
 ~~~
-
-
-The following is an explanation how KEM-ALGORITHM elements are used
-to create Composite KEMs:
-
-| SIGNATURE-ALGORITHM element | Definition |
-| ---------                   | ---------- |
-| IDENTIFIER                  | The Object ID used to identify the composite Signature Algorithm as defined in {{tab-kem-algs}} |
-| VALUE                       | A CompositeCiphertextValue |
-| PARAMS                      | Parameters of type CompositeKemParams may be provided when required |
-| PUBLIC-KEYS                 | The composite key required to produce the composite signature |
-
-
 
 ## CompositeCiphertextValue {#sec-CompositeCiphertextValue}
 
@@ -459,20 +443,6 @@ CompositeCiphertextValue ::= SEQUENCE SIZE (2) OF OCTET STRING
 ~~~
 
 A composite KEM and `CompositeCipherTextValue` MAY be associated with a composite KEM public key, but MAY also be associated with multiple public keys from different sources, for example multiple X.509 certificates, or multiple cryptographic modules. In the latter case, composite KEMs MAY be used as the mechanism for carrying multiple ciphertexts, for example, in a non-composite hybrid encryption equivalent of those described for digital signatures in {{I-D.becker-guthrie-noncomposite-hybrid-auth}}.
-
-
-## CompositeKemParameters {#sec-compositeKemParameters}
-
-Composite KEM parameters are defined as follows and MAY be included when a composite KEM algorithm is used with an AlgorithmIdentifier:
-
-~~~ asn.1
-CompositeKemParams ::= SEQUENCE SIZE (2) OF AlgorithmIdentifier{
-    KEM-ALGORITHM, {KEMAlgSet} }
-~~~
-
-The KEM's `CompositeKemParams` sequence MUST contain the same component algorithms listed in the same order as in the associated CompositeKEMPublicKey.
-
-For explicit composite algorithms, it is required in cases where one or both of the components themselves have parameters that need to be carried, however the authors have chosen to always carry it in order to simplify parsers. Implementation SHOULD NOT rely directly on the algorithmIDs contained in the `CompositeKemParams` and SHOULD verify that they match the algorithms expected from the overall composite AlgorithmIdentifier.
 
 
 ## KEM Combiner {#sec-kem-combiner}
@@ -710,7 +680,7 @@ TBD
 
 ## FIPS certification {#sec-fips}
 
-One of the primary design goals of the specification is for the overall composite algorithm to be able to considered FIPS-approved even when one of the component algorithms is not. The combiner presented in {{sec-kem-combiner}} was chosen to align with [SP.800-56Cr2] for this reason.
+One of the primary design goals of this specification is for the overall composite algorithm to be able to be considered FIPS-approved even when one of the component algorithms is not. The combiner presented in {{sec-kem-combiner}} was chosen to align with [SP.800-56Cr2] for this reason.
 
 Implementors seeking FIPS certification of a composite KEM algorithm where only one of the component algorithms has been FIPS-validated or FIPS-approved should credit the FIPS-validated component algorithm with full security strength, the non-FIPS-validated component algorith with zero security, and the overall composite should be considered full strength and thus FIPS-approved.
 
