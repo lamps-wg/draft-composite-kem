@@ -5,7 +5,7 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 4 April 2024                                     2 October 2023
+Expires: 5 April 2024                                     3 October 2023
 
 
                  Composite KEM For Use In Internet PKI
@@ -60,7 +60,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 4 April 2024.
+   This Internet-Draft will expire on 5 April 2024.
 
 Copyright Notice
 
@@ -95,8 +95,7 @@ Table of Contents
    4.  Composite KEM Structures
      4.1.  kema-CompositeKEM
      4.2.  CompositeCiphertextValue
-     4.3.  CompositeKemParameters
-     4.4.  KEM Combiner
+     4.3.  KEM Combiner
    5.  Algorithm Identifiers
      5.1.  id-MLKEM768-RSA3072-KMAC256 Parameters
    6.  ASN.1 Module
@@ -177,17 +176,9 @@ Table of Contents
 
    TODO:
 
-   [ ] Get Russ' approval that I've used RFC5990bis correctly.  Email
-   sent.  Waiting for a reply.
+   [ ] Add a id-MLKEM512-RSA2048-KMAC128
 
    Still to do in a future version:
-
-   [ ] I need an ASN.1 expert to help me fix how it references ECC named
-   curves.
-
-   [ ] We're getting rid of CompositeKemParams entirely, right?  If so,
-   then I might not need an ASN.1 expert because we're ripping it all
-   out anyway.
 
    [ ] We need PEM samples ... 118 hackathon?  OQS friends?  David @ BC?
    The right format for samples is probably to follow the hackathon ...
@@ -364,7 +355,7 @@ Table of Contents
 
                        Figure 1: Composite Encaps(pk)
 
-   where Combiner(k1, k2, fixedInfo) is defined in Section 4.4 and
+   where Combiner(k1, k2, fixedInfo) is defined in Section 4.3 and
    CompositeCiphertextValue is defined in Section 4.2.
 
 2.3.3.  Composite Decaps
@@ -459,7 +450,7 @@ Table of Contents
    corresponding algorithm identifier as defined in section Section 5.
 
    Some applications may need to reconstruct the SubjectPublicKeyInfo
-   objects corresponding to each component public key.  Table 3 in
+   objects corresponding to each component public key.  Table 2 in
    Section 5 provides the necessary mapping between composite and their
    component algorithms for doing this reconstruction.  This also
    motivates the design choice of SEQUENCE OF BIT STRING instead of
@@ -529,38 +520,15 @@ Table of Contents
 
    The ASN.1 algorithm object for a composite KEM is:
 
-   kema-CompositeKEM{
+   kema-CompositeKEM {
      OBJECT IDENTIFIER:id,
-       PUBLIC-KEY:publicKeyObject, CompositeKemParams} KEM-ALGORITHM
-         ::= {
+       PUBLIC-KEY:publicKeyType }
+       KEM-ALGORITHM ::= {
             IDENTIFIER id
             VALUE CompositeCiphertextValue
-            PARAMS TYPE CompositeKemParams ARE required
-            PUBLIC-KEYS { publicKeyObject }
+            PARAMS ARE absent
+            PUBLIC-KEYS { publicKeyType }
            }
-
-   The following is an explanation how KEM-ALGORITHM elements are used
-   to create Composite KEMs:
-
-         +=====================+=================================+
-         | SIGNATURE-ALGORITHM | Definition                      |
-         | element             |                                 |
-         +=====================+=================================+
-         | IDENTIFIER          | The Object ID used to identify  |
-         |                     | the composite Signature         |
-         |                     | Algorithm as defined in Table 3 |
-         +---------------------+---------------------------------+
-         | VALUE               | A CompositeCiphertextValue      |
-         +---------------------+---------------------------------+
-         | PARAMS              | Parameters of type              |
-         |                     | CompositeKemParams may be       |
-         |                     | provided when required          |
-         +---------------------+---------------------------------+
-         | PUBLIC-KEYS         | The composite key required to   |
-         |                     | produce the composite signature |
-         +---------------------+---------------------------------+
-
-                                  Table 1
 
 4.2.  CompositeCiphertextValue
 
@@ -579,27 +547,7 @@ Table of Contents
    equivalent of those described for digital signatures in
    [I-D.becker-guthrie-noncomposite-hybrid-auth].
 
-4.3.  CompositeKemParameters
-
-   Composite KEM parameters are defined as follows and MAY be included
-   when a composite KEM algorithm is used with an AlgorithmIdentifier:
-
-   CompositeKemParams ::= SEQUENCE SIZE (2) OF AlgorithmIdentifier{
-       KEM-ALGORITHM, {KEMAlgSet} }
-
-   The KEM's CompositeKemParams sequence MUST contain the same component
-   algorithms listed in the same order as in the associated
-   CompositeKEMPublicKey.
-
-   For explicit composite algorithms, it is required in cases where one
-   or both of the components themselves have parameters that need to be
-   carried, however the authors have chosen to always carry it in order
-   to simplify parsers.  Implementation SHOULD NOT rely directly on the
-   algorithmIDs contained in the CompositeKemParams and SHOULD verify
-   that they match the algorithms expected from the overall composite
-   AlgorithmIdentifier.
-
-4.4.  KEM Combiner
+4.3.  KEM Combiner
 
    TODO: as per https://www.enisa.europa.eu/publications/post-quantum-
    cryptography-integration-study section 4.2, might need to specify
@@ -620,7 +568,7 @@ Table of Contents
       the chosen KEMs according to {tab-kem-combiners}.
 
    *  fixedInfo SHALL be the ASCII-encoded string name of the composite
-      KEM algorithm as listed in Table 3.
+      KEM algorithm as listed in Table 2.
 
    *  counter SHALL be the fixed 32-bit value 0x00000001 which is placed
       here soly for the purposes of easy compliance with [SP.800-56Cr2].
@@ -643,7 +591,7 @@ Table of Contents
                | KMAC256/512       | KMAC256 | 512        |
                +-------------------+---------+------------+
 
-                          Table 2: KEM Combiners
+                          Table 1: KEM Combiners
 
    KMAC is defined in NIST SP 800-185 [SP800-185].  The KMAC(K, X, L, S)
    parameters are instantiated as follows:
@@ -669,7 +617,7 @@ Table of Contents
 
    END EDNOTE
 
-   For example, the KEM combiner used with the first entry of Table 3,
+   For example, the KEM combiner used with the first entry of Table 2,
    id-MLKEM512-ECDH-P256-KMAC128 would be:
 
    Combiner(ss1, ss2, "id-MLKEM512-ECDH-P256-KMAC128") =
@@ -692,7 +640,7 @@ Table of Contents
 
    Therefore <CompKEM>.1 is equal to 2.16.840.1.114027.80.5.2.1
 
-   The "KEM Combiner" column refers to the definitions in Section 4.4.
+   The "KEM Combiner" column refers to the definitions in Section 4.3.
 
    +========================+============+=========+===============+===========+
    |KEM Type OID            |OID         |First    |Second         |KEM        |
@@ -729,7 +677,7 @@ Table of Contents
    |MLKEM1024-X448-KMAC256  |            |         |               |           |
    +------------------------+------------+---------+---------------+-----------+
 
-                      Table 3: Composite KEM key types
+                      Table 2: Composite KEM key types
 
    The table above contains everything needed to implement the listed
    explicit composite algorithms, with the exception of some special
@@ -786,7 +734,7 @@ Table of Contents
         | DataEncapsulationMechanism | kwa-aes256-wrap           |
         +----------------------------+---------------------------+
 
-                       Table 4: RSA-KEM Parameters
+                       Table 3: RSA-KEM Parameters
 
    where:
 
@@ -1078,7 +1026,7 @@ Table of Contents
 7.1.  Object Identifier Allocations
 
    EDNOTE to IANA: OIDs will need to be replaced in both the ASN.1
-   module and in Table 3.
+   module and in Table 2.
 
 7.1.1.  Module Registration - SMI Security for PKIX Module Identifier
 
@@ -1194,7 +1142,7 @@ Table of Contents
    after ECDH-P256 is deprecated.
 
    The composite KEM design specified in this document, and especially
-   that of the KEM combiner specified in Section 4.4 means that the
+   that of the KEM combiner specified in Section 4.3 means that the
    overall composite KEM algorithm should be considered to have the
    security strength of the strongest of its component algorithms; ie as
    long as one component algorithm remains strong, then the overall
@@ -1430,7 +1378,7 @@ B.1.  FIPS certification
    One of the primary design goals of this specification is for the
    overall composite algorithm to be able to be considered FIPS-approved
    even when one of the component algorithms is not.  The combiner
-   presented in Section 4.4 was chosen to align with [SP.800-56Cr2] for
+   presented in Section 4.3 was chosen to align with [SP.800-56Cr2] for
    this reason.
 
    Implementors seeking FIPS certification of a composite KEM algorithm
