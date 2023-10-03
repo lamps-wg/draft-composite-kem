@@ -97,7 +97,8 @@ Table of Contents
      4.2.  CompositeCiphertextValue
      4.3.  KEM Combiner
    5.  Algorithm Identifiers
-     5.1.  id-MLKEM768-RSA3072-KMAC256 Parameters
+     5.1.  id-MLKEM512-RSA2048-KMAC128 Parameters
+     5.2.  id-MLKEM768-RSA3072-KMAC256 Parameters
    6.  ASN.1 Module
    7.  IANA Considerations
      7.1.  Object Identifier Allocations
@@ -717,7 +718,41 @@ Table of Contents
 
    The "KEM Combiner" column refers to the definitions in Section 4.3.
 
-5.1.  id-MLKEM768-RSA3072-KMAC256 Parameters
+5.1.  id-MLKEM512-RSA2048-KMAC128 Parameters
+
+   Use of RSA-KEM [I-D.ietf-lamps-rfc5990bis] requires additional
+   specification.
+
+   The RSA component keys MUST be generated at the 2048-bit security
+   level in order to match security level with ML-KEM-768.
+
+   As with the other composite KEM algorithms, when id-
+   MLKEM512-RSA2048-KMAC128 is used in an AlgorithmIdentifier, the
+   parameters MUST be absent. id-MLKEM512-RSA2048-KMAC128 SHALL
+   instantiate RSA-KEM with the following parameters:
+
+        +============================+===========================+
+        | RSA-KEM Parameter          | Value                     |
+        +============================+===========================+
+        | keyDerivationFunction      | kda-kdf3 with id-sha3-256 |
+        +----------------------------+---------------------------+
+        | keyLength                  | 128                       |
+        +----------------------------+---------------------------+
+        | DataEncapsulationMechanism | kwa-aes128-wrap           |
+        +----------------------------+---------------------------+
+
+                     Table 3: RSA-KEM 2048 Parameters
+
+   where:
+
+   *  kda-kdf3 is defined in [I-D.ietf-lamps-rfc5990bis] which
+      references it from [ANS-X9.44].
+
+   *  mda-shake256 is defined in [I-D.housley-lamps-cms-sha3-hash].
+
+   *  kwa-aes128-wrap is defined in [I-D.ietf-lamps-rfc5990bis]
+
+5.2.  id-MLKEM768-RSA3072-KMAC256 Parameters
 
    Use of RSA-KEM [I-D.ietf-lamps-rfc5990bis] requires additional
    specification.
@@ -740,16 +775,16 @@ Table of Contents
         | DataEncapsulationMechanism | kwa-aes256-wrap           |
         +----------------------------+---------------------------+
 
-                       Table 3: RSA-KEM Parameters
+                     Table 4: RSA-KEM 3072 Parameters
 
    where:
 
    *  kda-kdf3 is defined in [I-D.ietf-lamps-rfc5990bis] which
       references it from [ANS-X9.44].
 
-   *  kwa-aes256-wrap is defined in [I-D.ietf-lamps-rfc5990bis]
-
    *  mda-shake256 is defined in [I-D.housley-lamps-cms-sha3-hash].
+
+   *  kwa-aes256-wrap is defined in [I-D.ietf-lamps-rfc5990bis]
 
 6.  ASN.1 Module
 

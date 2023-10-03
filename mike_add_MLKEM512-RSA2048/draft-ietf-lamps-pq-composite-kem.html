@@ -1206,7 +1206,10 @@ svg :is([fill="white"], [fill^="#fff"]) {
             <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-algorithm-identifiers" class="internal xref">Algorithm Identifiers</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1">
-                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-id-mlkem768-rsa3072-kmac256" class="internal xref">id-MLKEM768-RSA3072-KMAC256 Parameters</a></p>
+                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-id-mlkem512-rsa2048-kmac128" class="internal xref">id-MLKEM512-RSA2048-KMAC128 Parameters</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2">
+                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="auto internal xref">5.2</a>.  <a href="#name-id-mlkem768-rsa3072-kmac256" class="internal xref">id-MLKEM768-RSA3072-KMAC256 Parameters</a></p>
 </li>
             </ul>
 </li>
@@ -1915,19 +1918,69 @@ Combiner(ss1, ss2, "id-MLKEM512-ECDH-P256-KMAC128") =
 <p id="section-5-9">Note that all ECDH as well as X25519 and X448 algorithms MUST be promoted into KEMs according to <span>[<a href="#I-D.ounsworth-lamps-cms-dhkem" class="cite xref">I-D.ounsworth-lamps-cms-dhkem</a>]</span>.<a href="#section-5-9" class="pilcrow">¶</a></p>
 <p id="section-5-10">EDNOTE: I believe that <span>[<a href="#SP.800-56Ar3" class="cite xref">SP.800-56Ar3</a>]</span> and <span>[<a href="#BSI-ECC" class="cite xref">BSI-ECC</a>]</span> give equivalent and interoperable algorithms, so maybe this is extranuous detail to include?<a href="#section-5-10" class="pilcrow">¶</a></p>
 <p id="section-5-11">The "KEM Combiner" column refers to the definitions in <a href="#sec-kem-combiner" class="auto internal xref">Section 4.3</a>.<a href="#section-5-11" class="pilcrow">¶</a></p>
-<div id="id-mlkem768-rsa3072-kmac256-parameters">
+<div id="id-mlkem512-rsa2048-kmac128-parameters">
 <section id="section-5.1">
-        <h3 id="name-id-mlkem768-rsa3072-kmac256">
-<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-id-mlkem768-rsa3072-kmac256" class="section-name selfRef">id-MLKEM768-RSA3072-KMAC256 Parameters</a>
+        <h3 id="name-id-mlkem512-rsa2048-kmac128">
+<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-id-mlkem512-rsa2048-kmac128" class="section-name selfRef">id-MLKEM512-RSA2048-KMAC128 Parameters</a>
         </h3>
 <p id="section-5.1-1">Use of RSA-KEM <span>[<a href="#I-D.ietf-lamps-rfc5990bis" class="cite xref">I-D.ietf-lamps-rfc5990bis</a>]</span> requires additional specification.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
-<p id="section-5.1-2">The RSA component keys MUST be generated at the 3072-bit security level in order to match security level with ML-KEM-768.<a href="#section-5.1-2" class="pilcrow">¶</a></p>
-<p id="section-5.1-3">As with the other composite KEM algorithms, when <code>id-MLKEM768-RSA3072-KMAC256</code> is used in an AlgorithmIdentifier, the parameters MUST be absent. <code>id-MLKEM768-RSA3072-KMAC256</code> SHALL instantiate RSA-KEM with the following parameters:<a href="#section-5.1-3" class="pilcrow">¶</a></p>
-<span id="name-rsa-kem-parameters"></span><div id="rsa-kem-params">
+<p id="section-5.1-2">The RSA component keys MUST be generated at the 2048-bit security level in order to match security level with ML-KEM-768.<a href="#section-5.1-2" class="pilcrow">¶</a></p>
+<p id="section-5.1-3">As with the other composite KEM algorithms, when <code>id-MLKEM512-RSA2048-KMAC128</code> is used in an AlgorithmIdentifier, the parameters MUST be absent. <code>id-MLKEM512-RSA2048-KMAC128</code> SHALL instantiate RSA-KEM with the following parameters:<a href="#section-5.1-3" class="pilcrow">¶</a></p>
+<span id="name-rsa-kem-2048-parameters"></span><div id="rsa-kem-params2048">
 <table class="center" id="table-3">
           <caption>
 <a href="#table-3" class="selfRef">Table 3</a>:
-<a href="#name-rsa-kem-parameters" class="selfRef">RSA-KEM Parameters</a>
+<a href="#name-rsa-kem-2048-parameters" class="selfRef">RSA-KEM 2048 Parameters</a>
+          </caption>
+<thead>
+            <tr>
+              <th class="text-left" rowspan="1" colspan="1">RSA-KEM Parameter</th>
+              <th class="text-left" rowspan="1" colspan="1">Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">keyDerivationFunction</td>
+              <td class="text-left" rowspan="1" colspan="1">kda-kdf3 with id-sha3-256</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">keyLength</td>
+              <td class="text-left" rowspan="1" colspan="1">128</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">DataEncapsulationMechanism</td>
+              <td class="text-left" rowspan="1" colspan="1">kwa-aes128-wrap</td>
+            </tr>
+          </tbody>
+        </table>
+</div>
+<p id="section-5.1-5">where:<a href="#section-5.1-5" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.1-6.1">
+            <p id="section-5.1-6.1.1"><code>kda-kdf3</code> is defined in <span>[<a href="#I-D.ietf-lamps-rfc5990bis" class="cite xref">I-D.ietf-lamps-rfc5990bis</a>]</span> which references it from <span>[<a href="#ANS-X9.44" class="cite xref">ANS-X9.44</a>]</span>.<a href="#section-5.1-6.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.1-6.2">
+            <p id="section-5.1-6.2.1"><code>mda-shake256</code> is defined in <span>[<a href="#I-D.housley-lamps-cms-sha3-hash" class="cite xref">I-D.housley-lamps-cms-sha3-hash</a>]</span>.<a href="#section-5.1-6.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.1-6.3">
+            <p id="section-5.1-6.3.1"><code>kwa-aes128-wrap</code> is defined in <span>[<a href="#I-D.ietf-lamps-rfc5990bis" class="cite xref">I-D.ietf-lamps-rfc5990bis</a>]</span><a href="#section-5.1-6.3.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+</section>
+</div>
+<div id="id-mlkem768-rsa3072-kmac256-parameters">
+<section id="section-5.2">
+        <h3 id="name-id-mlkem768-rsa3072-kmac256">
+<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-id-mlkem768-rsa3072-kmac256" class="section-name selfRef">id-MLKEM768-RSA3072-KMAC256 Parameters</a>
+        </h3>
+<p id="section-5.2-1">Use of RSA-KEM <span>[<a href="#I-D.ietf-lamps-rfc5990bis" class="cite xref">I-D.ietf-lamps-rfc5990bis</a>]</span> requires additional specification.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
+<p id="section-5.2-2">The RSA component keys MUST be generated at the 3072-bit security level in order to match security level with ML-KEM-768.<a href="#section-5.2-2" class="pilcrow">¶</a></p>
+<p id="section-5.2-3">As with the other composite KEM algorithms, when <code>id-MLKEM768-RSA3072-KMAC256</code> is used in an AlgorithmIdentifier, the parameters MUST be absent. <code>id-MLKEM768-RSA3072-KMAC256</code> SHALL instantiate RSA-KEM with the following parameters:<a href="#section-5.2-3" class="pilcrow">¶</a></p>
+<span id="name-rsa-kem-3072-parameters"></span><div id="rsa-kem-params3072">
+<table class="center" id="table-4">
+          <caption>
+<a href="#table-4" class="selfRef">Table 4</a>:
+<a href="#name-rsa-kem-3072-parameters" class="selfRef">RSA-KEM 3072 Parameters</a>
           </caption>
 <thead>
             <tr>
@@ -1951,16 +2004,16 @@ Combiner(ss1, ss2, "id-MLKEM512-ECDH-P256-KMAC128") =
           </tbody>
         </table>
 </div>
-<p id="section-5.1-5">where:<a href="#section-5.1-5" class="pilcrow">¶</a></p>
+<p id="section-5.2-5">where:<a href="#section-5.2-5" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-5.1-6.1">
-            <p id="section-5.1-6.1.1"><code>kda-kdf3</code> is defined in <span>[<a href="#I-D.ietf-lamps-rfc5990bis" class="cite xref">I-D.ietf-lamps-rfc5990bis</a>]</span> which references it from <span>[<a href="#ANS-X9.44" class="cite xref">ANS-X9.44</a>]</span>.<a href="#section-5.1-6.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-5.2-6.1">
+            <p id="section-5.2-6.1.1"><code>kda-kdf3</code> is defined in <span>[<a href="#I-D.ietf-lamps-rfc5990bis" class="cite xref">I-D.ietf-lamps-rfc5990bis</a>]</span> which references it from <span>[<a href="#ANS-X9.44" class="cite xref">ANS-X9.44</a>]</span>.<a href="#section-5.2-6.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-5.1-6.2">
-            <p id="section-5.1-6.2.1"><code>kwa-aes256-wrap</code> is defined in <span>[<a href="#I-D.ietf-lamps-rfc5990bis" class="cite xref">I-D.ietf-lamps-rfc5990bis</a>]</span><a href="#section-5.1-6.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-5.2-6.2">
+            <p id="section-5.2-6.2.1"><code>mda-shake256</code> is defined in <span>[<a href="#I-D.housley-lamps-cms-sha3-hash" class="cite xref">I-D.housley-lamps-cms-sha3-hash</a>]</span>.<a href="#section-5.2-6.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-5.1-6.3">
-            <p id="section-5.1-6.3.1"><code>mda-shake256</code> is defined in <span>[<a href="#I-D.housley-lamps-cms-sha3-hash" class="cite xref">I-D.housley-lamps-cms-sha3-hash</a>]</span>.<a href="#section-5.1-6.3.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-5.2-6.3">
+            <p id="section-5.2-6.3.1"><code>kwa-aes256-wrap</code> is defined in <span>[<a href="#I-D.ietf-lamps-rfc5990bis" class="cite xref">I-D.ietf-lamps-rfc5990bis</a>]</span><a href="#section-5.2-6.3.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
