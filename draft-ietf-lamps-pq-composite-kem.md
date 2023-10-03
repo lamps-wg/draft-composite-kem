@@ -547,6 +547,28 @@ EDNOTE: I believe that [SP.800-56Ar3] and [BSI-ECC] give equivalent and interope
 
 The "KEM Combiner" column refers to the definitions in {{sec-kem-combiner}}.
 
+## id-MLKEM512-RSA2048-KMAC128 Parameters
+
+Use of RSA-KEM {{I-D.ietf-lamps-rfc5990bis}} requires additional specification.
+
+The RSA component keys MUST be generated at the 2048-bit security level in order to match security level with ML-KEM-768.
+
+As with the other composite KEM algorithms, when `id-MLKEM512-RSA2048-KMAC128` is used in an AlgorithmIdentifier, the parameters MUST be absent. `id-MLKEM512-RSA2048-KMAC128` SHALL instantiate RSA-KEM with the following parameters:
+
+| RSA-KEM Parameter          | Value                      |
+| -------------------------- | -------------------------- |
+| keyDerivationFunction      | kda-kdf3 with id-sha3-256  |
+| keyLength                  | 128                        |
+| DataEncapsulationMechanism | kwa-aes128-wrap            |
+{: #rsa-kem-params2048 title="RSA-KEM 2048 Parameters"}
+
+where:
+
+* `kda-kdf3` is defined in {{I-D.ietf-lamps-rfc5990bis}} which references it from [ANS-X9.44].
+* `mda-shake256` is defined in {{I-D.housley-lamps-cms-sha3-hash}}.
+* `kwa-aes128-wrap` is defined in {{I-D.ietf-lamps-rfc5990bis}}
+
+
 
 ## id-MLKEM768-RSA3072-KMAC256 Parameters
 
@@ -561,13 +583,13 @@ As with the other composite KEM algorithms, when `id-MLKEM768-RSA3072-KMAC256` i
 | keyDerivationFunction      | kda-kdf3 with id-sha3-384  |
 | keyLength                  | 256                        |
 | DataEncapsulationMechanism | kwa-aes256-wrap            |
-{: #rsa-kem-params title="RSA-KEM Parameters"}
+{: #rsa-kem-params3072 title="RSA-KEM 3072 Parameters"}
 
 where:
 
 * `kda-kdf3` is defined in {{I-D.ietf-lamps-rfc5990bis}} which references it from [ANS-X9.44].
-* `kwa-aes256-wrap` is defined in {{I-D.ietf-lamps-rfc5990bis}}
 * `mda-shake256` is defined in {{I-D.housley-lamps-cms-sha3-hash}}.
+* `kwa-aes256-wrap` is defined in {{I-D.ietf-lamps-rfc5990bis}}
 
 
 
