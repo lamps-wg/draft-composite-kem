@@ -153,6 +153,9 @@ Table of Contents
 
    *  Aligned combiner with draft-ounsworth-cfrg-kem-combiners-04.
 
+   *  Added id-MLKEM512-RSA2048-KMAC128 so that we have an RSA 2048
+      option.
+
    Editorial changes:
 
    *  Refactored to use MartinThomson github template.
