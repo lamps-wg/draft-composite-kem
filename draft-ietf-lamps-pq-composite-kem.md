@@ -334,14 +334,15 @@ The composite structures defined in this specification allow only for pairs of a
 The following ASN.1 Information Object Class is a template to be used in defining all composite KEM public key types.
 
 ~~~ ASN.1
-pk-CompositeKEM{
-  OBJECT IDENTIFIER:id,
-  PUBLIC-KEY:firstPublicKey, FirstPublicKeyType,
-  PUBLIC-KEY:secondPublicKey, SecondPublicKeyType} PUBLIC-KEY ::=
+pk-CompositeKEM {
+  OBJECT IDENTIFIER:id, FirstPublicKeyType,
+  SecondPublicKeyType} PUBLIC-KEY ::=
   {
     IDENTIFIER id
-    KEY CompositeKEMPublicKey{ firstPublicKey, FirstPublicKeyType,
-        secondPublicKey, SecondPublicKeyType}
+    KEY SEQUENCE {
+     BIT STRING (CONTAINING FirstPublicKeyType)
+     BIT STRING (CONTAINING SecondPublicKeyType)
+    }
     PARAMS ARE absent
     CERT-KEY-USAGE { keyEncipherment }
   }
