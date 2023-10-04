@@ -158,7 +158,7 @@ Changes affecting interoperability:
   * Removed CompositeKEMParams since all params are now explicit in the OID.
 * Defined `KeyGen()`, `Encaps()`, and `Decaps()` for a composite KEM algorithm.
 * Removed the discussion of KeyTrans -> KEM and KeyAgree -> KEM promotions, and instead simply referenced {{I-D.ietf-lamps-rfc5990bis}} and {{I-D.ounsworth-lamps-cms-dhkem}}.
-* Made RSA keys fixed-length at 3072.
+* Made RSA keys fixed-length at 2048 and 3072.
 * Re-worked section 4.1 (id-MLKEM768-RSA3072-KMAC256) to Reference 5990bis and its updated structures.
 * Removed RSA-KEM KDF params and make them implied by the OID; ie provide a profile of 5990bis.
 * Aligned combiner with draft-ounsworth-cfrg-kem-combiners-04.
