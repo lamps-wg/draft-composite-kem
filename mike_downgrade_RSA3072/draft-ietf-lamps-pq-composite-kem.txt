@@ -392,7 +392,7 @@ Table of Contents
    1.  RSA combinations are provided at key sizes of 2048 and 3072 bits.
        Since RSA 2048 and 3072 are considered to have 112 and 128 bits
        of classical security respectively, they are both matched with
-       NIST PQC Level 1 algorithms and 128-bit symmetrc algorithms.
+       NIST PQC Level 1 algorithms and 128-bit symmetric algorithms.
 
    2.  Elliptic curve algorithms are provided with combinations on each
        of the NIST [RFC6090], Brainpool [RFC5639], and Edwards [RFC7748]
