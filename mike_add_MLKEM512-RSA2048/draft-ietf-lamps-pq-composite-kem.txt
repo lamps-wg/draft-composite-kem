@@ -5,7 +5,7 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 5 April 2024                                     3 October 2023
+Expires: 6 April 2024                                     4 October 2023
 
 
                  Composite KEM For Use In Internet PKI
@@ -60,7 +60,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 5 April 2024.
+   This Internet-Draft will expire on 6 April 2024.
 
 Copyright Notice
 
@@ -144,7 +144,7 @@ Table of Contents
       promotions, and instead simply referenced
       [I-D.ietf-lamps-rfc5990bis] and [I-D.ounsworth-lamps-cms-dhkem].
 
-   *  Made RSA keys fixed-length at 3072.
+   *  Made RSA keys fixed-length at 2048 and 3072.
 
    *  Re-worked section 4.1 (id-MLKEM768-RSA3072-KMAC256) to Reference
       5990bis and its updated structures.
