@@ -97,7 +97,8 @@ Table of Contents
      4.2.  CompositeCiphertextValue
      4.3.  KEM Combiner
    5.  Algorithm Identifiers
-     5.1.  id-MLKEM768-RSA3072-KMAC256 Parameters
+     5.1.  id-MLKEM512-RSA2048-KMAC128 Parameters
+     5.2.  id-MLKEM768-RSA3072-KMAC256 Parameters
    6.  ASN.1 Module
    7.  IANA Considerations
      7.1.  Object Identifier Allocations
@@ -143,7 +144,7 @@ Table of Contents
       promotions, and instead simply referenced
       [I-D.ietf-lamps-rfc5990bis] and [I-D.ounsworth-lamps-cms-dhkem].
 
-   *  Made RSA keys fixed-length at 3072.
+   *  Made RSA keys fixed-length at 2048 and 3072.
 
    *  Re-worked section 4.1 (id-MLKEM768-RSA3072-KMAC256) to Reference
       5990bis and its updated structures.
@@ -152,6 +153,9 @@ Table of Contents
       provide a profile of 5990bis.
 
    *  Aligned combiner with draft-ounsworth-cfrg-kem-combiners-04.
+
+   *  Added id-MLKEM512-RSA2048-KMAC128 so that we have an RSA 2048
+      option.
 
    Editorial changes:
 
@@ -640,12 +644,13 @@ Table of Contents
 
    Therefore <CompKEM>.1 is equal to 2.16.840.1.114027.80.5.2.1
 
-   The "KEM Combiner" column refers to the definitions in Section 4.3.
-
    +========================+============+=========+===============+===========+
    |KEM Type OID            |OID         |First    |Second         |KEM        |
    |                        |            |Algorithm|Algorithm      |Combiner   |
    +========================+============+=========+===============+===========+
+   |id-                     |<CompKEM>.13|MLKEM512 |RSA-KEM 2048   |KMAC128/256|
+   |MLKEM512-RSA2048-KMAC128|            |         |               |           |
+   +------------------------+------------+---------+---------------+-----------+
    |id-MLKEM512-ECDH-       |<CompKEM>.1 |MLKEM512 |ECDH-P256      |KMAC128/256|
    |P256-KMAC128            |            |         |               |           |
    +------------------------+------------+---------+---------------+-----------+
@@ -711,7 +716,43 @@ Table of Contents
    and interoperable algorithms, so maybe this is extranuous detail to
    include?
 
-5.1.  id-MLKEM768-RSA3072-KMAC256 Parameters
+   The "KEM Combiner" column refers to the definitions in Section 4.3.
+
+5.1.  id-MLKEM512-RSA2048-KMAC128 Parameters
+
+   Use of RSA-KEM [I-D.ietf-lamps-rfc5990bis] requires additional
+   specification.
+
+   The RSA component keys MUST be generated at the 2048-bit security
+   level in order to match security level with ML-KEM-768.
+
+   As with the other composite KEM algorithms, when id-
+   MLKEM512-RSA2048-KMAC128 is used in an AlgorithmIdentifier, the
+   parameters MUST be absent. id-MLKEM512-RSA2048-KMAC128 SHALL
+   instantiate RSA-KEM with the following parameters:
+
+        +============================+===========================+
+        | RSA-KEM Parameter          | Value                     |
+        +============================+===========================+
+        | keyDerivationFunction      | kda-kdf3 with id-sha3-256 |
+        +----------------------------+---------------------------+
+        | keyLength                  | 128                       |
+        +----------------------------+---------------------------+
+        | DataEncapsulationMechanism | kwa-aes128-wrap           |
+        +----------------------------+---------------------------+
+
+                     Table 3: RSA-KEM 2048 Parameters
+
+   where:
+
+   *  kda-kdf3 is defined in [I-D.ietf-lamps-rfc5990bis] which
+      references it from [ANS-X9.44].
+
+   *  mda-shake256 is defined in [I-D.housley-lamps-cms-sha3-hash].
+
+   *  kwa-aes128-wrap is defined in [I-D.ietf-lamps-rfc5990bis]
+
+5.2.  id-MLKEM768-RSA3072-KMAC256 Parameters
 
    Use of RSA-KEM [I-D.ietf-lamps-rfc5990bis] requires additional
    specification.
@@ -734,16 +775,16 @@ Table of Contents
         | DataEncapsulationMechanism | kwa-aes256-wrap           |
         +----------------------------+---------------------------+
 
-                       Table 3: RSA-KEM Parameters
+                     Table 4: RSA-KEM 3072 Parameters
 
    where:
 
    *  kda-kdf3 is defined in [I-D.ietf-lamps-rfc5990bis] which
       references it from [ANS-X9.44].
 
-   *  kwa-aes256-wrap is defined in [I-D.ietf-lamps-rfc5990bis]
-
    *  mda-shake256 is defined in [I-D.housley-lamps-cms-sha3-hash].
+
+   *  kwa-aes256-wrap is defined in [I-D.ietf-lamps-rfc5990bis]
 
 6.  ASN.1 Module
 
@@ -854,6 +895,23 @@ Table of Contents
    --
 
    -- TODO: OID to be replaced by IANA
+   id-MLKEM512-RSA2048-KMAC128 OBJECT IDENTIFIER ::= {
+     joint-iso-itu-t(2) country(16) us(840) organization(1)
+     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 13 }
+
+   pk-MLKEM512-RSA2048-KMAC128 PUBLIC-KEY ::=
+     pk-CompositeKEM {
+       id-MLKEM512-RSA2048-KMAC128,
+       OCTET STRING, RSAPublicKey }
+
+   kema-MLKEM512-RSA2048-KMAC128 KEM-ALGORITHM ::=
+       kema-CompositeKEM{
+         id-MLKEM512-RSA2048-KMAC128,
+         pk-MLKEM512-RSA2048-KMAC128 }
+
+
+
+   -- TODO: OID to be replaced by IANA
    id-MLKEM512-ECDH-P256-KMAC128 OBJECT IDENTIFIER ::= {
      joint-iso-itu-t(2) country(16) us(840) organization(1)
      entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 1 }
@@ -867,8 +925,6 @@ Table of Contents
        kema-CompositeKEM{
          id-MLKEM512-ECDH-P256-KMAC128,
          pk-MLKEM512-ECDH-P256-KMAC128 }
-
-
 
 
    -- TODO: OID to be replaced by IANA
