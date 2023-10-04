@@ -177,7 +177,7 @@ Editorial changes:
 
 TODO:
 
-  `[ ]` Add a id-MLKEM512-RSA2048-KMAC128
+  `[ ]` Oops. KEM Combiner is actually NOT -04. Sync that.
 
 
 Still to do in a future version:
