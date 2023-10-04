@@ -352,8 +352,9 @@ As an example, the public key type `pk-MLKEM512-ECDH-P256-KMAC128` is defined as
 
 ~~~
 pk-MLKEM512-ECDH-P256-KMAC128 PUBLIC-KEY ::=
-  pk-explicitCompositeKEM{ id-MLKEM512-ECDH-P256-KMAC128,
-  pk-MLKEM512TBD, OCTET STRING, pk-ec, ECPoint}
+  pk-CompositeKEM {
+    id-MLKEM512-ECDH-P256-KMAC128,
+    OCTET STRING, ECPoint }
 ~~~
 
 The full set of key types defined by this specification can be found in the ASN.1 Module in {{sec-asn1-module}}.
@@ -505,7 +506,7 @@ Combiner(ss1, ss2, "id-MLKEM512-ECDH-P256-KMAC128") =
 
 # Algorithm Identifiers {#sec-alg-ids}
 
-This table summarizes the list of explicit composite Signature algorithms by the key and signature OID and the two component algorithms which make up the explicit composite algorithm.  These are denoted by First Signature Alg, and Second Signature Alg.
+This table summarizes the list of composite KEM algorithms and lists the OID, two component algorithms, and the combiner function.
 
 EDNOTE: The OID referenced are TBD and MUST be used only for prototyping and replaced with the final IANA-assigned OIDS. The following prefix is used for each: replace &lt;CompKEM&gt; with the String "2.16.840.1.114027.80.5.2".
 
