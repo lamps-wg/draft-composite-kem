@@ -103,6 +103,23 @@ kema-CompositeKEM {
 --
 
 -- TODO: OID to be replaced by IANA
+id-MLKEM512-RSA2048-KMAC128 OBJECT IDENTIFIER ::= {
+  joint-iso-itu-t(2) country(16) us(840) organization(1) 
+  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 13 }
+
+pk-MLKEM512-RSA2048-KMAC128 PUBLIC-KEY ::= 
+  pk-CompositeKEM { 
+    id-MLKEM512-RSA2048-KMAC128, 
+    OCTET STRING, RSAPublicKey }
+
+kema-MLKEM512-RSA2048-KMAC128 KEM-ALGORITHM ::= 
+    kema-CompositeKEM{
+      id-MLKEM512-RSA2048-KMAC128, 
+      pk-MLKEM512-RSA2048-KMAC128 }
+
+
+
+-- TODO: OID to be replaced by IANA
 id-MLKEM512-ECDH-P256-KMAC128 OBJECT IDENTIFIER ::= {
   joint-iso-itu-t(2) country(16) us(840) organization(1) 
   entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 1 }
@@ -116,8 +133,6 @@ kema-MLKEM512-ECDH-P256-KMAC128 KEM-ALGORITHM ::=
     kema-CompositeKEM{
       id-MLKEM512-ECDH-P256-KMAC128, 
       pk-MLKEM512-ECDH-P256-KMAC128 }
-
-
 
 
 -- TODO: OID to be replaced by IANA

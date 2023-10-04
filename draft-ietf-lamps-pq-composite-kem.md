@@ -158,10 +158,11 @@ Changes affecting interoperability:
   * Removed CompositeKEMParams since all params are now explicit in the OID.
 * Defined `KeyGen()`, `Encaps()`, and `Decaps()` for a composite KEM algorithm.
 * Removed the discussion of KeyTrans -> KEM and KeyAgree -> KEM promotions, and instead simply referenced {{I-D.ietf-lamps-rfc5990bis}} and {{I-D.ounsworth-lamps-cms-dhkem}}.
-* Made RSA keys fixed-length at 3072.
+* Made RSA keys fixed-length at 2048 and 3072.
 * Re-worked section 4.1 (id-MLKEM768-RSA3072-KMAC256) to Reference 5990bis and its updated structures.
 * Removed RSA-KEM KDF params and make them implied by the OID; ie provide a profile of 5990bis.
 * Aligned combiner with draft-ounsworth-cfrg-kem-combiners-04.
+* Added id-MLKEM512-RSA2048-KMAC128 so that we have an RSA 2048 option.
 
 Editorial changes:
 
@@ -515,20 +516,19 @@ TODO: OIDs to be replaced by IANA.
 
 Therefore &lt;CompKEM&gt;.1 is equal to 2.16.840.1.114027.80.5.2.1
 
-The "KEM Combiner" column refers to the definitions in {{sec-kem-combiner}}.
-
-| KEM Type OID                              | OID                | First Algorithm | Second Algorithm |  KEM Combiner     |
-|---------                                  | -----------------  | ----------      | ----------     | ----------    |
-| id-MLKEM512-ECDH-P256-KMAC128             | &lt;CompKEM&gt;.1  | MLKEM512        | ECDH-P256      | KMAC128/256  |
+| KEM Type OID                              | OID                | First Algorithm | Second Algorithm |  KEM Combiner |
+|---------                                  | -----------------  | ----------      | ----------       | ----------    |
+| id-MLKEM512-RSA2048-KMAC128               | &lt;CompKEM&gt;.13 | MLKEM512        | RSA-KEM 2048     | KMAC128/256  |
+| id-MLKEM512-ECDH-P256-KMAC128             | &lt;CompKEM&gt;.1  | MLKEM512        | ECDH-P256        | KMAC128/256  |
 | id-MLKEM512-ECDH-brainpoolP256r1-KMAC128  | &lt;CompKEM&gt;.2  | MLKEM512        | ECDH-brainpoolp256r1 | KMAC128/256 |
-| id-MLKEM512-X25519-KMAC128                | &lt;CompKEM&gt;.3  | MLKEM512        | X25519         | KMAC128/256 |
-| id-MLKEM768-RSA3072-KMAC256               | &lt;CompKEM&gt;.4  | MLKEM768        | RSA-KEM 3072   | KMAC256/384 |
-| id-MLKEM768-ECDH-P256-KMAC256             | &lt;CompKEM&gt;.5  | MLKEM768        | ECDH-P256      | KMAC256/384 |
+| id-MLKEM512-X25519-KMAC128                | &lt;CompKEM&gt;.3  | MLKEM512        | X25519           | KMAC128/256 |
+| id-MLKEM768-RSA3072-KMAC256               | &lt;CompKEM&gt;.4  | MLKEM768        | RSA-KEM 3072     | KMAC256/384 |
+| id-MLKEM768-ECDH-P256-KMAC256             | &lt;CompKEM&gt;.5  | MLKEM768        | ECDH-P256        | KMAC256/384 |
 | id-MLKEM768-ECDH-brainpoolP256r1-KMAC256  | &lt;CompKEM&gt;.6  | MLKEM768        | ECDH-brainpoolp256r1 | KMAC256/384 |
-| id-MLKEM768-X25519-KMAC256                | &lt;CompKEM&gt;.7  | MLKEM768        | X25519         | KMAC256/384 |
-| id-MLKEM1024-ECDH-P384-KMAC256            | &lt;CompKEM&gt;.8  | MLKEM1024       | ECDH-P384     | KMAC256/512 |
+| id-MLKEM768-X25519-KMAC256                | &lt;CompKEM&gt;.7  | MLKEM768        | X25519           | KMAC256/384 |
+| id-MLKEM1024-ECDH-P384-KMAC256            | &lt;CompKEM&gt;.8  | MLKEM1024       | ECDH-P384        | KMAC256/512 |
 | id-MLKEM1024-ECDH-brainpoolP384r1-KMAC256 | &lt;CompKEM&gt;.9  | MLKEM1024       | ECDH-brainpoolP384r1 | KMAC256/512 |
-| id-MLKEM1024-X448-KMAC256                 | &lt;CompKEM&gt;.10 | MLKEM1024       | X448          | KMAC256/512 |
+| id-MLKEM1024-X448-KMAC256                 | &lt;CompKEM&gt;.10 | MLKEM1024       | X448             | KMAC256/512 |
 {: #tab-kem-algs title="Composite KEM key types"}
 
 
@@ -547,6 +547,29 @@ Note that all ECDH as well as X25519 and X448 algorithms MUST be promoted into K
 
 EDNOTE: I believe that [SP.800-56Ar3] and [BSI-ECC] give equivalent and interoperable algorithms, so maybe this is extranuous detail to include?
 
+The "KEM Combiner" column refers to the definitions in {{sec-kem-combiner}}.
+
+## id-MLKEM512-RSA2048-KMAC128 Parameters
+
+Use of RSA-KEM {{I-D.ietf-lamps-rfc5990bis}} requires additional specification.
+
+The RSA component keys MUST be generated at the 2048-bit security level in order to match security level with ML-KEM-768.
+
+As with the other composite KEM algorithms, when `id-MLKEM512-RSA2048-KMAC128` is used in an AlgorithmIdentifier, the parameters MUST be absent. `id-MLKEM512-RSA2048-KMAC128` SHALL instantiate RSA-KEM with the following parameters:
+
+| RSA-KEM Parameter          | Value                      |
+| -------------------------- | -------------------------- |
+| keyDerivationFunction      | kda-kdf3 with id-sha3-256  |
+| keyLength                  | 128                        |
+| DataEncapsulationMechanism | kwa-aes128-wrap            |
+{: #rsa-kem-params2048 title="RSA-KEM 2048 Parameters"}
+
+where:
+
+* `kda-kdf3` is defined in {{I-D.ietf-lamps-rfc5990bis}} which references it from [ANS-X9.44].
+* `mda-shake256` is defined in {{I-D.housley-lamps-cms-sha3-hash}}.
+* `kwa-aes128-wrap` is defined in {{I-D.ietf-lamps-rfc5990bis}}
+
 
 
 ## id-MLKEM768-RSA3072-KMAC256 Parameters
@@ -562,13 +585,13 @@ As with the other composite KEM algorithms, when `id-MLKEM768-RSA3072-KMAC256` i
 | keyDerivationFunction      | kda-kdf3 with id-sha3-384  |
 | keyLength                  | 256                        |
 | DataEncapsulationMechanism | kwa-aes256-wrap            |
-{: #rsa-kem-params title="RSA-KEM Parameters"}
+{: #rsa-kem-params3072 title="RSA-KEM 3072 Parameters"}
 
 where:
 
 * `kda-kdf3` is defined in {{I-D.ietf-lamps-rfc5990bis}} which references it from [ANS-X9.44].
-* `kwa-aes256-wrap` is defined in {{I-D.ietf-lamps-rfc5990bis}}
 * `mda-shake256` is defined in {{I-D.housley-lamps-cms-sha3-hash}}.
+* `kwa-aes256-wrap` is defined in {{I-D.ietf-lamps-rfc5990bis}}
 
 
 
