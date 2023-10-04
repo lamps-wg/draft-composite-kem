@@ -5,7 +5,7 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 5 April 2024                                     3 October 2023
+Expires: 6 April 2024                                     4 October 2023
 
 
                  Composite KEM For Use In Internet PKI
@@ -60,7 +60,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 5 April 2024.
+   This Internet-Draft will expire on 6 April 2024.
 
 Copyright Notice
 
@@ -433,8 +433,9 @@ Table of Contents
    defined as:
 
    pk-MLKEM512-ECDH-P256-KMAC128 PUBLIC-KEY ::=
-     pk-explicitCompositeKEM{ id-MLKEM512-ECDH-P256-KMAC128,
-     pk-MLKEM512TBD, OCTET STRING, pk-ec, ECPoint}
+     pk-CompositeKEM {
+       id-MLKEM512-ECDH-P256-KMAC128,
+       OCTET STRING, ECPoint }
 
    The full set of key types defined by this specification can be found
    in the ASN.1 Module in Section 6.
@@ -626,10 +627,8 @@ Table of Contents
 
 5.  Algorithm Identifiers
 
-   This table summarizes the list of explicit composite Signature
-   algorithms by the key and signature OID and the two component
-   algorithms which make up the explicit composite algorithm.  These are
-   denoted by First Signature Alg, and Second Signature Alg.
+   This table summarizes the list of composite KEM algorithms and lists
+   the OID, two component algorithms, and the combiner function.
 
    EDNOTE: The OID referenced are TBD and MUST be used only for
    prototyping and replaced with the final IANA-assigned OIDS.  The
