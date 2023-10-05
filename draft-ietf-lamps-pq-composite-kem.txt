@@ -5,7 +5,7 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 6 April 2024                                     4 October 2023
+Expires: 7 April 2024                                     5 October 2023
 
 
                  Composite KEM For Use In Internet PKI
@@ -20,12 +20,12 @@ Abstract
    composite algorithms should meet most Internet needs.
 
    This document assumes that all component algorithms are KEMs, and
-   therefore it depends on [RFC5990] and [I-D.ounsworth-lamps-cms-dhkem]
-   in order to promote RSA and ECDH respectively into KEMs.  For the
-   purpose of combining KEMs, the combiner function from
-   [I-D.ounsworth-cfrg-kem-combiners] is used.  For use within CMS, this
-   document is intended to be coupled with the CMS KEMRecipientInfo
-   mechanism in [I-D.housley-lamps-cms-kemri].
+   therefore it depends on [I-D.ietf-lamps-rfc5990bis] and
+   [I-D.ounsworth-lamps-cms-dhkem] in order to promote RSA and ECDH
+   respectively into KEMs.  For the purpose of combining KEMs, the
+   combiner function from [I-D.ounsworth-cfrg-kem-combiners] is used.
+   For use within CMS, this document is intended to be coupled with the
+   CMS KEMRecipientInfo mechanism in [I-D.housley-lamps-cms-kemri].
 
 About This Document
 
@@ -60,7 +60,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 6 April 2024.
+   This Internet-Draft will expire on 7 April 2024.
 
 Copyright Notice
 
@@ -1273,12 +1273,6 @@ Table of Contents
    [RFC5958]  Turner, S., "Asymmetric Key Packages", RFC 5958,
               DOI 10.17487/RFC5958, August 2010,
               <https://www.rfc-editor.org/info/rfc5958>.
-
-   [RFC5990]  Randall, J., Kaliski, B., Brainard, J., and S. Turner,
-              "Use of the RSA-KEM Key Transport Algorithm in the
-              Cryptographic Message Syntax (CMS)", RFC 5990,
-              DOI 10.17487/RFC5990, September 2010,
-              <https://www.rfc-editor.org/info/rfc5990>.
 
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
