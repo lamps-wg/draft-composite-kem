@@ -567,14 +567,12 @@ As with the other composite KEM algorithms, when `id-MLKEM512-RSA2048-KMAC128` i
 | -------------------------- | -------------------------- |
 | keyDerivationFunction      | kda-kdf3 with id-sha3-256  |
 | keyLength                  | 128                        |
-| DataEncapsulationMechanism | kwa-aes128-wrap            |
 {: #rsa-kem-params2048 title="RSA-KEM 2048 Parameters"}
 
 where:
 
 * `kda-kdf3` is defined in {{I-D.ietf-lamps-rfc5990bis}} which references it from [ANS-X9.44].
 * `mda-shake256` is defined in {{I-D.housley-lamps-cms-sha3-hash}}.
-* `kwa-aes128-wrap` is defined in {{I-D.ietf-lamps-rfc5990bis}}
 
 
 
@@ -590,7 +588,6 @@ As with the other composite KEM algorithms, when `id-MLKEM768-RSA3072-KMAC256` i
 | -------------------------- | -------------------------- |
 | keyDerivationFunction      | kda-kdf3 with id-sha3-384  |
 | keyLength                  | 256                        |
-| DataEncapsulationMechanism | kwa-aes256-wrap            |
 {: #rsa-kem-params3072 title="RSA-KEM 3072 Parameters"}
 
 where:
