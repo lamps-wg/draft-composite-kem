@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2023-10-03T01:15:18.637100+00:00",
+  "timestamp": "2023-10-05T01:14:58.347260+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -123,25 +123,35 @@
       "id": "PR_kwDOKRPFO85buNe6",
       "title": "Removing CompositeKEMParams",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/4",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2023-10-02T22:17:04Z",
-      "updatedAt": "2023-10-03T00:02:33Z",
+      "updatedAt": "2023-10-03T14:22:46Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "e18c3c43c266b1c703dc03e6e438d5b2ef91046d",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mike_asn1_remove_params",
-      "headRefOid": "3a3f3d3b7616acd3df431d86386a8a70986a9dad",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
-      "comments": [],
+      "headRefOid": "3e56992462b1c2adcfb2e2194d96c1dbbcc43697",
+      "closedAt": "2023-10-03T14:22:20Z",
+      "mergedAt": "2023-10-03T14:22:20Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "1fb6913195222dfd8e61349c1fc2e7f73b9e494e"
+      },
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> Looks good! Other than needing to define the ASN.1 module OID: id-mod-composite-kems\r\n> \r\n> I was able to compile the ASN.1, so that is great!\r\n\r\nYeah, I replace the `TBDMOD` with `999` when I'm test-compiling, but I've gotta leave something that's easy for IANA to CTRL+F replace.",
+          "createdAt": "2023-10-03T14:18:19Z",
+          "updatedAt": "2023-10-03T14:18:19Z"
+        }
+      ],
       "reviews": [
         {
           "id": "PRR_kwDOKRPFO85ikr5T",
@@ -157,6 +167,60 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 5,
+      "id": "PR_kwDOKRPFO85bzF-Z",
+      "title": "Added id-MLKEM512-RSA2048-KMAC128",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/5",
+      "state": "MERGED",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-10-03T14:30:06Z",
+      "updatedAt": "2023-10-04T15:23:29Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "1fb6913195222dfd8e61349c1fc2e7f73b9e494e",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mike_add_MLKEM512-RSA2048",
+      "headRefOid": "4cdaef1fa7c88ec971b57ec0a16dd0c9476d189a",
+      "closedAt": "2023-10-04T15:23:20Z",
+      "mergedAt": "2023-10-04T15:23:20Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "dc2a6d100628b032e9bfac40a57edf842ef43e09"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 6,
+      "id": "PR_kwDOKRPFO85b61Iv",
+      "title": "Demoted RSA 3072 to 128-bit Level 1",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/6",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This relates to the LAMPS mailist discussion:\r\n\r\nhttps://mailarchive.ietf.org/arch/msg/spasm/xSKIRjtMSJ8M7N7Fx3X09ASUHC8/\r\n\r\nThe main branch is option 3.1.\r\nThis PR is option 3.2.\r\n\r\nWe should wait to merge this PR pending the results of that discussion thread.",
+      "createdAt": "2023-10-04T16:09:56Z",
+      "updatedAt": "2023-10-04T16:18:34Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "6f3d6ee7dfb5df2492b5d6a8bcd2495884ae6e27",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mike_downgrade_RSA3072",
+      "headRefOid": "efba46de1223f1868aa6d0e94686fdd96ad239d2",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
