@@ -281,13 +281,13 @@ Encaps(pk):
 
   # combine
   ct = CompositeCiphertextValue(ct1, ct2)
-  ss = Combiner(ss1, ss2, algName)
+  ss = Combiner(ct1, ss1, ct2, ss2, algName)
 
   return (ct, ss)
 ~~~
 {: #alg-composite-encaps title="Composite Encaps(pk)"}
 
-where `Combiner(k1, k2, fixedInfo)` is defined in {{sec-kem-combiner}} and `CompositeCiphertextValue` is defined in {{sec-CompositeCiphertextValue}}.
+where `Combiner(ct1, ss1, ct2, ss2, fixedInfo)` is defined in {{sec-kem-combiner}} and `CompositeCiphertextValue` is defined in {{sec-CompositeCiphertextValue}}.
 
 ### Composite Decaps
 
@@ -304,13 +304,13 @@ Decaps(sk, ct):
   ss2 = ComponentKEM2.Encaps(sk2, ct2)
 
   # combine
-  ss = Combiner(ss1, ss2, algName)
+  ss = Combiner(ct1, ss1, ct2, ss2, algName)
 
   return ss
 ~~~
 {: #alg-composite-decaps title="Composite Decaps(sk, ct)"}
 
-where `Combiner(k1, k2, fixedInfo)` is defined in {sec-kem-combiner}.
+where `Combiner(ct1, ss1, ct2, ss2, fixedInfo)` is defined in {sec-kem-combiner}.
 
 
 ## Component Algorithm Selection Criteria {#sec-selection-criteria}
@@ -455,8 +455,8 @@ TODO: as per https://www.enisa.europa.eu/publications/post-quantum-cryptography-
 This document follows the construction of {{I-D.ounsworth-cfrg-kem-combiners}}, which is repeated here for clarity and simplified to take two imput shared secrets:
 
 ~~~
-Combiner(ss1, ss2, fixedInfo) = KDF(counter || ss1 || ss2 || fixedInfo,
-                                      outputBits)
+Combiner(ct1, ss1, ct2, ss2, fixedInfo) =
+  KDF(counter || ct1 || ss1 || ct2 || ss2 || fixedInfo, outputBits)
 ~~~
 {: #code-generic-kem-combiner title="Generic KEM combiner construction"}
 
@@ -467,10 +467,14 @@ where:
 * `counter` SHALL be the fixed 32-bit value `0x00000001` which is placed here soly for the purposes of easy compliance with [SP.800-56Cr2].
 * `||` represents concatenation.
 
-Each registered composite KEM algorithm must specify the exact KEM combiner construction that is to be used.
+Each registered composite KEM algorithm must specify the choice of `KDF`, `fixedInfo`, and `outputBits` to be used.
+
+See {{sec-cons-kem-combiner}} for further discussion of the security coniserations of this KEM combiner.
 
 
-This specification uses the following KMAC-based instantiations of the generic KEM combiner:
+### Named KEM Combiner parameter sets
+
+This specification references KEM combiner instantiations according to the following names:
 
 | KEM Combiner Name | KDF     | outputBits |
 | ---               | ------- |---         |
@@ -497,10 +501,12 @@ these choices are somewhat arbitrary but aiming to match security level of the i
 END EDNOTE
 
 
+# Example KEM Combiner instantiation
+
 For example, the KEM combiner used with the first entry of {{tab-kem-algs}}, `id-MLKEM512-ECDH-P256-KMAC128` would be:
 
 ~~~
-Combiner(ss1, ss2, "id-MLKEM512-ECDH-P256-KMAC128") =
+Combiner(ct1, ss1, ct2, ss2, "id-MLKEM512-ECDH-P256-KMAC128") =
            KMAC128( 0x00000001 || ss_1 || ss_2 ||
               "id-MLKEM512-ECDH-P256-KMAC128", 256, "")
 ~~~
@@ -688,9 +694,17 @@ Since composite algorithms are registered independently of their component algor
 The composite KEM design specified in this document, and especially that of the KEM combiner specified in {{sec-kem-combiner}} means that the overall composite KEM algorithm should be considered to have the security strength of the strongest of its component algorithms; ie as long as one component algorithm remains strong, then the overall composite algorithm remains strong.
 
 
-## KEM Combiner
+## KEM Combiner {#sec-cons-kem-combiner}
 
-This document uses directly the KEM Combiner defined in {{I-D.ounsworth-cfrg-kem-combiners}} and therefore inherits all of its security considerations, which the authors believe have all been addressed by the concrete instantiations of KEM algorithms and combiner parameters specified in this document.
+This document uses directly the KEM Combiner defined in {{I-D.ounsworth-cfrg-kem-combiners}} and therefore IND-CCA2 of any of its ingredient KEMs, i.e. the newly formed combined KEM is IND-CCA2 secure as long as at least one of the ingredient KEMs is
+
+{{I-D.ounsworth-cfrg-kem-combiners}} provides two different constructions depending on the properties of the component KEMs:
+
+> If both the secret share `ss_i` and the ciphertext `ct_i` are constant length, then k_i MAY be constructed concatenating the two values.
+> If `ss_i` or `ct_i` are not guaranteed to have constant length, it is REQUIRED to append the rlen encoded length when concatenating, prior to inclusion in the overall construction.
+
+The component KEMs used in this specification are RSA-KEM {{I-D.ietf-lamps-rfc5990bis}}, ECDH KEM {{I-D.ounsworth-lamps-cms-dhkem}} and ML-KEM {{FIPS.203-ipd}} all of which meet the criteria of having constant-length shared secrets and ciphertexts and therefore we justify using the simpler construction that omits the length tag.
+
 
 <!-- End of Security Considerations section -->
 
