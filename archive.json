@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2023-10-05T01:14:58.347260+00:00",
+  "timestamp": "2023-10-08T01:19:26.772978+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -208,7 +208,7 @@
       "labels": [],
       "body": "This relates to the LAMPS mailist discussion:\r\n\r\nhttps://mailarchive.ietf.org/arch/msg/spasm/xSKIRjtMSJ8M7N7Fx3X09ASUHC8/\r\n\r\nThe main branch is option 3.1.\r\nThis PR is option 3.2.\r\n\r\nWe should wait to merge this PR pending the results of that discussion thread.",
       "createdAt": "2023-10-04T16:09:56Z",
-      "updatedAt": "2023-10-04T16:18:34Z",
+      "updatedAt": "2023-10-07T01:46:41Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "6f3d6ee7dfb5df2492b5d6a8bcd2495884ae6e27",
@@ -220,7 +220,68 @@
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO85jHrif",
+          "commit": {
+            "abbreviatedOid": "efba46d"
+          },
+          "author": "johngray-dev",
+          "authorAssociation": "NONE",
+          "state": "CHANGES_REQUESTED",
+          "body": "",
+          "createdAt": "2023-10-07T01:46:16Z",
+          "updatedAt": "2023-10-07T01:46:41Z",
+          "comments": [
+            {
+              "originalPosition": 1,
+              "body": "On Line 12 you do not need to import SIGNATURE-ALGORITHM or ParamOptions.   I removed them and was able to compile this ASN.1  ",
+              "createdAt": "2023-10-07T01:46:16Z",
+              "updatedAt": "2023-10-07T01:46:41Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 7,
+      "id": "PR_kwDOKRPFO85b9Pfi",
+      "title": "synced with cfrg-kem-combiners-04 and rfc5990bis-05",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/7",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-10-05T02:31:29Z",
+      "updatedAt": "2023-10-07T01:43:27Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "6f3d6ee7dfb5df2492b5d6a8bcd2495884ae6e27",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mike_sync_cfrg-kem-combiner-04",
+      "headRefOid": "12f2ba3d9e6f87ab863797c798e0746d5e834309",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO85jHrcO",
+          "commit": {
+            "abbreviatedOid": "12f2ba3"
+          },
+          "author": "johngray-dev",
+          "authorAssociation": "NONE",
+          "state": "APPROVED",
+          "body": "Changes look good Mike.   Thanks for making sure it is up to date.",
+          "createdAt": "2023-10-07T01:43:27Z",
+          "updatedAt": "2023-10-07T01:43:27Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
