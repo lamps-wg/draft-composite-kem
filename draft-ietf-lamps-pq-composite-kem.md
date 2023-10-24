@@ -148,7 +148,7 @@ This document assumes that all component algorithms are KEMs, and therefore it d
 
 --- middle
 
-# Changes in version -01
+# Changes in version -01 and -02
 
 Changes affecting interoperability:
 
@@ -158,7 +158,7 @@ Changes affecting interoperability:
   * Removed CompositeKEMParams since all params are now explicit in the OID.
 * Defined `KeyGen()`, `Encaps()`, and `Decaps()` for a composite KEM algorithm.
 * Removed the discussion of KeyTrans -> KEM and KeyAgree -> KEM promotions, and instead simply referenced {{I-D.ietf-lamps-rfc5990bis}} and {{I-D.ounsworth-lamps-cms-dhkem}}.
-* Made RSA keys fixed-length at 2048 and 3072.
+* Made RSA keys fixed-length at 2048 and 3072, both at the NIST Level 1 / AES-128 security level.
 * Re-worked section 4.1 (id-MLKEM768-RSA3072-KMAC256) to Reference 5990bis and its updated structures.
 * Removed RSA-KEM KDF params and make them implied by the OID; ie provide a profile of 5990bis.
 * Aligned combiner with draft-ounsworth-cfrg-kem-combiners-04.
@@ -174,11 +174,6 @@ Editorial changes:
 * Brushed up the Security Considerations.
 * Made a proper IANA Considerations section.
 * Rename "Kyber" to "ML-KEM".
-
-TODO:
-
-  `[ ]` Oops. KEM Combiner is actually NOT -04. Sync that.
-
 
 Still to do in a future version:
 
@@ -317,7 +312,7 @@ where `Combiner(ct1, ss1, ct2, ss2, fixedInfo)` is defined in {sec-kem-combiner}
 
 The composite algorithm combinations defined in this document were chosen according to the following guidelines:
 
-1. A single RSA combination is provided at a key size of 3072 bits, matched with NIST PQC Level 3 algorithms.
+1. RSA combinations are provided at key sizes of 2048 and 3072 bits. Since RSA 2048 and 3072 are considered to have 112 and 128 bits of classical security respectively, they are both matched with NIST PQC Level 1 algorithms and 128-bit symmetric algorithms.
 1. Elliptic curve algorithms are provided with combinations on each of the NIST [RFC6090], Brainpool [RFC5639], and Edwards [RFC7748] curves. NIST PQC Levels 1 - 3 algorithms are matched with 256-bit curves, while NIST levels 4 - 5 are matched with 384-bit elliptic curves. This provides a balance between matching classical security levels of post-quantum and traditional algorithms, and also selecting elliptic curves which already have wide adoption.
 1. NIST level 1 candidates are provided, matched with 256-bit elliptic curves, intended for constrained use cases.
 
@@ -524,11 +519,11 @@ Therefore &lt;CompKEM&gt;.1 is equal to 2.16.840.1.114027.80.5.2.1
 
 | KEM Type OID                              | OID                | First Algorithm | Second Algorithm |  KEM Combiner |
 |---------                                  | -----------------  | ----------      | ----------       | ----------    |
-| id-MLKEM512-RSA2048-KMAC128               | &lt;CompKEM&gt;.13 | MLKEM512        | RSA-KEM 2048     | KMAC128/256  |
 | id-MLKEM512-ECDH-P256-KMAC128             | &lt;CompKEM&gt;.1  | MLKEM512        | ECDH-P256        | KMAC128/256  |
 | id-MLKEM512-ECDH-brainpoolP256r1-KMAC128  | &lt;CompKEM&gt;.2  | MLKEM512        | ECDH-brainpoolp256r1 | KMAC128/256 |
 | id-MLKEM512-X25519-KMAC128                | &lt;CompKEM&gt;.3  | MLKEM512        | X25519           | KMAC128/256 |
-| id-MLKEM768-RSA3072-KMAC256               | &lt;CompKEM&gt;.4  | MLKEM768        | RSA-KEM 3072     | KMAC256/384 |
+| id-MLKEM512-RSA2048-KMAC128               | &lt;CompKEM&gt;.13 | MLKEM512        | RSA-KEM 2048     | KMAC128/256  |
+| id-MLKEM512-RSA3072-KMAC128               | &lt;CompKEM&gt;.4  | MLKEM512        | RSA-KEM 3072     | KMAC128/256 |
 | id-MLKEM768-ECDH-P256-KMAC256             | &lt;CompKEM&gt;.5  | MLKEM768        | ECDH-P256        | KMAC256/384 |
 | id-MLKEM768-ECDH-brainpoolP256r1-KMAC256  | &lt;CompKEM&gt;.6  | MLKEM768        | ECDH-brainpoolp256r1 | KMAC256/384 |
 | id-MLKEM768-X25519-KMAC256                | &lt;CompKEM&gt;.7  | MLKEM768        | X25519           | KMAC256/384 |
@@ -555,13 +550,13 @@ EDNOTE: I believe that [SP.800-56Ar3] and [BSI-ECC] give equivalent and interope
 
 The "KEM Combiner" column refers to the definitions in {{sec-kem-combiner}}.
 
-## id-MLKEM512-RSA2048-KMAC128 Parameters
+## RSA-KEM Parameters
 
-Use of RSA-KEM {{I-D.ietf-lamps-rfc5990bis}} requires additional specification.
+Use of RSA-KEM {{I-D.ietf-lamps-rfc5990bis}} within `id-MLKEM512-RSA2048-KMAC128` and `id-MLKEM512-RSA3072-KMAC128` requires additional specification.
 
-The RSA component keys MUST be generated at the 2048-bit security level in order to match security level with ML-KEM-768.
+The RSA component keys MUST be generated at the 2048-bit and 3072-bit security level respectively.
 
-As with the other composite KEM algorithms, when `id-MLKEM512-RSA2048-KMAC128` is used in an AlgorithmIdentifier, the parameters MUST be absent. `id-MLKEM512-RSA2048-KMAC128` SHALL instantiate RSA-KEM with the following parameters:
+As with the other composite KEM algorithms, when `id-MLKEM512-RSA2048-KMAC128` or `id-MLKEM512-RSA3072-KMAC128` is used in an AlgorithmIdentifier, the parameters MUST be absent. The RSA-KEM SHALL be instantiated with the following parameters:
 
 | RSA-KEM Parameter          | Value                      |
 | -------------------------- | -------------------------- |
@@ -573,29 +568,6 @@ where:
 
 * `kda-kdf3` is defined in {{I-D.ietf-lamps-rfc5990bis}} which references it from [ANS-X9.44].
 * `mda-shake256` is defined in {{I-D.housley-lamps-cms-sha3-hash}}.
-
-
-
-## id-MLKEM768-RSA3072-KMAC256 Parameters
-
-Use of RSA-KEM {{I-D.ietf-lamps-rfc5990bis}} requires additional specification.
-
-The RSA component keys MUST be generated at the 3072-bit security level in order to match security level with ML-KEM-768.
-
-As with the other composite KEM algorithms, when `id-MLKEM768-RSA3072-KMAC256` is used in an AlgorithmIdentifier, the parameters MUST be absent. `id-MLKEM768-RSA3072-KMAC256` SHALL instantiate RSA-KEM with the following parameters:
-
-| RSA-KEM Parameter          | Value                      |
-| -------------------------- | -------------------------- |
-| keyDerivationFunction      | kda-kdf3 with id-sha3-384  |
-| keyLength                  | 256                        |
-{: #rsa-kem-params3072 title="RSA-KEM 3072 Parameters"}
-
-where:
-
-* `kda-kdf3` is defined in {{I-D.ietf-lamps-rfc5990bis}} which references it from [ANS-X9.44].
-* `mda-shake256` is defined in {{I-D.housley-lamps-cms-sha3-hash}}.
-* `kwa-aes256-wrap` is defined in {{I-D.ietf-lamps-rfc5990bis}}
-
 
 
 # ASN.1 Module {#sec-asn1-module}

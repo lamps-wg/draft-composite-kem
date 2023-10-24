@@ -9,7 +9,7 @@ EXPORTS ALL;
 
 IMPORTS
 
-PUBLIC-KEY, SIGNATURE-ALGORITHM, ParamOptions, AlgorithmIdentifier{}
+PUBLIC-KEY, AlgorithmIdentifier{}
   FROM AlgorithmInformation-2009  -- RFC 5912 [X509ASN1]
       { iso(1) identified-organization(3) dod(6) internet(1)
         security(5) mechanisms(5) pkix(7) id-mod(0)
@@ -102,22 +102,6 @@ kema-CompositeKEM {
 -- Composite KEM Algorithms
 --
 
--- TODO: OID to be replaced by IANA
-id-MLKEM512-RSA2048-KMAC128 OBJECT IDENTIFIER ::= {
-  joint-iso-itu-t(2) country(16) us(840) organization(1) 
-  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 13 }
-
-pk-MLKEM512-RSA2048-KMAC128 PUBLIC-KEY ::= 
-  pk-CompositeKEM { 
-    id-MLKEM512-RSA2048-KMAC128, 
-    OCTET STRING, RSAPublicKey }
-
-kema-MLKEM512-RSA2048-KMAC128 KEM-ALGORITHM ::= 
-    kema-CompositeKEM{
-      id-MLKEM512-RSA2048-KMAC128, 
-      pk-MLKEM512-RSA2048-KMAC128 }
-
-
 
 -- TODO: OID to be replaced by IANA
 id-MLKEM512-ECDH-P256-KMAC128 OBJECT IDENTIFIER ::= {
@@ -170,19 +154,36 @@ kema-MLKEM512-X25519-KMAC128 KEM-ALGORITHM ::=
 
 
 -- TODO: OID to be replaced by IANA
-id-MLKEM768-RSA3072-KMAC256 OBJECT IDENTIFIER ::= {
+id-MLKEM512-RSA2048-KMAC128 OBJECT IDENTIFIER ::= {
+  joint-iso-itu-t(2) country(16) us(840) organization(1) 
+  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 13 }
+
+pk-MLKEM512-RSA2048-KMAC128 PUBLIC-KEY ::= 
+  pk-CompositeKEM { 
+    id-MLKEM512-RSA2048-KMAC128, 
+    OCTET STRING, RSAPublicKey }
+
+kema-MLKEM512-RSA2048-KMAC128 KEM-ALGORITHM ::= 
+    kema-CompositeKEM{
+      id-MLKEM512-RSA2048-KMAC128, 
+      pk-MLKEM512-RSA2048-KMAC128 }
+
+
+
+-- TODO: OID to be replaced by IANA
+id-MLKEM512-RSA3072-KMAC128 OBJECT IDENTIFIER ::= {
   joint-iso-itu-t(2) country(16) us(840) organization(1) 
   entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 4 }
 
-pk-MLKEM768-RSA3072-KMAC256 PUBLIC-KEY ::= 
+pk-MLKEM512-RSA3072-KMAC128 PUBLIC-KEY ::= 
   pk-CompositeKEM {
-    id-MLKEM768-RSA3072-KMAC256, 
+    id-MLKEM512-RSA3072-KMAC128, 
     OCTET STRING, RSAPublicKey }
 
-kema-MLKEM768-RSA3072-KMAC256 KEM-ALGORITHM ::=
+kema-MLKEM512-RSA3072-KMAC128 KEM-ALGORITHM ::=
     kema-CompositeKEM{
-      id-MLKEM768-RSA3072-KMAC256, 
-      pk-MLKEM768-RSA3072-KMAC256 }
+      id-MLKEM512-RSA3072-KMAC128, 
+      pk-MLKEM512-RSA3072-KMAC128 }
 
 
 -- TODO: OID to be replaced by IANA
