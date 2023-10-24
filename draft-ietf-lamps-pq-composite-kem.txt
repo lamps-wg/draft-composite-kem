@@ -5,7 +5,7 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 7 April 2024                                     5 October 2023
+Expires: 26 April 2024                                   24 October 2023
 
 
                  Composite KEM For Use In Internet PKI
@@ -60,7 +60,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 7 April 2024.
+   This Internet-Draft will expire on 26 April 2024.
 
 Copyright Notice
 
@@ -78,7 +78,7 @@ Copyright Notice
 
 Table of Contents
 
-   1.  Changes in version -01
+   1.  Changes in version -01 and -02
    2.  Introduction
      2.1.  Terminology
      2.2.  Composite Design Philosophy
@@ -96,22 +96,23 @@ Table of Contents
      4.1.  kema-CompositeKEM
      4.2.  CompositeCiphertextValue
      4.3.  KEM Combiner
-   5.  Algorithm Identifiers
-     5.1.  id-MLKEM512-RSA2048-KMAC128 Parameters
-     5.2.  id-MLKEM768-RSA3072-KMAC256 Parameters
-   6.  ASN.1 Module
-   7.  IANA Considerations
-     7.1.  Object Identifier Allocations
-       7.1.1.  Module Registration - SMI Security for PKIX Module
+       4.3.1.  Named KEM Combiner parameter sets
+   5.  Example KEM Combiner instantiation
+   6.  Algorithm Identifiers
+     6.1.  RSA-KEM Parameters
+   7.  ASN.1 Module
+   8.  IANA Considerations
+     8.1.  Object Identifier Allocations
+       8.1.1.  Module Registration - SMI Security for PKIX Module
                Identifier
-       7.1.2.  Object Identifier Registrations - SMI Security for PKIX
+       8.1.2.  Object Identifier Registrations - SMI Security for PKIX
                Algorithms
-   8.  Security Considerations
-     8.1.  Policy for Deprecated and Acceptable Algorithms
-     8.2.  KEM Combiner
-   9.  References
-     9.1.  Normative References
-     9.2.  Informative References
+   9.  Security Considerations
+     9.1.  Policy for Deprecated and Acceptable Algorithms
+     9.2.  KEM Combiner
+   10. References
+     10.1.  Normative References
+     10.2.  Informative References
    Appendix A.  Samples
    Appendix B.  Implementation Considerations
      B.1.  FIPS certification
@@ -121,7 +122,7 @@ Table of Contents
    Appendix D.  Contributors and Acknowledgements
    Authors' Addresses
 
-1.  Changes in version -01
+1.  Changes in version -01 and -02
 
    Changes affecting interoperability:
 
@@ -144,7 +145,8 @@ Table of Contents
       promotions, and instead simply referenced
       [I-D.ietf-lamps-rfc5990bis] and [I-D.ounsworth-lamps-cms-dhkem].
 
-   *  Made RSA keys fixed-length at 2048 and 3072.
+   *  Made RSA keys fixed-length at 2048 and 3072, both at the NIST
+      Level 1 / AES-128 security level.
 
    *  Re-worked section 4.1 (id-MLKEM768-RSA3072-KMAC256) to Reference
       5990bis and its updated structures.
@@ -177,10 +179,6 @@ Table of Contents
    *  Made a proper IANA Considerations section.
 
    *  Rename "Kyber" to "ML-KEM".
-
-   TODO:
-
-   [ ] Oops.  KEM Combiner is actually NOT -04.  Sync that.
 
    Still to do in a future version:
 
@@ -353,14 +351,14 @@ Table of Contents
 
      # combine
      ct = CompositeCiphertextValue(ct1, ct2)
-     ss = Combiner(ss1, ss2, algName)
+     ss = Combiner(ct1, ss1, ct2, ss2, algName)
 
      return (ct, ss)
 
                        Figure 1: Composite Encaps(pk)
 
-   where Combiner(k1, k2, fixedInfo) is defined in Section 4.3 and
-   CompositeCiphertextValue is defined in Section 4.2.
+   where Combiner(ct1, ss1, ct2, ss2, fixedInfo) is defined in
+   Section 4.3 and CompositeCiphertextValue is defined in Section 4.2.
 
 2.3.3.  Composite Decaps
 
@@ -376,21 +374,24 @@ Table of Contents
      ss2 = ComponentKEM2.Encaps(sk2, ct2)
 
      # combine
-     ss = Combiner(ss1, ss2, algName)
+     ss = Combiner(ct1, ss1, ct2, ss2, algName)
 
      return ss
 
                      Figure 2: Composite Decaps(sk, ct)
 
-   where Combiner(k1, k2, fixedInfo) is defined in {sec-kem-combiner}.
+   where Combiner(ct1, ss1, ct2, ss2, fixedInfo) is defined in {sec-kem-
+   combiner}.
 
 2.4.  Component Algorithm Selection Criteria
 
    The composite algorithm combinations defined in this document were
    chosen according to the following guidelines:
 
-   1.  A single RSA combination is provided at a key size of 3072 bits,
-       matched with NIST PQC Level 3 algorithms.
+   1.  RSA combinations are provided at key sizes of 2048 and 3072 bits.
+       Since RSA 2048 and 3072 are considered to have 112 and 128 bits
+       of classical security respectively, they are both matched with
+       NIST PQC Level 1 algorithms and 128-bit symmetric algorithms.
 
    2.  Elliptic curve algorithms are provided with combinations on each
        of the NIST [RFC6090], Brainpool [RFC5639], and Edwards [RFC7748]
@@ -443,7 +444,7 @@ Table of Contents
        OCTET STRING, ECPoint }
 
    The full set of key types defined by this specification can be found
-   in the ASN.1 Module in Section 6.
+   in the ASN.1 Module in Section 7.
 
 3.2.  CompositeKEMPublicKey
 
@@ -453,11 +454,11 @@ Table of Contents
 
    A composite key MUST contain two component public keys.  The order of
    the component keys is determined by the definition of the
-   corresponding algorithm identifier as defined in section Section 5.
+   corresponding algorithm identifier as defined in section Section 6.
 
    Some applications may need to reconstruct the SubjectPublicKeyInfo
    objects corresponding to each component public key.  Table 2 in
-   Section 5 provides the necessary mapping between composite and their
+   Section 6 provides the necessary mapping between composite and their
    component algorithms for doing this reconstruction.  This also
    motivates the design choice of SEQUENCE OF BIT STRING instead of
    SEQUENCE OF OCTET STRING; using BIT STRING allows for easier
@@ -487,7 +488,7 @@ Table of Contents
    structure (version 1 of which is also known as PrivateKeyInfo)
    [RFC5958], the privateKeyAlgorithm field SHALL be set to the
    corresponding composite algorithm identifier defined according to
-   Section 5, the privateKey field SHALL contain the
+   Section 6, the privateKey field SHALL contain the
    CompositeKEMPrivateKey, and the publicKey field MUST NOT be present.
    Associated public key material MAY be present in the
    CompositeKEMPrivateKey.
@@ -563,10 +564,10 @@ Table of Contents
    [I-D.ounsworth-cfrg-kem-combiners], which is repeated here for
    clarity and simplified to take two imput shared secrets:
 
- Combiner(ss1, ss2, fixedInfo) = KDF(counter || ss1 || ss2 || fixedInfo,
-                                       outputBits)
+   Combiner(ct1, ss1, ct2, ss2, fixedInfo) =
+     KDF(counter || ct1 || ss1 || ct2 || ss2 || fixedInfo, outputBits)
 
-              Figure 3: Generic KEM combiner construction
+                Figure 3: Generic KEM combiner construction
 
    where:
 
@@ -581,11 +582,16 @@ Table of Contents
 
    *  || represents concatenation.
 
-   Each registered composite KEM algorithm must specify the exact KEM
-   combiner construction that is to be used.
+   Each registered composite KEM algorithm must specify the choice of
+   KDF, fixedInfo, and outputBits to be used.
 
-   This specification uses the following KMAC-based instantiations of
-   the generic KEM combiner:
+   See Section 9.2 for further discussion of the security coniserations
+   of this KEM combiner.
+
+4.3.1.  Named KEM Combiner parameter sets
+
+   This specification references KEM combiner instantiations according
+   to the following names:
 
                +===================+=========+============+
                | KEM Combiner Name | KDF     | outputBits |
@@ -623,14 +629,16 @@ Table of Contents
 
    END EDNOTE
 
+5.  Example KEM Combiner instantiation
+
    For example, the KEM combiner used with the first entry of Table 2,
    id-MLKEM512-ECDH-P256-KMAC128 would be:
 
-   Combiner(ss1, ss2, "id-MLKEM512-ECDH-P256-KMAC128") =
+   Combiner(ct1, ss1, ct2, ss2, "id-MLKEM512-ECDH-P256-KMAC128") =
               KMAC128( 0x00000001 || ss_1 || ss_2 ||
                  "id-MLKEM512-ECDH-P256-KMAC128", 256, "")
 
-5.  Algorithm Identifiers
+6.  Algorithm Identifiers
 
    This table summarizes the list of composite KEM algorithms and lists
    the OID, two component algorithms, and the combiner function.
@@ -648,9 +656,6 @@ Table of Contents
    |KEM Type OID            |OID         |First    |Second         |KEM        |
    |                        |            |Algorithm|Algorithm      |Combiner   |
    +========================+============+=========+===============+===========+
-   |id-                     |<CompKEM>.13|MLKEM512 |RSA-KEM 2048   |KMAC128/256|
-   |MLKEM512-RSA2048-KMAC128|            |         |               |           |
-   +------------------------+------------+---------+---------------+-----------+
    |id-MLKEM512-ECDH-       |<CompKEM>.1 |MLKEM512 |ECDH-P256      |KMAC128/256|
    |P256-KMAC128            |            |         |               |           |
    +------------------------+------------+---------+---------------+-----------+
@@ -660,8 +665,11 @@ Table of Contents
    |id-                     |<CompKEM>.3 |MLKEM512 |X25519         |KMAC128/256|
    |MLKEM512-X25519-KMAC128 |            |         |               |           |
    +------------------------+------------+---------+---------------+-----------+
-   |id-                     |<CompKEM>.4 |MLKEM768 |RSA-KEM 3072   |KMAC256/384|
-   |MLKEM768-RSA3072-KMAC256|            |         |               |           |
+   |id-                     |<CompKEM>.13|MLKEM512 |RSA-KEM 2048   |KMAC128/256|
+   |MLKEM512-RSA2048-KMAC128|            |         |               |           |
+   +------------------------+------------+---------+---------------+-----------+
+   |id-                     |<CompKEM>.4 |MLKEM512 |RSA-KEM 3072   |KMAC128/256|
+   |MLKEM512-RSA3072-KMAC128|            |         |               |           |
    +------------------------+------------+---------+---------------+-----------+
    |id-MLKEM768-ECDH-       |<CompKEM>.5 |MLKEM768 |ECDH-P256      |KMAC256/384|
    |P256-KMAC256            |            |         |               |           |
@@ -687,7 +695,7 @@ Table of Contents
    The table above contains everything needed to implement the listed
    explicit composite algorithms, with the exception of some special
    notes found below in this section.  See the ASN.1 module in section
-   Section 6 for the explicit definitions of the above Composite
+   Section 7 for the explicit definitions of the above Composite
    signature algorithms.
 
    Full specifications for the referenced algorithms can be found as
@@ -718,30 +726,29 @@ Table of Contents
 
    The "KEM Combiner" column refers to the definitions in Section 4.3.
 
-5.1.  id-MLKEM512-RSA2048-KMAC128 Parameters
+6.1.  RSA-KEM Parameters
 
-   Use of RSA-KEM [I-D.ietf-lamps-rfc5990bis] requires additional
-   specification.
+   Use of RSA-KEM [I-D.ietf-lamps-rfc5990bis] within id-
+   MLKEM512-RSA2048-KMAC128 and id-MLKEM512-RSA3072-KMAC128 requires
+   additional specification.
 
-   The RSA component keys MUST be generated at the 2048-bit security
-   level in order to match security level with ML-KEM-768.
+   The RSA component keys MUST be generated at the 2048-bit and 3072-bit
+   security level respectively.
 
    As with the other composite KEM algorithms, when id-
-   MLKEM512-RSA2048-KMAC128 is used in an AlgorithmIdentifier, the
-   parameters MUST be absent. id-MLKEM512-RSA2048-KMAC128 SHALL
-   instantiate RSA-KEM with the following parameters:
+   MLKEM512-RSA2048-KMAC128 or id-MLKEM512-RSA3072-KMAC128 is used in an
+   AlgorithmIdentifier, the parameters MUST be absent.  The RSA-KEM
+   SHALL be instantiated with the following parameters:
 
-        +============================+===========================+
-        | RSA-KEM Parameter          | Value                     |
-        +============================+===========================+
-        | keyDerivationFunction      | kda-kdf3 with id-sha3-256 |
-        +----------------------------+---------------------------+
-        | keyLength                  | 128                       |
-        +----------------------------+---------------------------+
-        | DataEncapsulationMechanism | kwa-aes128-wrap           |
-        +----------------------------+---------------------------+
+           +=======================+===========================+
+           | RSA-KEM Parameter     | Value                     |
+           +=======================+===========================+
+           | keyDerivationFunction | kda-kdf3 with id-sha3-256 |
+           +-----------------------+---------------------------+
+           | keyLength             | 128                       |
+           +-----------------------+---------------------------+
 
-                     Table 3: RSA-KEM 2048 Parameters
+                      Table 3: RSA-KEM 2048 Parameters
 
    where:
 
@@ -750,43 +757,7 @@ Table of Contents
 
    *  mda-shake256 is defined in [I-D.housley-lamps-cms-sha3-hash].
 
-   *  kwa-aes128-wrap is defined in [I-D.ietf-lamps-rfc5990bis]
-
-5.2.  id-MLKEM768-RSA3072-KMAC256 Parameters
-
-   Use of RSA-KEM [I-D.ietf-lamps-rfc5990bis] requires additional
-   specification.
-
-   The RSA component keys MUST be generated at the 3072-bit security
-   level in order to match security level with ML-KEM-768.
-
-   As with the other composite KEM algorithms, when id-
-   MLKEM768-RSA3072-KMAC256 is used in an AlgorithmIdentifier, the
-   parameters MUST be absent. id-MLKEM768-RSA3072-KMAC256 SHALL
-   instantiate RSA-KEM with the following parameters:
-
-        +============================+===========================+
-        | RSA-KEM Parameter          | Value                     |
-        +============================+===========================+
-        | keyDerivationFunction      | kda-kdf3 with id-sha3-384 |
-        +----------------------------+---------------------------+
-        | keyLength                  | 256                       |
-        +----------------------------+---------------------------+
-        | DataEncapsulationMechanism | kwa-aes256-wrap           |
-        +----------------------------+---------------------------+
-
-                     Table 4: RSA-KEM 3072 Parameters
-
-   where:
-
-   *  kda-kdf3 is defined in [I-D.ietf-lamps-rfc5990bis] which
-      references it from [ANS-X9.44].
-
-   *  mda-shake256 is defined in [I-D.housley-lamps-cms-sha3-hash].
-
-   *  kwa-aes256-wrap is defined in [I-D.ietf-lamps-rfc5990bis]
-
-6.  ASN.1 Module
+7.  ASN.1 Module
 
    <CODE STARTS>
 
@@ -801,7 +772,7 @@ Table of Contents
 
    IMPORTS
 
-   PUBLIC-KEY, SIGNATURE-ALGORITHM, ParamOptions, AlgorithmIdentifier{}
+   PUBLIC-KEY, AlgorithmIdentifier{}
      FROM AlgorithmInformation-2009  -- RFC 5912 [X509ASN1]
          { iso(1) identified-organization(3) dod(6) internet(1)
            security(5) mechanisms(5) pkix(7) id-mod(0)
@@ -894,22 +865,6 @@ Table of Contents
    -- Composite KEM Algorithms
    --
 
-   -- TODO: OID to be replaced by IANA
-   id-MLKEM512-RSA2048-KMAC128 OBJECT IDENTIFIER ::= {
-     joint-iso-itu-t(2) country(16) us(840) organization(1)
-     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 13 }
-
-   pk-MLKEM512-RSA2048-KMAC128 PUBLIC-KEY ::=
-     pk-CompositeKEM {
-       id-MLKEM512-RSA2048-KMAC128,
-       OCTET STRING, RSAPublicKey }
-
-   kema-MLKEM512-RSA2048-KMAC128 KEM-ALGORITHM ::=
-       kema-CompositeKEM{
-         id-MLKEM512-RSA2048-KMAC128,
-         pk-MLKEM512-RSA2048-KMAC128 }
-
-
 
    -- TODO: OID to be replaced by IANA
    id-MLKEM512-ECDH-P256-KMAC128 OBJECT IDENTIFIER ::= {
@@ -962,19 +917,36 @@ Table of Contents
 
 
    -- TODO: OID to be replaced by IANA
-   id-MLKEM768-RSA3072-KMAC256 OBJECT IDENTIFIER ::= {
+   id-MLKEM512-RSA2048-KMAC128 OBJECT IDENTIFIER ::= {
+     joint-iso-itu-t(2) country(16) us(840) organization(1)
+     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 13 }
+
+   pk-MLKEM512-RSA2048-KMAC128 PUBLIC-KEY ::=
+     pk-CompositeKEM {
+       id-MLKEM512-RSA2048-KMAC128,
+       OCTET STRING, RSAPublicKey }
+
+   kema-MLKEM512-RSA2048-KMAC128 KEM-ALGORITHM ::=
+       kema-CompositeKEM{
+         id-MLKEM512-RSA2048-KMAC128,
+         pk-MLKEM512-RSA2048-KMAC128 }
+
+
+
+   -- TODO: OID to be replaced by IANA
+   id-MLKEM512-RSA3072-KMAC128 OBJECT IDENTIFIER ::= {
      joint-iso-itu-t(2) country(16) us(840) organization(1)
      entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 4 }
 
-   pk-MLKEM768-RSA3072-KMAC256 PUBLIC-KEY ::=
+   pk-MLKEM512-RSA3072-KMAC128 PUBLIC-KEY ::=
      pk-CompositeKEM {
-       id-MLKEM768-RSA3072-KMAC256,
+       id-MLKEM512-RSA3072-KMAC128,
        OCTET STRING, RSAPublicKey }
 
-   kema-MLKEM768-RSA3072-KMAC256 KEM-ALGORITHM ::=
+   kema-MLKEM512-RSA3072-KMAC128 KEM-ALGORITHM ::=
        kema-CompositeKEM{
-         id-MLKEM768-RSA3072-KMAC256,
-         pk-MLKEM768-RSA3072-KMAC256 }
+         id-MLKEM512-RSA3072-KMAC128,
+         pk-MLKEM512-RSA3072-KMAC128 }
 
 
    -- TODO: OID to be replaced by IANA
@@ -1077,14 +1049,14 @@ Table of Contents
 
    <CODE ENDS>
 
-7.  IANA Considerations
+8.  IANA Considerations
 
-7.1.  Object Identifier Allocations
+8.1.  Object Identifier Allocations
 
    EDNOTE to IANA: OIDs will need to be replaced in both the ASN.1
    module and in Table 2.
 
-7.1.1.  Module Registration - SMI Security for PKIX Module Identifier
+8.1.1.  Module Registration - SMI Security for PKIX Module Identifier
 
    *  Decimal: IANA Assigned - *Replace TBDMOD*
 
@@ -1092,7 +1064,7 @@ Table of Contents
 
    *  References: This Document
 
-7.1.2.  Object Identifier Registrations - SMI Security for PKIX
+8.1.2.  Object Identifier Registrations - SMI Security for PKIX
         Algorithms
 
    *  id-MLKEM512-ECDH-P256-KMAC128
@@ -1175,9 +1147,9 @@ Table of Contents
 
       -  References: This Document
 
-8.  Security Considerations
+9.  Security Considerations
 
-8.1.  Policy for Deprecated and Acceptable Algorithms
+9.1.  Policy for Deprecated and Acceptable Algorithms
 
    Traditionally, a public key or certificate contains a single
    cryptographic algorithm.  If and when an algorithm becomes deprecated
@@ -1204,17 +1176,31 @@ Table of Contents
    long as one component algorithm remains strong, then the overall
    composite algorithm remains strong.
 
-8.2.  KEM Combiner
+9.2.  KEM Combiner
 
    This document uses directly the KEM Combiner defined in
-   [I-D.ounsworth-cfrg-kem-combiners] and therefore inherits all of its
-   security considerations, which the authors believe have all been
-   addressed by the concrete instantiations of KEM algorithms and
-   combiner parameters specified in this document.
+   [I-D.ounsworth-cfrg-kem-combiners] and therefore IND-CCA2 of any of
+   its ingredient KEMs, i.e. the newly formed combined KEM is IND-CCA2
+   secure as long as at least one of the ingredient KEMs is
 
-9.  References
+   [I-D.ounsworth-cfrg-kem-combiners] provides two different
+   constructions depending on the properties of the component KEMs:
 
-9.1.  Normative References
+      If both the secret share ss_i and the ciphertext ct_i are constant
+      length, then k_i MAY be constructed concatenating the two values.
+      If ss_i or ct_i are not guaranteed to have constant length, it is
+      REQUIRED to append the rlen encoded length when concatenating,
+      prior to inclusion in the overall construction.
+
+   The component KEMs used in this specification are RSA-KEM
+   [I-D.ietf-lamps-rfc5990bis], ECDH KEM [I-D.ounsworth-lamps-cms-dhkem]
+   and ML-KEM [FIPS.203-ipd] all of which meet the criteria of having
+   constant-length shared secrets and ciphertexts and therefore we
+   justify using the simpler construction that omits the length tag.
+
+10.  References
+
+10.1.  Normative References
 
    [ANS-X9.44]
               American National Standards Institute, "Public Key
@@ -1315,7 +1301,7 @@ Table of Contents
               Encoding Rules (CER) and Distinguished Encoding Rules
               (DER)", ISO/IEC 8825-1:2015, November 2015.
 
-9.2.  Informative References
+10.2.  Informative References
 
    [I-D.becker-guthrie-noncomposite-hybrid-auth]
               Becker, A., Guthrie, R., and M. J. Jenkins, "Non-Composite
