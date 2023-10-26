@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2023-10-24T01:14:34.880009+00:00",
+  "timestamp": "2023-10-26T01:13:15.540180+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -79,6 +79,22 @@
       "body": "This is a procedural issue: this draft is adopted by LAMPS, but it depends Informatively on draft-ounsworth-cfrg-kem-combiners, which is not yet adopted by CFRG. That will cause a problem at WGLC.\r\n\r\nI propose to leave this issue for now and revisit it as we approach WGLC.",
       "createdAt": "2023-08-23T21:03:13Z",
       "updatedAt": "2023-09-10T00:53:29Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 9,
+      "id": "I_kwDOKRPFO8506Rus",
+      "title": "Add Max, Jan, Scott as co-authors",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/9",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "They are equally part of the author's group.",
+      "createdAt": "2023-10-25T13:29:03Z",
+      "updatedAt": "2023-10-25T13:29:03Z",
       "closedAt": null,
       "comments": []
     }
@@ -201,25 +217,33 @@
       "id": "PR_kwDOKRPFO85b61Iv",
       "title": "Demoted RSA 3072 to 128-bit Level 1",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/6",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "This relates to the LAMPS mailist discussion:\r\n\r\nhttps://mailarchive.ietf.org/arch/msg/spasm/xSKIRjtMSJ8M7N7Fx3X09ASUHC8/\r\n\r\nThe main branch is option 3.1.\r\nThis PR is option 3.2.\r\n\r\nWe should wait to merge this PR pending the results of that discussion thread.",
       "createdAt": "2023-10-04T16:09:56Z",
-      "updatedAt": "2023-10-07T01:46:41Z",
+      "updatedAt": "2023-10-24T17:56:28Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "6f3d6ee7dfb5df2492b5d6a8bcd2495884ae6e27",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mike_downgrade_RSA3072",
       "headRefOid": "efba46de1223f1868aa6d0e94686fdd96ad239d2",
-      "closedAt": null,
+      "closedAt": "2023-10-24T17:56:27Z",
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "body": "This was already included in the john_integration branch Merge #8 ",
+          "createdAt": "2023-10-24T17:56:28Z",
+          "updatedAt": "2023-10-24T17:56:28Z"
+        }
+      ],
       "reviews": [
         {
           "id": "PRR_kwDOKRPFO85jHrif",
@@ -227,7 +251,7 @@
             "abbreviatedOid": "efba46d"
           },
           "author": "johngray-dev",
-          "authorAssociation": "NONE",
+          "authorAssociation": "COLLABORATOR",
           "state": "CHANGES_REQUESTED",
           "body": "",
           "createdAt": "2023-10-07T01:46:16Z",
@@ -248,24 +272,26 @@
       "id": "PR_kwDOKRPFO85b9Pfi",
       "title": "synced with cfrg-kem-combiners-04 and rfc5990bis-05",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/7",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2023-10-05T02:31:29Z",
-      "updatedAt": "2023-10-23T21:00:18Z",
+      "updatedAt": "2023-10-24T17:53:45Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "6f3d6ee7dfb5df2492b5d6a8bcd2495884ae6e27",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mike_sync_cfrg-kem-combiner-04",
       "headRefOid": "12f2ba3d9e6f87ab863797c798e0746d5e834309",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2023-10-24T17:53:45Z",
+      "mergedAt": "2023-10-24T17:53:45Z",
+      "mergedBy": "johngray-dev",
+      "mergeCommit": {
+        "oid": "12f2ba3d9e6f87ab863797c798e0746d5e834309"
+      },
       "comments": [],
       "reviews": [
         {
@@ -274,7 +300,7 @@
             "abbreviatedOid": "12f2ba3"
           },
           "author": "johngray-dev",
-          "authorAssociation": "NONE",
+          "authorAssociation": "COLLABORATOR",
           "state": "APPROVED",
           "body": "Changes look good Mike.   Thanks for making sure it is up to date.",
           "createdAt": "2023-10-07T01:43:27Z",
@@ -287,7 +313,7 @@
             "abbreviatedOid": "12f2ba3"
           },
           "author": "johngray-dev",
-          "authorAssociation": "NONE",
+          "authorAssociation": "COLLABORATOR",
           "state": "APPROVED",
           "body": "Changes look great!",
           "createdAt": "2023-10-23T21:00:18Z",
@@ -295,6 +321,34 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 8,
+      "id": "PR_kwDOKRPFO85dqxZ6",
+      "title": "John integration",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/8",
+      "state": "MERGED",
+      "author": "johngray-dev",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "The version of this .md file and asn1 module integrated Mike's other two pull request plus fixes up a few other nits.   ",
+      "createdAt": "2023-10-24T17:52:40Z",
+      "updatedAt": "2023-10-24T17:53:42Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "945a58d29ce79bd8ad302f47e03cf5d52869378e",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "john_integration",
+      "headRefOid": "746c0b1eb4d160cf9df130d8ebffe186310a22dc",
+      "closedAt": "2023-10-24T17:53:42Z",
+      "mergedAt": "2023-10-24T17:53:42Z",
+      "mergedBy": "johngray-dev",
+      "mergeCommit": {
+        "oid": "d6a1ebdc2a5b920fbbd20f1cc33410304471e3c3"
+      },
+      "comments": [],
+      "reviews": []
     }
   ]
 }
