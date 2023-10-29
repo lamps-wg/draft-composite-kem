@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2023-10-26T01:13:15.540180+00:00",
+  "timestamp": "2023-10-29T01:18:57.866232+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -95,6 +95,22 @@
       "body": "They are equally part of the author's group.",
       "createdAt": "2023-10-25T13:29:03Z",
       "updatedAt": "2023-10-25T13:29:03Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 10,
+      "id": "I_kwDOKRPFO851Oimq",
+      "title": "Fix references to both id-sha3-256 and mda-shake256",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/10",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "It should be one or the other, but not both.",
+      "createdAt": "2023-10-28T21:32:12Z",
+      "updatedAt": "2023-10-28T21:32:27Z",
       "closedAt": null,
       "comments": []
     }
