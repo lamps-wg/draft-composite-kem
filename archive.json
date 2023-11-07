@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2023-10-29T01:18:57.866232+00:00",
+  "timestamp": "2023-11-07T01:17:01.869734+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -191,7 +191,7 @@
             "abbreviatedOid": "3a3f3d3"
           },
           "author": "johngray-dev",
-          "authorAssociation": "NONE",
+          "authorAssociation": "COLLABORATOR",
           "state": "APPROVED",
           "body": "Looks good!   Other than needing to define the ASN.1 module OID:\r\nid-mod-composite-kems\r\n\r\nI was able to compile the ASN.1, so that is great!",
           "createdAt": "2023-10-03T00:02:33Z",
