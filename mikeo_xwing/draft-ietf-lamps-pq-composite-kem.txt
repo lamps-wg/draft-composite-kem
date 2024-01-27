@@ -91,23 +91,23 @@ Table of Contents
      4.2.  CompositeCiphertextValue
      4.3.  KEM Combiner
        4.3.1.  Named KEM Combiner parameter sets
-   5.  Example KEM Combiner instantiation
-   6.  Algorithm Identifiers
-     6.1.  RSA-KEM Parameters
-   7.  ASN.1 Module
-   8.  IANA Considerations
-     8.1.  Object Identifier Allocations
-       8.1.1.  Module Registration - SMI Security for PKIX Module
+   5.  Algorithm Identifiers
+     5.1.  Example KEM Combiner instantiation
+     5.2.  RSA-KEM Parameters
+   6.  ASN.1 Module
+   7.  IANA Considerations
+     7.1.  Object Identifier Allocations
+       7.1.1.  Module Registration - SMI Security for PKIX Module
                Identifier
-       8.1.2.  Object Identifier Registrations - SMI Security for PKIX
+       7.1.2.  Object Identifier Registrations - SMI Security for PKIX
                Algorithms
-   9.  Security Considerations
-     9.1.  Policy for Deprecated and Acceptable Algorithms
-     9.2.  KEM Combiner
-       9.2.1.  Ciphertext collision resistance
-   10. References
-     10.1.  Normative References
-     10.2.  Informative References
+   8.  Security Considerations
+     8.1.  Policy for Deprecated and Acceptable Algorithms
+     8.2.  KEM Combiner
+       8.2.1.  Ciphertext collision resistance
+   9.  References
+     9.1.  Normative References
+     9.2.  Informative References
    Appendix A.  Samples
    Appendix B.  Implementation Considerations
      B.1.  FIPS certification
@@ -309,7 +309,7 @@ Table of Contents
 
    where Combiner(ct1, ss1, ct2, ss2, fixedInfo) is defined in general
    in Section 4.3 with specific instantiations per composite KEM
-   algorithm in Section 6 and CompositeCiphertextValue is defined in
+   algorithm in Section 5 and CompositeCiphertextValue is defined in
    Section 4.2.
 
 2.3.3.  Composite Decaps
@@ -396,7 +396,7 @@ Table of Contents
        OCTET STRING, ECPoint }
 
    The full set of key types defined by this specification can be found
-   in the ASN.1 Module in Section 7.
+   in the ASN.1 Module in Section 6.
 
 3.2.  CompositeKEMPublicKey
 
@@ -406,11 +406,11 @@ Table of Contents
 
    A composite key MUST contain two component public keys.  The order of
    the component keys is determined by the definition of the
-   corresponding algorithm identifier as defined in section Section 6.
+   corresponding algorithm identifier as defined in section Section 5.
 
    Some applications may need to reconstruct the SubjectPublicKeyInfo
    objects corresponding to each component public key.  Table 2 in
-   Section 6 provides the necessary mapping between composite and their
+   Section 5 provides the necessary mapping between composite and their
    component algorithms for doing this reconstruction.  This also
    motivates the design choice of SEQUENCE OF BIT STRING instead of
    SEQUENCE OF OCTET STRING; using BIT STRING allows for easier
@@ -440,7 +440,7 @@ Table of Contents
    structure (version 1 of which is also known as PrivateKeyInfo)
    [RFC5958], the privateKeyAlgorithm field SHALL be set to the
    corresponding composite algorithm identifier defined according to
-   Section 6, the privateKey field SHALL contain the
+   Section 5, the privateKey field SHALL contain the
    CompositeKEMPrivateKey, and the publicKey field MUST NOT be present.
    Associated public key material MAY be present in the
    CompositeKEMPrivateKey.
@@ -543,15 +543,15 @@ Table of Contents
    Each registered composite KEM algorithm must specify the choice of
    KDF, fixedInfo, and outputBits to be used.
 
-   See Section 9.2 for further discussion of the security coniserations
+   See Section 8.2 for further discussion of the security coniserations
    of this KEM combiner.
 
    However, optimazations may be made in the following ways:
 
-   *  As discussed in Section 9.2.1, the ML-KEM ciphertext may be safely
+   *  As discussed in Section 8.2.1, the ML-KEM ciphertext may be safely
       omited.
 
-   *  As discussed in Section 9.2.1, the RSA-KEM ciphertext may be
+   *  As discussed in Section 8.2.1, the RSA-KEM ciphertext may be
       safely omited.
 
 4.3.1.  Named KEM Combiner parameter sets
@@ -595,16 +595,7 @@ Table of Contents
 
    END EDNOTE
 
-5.  Example KEM Combiner instantiation
-
-   For example, the KEM combiner used with the first entry of Table 2,
-   id-MLKEM512-ECDH-P256-KMAC128 would be:
-
-   Combiner(ct1, ss1, ct2, ss2, "id-MLKEM512-ECDH-P256-KMAC128") =
-              KMAC128( 0x00000001 || ss_1 || ss_2 ||
-                 "id-MLKEM512-ECDH-P256-KMAC128", 256, "")
-
-6.  Algorithm Identifiers
+5.  Algorithm Identifiers
 
    This table summarizes the list of composite KEM algorithms and lists
    the OID, two component algorithms, and the combiner function.
@@ -706,54 +697,71 @@ Table of Contents
 
    *  S: empty string.
 
-   +==========================+=============+=======+==+=====+==+=====+
-   | KEM Type                 | KEM         | KDF   |  |     |  |     |
-   |                          | Combiner    | Input |  |     |  |     |
-   |                          |             | X     |  |     |  |     |
-   +==========================+=============+=======+==+=====+==+=====+
-   | id-MLKEM512-ECDH-        | KMAC128/256 | ss1   |  | ss2 |  | ct2 |
-   | P256-KMAC128             |             |       |  |     |  |     |
-   +--------------------------+-------------+-------+--+-----+--+-----+
-   | id-MLKEM512-ECDH-        | KMAC128/256 | ss1   |  | ss2 |  | ct2 |
-   | brainpoolP256r1-KMAC128  |             |       |  |     |  |     |
-   +--------------------------+-------------+-------+--+-----+--+-----+
-   | id-                      | KMAC128/256 | ss1   |  | ss2 |  | ct2 |
-   | MLKEM512-X25519-KMAC128  |             |       |  |     |  |     |
-   +--------------------------+-------------+-------+--+-----+--+-----+
-   | id-                      | KMAC128/256 | ss1   |  | ss2 |  |     |
-   | MLKEM512-RSA2048-KMAC128 |             |       |  |     |  |     |
-   +--------------------------+-------------+-------+--+-----+--+-----+
-   | id-                      | KMAC128/256 | ss1   |  | ss2 |  |     |
-   | MLKEM512-RSA3072-KMAC128 |             |       |  |     |  |     |
-   +--------------------------+-------------+-------+--+-----+--+-----+
-   | id-MLKEM768-ECDH-        | KMAC256/384 | ss1   |  | ss2 |  | ct2 |
-   | P256-KMAC256             |             |       |  |     |  |     |
-   +--------------------------+-------------+-------+--+-----+--+-----+
-   | id-MLKEM768-ECDH-        | KMAC256/384 | ss1   |  | ss2 |  | ct2 |
-   | brainpoolP256r1-KMAC256  |             |       |  |     |  |     |
-   +--------------------------+-------------+-------+--+-----+--+-----+
-   | id-                      | KMAC256/384 | ss1   |  | ss2 |  | ct2 |
-   | MLKEM768-X25519-KMAC256  |             |       |  |     |  |     |
-   +--------------------------+-------------+-------+--+-----+--+-----+
-   | id-MLKEM1024-ECDH-       | KMAC256/512 | ss1   |  | ss2 |  | ct2 |
-   | P384-KMAC256             |             |       |  |     |  |     |
-   +--------------------------+-------------+-------+--+-----+--+-----+
-   | id-MLKEM1024-ECDH-       | KMAC256/512 | ss1   |  | ss2 |  | ct2 |
-   | brainpoolP384r1-KMAC256  |             |       |  |     |  |     |
-   +--------------------------+-------------+-------+--+-----+--+-----+
-   | id-                      | KMAC256/512 | ss1   |  | ss2 |  | ct2 |
-   | MLKEM1024-X448-KMAC256   |             |       |  |     |  |     |
-   +--------------------------+-------------+-------+--+-----+--+-----+
+   +===========================================+=============+=========+
+   | KEM Type                                  | KEM         | KDF     |
+   |                                           | Combiner    | Input   |
+   |                                           |             | X       |
+   +===========================================+=============+=========+
+   | id-MLKEM512-ECDH-P256-KMAC128             | KMAC128/256 | ss1 ||  |
+   |                                           |             | ss2 ||  |
+   |                                           |             | ct2     |
+   +-------------------------------------------+-------------+---------+
+   | id-MLKEM512-ECDH-brainpoolP256r1-KMAC128  | KMAC128/256 | ss1 ||  |
+   |                                           |             | ss2 ||  |
+   |                                           |             | ct2     |
+   +-------------------------------------------+-------------+---------+
+   | id-MLKEM512-X25519-KMAC128                | KMAC128/256 | ss1 ||  |
+   |                                           |             | ss2 ||  |
+   |                                           |             | ct2     |
+   +-------------------------------------------+-------------+---------+
+   | id-MLKEM512-RSA2048-KMAC128               | KMAC128/256 | ss1 ||  |
+   |                                           |             | ss2     |
+   +-------------------------------------------+-------------+---------+
+   | id-MLKEM512-RSA3072-KMAC128               | KMAC128/256 | ss1 ||  |
+   |                                           |             | ss2     |
+   +-------------------------------------------+-------------+---------+
+   | id-MLKEM768-ECDH-P256-KMAC256             | KMAC256/384 | ss1 ||  |
+   |                                           |             | ss2 ||  |
+   |                                           |             | ct2     |
+   +-------------------------------------------+-------------+---------+
+   | id-MLKEM768-ECDH-brainpoolP256r1-KMAC256  | KMAC256/384 | ss1 ||  |
+   |                                           |             | ss2 ||  |
+   |                                           |             | ct2     |
+   +-------------------------------------------+-------------+---------+
+   | id-MLKEM768-X25519-KMAC256                | KMAC256/384 | ss1 ||  |
+   |                                           |             | ss2 ||  |
+   |                                           |             | ct2     |
+   +-------------------------------------------+-------------+---------+
+   | id-MLKEM1024-ECDH-P384-KMAC256            | KMAC256/512 | ss1 ||  |
+   |                                           |             | ss2 ||  |
+   |                                           |             | ct2     |
+   +-------------------------------------------+-------------+---------+
+   | id-MLKEM1024-ECDH-brainpoolP384r1-KMAC256 | KMAC256/512 | ss1 ||  |
+   |                                           |             | ss2 ||  |
+   |                                           |             | ct2     |
+   +-------------------------------------------+-------------+---------+
+   | id-MLKEM1024-X448-KMAC256                 | KMAC256/512 | ss1 ||  |
+   |                                           |             | ss2 ||  |
+   |                                           |             | ct2     |
+   +-------------------------------------------+-------------+---------+
 
-                   Table 4: KEM Combiner Instattiations
+                    Table 4: KEM Combiner Instattiations
 
    The tables above contains everything needed to implement the listed
    explicit composite algorithms, with the exception of some special
    notes found below in this section.  See the ASN.1 module in section
-   Section 7 for the explicit definitions of the above Composite
+   Section 6 for the explicit definitions of the above Composite
    signature algorithms.
 
-6.1.  RSA-KEM Parameters
+5.1.  Example KEM Combiner instantiation
+
+   For example, the KEM combiner used with the first entry of Table 2,
+   id-MLKEM512-ECDH-P256-KMAC128 would be:
+
+   KMAC128( 0x00000001 || ss_1 || ss_2 || ct2
+                 "id-MLKEM512-ECDH-P256-KMAC128", 256, "")
+
+5.2.  RSA-KEM Parameters
 
    Use of RSA-KEM [I-D.ietf-lamps-rfc5990bis] within id-
    MLKEM512-RSA2048-KMAC128 and id-MLKEM512-RSA3072-KMAC128 requires
@@ -784,7 +792,7 @@ Table of Contents
 
    *  mda-shake256 is defined in [I-D.housley-lamps-cms-sha3-hash].
 
-7.  ASN.1 Module
+6.  ASN.1 Module
 
    <CODE STARTS>
 
@@ -1076,14 +1084,14 @@ Table of Contents
 
    <CODE ENDS>
 
-8.  IANA Considerations
+7.  IANA Considerations
 
-8.1.  Object Identifier Allocations
+7.1.  Object Identifier Allocations
 
    EDNOTE to IANA: OIDs will need to be replaced in both the ASN.1
    module and in Table 2.
 
-8.1.1.  Module Registration - SMI Security for PKIX Module Identifier
+7.1.1.  Module Registration - SMI Security for PKIX Module Identifier
 
    *  Decimal: IANA Assigned - *Replace TBDMOD*
 
@@ -1091,7 +1099,7 @@ Table of Contents
 
    *  References: This Document
 
-8.1.2.  Object Identifier Registrations - SMI Security for PKIX
+7.1.2.  Object Identifier Registrations - SMI Security for PKIX
         Algorithms
 
    *  id-MLKEM512-ECDH-P256-KMAC128
@@ -1174,9 +1182,9 @@ Table of Contents
 
       -  References: This Document
 
-9.  Security Considerations
+8.  Security Considerations
 
-9.1.  Policy for Deprecated and Acceptable Algorithms
+8.1.  Policy for Deprecated and Acceptable Algorithms
 
    Traditionally, a public key or certificate contains a single
    cryptographic algorithm.  If and when an algorithm becomes deprecated
@@ -1203,7 +1211,7 @@ Table of Contents
    long as one component algorithm remains strong, then the overall
    composite algorithm remains strong.
 
-9.2.  KEM Combiner
+8.2.  KEM Combiner
 
    This document uses directly the KEM Combiner defined in
    [I-D.ounsworth-cfrg-kem-combiners] and therefore IND-CCA2 of any of
@@ -1225,7 +1233,7 @@ Table of Contents
    length shared secrets and ciphertexts and therefore we justify using
    the simpler construction that omits the length tag.
 
-9.2.1.  Ciphertext collision resistance
+8.2.1.  Ciphertext collision resistance
 
    The notion of a ciphertext cellision resistant KEM is defined in
    [X-Wing] being the property that it is computationally difficult to
@@ -1239,9 +1247,9 @@ Table of Contents
    are not ciphertext collision resistant and for which the ciphertexts
    need to be included in the derivation of the shared secret.
 
-10.  References
+9.  References
 
-10.1.  Normative References
+9.1.  Normative References
 
    [ANS-X9.44]
               American National Standards Institute, "Public Key
@@ -1334,7 +1342,7 @@ Table of Contents
               Encoding Rules (CER) and Distinguished Encoding Rules
               (DER)", ISO/IEC 8825-1:2015, November 2015.
 
-10.2.  Informative References
+9.2.  Informative References
 
    [I-D.becker-guthrie-noncomposite-hybrid-auth]
               Becker, A., Guthrie, R., and M. J. Jenkins, "Non-Composite
