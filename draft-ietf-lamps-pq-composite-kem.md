@@ -506,15 +506,6 @@ these choices are somewhat arbitrary but aiming to match security level of the i
 END EDNOTE
 
 
-# Example KEM Combiner instantiation
-
-For example, the KEM combiner used with the first entry of {{tab-kem-algs}}, `id-MLKEM512-ECDH-P256-KMAC128` would be:
-
-~~~
-Combiner(ct1, ss1, ct2, ss2, "id-MLKEM512-ECDH-P256-KMAC128") =
-           KMAC128( 0x00000001 || ss_1 || ss_2 ||
-              "id-MLKEM512-ECDH-P256-KMAC128", 256, "")
-~~~
 
 
 # Algorithm Identifiers {#sec-alg-ids}
@@ -569,23 +560,33 @@ KMAC is defined in NIST SP 800-185 [SP800-185]. The `KMAC(K, X, L, S)` parameter
 * `L`: integer representation of `outputBits`.
 * `S`: empty string.
 
-| KEM Type                                  | KEM Combiner  | KDF Input X                 |
-|---------                                  | ----------    | -------------
-| id-MLKEM512-ECDH-P256-KMAC128             | KMAC128/256   | ss1 || ss2 || ct2
-| id-MLKEM512-ECDH-brainpoolP256r1-KMAC128  | KMAC128/256   | ss1 || ss2 || ct2
-| id-MLKEM512-X25519-KMAC128                | KMAC128/256   | ss1 || ss2 || ct2
-| id-MLKEM512-RSA2048-KMAC128               | KMAC128/256   | ss1 || ss2
-| id-MLKEM512-RSA3072-KMAC128               | KMAC128/256   | ss1 || ss2
-| id-MLKEM768-ECDH-P256-KMAC256             | KMAC256/384   | ss1 || ss2 || ct2
-| id-MLKEM768-ECDH-brainpoolP256r1-KMAC256  | KMAC256/384   | ss1 || ss2 || ct2
-| id-MLKEM768-X25519-KMAC256                | KMAC256/384   | ss1 || ss2 || ct2
-| id-MLKEM1024-ECDH-P384-KMAC256            | KMAC256/512   | ss1 || ss2 || ct2
-| id-MLKEM1024-ECDH-brainpoolP384r1-KMAC256 | KMAC256/512   | ss1 || ss2 || ct2
-| id-MLKEM1024-X448-KMAC256                 | KMAC256/512   | ss1 || ss2 || ct2
+| KEM Type                                  | KEM Combiner  | KDF Input X         |
+|---------                                  | ----------    | -------------       |
+| id-MLKEM512-ECDH-P256-KMAC128             | KMAC128/256   | ss1 \|\| ss2 \|\| ct2   |
+| id-MLKEM512-ECDH-brainpoolP256r1-KMAC128  | KMAC128/256   | ss1 \|\| ss2 \|\| ct2   |
+| id-MLKEM512-X25519-KMAC128                | KMAC128/256   | ss1 \|\| ss2 \|\| ct2   |
+| id-MLKEM512-RSA2048-KMAC128               | KMAC128/256   | ss1 \|\| ss2          |
+| id-MLKEM512-RSA3072-KMAC128               | KMAC128/256   | ss1 \|\| ss2          |
+| id-MLKEM768-ECDH-P256-KMAC256             | KMAC256/384   | ss1 \|\| ss2 \|\| ct2   |
+| id-MLKEM768-ECDH-brainpoolP256r1-KMAC256  | KMAC256/384   | ss1 \|\| ss2 \|\| ct2   |
+| id-MLKEM768-X25519-KMAC256                | KMAC256/384   | ss1 \|\| ss2 \|\| ct2   |
+| id-MLKEM1024-ECDH-P384-KMAC256            | KMAC256/512   | ss1 \|\| ss2 \|\| ct2   |
+| id-MLKEM1024-ECDH-brainpoolP384r1-KMAC256 | KMAC256/512   | ss1 \|\| ss2 \|\| ct2   |
+| id-MLKEM1024-X448-KMAC256                 | KMAC256/512   | ss1 \|\| ss2 \|\| ct2   |
 {: #tab-kem-combiner-instantiations title="KEM Combiner Instattiations"}
 
 
 The tables above contains everything needed to implement the listed explicit composite algorithms, with the exception of some special notes found below in this section. See the ASN.1 module in section {{sec-asn1-module}} for the explicit definitions of the above Composite signature algorithms.
+
+
+## Example KEM Combiner instantiation
+
+For example, the KEM combiner used with the first entry of {{tab-kem-algs}}, `id-MLKEM512-ECDH-P256-KMAC128` would be:
+
+~~~
+KMAC128( 0x00000001 || ss_1 || ss_2 || ct2
+              "id-MLKEM512-ECDH-P256-KMAC128", 256, "")
+~~~
 
 
 ## RSA-KEM Parameters
