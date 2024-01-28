@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-01-25T01:21:35.831642+00:00",
+  "timestamp": "2024-01-28T01:18:54.156468+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -365,6 +365,53 @@
       },
       "comments": [],
       "reviews": []
+    },
+    {
+      "number": 11,
+      "id": "PR_kwDOKRPFO85lPYQe",
+      "title": "Aligned with X-Wing",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/11",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-01-27T22:50:55Z",
+      "updatedAt": "2024-01-27T23:41:09Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "d6a1ebdc2a5b920fbbd20f1cc33410304471e3c3",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_xwing",
+      "headRefOid": "5fb7140ad8f4e684fa0e8ff930b23b01b077a694",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO85uG_7x",
+          "commit": {
+            "abbreviatedOid": "5fb7140"
+          },
+          "author": "bwesterb",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-01-27T23:41:09Z",
+          "updatedAt": "2024-01-27T23:41:09Z",
+          "comments": [
+            {
+              "originalPosition": 39,
+              "body": "Nice to see X-Wing is a FIPS standard ;).",
+              "createdAt": "2024-01-27T23:41:09Z",
+              "updatedAt": "2024-01-27T23:41:10Z"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
