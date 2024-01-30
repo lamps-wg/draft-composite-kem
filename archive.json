@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-01-28T01:18:54.156468+00:00",
+  "timestamp": "2024-01-30T01:14:01.062236+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -378,7 +378,7 @@
       "labels": [],
       "body": "",
       "createdAt": "2024-01-27T22:50:55Z",
-      "updatedAt": "2024-01-27T23:41:09Z",
+      "updatedAt": "2024-01-28T09:54:19Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "d6a1ebdc2a5b920fbbd20f1cc33410304471e3c3",
@@ -408,6 +408,66 @@
               "body": "Nice to see X-Wing is a FIPS standard ;).",
               "createdAt": "2024-01-27T23:41:09Z",
               "updatedAt": "2024-01-27T23:41:10Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO85uHdDk",
+          "commit": {
+            "abbreviatedOid": "5fb7140"
+          },
+          "author": "dconnolly",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-01-28T09:03:21Z",
+          "updatedAt": "2024-01-28T09:05:56Z",
+          "comments": [
+            {
+              "originalPosition": 257,
+              "body": "\ud83d\udc4d",
+              "createdAt": "2024-01-28T09:03:21Z",
+              "updatedAt": "2024-01-28T09:05:56Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO85uHihZ",
+          "commit": {
+            "abbreviatedOid": "5fb7140"
+          },
+          "author": "dconnolly",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-01-28T09:47:04Z",
+          "updatedAt": "2024-01-28T09:47:29Z",
+          "comments": [
+            {
+              "originalPosition": 130,
+              "body": "```suggestion\nHowever, optimizations may be made in the following ways:\n```\n",
+              "createdAt": "2024-01-28T09:47:05Z",
+              "updatedAt": "2024-01-28T09:47:29Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO85uHi48",
+          "commit": {
+            "abbreviatedOid": "5fb7140"
+          },
+          "author": "dconnolly",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-01-28T09:54:15Z",
+          "updatedAt": "2024-01-28T09:54:19Z",
+          "comments": [
+            {
+              "originalPosition": 93,
+              "body": "This is a good question, not sure yet",
+              "createdAt": "2024-01-28T09:54:15Z",
+              "updatedAt": "2024-01-28T09:54:19Z"
             }
           ]
         }
