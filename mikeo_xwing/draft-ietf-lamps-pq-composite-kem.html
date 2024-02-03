@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta content="Common,Latin" name="scripts">
 <meta content="initial-scale=1.0" name="viewport">
-<title>Composite KEM For Use In Internet PKI</title>
+<title>Composite ML-KEM For Use In Internet PKI</title>
 <meta content="Mike Ounsworth" name="author">
 <meta content="John Gray" name="author">
 <meta content="
@@ -14,21 +14,21 @@
 
 
     " name="description">
-<meta content="xml2rfc 3.19.1" name="generator">
+<meta content="xml2rfc 3.19.2" name="generator">
 <meta content="X.509" name="keyword">
 <meta content="CMS" name="keyword">
 <meta content="Post-Quantum" name="keyword">
 <meta content="KEM" name="keyword">
 <meta content="draft-ietf-lamps-pq-composite-kem-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.19.1
+  xml2rfc 3.19.2
     Python 3.11.6
     ConfigArgParse 1.7
     google-i18n-address 3.1.0
     intervaltree 3.1.0
     Jinja2 3.1.2
     lxml 4.9.3
-    platformdirs 4.1.0
+    platformdirs 4.2.0
     pycountry 22.3.5
     PyYAML 6.0.1
     requests 2.31.0
@@ -1033,11 +1033,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">Composite KEMs</td>
-<td class="right">January 2024</td>
+<td class="right">February 2024</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Ounsworth &amp; Gray</td>
-<td class="center">Expires 30 July 2024</td>
+<td class="center">Expires 6 August 2024</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1050,12 +1050,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-lamps-pq-composite-kem-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2024-01-27" class="published">27 January 2024</time>
+<time datetime="2024-02-03" class="published">3 February 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2024-07-30">30 July 2024</time></dd>
+<dd class="expires"><time datetime="2024-08-06">6 August 2024</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1069,7 +1069,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </dd>
 </dl>
 </div>
-<h1 id="title">Composite KEM For Use In Internet PKI</h1>
+<h1 id="title">Composite ML-KEM For Use In Internet PKI</h1>
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
 <p id="section-abstract-1">This document defines Post-Quantum / Traditional composite Key Encapsulation Mechanism (KEM) algorithms suitable for use within X.509 and PKIX and CMS protocols. Composite algorithms are provided which combine ML-KEM with RSA-KEM, ECDH, X25519, and X448. The provided set of composite algorithms should meet most CMS needs. For use within CMS, this document is intended to be coupled with the CMS KEMRecipientInfo mechanism in <span>[<a href="#I-D.housley-lamps-cms-kemri" class="cite xref">I-D.housley-lamps-cms-kemri</a>]</span>.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
@@ -1109,7 +1109,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 30 July 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 6 August 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1197,11 +1197,6 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.3">
                 <p id="section-toc.1-1.4.2.3.1"><a href="#section-4.3" class="auto internal xref">4.3</a>.  <a href="#name-kem-combiner" class="internal xref">KEM Combiner</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.3.2.1">
-                    <p id="section-toc.1-1.4.2.3.2.1.1"><a href="#section-4.3.1" class="auto internal xref">4.3.1</a>.  <a href="#name-named-kem-combiner-paramete" class="internal xref">Named KEM Combiner parameter sets</a></p>
-</li>
-                </ul>
 </li>
             </ul>
 </li>
@@ -1209,10 +1204,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
             <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-algorithm-identifiers" class="internal xref">Algorithm Identifiers</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1">
-                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-example-kem-combiner-instan" class="internal xref">Example KEM Combiner instantiation</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2">
-                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="auto internal xref">5.2</a>.  <a href="#name-rsa-kem-parameters" class="internal xref">RSA-KEM Parameters</a></p>
+                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-rsa-kem-parameters" class="internal xref">RSA-KEM Parameters</a></p>
 </li>
             </ul>
 </li>
@@ -1302,18 +1294,26 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <p id="section-1-1">Changes to sync with X-Wing:<a href="#section-1-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-1-2.1">
-          <p id="section-1-2.1.1">Removed ML-KEM ciphertext from KDF.<a href="#section-1-2.1.1" class="pilcrow">¶</a></p>
+          <p id="section-1-2.1.1">Removed ML-KEM ciphertext from KDF as per X-Wing proof -- this makes the KEM combiner ML-KEM specific, so:<a href="#section-1-2.1.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-1-2.1.2.1">
+              <p id="section-1-2.1.2.1.1">Changed title to be ML-KEM specific.<a href="#section-1-2.1.2.1.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
 </li>
         <li class="normal" id="section-1-2.2">
           <p id="section-1-2.2.1">Removed RSA-KEM ciphertext from KDF.<a href="#section-1-2.2.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-1-2.3">
-          <p id="section-1-2.3.1">Removed references to I-D.ounsworth-lamps-cms-dhkem since we'll just inline it and don't need a DHKEM wrapper.<a href="#section-1-2.3.1" class="pilcrow">¶</a></p>
+          <p id="section-1-2.3.1">Changed the KDF from KMAC to SHA3.<a href="#section-1-2.3.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-1-2.4">
+          <p id="section-1-2.4.1">Removed references to I-D.ounsworth-lamps-cms-dhkem since we'll just inline it and don't need a DHKEM wrapper.<a href="#section-1-2.4.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <p id="section-1-3">Still to do in a future version:<a href="#section-1-3" class="pilcrow">¶</a></p>
 <p id="section-1-4"><code>[ ]</code> We need PEM samples ... 118 hackathon? OQS friends? David @ BC? The right format for samples is probably to follow the hackathon ... a Dilithium or ECDSA trust anchor certificate, a composite KEM end entity certificate, and a CMS EnvolepedData sample encrypted for that composite KEM certificate.
-  <code>[ ]</code> Open question: do we need to incluede the ECDH, X25519, X448, and RSA public keys is the KDF? X-Wing does, but previous versions of this spec do not.<a href="#section-1-4" class="pilcrow">¶</a></p>
+  <code>[ ]</code> Open question: do we need to incluede the ECDH, X25519, X448, and RSA public keys is the KDF? X-Wing does, but previous versions of this spec do not. In general existing ECC and RSA hardware decryptor implementations might not know their own public key.<a href="#section-1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-intro">
@@ -1524,12 +1524,12 @@ pk-CompositeKEM {
   }
 </pre><a href="#section-3.1-2" class="pilcrow">¶</a>
 </div>
-<p id="section-3.1-3">As an example, the public key type <code>pk-MLKEM512-ECDH-P256-KMAC128</code> is defined as:<a href="#section-3.1-3" class="pilcrow">¶</a></p>
+<p id="section-3.1-3">As an example, the public key type <code>pk-MLKEM512-ECDH-P256</code> is defined as:<a href="#section-3.1-3" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-3.1-4">
 <pre>
-pk-MLKEM512-ECDH-P256-KMAC128 PUBLIC-KEY ::=
+pk-MLKEM512-ECDH-P256 PUBLIC-KEY ::=
   pk-CompositeKEM {
-    id-MLKEM512-ECDH-P256-KMAC128,
+    id-MLKEM512-ECDH-P256,
     OCTET STRING, ECPoint }
 </pre><a href="#section-3.1-4" class="pilcrow">¶</a>
 </div>
@@ -1548,7 +1548,7 @@ CompositeKEMPublicKey ::= SEQUENCE SIZE (2) OF BIT STRING
 </pre><a href="#section-3.2-2" class="pilcrow">¶</a>
 </div>
 <p id="section-3.2-3">A composite key MUST contain two component public keys. The order of the component keys is determined by the definition of the corresponding algorithm identifier as defined in section <a href="#sec-alg-ids" class="auto internal xref">Section 5</a>.<a href="#section-3.2-3" class="pilcrow">¶</a></p>
-<p id="section-3.2-4">Some applications may need to reconstruct the <code>SubjectPublicKeyInfo</code> objects corresponding to each component public key. <a href="#tab-kem-algs" class="auto internal xref">Table 2</a> in <a href="#sec-alg-ids" class="auto internal xref">Section 5</a> provides the necessary mapping between composite and their component algorithms for doing this reconstruction. This also motivates the design choice of <code>SEQUENCE OF BIT STRING</code> instead of <code>SEQUENCE OF OCTET STRING</code>; using <code>BIT STRING</code> allows for easier transcription between CompositeKEMPublicKey and SubjectPublicKeyInfo.<a href="#section-3.2-4" class="pilcrow">¶</a></p>
+<p id="section-3.2-4">Some applications may need to reconstruct the <code>SubjectPublicKeyInfo</code> objects corresponding to each component public key. <a href="#tab-kem-algs" class="auto internal xref">Table 1</a> in <a href="#sec-alg-ids" class="auto internal xref">Section 5</a> provides the necessary mapping between composite and their component algorithms for doing this reconstruction. This also motivates the design choice of <code>SEQUENCE OF BIT STRING</code> instead of <code>SEQUENCE OF OCTET STRING</code>; using <code>BIT STRING</code> allows for easier transcription between CompositeKEMPublicKey and SubjectPublicKeyInfo.<a href="#section-3.2-4" class="pilcrow">¶</a></p>
 <p id="section-3.2-5">When the CompositeKEMPublicKey must be provided in octet string or bit string format, the data structure is encoded as specified in <a href="#sec-encoding-rules" class="auto internal xref">Section 3.4</a>.<a href="#section-3.2-5" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1659,7 +1659,7 @@ Combiner(ct1, ss1, ct2, ss2, fixedInfo) =
             <p id="section-4.3-6.1.1"><code>KDF(message, outputBits)</code> represents a hash function suitable to the chosen KEMs according to {tab-kem-combiners}.<a href="#section-4.3-6.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-4.3-6.2">
-            <p id="section-4.3-6.2.1"><code>fixedInfo</code> SHALL be the ASCII-encoded string name of the composite KEM algorithm as listed in <a href="#tab-kem-algs" class="auto internal xref">Table 2</a>.<a href="#section-4.3-6.2.1" class="pilcrow">¶</a></p>
+            <p id="section-4.3-6.2.1"><code>fixedInfo</code> SHALL be the ASCII-encoded string name of the composite KEM algorithm as listed in <a href="#tab-kem-algs" class="auto internal xref">Table 1</a>.<a href="#section-4.3-6.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-4.3-6.3">
             <p id="section-4.3-6.3.1"><code>counter</code> SHALL be the fixed 32-bit value <code>0x00000001</code> which is placed here soly for the purposes of easy compliance with <span>[<a href="#SP.800-56Cr2" class="cite xref">SP.800-56Cr2</a>]</span>.<a href="#section-4.3-6.3.1" class="pilcrow">¶</a></p>
@@ -1678,75 +1678,28 @@ Combiner(ct1, ss1, ct2, ss2, fixedInfo) =
           <li class="normal" id="section-4.3-10.2">
             <p id="section-4.3-10.2.1">As discussed in <a href="#sec-cons-ct-collision" class="auto internal xref">Section 8.2.1</a>, the RSA-KEM ciphertext may be safely omited.<a href="#section-4.3-10.2.1" class="pilcrow">¶</a></p>
 </li>
+          <li class="normal" id="section-4.3-10.3">
+            <p id="section-4.3-10.3.1">As the KDF we use everywhere SHA3-256 or SHA3-512.<a href="#section-4.3-10.3.1" class="pilcrow">¶</a></p>
+</li>
         </ul>
-<div id="named-kem-combiner-parameter-sets">
-<section id="section-4.3.1">
-          <h4 id="name-named-kem-combiner-paramete">
-<a href="#section-4.3.1" class="section-number selfRef">4.3.1. </a><a href="#name-named-kem-combiner-paramete" class="section-name selfRef">Named KEM Combiner parameter sets</a>
-          </h4>
-<p id="section-4.3.1-1">This specification references KEM combiner instantiations according to the following names:<a href="#section-4.3.1-1" class="pilcrow">¶</a></p>
-<span id="name-kem-combiners"></span><div id="tab-kem-combiners">
-<table class="center" id="table-1">
-            <caption>
-<a href="#table-1" class="selfRef">Table 1</a>:
-<a href="#name-kem-combiners" class="selfRef">KEM Combiners</a>
-            </caption>
-<thead>
-              <tr>
-                <th class="text-left" rowspan="1" colspan="1">KEM Combiner Name</th>
-                <th class="text-left" rowspan="1" colspan="1">KDF</th>
-                <th class="text-left" rowspan="1" colspan="1">outputBits</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="text-left" rowspan="1" colspan="1">KMAC128/256</td>
-                <td class="text-left" rowspan="1" colspan="1">KMAC128</td>
-                <td class="text-left" rowspan="1" colspan="1">256</td>
-              </tr>
-              <tr>
-                <td class="text-left" rowspan="1" colspan="1">KMAC256/384</td>
-                <td class="text-left" rowspan="1" colspan="1">KMAC256</td>
-                <td class="text-left" rowspan="1" colspan="1">384</td>
-              </tr>
-              <tr>
-                <td class="text-left" rowspan="1" colspan="1">KMAC256/512</td>
-                <td class="text-left" rowspan="1" colspan="1">KMAC256</td>
-                <td class="text-left" rowspan="1" colspan="1">512</td>
-              </tr>
-            </tbody>
-          </table>
+<p id="section-4.3-11">That yields combiners of the form<a href="#section-4.3-11" class="pilcrow">¶</a></p>
+<span id="name-optimized-kem-combiner-cons"></span><div id="code-optimized-kem-combiner">
+<figure id="figure-4">
+          <div class="alignLeft art-text artwork" id="section-4.3-12.1">
+<pre>
+SHA3-256(counter || ss1 || ct2 || ss2 || fixedInfo, outputBits)
+</pre>
 </div>
-<p id="section-4.3.1-3">KMAC is defined in NIST SP 800-185 <span>[<a href="#SP800-185" class="cite xref">SP800-185</a>]</span>. The <code>KMAC(K, X, L, S)</code> parameters are instantiated as follows:<a href="#section-4.3.1-3" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-4.3.1-4.1">
-              <p id="section-4.3.1-4.1.1"><code>K</code>: the ASCI value of the name of the Kem Type OID.<a href="#section-4.3.1-4.1.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="normal" id="section-4.3.1-4.2">
-              <p id="section-4.3.1-4.2.1"><code>X</code>: the message input to <code>KDF()</code>, as defined above.<a href="#section-4.3.1-4.2.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="normal" id="section-4.3.1-4.3">
-              <p id="section-4.3.1-4.3.1"><code>L</code>: integer representation of <code>outputBits</code>.<a href="#section-4.3.1-4.3.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="normal" id="section-4.3.1-4.4">
-              <p id="section-4.3.1-4.4.1"><code>S</code>: empty string.<a href="#section-4.3.1-4.4.1" class="pilcrow">¶</a></p>
-</li>
-          </ul>
-<p id="section-4.3.1-5">BEGIN EDNOTE<a href="#section-4.3.1-5" class="pilcrow">¶</a></p>
-<p id="section-4.3.1-6">these choices are somewhat arbitrary but aiming to match security level of the input KEMs. Feedback welcome.<a href="#section-4.3.1-6" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-4.3.1-7.1">
-              <p id="section-4.3.1-7.1.1">ML-KEM-512: KMAC128/256<a href="#section-4.3.1-7.1.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="normal" id="section-4.3.1-7.2">
-              <p id="section-4.3.1-7.2.1">ML-KEM-768: KMAC256/384<a href="#section-4.3.1-7.2.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="normal" id="section-4.3.1-7.3">
-              <p id="section-4.3.1-7.3.1">ML-KEM-1024 KMAC256/512<a href="#section-4.3.1-7.3.1" class="pilcrow">¶</a></p>
-</li>
-          </ul>
-<p id="section-4.3.1-8">END EDNOTE<a href="#section-4.3.1-8" class="pilcrow">¶</a></p>
-</section>
+<figcaption><a href="#figure-4" class="selfRef">Figure 4</a>:
+<a href="#name-optimized-kem-combiner-cons" class="selfRef">Optimized KEM combiner construction</a>
+          </figcaption></figure>
+</div>
+<p id="section-4.3-13">For example, the KEM combiner used with the first entry of <a href="#tab-kem-algs" class="auto internal xref">Table 1</a>, <code>id-MLKEM512-ECDH-P256</code> would be:<a href="#section-4.3-13" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.3-14">
+<pre>
+SHA3-256( 0x00000001 || ss_mlkem || ct_ecdh-p256 || ss_ecdh-p256
+              "id-MLKEM512-ECDH-P256", "")
+</pre><a href="#section-4.3-14" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
@@ -1762,9 +1715,9 @@ Combiner(ct1, ss1, ct2, ss2, fixedInfo) =
 <p id="section-5-3">TODO: OIDs to be replaced by IANA.<a href="#section-5-3" class="pilcrow">¶</a></p>
 <p id="section-5-4">Therefore &lt;CompKEM&gt;.1 is equal to 2.16.840.1.114027.80.5.2.1<a href="#section-5-4" class="pilcrow">¶</a></p>
 <span id="name-composite-kem-key-types"></span><div id="tab-kem-algs">
-<table class="center" id="table-2">
+<table class="center" id="table-1">
         <caption>
-<a href="#table-2" class="selfRef">Table 2</a>:
+<a href="#table-1" class="selfRef">Table 1</a>:
 <a href="#name-composite-kem-key-types" class="selfRef">Composite KEM key types</a>
         </caption>
 <thead>
@@ -1777,67 +1730,67 @@ Combiner(ct1, ss1, ct2, ss2, fixedInfo) =
         </thead>
         <tbody>
           <tr>
-            <td class="text-left" rowspan="1" colspan="1">id-MLKEM512-ECDH-P256-KMAC128</td>
+            <td class="text-left" rowspan="1" colspan="1">id-MLKEM512-ECDH-P256</td>
             <td class="text-left" rowspan="1" colspan="1">&lt;CompKEM&gt;.1</td>
             <td class="text-left" rowspan="1" colspan="1">MLKEM512</td>
             <td class="text-left" rowspan="1" colspan="1">ECDH-P256</td>
           </tr>
           <tr>
-            <td class="text-left" rowspan="1" colspan="1">id-MLKEM512-ECDH-brainpoolP256r1-KMAC128</td>
+            <td class="text-left" rowspan="1" colspan="1">id-MLKEM512-ECDH-brainpoolP256r1</td>
             <td class="text-left" rowspan="1" colspan="1">&lt;CompKEM&gt;.2</td>
             <td class="text-left" rowspan="1" colspan="1">MLKEM512</td>
             <td class="text-left" rowspan="1" colspan="1">ECDH-brainpoolp256r1</td>
           </tr>
           <tr>
-            <td class="text-left" rowspan="1" colspan="1">id-MLKEM512-X25519-KMAC128</td>
+            <td class="text-left" rowspan="1" colspan="1">id-MLKEM512-X25519</td>
             <td class="text-left" rowspan="1" colspan="1">&lt;CompKEM&gt;.3</td>
             <td class="text-left" rowspan="1" colspan="1">MLKEM512</td>
             <td class="text-left" rowspan="1" colspan="1">X25519</td>
           </tr>
           <tr>
-            <td class="text-left" rowspan="1" colspan="1">id-MLKEM512-RSA2048-KMAC128</td>
+            <td class="text-left" rowspan="1" colspan="1">id-MLKEM512-RSA2048</td>
             <td class="text-left" rowspan="1" colspan="1">&lt;CompKEM&gt;.13</td>
             <td class="text-left" rowspan="1" colspan="1">MLKEM512</td>
             <td class="text-left" rowspan="1" colspan="1">RSA-KEM 2048</td>
           </tr>
           <tr>
-            <td class="text-left" rowspan="1" colspan="1">id-MLKEM512-RSA3072-KMAC128</td>
+            <td class="text-left" rowspan="1" colspan="1">id-MLKEM512-RSA3072</td>
             <td class="text-left" rowspan="1" colspan="1">&lt;CompKEM&gt;.4</td>
             <td class="text-left" rowspan="1" colspan="1">MLKEM512</td>
             <td class="text-left" rowspan="1" colspan="1">RSA-KEM 3072</td>
           </tr>
           <tr>
-            <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-ECDH-P256-KMAC256</td>
+            <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-ECDH-P256</td>
             <td class="text-left" rowspan="1" colspan="1">&lt;CompKEM&gt;.5</td>
             <td class="text-left" rowspan="1" colspan="1">MLKEM768</td>
             <td class="text-left" rowspan="1" colspan="1">ECDH-P256</td>
           </tr>
           <tr>
-            <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-ECDH-brainpoolP256r1-KMAC256</td>
+            <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-ECDH-brainpoolP256r1</td>
             <td class="text-left" rowspan="1" colspan="1">&lt;CompKEM&gt;.6</td>
             <td class="text-left" rowspan="1" colspan="1">MLKEM768</td>
             <td class="text-left" rowspan="1" colspan="1">ECDH-brainpoolp256r1</td>
           </tr>
           <tr>
-            <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-X25519-KMAC256</td>
+            <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-X25519</td>
             <td class="text-left" rowspan="1" colspan="1">&lt;CompKEM&gt;.7</td>
             <td class="text-left" rowspan="1" colspan="1">MLKEM768</td>
             <td class="text-left" rowspan="1" colspan="1">X25519</td>
           </tr>
           <tr>
-            <td class="text-left" rowspan="1" colspan="1">id-MLKEM1024-ECDH-P384-KMAC256</td>
+            <td class="text-left" rowspan="1" colspan="1">id-MLKEM1024-ECDH-P384</td>
             <td class="text-left" rowspan="1" colspan="1">&lt;CompKEM&gt;.8</td>
             <td class="text-left" rowspan="1" colspan="1">MLKEM1024</td>
             <td class="text-left" rowspan="1" colspan="1">ECDH-P384</td>
           </tr>
           <tr>
-            <td class="text-left" rowspan="1" colspan="1">id-MLKEM1024-ECDH-brainpoolP384r1-KMAC256</td>
+            <td class="text-left" rowspan="1" colspan="1">id-MLKEM1024-ECDH-brainpoolP384r1</td>
             <td class="text-left" rowspan="1" colspan="1">&lt;CompKEM&gt;.9</td>
             <td class="text-left" rowspan="1" colspan="1">MLKEM1024</td>
             <td class="text-left" rowspan="1" colspan="1">ECDH-brainpoolP384r1</td>
           </tr>
           <tr>
-            <td class="text-left" rowspan="1" colspan="1">id-MLKEM1024-X448-KMAC256</td>
+            <td class="text-left" rowspan="1" colspan="1">id-MLKEM1024-X448</td>
             <td class="text-left" rowspan="1" colspan="1">&lt;CompKEM&gt;.10</td>
             <td class="text-left" rowspan="1" colspan="1">MLKEM1024</td>
             <td class="text-left" rowspan="1" colspan="1">X448</td>
@@ -1845,177 +1798,118 @@ Combiner(ct1, ss1, ct2, ss2, fixedInfo) =
         </tbody>
       </table>
 </div>
-<p id="section-5-6">Full specifications for the referenced algorithms can be found as follows:<a href="#section-5-6" class="pilcrow">¶</a></p>
+<p id="section-5-6">EDNOTE: The original reason for using KMAC was that RSA, in general, allows for the attacker to choose the shared secret ss, but with RSA-KEM I think this is actually not the case since the final step of RSA-KEM is SS = KDF(Z), so SHA3 should be fine.<a href="#section-5-6" class="pilcrow">¶</a></p>
+<p id="section-5-7">Full specifications for the referenced algorithms can be found as follows:<a href="#section-5-7" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-5-7.1">
-          <p id="section-5-7.1.1"><em>ECDH</em>: There does not appear to be a single IETF definition of ECDH, so we refer to the following:<a href="#section-5-7.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-5-8.1">
+          <p id="section-5-8.1.1"><em>ECDH</em>: There does not appear to be a single IETF definition of ECDH, so we refer to the following:<a href="#section-5-8.1.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-5-7.1.2.1">
-              <p id="section-5-7.1.2.1.1"><em>ECDH NIST</em>: SHALL be Elliptic Curve Cryptography Cofactor Diffie-Hellman (ECC CDH) as defined in section 5.7.1.2 of <span>[<a href="#SP.800-56Ar3" class="cite xref">SP.800-56Ar3</a>]</span>.<a href="#section-5-7.1.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-5-8.1.2.1">
+              <p id="section-5-8.1.2.1.1"><em>ECDH NIST</em>: SHALL be Elliptic Curve Cryptography Cofactor Diffie-Hellman (ECC CDH) as defined in section 5.7.1.2 of <span>[<a href="#SP.800-56Ar3" class="cite xref">SP.800-56Ar3</a>]</span>.<a href="#section-5-8.1.2.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-5-7.1.2.2">
-              <p id="section-5-7.1.2.2.1"><em>ECDH BSI / brainpool</em>: SHALL be Elliptic Curve Key Agreement algorithm (ECKA) as defined in section 4.3.1 of <span>[<a href="#BSI-ECC" class="cite xref">BSI-ECC</a>]</span><a href="#section-5-7.1.2.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-5-8.1.2.2">
+              <p id="section-5-8.1.2.2.1"><em>ECDH BSI / brainpool</em>: SHALL be Elliptic Curve Key Agreement algorithm (ECKA) as defined in section 4.3.1 of <span>[<a href="#BSI-ECC" class="cite xref">BSI-ECC</a>]</span><a href="#section-5-8.1.2.2.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 </li>
-        <li class="normal" id="section-5-7.2">
-          <p id="section-5-7.2.1"><em>ML-KEM</em>: <span>[<a href="#I-D.ietf-lamps-kyber-certificates" class="cite xref">I-D.ietf-lamps-kyber-certificates</a>]</span> and <span>[<a href="#FIPS.203-ipd" class="cite xref">FIPS.203-ipd</a>]</span><a href="#section-5-7.2.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-5-8.2">
+          <p id="section-5-8.2.1"><em>ML-KEM</em>: <span>[<a href="#I-D.ietf-lamps-kyber-certificates" class="cite xref">I-D.ietf-lamps-kyber-certificates</a>]</span> and <span>[<a href="#FIPS.203-ipd" class="cite xref">FIPS.203-ipd</a>]</span><a href="#section-5-8.2.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-5-7.3">
-          <p id="section-5-7.3.1"><em>RSA-KEM</em>: <span>[<a href="#I-D.ietf-lamps-rfc5990bis" class="cite xref">I-D.ietf-lamps-rfc5990bis</a>]</span><a href="#section-5-7.3.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-5-8.3">
+          <p id="section-5-8.3.1"><em>RSA-KEM</em>: <span>[<a href="#I-D.ietf-lamps-rfc5990bis" class="cite xref">I-D.ietf-lamps-rfc5990bis</a>]</span><a href="#section-5-8.3.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-5-7.4">
-          <p id="section-5-7.4.1"><em>X25519 / X448</em>: <span>[<a href="#RFC8410" class="cite xref">RFC8410</a>]</span><a href="#section-5-7.4.1" class="pilcrow">¶</a></p>
-</li>
-      </ul>
-<p id="section-5-8">EDNOTE: I believe that <span>[<a href="#SP.800-56Ar3" class="cite xref">SP.800-56Ar3</a>]</span> and <span>[<a href="#BSI-ECC" class="cite xref">BSI-ECC</a>]</span> give equivalent and interoperable algorithms, so maybe this is extranuous detail to include?<a href="#section-5-8" class="pilcrow">¶</a></p>
-<p id="section-5-9">The KEM combiners for each algorithm are instantiated as follows<a href="#section-5-9" class="pilcrow">¶</a></p>
-<span id="name-named-kem-combiners"></span><div id="tab-named-kem-combiners">
-<table class="center" id="table-3">
-        <caption>
-<a href="#table-3" class="selfRef">Table 3</a>:
-<a href="#name-named-kem-combiners" class="selfRef">Named KEM Combiners</a>
-        </caption>
-<thead>
-          <tr>
-            <th class="text-left" rowspan="1" colspan="1">KEM Combiner Name</th>
-            <th class="text-left" rowspan="1" colspan="1">KDF</th>
-            <th class="text-left" rowspan="1" colspan="1">outputBits</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="text-left" rowspan="1" colspan="1">KMAC128/256</td>
-            <td class="text-left" rowspan="1" colspan="1">KMAC128</td>
-            <td class="text-left" rowspan="1" colspan="1">256</td>
-          </tr>
-          <tr>
-            <td class="text-left" rowspan="1" colspan="1">KMAC256/384</td>
-            <td class="text-left" rowspan="1" colspan="1">KMAC256</td>
-            <td class="text-left" rowspan="1" colspan="1">384</td>
-          </tr>
-          <tr>
-            <td class="text-left" rowspan="1" colspan="1">KMAC256/512</td>
-            <td class="text-left" rowspan="1" colspan="1">KMAC256</td>
-            <td class="text-left" rowspan="1" colspan="1">512</td>
-          </tr>
-        </tbody>
-      </table>
-</div>
-<p id="section-5-11">KMAC is defined in NIST SP 800-185 <span>[<a href="#SP800-185" class="cite xref">SP800-185</a>]</span>. The <code>KMAC(K, X, L, S)</code> parameters are instantiated as follows:<a href="#section-5-11" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-5-12.1">
-          <p id="section-5-12.1.1"><code>K</code>: the ASCI value of the name of the Kem Type.<a href="#section-5-12.1.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="section-5-12.2">
-          <p id="section-5-12.2.1"><code>X</code>: the message input to <code>KDF()</code>, as defined above.<a href="#section-5-12.2.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="section-5-12.3">
-          <p id="section-5-12.3.1"><code>L</code>: integer representation of <code>outputBits</code>.<a href="#section-5-12.3.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="section-5-12.4">
-          <p id="section-5-12.4.1"><code>S</code>: empty string.<a href="#section-5-12.4.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-5-8.4">
+          <p id="section-5-8.4.1"><em>X25519 / X448</em>: <span>[<a href="#RFC8410" class="cite xref">RFC8410</a>]</span><a href="#section-5-8.4.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
+<p id="section-5-9">EDNOTE: I believe that <span>[<a href="#SP.800-56Ar3" class="cite xref">SP.800-56Ar3</a>]</span> and <span>[<a href="#BSI-ECC" class="cite xref">BSI-ECC</a>]</span> give equivalent and interoperable algorithms, so maybe this is extranuous detail to include?<a href="#section-5-9" class="pilcrow">¶</a></p>
+<p id="section-5-10">The KEM combiners for each algorithm are instantiated as follows<a href="#section-5-10" class="pilcrow">¶</a></p>
 <span id="name-kem-combiner-instattiations"></span><div id="tab-kem-combiner-instantiations">
-<table class="center" id="table-4">
+<table class="center" id="table-2">
         <caption>
-<a href="#table-4" class="selfRef">Table 4</a>:
+<a href="#table-2" class="selfRef">Table 2</a>:
 <a href="#name-kem-combiner-instattiations" class="selfRef">KEM Combiner Instattiations</a>
         </caption>
 <thead>
           <tr>
             <th class="text-left" rowspan="1" colspan="1">KEM Type</th>
-            <th class="text-left" rowspan="1" colspan="1">KEM Combiner</th>
+            <th class="text-left" rowspan="1" colspan="1">KDF</th>
             <th class="text-left" rowspan="1" colspan="1">KDF Input X</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td class="text-left" rowspan="1" colspan="1">id-MLKEM512-ECDH-P256-KMAC128</td>
-            <td class="text-left" rowspan="1" colspan="1">KMAC128/256</td>
+            <td class="text-left" rowspan="1" colspan="1">id-MLKEM512-ECDH-P256</td>
+            <td class="text-left" rowspan="1" colspan="1">SHA3-256</td>
             <td class="text-left" rowspan="1" colspan="1">ss1 || ss2 || ct2</td>
           </tr>
           <tr>
-            <td class="text-left" rowspan="1" colspan="1">id-MLKEM512-ECDH-brainpoolP256r1-KMAC128</td>
-            <td class="text-left" rowspan="1" colspan="1">KMAC128/256</td>
+            <td class="text-left" rowspan="1" colspan="1">id-MLKEM512-ECDH-brainpoolP256r1</td>
+            <td class="text-left" rowspan="1" colspan="1">SHA3-256</td>
             <td class="text-left" rowspan="1" colspan="1">ss1 || ss2 || ct2</td>
           </tr>
           <tr>
-            <td class="text-left" rowspan="1" colspan="1">id-MLKEM512-X25519-KMAC128</td>
-            <td class="text-left" rowspan="1" colspan="1">KMAC128/256</td>
+            <td class="text-left" rowspan="1" colspan="1">id-MLKEM512-X25519</td>
+            <td class="text-left" rowspan="1" colspan="1">SHA3-256</td>
             <td class="text-left" rowspan="1" colspan="1">ss1 || ss2 || ct2</td>
           </tr>
           <tr>
-            <td class="text-left" rowspan="1" colspan="1">id-MLKEM512-RSA2048-KMAC128</td>
-            <td class="text-left" rowspan="1" colspan="1">KMAC128/256</td>
+            <td class="text-left" rowspan="1" colspan="1">id-MLKEM512-RSA2048</td>
+            <td class="text-left" rowspan="1" colspan="1">SHA3-256</td>
             <td class="text-left" rowspan="1" colspan="1">ss1 || ss2</td>
           </tr>
           <tr>
-            <td class="text-left" rowspan="1" colspan="1">id-MLKEM512-RSA3072-KMAC128</td>
-            <td class="text-left" rowspan="1" colspan="1">KMAC128/256</td>
+            <td class="text-left" rowspan="1" colspan="1">id-MLKEM512-RSA3072</td>
+            <td class="text-left" rowspan="1" colspan="1">SHA3-256</td>
             <td class="text-left" rowspan="1" colspan="1">ss1 || ss2</td>
           </tr>
           <tr>
-            <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-ECDH-P256-KMAC256</td>
-            <td class="text-left" rowspan="1" colspan="1">KMAC256/384</td>
+            <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-ECDH-P256</td>
+            <td class="text-left" rowspan="1" colspan="1">SHA3-512/384</td>
             <td class="text-left" rowspan="1" colspan="1">ss1 || ss2 || ct2</td>
           </tr>
           <tr>
-            <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-ECDH-brainpoolP256r1-KMAC256</td>
-            <td class="text-left" rowspan="1" colspan="1">KMAC256/384</td>
+            <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-ECDH-brainpoolP256r1</td>
+            <td class="text-left" rowspan="1" colspan="1">SHA3-512/384</td>
             <td class="text-left" rowspan="1" colspan="1">ss1 || ss2 || ct2</td>
           </tr>
           <tr>
-            <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-X25519-KMAC256</td>
-            <td class="text-left" rowspan="1" colspan="1">KMAC256/384</td>
+            <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-X25519</td>
+            <td class="text-left" rowspan="1" colspan="1">SHA3-512/384</td>
             <td class="text-left" rowspan="1" colspan="1">ss1 || ss2 || ct2</td>
           </tr>
           <tr>
-            <td class="text-left" rowspan="1" colspan="1">id-MLKEM1024-ECDH-P384-KMAC256</td>
-            <td class="text-left" rowspan="1" colspan="1">KMAC256/512</td>
+            <td class="text-left" rowspan="1" colspan="1">id-MLKEM1024-ECDH-P384</td>
+            <td class="text-left" rowspan="1" colspan="1">SHA3-512</td>
             <td class="text-left" rowspan="1" colspan="1">ss1 || ss2 || ct2</td>
           </tr>
           <tr>
-            <td class="text-left" rowspan="1" colspan="1">id-MLKEM1024-ECDH-brainpoolP384r1-KMAC256</td>
-            <td class="text-left" rowspan="1" colspan="1">KMAC256/512</td>
+            <td class="text-left" rowspan="1" colspan="1">id-MLKEM1024-ECDH-brainpoolP384r1</td>
+            <td class="text-left" rowspan="1" colspan="1">SHA3-512</td>
             <td class="text-left" rowspan="1" colspan="1">ss1 || ss2 || ct2</td>
           </tr>
           <tr>
-            <td class="text-left" rowspan="1" colspan="1">id-MLKEM1024-X448-KMAC256</td>
-            <td class="text-left" rowspan="1" colspan="1">KMAC256/512</td>
+            <td class="text-left" rowspan="1" colspan="1">id-MLKEM1024-X448</td>
+            <td class="text-left" rowspan="1" colspan="1">SHA3-512</td>
             <td class="text-left" rowspan="1" colspan="1">ss1 || ss2 || ct2</td>
           </tr>
         </tbody>
       </table>
 </div>
-<p id="section-5-14">The tables above contains everything needed to implement the listed explicit composite algorithms, with the exception of some special notes found below in this section. See the ASN.1 module in section <a href="#sec-asn1-module" class="auto internal xref">Section 6</a> for the explicit definitions of the above Composite signature algorithms.<a href="#section-5-14" class="pilcrow">¶</a></p>
-<div id="example-kem-combiner-instantiation">
-<section id="section-5.1">
-        <h3 id="name-example-kem-combiner-instan">
-<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-example-kem-combiner-instan" class="section-name selfRef">Example KEM Combiner instantiation</a>
-        </h3>
-<p id="section-5.1-1">For example, the KEM combiner used with the first entry of <a href="#tab-kem-algs" class="auto internal xref">Table 2</a>, <code>id-MLKEM512-ECDH-P256-KMAC128</code> would be:<a href="#section-5.1-1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.1-2">
-<pre>
-KMAC128( 0x00000001 || ss_1 || ss_2 || ct2
-              "id-MLKEM512-ECDH-P256-KMAC128", 256, "")
-</pre><a href="#section-5.1-2" class="pilcrow">¶</a>
-</div>
-</section>
-</div>
+<p id="section-5-12">Note that since ML-KEM-768 only claims security equivalent to a 384-bit hash function, the output of SHA3-512 is truncated to 384 bits to not give a false sense of security to developers using this value.<a href="#section-5-12" class="pilcrow">¶</a></p>
+<p id="section-5-13">The tables above contains everything needed to implement the listed explicit composite algorithms, with the exception of some special notes found below in this section. See the ASN.1 module in section <a href="#sec-asn1-module" class="auto internal xref">Section 6</a> for the explicit definitions of the above Composite signature algorithms.<a href="#section-5-13" class="pilcrow">¶</a></p>
 <div id="rsa-kem-parameters">
-<section id="section-5.2">
+<section id="section-5.1">
         <h3 id="name-rsa-kem-parameters">
-<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-rsa-kem-parameters" class="section-name selfRef">RSA-KEM Parameters</a>
+<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-rsa-kem-parameters" class="section-name selfRef">RSA-KEM Parameters</a>
         </h3>
-<p id="section-5.2-1">Use of RSA-KEM <span>[<a href="#I-D.ietf-lamps-rfc5990bis" class="cite xref">I-D.ietf-lamps-rfc5990bis</a>]</span> within <code>id-MLKEM512-RSA2048-KMAC128</code> and <code>id-MLKEM512-RSA3072-KMAC128</code> requires additional specification.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
-<p id="section-5.2-2">The RSA component keys MUST be generated at the 2048-bit and 3072-bit security level respectively.<a href="#section-5.2-2" class="pilcrow">¶</a></p>
-<p id="section-5.2-3">As with the other composite KEM algorithms, when <code>id-MLKEM512-RSA2048-KMAC128</code> or <code>id-MLKEM512-RSA3072-KMAC128</code> is used in an AlgorithmIdentifier, the parameters MUST be absent. The RSA-KEM SHALL be instantiated with the following parameters:<a href="#section-5.2-3" class="pilcrow">¶</a></p>
+<p id="section-5.1-1">Use of RSA-KEM <span>[<a href="#I-D.ietf-lamps-rfc5990bis" class="cite xref">I-D.ietf-lamps-rfc5990bis</a>]</span> within <code>id-MLKEM512-RSA2048</code> and <code>id-MLKEM512-RSA3072</code> requires additional specification.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
+<p id="section-5.1-2">The RSA component keys MUST be generated at the 2048-bit and 3072-bit security level respectively.<a href="#section-5.1-2" class="pilcrow">¶</a></p>
+<p id="section-5.1-3">As with the other composite KEM algorithms, when <code>id-MLKEM512-RSA2048</code> or <code>id-MLKEM512-RSA3072</code> is used in an AlgorithmIdentifier, the parameters MUST be absent. The RSA-KEM SHALL be instantiated with the following parameters:<a href="#section-5.1-3" class="pilcrow">¶</a></p>
 <span id="name-rsa-kem-2048-parameters"></span><div id="rsa-kem-params2048">
-<table class="center" id="table-5">
+<table class="center" id="table-3">
           <caption>
-<a href="#table-5" class="selfRef">Table 5</a>:
+<a href="#table-3" class="selfRef">Table 3</a>:
 <a href="#name-rsa-kem-2048-parameters" class="selfRef">RSA-KEM 2048 Parameters</a>
           </caption>
 <thead>
@@ -2036,13 +1930,13 @@ KMAC128( 0x00000001 || ss_1 || ss_2 || ct2
           </tbody>
         </table>
 </div>
-<p id="section-5.2-5">where:<a href="#section-5.2-5" class="pilcrow">¶</a></p>
+<p id="section-5.1-5">where:<a href="#section-5.1-5" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-5.2-6.1">
-            <p id="section-5.2-6.1.1"><code>kda-kdf3</code> is defined in <span>[<a href="#I-D.ietf-lamps-rfc5990bis" class="cite xref">I-D.ietf-lamps-rfc5990bis</a>]</span> which references it from <span>[<a href="#ANS-X9.44" class="cite xref">ANS-X9.44</a>]</span>.<a href="#section-5.2-6.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-5.1-6.1">
+            <p id="section-5.1-6.1.1"><code>kda-kdf3</code> is defined in <span>[<a href="#I-D.ietf-lamps-rfc5990bis" class="cite xref">I-D.ietf-lamps-rfc5990bis</a>]</span> which references it from <span>[<a href="#ANS-X9.44" class="cite xref">ANS-X9.44</a>]</span>.<a href="#section-5.1-6.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-5.2-6.2">
-            <p id="section-5.2-6.2.1"><code>mda-shake256</code> is defined in <span>[<a href="#I-D.housley-lamps-cms-sha3-hash" class="cite xref">I-D.housley-lamps-cms-sha3-hash</a>]</span>.<a href="#section-5.2-6.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-5.1-6.2">
+            <p id="section-5.1-6.2.1"><code>mda-shake256</code> is defined in <span>[<a href="#I-D.housley-lamps-cms-sha3-hash" class="cite xref">I-D.housley-lamps-cms-sha3-hash</a>]</span>.<a href="#section-5.1-6.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
@@ -2164,183 +2058,183 @@ kema-CompositeKEM {
 
 
 -- TODO: OID to be replaced by IANA
-id-MLKEM512-ECDH-P256-KMAC128 OBJECT IDENTIFIER ::= {
+id-MLKEM512-ECDH-P256 OBJECT IDENTIFIER ::= {
   joint-iso-itu-t(2) country(16) us(840) organization(1)
   entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 1 }
 
-pk-MLKEM512-ECDH-P256-KMAC128 PUBLIC-KEY ::=
+pk-MLKEM512-ECDH-P256 PUBLIC-KEY ::=
   pk-CompositeKEM {
-    id-MLKEM512-ECDH-P256-KMAC128,
+    id-MLKEM512-ECDH-P256,
     OCTET STRING, ECPoint }
 
-kema-MLKEM512-ECDH-P256-KMAC128 KEM-ALGORITHM ::=
+kema-MLKEM512-ECDH-P256 KEM-ALGORITHM ::=
     kema-CompositeKEM{
-      id-MLKEM512-ECDH-P256-KMAC128,
-      pk-MLKEM512-ECDH-P256-KMAC128 }
+      id-MLKEM512-ECDH-P256,
+      pk-MLKEM512-ECDH-P256 }
 
 
 -- TODO: OID to be replaced by IANA
-id-MLKEM512-ECDH-brainpoolP256r1-KMAC128 OBJECT IDENTIFIER ::= {
+id-MLKEM512-ECDH-brainpoolP256r1 OBJECT IDENTIFIER ::= {
   joint-iso-itu-t(2) country(16) us(840) organization(1)
   entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 2 }
 
-pk-MLKEM512-ECDH-brainpoolP256r1-KMAC128 PUBLIC-KEY ::=
+pk-MLKEM512-ECDH-brainpoolP256r1 PUBLIC-KEY ::=
   pk-CompositeKEM {
-    id-MLKEM512-ECDH-brainpoolP256r1-KMAC128,
+    id-MLKEM512-ECDH-brainpoolP256r1,
     OCTET STRING, ECPoint }
 
-kema-MLKEM512-ECDH-brainpoolP256r1-KMAC128 KEM-ALGORITHM ::=
+kema-MLKEM512-ECDH-brainpoolP256r1 KEM-ALGORITHM ::=
     kema-CompositeKEM{
-      id-MLKEM512-ECDH-brainpoolP256r1-KMAC128,
-      pk-MLKEM512-ECDH-brainpoolP256r1-KMAC128 }
+      id-MLKEM512-ECDH-brainpoolP256r1,
+      pk-MLKEM512-ECDH-brainpoolP256r1 }
 
 
 
 -- TODO: OID to be replaced by IANA
-id-MLKEM512-X25519-KMAC128 OBJECT IDENTIFIER ::= {
+id-MLKEM512-X25519 OBJECT IDENTIFIER ::= {
   joint-iso-itu-t(2) country(16) us(840) organization(1)
   entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 3 }
 
-pk-MLKEM512-X25519-KMAC128 PUBLIC-KEY ::=
+pk-MLKEM512-X25519 PUBLIC-KEY ::=
   pk-CompositeKEM {
-    id-MLKEM512-X25519-KMAC128,
+    id-MLKEM512-X25519,
     OCTET STRING, OCTET STRING }
 
-kema-MLKEM512-X25519-KMAC128 KEM-ALGORITHM ::=
+kema-MLKEM512-X25519 KEM-ALGORITHM ::=
     kema-CompositeKEM{
-      id-MLKEM512-X25519-KMAC128,
-      pk-MLKEM512-X25519-KMAC128 }
+      id-MLKEM512-X25519,
+      pk-MLKEM512-X25519 }
 
 
 
 -- TODO: OID to be replaced by IANA
-id-MLKEM512-RSA2048-KMAC128 OBJECT IDENTIFIER ::= {
+id-MLKEM512-RSA2048 OBJECT IDENTIFIER ::= {
   joint-iso-itu-t(2) country(16) us(840) organization(1)
   entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 13 }
 
-pk-MLKEM512-RSA2048-KMAC128 PUBLIC-KEY ::=
+pk-MLKEM512-RSA2048 PUBLIC-KEY ::=
   pk-CompositeKEM {
-    id-MLKEM512-RSA2048-KMAC128,
+    id-MLKEM512-RSA2048,
     OCTET STRING, RSAPublicKey }
 
-kema-MLKEM512-RSA2048-KMAC128 KEM-ALGORITHM ::=
+kema-MLKEM512-RSA2048 KEM-ALGORITHM ::=
     kema-CompositeKEM{
-      id-MLKEM512-RSA2048-KMAC128,
-      pk-MLKEM512-RSA2048-KMAC128 }
+      id-MLKEM512-RSA2048,
+      pk-MLKEM512-RSA2048 }
 
 
 
 -- TODO: OID to be replaced by IANA
-id-MLKEM512-RSA3072-KMAC128 OBJECT IDENTIFIER ::= {
+id-MLKEM512-RSA3072 OBJECT IDENTIFIER ::= {
   joint-iso-itu-t(2) country(16) us(840) organization(1)
   entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 4 }
 
-pk-MLKEM512-RSA3072-KMAC128 PUBLIC-KEY ::=
+pk-MLKEM512-RSA3072 PUBLIC-KEY ::=
   pk-CompositeKEM {
-    id-MLKEM512-RSA3072-KMAC128,
+    id-MLKEM512-RSA3072,
     OCTET STRING, RSAPublicKey }
 
-kema-MLKEM512-RSA3072-KMAC128 KEM-ALGORITHM ::=
+kema-MLKEM512-RSA3072 KEM-ALGORITHM ::=
     kema-CompositeKEM{
-      id-MLKEM512-RSA3072-KMAC128,
-      pk-MLKEM512-RSA3072-KMAC128 }
+      id-MLKEM512-RSA3072,
+      pk-MLKEM512-RSA3072 }
 
 
 -- TODO: OID to be replaced by IANA
-id-MLKEM768-ECDH-P256-KMAC256 OBJECT IDENTIFIER ::= {
+id-MLKEM768-ECDH-P256 OBJECT IDENTIFIER ::= {
   joint-iso-itu-t(2) country(16) us(840) organization(1)
   entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 5 }
 
-pk-MLKEM768-ECDH-P256-KMAC256 PUBLIC-KEY ::=
+pk-MLKEM768-ECDH-P256 PUBLIC-KEY ::=
   pk-CompositeKEM {
-    id-MLKEM768-ECDH-P256-KMAC256,
+    id-MLKEM768-ECDH-P256,
     OCTET STRING, ECPoint }
 
-kema-MLKEM768-ECDH-P256-KMAC256 KEM-ALGORITHM ::=
+kema-MLKEM768-ECDH-P256 KEM-ALGORITHM ::=
     kema-CompositeKEM{
-      id-MLKEM768-ECDH-P256-KMAC256,
-      pk-MLKEM768-ECDH-P256-KMAC256 }
+      id-MLKEM768-ECDH-P256,
+      pk-MLKEM768-ECDH-P256 }
 
 
 -- TODO: OID to be replaced by IANA
-id-MLKEM768-ECDH-brainpoolP256r1-KMAC256 OBJECT IDENTIFIER ::= {
+id-MLKEM768-ECDH-brainpoolP256r1 OBJECT IDENTIFIER ::= {
   joint-iso-itu-t(2) country(16) us(840) organization(1)
   entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 6 }
 
-pk-MLKEM768-ECDH-brainpoolP256r1-KMAC256 PUBLIC-KEY ::=
+pk-MLKEM768-ECDH-brainpoolP256r1 PUBLIC-KEY ::=
   pk-CompositeKEM {
-    id-MLKEM768-ECDH-brainpoolP256r1-KMAC256,
+    id-MLKEM768-ECDH-brainpoolP256r1,
     OCTET STRING, ECPoint }
 
-kema-MLKEM768-ECDH-brainpoolP256r1-KMAC256 KEM-ALGORITHM ::=
+kema-MLKEM768-ECDH-brainpoolP256r1 KEM-ALGORITHM ::=
     kema-CompositeKEM{
-      id-MLKEM768-ECDH-brainpoolP256r1-KMAC256,
-      pk-MLKEM768-ECDH-brainpoolP256r1-KMAC256 }
+      id-MLKEM768-ECDH-brainpoolP256r1,
+      pk-MLKEM768-ECDH-brainpoolP256r1 }
 
 
 -- TODO: OID to be replaced by IANA
-id-MLKEM768-X25519-KMAC256 OBJECT IDENTIFIER ::= {
+id-MLKEM768-X25519 OBJECT IDENTIFIER ::= {
   joint-iso-itu-t(2) country(16) us(840) organization(1)
   entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 7 }
 
-pk-MLKEM768-X25519-KMAC256 PUBLIC-KEY ::=
+pk-MLKEM768-X25519 PUBLIC-KEY ::=
   pk-CompositeKEM {
-    id-MLKEM768-X25519-KMAC256,
+    id-MLKEM768-X25519,
     OCTET STRING, OCTET STRING }
 
-kema-MLKEM768-X25519-KMAC256 KEM-ALGORITHM ::=
+kema-MLKEM768-X25519 KEM-ALGORITHM ::=
     kema-CompositeKEM{
-      id-MLKEM768-X25519-KMAC256,
-      pk-MLKEM768-X25519-KMAC256 }
+      id-MLKEM768-X25519,
+      pk-MLKEM768-X25519 }
 
 
 
 -- TODO: OID to be replaced by IANA
-id-MLKEM1024-ECDH-P384-KMAC256 OBJECT IDENTIFIER ::= {
+id-MLKEM1024-ECDH-P384 OBJECT IDENTIFIER ::= {
   joint-iso-itu-t(2) country(16) us(840) organization(1)
   entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 8 }
 
-pk-MLKEM1024-ECDH-P384-KMAC256 PUBLIC-KEY ::=
+pk-MLKEM1024-ECDH-P384 PUBLIC-KEY ::=
   pk-CompositeKEM {
-    id-MLKEM1024-ECDH-P384-KMAC256,
+    id-MLKEM1024-ECDH-P384,
     OCTET STRING, ECPoint }
 
-kema-MLKEM1024-ECDH-P384-KMAC256 KEM-ALGORITHM ::=
+kema-MLKEM1024-ECDH-P384 KEM-ALGORITHM ::=
     kema-CompositeKEM{
-      id-MLKEM1024-ECDH-P384-KMAC256,
-      pk-MLKEM1024-ECDH-P384-KMAC256 }
+      id-MLKEM1024-ECDH-P384,
+      pk-MLKEM1024-ECDH-P384 }
 
 
 -- TODO: OID to be replaced by IANA
-id-MLKEM1024-ECDH-brainpoolP384r1-KMAC256 OBJECT IDENTIFIER ::= {
+id-MLKEM1024-ECDH-brainpoolP384r1 OBJECT IDENTIFIER ::= {
   joint-iso-itu-t(2) country(16) us(840) organization(1)
   entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 9 }
 
-pk-MLKEM1024-ECDH-brainpoolP384r1-KMAC256 PUBLIC-KEY ::=
+pk-MLKEM1024-ECDH-brainpoolP384r1 PUBLIC-KEY ::=
   pk-CompositeKEM{
-    id-MLKEM1024-ECDH-brainpoolP384r1-KMAC256,
+    id-MLKEM1024-ECDH-brainpoolP384r1,
     OCTET STRING, ECPoint }
 
-kema-MLKEM1024-ECDH-brainpoolP384r1-KMAC256 KEM-ALGORITHM ::=
+kema-MLKEM1024-ECDH-brainpoolP384r1 KEM-ALGORITHM ::=
     kema-CompositeKEM{
-      id-MLKEM1024-ECDH-brainpoolP384r1-KMAC256,
-      pk-MLKEM1024-ECDH-brainpoolP384r1-KMAC256 }
+      id-MLKEM1024-ECDH-brainpoolP384r1,
+      pk-MLKEM1024-ECDH-brainpoolP384r1 }
 
 
 -- TODO: OID to be replaced by IANA
-id-MLKEM1024-X448-KMAC256 OBJECT IDENTIFIER ::= {
+id-MLKEM1024-X448 OBJECT IDENTIFIER ::= {
   joint-iso-itu-t(2) country(16) us(840) organization(1)
   entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 10 }
 
-pk-MLKEM1024-X448-KMAC256 PUBLIC-KEY ::=
+pk-MLKEM1024-X448 PUBLIC-KEY ::=
   pk-CompositeKEM {
-    id-MLKEM1024-X448-KMAC256,
+    id-MLKEM1024-X448,
     OCTET STRING, OCTET STRING }
 
-kema-MLKEM1024-X448-KMAC256 KEM-ALGORITHM ::=
+kema-MLKEM1024-X448 KEM-ALGORITHM ::=
     kema-CompositeKEM{
-      id-MLKEM1024-X448-KMAC256,
-      pk-MLKEM1024-X448-KMAC256 }
+      id-MLKEM1024-X448,
+      pk-MLKEM1024-X448 }
 
 END
 
@@ -2360,7 +2254,7 @@ END
         <h3 id="name-object-identifier-allocatio">
 <a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-object-identifier-allocatio" class="section-name selfRef">Object Identifier Allocations</a>
         </h3>
-<p id="section-7.1-1">EDNOTE to IANA: OIDs will need to be replaced in both the ASN.1 module and in <a href="#tab-kem-algs" class="auto internal xref">Table 2</a>.<a href="#section-7.1-1" class="pilcrow">¶</a></p>
+<p id="section-7.1-1">EDNOTE to IANA: OIDs will need to be replaced in both the ASN.1 module and in <a href="#tab-kem-algs" class="auto internal xref">Table 1</a>.<a href="#section-7.1-1" class="pilcrow">¶</a></p>
 <div id="module-registration-smi-security-for-pkix-module-identifier">
 <section id="section-7.1.1">
           <h4 id="name-module-registration-smi-sec">
@@ -2386,13 +2280,13 @@ END
           </h4>
 <ul class="normal">
 <li class="normal" id="section-7.1.2-1.1">
-              <p id="section-7.1.2-1.1.1">id-MLKEM512-ECDH-P256-KMAC128<a href="#section-7.1.2-1.1.1" class="pilcrow">¶</a></p>
+              <p id="section-7.1.2-1.1.1">id-MLKEM512-ECDH-P256<a href="#section-7.1.2-1.1.1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-7.1.2-1.1.2.1">
                   <p id="section-7.1.2-1.1.2.1.1">Decimal: IANA Assigned<a href="#section-7.1.2-1.1.2.1.1" class="pilcrow">¶</a></p>
 </li>
                 <li class="normal" id="section-7.1.2-1.1.2.2">
-                  <p id="section-7.1.2-1.1.2.2.1">Description: id-MLKEM512-ECDH-P256-KMAC128<a href="#section-7.1.2-1.1.2.2.1" class="pilcrow">¶</a></p>
+                  <p id="section-7.1.2-1.1.2.2.1">Description: id-MLKEM512-ECDH-P256<a href="#section-7.1.2-1.1.2.2.1" class="pilcrow">¶</a></p>
 </li>
                 <li class="normal" id="section-7.1.2-1.1.2.3">
                   <p id="section-7.1.2-1.1.2.3.1">References: This Document<a href="#section-7.1.2-1.1.2.3.1" class="pilcrow">¶</a></p>
@@ -2400,13 +2294,13 @@ END
               </ul>
 </li>
             <li class="normal" id="section-7.1.2-1.2">
-              <p id="section-7.1.2-1.2.1">id-MLKEM512-ECDH-brainpoolP256r1-KMAC128<a href="#section-7.1.2-1.2.1" class="pilcrow">¶</a></p>
+              <p id="section-7.1.2-1.2.1">id-MLKEM512-ECDH-brainpoolP256r1<a href="#section-7.1.2-1.2.1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-7.1.2-1.2.2.1">
                   <p id="section-7.1.2-1.2.2.1.1">Decimal: IANA Assigned<a href="#section-7.1.2-1.2.2.1.1" class="pilcrow">¶</a></p>
 </li>
                 <li class="normal" id="section-7.1.2-1.2.2.2">
-                  <p id="section-7.1.2-1.2.2.2.1">Description: id-MLKEM512-ECDH-brainpoolP256r1-KMAC128<a href="#section-7.1.2-1.2.2.2.1" class="pilcrow">¶</a></p>
+                  <p id="section-7.1.2-1.2.2.2.1">Description: id-MLKEM512-ECDH-brainpoolP256r1<a href="#section-7.1.2-1.2.2.2.1" class="pilcrow">¶</a></p>
 </li>
                 <li class="normal" id="section-7.1.2-1.2.2.3">
                   <p id="section-7.1.2-1.2.2.3.1">References: This Document<a href="#section-7.1.2-1.2.2.3.1" class="pilcrow">¶</a></p>
@@ -2414,13 +2308,13 @@ END
               </ul>
 </li>
             <li class="normal" id="section-7.1.2-1.3">
-              <p id="section-7.1.2-1.3.1">id-MLKEM512-X25519-KMAC128<a href="#section-7.1.2-1.3.1" class="pilcrow">¶</a></p>
+              <p id="section-7.1.2-1.3.1">id-MLKEM512-X25519<a href="#section-7.1.2-1.3.1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-7.1.2-1.3.2.1">
                   <p id="section-7.1.2-1.3.2.1.1">Decimal: IANA Assigned<a href="#section-7.1.2-1.3.2.1.1" class="pilcrow">¶</a></p>
 </li>
                 <li class="normal" id="section-7.1.2-1.3.2.2">
-                  <p id="section-7.1.2-1.3.2.2.1">Description: id-MLKEM512-X25519-KMAC128<a href="#section-7.1.2-1.3.2.2.1" class="pilcrow">¶</a></p>
+                  <p id="section-7.1.2-1.3.2.2.1">Description: id-MLKEM512-X25519<a href="#section-7.1.2-1.3.2.2.1" class="pilcrow">¶</a></p>
 </li>
                 <li class="normal" id="section-7.1.2-1.3.2.3">
                   <p id="section-7.1.2-1.3.2.3.1">References: This Document<a href="#section-7.1.2-1.3.2.3.1" class="pilcrow">¶</a></p>
@@ -2428,13 +2322,13 @@ END
               </ul>
 </li>
             <li class="normal" id="section-7.1.2-1.4">
-              <p id="section-7.1.2-1.4.1">id-MLKEM768-RSA3072-KMAC256<a href="#section-7.1.2-1.4.1" class="pilcrow">¶</a></p>
+              <p id="section-7.1.2-1.4.1">id-MLKEM768-RSA3072<a href="#section-7.1.2-1.4.1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-7.1.2-1.4.2.1">
                   <p id="section-7.1.2-1.4.2.1.1">Decimal: IANA Assigned<a href="#section-7.1.2-1.4.2.1.1" class="pilcrow">¶</a></p>
 </li>
                 <li class="normal" id="section-7.1.2-1.4.2.2">
-                  <p id="section-7.1.2-1.4.2.2.1">Description: id-MLKEM768-3072-KMAC256<a href="#section-7.1.2-1.4.2.2.1" class="pilcrow">¶</a></p>
+                  <p id="section-7.1.2-1.4.2.2.1">Description: id-MLKEM768-3072<a href="#section-7.1.2-1.4.2.2.1" class="pilcrow">¶</a></p>
 </li>
                 <li class="normal" id="section-7.1.2-1.4.2.3">
                   <p id="section-7.1.2-1.4.2.3.1">References: This Document<a href="#section-7.1.2-1.4.2.3.1" class="pilcrow">¶</a></p>
@@ -2442,13 +2336,13 @@ END
               </ul>
 </li>
             <li class="normal" id="section-7.1.2-1.5">
-              <p id="section-7.1.2-1.5.1">id-MLKEM768-ECDH-P256-KMAC256<a href="#section-7.1.2-1.5.1" class="pilcrow">¶</a></p>
+              <p id="section-7.1.2-1.5.1">id-MLKEM768-ECDH-P256<a href="#section-7.1.2-1.5.1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-7.1.2-1.5.2.1">
                   <p id="section-7.1.2-1.5.2.1.1">Decimal: IANA Assigned<a href="#section-7.1.2-1.5.2.1.1" class="pilcrow">¶</a></p>
 </li>
                 <li class="normal" id="section-7.1.2-1.5.2.2">
-                  <p id="section-7.1.2-1.5.2.2.1">Description: id-MLKEM768-ECDH-P256-KMAC256<a href="#section-7.1.2-1.5.2.2.1" class="pilcrow">¶</a></p>
+                  <p id="section-7.1.2-1.5.2.2.1">Description: id-MLKEM768-ECDH-P256<a href="#section-7.1.2-1.5.2.2.1" class="pilcrow">¶</a></p>
 </li>
                 <li class="normal" id="section-7.1.2-1.5.2.3">
                   <p id="section-7.1.2-1.5.2.3.1">References: This Document<a href="#section-7.1.2-1.5.2.3.1" class="pilcrow">¶</a></p>
@@ -2456,13 +2350,13 @@ END
               </ul>
 </li>
             <li class="normal" id="section-7.1.2-1.6">
-              <p id="section-7.1.2-1.6.1">id-MLKEM768-ECDH-brainpoolP256r1-KMAC256<a href="#section-7.1.2-1.6.1" class="pilcrow">¶</a></p>
+              <p id="section-7.1.2-1.6.1">id-MLKEM768-ECDH-brainpoolP256r1<a href="#section-7.1.2-1.6.1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-7.1.2-1.6.2.1">
                   <p id="section-7.1.2-1.6.2.1.1">Decimal: IANA Assigned<a href="#section-7.1.2-1.6.2.1.1" class="pilcrow">¶</a></p>
 </li>
                 <li class="normal" id="section-7.1.2-1.6.2.2">
-                  <p id="section-7.1.2-1.6.2.2.1">Description: id-MLKEM768-ECDH-brainpoolP256r1-KMAC256<a href="#section-7.1.2-1.6.2.2.1" class="pilcrow">¶</a></p>
+                  <p id="section-7.1.2-1.6.2.2.1">Description: id-MLKEM768-ECDH-brainpoolP256r1<a href="#section-7.1.2-1.6.2.2.1" class="pilcrow">¶</a></p>
 </li>
                 <li class="normal" id="section-7.1.2-1.6.2.3">
                   <p id="section-7.1.2-1.6.2.3.1">References: This Document<a href="#section-7.1.2-1.6.2.3.1" class="pilcrow">¶</a></p>
@@ -2470,13 +2364,13 @@ END
               </ul>
 </li>
             <li class="normal" id="section-7.1.2-1.7">
-              <p id="section-7.1.2-1.7.1">id-MLKEM768-X25519-KMAC256<a href="#section-7.1.2-1.7.1" class="pilcrow">¶</a></p>
+              <p id="section-7.1.2-1.7.1">id-MLKEM768-X25519<a href="#section-7.1.2-1.7.1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-7.1.2-1.7.2.1">
                   <p id="section-7.1.2-1.7.2.1.1">Decimal: IANA Assigned<a href="#section-7.1.2-1.7.2.1.1" class="pilcrow">¶</a></p>
 </li>
                 <li class="normal" id="section-7.1.2-1.7.2.2">
-                  <p id="section-7.1.2-1.7.2.2.1">Description: id-MLKEM768-X25519-KMAC256<a href="#section-7.1.2-1.7.2.2.1" class="pilcrow">¶</a></p>
+                  <p id="section-7.1.2-1.7.2.2.1">Description: id-MLKEM768-X25519<a href="#section-7.1.2-1.7.2.2.1" class="pilcrow">¶</a></p>
 </li>
                 <li class="normal" id="section-7.1.2-1.7.2.3">
                   <p id="section-7.1.2-1.7.2.3.1">References: This Document<a href="#section-7.1.2-1.7.2.3.1" class="pilcrow">¶</a></p>
@@ -2484,13 +2378,13 @@ END
               </ul>
 </li>
             <li class="normal" id="section-7.1.2-1.8">
-              <p id="section-7.1.2-1.8.1">id-MLKEM1024-ECDH-P384-KMAC256<a href="#section-7.1.2-1.8.1" class="pilcrow">¶</a></p>
+              <p id="section-7.1.2-1.8.1">id-MLKEM1024-ECDH-P384<a href="#section-7.1.2-1.8.1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-7.1.2-1.8.2.1">
                   <p id="section-7.1.2-1.8.2.1.1">Decimal: IANA Assigned<a href="#section-7.1.2-1.8.2.1.1" class="pilcrow">¶</a></p>
 </li>
                 <li class="normal" id="section-7.1.2-1.8.2.2">
-                  <p id="section-7.1.2-1.8.2.2.1">Description: id-MLKEM1024-ECDH-P384-KMAC256<a href="#section-7.1.2-1.8.2.2.1" class="pilcrow">¶</a></p>
+                  <p id="section-7.1.2-1.8.2.2.1">Description: id-MLKEM1024-ECDH-P384<a href="#section-7.1.2-1.8.2.2.1" class="pilcrow">¶</a></p>
 </li>
                 <li class="normal" id="section-7.1.2-1.8.2.3">
                   <p id="section-7.1.2-1.8.2.3.1">References: This Document<a href="#section-7.1.2-1.8.2.3.1" class="pilcrow">¶</a></p>
@@ -2498,13 +2392,13 @@ END
               </ul>
 </li>
             <li class="normal" id="section-7.1.2-1.9">
-              <p id="section-7.1.2-1.9.1">id-MLKEM1024-ECDH-brainpoolP384r1-KMAC256<a href="#section-7.1.2-1.9.1" class="pilcrow">¶</a></p>
+              <p id="section-7.1.2-1.9.1">id-MLKEM1024-ECDH-brainpoolP384r1<a href="#section-7.1.2-1.9.1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-7.1.2-1.9.2.1">
                   <p id="section-7.1.2-1.9.2.1.1">Decimal: IANA Assigned<a href="#section-7.1.2-1.9.2.1.1" class="pilcrow">¶</a></p>
 </li>
                 <li class="normal" id="section-7.1.2-1.9.2.2">
-                  <p id="section-7.1.2-1.9.2.2.1">Description: id-MLKEM1024-ECDH-brainpoolP384r1-KMAC256<a href="#section-7.1.2-1.9.2.2.1" class="pilcrow">¶</a></p>
+                  <p id="section-7.1.2-1.9.2.2.1">Description: id-MLKEM1024-ECDH-brainpoolP384r1<a href="#section-7.1.2-1.9.2.2.1" class="pilcrow">¶</a></p>
 </li>
                 <li class="normal" id="section-7.1.2-1.9.2.3">
                   <p id="section-7.1.2-1.9.2.3.1">References: This Document<a href="#section-7.1.2-1.9.2.3.1" class="pilcrow">¶</a></p>
@@ -2512,13 +2406,13 @@ END
               </ul>
 </li>
             <li class="normal" id="section-7.1.2-1.10">
-              <p id="section-7.1.2-1.10.1">id-MLKEM1024-X448-KMAC256<a href="#section-7.1.2-1.10.1" class="pilcrow">¶</a></p>
+              <p id="section-7.1.2-1.10.1">id-MLKEM1024-X448<a href="#section-7.1.2-1.10.1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-7.1.2-1.10.2.1">
                   <p id="section-7.1.2-1.10.2.1.1">Decimal: IANA Assigned<a href="#section-7.1.2-1.10.2.1.1" class="pilcrow">¶</a></p>
 </li>
                 <li class="normal" id="section-7.1.2-1.10.2.2">
-                  <p id="section-7.1.2-1.10.2.2.1">Description: id-MLKEM1024-X448-KMAC256<a href="#section-7.1.2-1.10.2.2.1" class="pilcrow">¶</a></p>
+                  <p id="section-7.1.2-1.10.2.2.1">Description: id-MLKEM1024-X448<a href="#section-7.1.2-1.10.2.2.1" class="pilcrow">¶</a></p>
 </li>
                 <li class="normal" id="section-7.1.2-1.10.2.3">
                   <p id="section-7.1.2-1.10.2.3.1">References: This Document<a href="#section-7.1.2-1.10.2.3.1" class="pilcrow">¶</a></p>
@@ -2544,7 +2438,7 @@ END
         </h3>
 <p id="section-8.1-1">Traditionally, a public key or certificate contains a single cryptographic algorithm. If and when an algorithm becomes deprecated (for example, RSA-512, or SHA1), it is obvious that the public keys or certificates using that algorithm are to be considered revoked.<a href="#section-8.1-1" class="pilcrow">¶</a></p>
 <p id="section-8.1-2">In the composite model this is less obvious since implementers may decide that certain cryptographic algorithms have complementary security properties and are acceptable in combination even though one or both algorithms are deprecated for individual use. As such, a single composite public key or certificate may contain a mixture of deprecated and non-deprecated algorithms.<a href="#section-8.1-2" class="pilcrow">¶</a></p>
-<p id="section-8.1-3">Since composite algorithms are registered independently of their component algorithms, their deprecation can be handled indpendently from that of their component algorithms. For example a cryptographic policy might continue to allow <code>id-MLKEM512-ECDH-P256-KMAC128</code> even after ECDH-P256 is deprecated.<a href="#section-8.1-3" class="pilcrow">¶</a></p>
+<p id="section-8.1-3">Since composite algorithms are registered independently of their component algorithms, their deprecation can be handled indpendently from that of their component algorithms. For example a cryptographic policy might continue to allow <code>id-MLKEM512-ECDH-P256</code> even after ECDH-P256 is deprecated.<a href="#section-8.1-3" class="pilcrow">¶</a></p>
 <p id="section-8.1-4">The composite KEM design specified in this document, and especially that of the KEM combiner specified in <a href="#sec-kem-combiner" class="auto internal xref">Section 4.3</a> means that the overall composite KEM algorithm should be considered to have the security strength of the strongest of its component algorithms; ie as long as one component algorithm remains strong, then the overall composite algorithm remains strong.<a href="#section-8.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -2727,7 +2621,7 @@ If <code>ss_i</code> or <code>ct_i</code> are not guaranteed to have constant le
 <dd class="break"></dd>
 <dt id="X-Wing">[X-Wing]</dt>
       <dd>
-<span class="refAuthor">Barbosa, M.</span>, <span class="refAuthor">Connolly, D.</span>, <span class="refAuthor">Duarte, J.</span>, <span class="refAuthor">Kaiser, A.</span>, <span class="refAuthor">Schwabe, P.</span>, <span class="refAuthor">Varner, K.</span>, and <span class="refAuthor">B. Westerbaan</span>, <span class="refTitle">"X-Wing The Hybrid KEM You've Been Looking For"</span>, <time datetime="2024-01-09" class="refDate">9 January 2024</time>, <span>&lt;<a href="https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.203.ipd.pdf">https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.203.ipd.pdf</a>&gt;</span>. </dd>
+<span class="refAuthor">Barbosa, M.</span>, <span class="refAuthor">Connolly, D.</span>, <span class="refAuthor">Duarte, J.</span>, <span class="refAuthor">Kaiser, A.</span>, <span class="refAuthor">Schwabe, P.</span>, <span class="refAuthor">Varner, K.</span>, and <span class="refAuthor">B. Westerbaan</span>, <span class="refTitle">"X-Wing The Hybrid KEM You've Been Looking For"</span>, <time datetime="2024-01-09" class="refDate">9 January 2024</time>, <span>&lt;<a href="https://eprint.iacr.org/2024/039.pdf">https://eprint.iacr.org/2024/039.pdf</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
 </section>
