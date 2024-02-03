@@ -1,5 +1,5 @@
 ---
-title: Composite KEM For Use In Internet PKI
+title: Composite ML-KEM For Use In Internet PKI
 abbrev: Composite KEMs
 docname: draft-ietf-lamps-pq-composite-kem-latest
 
@@ -157,7 +157,7 @@ informative:
       -
         ins: B. Westerbaan
         name: Bas Westerbaan
-    target: https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.203.ipd.pdf
+    target: https://eprint.iacr.org/2024/039.pdf
 
 
 --- abstract
@@ -173,15 +173,17 @@ This document defines Post-Quantum / Traditional composite Key Encapsulation Mec
 
 Changes to sync with X-Wing:
 
-  - Removed ML-KEM ciphertext from KDF.
+  - Removed ML-KEM ciphertext from KDF as per X-Wing proof -- this makes the KEM combiner ML-KEM specific, so:
+    - Changed title to be ML-KEM specific.
   - Removed RSA-KEM ciphertext from KDF.
+  - Changed the KDF from KMAC to SHA3.
   - Removed references to I-D.ounsworth-lamps-cms-dhkem since we'll just inline it and don't need a DHKEM wrapper.
 
 
 Still to do in a future version:
 
   `[ ]` We need PEM samples … 118 hackathon? OQS friends? David @ BC? The right format for samples is probably to follow the hackathon ... a Dilithium or ECDSA trust anchor certificate, a composite KEM end entity certificate, and a CMS EnvolepedData sample encrypted for that composite KEM certificate.
-  `[ ]` Open question: do we need to incluede the ECDH, X25519, X448, and RSA public keys is the KDF? X-Wing does, but previous versions of this spec do not.
+  `[ ]` Open question: do we need to incluede the ECDH, X25519, X448, and RSA public keys is the KDF? X-Wing does, but previous versions of this spec do not. In general existing ECC and RSA hardware decryptor implementations might not know their own public key.
 
 # Introduction {#sec-intro}
 
@@ -348,12 +350,12 @@ pk-CompositeKEM {
 ~~~
 {: artwork-name="CompositeKeyObject-asn.1-structures"}
 
-As an example, the public key type `pk-MLKEM512-ECDH-P256-KMAC128` is defined as:
+As an example, the public key type `pk-MLKEM512-ECDH-P256` is defined as:
 
 ~~~
-pk-MLKEM512-ECDH-P256-KMAC128 PUBLIC-KEY ::=
+pk-MLKEM512-ECDH-P256 PUBLIC-KEY ::=
   pk-CompositeKEM {
-    id-MLKEM512-ECDH-P256-KMAC128,
+    id-MLKEM512-ECDH-P256,
     OCTET STRING, ECPoint }
 ~~~
 
@@ -475,37 +477,22 @@ However, optimazations may be made in the following ways:
 
 * As discussed in {{sec-cons-ct-collision}}, the ML-KEM ciphertext may be safely omited.
 * As discussed in {{sec-cons-ct-collision}}, the RSA-KEM ciphertext may be safely omited.
+* As the KDF we use everywhere SHA3-256 or SHA3-512.
+
+That yields combiners of the form
+
+~~~
+SHA3-256(counter || ss1 || ct2 || ss2 || fixedInfo, outputBits)
+~~~
+{: #code-optimized-kem-combiner title="Optimized KEM combiner construction"}
 
 
-### Named KEM Combiner parameter sets
+For example, the KEM combiner used with the first entry of {{tab-kem-algs}}, `id-MLKEM512-ECDH-P256` would be:
 
-This specification references KEM combiner instantiations according to the following names:
-
-| KEM Combiner Name | KDF     | outputBits |
-| ---               | ------- |---         |
-| KMAC128/256       | KMAC128 | 256 |
-| KMAC256/384       | KMAC256 | 384 |
-| KMAC256/512       | KMAC256 | 512 |
-{: #tab-kem-combiners title="KEM Combiners"}
-
-KMAC is defined in NIST SP 800-185 [SP800-185]. The `KMAC(K, X, L, S)` parameters are instantiated as follows:
-
-* `K`: the ASCI value of the name of the Kem Type OID.
-* `X`: the message input to `KDF()`, as defined above.
-* `L`: integer representation of `outputBits`.
-* `S`: empty string.
-
-BEGIN EDNOTE
-
-these choices are somewhat arbitrary but aiming to match security level of the input KEMs. Feedback welcome.
-
-* ML-KEM-512: KMAC128/256
-* ML-KEM-768: KMAC256/384
-* ML-KEM-1024 KMAC256/512
-
-END EDNOTE
-
-
+~~~
+SHA3-256( 0x00000001 || ss_mlkem || ct_ecdh-p256 || ss_ecdh-p256
+              "id-MLKEM512-ECDH-P256", "")
+~~~
 
 
 # Algorithm Identifiers {#sec-alg-ids}
@@ -518,20 +505,22 @@ TODO: OIDs to be replaced by IANA.
 
 Therefore &lt;CompKEM&gt;.1 is equal to 2.16.840.1.114027.80.5.2.1
 
-| KEM Type                                  | OID                | First Algorithm | Second Algorithm     |
-|---------                                  | -----------------  | ----------      | ----------           |
-| id-MLKEM512-ECDH-P256-KMAC128             | &lt;CompKEM&gt;.1  | MLKEM512        | ECDH-P256            |
-| id-MLKEM512-ECDH-brainpoolP256r1-KMAC128  | &lt;CompKEM&gt;.2  | MLKEM512        | ECDH-brainpoolp256r1 |
-| id-MLKEM512-X25519-KMAC128                | &lt;CompKEM&gt;.3  | MLKEM512        | X25519               |
-| id-MLKEM512-RSA2048-KMAC128               | &lt;CompKEM&gt;.13 | MLKEM512        | RSA-KEM 2048         |
-| id-MLKEM512-RSA3072-KMAC128               | &lt;CompKEM&gt;.4  | MLKEM512        | RSA-KEM 3072         |
-| id-MLKEM768-ECDH-P256-KMAC256             | &lt;CompKEM&gt;.5  | MLKEM768        | ECDH-P256            |
-| id-MLKEM768-ECDH-brainpoolP256r1-KMAC256  | &lt;CompKEM&gt;.6  | MLKEM768        | ECDH-brainpoolp256r1 |
-| id-MLKEM768-X25519-KMAC256                | &lt;CompKEM&gt;.7  | MLKEM768        | X25519               |
-| id-MLKEM1024-ECDH-P384-KMAC256            | &lt;CompKEM&gt;.8  | MLKEM1024       | ECDH-P384            |
-| id-MLKEM1024-ECDH-brainpoolP384r1-KMAC256 | &lt;CompKEM&gt;.9  | MLKEM1024       | ECDH-brainpoolP384r1 |
-| id-MLKEM1024-X448-KMAC256                 | &lt;CompKEM&gt;.10 | MLKEM1024       | X448                 |
+| KEM Type                          | OID                | First Algorithm | Second Algorithm     |
+|---------                          | -----------------  | ----------      | ----------           |
+| id-MLKEM512-ECDH-P256             | &lt;CompKEM&gt;.1  | MLKEM512        | ECDH-P256            |
+| id-MLKEM512-ECDH-brainpoolP256r1  | &lt;CompKEM&gt;.2  | MLKEM512        | ECDH-brainpoolp256r1 |
+| id-MLKEM512-X25519                | &lt;CompKEM&gt;.3  | MLKEM512        | X25519               |
+| id-MLKEM512-RSA2048               | &lt;CompKEM&gt;.13 | MLKEM512        | RSA-KEM 2048         |
+| id-MLKEM512-RSA3072               | &lt;CompKEM&gt;.4  | MLKEM512        | RSA-KEM 3072         |
+| id-MLKEM768-ECDH-P256             | &lt;CompKEM&gt;.5  | MLKEM768        | ECDH-P256            |
+| id-MLKEM768-ECDH-brainpoolP256r1  | &lt;CompKEM&gt;.6  | MLKEM768        | ECDH-brainpoolp256r1 |
+| id-MLKEM768-X25519                | &lt;CompKEM&gt;.7  | MLKEM768        | X25519               |
+| id-MLKEM1024-ECDH-P384            | &lt;CompKEM&gt;.8  | MLKEM1024       | ECDH-P384            |
+| id-MLKEM1024-ECDH-brainpoolP384r1 | &lt;CompKEM&gt;.9  | MLKEM1024       | ECDH-brainpoolP384r1 |
+| id-MLKEM1024-X448                 | &lt;CompKEM&gt;.10 | MLKEM1024       | X448                 |
 {: #tab-kem-algs title="Composite KEM key types"}
+
+EDNOTE: The original reason for using KMAC was that RSA, in general, allows for the attacker to choose the shared secret ss, but with RSA-KEM I think this is actually not the case since the final step of RSA-KEM is SS = KDF(Z), so SHA3 should be fine.
 
 Full specifications for the referenced algorithms can be found as follows:
 
@@ -546,56 +535,35 @@ EDNOTE: I believe that [SP.800-56Ar3] and [BSI-ECC] give equivalent and interope
 
 The KEM combiners for each algorithm are instantiated as follows
 
-| KEM Combiner Name | KDF     | outputBits |
-| ---               | ------- |---         |
-| KMAC128/256       | KMAC128 | 256        |
-| KMAC256/384       | KMAC256 | 384        |
-| KMAC256/512       | KMAC256 | 512        |
-{: #tab-named-kem-combiners title="Named KEM Combiners"}
 
-KMAC is defined in NIST SP 800-185 [SP800-185]. The `KMAC(K, X, L, S)` parameters are instantiated as follows:
-
-* `K`: the ASCI value of the name of the Kem Type.
-* `X`: the message input to `KDF()`, as defined above.
-* `L`: integer representation of `outputBits`.
-* `S`: empty string.
-
-| KEM Type                                  | KEM Combiner  | KDF Input X         |
-|---------                                  | ----------    | -------------       |
-| id-MLKEM512-ECDH-P256-KMAC128             | KMAC128/256   | ss1 \|\| ss2 \|\| ct2   |
-| id-MLKEM512-ECDH-brainpoolP256r1-KMAC128  | KMAC128/256   | ss1 \|\| ss2 \|\| ct2   |
-| id-MLKEM512-X25519-KMAC128                | KMAC128/256   | ss1 \|\| ss2 \|\| ct2   |
-| id-MLKEM512-RSA2048-KMAC128               | KMAC128/256   | ss1 \|\| ss2          |
-| id-MLKEM512-RSA3072-KMAC128               | KMAC128/256   | ss1 \|\| ss2          |
-| id-MLKEM768-ECDH-P256-KMAC256             | KMAC256/384   | ss1 \|\| ss2 \|\| ct2   |
-| id-MLKEM768-ECDH-brainpoolP256r1-KMAC256  | KMAC256/384   | ss1 \|\| ss2 \|\| ct2   |
-| id-MLKEM768-X25519-KMAC256                | KMAC256/384   | ss1 \|\| ss2 \|\| ct2   |
-| id-MLKEM1024-ECDH-P384-KMAC256            | KMAC256/512   | ss1 \|\| ss2 \|\| ct2   |
-| id-MLKEM1024-ECDH-brainpoolP384r1-KMAC256 | KMAC256/512   | ss1 \|\| ss2 \|\| ct2   |
-| id-MLKEM1024-X448-KMAC256                 | KMAC256/512   | ss1 \|\| ss2 \|\| ct2   |
+| KEM Type                          | KDF          | KDF Input X            |
+|---------                          | ----------   | -------------          |
+| id-MLKEM512-ECDH-P256             | SHA3-256     | ss1 \|\| ss2 \|\| ct2  |
+| id-MLKEM512-ECDH-brainpoolP256r1  | SHA3-256     | ss1 \|\| ss2 \|\| ct2  |
+| id-MLKEM512-X25519                | SHA3-256     | ss1 \|\| ss2 \|\| ct2  |
+| id-MLKEM512-RSA2048               | SHA3-256     | ss1 \|\| ss2           |
+| id-MLKEM512-RSA3072               | SHA3-256     | ss1 \|\| ss2           |
+| id-MLKEM768-ECDH-P256             | SHA3-512/384 | ss1 \|\| ss2 \|\| ct2  |
+| id-MLKEM768-ECDH-brainpoolP256r1  | SHA3-512/384 | ss1 \|\| ss2 \|\| ct2  |
+| id-MLKEM768-X25519                | SHA3-512/384 | ss1 \|\| ss2 \|\| ct2  |
+| id-MLKEM1024-ECDH-P384            | SHA3-512     | ss1 \|\| ss2 \|\| ct2  |
+| id-MLKEM1024-ECDH-brainpoolP384r1 | SHA3-512     | ss1 \|\| ss2 \|\| ct2  |
+| id-MLKEM1024-X448                 | SHA3-512     | ss1 \|\| ss2 \|\| ct2  |
 {: #tab-kem-combiner-instantiations title="KEM Combiner Instattiations"}
 
+Note that since ML-KEM-768 only claims security equivalent to a 384-bit hash function, the output of SHA3-512 is truncated to 384 bits to not give a false sense of security to developers using this value.
 
 The tables above contains everything needed to implement the listed explicit composite algorithms, with the exception of some special notes found below in this section. See the ASN.1 module in section {{sec-asn1-module}} for the explicit definitions of the above Composite signature algorithms.
 
 
-## Example KEM Combiner instantiation
-
-For example, the KEM combiner used with the first entry of {{tab-kem-algs}}, `id-MLKEM512-ECDH-P256-KMAC128` would be:
-
-~~~
-KMAC128( 0x00000001 || ss_1 || ss_2 || ct2
-              "id-MLKEM512-ECDH-P256-KMAC128", 256, "")
-~~~
-
 
 ## RSA-KEM Parameters
 
-Use of RSA-KEM {{I-D.ietf-lamps-rfc5990bis}} within `id-MLKEM512-RSA2048-KMAC128` and `id-MLKEM512-RSA3072-KMAC128` requires additional specification.
+Use of RSA-KEM {{I-D.ietf-lamps-rfc5990bis}} within `id-MLKEM512-RSA2048` and `id-MLKEM512-RSA3072` requires additional specification.
 
 The RSA component keys MUST be generated at the 2048-bit and 3072-bit security level respectively.
 
-As with the other composite KEM algorithms, when `id-MLKEM512-RSA2048-KMAC128` or `id-MLKEM512-RSA3072-KMAC128` is used in an AlgorithmIdentifier, the parameters MUST be absent. The RSA-KEM SHALL be instantiated with the following parameters:
+As with the other composite KEM algorithms, when `id-MLKEM512-RSA2048` or `id-MLKEM512-RSA3072` is used in an AlgorithmIdentifier, the parameters MUST be absent. The RSA-KEM SHALL be instantiated with the following parameters:
 
 | RSA-KEM Parameter          | Value                      |
 | -------------------------- | -------------------------- |
@@ -636,54 +604,54 @@ EDNOTE to IANA: OIDs will need to be replaced in both the ASN.1 module and in {{
 
 ###  Object Identifier Registrations - SMI Security for PKIX Algorithms
 
-- id-MLKEM512-ECDH-P256-KMAC128
+- id-MLKEM512-ECDH-P256
   - Decimal: IANA Assigned
-  - Description: id-MLKEM512-ECDH-P256-KMAC128
+  - Description: id-MLKEM512-ECDH-P256
   - References: This Document
 
-- id-MLKEM512-ECDH-brainpoolP256r1-KMAC128
+- id-MLKEM512-ECDH-brainpoolP256r1
   - Decimal: IANA Assigned
-  - Description: id-MLKEM512-ECDH-brainpoolP256r1-KMAC128
+  - Description: id-MLKEM512-ECDH-brainpoolP256r1
   - References: This Document
 
-- id-MLKEM512-X25519-KMAC128
+- id-MLKEM512-X25519
   - Decimal: IANA Assigned
-  - Description: id-MLKEM512-X25519-KMAC128
+  - Description: id-MLKEM512-X25519
   - References: This Document
 
-- id-MLKEM768-RSA3072-KMAC256
+- id-MLKEM768-RSA3072
   - Decimal: IANA Assigned
-  - Description: id-MLKEM768-3072-KMAC256
+  - Description: id-MLKEM768-3072
   - References: This Document
 
-- id-MLKEM768-ECDH-P256-KMAC256
+- id-MLKEM768-ECDH-P256
   - Decimal: IANA Assigned
-  - Description: id-MLKEM768-ECDH-P256-KMAC256
+  - Description: id-MLKEM768-ECDH-P256
   - References: This Document
 
-- id-MLKEM768-ECDH-brainpoolP256r1-KMAC256
+- id-MLKEM768-ECDH-brainpoolP256r1
   - Decimal: IANA Assigned
-  - Description: id-MLKEM768-ECDH-brainpoolP256r1-KMAC256
+  - Description: id-MLKEM768-ECDH-brainpoolP256r1
   - References: This Document
 
-- id-MLKEM768-X25519-KMAC256
+- id-MLKEM768-X25519
   - Decimal: IANA Assigned
-  - Description: id-MLKEM768-X25519-KMAC256
+  - Description: id-MLKEM768-X25519
   - References: This Document
 
-- id-MLKEM1024-ECDH-P384-KMAC256
+- id-MLKEM1024-ECDH-P384
   - Decimal: IANA Assigned
-  - Description: id-MLKEM1024-ECDH-P384-KMAC256
+  - Description: id-MLKEM1024-ECDH-P384
   - References: This Document
 
-- id-MLKEM1024-ECDH-brainpoolP384r1-KMAC256
+- id-MLKEM1024-ECDH-brainpoolP384r1
   - Decimal: IANA Assigned
-  - Description: id-MLKEM1024-ECDH-brainpoolP384r1-KMAC256
+  - Description: id-MLKEM1024-ECDH-brainpoolP384r1
   - References: This Document
 
-- id-MLKEM1024-X448-KMAC256
+- id-MLKEM1024-X448
   - Decimal: IANA Assigned
-  - Description: id-MLKEM1024-X448-KMAC256
+  - Description: id-MLKEM1024-X448
   - References: This Document
 
 <!-- End of IANA Considerations section -->
@@ -697,7 +665,7 @@ Traditionally, a public key or certificate contains a single cryptographic algor
 
 In the composite model this is less obvious since implementers may decide that certain cryptographic algorithms have complementary security properties and are acceptable in combination even though one or both algorithms are deprecated for individual use. As such, a single composite public key or certificate may contain a mixture of deprecated and non-deprecated algorithms.
 
-Since composite algorithms are registered independently of their component algorithms, their deprecation can be handled indpendently from that of their component algorithms. For example a cryptographic policy might continue to allow `id-MLKEM512-ECDH-P256-KMAC128` even after ECDH-P256 is deprecated.
+Since composite algorithms are registered independently of their component algorithms, their deprecation can be handled indpendently from that of their component algorithms. For example a cryptographic policy might continue to allow `id-MLKEM512-ECDH-P256` even after ECDH-P256 is deprecated.
 
 The composite KEM design specified in this document, and especially that of the KEM combiner specified in {{sec-kem-combiner}} means that the overall composite KEM algorithm should be considered to have the security strength of the strongest of its component algorithms; ie as long as one component algorithm remains strong, then the overall composite algorithm remains strong.
 
