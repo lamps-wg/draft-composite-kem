@@ -551,7 +551,7 @@ Table of Contents
    See Section 8.2 for further discussion of the security coniserations
    of this KEM combiner.
 
-   However, optimazations may be made in the following ways:
+   However, optimizations may be made in the following ways:
 
    *  As discussed in Section 8.2.1, the ML-KEM ciphertext may be safely
       omited.
