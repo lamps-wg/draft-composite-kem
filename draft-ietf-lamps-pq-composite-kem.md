@@ -491,7 +491,7 @@ For example, the KEM combiner used with the first entry of {{tab-kem-algs}}, `id
 
 ~~~
 SHA3-256( 0x00000001 || ss_mlkem || ct_ecdh-p256 || ss_ecdh-p256
-              "id-MLKEM512-ECDH-P256", "")
+            || "id-MLKEM512-ECDH-P256", "")
 ~~~
 
 
