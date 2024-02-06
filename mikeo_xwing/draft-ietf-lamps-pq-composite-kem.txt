@@ -5,7 +5,7 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 6 August 2024                                   3 February 2024
+Expires: 9 August 2024                                   6 February 2024
 
 
                 Composite ML-KEM For Use In Internet PKI
@@ -54,7 +54,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 6 August 2024.
+   This Internet-Draft will expire on 9 August 2024.
 
 Copyright Notice
 
@@ -571,7 +571,7 @@ Table of Contents
    id-MLKEM512-ECDH-P256 would be:
 
    SHA3-256( 0x00000001 || ss_mlkem || ct_ecdh-p256 || ss_ecdh-p256
-                 "id-MLKEM512-ECDH-P256", "")
+               || "id-MLKEM512-ECDH-P256", "")
 
 5.  Algorithm Identifiers
 
