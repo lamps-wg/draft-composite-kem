@@ -134,35 +134,7 @@ informative:
   I-D.draft-housley-lamps-cms-kemri-02:
   X-Wing:
     title: "X-Wing The Hybrid KEM You’ve Been Looking For"
-    date: 2024-01-09
-    author:
-      -
-        ins: M. Barbosa
-        name: Manuel Barbosa
-      -
-        ins: D. Connolly
-        name: Deirdre Connolly
-      -
-        ins: J. Duarte
-        name: João Diogo Duarte
-      -
-        ins: A. Kaiser
-        name: Aaron Kaiser
-      -
-        ins: P. Schwabe
-        name: Peter Schwabe
-      -
-        ins: K. Varner
-        name: Karolin Varner
-      -
-        ins: B. Westerbaan
-        name: Bas Westerbaan
-    target: https://eprint.iacr.org/2024/039.pdf
-
-
---- abstract
-
-This document defines Post-Quantum / Traditional composite Key Encapsulation Mechanism (KEM) algorithms suitable for use within X.509 and PKIX and CMS protocols. Composite algorithms are provided which combine ML-KEM with RSA-KEM, ECDH, X25519, and X448. The provided set of composite algorithms should meet most CMS needs. For use within CMS, this document is intended to be coupled with the CMS KEMRecipientInfo mechanism in {{I-D.housley-lamps-cms-kemri}}.
+    date: 2024-01sm (KEM) algorithms suitable for use within X.509 and PKIX and CMS protocols. Composite algorithms are provided which combine ML-KEM with RSA-KEM, ECDH, X25519, and X448. The provided set of composite algorithms should meet most CMS needs. For use within CMS, this document is intended to be coupled with the CMS KEMRecipientInfo mechanism in {{I-D.housley-lamps-cms-kemri}}.
 
 <!-- End of Abstract -->
 
@@ -183,12 +155,12 @@ Changes to sync with X-Wing:
 Still to do in a future version:
 
   `[ ]` We need PEM samples … 118 hackathon? OQS friends? David @ BC? The right format for samples is probably to follow the hackathon ... a Dilithium or ECDSA trust anchor certificate, a composite KEM end entity certificate, and a CMS EnvolepedData sample encrypted for that composite KEM certificate.
-  `[ ]` Open question: do we need to incluede the ECDH, X25519, X448, and RSA public keys is the KDF? X-Wing does, but previous versions of this spec do not. In general existing ECC and RSA hardware decryptor implementations might not know their own public key.
+  `[ ]` Open question: do we need to include the ECDH, X25519, X448, and RSA public keys in the KDF? X-Wing does, but previous versions of this spec do not. In general existing ECC and RSA hardware decryptor implementations might not know their own public key.
 
 # Introduction {#sec-intro}
 
 
-The migration to post-quantum cryptography is unique in the history of modern digital cryptography in that neither the old outgoing nor the new incoming algorithms are fully trusted to protect data for long data lifetimes. The outgoing algorithms, such as RSA and elliptic curve, may fall to quantum cryptalanysis, while the incoming post-quantum algorithms face uncertainty about both the underlying mathematics falling to classical algorithmic attacks as well as hardware and software implementations that have not had sufficient maturing time to rule out catestrophic implementation bugs. Unlike previous cryptographic algorithm migrations, the choice of when to migrate and which algorithms to migrate to, is not so clear.
+The migration to post-quantum cryptography is unique in the history of modern digital cryptography in that neither the old outgoing nor the new incoming algorithms are fully trusted to protect data for long data lifetimes. The outgoing algorithms, such as RSA and elliptic curve, may fall to quantum cryptalanysis, while the incoming post-quantum algorithms face uncertainty about both the underlying mathematics falling to classical algorithmic attacks as well as hardware and software implementations that have not had sufficient maturing time to rule out catastrophic implementation bugs. Unlike previous cryptographic algorithm migrations, the choice of when to migrate and which algorithms to migrate to, is not so clear.
 
 Cautious implementers may wish to combine cryptographic algorithms such that an attacker would need to break all of them in order to compromise the data being protected. Such mechanisms are referred to as Post-Quantum / Traditional Hybrids {{I-D.driscoll-pqt-hybrid-terminology}}.
 
@@ -226,7 +198,7 @@ In addition, the following terms are used in this document:
   A value established between two communicating parties for use as
   cryptographic key material, but which cannot be learned by an active
   or passive adversary. This document is concerned with shared
-  secrets established via public key cryptagraphic operations.
+  secrets established via public key cryptographic operations.
 
 ## Composite Design Philosophy
 
@@ -381,7 +353,7 @@ When the CompositeKEMPublicKey must be provided in octet string or bit string fo
 
 ## CompositeKEMPrivateKey {#sec-priv-key}
 
-Usecases that require an interoperable encoding for composite private keys, such as when private keys are carried in PKCS #12 [RFC7292], CMP [RFC4210] or CRMF [RFC4211] MUST use the following structure.
+Use cases that require an inter-operable encoding for composite private keys, such as when private keys are carried in PKCS #12 [RFC7292], CMP [RFC4210] or CRMF [RFC4211] MUST use the following structure.
 
 ~~~ ASN.1
 CompositeKEMPrivateKey ::= SEQUENCE SIZE (2) OF OneAsymmetricKey
@@ -396,7 +368,7 @@ The order of the component keys is the same as the order defined in {{sec-compos
 
 When a `CompositePrivateKey` is conveyed inside a OneAsymmetricKey structure (version 1 of which is also known as PrivateKeyInfo) [RFC5958], the privateKeyAlgorithm field SHALL be set to the corresponding composite algorithm identifier defined according to {{sec-alg-ids}}, the privateKey field SHALL contain the CompositeKEMPrivateKey, and the publicKey field MUST NOT be present. Associated public key material MAY be present in the CompositeKEMPrivateKey.
 
-In some usecases the private keys that comprise a composite key may not be represented in a single structure or even be contained in a single cryptographic module; for example if one component is within the FIPS boundary of a cryptographic module and the other is not; see {sec-fips} for more discussion. The establishment of correspondence between public keys in a CompositeKEMPublicKey and private keys not represented in a single composite structure is beyond the scope of this document.
+In some use-cases the private keys that comprise a composite key may not be represented in a single structure or even be contained in a single cryptographic module; for example if one component is within the FIPS boundary of a cryptographic module and the other is not; see {sec-fips} for more discussion. The establishment of correspondence between public keys in a CompositeKEMPublicKey and private keys not represented in a single composite structure is beyond the scope of this document.
 
 
 ## Encoding Rules {#sec-encoding-rules}
@@ -450,9 +422,9 @@ A composite KEM and `CompositeCipherTextValue` MAY be associated with a composit
 
 ## KEM Combiner {#sec-kem-combiner}
 
-TODO: as per https://www.enisa.europa.eu/publications/post-quantum-cryptography-integration-study section 4.2, might need to specify behaviour in light of KEMs with a non-zero failure probility.
+TODO: as per https://www.enisa.europa.eu/publications/post-quantum-cryptography-integration-study section 4.2, might need to specify behaviour in light of KEMs with a non-zero failure probability.
 
-This document follows the construction of {{I-D.ounsworth-cfrg-kem-combiners}}, which is repeated here for clarity, however it has been simplified to take two imput shared secrets, and to take advantage of ML-KEM specific optimizations as per [X-Wing], and RSA-KEM specific optimizations since RSA-KEM is a bijective map between ciphertexts and plaintexts.
+This document follows the construction of {{I-D.ounsworth-cfrg-kem-combiners}}, which is repeated here for clarity, however it has been simplified to take two input shared secrets, and to take advantage of ML-KEM specific optimizations as per [X-Wing], and RSA-KEM specific optimizations since RSA-KEM is a bijective map between ciphertexts and plaintexts.
 
 The general combiner defined in {{I-D.ounsworth-cfrg-kem-combiners}} is:
 
@@ -466,17 +438,17 @@ where:
 
 * `KDF(message, outputBits)` represents a hash function suitable to the chosen KEMs according to {tab-kem-combiners}.
 * `fixedInfo` SHALL be the ASCII-encoded string name of the composite KEM algorithm as listed in {{tab-kem-algs}}.
-* `counter` SHALL be the fixed 32-bit value `0x00000001` which is placed here soly for the purposes of easy compliance with [SP.800-56Cr2].
+* `counter` SHALL be the fixed 32-bit value `0x00000001` which is placed here solely for the purposes of easy compliance with [SP.800-56Cr2].
 * `||` represents concatenation.
 
 Each registered composite KEM algorithm must specify the choice of `KDF`, `fixedInfo`, and `outputBits` to be used.
 
-See {{sec-cons-kem-combiner}} for further discussion of the security coniserations of this KEM combiner.
+See {{sec-cons-kem-combiner}} for further discussion of the security considerations of this KEM combiner.
 
-However, optimazations may be made in the following ways:
+However, optimizations may be made in the following ways:
 
-* As discussed in {{sec-cons-ct-collision}}, the ML-KEM ciphertext may be safely omited.
-* As discussed in {{sec-cons-ct-collision}}, the RSA-KEM ciphertext may be safely omited.
+* As discussed in {{sec-cons-ct-collision}}, the ML-KEM ciphertext may be safely omitted.
+* As discussed in {{sec-cons-ct-collision}}, the RSA-KEM ciphertext may be safely omitted.
 * As the KDF we use everywhere SHA3-256 or SHA3-512.
 
 That yields combiners of the form
@@ -499,7 +471,7 @@ SHA3-256( 0x00000001 || ss_mlkem || ct_ecdh-p256 || ss_ecdh-p256
 
 This table summarizes the list of composite KEM algorithms and lists the OID, two component algorithms, and the combiner function.
 
-EDNOTE: The OID referenced are TBD and MUST be used only for prototyping and replaced with the final IANA-assigned OIDS. The following prefix is used for each: replace &lt;CompKEM&gt; with the String "2.16.840.1.114027.80.5.2".
+EDNOTE: The OID referenced are TBD and MUST be used only for prototyping and replaced with the final IANA-assigned OIDs. The following prefix is used for each: replace &lt;CompKEM&gt; with the String "2.16.840.1.114027.80.5.2".
 
 TODO: OIDs to be replaced by IANA.
 
@@ -531,7 +503,7 @@ Full specifications for the referenced algorithms can be found as follows:
 * _RSA-KEM_: {{I-D.ietf-lamps-rfc5990bis}}
 * _X25519 / X448_: [RFC8410]
 
-EDNOTE: I believe that [SP.800-56Ar3] and [BSI-ECC] give equivalent and interoperable algorithms, so maybe this is extranuous detail to include?
+EDNOTE: I believe that [SP.800-56Ar3] and [BSI-ECC] give equivalent and inter-operable algorithms, so maybe this is extraneous detail to include?
 
 The KEM combiners for each algorithm are instantiated as follows
 
@@ -549,7 +521,7 @@ The KEM combiners for each algorithm are instantiated as follows
 | id-MLKEM1024-ECDH-P384            | SHA3-512     | ss1 \|\| ss2 \|\| ct2  |
 | id-MLKEM1024-ECDH-brainpoolP384r1 | SHA3-512     | ss1 \|\| ss2 \|\| ct2  |
 | id-MLKEM1024-X448                 | SHA3-512     | ss1 \|\| ss2 \|\| ct2  |
-{: #tab-kem-combiner-instantiations title="KEM Combiner Instattiations"}
+{: #tab-kem-combiner-instantiations title="KEM Combiner Instantiations"}
 
 Note that since ML-KEM-768 only claims security equivalent to a 384-bit hash function, the output of SHA3-512 is truncated to 384 bits to not give a false sense of security to developers using this value.
 
@@ -665,7 +637,7 @@ Traditionally, a public key or certificate contains a single cryptographic algor
 
 In the composite model this is less obvious since implementers may decide that certain cryptographic algorithms have complementary security properties and are acceptable in combination even though one or both algorithms are deprecated for individual use. As such, a single composite public key or certificate may contain a mixture of deprecated and non-deprecated algorithms.
 
-Since composite algorithms are registered independently of their component algorithms, their deprecation can be handled indpendently from that of their component algorithms. For example a cryptographic policy might continue to allow `id-MLKEM512-ECDH-P256` even after ECDH-P256 is deprecated.
+Since composite algorithms are registered independently of their component algorithms, their deprecation can be handled independently from that of their component algorithms. For example a cryptographic policy might continue to allow `id-MLKEM512-ECDH-P256` even after ECDH-P256 is deprecated.
 
 The composite KEM design specified in this document, and especially that of the KEM combiner specified in {{sec-kem-combiner}} means that the overall composite KEM algorithm should be considered to have the security strength of the strongest of its component algorithms; ie as long as one component algorithm remains strong, then the overall composite algorithm remains strong.
 
@@ -683,7 +655,7 @@ The component KEMs used in this specification are RSA-KEM {{I-D.ietf-lamps-rfc59
 
 ### Ciphertext collision resistance {#sec-cons-ct-collision}
 
-The notion of a ciphertext cellision resistant KEM is defined in [X-Wing] being the property that it is computationally difficult to find two different ciphertexts that will decapsulate to the same shared secret under the same public key. In [X-Wing] it is proven that ML-KEM has this property and therefore the ML-KEM ciphertext can safely be omitted from the KEM combiner. Similarly, RSA-KEM {{I-D.ietf-lamps-rfc5990bis}} is a bijective map between the shared secret `Z` and the ciphertext `C` and so is naturally immune to ciphertext collision. This leaves only ECDH, X25519 and X448 which are not ciphertext collision resistant and for which the ciphertexts need to be included in the derivation of the shared secret.
+The notion of a ciphertext collision resistant KEM is defined in [X-Wing] being the property that it is computationally difficult to find two different ciphertexts that will decapsulate to the same shared secret under the same public key. In [X-Wing] it is proven that ML-KEM has this property and therefore the ML-KEM ciphertext can safely be omitted from the KEM combiner. Similarly, RSA-KEM {{I-D.ietf-lamps-rfc5990bis}} is a bijective map between the shared secret `Z` and the ciphertext `C` and so is naturally immune to ciphertext collision. This leaves only ECDH, X25519 and X448 which are not ciphertext collision resistant and for which the ciphertexts need to be included in the derivation of the shared secret.
 
 
 <!-- End of Security Considerations section -->
@@ -701,7 +673,7 @@ TBD
 
 One of the primary design goals of this specification is for the overall composite algorithm to be able to be considered FIPS-approved even when one of the component algorithms is not. The combiner presented in {{sec-kem-combiner}} was chosen to align with [SP.800-56Cr2] for this reason.
 
-Implementors seeking FIPS certification of a composite KEM algorithm where only one of the component algorithms has been FIPS-validated or FIPS-approved should credit the FIPS-validated component algorithm with full security strength, the non-FIPS-validated component algorith with zero security, and the overall composite should be considered full strength and thus FIPS-approved.
+Implementers seeking FIPS certification of a composite KEM algorithm where only one of the component algorithms has been FIPS-validated or FIPS-approved should credit the FIPS-validated component algorithm with full security strength, the non-FIPS-validated component algorithm with zero security, and the overall composite should be considered full strength and thus FIPS-approved.
 
 The authors wish to note that this gives composite algorithms great future utility both for future cryptographic migrations as well as bridging across jurisdictions; for example defining composite algorithms which combine FIPS cryptography with cryptography from a different national standards body.
 
@@ -709,7 +681,7 @@ The authors wish to note that this gives composite algorithms great future utili
 
 As noted in the introduction, the post-quantum cryptographic migration will face challenges in both ensuring cryptographic strength against adversaries of unknown capabilities, as well as providing ease of migration. The composite mechanisms defined in this document primarily address cryptographic strength, however this section contains notes on how backwards compatibility may be obtained.
 
-The term "ease of migration" is used here to mean that existing systems can be gracefully transitioned to the new technology without requiring large service disruptions or expensive upgrades. The term "backwards compatibility" is used here to mean something more specific; that existing systems as they are deployed today can interoperate with the upgraded systems of the future.
+The term "ease of migration" is used here to mean that existing systems can be gracefully transitioned to the new technology without requiring large service disruptions or expensive upgrades. The term "backwards compatibility" is used here to mean something more specific; that existing systems as they are deployed today can inter-operate with the upgraded systems of the future.
 
 These migration and interoperability concerns need to be thought about in the context of various types of protocols that make use of X.509 and PKIX with relation to key establishment and content encryption, from online negotiated protocols such as TLS 1.3 [RFC8446] and IKEv2 [RFC7296], to non-negotiated asynchronous protocols such as S/MIME signed email [RFC8551], as well as myriad other standardized and proprietary protocols and applications that leverage CMS [RFC5652] encrypted structures.
 
@@ -741,7 +713,7 @@ EDNOTE TODO: Check with Max Pala whether this IPR actually applies to this draft
 
 
 
-# Contributors and Acknowledgements
+# Contributors and Acknowledgments
 
 This document incorporates contributions and comments from a large group of experts. The Editors would especially like to acknowledge the expertise and tireless dedication of the following people, who attended many long meetings and generated millions of bytes of electronic mail and VOIP traffic over the past year in pursuit of this document:
 
