@@ -5,7 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 26 April 2024                                   24 October 2023
+Expires: 9 August 2024                                           M. Pala
+                                                                  OpenCA
+                                                            J. Klaussner
+                                                            D-Trust GmbH
+                                                              S. Fluhrer
+                                                           Cisco Systems
+                                                         6 February 2024
 
 
                  Composite KEM For Use In Internet PKI
@@ -60,11 +66,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 26 April 2024.
+   This Internet-Draft will expire on 9 August 2024.
 
 Copyright Notice
 
-   Copyright (c) 2023 IETF Trust and the persons identified as the
+   Copyright (c) 2024 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -1502,8 +1508,7 @@ Appendix D.  Contributors and Acknowledgements
    electronic mail and VOIP traffic over the past year in pursuit of
    this document:
 
-   Serge Mister (Entrust), Ali Noman (Entrust), Scott Fluhrer (Cisco),
-   Jan Klaussner (D-Trust), Max Pala (CableLabs), and Douglas Stebila
+   Serge Mister (Entrust), Ali Noman (Entrust), and Douglas Stebila
    (University of Waterloo).
 
    We are grateful to all, including any contributors who may have been
@@ -1530,3 +1535,24 @@ Authors' Addresses
    Ottawa, Ontario  K2K 3G5
    Canada
    Email: john.gray@entrust.com
+
+
+   Massimiliano Pala
+   OpenCA
+   858 Coal Creek Cir
+   Louisville, Colorado,  80027
+   United States of America
+   Email: director@openca.org
+
+
+   Jan Klaussner
+   D-Trust GmbH
+   Kommandantenstr. 15
+   10969 Berlin
+   Germany
+   Email: jan.klaussner@d-trust.net
+
+
+   Scott Fluhrer
+   Cisco Systems
+   Email: sfluhrer@cisco.com

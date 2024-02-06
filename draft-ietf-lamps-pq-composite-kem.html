@@ -7,6 +7,9 @@
 <title>Composite KEM For Use In Internet PKI</title>
 <meta content="Mike Ounsworth" name="author">
 <meta content="John Gray" name="author">
+<meta content="Massimiliano Pala" name="author">
+<meta content="Jan Klaussner" name="author">
+<meta content="Scott Fluhrer" name="author">
 <meta content="
        This document defines Post-Quantum / Traditional composite Key Encapsulation Mechanism (KEM) algorithms suitable for use within X.509 and PKIX and CMS protocols. Composite algorithms are provided which combine ML-KEM with RSA-KEM and ECDH-KEM. The provided set of composite algorithms should meet most Internet needs. 
        This document assumes that all component algorithms are KEMs, and therefore it depends on   and   in order to promote RSA and ECDH respectively into KEMs. For the purpose of combining KEMs, the combiner function from   is used. For use within CMS, this document is intended to be coupled with the CMS KEMRecipientInfo mechanism in  . 
@@ -15,27 +18,27 @@
 
 
     " name="description">
-<meta content="xml2rfc 3.18.2" name="generator">
+<meta content="xml2rfc 3.19.2" name="generator">
 <meta content="X.509" name="keyword">
 <meta content="CMS" name="keyword">
 <meta content="Post-Quantum" name="keyword">
 <meta content="KEM" name="keyword">
 <meta content="draft-ietf-lamps-pq-composite-kem-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.18.2
+  xml2rfc 3.19.2
     Python 3.11.6
-    ConfigArgParse 1.5.3
+    ConfigArgParse 1.7
     google-i18n-address 3.1.0
     intervaltree 3.1.0
     Jinja2 3.1.2
     lxml 4.9.3
-    platformdirs 3.11.0
+    platformdirs 4.2.0
     pycountry 22.3.5
-    PyYAML 6.0
+    PyYAML 6.0.1
     requests 2.31.0
-    setuptools 67.7.2
+    setuptools 68.2.2
     six 1.16.0
-    wcwidth 0.2.8
+    wcwidth 0.2.13
 -->
 <link href="draft-ietf-lamps-pq-composite-kem.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -1034,11 +1037,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">Composite KEMs</td>
-<td class="right">October 2023</td>
+<td class="right">February 2024</td>
 </tr></thead>
 <tfoot><tr>
-<td class="left">Ounsworth &amp; Gray</td>
-<td class="center">Expires 26 April 2024</td>
+<td class="left">Ounsworth, et al.</td>
+<td class="center">Expires 9 August 2024</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1051,12 +1054,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-lamps-pq-composite-kem-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2023-10-24" class="published">24 October 2023</time>
+<time datetime="2024-02-06" class="published">6 February 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2024-04-26">26 April 2024</time></dd>
+<dd class="expires"><time datetime="2024-08-09">9 August 2024</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1066,6 +1069,18 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <div class="author">
       <div class="author-name">J. Gray</div>
 <div class="org">Entrust</div>
+</div>
+<div class="author">
+      <div class="author-name">M. Pala</div>
+<div class="org">OpenCA</div>
+</div>
+<div class="author">
+      <div class="author-name">J. Klaussner</div>
+<div class="org">D-Trust GmbH</div>
+</div>
+<div class="author">
+      <div class="author-name">S. Fluhrer</div>
+<div class="org">Cisco Systems</div>
 </div>
 </dd>
 </dl>
@@ -1111,7 +1126,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 26 April 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 9 August 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1120,7 +1135,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="#name-copyright-notice" class="section-name selfRef">Copyright Notice</a>
         </h2>
 <p id="section-boilerplate.2-1">
-            Copyright (c) 2023 IETF Trust and the persons identified as the
+            Copyright (c) 2024 IETF Trust and the persons identified as the
             document authors. All rights reserved.<a href="#section-boilerplate.2-1" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.2-2">
             This document is subject to BCP 78 and the IETF Trust's Legal
@@ -2723,7 +2738,7 @@ If <code>ss_i</code> or <code>ct_i</code> are not guaranteed to have constant le
 <a href="#appendix-D" class="section-number selfRef">Appendix D. </a><a href="#name-contributors-and-acknowledg" class="section-name selfRef">Contributors and Acknowledgements</a>
       </h2>
 <p id="appendix-D-1">This document incorporates contributions and comments from a large group of experts. The Editors would especially like to acknowledge the expertise and tireless dedication of the following people, who attended many long meetings and generated millions of bytes of electronic mail and VOIP traffic over the past year in pursuit of this document:<a href="#appendix-D-1" class="pilcrow">¶</a></p>
-<p id="appendix-D-2">Serge Mister (Entrust), Ali Noman (Entrust), Scott Fluhrer (Cisco), Jan Klaussner (D-Trust), Max Pala (CableLabs), and
+<p id="appendix-D-2">Serge Mister (Entrust), Ali Noman (Entrust), and
 Douglas Stebila (University of Waterloo).<a href="#appendix-D-2" class="pilcrow">¶</a></p>
 <p id="appendix-D-3">We are grateful to all, including any contributors who may have
 been inadvertently omitted from this list.<a href="#appendix-D-3" class="pilcrow">¶</a></p>
@@ -2760,6 +2775,40 @@ been inadvertently omitted from this list.<a href="#appendix-D-3" class="pilcrow
 <div class="email">
 <span>Email:</span>
 <a href="mailto:john.gray@entrust.com" class="email">john.gray@entrust.com</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Massimiliano Pala</span></div>
+<div dir="auto" class="left"><span class="org">OpenCA</span></div>
+<div dir="auto" class="left"><span class="street-address">858 Coal Creek Cir</span></div>
+<div dir="auto" class="left">
+<span class="locality">Louisville, Colorado</span>,  <span class="postal-code">80027</span>
+</div>
+<div dir="auto" class="left"><span class="country-name">United States of America</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:director@openca.org" class="email">director@openca.org</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Jan Klaussner</span></div>
+<div dir="auto" class="left"><span class="org">D-Trust GmbH</span></div>
+<div dir="auto" class="left"><span class="street-address">Kommandantenstr. 15</span></div>
+<div dir="auto" class="left">
+<span class="postal-code">10969</span> <span class="locality">Berlin</span>
+</div>
+<div dir="auto" class="left"><span class="country-name">Germany</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:jan.klaussner@d-trust.net" class="email">jan.klaussner@d-trust.net</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Scott Fluhrer</span></div>
+<div dir="auto" class="left"><span class="org">Cisco Systems</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:sfluhrer@cisco.com" class="email">sfluhrer@cisco.com</a>
 </div>
 </address>
 </section>
