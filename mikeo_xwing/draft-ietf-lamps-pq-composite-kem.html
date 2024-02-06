@@ -1865,17 +1865,17 @@ SHA3-256( 0x00000001 || ss_mlkem || ct_ecdh-p256 || ss_ecdh-p256
           </tr>
           <tr>
             <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-ECDH-P256</td>
-            <td class="text-left" rowspan="1" colspan="1">SHA3-512/384</td>
+            <td class="text-left" rowspan="1" colspan="1">SHA3-384</td>
             <td class="text-left" rowspan="1" colspan="1">ss1 || ss2 || ct2</td>
           </tr>
           <tr>
             <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-ECDH-brainpoolP256r1</td>
-            <td class="text-left" rowspan="1" colspan="1">SHA3-512/384</td>
+            <td class="text-left" rowspan="1" colspan="1">SHA3-384</td>
             <td class="text-left" rowspan="1" colspan="1">ss1 || ss2 || ct2</td>
           </tr>
           <tr>
             <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-X25519</td>
-            <td class="text-left" rowspan="1" colspan="1">SHA3-512/384</td>
+            <td class="text-left" rowspan="1" colspan="1">SHA3-384</td>
             <td class="text-left" rowspan="1" colspan="1">ss1 || ss2 || ct2</td>
           </tr>
           <tr>
@@ -1896,8 +1896,7 @@ SHA3-256( 0x00000001 || ss_mlkem || ct_ecdh-p256 || ss_ecdh-p256
         </tbody>
       </table>
 </div>
-<p id="section-5-12">Note that since ML-KEM-768 only claims security equivalent to a 384-bit hash function, the output of SHA3-512 is truncated to 384 bits to not give a false sense of security to developers using this value.<a href="#section-5-12" class="pilcrow">¶</a></p>
-<p id="section-5-13">The tables above contains everything needed to implement the listed explicit composite algorithms, with the exception of some special notes found below in this section. See the ASN.1 module in section <a href="#sec-asn1-module" class="auto internal xref">Section 6</a> for the explicit definitions of the above Composite signature algorithms.<a href="#section-5-13" class="pilcrow">¶</a></p>
+<p id="section-5-12">The tables above contains everything needed to implement the listed explicit composite algorithms, with the exception of some special notes found below in this section. See the ASN.1 module in section <a href="#sec-asn1-module" class="auto internal xref">Section 6</a> for the explicit definitions of the above Composite signature algorithms.<a href="#section-5-12" class="pilcrow">¶</a></p>
 <div id="rsa-kem-parameters">
 <section id="section-5.1">
         <h3 id="name-rsa-kem-parameters">
