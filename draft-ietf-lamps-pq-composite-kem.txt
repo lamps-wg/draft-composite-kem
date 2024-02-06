@@ -761,8 +761,6 @@ Table of Contents
    *  kda-kdf3 is defined in [I-D.ietf-lamps-rfc5990bis] which
       references it from [ANS-X9.44].
 
-   *  mda-shake256 is defined in [I-D.housley-lamps-cms-sha3-hash].
-
 7.  ASN.1 Module
 
    <CODE STARTS>
