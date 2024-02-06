@@ -95,12 +95,12 @@ normative:
       org: "American National Standards Institute"
     date: 2007
     seriesinfo: American National Standard X9.44
-  # SHA3:
-  #   title: "SHA-3 Standard: Permutation-Based Hash and Extendable-Output Functions, FIPS PUB 202, DOI 10.6028/NIST.FIPS.202"
-  #   author:
-  #     org: "National Institute of Standards and Technology (NIST)"
-  #   date: August 2015
-  #   target: https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.202.pdf
+  SHA3:
+    title: "SHA-3 Standard: Permutation-Based Hash and Extendable-Output Functions, FIPS PUB 202, DOI 10.6028/NIST.FIPS.202"
+    author:
+      org: "National Institute of Standards and Technology (NIST)"
+    date: August 2015
+    target: https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.202.pdf
   SP800-185:
     title: "SHA-3 Derived Functions: cSHAKE, KMAC, TupleHash and ParallelHash"
     author:
@@ -143,6 +143,7 @@ informative:
   RFC2986:
   RFC4210:
   RFC4211:
+  RFC5083:
   RFC5639:
   RFC5914:
   RFC6090:
@@ -589,7 +590,62 @@ As with the other composite KEM algorithms, when `id-MLKEM512-RSA2048-KMAC128` o
 where:
 
 * `kda-kdf3` is defined in {{I-D.ietf-lamps-rfc5990bis}} which references it from [ANS-X9.44].
+* `id-sha3-256` is defined in {{I-D.housley-lamps-cms-sha3-hash}} which references it from [SHA3].
 
+
+# Use in CMS
+
+Composite KEM algorithms MAY be employed for one or more recipients in the CMS enveloped-data content type [RFC5652], the CMS authenticated-data content type [RFC5652], or the CMS authenticated-enveloped-data content type [RFC5083]. In each case, the KEMRecipientInfo [I-D.ietf-lamps-cms-kemri] is used with with the chosen composite KEM Algorithm to securely transfer the content-encryption key from the originator to the recipient.
+
+## Underlying Components
+
+A CMS implementation that supports a composite KEM algorithm MUST support at least the following underlying components:
+
+For the key-derivation function, an implementation MUST support KDF3 [ANS-X9.44] with id-sha3-256 {{I-D.housley-lamps-cms-sha3-hash}}.
+
+For key-wrapping, an implementation MUST support the AES-Wrap-128 [RFC3394] key-encryption algorithm.
+
+An implementation MAY also support other key-derivation functions and other key-encryption algorithms as well.
+
+## RecipientInfo Conventions
+
+When a composite KEM Algorithm is employed for a recipient, the RecipientInfo alternative for that recipient MUST be OtherRecipientInfo using the KEMRecipientInfo structure [I-D.ietf-lamps-cms-kemri]. The fields of the KEMRecipientInfo MUST have the following values:
+
+`version` is the syntax version number; it MUST be 0.
+
+`rid` identifies the recipient's certificate or public key.
+
+`kem` identifies the KEM algorithm; it MUST contain one of the OIDs listed in {{tab-kem-algs}}.
+
+`kemct` is the ciphertext produced for this recipient; it contains the `ct` output from `Encaps(pk)`.
+
+`kdf` identifies the key-derivation function (KDF). Note that the KDF used for CMS RecipientInfo process MAY be different than the KDF used within the composite KEM Algorithm.
+
+`kekLength` is the size of the key-encryption key in octets.
+
+`ukm` is an optional random input to the key-derivation function.
+
+`wrap` identifies a key-encryption algorithm used to encrypt the keying material.
+
+`encryptedKey` is the result of encrypting the keying material with the key-encryption key. When used with the CMS enveloped-data content type [RFC5652], the keying material is a content-encryption key. When used with the CMS authenticated-data content type [RFC5652], the keying material is a message-authentication key. When used with the CMS authenticated-enveloped-data content type [RFC5083], the keying material is a content-authenticated-encryption key.
+
+## Certificate Conventions
+The conventions specified in this section augment RFC 5280 [RFC5280].
+
+The willingness to accept a composite KEM Algorithm MAY be signaled by the use of the SMIMECapabilities Attribute as specified in Section 2.5.2. of [RFC8551] or the SMIMECapabilities certificate extension as specified in [RFC4262].
+
+The intended application for the public key MAY be indicated in the key usage certificate extension as specified in Section 4.2.1.3 of [RFC5280]. If the keyUsage extension is present in a certificate that conveys a composite KEM public key, then the key usage extension MUST contain only the following value:
+
+keyEncipherment
+
+The digitalSignatrure and dataEncipherment values MUST NOT be present. That is, a public key intended to be employed only with a composite KEM algorithm MUST NOT also be employed for data encryption or for digital signatures. This requirement does not carry any particular security consideration; only the convention that KEM keys be identifed with the `keyEncipherment` key usage.
+
+
+## SMIMECapabilities Attribute Conventions
+
+Section 2.5.2 of [RFC8551] defines the SMIMECapabilities attribute to announce a partial list of algorithms that an S/MIME implementation can support. When constructing a CMS signed-data content type [RFC5652], a compliant implementation MAY include the SMIMECapabilities attribute that announces support for the RSA-KEM Algorithm.
+
+The SMIMECapability SEQUENCE representing a composite KEM Algorithm MUST include the appropriate object identifier as per {{tab-kem-algs}} in the capabilityID field.
 
 # ASN.1 Module {#sec-asn1-module}
 
