@@ -40,7 +40,6 @@ author:
       country: Canada
       code: K2K 3G5
       email: mike.ounsworth@entrust.com
-
     -
       ins: J. Gray
       name: John Gray
@@ -51,6 +50,31 @@ author:
       country: Canada
       code: K2K 3G5
       email: john.gray@entrust.com
+    -
+      ins: M. Pala
+      fullname: Massimiliano Pala
+      org: OpenCA
+      street: 858 Coal Creek Cir
+      city: Louisville, Colorado
+      country: United States of America
+      code: 80027
+      email: director@openca.org
+    -
+      ins: J. Klaußner
+      fullname: Jan Klaußner
+      asciiFullname: Jan Klaussner
+      org: D-Trust GmbH
+      email: jan.klaussner@d-trust.net
+      street: Kommandantenstr. 15
+      code: 10969
+      city: Berlin
+      country: Germany
+    -
+      ins: S. Fluhrer
+      name: Scott Fluhrer
+      org: Cisco Systems
+      email: sfluhrer@cisco.com
+
 
 normative:
   RFC2119:
@@ -732,7 +756,7 @@ EDNOTE TODO: Check with Max Pala whether this IPR actually applies to this draft
 
 This document incorporates contributions and comments from a large group of experts. The Editors would especially like to acknowledge the expertise and tireless dedication of the following people, who attended many long meetings and generated millions of bytes of electronic mail and VOIP traffic over the past year in pursuit of this document:
 
-Serge Mister (Entrust), Ali Noman (Entrust), Scott Fluhrer (Cisco), Jan Klaußner (D-Trust), Max Pala (CableLabs), and
+Serge Mister (Entrust), Ali Noman (Entrust), and
 Douglas Stebila (University of Waterloo).
 
 We are grateful to all, including any contributors who may have
