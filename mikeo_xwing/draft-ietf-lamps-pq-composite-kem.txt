@@ -112,7 +112,7 @@ Table of Contents
      B.2.  Backwards Compatibility
        B.2.1.  Parallel PKIs
    Appendix C.  Intellectual Property Considerations
-   Appendix D.  Contributors and Acknowledgements
+   Appendix D.  Contributors and Acknowledgments
    Authors' Addresses
 
 1.  Changes in version -03
@@ -137,8 +137,8 @@ Table of Contents
    The right format for samples is probably to follow the hackathon ...
    a Dilithium or ECDSA trust anchor certificate, a composite KEM end
    entity certificate, and a CMS EnvolepedData sample encrypted for that
-   composite KEM certificate.  [ ] Open question: do we need to incluede
-   the ECDH, X25519, X448, and RSA public keys is the KDF?  X-Wing does,
+   composite KEM certificate.  [ ] Open question: do we need to include
+   the ECDH, X25519, X448, and RSA public keys in the KDF?  X-Wing does,
    but previous versions of this spec do not.  In general existing ECC
    and RSA hardware decryptor implementations might not know their own
    public key.
@@ -153,7 +153,7 @@ Table of Contents
    post-quantum algorithms face uncertainty about both the underlying
    mathematics falling to classical algorithmic attacks as well as
    hardware and software implementations that have not had sufficient
-   maturing time to rule out catestrophic implementation bugs.  Unlike
+   maturing time to rule out catastrophic implementation bugs.  Unlike
    previous cryptographic algorithm migrations, the choice of when to
    migrate and which algorithms to migrate to, is not so clear.
 
@@ -219,7 +219,7 @@ Table of Contents
    parties for use as cryptographic key material, but which cannot be
    learned by an active or passive adversary.  This document is
    concerned with shared secrets established via public key
-   cryptagraphic operations.
+   cryptographic operations.
 
 2.2.  Composite Design Philosophy
 
@@ -427,9 +427,10 @@ Table of Contents
 
 3.3.  CompositeKEMPrivateKey
 
-   Usecases that require an interoperable encoding for composite private
-   keys, such as when private keys are carried in PKCS #12 [RFC7292],
-   CMP [RFC4210] or CRMF [RFC4211] MUST use the following structure.
+   Use cases that require an inter-operable encoding for composite
+   private keys, such as when private keys are carried in PKCS #12
+   [RFC7292], CMP [RFC4210] or CRMF [RFC4211] MUST use the following
+   structure.
 
    CompositeKEMPrivateKey ::= SEQUENCE SIZE (2) OF OneAsymmetricKey
 
@@ -450,7 +451,7 @@ Table of Contents
    Associated public key material MAY be present in the
    CompositeKEMPrivateKey.
 
-   In some usecases the private keys that comprise a composite key may
+   In some use-cases the private keys that comprise a composite key may
    not be represented in a single structure or even be contained in a
    single cryptographic module; for example if one component is within
    the FIPS boundary of a cryptographic module and the other is not; see
@@ -515,11 +516,11 @@ Table of Contents
 
    TODO: as per https://www.enisa.europa.eu/publications/post-quantum-
    cryptography-integration-study section 4.2, might need to specify
-   behaviour in light of KEMs with a non-zero failure probility.
+   behaviour in light of KEMs with a non-zero failure probability.
 
    This document follows the construction of
    [I-D.ounsworth-cfrg-kem-combiners], which is repeated here for
-   clarity, however it has been simplified to take two imput shared
+   clarity, however it has been simplified to take two input shared
    secrets, and to take advantage of ML-KEM specific optimizations as
    per [X-Wing], and RSA-KEM specific optimizations since RSA-KEM is a
    bijective map between ciphertexts and plaintexts.
@@ -541,23 +542,24 @@ Table of Contents
       KEM algorithm as listed in Table 1.
 
    *  counter SHALL be the fixed 32-bit value 0x00000001 which is placed
-      here soly for the purposes of easy compliance with [SP.800-56Cr2].
+      here solely for the purposes of easy compliance with
+      [SP.800-56Cr2].
 
    *  || represents concatenation.
 
    Each registered composite KEM algorithm must specify the choice of
    KDF, fixedInfo, and outputBits to be used.
 
-   See Section 8.2 for further discussion of the security coniserations
+   See Section 8.2 for further discussion of the security considerations
    of this KEM combiner.
 
    However, optimizations may be made in the following ways:
 
    *  As discussed in Section 8.2.1, the ML-KEM ciphertext may be safely
-      omited.
+      omitted.
 
    *  As discussed in Section 8.2.1, the RSA-KEM ciphertext may be
-      safely omited.
+      safely omitted.
 
    *  As the KDF we use everywhere SHA3-256 or SHA3-512.
 
@@ -579,7 +581,7 @@ Table of Contents
    the OID, two component algorithms, and the combiner function.
 
    EDNOTE: The OID referenced are TBD and MUST be used only for
-   prototyping and replaced with the final IANA-assigned OIDS.  The
+   prototyping and replaced with the final IANA-assigned OIDs.  The
    following prefix is used for each: replace <CompKEM> with the String
    "2.16.840.1.114027.80.5.2".
 
@@ -649,7 +651,7 @@ Table of Contents
    *  _X25519 / X448_: [RFC8410]
 
    EDNOTE: I believe that [SP.800-56Ar3] and [BSI-ECC] give equivalent
-   and interoperable algorithms, so maybe this is extranuous detail to
+   and inter-operable algorithms, so maybe this is extraneous detail to
    include?
 
    The KEM combiners for each algorithm are instantiated as follows
@@ -689,7 +691,7 @@ Table of Contents
     |                                   |              | ss2 || ct2  |
     +-----------------------------------+--------------+-------------+
 
-                   Table 2: KEM Combiner Instattiations
+                   Table 2: KEM Combiner Instantiations
 
    Note that since ML-KEM-768 only claims security equivalent to a
    384-bit hash function, the output of SHA3-512 is truncated to 384
@@ -1139,7 +1141,7 @@ Table of Contents
    deprecated and non-deprecated algorithms.
 
    Since composite algorithms are registered independently of their
-   component algorithms, their deprecation can be handled indpendently
+   component algorithms, their deprecation can be handled independently
    from that of their component algorithms.  For example a cryptographic
    policy might continue to allow id-MLKEM512-ECDH-P256 even after
    ECDH-P256 is deprecated.
@@ -1175,7 +1177,7 @@ Table of Contents
 
 8.2.1.  Ciphertext collision resistance
 
-   The notion of a ciphertext cellision resistant KEM is defined in
+   The notion of a ciphertext collision resistant KEM is defined in
    [X-Wing] being the property that it is computationally difficult to
    find two different ciphertexts that will decapsulate to the same
    shared secret under the same public key.  In [X-Wing] it is proven
@@ -1402,11 +1404,11 @@ B.1.  FIPS certification
    presented in Section 4.3 was chosen to align with [SP.800-56Cr2] for
    this reason.
 
-   Implementors seeking FIPS certification of a composite KEM algorithm
+   Implementers seeking FIPS certification of a composite KEM algorithm
    where only one of the component algorithms has been FIPS-validated or
    FIPS-approved should credit the FIPS-validated component algorithm
    with full security strength, the non-FIPS-validated component
-   algorith with zero security, and the overall composite should be
+   algorithm with zero security, and the overall composite should be
    considered full strength and thus FIPS-approved.
 
    The authors wish to note that this gives composite algorithms great
@@ -1429,8 +1431,8 @@ B.2.  Backwards Compatibility
    systems can be gracefully transitioned to the new technology without
    requiring large service disruptions or expensive upgrades.  The term
    "backwards compatibility" is used here to mean something more
-   specific; that existing systems as they are deployed today can
-   interoperate with the upgraded systems of the future.
+   specific; that existing systems as they are deployed today can inter-
+   operate with the upgraded systems of the future.
 
    These migration and interoperability concerns need to be thought
    about in the context of various types of protocols that make use of
@@ -1479,7 +1481,7 @@ Appendix C.  Intellectual Property Considerations
    EDNOTE TODO: Check with Max Pala whether this IPR actually applies to
    this draft.
 
-Appendix D.  Contributors and Acknowledgements
+Appendix D.  Contributors and Acknowledgments
 
    This document incorporates contributions and comments from a large
    group of experts.  The Editors would especially like to acknowledge
