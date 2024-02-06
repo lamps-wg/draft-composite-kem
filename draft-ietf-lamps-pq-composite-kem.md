@@ -134,7 +134,35 @@ informative:
   I-D.draft-housley-lamps-cms-kemri-02:
   X-Wing:
     title: "X-Wing The Hybrid KEM You’ve Been Looking For"
-    date: 2024-01sm (KEM) algorithms suitable for use within X.509 and PKIX and CMS protocols. Composite algorithms are provided which combine ML-KEM with RSA-KEM, ECDH, X25519, and X448. The provided set of composite algorithms should meet most CMS needs. For use within CMS, this document is intended to be coupled with the CMS KEMRecipientInfo mechanism in {{I-D.housley-lamps-cms-kemri}}.
+    date: 2024-01-09
+    author:
+      -
+        ins: M. Barbosa
+        name: Manuel Barbosa
+      -
+        ins: D. Connolly
+        name: Deirdre Connolly
+      -
+        ins: J. Duarte
+        name: João Diogo Duarte
+      -
+        ins: A. Kaiser
+        name: Aaron Kaiser
+      -
+        ins: P. Schwabe
+        name: Peter Schwabe
+      -
+        ins: K. Varner
+        name: Karolin Varner
+      -
+        ins: B. Westerbaan
+        name: Bas Westerbaan
+    target: https://eprint.iacr.org/2024/039.pdf
+
+
+--- abstract
+
+This document defines Post-Quantum / Traditional composite Key Encapsulation Mechanism (KEM) algorithms suitable for use within X.509 and PKIX and CMS protocols. Composite algorithms are provided which combine ML-KEM with RSA-KEM, ECDH, X25519, and X448. The provided set of composite algorithms should meet most CMS needs. For use within CMS, this document is intended to be coupled with the CMS KEMRecipientInfo mechanism in {{I-D.housley-lamps-cms-kemri}}.
 
 <!-- End of Abstract -->
 
