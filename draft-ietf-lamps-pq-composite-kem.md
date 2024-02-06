@@ -536,22 +536,21 @@ EDNOTE: I believe that [SP.800-56Ar3] and [BSI-ECC] give equivalent and inter-op
 The KEM combiners for each algorithm are instantiated as follows
 
 
-| KEM Type                          | KDF          | KDF Input X            |
-|---------                          | ----------   | -------------          |
-| id-MLKEM512-ECDH-P256             | SHA3-256     | ss1 \|\| ss2 \|\| ct2  |
-| id-MLKEM512-ECDH-brainpoolP256r1  | SHA3-256     | ss1 \|\| ss2 \|\| ct2  |
-| id-MLKEM512-X25519                | SHA3-256     | ss1 \|\| ss2 \|\| ct2  |
-| id-MLKEM512-RSA2048               | SHA3-256     | ss1 \|\| ss2           |
-| id-MLKEM512-RSA3072               | SHA3-256     | ss1 \|\| ss2           |
-| id-MLKEM768-ECDH-P256             | SHA3-512/384 | ss1 \|\| ss2 \|\| ct2  |
-| id-MLKEM768-ECDH-brainpoolP256r1  | SHA3-512/384 | ss1 \|\| ss2 \|\| ct2  |
-| id-MLKEM768-X25519                | SHA3-512/384 | ss1 \|\| ss2 \|\| ct2  |
-| id-MLKEM1024-ECDH-P384            | SHA3-512     | ss1 \|\| ss2 \|\| ct2  |
-| id-MLKEM1024-ECDH-brainpoolP384r1 | SHA3-512     | ss1 \|\| ss2 \|\| ct2  |
-| id-MLKEM1024-X448                 | SHA3-512     | ss1 \|\| ss2 \|\| ct2  |
+| KEM Type                          | KDF      | KDF Input X            |
+|---------                          | -------- | -------------          |
+| id-MLKEM512-ECDH-P256             | SHA3-256 | ss1 \|\| ss2 \|\| ct2  |
+| id-MLKEM512-ECDH-brainpoolP256r1  | SHA3-256 | ss1 \|\| ss2 \|\| ct2  |
+| id-MLKEM512-X25519                | SHA3-256 | ss1 \|\| ss2 \|\| ct2  |
+| id-MLKEM512-RSA2048               | SHA3-256 | ss1 \|\| ss2           |
+| id-MLKEM512-RSA3072               | SHA3-256 | ss1 \|\| ss2           |
+| id-MLKEM768-ECDH-P256             | SHA3-384 | ss1 \|\| ss2 \|\| ct2  |
+| id-MLKEM768-ECDH-brainpoolP256r1  | SHA3-384 | ss1 \|\| ss2 \|\| ct2  |
+| id-MLKEM768-X25519                | SHA3-384 | ss1 \|\| ss2 \|\| ct2  |
+| id-MLKEM1024-ECDH-P384            | SHA3-512 | ss1 \|\| ss2 \|\| ct2  |
+| id-MLKEM1024-ECDH-brainpoolP384r1 | SHA3-512 | ss1 \|\| ss2 \|\| ct2  |
+| id-MLKEM1024-X448                 | SHA3-512 | ss1 \|\| ss2 \|\| ct2  |
 {: #tab-kem-combiner-instantiations title="KEM Combiner Instantiations"}
 
-Note that since ML-KEM-768 only claims security equivalent to a 384-bit hash function, the output of SHA3-512 is truncated to 384 bits to not give a false sense of security to developers using this value.
 
 The tables above contains everything needed to implement the listed explicit composite algorithms, with the exception of some special notes found below in this section. See the ASN.1 module in section {{sec-asn1-module}} for the explicit definitions of the above Composite signature algorithms.
 
