@@ -171,32 +171,9 @@ This document assumes that all component algorithms are KEMs, and therefore it d
 
 --- middle
 
-# Changes in version -01 and -02
+# Changes in version -03
 
-Changes affecting interoperability:
-
-* Re-worked wire format and ASN.1 to remove vestiges of Generics.
-  * Changed all `SEQUENCE OF SIZE (2..MAX)` to `SEQUENCE OF SIZE (2)`.
-  * Changed the definition of `CompositeKEMPublicKey` from `SEQUENCE OF SubjectPublicKeyInfo` to `SEQUENCE OF BIT STRING` since with complete removal of Generic Composites, there is no longer any need to carry the component AlgorithmIdentifiers.
-  * Removed CompositeKEMParams since all params are now explicit in the OID.
-* Defined `KeyGen()`, `Encaps()`, and `Decaps()` for a composite KEM algorithm.
-* Removed the discussion of KeyTrans -> KEM and KeyAgree -> KEM promotions, and instead simply referenced {{I-D.ietf-lamps-rfc5990bis}} and {{I-D.ounsworth-lamps-cms-dhkem}}.
-* Made RSA keys fixed-length at 2048 and 3072, both at the NIST Level 1 / AES-128 security level.
-* Re-worked section 4.1 (id-MLKEM768-RSA3072-KMAC256) to Reference 5990bis and its updated structures.
-* Removed RSA-KEM KDF params and make them implied by the OID; ie provide a profile of 5990bis.
-* Aligned combiner with draft-ounsworth-cfrg-kem-combiners-04.
-* Added id-MLKEM512-RSA2048-KMAC128 so that we have an RSA 2048 option.
-
-Editorial changes:
-
-* Refactored to use MartinThomson github template.
-* Made this document standalone by folding in the minimum necessary content from composite-keys and dropping the cross-reference to composite-sigs.
-* Added a paragraph describing how to reconstitute component SPKIs.
-* Added an Implementation Consideration about FIPS validation where only one component algorithm is FIPS-approved.
-* Shortened the abstract (moved some content into Intro).
-* Brushed up the Security Considerations.
-* Made a proper IANA Considerations section.
-* Rename "Kyber" to "ML-KEM".
+* Added section "Use in CMS".
 
 Still to do in a future version:
 
