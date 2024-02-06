@@ -473,7 +473,7 @@ Each registered composite KEM algorithm must specify the choice of `KDF`, `fixed
 
 See {{sec-cons-kem-combiner}} for further discussion of the security coniserations of this KEM combiner.
 
-However, optimazations may be made in the following ways:
+However, optimizations may be made in the following ways:
 
 * As discussed in {{sec-cons-ct-collision}}, the ML-KEM ciphertext may be safely omited.
 * As discussed in {{sec-cons-ct-collision}}, the RSA-KEM ciphertext may be safely omited.
