@@ -589,7 +589,6 @@ As with the other composite KEM algorithms, when `id-MLKEM512-RSA2048-KMAC128` o
 where:
 
 * `kda-kdf3` is defined in {{I-D.ietf-lamps-rfc5990bis}} which references it from [ANS-X9.44].
-* `mda-shake256` is defined in {{I-D.housley-lamps-cms-sha3-hash}}.
 
 
 # ASN.1 Module {#sec-asn1-module}
