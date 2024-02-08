@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-02-06T01:13:46.800041+00:00",
+  "timestamp": "2024-02-08T01:12:44.733237+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -69,7 +69,7 @@
     {
       "number": 2,
       "id": "I_kwDOKRPFO85wlqMj",
-      "title": "Remove Informative reference to draft-cfrg-kem-combiners",
+      "title": "WGLC issue: Remove Informative reference to draft-cfrg-kem-combiners ?",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/2",
       "state": "OPEN",
       "author": "ounsworth",
@@ -78,7 +78,7 @@
       "labels": [],
       "body": "This is a procedural issue: this draft is adopted by LAMPS, but it depends Informatively on draft-ounsworth-cfrg-kem-combiners, which is not yet adopted by CFRG. That will cause a problem at WGLC.\r\n\r\nI propose to leave this issue for now and revisit it as we approach WGLC.",
       "createdAt": "2023-08-23T21:03:13Z",
-      "updatedAt": "2023-09-10T00:53:29Z",
+      "updatedAt": "2024-02-06T14:22:44Z",
       "closedAt": null,
       "comments": []
     },
@@ -87,31 +87,39 @@
       "id": "I_kwDOKRPFO8506Rus",
       "title": "Add Max, Jan, Scott as co-authors",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/9",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "They are equally part of the author's group.",
       "createdAt": "2023-10-25T13:29:03Z",
-      "updatedAt": "2023-10-25T13:29:03Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2024-02-06T15:33:08Z",
+      "closedAt": "2024-02-06T15:33:08Z",
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Closed by https://github.com/lamps-wg/draft-composite-kem/commit/29abd8be525ad993279667b166571e5e56bfdce2",
+          "createdAt": "2024-02-06T15:33:04Z",
+          "updatedAt": "2024-02-06T15:33:04Z"
+        }
+      ]
     },
     {
       "number": 10,
       "id": "I_kwDOKRPFO851Oimq",
       "title": "Fix references to both id-sha3-256 and mda-shake256",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/10",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "It should be one or the other, but not both.",
       "createdAt": "2023-10-28T21:32:12Z",
-      "updatedAt": "2023-10-28T21:32:27Z",
-      "closedAt": null,
+      "updatedAt": "2024-02-06T15:39:00Z",
+      "closedAt": "2024-02-06T15:39:00Z",
       "comments": []
     },
     {
@@ -127,6 +135,38 @@
       "body": "This draft should define how you take a composite KEM and stuff it into a KEMRI.",
       "createdAt": "2024-02-01T21:18:51Z",
       "updatedAt": "2024-02-01T21:18:51Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 13,
+      "id": "I_kwDOKRPFO85-a9m-",
+      "title": "If the X-Wing PR does not get merged, then re-run aspell",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/13",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "I ran the aspell spell checker on #11 and found some embarrassing spelling mistakes. If that PR is ultimately rejected, then re-run aspell over the main branch. ",
+      "createdAt": "2024-02-06T14:59:43Z",
+      "updatedAt": "2024-02-06T14:59:43Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 16,
+      "id": "I_kwDOKRPFO85-dY23",
+      "title": "I think info should be ASN.1 DER TLV for the combiner OID",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/16",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Motivation: converting the ASCII name of the OID to bytes could be a source interop problems.\r\nComment from Ilari: https://mailarchive.ietf.org/arch/msg/spasm/JUISSb8kzHvly6iwEaY4jYGG_yE/",
+      "createdAt": "2024-02-06T20:42:51Z",
+      "updatedAt": "2024-02-06T20:42:52Z",
       "closedAt": null,
       "comments": []
     }
@@ -394,18 +434,26 @@
       "labels": [],
       "body": "",
       "createdAt": "2024-01-27T22:50:55Z",
-      "updatedAt": "2024-02-03T16:03:00Z",
+      "updatedAt": "2024-02-06T20:45:58Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "d6a1ebdc2a5b920fbbd20f1cc33410304471e3c3",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_xwing",
-      "headRefOid": "e206720c34994ef0978353896dc5dfbab86e618e",
+      "headRefOid": "645d48bf9cf22be1d1eda1f7cd8c7a28a617f6c7",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Closes #13 ",
+          "createdAt": "2024-02-06T14:59:53Z",
+          "updatedAt": "2024-02-06T14:59:53Z"
+        }
+      ],
       "reviews": [
         {
           "id": "PRR_kwDOKRPFO85uG_7x",
@@ -484,6 +532,99 @@
               "body": "This is a good question, not sure yet",
               "createdAt": "2024-01-28T09:54:15Z",
               "updatedAt": "2024-01-28T09:54:19Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO85vL6sc",
+          "commit": {
+            "abbreviatedOid": "5fb7140"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-02-06T14:33:41Z",
+          "updatedAt": "2024-02-06T14:33:41Z",
+          "comments": [
+            {
+              "originalPosition": 39,
+              "body": "Good catch. Fixed.",
+              "createdAt": "2024-02-06T14:33:41Z",
+              "updatedAt": "2024-02-06T14:33:41Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 14,
+      "id": "PR_kwDOKRPFO85mKTX8",
+      "title": "Changed title from 'Internet PKI' to 'PKIX and CMS'. Closes #1",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/14",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-02-06T15:48:58Z",
+      "updatedAt": "2024-02-06T15:48:58Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "cad051fe5dbcc17e8e4004bfd1c5333b9d47749f",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_sf_comments",
+      "headRefOid": "0a978937cc7192e6dea167eec971384282ab1423",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 15,
+      "id": "PR_kwDOKRPFO85mL58Q",
+      "title": "Added a Use In CMS section",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/15",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Adding this section here avoids the need for a wrapper draft telling you how to use composite KEM in CMS.\r\n\r\nCloses #12 ",
+      "createdAt": "2024-02-06T20:03:04Z",
+      "updatedAt": "2024-02-06T20:40:05Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "cad051fe5dbcc17e8e4004bfd1c5333b9d47749f",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_use_in_cms",
+      "headRefOid": "abebe14f1bd697181e6e8020ce9b1c000462233f",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO85vPR3s",
+          "commit": {
+            "abbreviatedOid": "abebe14"
+          },
+          "author": "job",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-02-06T20:40:04Z",
+          "updatedAt": "2024-02-06T20:40:05Z",
+          "comments": [
+            {
+              "originalPosition": 72,
+              "body": "Typo: \u201cwith with\u201d",
+              "createdAt": "2024-02-06T20:40:05Z",
+              "updatedAt": "2024-02-06T20:40:05Z"
             }
           ]
         }
