@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 9 August 2024                                           M. Pala
+Expires: 11 August 2024                                          M. Pala
                                                                   OpenCA
                                                             J. Klaussner
                                                             D-Trust GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                         6 February 2024
+                                                         8 February 2024
 
 
                  Composite KEM For Use In Internet PKI
@@ -21,7 +21,7 @@ Abstract
 
    This document defines Post-Quantum / Traditional composite Key
    Encapsulation Mechanism (KEM) algorithms suitable for use within
-   X.509 and PKIX and CMS protocols.  Composite algorithms are provided
+   X.509, PKIX and CMS protocols.  Composite algorithms are provided
    which combine ML-KEM with RSA-KEM and ECDH-KEM.  The provided set of
    composite algorithms should meet most Internet needs.
 
@@ -66,7 +66,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 9 August 2024.
+   This Internet-Draft will expire on 11 August 2024.
 
 Copyright Notice
 
