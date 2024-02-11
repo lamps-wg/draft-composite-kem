@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-02-08T01:12:44.733237+00:00",
+  "timestamp": "2024-02-11T01:18:49.328622+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -167,6 +167,22 @@
       "body": "Motivation: converting the ASCII name of the OID to bytes could be a source interop problems.\r\nComment from Ilari: https://mailarchive.ietf.org/arch/msg/spasm/JUISSb8kzHvly6iwEaY4jYGG_yE/",
       "createdAt": "2024-02-06T20:42:51Z",
       "updatedAt": "2024-02-06T20:42:52Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 17,
+      "id": "I_kwDOKRPFO85-0YTv",
+      "title": "Copy the Key Usage section from composite-sigs",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/17",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-02-09T18:31:50Z",
+      "updatedAt": "2024-02-09T18:31:50Z",
       "closedAt": null,
       "comments": []
     }
@@ -434,7 +450,7 @@
       "labels": [],
       "body": "",
       "createdAt": "2024-01-27T22:50:55Z",
-      "updatedAt": "2024-02-06T20:45:58Z",
+      "updatedAt": "2024-02-08T18:12:55Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "d6a1ebdc2a5b920fbbd20f1cc33410304471e3c3",
@@ -552,6 +568,26 @@
               "body": "Good catch. Fixed.",
               "createdAt": "2024-02-06T14:33:41Z",
               "updatedAt": "2024-02-06T14:33:41Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO85vhC6P",
+          "commit": {
+            "abbreviatedOid": "5fb7140"
+          },
+          "author": "csosto-pk",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-02-08T18:12:55Z",
+          "updatedAt": "2024-02-08T18:12:55Z",
+          "comments": [
+            {
+              "originalPosition": 257,
+              "body": "> Similarly, RSA-KEM {{I-D.ietf-lamps-rfc5990bis}} is a bijective map between the shared secret `Z` and the ciphertext `C` and so is naturally immune to ciphertext collision. This leaves only ECDH, X25519 and X448 which are not ciphertext collision resistant and for which the ciphertexts need to be included in the derivation of the shared secret.\r\n\r\nI am not sure I get that. Why is RSA-KEM in rfc5990bis CCR?\r\n\r\nrfc5990bis defines\r\n\r\n```\r\nCEK <-  random 256-bits\r\nz <-$ [0, n);\r\nc <- z^e mod n;\r\nWK <- ENCRYPT(KDF(z), CEK);\r\nCC <- (WK, c)\r\nRSA-ENCAPS(pubkey=(e,n)) :=  (CC, CEK) \r\n```\r\n\r\nSomeone that can break `c` or `WK` can produce a different `CC'` which leads to the same `CEK` by producing a different value of  `c`. ML-KEM did not have that issue because there is only one random `m` used for the encapsulation.\r\n\r\n",
+              "createdAt": "2024-02-08T18:12:55Z",
+              "updatedAt": "2024-02-08T18:12:55Z"
             }
           ]
         }
