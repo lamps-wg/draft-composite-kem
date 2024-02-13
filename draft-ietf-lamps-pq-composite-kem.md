@@ -157,6 +157,20 @@ informative:
   I-D.draft-ietf-lamps-kyber-certificates-01:
   I-D.draft-becker-guthrie-noncomposite-hybrid-auth-00:
   I-D.draft-housley-lamps-cms-kemri-02:
+  BSI2021:
+    title: "Quantum-safe cryptography - fundamentals, current developments and recommendations"
+    target: https://www.bsi.bund.de/SharedDocs/Downloads/EN/BSI/Publications/Brochure/quantum-safe-cryptography.pdf
+    author:
+      - org: "Federal Office for Information Security (BSI)"
+    date: October 2021
+  ANSSI2024:
+    title: "Position Paper on Quantum Key Distribution"
+    target: https://cyber.gouv.fr/sites/default/files/document/Quantum_Key_Distribution_Position_Paper.pdf
+    author:
+      - org: "French Cybersecurity Agency (ANSSI)"
+      - org: "Federal Office for Information Security (BSI)"
+      - org: "Netherlands National Communications Security Agency (NLNCSA)"
+      - org: "Swedish National Communications Security Authority, Swedish Armed Forces"
 
 
 --- abstract
@@ -173,6 +187,7 @@ This document assumes that all component algorithms are KEMs, and therefore it d
 # Changes in version -03
 
 * Added Max Pala, Jan Klaußner, and Scott Fluhrer as authors.
+* Added text to Introduction to justify where and why this mechanism would be used.
 
 Still to do in a future version:
 
@@ -185,6 +200,25 @@ Still to do in a future version:
 The migration to post-quantum cryptography is unique in the history of modern digital cryptography in that neither the old outgoing nor the new incoming algorithms are fully trusted to protect data for long data lifetimes. The outgoing algorithms, such as RSA and elliptic curve, may fall to quantum cryptalanysis, while the incoming post-quantum algorithms face uncertainty about both the underlying mathematics falling to classical algorithmic attacks as well as hardware and software implementations that have not had sufficient maturing time to rule out catestrophic implementation bugs. Unlike previous cryptographic algorithm migrations, the choice of when to migrate and which algorithms to migrate to, is not so clear.
 
 Cautious implementers may wish to combine cryptographic algorithms such that an attacker would need to break all of them in order to compromise the data being protected. Such mechanisms are referred to as Post-Quantum / Traditional Hybrids {{I-D.driscoll-pqt-hybrid-terminology}}.
+
+In particular, certain jurisdictions are recommending or requiring that PQC lattice schemes only be used within in a PQ/T hybrid. As an example, we point to [BSI2021] which includes the following recommendation:
+
+"Therefore, quantum computer-resistant methods should
+not be used alone - at least in a transitional period - but
+only in hybrid mode, i.e. in combination with a classical
+method. For this purpose, protocols must be modified
+or supplemented accordingly. In addition, public key
+infrastructures, for example, must also be adapted"
+
+In addition, [BSI2021] specifically references this specification as a concrete example of hybrid X.509 certificates.
+
+A more recent example is [ANSSI2024], a document co-authored by French Cybersecurity Agency (ANSSI),
+Federal Office for Information Security (BSI), Netherlands National Communications Security Agency (NLNCSA), and
+Swedish National Communications Security Authority, Swedish Armed Forces which makes the following statement:
+
+“In light of the urgent need to stop relying only on quantum-vulnerable public-key cryptography for key establishment, the clear priority should therefore be the migration to post-quantum cryptography in hybrid solutions”
+
+This specification represents the straightforward implementation of the hybrid solutions called for by European cyber security agencies.
 
 PQ/T Hybrid cryptography can, in general, provide solutions to two migration problems:
 
