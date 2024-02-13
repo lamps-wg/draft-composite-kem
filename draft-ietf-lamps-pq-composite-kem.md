@@ -412,6 +412,14 @@ CompositeKEMPublicKeyBs ::= BIT STRING (CONTAINING CompositeKEMPublicKey ENCODED
 
 
 
+## Key Usage Bits
+
+For protocols such as X.509 [RFC5280] that specify key usage along with the public key, then the composite public key associated with a composite KEM algorithm MUST have a `keyEncipherment` key usage.
+
+Since KEM keys cannot perform digital signatures, they MUST NOT appear in Certification Authority (CA) certificates.
+
+
+
 # Composite KEM Structures
 
 ## kema-CompositeKEM {#sec-kema-CompositeKEM}
