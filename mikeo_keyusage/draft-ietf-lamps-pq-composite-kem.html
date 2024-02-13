@@ -1602,7 +1602,11 @@ CompositeKEMPublicKeyBs ::= BIT STRING (CONTAINING CompositeKEMPublicKey ENCODED
         <h3 id="name-key-usage-bits">
 <a href="#section-3.5" class="section-number selfRef">3.5. </a><a href="#name-key-usage-bits" class="section-name selfRef">Key Usage Bits</a>
         </h3>
-<p id="section-3.5-1">For protocols such as X.509 <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> that specify key usage along with the public key, then the composite public key associated with a composite KEM algorithm MUST have a <code>keyEncipherment</code> key usage.<a href="#section-3.5-1" class="pilcrow">¶</a></p>
+<p id="section-3.5-1">For protocols such as X.509 <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> that specify key usage along with the public key, then the composite public key associated with a composite KEM algorithm MUST have a <code>keyEncipherment</code> key usage.
+This is because the composite public key can only be used in situations
+that are appropriate for both component algorithms, so even if the
+classical component key supports both signing and encryption,
+the post-quantum algorithms do not.<a href="#section-3.5-1" class="pilcrow">¶</a></p>
 <p id="section-3.5-2">Since KEM keys cannot perform digital signatures, they MUST NOT appear in Certification Authority (CA) certificates.<a href="#section-3.5-2" class="pilcrow">¶</a></p>
 </section>
 </div>
