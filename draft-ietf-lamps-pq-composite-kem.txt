@@ -6,7 +6,7 @@ LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
 Expires: 17 August 2024                                          M. Pala
-                                                                  OpenCA
+                                                             OpenCA Labs
                                                             J. Klaussner
                                                             D-Trust GmbH
                                                               S. Fluhrer
@@ -1540,7 +1540,7 @@ Authors' Addresses
 
 
    Massimiliano Pala
-   OpenCA
+   OpenCA Labs
    858 Coal Creek Cir
    Louisville, Colorado,  80027
    United States of America
