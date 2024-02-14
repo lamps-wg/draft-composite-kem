@@ -1041,7 +1041,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Ounsworth, et al.</td>
-<td class="center">Expires 16 August 2024</td>
+<td class="center">Expires 17 August 2024</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1054,12 +1054,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-lamps-pq-composite-kem-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2024-02-13" class="published">13 February 2024</time>
+<time datetime="2024-02-14" class="published">14 February 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2024-08-16">16 August 2024</time></dd>
+<dd class="expires"><time datetime="2024-08-17">17 August 2024</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1126,7 +1126,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 16 August 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 17 August 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1795,7 +1795,7 @@ Combiner(ct1, ss1, ct2, ss2, "id-MLKEM512-ECDH-P256-KMAC128") =
         </caption>
 <thead>
           <tr>
-            <th class="text-left" rowspan="1" colspan="1">KEM Type OID</th>
+            <th class="text-left" rowspan="1" colspan="1">Composite KEM OID</th>
             <th class="text-left" rowspan="1" colspan="1">OID</th>
             <th class="text-left" rowspan="1" colspan="1">First Algorithm</th>
             <th class="text-left" rowspan="1" colspan="1">Second Algorithm</th>
@@ -1948,7 +1948,7 @@ Combiner(ct1, ss1, ct2, ss2, "id-MLKEM512-ECDH-P256-KMAC128") =
             <p id="section-6.1-6.1.1"><code>kda-kdf3</code> is defined in <span>[<a href="#I-D.ietf-lamps-rfc5990bis" class="cite xref">I-D.ietf-lamps-rfc5990bis</a>]</span> which references it from <span>[<a href="#ANS-X9.44" class="cite xref">ANS-X9.44</a>]</span>.<a href="#section-6.1-6.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-6.1-6.2">
-            <p id="section-6.1-6.2.1"><code>id-sha3-256</code> is defined in <span>[<a href="#I-D.housley-lamps-cms-sha3-hash" class="cite xref">I-D.housley-lamps-cms-sha3-hash</a>]</span> which references it from <span>[<a href="#SHA3" class="cite xref">SHA3</a>]</span>.<a href="#section-6.1-6.2.1" class="pilcrow">¶</a></p>
+            <p id="section-6.1-6.2.1"><code>id-sha3-256</code> is defined in <span>[<a href="#I-D.ietf-lamps-cms-sha3-hash" class="cite xref">I-D.ietf-lamps-cms-sha3-hash</a>]</span> which references it from <span>[<a href="#SHA3" class="cite xref">SHA3</a>]</span>.<a href="#section-6.1-6.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
@@ -1960,16 +1960,101 @@ Combiner(ct1, ss1, ct2, ss2, "id-MLKEM512-ECDH-P256-KMAC128") =
       <h2 id="name-use-in-cms">
 <a href="#section-7" class="section-number selfRef">7. </a><a href="#name-use-in-cms" class="section-name selfRef">Use in CMS</a>
       </h2>
-<p id="section-7-1">Composite KEM algorithms MAY be employed for one or more recipients in the CMS enveloped-data content type <span>[<a href="#RFC5652" class="cite xref">RFC5652</a>]</span>, the CMS authenticated-data content type <span>[<a href="#RFC5652" class="cite xref">RFC5652</a>]</span>, or the CMS authenticated-enveloped-data content type <span>[<a href="#RFC5083" class="cite xref">RFC5083</a>]</span>. In each case, the KEMRecipientInfo [I-D.ietf-lamps-cms-kemri] is used with the chosen composite KEM Algorithm to securely transfer the content-encryption key from the originator to the recipient.<a href="#section-7-1" class="pilcrow">¶</a></p>
+<p id="section-7-1">EDNOTE: The convention in LAMPS is to specify algorithms and their CMS conventions in separate documents. Here we have presented them in the same document, but this section has been written so that it can easily be moved to a standalone document.<a href="#section-7-1" class="pilcrow">¶</a></p>
+<p id="section-7-2">Composite KEM algorithms MAY be employed for one or more recipients in the CMS enveloped-data content type <span>[<a href="#RFC5652" class="cite xref">RFC5652</a>]</span>, the CMS authenticated-data content type <span>[<a href="#RFC5652" class="cite xref">RFC5652</a>]</span>, or the CMS authenticated-enveloped-data content type <span>[<a href="#RFC5083" class="cite xref">RFC5083</a>]</span>. In each case, the KEMRecipientInfo [I-D.ietf-lamps-cms-kemri] is used with the chosen composite KEM Algorithm to securely transfer the content-encryption key from the originator to the recipient.<a href="#section-7-2" class="pilcrow">¶</a></p>
 <div id="underlying-components">
 <section id="section-7.1">
         <h3 id="name-underlying-components">
 <a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-underlying-components" class="section-name selfRef">Underlying Components</a>
         </h3>
 <p id="section-7.1-1">A CMS implementation that supports a composite KEM algorithm MUST support at least the following underlying components:<a href="#section-7.1-1" class="pilcrow">¶</a></p>
-<p id="section-7.1-2">For the key-derivation function, an implementation MUST support KDF3 <span>[<a href="#ANS-X9.44" class="cite xref">ANS-X9.44</a>]</span> with id-sha3-256 <span>[<a href="#I-D.housley-lamps-cms-sha3-hash" class="cite xref">I-D.housley-lamps-cms-sha3-hash</a>]</span>.<a href="#section-7.1-2" class="pilcrow">¶</a></p>
-<p id="section-7.1-3">For key-wrapping, an implementation MUST support the AES-Wrap-128 [RFC3394] key-encryption algorithm.<a href="#section-7.1-3" class="pilcrow">¶</a></p>
+<p id="section-7.1-2">For the key-derivation function, an implementation MUST support <code>id-alg-hkdf-with-sha3-256</code> <span>[<a href="#I-D.ietf-lamps-cms-sha3-hash" class="cite xref">I-D.ietf-lamps-cms-sha3-hash</a>]</span>.<a href="#section-7.1-2" class="pilcrow">¶</a></p>
+<p id="section-7.1-3">For key-wrapping, an implementation MUST support the AES-Wrap-128 <span>[<a href="#RFC3394" class="cite xref">RFC3394</a>]</span> key-encryption algorithm.<a href="#section-7.1-3" class="pilcrow">¶</a></p>
 <p id="section-7.1-4">An implementation MAY also support other key-derivation functions and other key-encryption algorithms as well.<a href="#section-7.1-4" class="pilcrow">¶</a></p>
+<p id="section-7.1-5">The following table lists the RECOMMENDED KDF and WRAP algorithms to preserve security and performance characteristics of each composite algorithm.<a href="#section-7.1-5" class="pilcrow">¶</a></p>
+<span id="name-recommended-pairings-for-cm"></span><div id="tab-cms-kdf-wrap">
+<table class="center" id="table-4">
+          <caption>
+<a href="#table-4" class="selfRef">Table 4</a>:
+<a href="#name-recommended-pairings-for-cm" class="selfRef">RECOMMENDED pairings for CMS KDF and WRAP</a>
+          </caption>
+<thead>
+            <tr>
+              <th class="text-left" rowspan="1" colspan="1">Composite KEM OID</th>
+              <th class="text-left" rowspan="1" colspan="1">KDF</th>
+              <th class="text-left" rowspan="1" colspan="1">WRAP</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">id-MLKEM512-ECDH-P256-KMAC128</td>
+              <td class="text-left" rowspan="1" colspan="1">id-alg-hkdf-with-sha3-256</td>
+              <td class="text-left" rowspan="1" colspan="1">id-aes128-Wrap</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">id-MLKEM512-ECDH-brainpoolP256r1-KMAC128</td>
+              <td class="text-left" rowspan="1" colspan="1">id-alg-hkdf-with-sha3-256</td>
+              <td class="text-left" rowspan="1" colspan="1">id-aes128-Wrap</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">id-MLKEM512-X25519-KMAC128</td>
+              <td class="text-left" rowspan="1" colspan="1">id-alg-hkdf-with-sha3-256</td>
+              <td class="text-left" rowspan="1" colspan="1">id-aes128-Wrap</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">id-MLKEM512-RSA2048-KMAC128</td>
+              <td class="text-left" rowspan="1" colspan="1">id-alg-hkdf-with-sha3-256</td>
+              <td class="text-left" rowspan="1" colspan="1">id-aes128-Wrap</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">id-MLKEM512-RSA3072-KMAC128</td>
+              <td class="text-left" rowspan="1" colspan="1">id-alg-hkdf-with-sha3-256</td>
+              <td class="text-left" rowspan="1" colspan="1">id-aes128-Wrap</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-ECDH-P256-KMAC256</td>
+              <td class="text-left" rowspan="1" colspan="1">id-alg-hkdf-with-sha3-384</td>
+              <td class="text-left" rowspan="1" colspan="1">id-aes192-Wrap</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-ECDH-brainpoolP256r1-KMAC256</td>
+              <td class="text-left" rowspan="1" colspan="1">id-alg-hkdf-with-sha3-384</td>
+              <td class="text-left" rowspan="1" colspan="1">id-aes192-Wrap</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-X25519-KMAC256</td>
+              <td class="text-left" rowspan="1" colspan="1">id-alg-hkdf-with-sha3-384</td>
+              <td class="text-left" rowspan="1" colspan="1">id-aes192-Wrap</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">id-MLKEM1024-ECDH-P384-KMAC256</td>
+              <td class="text-left" rowspan="1" colspan="1">id-alg-hkdf-with-sha3-512</td>
+              <td class="text-left" rowspan="1" colspan="1">id-aes256-Wrap</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">id-MLKEM1024-ECDH-brainpoolP384r1-KMAC256</td>
+              <td class="text-left" rowspan="1" colspan="1">id-alg-hkdf-with-sha3-512</td>
+              <td class="text-left" rowspan="1" colspan="1">id-aes256-Wrap</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">id-MLKEM1024-X448-KMAC256</td>
+              <td class="text-left" rowspan="1" colspan="1">id-alg-hkdf-with-sha3-512</td>
+              <td class="text-left" rowspan="1" colspan="1">id-aes256-Wrap</td>
+            </tr>
+          </tbody>
+        </table>
+</div>
+<p id="section-7.1-7">where:<a href="#section-7.1-7" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-7.1-8.1">
+            <p id="section-7.1-8.1.1"><code>id-alg-hkdf-with-sha3-*</code> are defined in <span>[<a href="#I-D.ietf-lamps-cms-sha3-hash" class="cite xref">I-D.ietf-lamps-cms-sha3-hash</a>]</span>.<a href="#section-7.1-8.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-7.1-8.2">
+            <p id="section-7.1-8.2.1"><code>id-aes*-Wrap</code> are defined in <span>[<a href="#RFC3394" class="cite xref">RFC3394</a>]</span>.<a href="#section-7.1-8.2.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-7.1-9">Implementors MAY safely substutite stronger KDF and WRAP algorithms than those indicated; for example <code>id-alg-hkdf-with-sha3-512</code> and <code>id-aes256-Wrap</code> MAY be safely used in place of <code>id-alg-hkdf-with-sha3-384</code>and <code>id-aes192-Wrap</code>, for example, where SHA3-384 or AES-192 are not supported.<a href="#section-7.1-9" class="pilcrow">¶</a></p>
+<p id="section-7.1-10">Implementors MAY salefy substitute different symmetric algorithms of equivalent strength. For example SHA-3 MAY be replaced by the equivalent strength SHA-2, or the HKDF-based algorithms MAY be replaced by an equivalent strength KDF based on a different construction, such as KDF3.<a href="#section-7.1-10" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="recipientinfo-conventions">
@@ -2551,9 +2636,9 @@ If <code>ss_i</code> or <code>ct_i</code> are not guaranteed to have constant le
         <dd>
 <span class="refAuthor">National Institute of Standards and Technology (NIST)</span>, <span class="refTitle">"Module-Lattice-based Key-Encapsulation Mechanism Standard"</span>, <time datetime="2023-08" class="refDate">August 2023</time>, <span>&lt;<a href="https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.203.ipd.pdf">https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.203.ipd.pdf</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="I-D.housley-lamps-cms-sha3-hash">[I-D.housley-lamps-cms-sha3-hash]</dt>
+<dt id="I-D.ietf-lamps-cms-sha3-hash">[I-D.ietf-lamps-cms-sha3-hash]</dt>
         <dd>
-<span class="refAuthor">Housley, R.</span>, <span class="refTitle">"Use of the SHA3 One-way Hash Functions in the Cryptographic Message Syntax (CMS)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-housley-lamps-cms-sha3-hash-01</span>, <time datetime="2023-10-02" class="refDate">2 October 2023</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-housley-lamps-cms-sha3-hash-01">https://datatracker.ietf.org/doc/html/draft-housley-lamps-cms-sha3-hash-01</a>&gt;</span>. </dd>
+<span class="refAuthor">Housley, R.</span>, <span class="refTitle">"Use of the SHA3 One-way Hash Functions in the Cryptographic Message Syntax (CMS)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-lamps-cms-sha3-hash-00</span>, <time datetime="2023-11-28" class="refDate">28 November 2023</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-lamps-cms-sha3-hash-00">https://datatracker.ietf.org/doc/html/draft-ietf-lamps-cms-sha3-hash-00</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.ietf-lamps-rfc5990bis">[I-D.ietf-lamps-rfc5990bis]</dt>
         <dd>
@@ -2566,6 +2651,10 @@ If <code>ss_i</code> or <code>ct_i</code> are not guaranteed to have constant le
 <dt id="RFC2119">[RFC2119]</dt>
         <dd>
 <span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc2119">https://www.rfc-editor.org/info/rfc2119</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC3394">[RFC3394]</dt>
+        <dd>
+<span class="refAuthor">Schaad, J.</span> and <span class="refAuthor">R. Housley</span>, <span class="refTitle">"Advanced Encryption Standard (AES) Key Wrap Algorithm"</span>, <span class="seriesInfo">RFC 3394</span>, <span class="seriesInfo">DOI 10.17487/RFC3394</span>, <time datetime="2002-09" class="refDate">September 2002</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc3394">https://www.rfc-editor.org/info/rfc3394</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC5280">[RFC5280]</dt>
         <dd>
