@@ -53,7 +53,7 @@ author:
     -
       ins: M. Pala
       fullname: Massimiliano Pala
-      org: OpenCA
+      org: OpenCA Labs
       street: 858 Coal Creek Cir
       city: Louisville, Colorado
       country: United States of America
