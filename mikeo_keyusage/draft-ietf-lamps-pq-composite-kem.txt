@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 16 August 2024                                          M. Pala
+Expires: 17 August 2024                                          M. Pala
                                                                   OpenCA
                                                             J. Klaussner
                                                             D-Trust GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                        13 February 2024
+                                                        14 February 2024
 
 
                  Composite KEM For Use In Internet PKI
@@ -66,7 +66,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 16 August 2024.
+   This Internet-Draft will expire on 17 August 2024.
 
 Copyright Notice
 
@@ -478,14 +478,12 @@ Table of Contents
 
    For protocols such as X.509 [RFC5280] that specify key usage along
    with the public key, then the composite public key associated with a
-   composite KEM algorithm MUST have a keyEncipherment key usage.  This
-   is because the composite public key can only be used in situations
-   that are appropriate for both component algorithms, so even if the
-   classical component key supports both signing and encryption, the
-   post-quantum algorithms do not.
-
-   Since KEM keys cannot perform digital signatures, they MUST NOT
-   appear in Certification Authority (CA) certificates.
+   composite KEM algorithm MUST contain only a keyEncipherment key
+   usage, all other key usages MUST NOT be used.  This is because the
+   composite public key can only be used in situations that are
+   appropriate for both component algorithms, so even if the classical
+   component key supports both signing and encryption, the post-quantum
+   algorithms do not.
 
 4.  Composite KEM Structures
 
