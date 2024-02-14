@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 11 August 2024                                          M. Pala
+Expires: 17 August 2024                                          M. Pala
                                                                   OpenCA
                                                             J. Klaussner
                                                             D-Trust GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                         8 February 2024
+                                                        14 February 2024
 
 
                  Composite KEM For Use In Internet PKI
@@ -66,7 +66,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 11 August 2024.
+   This Internet-Draft will expire on 17 August 2024.
 
 Copyright Notice
 
@@ -132,6 +132,9 @@ Table of Contents
 
    *  Added Max Pala, Jan Klaussner, and Scott Fluhrer as authors.
 
+   *  Added text to Introduction to justify where and why this mechanism
+      would be used.
+
    Still to do in a future version:
 
    [ ] We need PEM samples ... 118 hackathon?  OQS friends?  David @ BC?
@@ -159,6 +162,34 @@ Table of Contents
    compromise the data being protected.  Such mechanisms are referred to
    as Post-Quantum / Traditional Hybrids
    [I-D.driscoll-pqt-hybrid-terminology].
+
+   In particular, certain jurisdictions are recommending or requiring
+   that PQC lattice schemes only be used within a PQ/T hybrid.  As an
+   example, we point to [BSI2021] which includes the following
+   recommendation:
+
+   "Therefore, quantum computer-resistant methods should not be used
+   alone - at least in a transitional period - but only in hybrid mode,
+   i.e. in combination with a classical method.  For this purpose,
+   protocols must be modified or supplemented accordingly.  In addition,
+   public key infrastructures, for example, must also be adapted"
+
+   In addition, [BSI2021] specifically references this specification as
+   a concrete example of hybrid X.509 certificates.
+
+   A more recent example is [ANSSI2024], a document co-authored by
+   French Cybersecurity Agency (ANSSI), Federal Office for Information
+   Security (BSI), Netherlands National Communications Security Agency
+   (NLNCSA), and Swedish National Communications Security Authority,
+   Swedish Armed Forces which makes the following statement:
+
+   "In light of the urgent need to stop relying only on quantum-
+   vulnerable public-key cryptography for key establishment, the clear
+   priority should therefore be the migration to post-quantum
+   cryptography in hybrid solutions"
+
+   This specification represents the straightforward implementation of
+   the hybrid solutions called for by European cyber security agencies.
 
    PQ/T Hybrid cryptography can, in general, provide solutions to two
    migration problems:
@@ -1252,6 +1283,21 @@ Table of Contents
               (DER)", ISO/IEC 8825-1:2015, November 2015.
 
 10.2.  Informative References
+
+   [ANSSI2024]
+              French Cybersecurity Agency (ANSSI), Federal Office for
+              Information Security (BSI), Netherlands National
+              Communications Security Agency (NLNCSA), and Swedish
+              National Communications Security Authority, Swedish Armed
+              Forces, "Position Paper on Quantum Key Distribution",
+              n.d., <https://cyber.gouv.fr/sites/default/files/document/
+              Quantum_Key_Distribution_Position_Paper.pdf>.
+
+   [BSI2021]  Federal Office for Information Security (BSI), "Quantum-
+              safe cryptography - fundamentals, current developments and
+              recommendations", October 2021,
+              <https://www.bsi.bund.de/SharedDocs/Downloads/EN/BSI/
+              Publications/Brochure/quantum-safe-cryptography.pdf>.
 
    [I-D.becker-guthrie-noncomposite-hybrid-auth]
               Becker, A., Guthrie, R., and M. J. Jenkins, "Non-Composite
