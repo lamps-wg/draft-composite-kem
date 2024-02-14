@@ -1,5 +1,5 @@
 ---
-title: Composite KEM For Use In Internet PKI
+title: Composite KEM For Use In PKIX and CMS
 abbrev: Composite KEMs
 docname: draft-ietf-lamps-pq-composite-kem-latest
 
