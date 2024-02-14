@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 16 August 2024                                          M. Pala
+Expires: 17 August 2024                                          M. Pala
                                                                   OpenCA
                                                             J. Klaussner
                                                             D-Trust GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                        13 February 2024
+                                                        14 February 2024
 
 
                  Composite KEM For Use In Internet PKI
@@ -66,7 +66,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 16 August 2024.
+   This Internet-Draft will expire on 17 August 2024.
 
 Copyright Notice
 
@@ -164,7 +164,7 @@ Table of Contents
    [I-D.driscoll-pqt-hybrid-terminology].
 
    In particular, certain jurisdictions are recommending or requiring
-   that PQC lattice schemes only be used within in a PQ/T hybrid.  As an
+   that PQC lattice schemes only be used within a PQ/T hybrid.  As an
    example, we point to [BSI2021] which includes the following
    recommendation:
 
