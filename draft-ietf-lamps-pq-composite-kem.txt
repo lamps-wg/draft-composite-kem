@@ -14,7 +14,7 @@ Expires: 17 August 2024                                          M. Pala
                                                         14 February 2024
 
 
-                 Composite KEM For Use In Internet PKI
+                 Composite KEM For Use In PKIX and CMS
                 draft-ietf-lamps-pq-composite-kem-latest
 
 Abstract
