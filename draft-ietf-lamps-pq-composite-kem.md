@@ -414,15 +414,11 @@ CompositeKEMPublicKeyBs ::= BIT STRING (CONTAINING CompositeKEMPublicKey ENCODED
 
 ## Key Usage Bits
 
-For protocols such as X.509 [RFC5280] that specify key usage along with the public key, then the composite public key associated with a composite KEM algorithm MUST have a `keyEncipherment` key usage.
+For protocols such as X.509 [RFC5280] that specify key usage along with the public key, then the composite public key associated with a composite KEM algorithm MUST contain only a `keyEncipherment` key usage, all other key usages MUST NOT be used.
 This is because the composite public key can only be used in situations
 that are appropriate for both component algorithms, so even if the
 classical component key supports both signing and encryption,
 the post-quantum algorithms do not.
-
-
-Since KEM keys cannot perform digital signatures, they MUST NOT appear in Certification Authority (CA) certificates.
-
 
 
 # Composite KEM Structures
