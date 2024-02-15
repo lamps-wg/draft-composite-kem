@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-02-13T01:14:11.455224+00:00",
+  "timestamp": "2024-02-15T01:13:54.674229+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -55,15 +55,15 @@
       "id": "I_kwDOKRPFO85wlqLV",
       "title": "Comments from Stephen Ferrell",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/1",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "(June 20, 2023)\r\n\r\nA couple of specific comments in case those help:\r\n\r\n    the title refers to \"Internet PKI\" so I don't know if it\r\n    will in fact be possible to usefully unwind this from the\r\n    other composite drafts\r\n\r\n[[MO]] We haven't changed the title since draft-ounsworth-pq-composite-sigs-00 in 2019. Happy to change that.\r\n\r\n    describing this as layering seems wrong\r\n\r\n    kema-CompositeKEM and the other ASN.1 structures seem very\r\n    complex and overly-generic\r\n    [[MO]] It's really just machinery to make the ASN.1 module shorter. Without it, the module would be many hundreds of lines longer. We can unroll it if that's the will of the WG.\r\n\r\n    PUBLIC-KEYS in table 1 refers to signatures, I didn't get\r\n    why?\r\n    [[MO]] copy&paste error. Thanks.\r\n\r\n    section 7.2 (\"OR\" modes) seems odd\r\n    [[MO]] OR modes are now covered by draft-pala-klaussner-composite-kofn; that section should have been removed.\r\n\r\n    appendix C confused me: this I-D has no IPR declaration\r\n    but states that an IPR declaration \"relates\" to this\r\n    draft\r\n    [[MO]] There's IPR on draft-ounsworth-pq-composite-sigs, which probably applies to all three drafts.\r\n",
       "createdAt": "2023-08-23T21:04:10Z",
-      "updatedAt": "2023-09-10T00:53:02Z",
-      "closedAt": null,
+      "updatedAt": "2024-02-14T15:44:01Z",
+      "closedAt": "2024-02-14T15:44:01Z",
       "comments": []
     },
     {
@@ -166,24 +166,32 @@
       "labels": [],
       "body": "Motivation: converting the ASCII name of the OID to bytes could be a source interop problems.\r\nComment from Ilari: https://mailarchive.ietf.org/arch/msg/spasm/JUISSb8kzHvly6iwEaY4jYGG_yE/",
       "createdAt": "2024-02-06T20:42:51Z",
-      "updatedAt": "2024-02-06T20:42:52Z",
+      "updatedAt": "2024-02-13T22:43:02Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "It is worth putting an EDNOTE in the document that once we do this, we will need IANA to pre-allocate the OIDs so that we can re-compile the domain separators and update the table in the doc.\r\n(and also put the same EDNOTE in composite-sigs)",
+          "createdAt": "2024-02-13T20:45:06Z",
+          "updatedAt": "2024-02-13T22:43:02Z"
+        }
+      ]
     },
     {
       "number": 17,
       "id": "I_kwDOKRPFO85-0YTv",
       "title": "Copy the Key Usage section from composite-sigs",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/17",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2024-02-09T18:31:50Z",
-      "updatedAt": "2024-02-09T18:31:50Z",
-      "closedAt": null,
+      "updatedAt": "2024-02-14T15:42:33Z",
+      "closedAt": "2024-02-14T15:42:33Z",
       "comments": []
     }
   ],
@@ -598,24 +606,26 @@
       "id": "PR_kwDOKRPFO85mKTX8",
       "title": "Changed title from 'Internet PKI' to 'PKIX and CMS'. Closes #1",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/14",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2024-02-06T15:48:58Z",
-      "updatedAt": "2024-02-06T15:48:58Z",
+      "updatedAt": "2024-02-14T15:44:03Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "cad051fe5dbcc17e8e4004bfd1c5333b9d47749f",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_sf_comments",
       "headRefOid": "0a978937cc7192e6dea167eec971384282ab1423",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2024-02-14T15:44:00Z",
+      "mergedAt": "2024-02-14T15:44:00Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "35040231761a50c992c75598c14014d66e36d5ad"
+      },
       "comments": [],
       "reviews": []
     },
@@ -631,18 +641,33 @@
       "labels": [],
       "body": "Adding this section here avoids the need for a wrapper draft telling you how to use composite KEM in CMS.\r\n\r\nCloses #12 ",
       "createdAt": "2024-02-06T20:03:04Z",
-      "updatedAt": "2024-02-06T20:40:05Z",
+      "updatedAt": "2024-02-14T18:14:36Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "cad051fe5dbcc17e8e4004bfd1c5333b9d47749f",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_use_in_cms",
-      "headRefOid": "abebe14f1bd697181e6e8020ce9b1c000462233f",
+      "headRefOid": "3d773920b4dc888742e2a0196fdcc035beb46764",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Note-to-self: look at whether we need to specify higher levels of KDF and WRAP for the stronger algorithms -- see how DVG did it in the CMS-Kyber draft.\r\n\r\nUPDATE: done.",
+          "createdAt": "2024-02-13T20:41:49Z",
+          "updatedAt": "2024-02-14T18:14:36Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Question: does the `## Certificate Conventions` section collide with the recently-merged Key Usage section?\r\n\r\nUPDATE: I think this is fine because this section is intended to be able to be standalone if LAMPS wants the alg definitions, and the \"Use in CMS\" to become separate documents.",
+          "createdAt": "2024-02-14T15:41:32Z",
+          "updatedAt": "2024-02-14T18:14:28Z"
+        }
+      ],
       "reviews": [
         {
           "id": "PRR_kwDOKRPFO85vPR3s",
@@ -663,8 +688,84 @@
               "updatedAt": "2024-02-06T20:40:05Z"
             }
           ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO85v_HOG",
+          "commit": {
+            "abbreviatedOid": "abebe14"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-02-13T20:04:18Z",
+          "updatedAt": "2024-02-13T20:04:19Z",
+          "comments": [
+            {
+              "originalPosition": 72,
+              "body": "Thanks. Fixed.",
+              "createdAt": "2024-02-13T20:04:19Z",
+              "updatedAt": "2024-02-13T20:04:19Z"
+            }
+          ]
         }
       ]
+    },
+    {
+      "number": 18,
+      "id": "PR_kwDOKRPFO85myUbx",
+      "title": "Added a Key Usage section.",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/18",
+      "state": "MERGED",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-02-13T18:59:24Z",
+      "updatedAt": "2024-02-14T15:42:35Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "d715b285547da9e1e5cdcc6402f9ee12467293b0",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_keyusage",
+      "headRefOid": "883493f8be12e12f0f990747504fb602a571a40f",
+      "closedAt": "2024-02-14T15:42:32Z",
+      "mergedAt": "2024-02-14T15:42:32Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "c7d185a40c1fab7398209130efaf9f9e7d68355f"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 19,
+      "id": "PR_kwDOKRPFO85myV9-",
+      "title": "Added a justification referencing BSI and ANSSI",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/19",
+      "state": "MERGED",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-02-13T19:04:51Z",
+      "updatedAt": "2024-02-14T15:38:46Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "d715b285547da9e1e5cdcc6402f9ee12467293b0",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_justification",
+      "headRefOid": "b3d679177abaf074a95648a7f30e431b7f151f3f",
+      "closedAt": "2024-02-14T15:38:46Z",
+      "mergedAt": "2024-02-14T15:38:46Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "cbbf3553e9500e82bfb603e1020ad80ab99e35be"
+      },
+      "comments": [],
+      "reviews": []
     }
   ]
 }
