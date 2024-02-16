@@ -5,16 +5,17 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 17 August 2024                                          M. Pala
+Expires: 19 August 2024                                          M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                             D-Trust GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                        14 February 2024
+                                                        16 February 2024
 
 
-                 Composite KEM For Use In PKIX and CMS
+Composite ML-KEM for Use in the Internet X.509 Public Key Infrastructure
+                                and CMS
                 draft-ietf-lamps-pq-composite-kem-latest
 
 Abstract
@@ -66,7 +67,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 17 August 2024.
+   This Internet-Draft will expire on 19 August 2024.
 
 Copyright Notice
 
