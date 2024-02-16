@@ -132,6 +132,8 @@ Table of Contents
 
 1.  Changes in version -03
 
+   *  Changed the title to reflect that it is specific to ML-KEM.
+
    *  Added Max Pala, Jan Klaussner, and Scott Fluhrer as authors.
 
    *  Added text to Introduction to justify where and why this mechanism
