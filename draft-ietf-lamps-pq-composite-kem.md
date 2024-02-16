@@ -1,5 +1,5 @@
 ---
-title: Composite KEM For Use In PKIX and CMS
+title: Composite ML-KEM for Use in the Internet X.509 Public Key Infrastructure and CMS
 abbrev: Composite KEMs
 docname: draft-ietf-lamps-pq-composite-kem-latest
 
