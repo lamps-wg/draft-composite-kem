@@ -452,7 +452,7 @@ A composite KEM and `CompositeCipherTextValue` MAY be associated with a composit
 
 TODO: as per https://www.enisa.europa.eu/publications/post-quantum-cryptography-integration-study section 4.2, might need to specify behaviour in light of KEMs with a non-zero failure probability.
 
-This document follows the construction of {{I-D.ounsworth-cfrg-kem-combiners}}, which is repeated here for clarity, however it has been simplified to take two input shared secrets, and to take advantage of ML-KEM specific optimizations as per [X-Wing], and RSA-KEM specific optimizations since RSA-KEM is a bijective map between ciphertexts and plaintexts.
+This document follows the construction of {{I-D.ounsworth-cfrg-kem-combiners}}, which is repeated here for clarity, however it has been simplified to take two input shared secrets, and to take advantage of ML-KEM specific optimizations as per [X-Wing].
 
 The general combiner defined in {{I-D.ounsworth-cfrg-kem-combiners}} is:
 
@@ -541,8 +541,8 @@ The KEM combiners for each algorithm are instantiated as follows
 | id-MLKEM512-ECDH-P256             | SHA3-256 | ss1 \|\| ss2 \|\| ct2  |
 | id-MLKEM512-ECDH-brainpoolP256r1  | SHA3-256 | ss1 \|\| ss2 \|\| ct2  |
 | id-MLKEM512-X25519                | SHA3-256 | ss1 \|\| ss2 \|\| ct2  |
-| id-MLKEM512-RSA2048               | SHA3-256 | ss1 \|\| ss2           |
-| id-MLKEM512-RSA3072               | SHA3-256 | ss1 \|\| ss2           |
+| id-MLKEM512-RSA2048               | SHA3-256 | ss1 \|\| ss2 \|\| ct2  |
+| id-MLKEM512-RSA3072               | SHA3-256 | ss1 \|\| ss2 \|\| ct2  |
 | id-MLKEM768-ECDH-P256             | SHA3-384 | ss1 \|\| ss2 \|\| ct2  |
 | id-MLKEM768-ECDH-brainpoolP256r1  | SHA3-384 | ss1 \|\| ss2 \|\| ct2  |
 | id-MLKEM768-X25519                | SHA3-384 | ss1 \|\| ss2 \|\| ct2  |
@@ -682,7 +682,7 @@ The component KEMs used in this specification are RSA-KEM {{I-D.ietf-lamps-rfc59
 
 ### Ciphertext collision resistance {#sec-cons-ct-collision}
 
-The notion of a ciphertext collision resistant KEM is defined in [X-Wing] being the property that it is computationally difficult to find two different ciphertexts that will decapsulate to the same shared secret under the same public key. In [X-Wing] it is proven that ML-KEM has this property and therefore the ML-KEM ciphertext can safely be omitted from the KEM combiner. Similarly, RSA-KEM {{I-D.ietf-lamps-rfc5990bis}} is a bijective map between the shared secret `Z` and the ciphertext `C` and so is naturally immune to ciphertext collision. This leaves only ECDH, X25519 and X448 which are not ciphertext collision resistant and for which the ciphertexts need to be included in the derivation of the shared secret.
+The notion of a ciphertext collision resistant KEM is defined in [X-Wing] being the property that it is computationally difficult to find two different ciphertexts that will decapsulate to the same shared secret under the same public key. In [X-Wing] it is proven that ML-KEM has this property and therefore the ML-KEM ciphertext can safely be omitted from the KEM combiner. Ciphertext collision resistance is not guaranteed for either RSA-KEM or ECDH, therefore these ciphertexts are bound to the key derivation.
 
 
 <!-- End of Security Considerations section -->
