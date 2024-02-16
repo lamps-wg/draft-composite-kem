@@ -186,6 +186,7 @@ This document assumes that all component algorithms are KEMs, and therefore it d
 
 # Changes in version -03
 
+* Changed the title to reflect that it is specific to ML-KEM.
 * Added Max Pala, Jan Klaußner, and Scott Fluhrer as authors.
 * Added text to Introduction to justify where and why this mechanism would be used.
 
