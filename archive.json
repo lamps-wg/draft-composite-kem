@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-02-15T01:13:54.674229+00:00",
+  "timestamp": "2024-02-18T01:17:58.229995+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -192,6 +192,22 @@
       "createdAt": "2024-02-09T18:31:50Z",
       "updatedAt": "2024-02-14T15:42:33Z",
       "closedAt": "2024-02-14T15:42:33Z",
+      "comments": []
+    },
+    {
+      "number": 20,
+      "id": "I_kwDOKRPFO85_fTKA",
+      "title": "Add a new section: explicitely list SPKI AlgIds",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/20",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "We should add a section listing explicitly the DER-encoded AlgorithmIdentifiers for the components of each composite public key and signature algorithm. This is important to resolve ambiguity on, for example, whether the RSA should have a NULL param, and the ECC curve params.\r\n\r\nExample, for id-MLDSA44-ECDSA-P256-SHA256 the ML-DSA SPKI would have an AlgorithmIdentifier of:\r\n\r\n   AlgorithmIdentifier  ::=  SEQUENCE  {\r\n        id-ml-dsa\r\n    }\r\nwhich is:\r\n\r\nAlgorithmIdentifier  ::=  SEQUENCE  {\r\n        {\r\n     1.3.6.1.4.1.2.267.12.4.4\r\n      }\r\n  }\r\nAnd the ECDSA-P256-SHA256 would have a SPKI would have an AlgorithmIdentifier of:\r\n\r\n   AlgorithmIdentifier  ::=  SEQUENCE  {\r\n        id-ecPublicKey,\r\n       secp256r1  \r\n  }\r\nwhich is:\r\n\r\n   AlgorithmIdentifier  ::=  SEQUENCE  {\r\n        {\r\n     iso(1) member-body(2) us(840) ansi-X9-62(10045) keyType(2) 1 },\r\n       iso(1) member-body(2) us(840) ansi-X9-62(10045) curves(3) prime(1) 7}\r\nAnd the signature algorithm for id-MLDSA44-ECDSA-P256-SHA256, the first component signature algorithm would have an AlgorithmIdentifier of\r\n\r\n   AlgorithmIdentifier  ::=  SEQUENCE  {\r\n        id-ml-dsa\r\n    }\r\nwhich is:\r\n\r\nAlgorithmIdentifier  ::=  SEQUENCE  {\r\n        {\r\n     1.3.6.1.4.1.2.267.12.4.4\r\n      }\r\n  }\r\nand the second component signature algorithm would have an AlgorithmIdentifier of\r\n\r\n   AlgorithmIdentifier  ::=  SEQUENCE  {\r\n          ecdsa-with-SHA256\r\n  }\r\nwhich is:\r\n\r\nAlgorithmIdentifier  ::=  SEQUENCE  {\r\n           {\r\n     iso(1) member-body(2) us(840) ansi-X9-62(10045) signatures(4) ecdsa-with-SHA2(3) 2\r\n       }\r\n  }\r\nWith that done, we should replace the message prefix values in Sectien 2.4 with the SHA256 hash of the signature AlgorithmIdentifiers. This has two nice properties that are better than using the ASCII encoding of the OID name: 1) they are all the same length (ie the length of SHA256), and 2) if the inner OIDs change, for example with a new Kyber version, then the message prefix changes, which prevents cryptographic compatibility issues; or otherwise stated: provides signature domain-separation based on the component OIDs.\r\n\r\n--- SHA256 of the DER encoding of the following ASN.1 value\r\n--- Security Consideration note: the choice of SHA256 here is not security-relevant since it is only to generate fixed string values.\r\n\r\nSEQUENCE {\r\nAlgorithmIdentifier  ::=  SEQUENCE  {\r\n        {\r\n     1.3.6.1.4.1.2.267.12.4.4\r\n      }\r\n  },\r\nAlgorithmIdentifier  ::=  SEQUENCE  {\r\n           {\r\n     iso(1) member-body(2) us(840) ansi-X9-62(10045) signatures(4) ecdsa-with-SHA2(3) 2\r\n       }\r\n  }\r\n}\r\n",
+      "createdAt": "2024-02-16T16:01:24Z",
+      "updatedAt": "2024-02-16T16:01:24Z",
+      "closedAt": null,
       "comments": []
     }
   ],
@@ -458,13 +474,13 @@
       "labels": [],
       "body": "",
       "createdAt": "2024-01-27T22:50:55Z",
-      "updatedAt": "2024-02-08T18:12:55Z",
+      "updatedAt": "2024-02-16T16:54:44Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "d6a1ebdc2a5b920fbbd20f1cc33410304471e3c3",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_xwing",
-      "headRefOid": "645d48bf9cf22be1d1eda1f7cd8c7a28a617f6c7",
+      "headRefOid": "a06a8eba6c6e94e299a874943a06f36f846d9fe2",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
@@ -598,6 +614,26 @@
               "updatedAt": "2024-02-08T18:12:55Z"
             }
           ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO85wTysv",
+          "commit": {
+            "abbreviatedOid": "5fb7140"
+          },
+          "author": "dstebila",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-02-16T02:56:57Z",
+          "updatedAt": "2024-02-16T02:56:57Z",
+          "comments": [
+            {
+              "originalPosition": 257,
+              "body": "I'm just looking at this now, so apologies if I'm mistaken. But I think the argument that the mapping between RSA ciphertext and plaintext is bijective only holds once you fix the modulus.  So I think you would need some binding to the modulus in the KDF input to achieve bijectivity.  (But do not take this as a proof that it's okay if you have this -- would need more careful consideration than I've given it so far.)",
+              "createdAt": "2024-02-16T02:56:57Z",
+              "updatedAt": "2024-02-16T02:56:57Z"
+            }
+          ]
         }
       ]
     },
@@ -641,7 +677,7 @@
       "labels": [],
       "body": "Adding this section here avoids the need for a wrapper draft telling you how to use composite KEM in CMS.\r\n\r\nCloses #12 ",
       "createdAt": "2024-02-06T20:03:04Z",
-      "updatedAt": "2024-02-14T18:14:36Z",
+      "updatedAt": "2024-02-16T15:50:48Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "cad051fe5dbcc17e8e4004bfd1c5333b9d47749f",
@@ -666,6 +702,13 @@
           "body": "Question: does the `## Certificate Conventions` section collide with the recently-merged Key Usage section?\r\n\r\nUPDATE: I think this is fine because this section is intended to be able to be standalone if LAMPS wants the alg definitions, and the \"Use in CMS\" to become separate documents.",
           "createdAt": "2024-02-14T15:41:32Z",
           "updatedAt": "2024-02-14T18:14:28Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "We also need to add the SMIME-CAPS to the ASN.1 (find a good example doc).",
+          "createdAt": "2024-02-16T15:50:47Z",
+          "updatedAt": "2024-02-16T15:50:47Z"
         }
       ],
       "reviews": [
@@ -706,6 +749,68 @@
               "body": "Thanks. Fixed.",
               "createdAt": "2024-02-13T20:04:19Z",
               "updatedAt": "2024-02-13T20:04:19Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO85wL5I0",
+          "commit": {
+            "abbreviatedOid": "3d77392"
+          },
+          "author": "danvangeest",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-02-15T09:05:24Z",
+          "updatedAt": "2024-02-15T10:43:04Z",
+          "comments": [
+            {
+              "originalPosition": 151,
+              "body": "```suggestion\r\n`kdf` identifies the key-derivation function (KDF). Note that the KDF used for CMS RecipientInfo process MAY be different than the KDF used within the composite KEM Algorithm, which MAY be different than the KDFs (if any) used within the component KEMs of the composite KEM Algorithm.\r\n```",
+              "createdAt": "2024-02-15T09:08:13Z",
+              "updatedAt": "2024-02-15T10:43:04Z"
+            },
+            {
+              "originalPosition": 171,
+              "body": "```suggestion\r\nThe digitalSignature and dataEncipherment values MUST NOT be present. That is, a public key intended to be employed only with a composite KEM algorithm MUST NOT also be employed for data encryption or for digital signatures. This requirement does not carry any particular security consideration; only the convention that KEM keys be identifed with the `keyEncipherment` key usage.\r\n```",
+              "createdAt": "2024-02-15T10:09:11Z",
+              "updatedAt": "2024-02-15T10:43:04Z"
+            },
+            {
+              "originalPosition": 128,
+              "body": "```suggestion\r\n{: #tab-cms-kdf-wrap title=\"REQUIRED pairings for CMS KDF and WRAP\"}\r\n```",
+              "createdAt": "2024-02-15T10:10:43Z",
+              "updatedAt": "2024-02-15T10:43:04Z"
+            },
+            {
+              "originalPosition": 130,
+              "body": "```suggestion\r\n\r\n\\[EDNOTE: OIDs for KMAC-based KDFs are expected and will be used in place of the HKDF-with-sha3 OIDs above]\r\n\r\nwhere:\r\n```\r\nI assume this because SHA3 isn't great to use with HKDF, and implementers will need KMAC KDF implementations anyways.\r\n",
+              "createdAt": "2024-02-15T10:11:14Z",
+              "updatedAt": "2024-02-15T10:43:04Z"
+            },
+            {
+              "originalPosition": 135,
+              "body": "```suggestion\r\nImplementors MAY safely substitute stronger KDF and WRAP algorithms than those indicated; for example `id-alg-hkdf-with-sha3-512` and `id-aes256-Wrap` MAY be safely used in place of `id-alg-hkdf-with-sha3-384`and `id-aes192-Wrap`, for example, where SHA3-384 or AES-192 are not supported.\r\n```",
+              "createdAt": "2024-02-15T10:11:52Z",
+              "updatedAt": "2024-02-15T10:43:04Z"
+            },
+            {
+              "originalPosition": 106,
+              "body": "```suggestion\r\nWhen a particular Composite KEM OID is supported, an implementation MUST support the corresponding KDF algorithm identifier in {{tab-cms-kdf-wrap}}.\r\n```\r\nid-alg-hkdf-with-sha3-256 is too low a bar for NIST level 5 KEMs.",
+              "createdAt": "2024-02-15T10:14:22Z",
+              "updatedAt": "2024-02-15T10:43:04Z"
+            },
+            {
+              "originalPosition": 108,
+              "body": "```suggestion\r\nWhen a particular Composite KEM OID is supported, an implementation MUST support the corresponding WRAP algorithm identifier in {{tab-cms-kdf-wrap}}.\r\n```\r\nAES-Wrap-128 is too low a bar for NIST level 5 KEMs.",
+              "createdAt": "2024-02-15T10:14:40Z",
+              "updatedAt": "2024-02-15T10:43:04Z"
+            },
+            {
+              "originalPosition": 112,
+              "body": "```suggestion\r\nThe following table lists the REQUIRED KDF and WRAP algorithms to preserve security and performance characteristics of each composite algorithm.\r\n```",
+              "createdAt": "2024-02-15T10:14:52Z",
+              "updatedAt": "2024-02-15T10:43:04Z"
             }
           ]
         }
