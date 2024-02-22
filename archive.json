@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-02-20T01:12:38.557089+00:00",
+  "timestamp": "2024-02-22T01:13:20.651037+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -209,6 +209,30 @@
       "updatedAt": "2024-02-16T16:01:24Z",
       "closedAt": null,
       "comments": []
+    },
+    {
+      "number": 21,
+      "id": "I_kwDOKRPFO85_3gER",
+      "title": "Should we instead or in addition support RSA-OAEP?",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/21",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Sophie Schmieg made the excellent point:\r\n\r\n> on the classical side, nobody uses RSA-KEM (a shame, but alas), leaving RSA-OAEP",
+      "createdAt": "2024-02-20T20:48:46Z",
+      "updatedAt": "2024-02-20T21:13:11Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "What about RSA-PKCS#1 ?",
+          "createdAt": "2024-02-20T21:13:11Z",
+          "updatedAt": "2024-02-20T21:13:11Z"
+        }
+      ]
     }
   ],
   "pulls": [
