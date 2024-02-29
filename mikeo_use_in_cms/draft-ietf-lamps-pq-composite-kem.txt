@@ -744,7 +744,7 @@ Table of Contents
    An implementation MAY also support other key-derivation functions and
    other key-encryption algorithms as well.
 
-   The following table lists the RECOMMENDED KDF and WRAP algorithms to
+   The following table lists the REQUIRED KDF and WRAP algorithms to
    preserve security and performance characteristics of each composite
    algorithm.
 
@@ -785,7 +785,10 @@ Table of Contents
       |                               | with-sha3-512 | aes256-Wrap |
       +-------------------------------+---------------+-------------+
 
-             Table 4: RECOMMENDED pairings for CMS KDF and WRAP
+              Table 4: REQUIRED pairings for CMS KDF and WRAP
+
+   [EDNOTE: OIDs for KMAC-based KDFs are expected.  Should they be used
+   in place of the HKDF-with-sha3 OIDs above?]
 
    where:
 
@@ -794,7 +797,7 @@ Table of Contents
 
    *  id-aes*-Wrap are defined in [RFC3394].
 
-   Implementors MAY safely substutite stronger KDF and WRAP algorithms
+   Implementors MAY safely substitute stronger KDF and WRAP algorithms
    than those indicated; for example id-alg-hkdf-with-sha3-512 and id-
    aes256-Wrap MAY be safely used in place of id-alg-hkdf-with-
    sha3-384and id-aes192-Wrap, for example, where SHA3-384 or AES-192
