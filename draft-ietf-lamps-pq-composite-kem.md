@@ -583,7 +583,7 @@ A CMS implementation that supports a composite KEM algorithm MUST support at lea
 
 When a particular Composite KEM OID is supported, an implementation MUST support the corresponding KDF algorithm identifier in {{tab-cms-kdf-wrap}}.
 
-For key-wrapping, an implementation MUST support the AES-Wrap-128 [RFC3394] key-encryption algorithm.
+When a particular Composite KEM OID is supported, an implementation MUST support the corresponding WRAP algorithm identifier in {{tab-cms-kdf-wrap}}.
 
 An implementation MAY also support other key-derivation functions and other key-encryption algorithms as well.
 
