@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 17 August 2024                                          M. Pala
+Expires: 1 September 2024                                        M. Pala
                                                                   OpenCA
                                                             J. Klaussner
                                                             D-Trust GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                        14 February 2024
+                                                        29 February 2024
 
 
                  Composite KEM For Use In Internet PKI
@@ -66,7 +66,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 17 August 2024.
+   This Internet-Draft will expire on 1 September 2024.
 
 Copyright Notice
 
@@ -826,7 +826,9 @@ Table of Contents
 
    kdf identifies the key-derivation function (KDF).  Note that the KDF
    used for CMS RecipientInfo process MAY be different than the KDF used
-   within the composite KEM Algorithm.
+   within the composite KEM Algorithm, which MAY be different than the
+   KDFs (if any) used within the component KEMs of the composite KEM
+   Algorithm.
 
    kekLength is the size of the key-encryption key in octets.
 
