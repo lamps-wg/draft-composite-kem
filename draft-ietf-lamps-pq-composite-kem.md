@@ -587,7 +587,7 @@ When a particular Composite KEM OID is supported, an implementation MUST support
 
 An implementation MAY also support other key-derivation functions and other key-encryption algorithms as well.
 
-The following table lists the RECOMMENDED KDF and WRAP algorithms to preserve security and performance characteristics of each composite algorithm.
+The following table lists the REQUIRED KDF and WRAP algorithms to preserve security and performance characteristics of each composite algorithm.
 
 
 | Composite KEM OID                         | KDF                       | WRAP             |
@@ -603,14 +603,16 @@ The following table lists the RECOMMENDED KDF and WRAP algorithms to preserve se
 | id-MLKEM1024-ECDH-P384-KMAC256            | id-alg-hkdf-with-sha3-512 | id-aes256-Wrap   |
 | id-MLKEM1024-ECDH-brainpoolP384r1-KMAC256 | id-alg-hkdf-with-sha3-512 | id-aes256-Wrap   |
 | id-MLKEM1024-X448-KMAC256                 | id-alg-hkdf-with-sha3-512 | id-aes256-Wrap   |
-{: #tab-cms-kdf-wrap title="RECOMMENDED pairings for CMS KDF and WRAP"}
+{: #tab-cms-kdf-wrap title="REQUIRED pairings for CMS KDF and WRAP"}
+
+\[EDNOTE: OIDs for KMAC-based KDFs are expected. Should they be used in place of the HKDF-with-sha3 OIDs above?]
 
 where:
 
 * `id-alg-hkdf-with-sha3-*` are defined in {{I-D.ietf-lamps-cms-sha3-hash}}.
 * `id-aes*-Wrap` are defined in [RFC3394].
 
-Implementors MAY safely substutite stronger KDF and WRAP algorithms than those indicated; for example `id-alg-hkdf-with-sha3-512` and `id-aes256-Wrap` MAY be safely used in place of `id-alg-hkdf-with-sha3-384`and `id-aes192-Wrap`, for example, where SHA3-384 or AES-192 are not supported.
+Implementors MAY safely substitute stronger KDF and WRAP algorithms than those indicated; for example `id-alg-hkdf-with-sha3-512` and `id-aes256-Wrap` MAY be safely used in place of `id-alg-hkdf-with-sha3-384`and `id-aes192-Wrap`, for example, where SHA3-384 or AES-192 are not supported.
 
 Implementors MAY salefy substitute different symmetric algorithms of equivalent strength. For example SHA-3 MAY be replaced by the equivalent strength SHA-2, or the HKDF-based algorithms MAY be replaced by an equivalent strength KDF based on a different construction, such as KDF3.
 
