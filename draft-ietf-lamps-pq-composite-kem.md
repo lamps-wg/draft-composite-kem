@@ -646,7 +646,7 @@ The intended application for the public key MAY be indicated in the key usage ce
 
 keyEncipherment
 
-The digitalSignatrure and dataEncipherment values MUST NOT be present. That is, a public key intended to be employed only with a composite KEM algorithm MUST NOT also be employed for data encryption or for digital signatures. This requirement does not carry any particular security consideration; only the convention that KEM keys be identifed with the `keyEncipherment` key usage.
+The digitalSignature and dataEncipherment values MUST NOT be present. That is, a public key intended to be employed only with a composite KEM algorithm MUST NOT also be employed for data encryption or for digital signatures. This requirement does not carry any particular security consideration; only the convention that KEM keys be identifed with the `keyEncipherment` key usage.
 
 
 ## SMIMECapabilities Attribute Conventions
