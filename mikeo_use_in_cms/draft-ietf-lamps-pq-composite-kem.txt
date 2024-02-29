@@ -735,8 +735,8 @@ Table of Contents
    A CMS implementation that supports a composite KEM algorithm MUST
    support at least the following underlying components:
 
-   For the key-derivation function, an implementation MUST support id-
-   alg-hkdf-with-sha3-256 [I-D.ietf-lamps-cms-sha3-hash].
+   When a particular Composite KEM OID is supported, an implementation
+   MUST support the corresponding KDF algorithm identifier in Table 4.
 
    For key-wrapping, an implementation MUST support the AES-Wrap-128
    [RFC3394] key-encryption algorithm.
@@ -862,12 +862,12 @@ Table of Contents
 
    keyEncipherment
 
-   The digitalSignatrure and dataEncipherment values MUST NOT be
-   present.  That is, a public key intended to be employed only with a
-   composite KEM algorithm MUST NOT also be employed for data encryption
-   or for digital signatures.  This requirement does not carry any
-   particular security consideration; only the convention that KEM keys
-   be identifed with the keyEncipherment key usage.
+   The digitalSignature and dataEncipherment values MUST NOT be present.
+   That is, a public key intended to be employed only with a composite
+   KEM algorithm MUST NOT also be employed for data encryption or for
+   digital signatures.  This requirement does not carry any particular
+   security consideration; only the convention that KEM keys be
+   identifed with the keyEncipherment key usage.
 
 7.4.  SMIMECapabilities Attribute Conventions
 
