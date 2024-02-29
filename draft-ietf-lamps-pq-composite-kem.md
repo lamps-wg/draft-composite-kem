@@ -581,7 +581,7 @@ Composite KEM algorithms MAY be employed for one or more recipients in the CMS e
 
 A CMS implementation that supports a composite KEM algorithm MUST support at least the following underlying components:
 
-For the key-derivation function, an implementation MUST support `id-alg-hkdf-with-sha3-256` {{I-D.ietf-lamps-cms-sha3-hash}}.
+When a particular Composite KEM OID is supported, an implementation MUST support the corresponding KDF algorithm identifier in {{tab-cms-kdf-wrap}}.
 
 For key-wrapping, an implementation MUST support the AES-Wrap-128 [RFC3394] key-encryption algorithm.
 
