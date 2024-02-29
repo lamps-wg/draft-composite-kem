@@ -1969,7 +1969,7 @@ Combiner(ct1, ss1, ct2, ss2, "id-MLKEM512-ECDH-P256-KMAC128") =
         </h3>
 <p id="section-7.1-1">A CMS implementation that supports a composite KEM algorithm MUST support at least the following underlying components:<a href="#section-7.1-1" class="pilcrow">¶</a></p>
 <p id="section-7.1-2">When a particular Composite KEM OID is supported, an implementation MUST support the corresponding KDF algorithm identifier in <a href="#tab-cms-kdf-wrap" class="auto internal xref">Table 4</a>.<a href="#section-7.1-2" class="pilcrow">¶</a></p>
-<p id="section-7.1-3">For key-wrapping, an implementation MUST support the AES-Wrap-128 <span>[<a href="#RFC3394" class="cite xref">RFC3394</a>]</span> key-encryption algorithm.<a href="#section-7.1-3" class="pilcrow">¶</a></p>
+<p id="section-7.1-3">When a particular Composite KEM OID is supported, an implementation MUST support the corresponding WRAP algorithm identifier in <a href="#tab-cms-kdf-wrap" class="auto internal xref">Table 4</a>.<a href="#section-7.1-3" class="pilcrow">¶</a></p>
 <p id="section-7.1-4">An implementation MAY also support other key-derivation functions and other key-encryption algorithms as well.<a href="#section-7.1-4" class="pilcrow">¶</a></p>
 <p id="section-7.1-5">The following table lists the RECOMMENDED KDF and WRAP algorithms to preserve security and performance characteristics of each composite algorithm.<a href="#section-7.1-5" class="pilcrow">¶</a></p>
 <span id="name-recommended-pairings-for-cm"></span><div id="tab-cms-kdf-wrap">

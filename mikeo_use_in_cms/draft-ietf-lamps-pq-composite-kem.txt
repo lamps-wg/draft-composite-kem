@@ -738,8 +738,8 @@ Table of Contents
    When a particular Composite KEM OID is supported, an implementation
    MUST support the corresponding KDF algorithm identifier in Table 4.
 
-   For key-wrapping, an implementation MUST support the AES-Wrap-128
-   [RFC3394] key-encryption algorithm.
+   When a particular Composite KEM OID is supported, an implementation
+   MUST support the corresponding WRAP algorithm identifier in Table 4.
 
    An implementation MAY also support other key-derivation functions and
    other key-encryption algorithms as well.
