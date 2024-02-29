@@ -626,7 +626,7 @@ When a composite KEM Algorithm is employed for a recipient, the RecipientInfo al
 
 `kemct` is the ciphertext produced for this recipient; it contains the `ct` output from `Encaps(pk)`.
 
-`kdf` identifies the key-derivation function (KDF). Note that the KDF used for CMS RecipientInfo process MAY be different than the KDF used within the composite KEM Algorithm.
+`kdf` identifies the key-derivation function (KDF). Note that the KDF used for CMS RecipientInfo process MAY be different than the KDF used within the composite KEM Algorithm, which MAY be different than the KDFs (if any) used within the component KEMs of the composite KEM Algorithm.
 
 `kekLength` is the size of the key-encryption key in octets.
 
