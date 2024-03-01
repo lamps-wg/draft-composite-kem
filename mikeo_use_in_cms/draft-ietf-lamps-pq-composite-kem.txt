@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 1 September 2024                                        M. Pala
+Expires: 2 September 2024                                        M. Pala
                                                                   OpenCA
                                                             J. Klaussner
                                                             D-Trust GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                        29 February 2024
+                                                            1 March 2024
 
 
                  Composite KEM For Use In Internet PKI
@@ -66,7 +66,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 1 September 2024.
+   This Internet-Draft will expire on 2 September 2024.
 
 Copyright Notice
 
@@ -985,6 +985,7 @@ Table of Contents
             VALUE CompositeCiphertextValue
             PARAMS ARE absent
             PUBLIC-KEYS { publicKeyType }
+            SMIME-CAPS { IDENTIFIED BY id }
            }
 
 
@@ -1172,6 +1173,25 @@ Table of Contents
        kema-CompositeKEM{
          id-MLKEM1024-X448-KMAC256,
          pk-MLKEM1024-X448-KMAC256 }
+
+
+   --
+   -- Expand the S/MIME capabilities set used by CMS [RFC5911]
+   --
+
+   SMimeCaps SMIME-CAPS ::=
+       { kema-MLKEM512-ECDH-P256-KMAC128 |
+         kema-MLKEM512-ECDH-brainpoolP256r1-KMAC128 |
+         kema-MLKEM512-X25519-KMAC128 |
+         kema-MLKEM512-RSA2048-KMAC128 |
+         kema-MLKEM512-RSA3072-KMAC128 |
+         kema-MLKEM768-ECDH-P256-KMAC256 |
+         kema-MLKEM768-ECDH-brainpoolP256r1-KMAC256 |
+         kema-MLKEM768-X25519-KMAC256 |
+         kema-MLKEM1024-ECDH-P384-KMAC256 |
+         kema-MLKEM1024-ECDH-brainpoolP384r1-KMAC256 |
+         kema-MLKEM1024-X448-KMAC256,
+         ... }
 
    END
 
