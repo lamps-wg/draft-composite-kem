@@ -1,5 +1,5 @@
 ---
-title: Composite KEM For Use In Internet PKI
+title: Composite ML-KEM for Use in the Internet X.509 Public Key Infrastructure and CMS
 abbrev: Composite KEMs
 docname: draft-ietf-lamps-pq-composite-kem-latest
 
@@ -53,7 +53,7 @@ author:
     -
       ins: M. Pala
       fullname: Massimiliano Pala
-      org: OpenCA
+      org: OpenCA Labs
       street: 858 Coal Creek Cir
       city: Louisville, Colorado
       country: United States of America
@@ -159,11 +159,25 @@ informative:
   I-D.draft-ietf-lamps-kyber-certificates-01:
   I-D.draft-becker-guthrie-noncomposite-hybrid-auth-00:
   I-D.draft-housley-lamps-cms-kemri-02:
+  BSI2021:
+    title: "Quantum-safe cryptography - fundamentals, current developments and recommendations"
+    target: https://www.bsi.bund.de/SharedDocs/Downloads/EN/BSI/Publications/Brochure/quantum-safe-cryptography.pdf
+    author:
+      - org: "Federal Office for Information Security (BSI)"
+    date: October 2021
+  ANSSI2024:
+    title: "Position Paper on Quantum Key Distribution"
+    target: https://cyber.gouv.fr/sites/default/files/document/Quantum_Key_Distribution_Position_Paper.pdf
+    author:
+      - org: "French Cybersecurity Agency (ANSSI)"
+      - org: "Federal Office for Information Security (BSI)"
+      - org: "Netherlands National Communications Security Agency (NLNCSA)"
+      - org: "Swedish National Communications Security Authority, Swedish Armed Forces"
 
 
 --- abstract
 
-This document defines Post-Quantum / Traditional composite Key Encapsulation Mechanism (KEM) algorithms suitable for use within X.509 and PKIX and CMS protocols. Composite algorithms are provided which combine ML-KEM with RSA-KEM and ECDH-KEM. The provided set of composite algorithms should meet most Internet needs.
+This document defines Post-Quantum / Traditional composite Key Encapsulation Mechanism (KEM) algorithms suitable for use within X.509, PKIX and CMS protocols. Composite algorithms are provided which combine ML-KEM with RSA-KEM and ECDH-KEM. The provided set of composite algorithms should meet most Internet needs.
 
 This document assumes that all component algorithms are KEMs, and therefore it depends on {{I-D.ietf-lamps-rfc5990bis}} and {{I-D.ounsworth-lamps-cms-dhkem}} in order to promote RSA and ECDH respectively into KEMs. For the purpose of combining KEMs, the combiner function from {{I-D.ounsworth-cfrg-kem-combiners}} is used. For use within CMS, this document is intended to be coupled with the CMS KEMRecipientInfo mechanism in {{I-D.housley-lamps-cms-kemri}}.
 
@@ -174,7 +188,11 @@ This document assumes that all component algorithms are KEMs, and therefore it d
 
 # Changes in version -03
 
+* Changed the title to reflect that it is specific to ML-KEM.
+* Added Max Pala, Jan Klaußner, and Scott Fluhrer as authors.
+* Added text to Introduction to justify where and why this mechanism would be used.
 * Added section "Use in CMS".
+
 
 Still to do in a future version:
 
@@ -187,6 +205,25 @@ Still to do in a future version:
 The migration to post-quantum cryptography is unique in the history of modern digital cryptography in that neither the old outgoing nor the new incoming algorithms are fully trusted to protect data for long data lifetimes. The outgoing algorithms, such as RSA and elliptic curve, may fall to quantum cryptalanysis, while the incoming post-quantum algorithms face uncertainty about both the underlying mathematics falling to classical algorithmic attacks as well as hardware and software implementations that have not had sufficient maturing time to rule out catestrophic implementation bugs. Unlike previous cryptographic algorithm migrations, the choice of when to migrate and which algorithms to migrate to, is not so clear.
 
 Cautious implementers may wish to combine cryptographic algorithms such that an attacker would need to break all of them in order to compromise the data being protected. Such mechanisms are referred to as Post-Quantum / Traditional Hybrids {{I-D.driscoll-pqt-hybrid-terminology}}.
+
+In particular, certain jurisdictions are recommending or requiring that PQC lattice schemes only be used within a PQ/T hybrid. As an example, we point to [BSI2021] which includes the following recommendation:
+
+"Therefore, quantum computer-resistant methods should
+not be used alone - at least in a transitional period - but
+only in hybrid mode, i.e. in combination with a classical
+method. For this purpose, protocols must be modified
+or supplemented accordingly. In addition, public key
+infrastructures, for example, must also be adapted"
+
+In addition, [BSI2021] specifically references this specification as a concrete example of hybrid X.509 certificates.
+
+A more recent example is [ANSSI2024], a document co-authored by French Cybersecurity Agency (ANSSI),
+Federal Office for Information Security (BSI), Netherlands National Communications Security Agency (NLNCSA), and
+Swedish National Communications Security Authority, Swedish Armed Forces which makes the following statement:
+
+“In light of the urgent need to stop relying only on quantum-vulnerable public-key cryptography for key establishment, the clear priority should therefore be the migration to post-quantum cryptography in hybrid solutions”
+
+This specification represents the straightforward implementation of the hybrid solutions called for by European cyber security agencies.
 
 PQ/T Hybrid cryptography can, in general, provide solutions to two migration problems:
 
@@ -412,6 +449,15 @@ When a bit string is required, the octets of the DER encoded composite data stru
 CompositeKEMPublicKeyBs ::= BIT STRING (CONTAINING CompositeKEMPublicKey ENCODED BY der)
 ~~~
 
+
+
+## Key Usage Bits
+
+For protocols such as X.509 [RFC5280] that specify key usage along with the public key, then the composite public key associated with a composite KEM algorithm MUST contain only a `keyEncipherment` key usage, all other key usages MUST NOT be used.
+This is because the composite public key can only be used in situations
+that are appropriate for both component algorithms, so even if the
+classical component key supports both signing and encryption,
+the post-quantum algorithms do not.
 
 
 # Composite KEM Structures
