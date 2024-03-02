@@ -619,7 +619,7 @@ where:
 
 # Use in CMS
 
-EDNOTE: The convention in LAMPS is to specify algorithms and their CMS conventions in separate documents. Here we have presented them in the same document, but this section has been written so that it can easily be moved to a standalone document.
+\[EDNOTE: The convention in LAMPS is to specify algorithms and their CMS conventions in separate documents. Here we have presented them in the same document, but this section has been written so that it can easily be moved to a standalone document.\]
 
 Composite KEM algorithms MAY be employed for one or more recipients in the CMS enveloped-data content type [RFC5652], the CMS authenticated-data content type [RFC5652], or the CMS authenticated-enveloped-data content type [RFC5083]. In each case, the KEMRecipientInfo [I-D.ietf-lamps-cms-kemri] is used with the chosen composite KEM Algorithm to securely transfer the content-encryption key from the originator to the recipient.
 
@@ -629,14 +629,14 @@ A CMS implementation that supports a composite KEM algorithm MUST support at lea
 
 When a particular Composite KEM OID is supported, an implementation MUST support the corresponding KDF algorithm identifier in {{tab-cms-kdf-wrap}}.
 
-When a particular Composite KEM OID is supported, an implementation MUST support the corresponding WRAP algorithm identifier in {{tab-cms-kdf-wrap}}.
+When a particular Composite KEM OID is supported, an implementation MUST support the corresponding key-encryption algorithm identifier in {{tab-cms-kdf-wrap}}.
 
 An implementation MAY also support other key-derivation functions and other key-encryption algorithms as well.
 
-The following table lists the REQUIRED KDF and WRAP algorithms to preserve security and performance characteristics of each composite algorithm.
+The following table lists the REQUIRED KDF and key-encryption algorithms to preserve security and performance characteristics of each composite algorithm.
 
 
-| Composite KEM OID                         | KDF                       | WRAP             |
+| Composite KEM OID                         | KDF                       | Key Encryption Alg |
 |---------                                  | ---                       | ---              |
 | id-MLKEM512-ECDH-P256-KMAC128             | id-alg-hkdf-with-sha3-256 | id-aes128-Wrap   |
 | id-MLKEM512-ECDH-brainpoolP256r1-KMAC128  | id-alg-hkdf-with-sha3-256 | id-aes128-Wrap   |
@@ -658,9 +658,8 @@ where:
 * `id-alg-hkdf-with-sha3-*` are defined in {{I-D.ietf-lamps-cms-sha3-hash}}.
 * `id-aes*-Wrap` are defined in [RFC3394].
 
-Implementors MAY safely substitute stronger KDF and WRAP algorithms than those indicated; for example `id-alg-hkdf-with-sha3-512` and `id-aes256-Wrap` MAY be safely used in place of `id-alg-hkdf-with-sha3-384`and `id-aes192-Wrap`, for example, where SHA3-384 or AES-192 are not supported.
+Implementors MAY safely substitute stronger KDF and key-encryption algorithms than those indicated; for example `id-alg-hkdf-with-sha3-512` and `id-aes256-Wrap` MAY be safely used in place of `id-alg-hkdf-with-sha3-384`and `id-aes192-Wrap`, for example, where SHA3-384 or AES-192 are not supported.
 
-Implementors MAY salefy substitute different symmetric algorithms of equivalent strength. For example SHA-3 MAY be replaced by the equivalent strength SHA-2, or the HKDF-based algorithms MAY be replaced by an equivalent strength KDF based on a different construction, such as KDF3.
 
 ## RecipientInfo Conventions
 
@@ -672,7 +671,7 @@ When a composite KEM Algorithm is employed for a recipient, the RecipientInfo al
 
 `kem` identifies the KEM algorithm; it MUST contain one of the OIDs listed in {{tab-kem-algs}}.
 
-`kemct` is the ciphertext produced for this recipient; it contains the `ct` output from `Encaps(pk)`.
+`kemct` is the ciphertext produced for this recipient; it contains the `ct` output from `Encaps(pk)` of the KEM algorithm identified in the `kem` parameter.
 
 `kdf` identifies the key-derivation function (KDF). Note that the KDF used for CMS RecipientInfo process MAY be different than the KDF used within the composite KEM Algorithm, which MAY be different than the KDFs (if any) used within the component KEMs of the composite KEM Algorithm.
 
