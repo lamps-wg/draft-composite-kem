@@ -192,6 +192,7 @@ This document assumes that all component algorithms are KEMs, and therefore it d
 * Added Max Pala, Jan Klaußner, and Scott Fluhrer as authors.
 * Added text to Introduction to justify where and why this mechanism would be used.
 * Added section "Use in CMS".
+* Switched all KDFs for both the combiner and the CMS KEMRI to use id-kmac128 or id-kmac256 from I-D.ietf-lamps-cms-sha3-hash.
 
 
 Still to do in a future version:
