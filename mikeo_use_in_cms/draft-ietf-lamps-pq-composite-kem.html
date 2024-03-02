@@ -1041,7 +1041,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Ounsworth, et al.</td>
-<td class="center">Expires 2 September 2024</td>
+<td class="center">Expires 3 September 2024</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1054,12 +1054,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-lamps-pq-composite-kem-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2024-03-01" class="published">1 March 2024</time>
+<time datetime="2024-03-02" class="published">2 March 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2024-09-02">2 September 2024</time></dd>
+<dd class="expires"><time datetime="2024-09-03">3 September 2024</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1126,7 +1126,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 2 September 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 3 September 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1997,7 +1997,7 @@ Combiner(ct1, ss1, ct2, ss2, "id-MLKEM512-ECDH-P256-KMAC128") =
       <h2 id="name-use-in-cms">
 <a href="#section-7" class="section-number selfRef">7. </a><a href="#name-use-in-cms" class="section-name selfRef">Use in CMS</a>
       </h2>
-<p id="section-7-1">EDNOTE: The convention in LAMPS is to specify algorithms and their CMS conventions in separate documents. Here we have presented them in the same document, but this section has been written so that it can easily be moved to a standalone document.<a href="#section-7-1" class="pilcrow">¶</a></p>
+<p id="section-7-1">[EDNOTE: The convention in LAMPS is to specify algorithms and their CMS conventions in separate documents. Here we have presented them in the same document, but this section has been written so that it can easily be moved to a standalone document.]<a href="#section-7-1" class="pilcrow">¶</a></p>
 <p id="section-7-2">Composite KEM algorithms MAY be employed for one or more recipients in the CMS enveloped-data content type <span>[<a href="#RFC5652" class="cite xref">RFC5652</a>]</span>, the CMS authenticated-data content type <span>[<a href="#RFC5652" class="cite xref">RFC5652</a>]</span>, or the CMS authenticated-enveloped-data content type <span>[<a href="#RFC5083" class="cite xref">RFC5083</a>]</span>. In each case, the KEMRecipientInfo [I-D.ietf-lamps-cms-kemri] is used with the chosen composite KEM Algorithm to securely transfer the content-encryption key from the originator to the recipient.<a href="#section-7-2" class="pilcrow">¶</a></p>
 <div id="underlying-components">
 <section id="section-7.1">
@@ -2006,9 +2006,9 @@ Combiner(ct1, ss1, ct2, ss2, "id-MLKEM512-ECDH-P256-KMAC128") =
         </h3>
 <p id="section-7.1-1">A CMS implementation that supports a composite KEM algorithm MUST support at least the following underlying components:<a href="#section-7.1-1" class="pilcrow">¶</a></p>
 <p id="section-7.1-2">When a particular Composite KEM OID is supported, an implementation MUST support the corresponding KDF algorithm identifier in <a href="#tab-cms-kdf-wrap" class="auto internal xref">Table 4</a>.<a href="#section-7.1-2" class="pilcrow">¶</a></p>
-<p id="section-7.1-3">When a particular Composite KEM OID is supported, an implementation MUST support the corresponding WRAP algorithm identifier in <a href="#tab-cms-kdf-wrap" class="auto internal xref">Table 4</a>.<a href="#section-7.1-3" class="pilcrow">¶</a></p>
+<p id="section-7.1-3">When a particular Composite KEM OID is supported, an implementation MUST support the corresponding key-encryption algorithm identifier in <a href="#tab-cms-kdf-wrap" class="auto internal xref">Table 4</a>.<a href="#section-7.1-3" class="pilcrow">¶</a></p>
 <p id="section-7.1-4">An implementation MAY also support other key-derivation functions and other key-encryption algorithms as well.<a href="#section-7.1-4" class="pilcrow">¶</a></p>
-<p id="section-7.1-5">The following table lists the REQUIRED KDF and WRAP algorithms to preserve security and performance characteristics of each composite algorithm.<a href="#section-7.1-5" class="pilcrow">¶</a></p>
+<p id="section-7.1-5">The following table lists the REQUIRED KDF and key-encryption algorithms to preserve security and performance characteristics of each composite algorithm.<a href="#section-7.1-5" class="pilcrow">¶</a></p>
 <span id="name-required-pairings-for-cms-k"></span><div id="tab-cms-kdf-wrap">
 <table class="center" id="table-4">
           <caption>
@@ -2019,7 +2019,7 @@ Combiner(ct1, ss1, ct2, ss2, "id-MLKEM512-ECDH-P256-KMAC128") =
             <tr>
               <th class="text-left" rowspan="1" colspan="1">Composite KEM OID</th>
               <th class="text-left" rowspan="1" colspan="1">KDF</th>
-              <th class="text-left" rowspan="1" colspan="1">WRAP</th>
+              <th class="text-left" rowspan="1" colspan="1">Key Encryption Alg</th>
             </tr>
           </thead>
           <tbody>
@@ -2091,8 +2091,7 @@ Combiner(ct1, ss1, ct2, ss2, "id-MLKEM512-ECDH-P256-KMAC128") =
             <p id="section-7.1-9.2.1"><code>id-aes*-Wrap</code> are defined in <span>[<a href="#RFC3394" class="cite xref">RFC3394</a>]</span>.<a href="#section-7.1-9.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-7.1-10">Implementors MAY safely substitute stronger KDF and WRAP algorithms than those indicated; for example <code>id-alg-hkdf-with-sha3-512</code> and <code>id-aes256-Wrap</code> MAY be safely used in place of <code>id-alg-hkdf-with-sha3-384</code>and <code>id-aes192-Wrap</code>, for example, where SHA3-384 or AES-192 are not supported.<a href="#section-7.1-10" class="pilcrow">¶</a></p>
-<p id="section-7.1-11">Implementors MAY salefy substitute different symmetric algorithms of equivalent strength. For example SHA-3 MAY be replaced by the equivalent strength SHA-2, or the HKDF-based algorithms MAY be replaced by an equivalent strength KDF based on a different construction, such as KDF3.<a href="#section-7.1-11" class="pilcrow">¶</a></p>
+<p id="section-7.1-10">Implementors MAY safely substitute stronger KDF and key-encryption algorithms than those indicated; for example <code>id-alg-hkdf-with-sha3-512</code> and <code>id-aes256-Wrap</code> MAY be safely used in place of <code>id-alg-hkdf-with-sha3-384</code>and <code>id-aes192-Wrap</code>, for example, where SHA3-384 or AES-192 are not supported.<a href="#section-7.1-10" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="recipientinfo-conventions">
@@ -2104,7 +2103,7 @@ Combiner(ct1, ss1, ct2, ss2, "id-MLKEM512-ECDH-P256-KMAC128") =
 <p id="section-7.2-2"><code>version</code> is the syntax version number; it MUST be 0.<a href="#section-7.2-2" class="pilcrow">¶</a></p>
 <p id="section-7.2-3"><code>rid</code> identifies the recipient's certificate or public key.<a href="#section-7.2-3" class="pilcrow">¶</a></p>
 <p id="section-7.2-4"><code>kem</code> identifies the KEM algorithm; it MUST contain one of the OIDs listed in <a href="#tab-kem-algs" class="auto internal xref">Table 2</a>.<a href="#section-7.2-4" class="pilcrow">¶</a></p>
-<p id="section-7.2-5"><code>kemct</code> is the ciphertext produced for this recipient; it contains the <code>ct</code> output from <code>Encaps(pk)</code>.<a href="#section-7.2-5" class="pilcrow">¶</a></p>
+<p id="section-7.2-5"><code>kemct</code> is the ciphertext produced for this recipient; it contains the <code>ct</code> output from <code>Encaps(pk)</code> of the KEM algorithm identified in the <code>kem</code> parameter.<a href="#section-7.2-5" class="pilcrow">¶</a></p>
 <p id="section-7.2-6"><code>kdf</code> identifies the key-derivation function (KDF). Note that the KDF used for CMS RecipientInfo process MAY be different than the KDF used within the composite KEM Algorithm, which MAY be different than the KDFs (if any) used within the component KEMs of the composite KEM Algorithm.<a href="#section-7.2-6" class="pilcrow">¶</a></p>
 <p id="section-7.2-7"><code>kekLength</code> is the size of the key-encryption key in octets.<a href="#section-7.2-7" class="pilcrow">¶</a></p>
 <p id="section-7.2-8"><code>ukm</code> is an optional random input to the key-derivation function.<a href="#section-7.2-8" class="pilcrow">¶</a></p>

@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 2 September 2024                                        M. Pala
+Expires: 3 September 2024                                        M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                             D-Trust GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                            1 March 2024
+                                                            2 March 2024
 
 
 Composite ML-KEM for Use in the Internet X.509 Public Key Infrastructure
@@ -67,7 +67,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 2 September 2024.
+   This Internet-Draft will expire on 3 September 2024.
 
 Copyright Notice
 
@@ -765,10 +765,10 @@ Table of Contents
 
 7.  Use in CMS
 
-   EDNOTE: The convention in LAMPS is to specify algorithms and their
+   [EDNOTE: The convention in LAMPS is to specify algorithms and their
    CMS conventions in separate documents.  Here we have presented them
    in the same document, but this section has been written so that it
-   can easily be moved to a standalone document.
+   can easily be moved to a standalone document.]
 
    Composite KEM algorithms MAY be employed for one or more recipients
    in the CMS enveloped-data content type [RFC5652], the CMS
@@ -787,51 +787,52 @@ Table of Contents
    MUST support the corresponding KDF algorithm identifier in Table 4.
 
    When a particular Composite KEM OID is supported, an implementation
-   MUST support the corresponding WRAP algorithm identifier in Table 4.
+   MUST support the corresponding key-encryption algorithm identifier in
+   Table 4.
 
    An implementation MAY also support other key-derivation functions and
    other key-encryption algorithms as well.
 
-   The following table lists the REQUIRED KDF and WRAP algorithms to
-   preserve security and performance characteristics of each composite
-   algorithm.
+   The following table lists the REQUIRED KDF and key-encryption
+   algorithms to preserve security and performance characteristics of
+   each composite algorithm.
 
-      +===============================+===============+=============+
-      | Composite KEM OID             | KDF           | WRAP        |
-      +===============================+===============+=============+
-      | id-MLKEM512-ECDH-P256-KMAC128 | id-alg-hkdf-  | id-         |
-      |                               | with-sha3-256 | aes128-Wrap |
-      +-------------------------------+---------------+-------------+
-      | id-MLKEM512-ECDH-             | id-alg-hkdf-  | id-         |
-      | brainpoolP256r1-KMAC128       | with-sha3-256 | aes128-Wrap |
-      +-------------------------------+---------------+-------------+
-      | id-MLKEM512-X25519-KMAC128    | id-alg-hkdf-  | id-         |
-      |                               | with-sha3-256 | aes128-Wrap |
-      +-------------------------------+---------------+-------------+
-      | id-MLKEM512-RSA2048-KMAC128   | id-alg-hkdf-  | id-         |
-      |                               | with-sha3-256 | aes128-Wrap |
-      +-------------------------------+---------------+-------------+
-      | id-MLKEM512-RSA3072-KMAC128   | id-alg-hkdf-  | id-         |
-      |                               | with-sha3-256 | aes128-Wrap |
-      +-------------------------------+---------------+-------------+
-      | id-MLKEM768-ECDH-P256-KMAC256 | id-alg-hkdf-  | id-         |
-      |                               | with-sha3-384 | aes192-Wrap |
-      +-------------------------------+---------------+-------------+
-      | id-MLKEM768-ECDH-             | id-alg-hkdf-  | id-         |
-      | brainpoolP256r1-KMAC256       | with-sha3-384 | aes192-Wrap |
-      +-------------------------------+---------------+-------------+
-      | id-MLKEM768-X25519-KMAC256    | id-alg-hkdf-  | id-         |
-      |                               | with-sha3-384 | aes192-Wrap |
-      +-------------------------------+---------------+-------------+
-      | id-MLKEM1024-ECDH-            | id-alg-hkdf-  | id-         |
-      | P384-KMAC256                  | with-sha3-512 | aes256-Wrap |
-      +-------------------------------+---------------+-------------+
-      | id-MLKEM1024-ECDH-            | id-alg-hkdf-  | id-         |
-      | brainpoolP384r1-KMAC256       | with-sha3-512 | aes256-Wrap |
-      +-------------------------------+---------------+-------------+
-      | id-MLKEM1024-X448-KMAC256     | id-alg-hkdf-  | id-         |
-      |                               | with-sha3-512 | aes256-Wrap |
-      +-------------------------------+---------------+-------------+
+     +==========================+===============+====================+
+     | Composite KEM OID        | KDF           | Key Encryption Alg |
+     +==========================+===============+====================+
+     | id-MLKEM512-ECDH-        | id-alg-hkdf-  | id-aes128-Wrap     |
+     | P256-KMAC128             | with-sha3-256 |                    |
+     +--------------------------+---------------+--------------------+
+     | id-MLKEM512-ECDH-        | id-alg-hkdf-  | id-aes128-Wrap     |
+     | brainpoolP256r1-KMAC128  | with-sha3-256 |                    |
+     +--------------------------+---------------+--------------------+
+     | id-                      | id-alg-hkdf-  | id-aes128-Wrap     |
+     | MLKEM512-X25519-KMAC128  | with-sha3-256 |                    |
+     +--------------------------+---------------+--------------------+
+     | id-                      | id-alg-hkdf-  | id-aes128-Wrap     |
+     | MLKEM512-RSA2048-KMAC128 | with-sha3-256 |                    |
+     +--------------------------+---------------+--------------------+
+     | id-                      | id-alg-hkdf-  | id-aes128-Wrap     |
+     | MLKEM512-RSA3072-KMAC128 | with-sha3-256 |                    |
+     +--------------------------+---------------+--------------------+
+     | id-MLKEM768-ECDH-        | id-alg-hkdf-  | id-aes192-Wrap     |
+     | P256-KMAC256             | with-sha3-384 |                    |
+     +--------------------------+---------------+--------------------+
+     | id-MLKEM768-ECDH-        | id-alg-hkdf-  | id-aes192-Wrap     |
+     | brainpoolP256r1-KMAC256  | with-sha3-384 |                    |
+     +--------------------------+---------------+--------------------+
+     | id-                      | id-alg-hkdf-  | id-aes192-Wrap     |
+     | MLKEM768-X25519-KMAC256  | with-sha3-384 |                    |
+     +--------------------------+---------------+--------------------+
+     | id-MLKEM1024-ECDH-       | id-alg-hkdf-  | id-aes256-Wrap     |
+     | P384-KMAC256             | with-sha3-512 |                    |
+     +--------------------------+---------------+--------------------+
+     | id-MLKEM1024-ECDH-       | id-alg-hkdf-  | id-aes256-Wrap     |
+     | brainpoolP384r1-KMAC256  | with-sha3-512 |                    |
+     +--------------------------+---------------+--------------------+
+     | id-                      | id-alg-hkdf-  | id-aes256-Wrap     |
+     | MLKEM1024-X448-KMAC256   | with-sha3-512 |                    |
+     +--------------------------+---------------+--------------------+
 
               Table 4: REQUIRED pairings for CMS KDF and WRAP
 
@@ -845,17 +846,11 @@ Table of Contents
 
    *  id-aes*-Wrap are defined in [RFC3394].
 
-   Implementors MAY safely substitute stronger KDF and WRAP algorithms
-   than those indicated; for example id-alg-hkdf-with-sha3-512 and id-
-   aes256-Wrap MAY be safely used in place of id-alg-hkdf-with-
-   sha3-384and id-aes192-Wrap, for example, where SHA3-384 or AES-192
-   are not supported.
-
-   Implementors MAY salefy substitute different symmetric algorithms of
-   equivalent strength.  For example SHA-3 MAY be replaced by the
-   equivalent strength SHA-2, or the HKDF-based algorithms MAY be
-   replaced by an equivalent strength KDF based on a different
-   construction, such as KDF3.
+   Implementors MAY safely substitute stronger KDF and key-encryption
+   algorithms than those indicated; for example id-alg-hkdf-with-
+   sha3-512 and id-aes256-Wrap MAY be safely used in place of id-alg-
+   hkdf-with-sha3-384and id-aes192-Wrap, for example, where SHA3-384 or
+   AES-192 are not supported.
 
 7.2.  RecipientInfo Conventions
 
@@ -873,7 +868,8 @@ Table of Contents
    listed in Table 2.
 
    kemct is the ciphertext produced for this recipient; it contains the
-   ct output from Encaps(pk).
+   ct output from Encaps(pk) of the KEM algorithm identified in the kem
+   parameter.
 
    kdf identifies the key-derivation function (KDF).  Note that the KDF
    used for CMS RecipientInfo process MAY be different than the KDF used
