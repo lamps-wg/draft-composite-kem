@@ -94,6 +94,7 @@ kema-CompositeKEM {
          VALUE CompositeCiphertextValue
          PARAMS ARE absent
          PUBLIC-KEYS { publicKeyType } 
+         SMIME-CAPS { IDENTIFIED BY id }
         }
 
 
@@ -281,5 +282,24 @@ kema-MLKEM1024-X448-KMAC256 KEM-ALGORITHM ::=
     kema-CompositeKEM{
       id-MLKEM1024-X448-KMAC256, 
       pk-MLKEM1024-X448-KMAC256 }
+
+
+--
+-- Expand the S/MIME capabilities set used by CMS [RFC5911]
+--
+
+SMimeCaps SMIME-CAPS ::=
+    { kema-MLKEM512-ECDH-P256-KMAC128.&smimeCaps |
+      kema-MLKEM512-ECDH-brainpoolP256r1-KMAC128.&smimeCaps |
+      kema-MLKEM512-X25519-KMAC128.&smimeCaps |
+      kema-MLKEM512-RSA2048-KMAC128.&smimeCaps |
+      kema-MLKEM512-RSA3072-KMAC128.&smimeCaps |
+      kema-MLKEM768-ECDH-P256-KMAC256.&smimeCaps |
+      kema-MLKEM768-ECDH-brainpoolP256r1-KMAC256.&smimeCaps |
+      kema-MLKEM768-X25519-KMAC256.&smimeCaps |
+      kema-MLKEM1024-ECDH-P384-KMAC256.&smimeCaps |
+      kema-MLKEM1024-ECDH-brainpoolP384r1-KMAC256.&smimeCaps |
+      kema-MLKEM1024-X448-KMAC256.&smimeCaps,
+      ... }
 
 END
