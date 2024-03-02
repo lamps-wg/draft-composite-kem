@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 19 August 2024                                          M. Pala
+Expires: 3 September 2024                                        M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                             D-Trust GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                        16 February 2024
+                                                            2 March 2024
 
 
 Composite ML-KEM for Use in the Internet X.509 Public Key Infrastructure
@@ -67,7 +67,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 19 August 2024.
+   This Internet-Draft will expire on 3 September 2024.
 
 Copyright Notice
 
@@ -108,19 +108,24 @@ Table of Contents
    5.  Example KEM Combiner instantiation
    6.  Algorithm Identifiers
      6.1.  RSA-KEM Parameters
-   7.  ASN.1 Module
-   8.  IANA Considerations
-     8.1.  Object Identifier Allocations
-       8.1.1.  Module Registration - SMI Security for PKIX Module
+   7.  Use in CMS
+     7.1.  Underlying Components
+     7.2.  RecipientInfo Conventions
+     7.3.  Certificate Conventions
+     7.4.  SMIMECapabilities Attribute Conventions
+   8.  ASN.1 Module
+   9.  IANA Considerations
+     9.1.  Object Identifier Allocations
+       9.1.1.  Module Registration - SMI Security for PKIX Module
                Identifier
-       8.1.2.  Object Identifier Registrations - SMI Security for PKIX
+       9.1.2.  Object Identifier Registrations - SMI Security for PKIX
                Algorithms
-   9.  Security Considerations
-     9.1.  Policy for Deprecated and Acceptable Algorithms
-     9.2.  KEM Combiner
-   10. References
-     10.1.  Normative References
-     10.2.  Informative References
+   10. Security Considerations
+     10.1.  Policy for Deprecated and Acceptable Algorithms
+     10.2.  KEM Combiner
+   11. References
+     11.1.  Normative References
+     11.2.  Informative References
    Appendix A.  Samples
    Appendix B.  Implementation Considerations
      B.1.  FIPS certification
@@ -138,6 +143,8 @@ Table of Contents
 
    *  Added text to Introduction to justify where and why this mechanism
       would be used.
+
+   *  Added section "Use in CMS".
 
    Still to do in a future version:
 
@@ -431,7 +438,7 @@ Table of Contents
        OCTET STRING, ECPoint }
 
    The full set of key types defined by this specification can be found
-   in the ASN.1 Module in Section 7.
+   in the ASN.1 Module in Section 8.
 
 3.2.  CompositeKEMPublicKey
 
@@ -583,7 +590,7 @@ Table of Contents
    Each registered composite KEM algorithm must specify the choice of
    KDF, fixedInfo, and outputBits to be used.
 
-   See Section 9.2 for further discussion of the security coniserations
+   See Section 10.2 for further discussion of the security coniserations
    of this KEM combiner.
 
 4.3.1.  Named KEM Combiner parameter sets
@@ -651,7 +658,7 @@ Table of Contents
    Therefore <CompKEM>.1 is equal to 2.16.840.1.114027.80.5.2.1
 
    +========================+============+=========+===============+===========+
-   |KEM Type OID            |OID         |First    |Second         |KEM        |
+   |Composite KEM OID       |OID         |First    |Second         |KEM        |
    |                        |            |Algorithm|Algorithm      |Combiner   |
    +========================+============+=========+===============+===========+
    |id-MLKEM512-ECDH-       |<CompKEM>.1 |MLKEM512 |ECDH-P256      |KMAC128/256|
@@ -693,7 +700,7 @@ Table of Contents
    The table above contains everything needed to implement the listed
    explicit composite algorithms, with the exception of some special
    notes found below in this section.  See the ASN.1 module in section
-   Section 7 for the explicit definitions of the above Composite
+   Section 8 for the explicit definitions of the above Composite
    signature algorithms.
 
    Full specifications for the referenced algorithms can be found as
@@ -753,7 +760,176 @@ Table of Contents
    *  kda-kdf3 is defined in [I-D.ietf-lamps-rfc5990bis] which
       references it from [ANS-X9.44].
 
-7.  ASN.1 Module
+   *  id-sha3-256 is defined in [I-D.ietf-lamps-cms-sha3-hash] which
+      references it from [SHA3].
+
+7.  Use in CMS
+
+   [EDNOTE: The convention in LAMPS is to specify algorithms and their
+   CMS conventions in separate documents.  Here we have presented them
+   in the same document, but this section has been written so that it
+   can easily be moved to a standalone document.]
+
+   Composite KEM algorithms MAY be employed for one or more recipients
+   in the CMS enveloped-data content type [RFC5652], the CMS
+   authenticated-data content type [RFC5652], or the CMS authenticated-
+   enveloped-data content type [RFC5083].  In each case, the
+   KEMRecipientInfo [I-D.ietf-lamps-cms-kemri] is used with the chosen
+   composite KEM Algorithm to securely transfer the content-encryption
+   key from the originator to the recipient.
+
+7.1.  Underlying Components
+
+   A CMS implementation that supports a composite KEM algorithm MUST
+   support at least the following underlying components:
+
+   When a particular Composite KEM OID is supported, an implementation
+   MUST support the corresponding KDF algorithm identifier in Table 4.
+
+   When a particular Composite KEM OID is supported, an implementation
+   MUST support the corresponding key-encryption algorithm identifier in
+   Table 4.
+
+   An implementation MAY also support other key-derivation functions and
+   other key-encryption algorithms as well.
+
+   The following table lists the REQUIRED KDF and key-encryption
+   algorithms to preserve security and performance characteristics of
+   each composite algorithm.
+
+     +==========================+===============+====================+
+     | Composite KEM OID        | KDF           | Key Encryption Alg |
+     +==========================+===============+====================+
+     | id-MLKEM512-ECDH-        | id-alg-hkdf-  | id-aes128-Wrap     |
+     | P256-KMAC128             | with-sha3-256 |                    |
+     +--------------------------+---------------+--------------------+
+     | id-MLKEM512-ECDH-        | id-alg-hkdf-  | id-aes128-Wrap     |
+     | brainpoolP256r1-KMAC128  | with-sha3-256 |                    |
+     +--------------------------+---------------+--------------------+
+     | id-                      | id-alg-hkdf-  | id-aes128-Wrap     |
+     | MLKEM512-X25519-KMAC128  | with-sha3-256 |                    |
+     +--------------------------+---------------+--------------------+
+     | id-                      | id-alg-hkdf-  | id-aes128-Wrap     |
+     | MLKEM512-RSA2048-KMAC128 | with-sha3-256 |                    |
+     +--------------------------+---------------+--------------------+
+     | id-                      | id-alg-hkdf-  | id-aes128-Wrap     |
+     | MLKEM512-RSA3072-KMAC128 | with-sha3-256 |                    |
+     +--------------------------+---------------+--------------------+
+     | id-MLKEM768-ECDH-        | id-alg-hkdf-  | id-aes192-Wrap     |
+     | P256-KMAC256             | with-sha3-384 |                    |
+     +--------------------------+---------------+--------------------+
+     | id-MLKEM768-ECDH-        | id-alg-hkdf-  | id-aes192-Wrap     |
+     | brainpoolP256r1-KMAC256  | with-sha3-384 |                    |
+     +--------------------------+---------------+--------------------+
+     | id-                      | id-alg-hkdf-  | id-aes192-Wrap     |
+     | MLKEM768-X25519-KMAC256  | with-sha3-384 |                    |
+     +--------------------------+---------------+--------------------+
+     | id-MLKEM1024-ECDH-       | id-alg-hkdf-  | id-aes256-Wrap     |
+     | P384-KMAC256             | with-sha3-512 |                    |
+     +--------------------------+---------------+--------------------+
+     | id-MLKEM1024-ECDH-       | id-alg-hkdf-  | id-aes256-Wrap     |
+     | brainpoolP384r1-KMAC256  | with-sha3-512 |                    |
+     +--------------------------+---------------+--------------------+
+     | id-                      | id-alg-hkdf-  | id-aes256-Wrap     |
+     | MLKEM1024-X448-KMAC256   | with-sha3-512 |                    |
+     +--------------------------+---------------+--------------------+
+
+              Table 4: REQUIRED pairings for CMS KDF and WRAP
+
+   [EDNOTE: OIDs for KMAC-based KDFs are expected.  Should they be used
+   in place of the HKDF-with-sha3 OIDs above?]
+
+   where:
+
+   *  id-alg-hkdf-with-sha3-* are defined in
+      [I-D.ietf-lamps-cms-sha3-hash].
+
+   *  id-aes*-Wrap are defined in [RFC3394].
+
+   Implementors MAY safely substitute stronger KDF and key-encryption
+   algorithms than those indicated; for example id-alg-hkdf-with-
+   sha3-512 and id-aes256-Wrap MAY be safely used in place of id-alg-
+   hkdf-with-sha3-384and id-aes192-Wrap, for example, where SHA3-384 or
+   AES-192 are not supported.
+
+7.2.  RecipientInfo Conventions
+
+   When a composite KEM Algorithm is employed for a recipient, the
+   RecipientInfo alternative for that recipient MUST be
+   OtherRecipientInfo using the KEMRecipientInfo structure [I-D.ietf-
+   lamps-cms-kemri].  The fields of the KEMRecipientInfo MUST have the
+   following values:
+
+   version is the syntax version number; it MUST be 0.
+
+   rid identifies the recipient's certificate or public key.
+
+   kem identifies the KEM algorithm; it MUST contain one of the OIDs
+   listed in Table 2.
+
+   kemct is the ciphertext produced for this recipient; it contains the
+   ct output from Encaps(pk) of the KEM algorithm identified in the kem
+   parameter.
+
+   kdf identifies the key-derivation function (KDF).  Note that the KDF
+   used for CMS RecipientInfo process MAY be different than the KDF used
+   within the composite KEM Algorithm, which MAY be different than the
+   KDFs (if any) used within the component KEMs of the composite KEM
+   Algorithm.
+
+   kekLength is the size of the key-encryption key in octets.
+
+   ukm is an optional random input to the key-derivation function.
+
+   wrap identifies a key-encryption algorithm used to encrypt the keying
+   material.
+
+   encryptedKey is the result of encrypting the keying material with the
+   key-encryption key.  When used with the CMS enveloped-data content
+   type [RFC5652], the keying material is a content-encryption key.
+   When used with the CMS authenticated-data content type [RFC5652], the
+   keying material is a message-authentication key.  When used with the
+   CMS authenticated-enveloped-data content type [RFC5083], the keying
+   material is a content-authenticated-encryption key.
+
+7.3.  Certificate Conventions
+
+   The conventions specified in this section augment RFC 5280 [RFC5280].
+
+   The willingness to accept a composite KEM Algorithm MAY be signaled
+   by the use of the SMIMECapabilities Attribute as specified in
+   Section 2.5.2. of [RFC8551] or the SMIMECapabilities certificate
+   extension as specified in [RFC4262].
+
+   The intended application for the public key MAY be indicated in the
+   key usage certificate extension as specified in Section 4.2.1.3 of
+   [RFC5280].  If the keyUsage extension is present in a certificate
+   that conveys a composite KEM public key, then the key usage extension
+   MUST contain only the following value:
+
+   keyEncipherment
+
+   The digitalSignature and dataEncipherment values MUST NOT be present.
+   That is, a public key intended to be employed only with a composite
+   KEM algorithm MUST NOT also be employed for data encryption or for
+   digital signatures.  This requirement does not carry any particular
+   security consideration; only the convention that KEM keys be
+   identifed with the keyEncipherment key usage.
+
+7.4.  SMIMECapabilities Attribute Conventions
+
+   Section 2.5.2 of [RFC8551] defines the SMIMECapabilities attribute to
+   announce a partial list of algorithms that an S/MIME implementation
+   can support.  When constructing a CMS signed-data content type
+   [RFC5652], a compliant implementation MAY include the
+   SMIMECapabilities attribute that announces support for the RSA-KEM
+   Algorithm.
+
+   The SMIMECapability SEQUENCE representing a composite KEM Algorithm
+   MUST include the appropriate object identifier as per Table 2 in the
+   capabilityID field.
+
+8.  ASN.1 Module
 
    <CODE STARTS>
 
@@ -853,6 +1029,7 @@ Table of Contents
             VALUE CompositeCiphertextValue
             PARAMS ARE absent
             PUBLIC-KEYS { publicKeyType }
+            SMIME-CAPS { IDENTIFIED BY id }
            }
 
 
@@ -1041,18 +1218,37 @@ Table of Contents
          id-MLKEM1024-X448-KMAC256,
          pk-MLKEM1024-X448-KMAC256 }
 
+
+   --
+   -- Expand the S/MIME capabilities set used by CMS [RFC5911]
+   --
+
+   SMimeCaps SMIME-CAPS ::=
+       { kema-MLKEM512-ECDH-P256-KMAC128.&smimeCaps |
+         kema-MLKEM512-ECDH-brainpoolP256r1-KMAC128.&smimeCaps |
+         kema-MLKEM512-X25519-KMAC128.&smimeCaps |
+         kema-MLKEM512-RSA2048-KMAC128.&smimeCaps |
+         kema-MLKEM512-RSA3072-KMAC128.&smimeCaps |
+         kema-MLKEM768-ECDH-P256-KMAC256.&smimeCaps |
+         kema-MLKEM768-ECDH-brainpoolP256r1-KMAC256.&smimeCaps |
+         kema-MLKEM768-X25519-KMAC256.&smimeCaps |
+         kema-MLKEM1024-ECDH-P384-KMAC256.&smimeCaps |
+         kema-MLKEM1024-ECDH-brainpoolP384r1-KMAC256.&smimeCaps |
+         kema-MLKEM1024-X448-KMAC256.&smimeCaps,
+         ... }
+
    END
 
    <CODE ENDS>
 
-8.  IANA Considerations
+9.  IANA Considerations
 
-8.1.  Object Identifier Allocations
+9.1.  Object Identifier Allocations
 
    EDNOTE to IANA: OIDs will need to be replaced in both the ASN.1
    module and in Table 2.
 
-8.1.1.  Module Registration - SMI Security for PKIX Module Identifier
+9.1.1.  Module Registration - SMI Security for PKIX Module Identifier
 
    *  Decimal: IANA Assigned - *Replace TBDMOD*
 
@@ -1060,7 +1256,7 @@ Table of Contents
 
    *  References: This Document
 
-8.1.2.  Object Identifier Registrations - SMI Security for PKIX
+9.1.2.  Object Identifier Registrations - SMI Security for PKIX
         Algorithms
 
    *  id-MLKEM512-ECDH-P256-KMAC128
@@ -1143,9 +1339,9 @@ Table of Contents
 
       -  References: This Document
 
-9.  Security Considerations
+10.  Security Considerations
 
-9.1.  Policy for Deprecated and Acceptable Algorithms
+10.1.  Policy for Deprecated and Acceptable Algorithms
 
    Traditionally, a public key or certificate contains a single
    cryptographic algorithm.  If and when an algorithm becomes deprecated
@@ -1172,7 +1368,7 @@ Table of Contents
    long as one component algorithm remains strong, then the overall
    composite algorithm remains strong.
 
-9.2.  KEM Combiner
+10.2.  KEM Combiner
 
    This document uses directly the KEM Combiner defined in
    [I-D.ounsworth-cfrg-kem-combiners] and therefore IND-CCA2 of any of
@@ -1194,9 +1390,9 @@ Table of Contents
    constant-length shared secrets and ciphertexts and therefore we
    justify using the simpler construction that omits the length tag.
 
-10.  References
+11.  References
 
-10.1.  Normative References
+11.1.  Normative References
 
    [ANS-X9.44]
               American National Standards Institute, "Public Key
@@ -1215,12 +1411,12 @@ Table of Contents
               <https://nvlpubs.nist.gov/nistpubs/FIPS/
               NIST.FIPS.203.ipd.pdf>.
 
-   [I-D.housley-lamps-cms-sha3-hash]
+   [I-D.ietf-lamps-cms-sha3-hash]
               Housley, R., "Use of the SHA3 One-way Hash Functions in
               the Cryptographic Message Syntax (CMS)", Work in Progress,
-              Internet-Draft, draft-housley-lamps-cms-sha3-hash-01, 2
-              October 2023, <https://datatracker.ietf.org/doc/html/
-              draft-housley-lamps-cms-sha3-hash-01>.
+              Internet-Draft, draft-ietf-lamps-cms-sha3-hash-01, 1 March
+              2024, <https://datatracker.ietf.org/doc/html/draft-ietf-
+              lamps-cms-sha3-hash-01>.
 
    [I-D.ietf-lamps-rfc5990bis]
               Housley, R. and S. Turner, "Use of the RSA-KEM Algorithm
@@ -1241,6 +1437,10 @@ Table of Contents
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
+
+   [RFC3394]  Schaad, J. and R. Housley, "Advanced Encryption Standard
+              (AES) Key Wrap Algorithm", RFC 3394, DOI 10.17487/RFC3394,
+              September 2002, <https://www.rfc-editor.org/info/rfc3394>.
 
    [RFC5280]  Cooper, D., Santesson, S., Farrell, S., Boeyen, S.,
               Housley, R., and W. Polk, "Internet X.509 Public Key
@@ -1271,6 +1471,13 @@ Table of Contents
               RFC 8411, DOI 10.17487/RFC8411, August 2018,
               <https://www.rfc-editor.org/info/rfc8411>.
 
+   [SHA3]     National Institute of Standards and Technology (NIST),
+              "SHA-3 Standard: Permutation-Based Hash and Extendable-
+              Output Functions, FIPS PUB 202, DOI 10.6028/
+              NIST.FIPS.202", August 2015,
+              <https://nvlpubs.nist.gov/nistpubs/FIPS/
+              NIST.FIPS.202.pdf>.
+
    [SP.800-56Ar3]
               National Institute of Standards and Technology (NIST),
               "Recommendation for Pair-Wise Key-Establishment Schemes
@@ -1297,7 +1504,7 @@ Table of Contents
               Encoding Rules (CER) and Distinguished Encoding Rules
               (DER)", ISO/IEC 8825-1:2015, November 2015.
 
-10.2.  Informative References
+11.2.  Informative References
 
    [ANSSI2024]
               French Cybersecurity Agency (ANSSI), Federal Office for
@@ -1375,6 +1582,11 @@ Table of Contents
               Certificate Request Message Format (CRMF)", RFC 4211,
               DOI 10.17487/RFC4211, September 2005,
               <https://www.rfc-editor.org/info/rfc4211>.
+
+   [RFC5083]  Housley, R., "Cryptographic Message Syntax (CMS)
+              Authenticated-Enveloped-Data Content Type", RFC 5083,
+              DOI 10.17487/RFC5083, November 2007,
+              <https://www.rfc-editor.org/info/rfc5083>.
 
    [RFC5639]  Lochter, M. and J. Merkle, "Elliptic Curve Cryptography
               (ECC) Brainpool Standard Curves and Curve Generation",
