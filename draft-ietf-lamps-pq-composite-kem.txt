@@ -104,7 +104,7 @@ Table of Contents
      4.1.  kema-CompositeKEM
      4.2.  CompositeCiphertextValue
      4.3.  KEM Combiner
-       4.3.1.  Named KEM Combiner parameter sets
+       4.3.1.  KMAC-KDF
    5.  Example KEM Combiner instantiation
    6.  Algorithm Identifiers
      6.1.  RSA-KEM Parameters
@@ -145,6 +145,9 @@ Table of Contents
       would be used.
 
    *  Added section "Use in CMS".
+
+   *  Switched all KDFs for both the combiner and the CMS KEMRI to use
+      id-kmac128 or id-kmac256 from I-D.ietf-lamps-cms-sha3-hash.
 
    Still to do in a future version:
 
@@ -594,33 +597,51 @@ Table of Contents
    See Section 10.2 for further discussion of the security
    considerations of this KEM combiner.
 
-4.3.1.  Named KEM Combiner parameter sets
+4.3.1.  KMAC-KDF
+
+   KMAC128-KDF and KMAC256-KDF are KMAC-based KDFs specified for use in
+   CMS in [I-D.ietf-lamps-cms-sha3-hash].  Here, KMAC# indicates the use
+   of either KMAC128-KDF or KMAC256-KDF.
+
+   KMAC#(K, X, L, S) takes the following parameters:
+
+      K: the input key-derivation key.  In this document this is the
+      shared secret outputted from the Encapsulate() or Decapsulate()
+      functions.  This corresponds to the IKM KDF input from Section 5
+      of [I-D.ietf-lamps-cms-kemri].
+
+      X: the context, which is the info KDF input.
+
+      L: the output length, in bits.
+
+      S: the optional customization label.  In this document this
+      parameter is unused, that is it is the zero-length string "".
+
+   The object identifier for KMAC128-KDF is id-kmac128 as defined in
+   [I-D.ietf-lamps-cms-sha3-hash].
+
+   The object identifier for KMAC256-KDF is id-kmac256 as defined in
+   [I-D.ietf-lamps-cms-sha3-hash].
+
+   Since the customization label to KMAC# is not used, the parameter
+   field MUST be absent when id-kmac128 or id-kmac256 is used as part of
+   an algorithm identifier specifying the KDF to use for ML-KEM in
+   KemRecipientInfo.
 
    This specification references KEM combiner instantiations according
    to the following names:
 
-               +===================+=========+============+
-               | KEM Combiner Name | KDF     | outputBits |
-               +===================+=========+============+
-               | KMAC128/256       | KMAC128 | 256        |
-               +-------------------+---------+------------+
-               | KMAC256/384       | KMAC256 | 384        |
-               +-------------------+---------+------------+
-               | KMAC256/512       | KMAC256 | 512        |
-               +-------------------+---------+------------+
+              +===================+============+============+
+              | KEM Combiner Name | KDF        | outputBits |
+              +===================+============+============+
+              | KMAC128/256       | id-kmac128 | 256        |
+              +-------------------+------------+------------+
+              | KMAC256/384       | id-kmac256 | 384        |
+              +-------------------+------------+------------+
+              | KMAC256/512       | id-kmac256 | 512        |
+              +-------------------+------------+------------+
 
-                          Table 1: KEM Combiners
-
-   KMAC is defined in NIST SP 800-185 [SP800-185].  The KMAC(K, X, L, S)
-   parameters are instantiated as follows:
-
-   *  K: the ASCII value of the name of the Kem Type OID.
-
-   *  X: the message input to KDF(), as defined above.
-
-   *  L: integer representation of outputBits.
-
-   *  S: empty string.
+                           Table 1: KEM Combiners
 
    BEGIN EDNOTE
 
@@ -798,52 +819,41 @@ Table of Contents
    algorithms to preserve security and performance characteristics of
    each composite algorithm.
 
-     +==========================+===============+====================+
-     | Composite KEM OID        | KDF           | Key Encryption Alg |
-     +==========================+===============+====================+
-     | id-MLKEM512-ECDH-        | id-alg-hkdf-  | id-aes128-Wrap     |
-     | P256-KMAC128             | with-sha3-256 |                    |
-     +--------------------------+---------------+--------------------+
-     | id-MLKEM512-ECDH-        | id-alg-hkdf-  | id-aes128-Wrap     |
-     | brainpoolP256r1-KMAC128  | with-sha3-256 |                    |
-     +--------------------------+---------------+--------------------+
-     | id-                      | id-alg-hkdf-  | id-aes128-Wrap     |
-     | MLKEM512-X25519-KMAC128  | with-sha3-256 |                    |
-     +--------------------------+---------------+--------------------+
-     | id-                      | id-alg-hkdf-  | id-aes128-Wrap     |
-     | MLKEM512-RSA2048-KMAC128 | with-sha3-256 |                    |
-     +--------------------------+---------------+--------------------+
-     | id-                      | id-alg-hkdf-  | id-aes128-Wrap     |
-     | MLKEM512-RSA3072-KMAC128 | with-sha3-256 |                    |
-     +--------------------------+---------------+--------------------+
-     | id-MLKEM768-ECDH-        | id-alg-hkdf-  | id-aes192-Wrap     |
-     | P256-KMAC256             | with-sha3-384 |                    |
-     +--------------------------+---------------+--------------------+
-     | id-MLKEM768-ECDH-        | id-alg-hkdf-  | id-aes192-Wrap     |
-     | brainpoolP256r1-KMAC256  | with-sha3-384 |                    |
-     +--------------------------+---------------+--------------------+
-     | id-                      | id-alg-hkdf-  | id-aes192-Wrap     |
-     | MLKEM768-X25519-KMAC256  | with-sha3-384 |                    |
-     +--------------------------+---------------+--------------------+
-     | id-MLKEM1024-ECDH-       | id-alg-hkdf-  | id-aes256-Wrap     |
-     | P384-KMAC256             | with-sha3-512 |                    |
-     +--------------------------+---------------+--------------------+
-     | id-MLKEM1024-ECDH-       | id-alg-hkdf-  | id-aes256-Wrap     |
-     | brainpoolP384r1-KMAC256  | with-sha3-512 |                    |
-     +--------------------------+---------------+--------------------+
-     | id-                      | id-alg-hkdf-  | id-aes256-Wrap     |
-     | MLKEM1024-X448-KMAC256   | with-sha3-512 |                    |
-     +--------------------------+---------------+--------------------+
+   +===============================+=============+====================+
+   | Composite KEM OID             | KDF         | Key Encryption Alg |
+   +===============================+=============+====================+
+   | id-MLKEM512-ECDH-P256-KMAC128 | KMAC128/256 | id-aes128-Wrap     |
+   +-------------------------------+-------------+--------------------+
+   | id-MLKEM512-ECDH-             | KMAC128/256 | id-aes128-Wrap     |
+   | brainpoolP256r1-KMAC128       |             |                    |
+   +-------------------------------+-------------+--------------------+
+   | id-MLKEM512-X25519-KMAC128    | KMAC128/256 | id-aes128-Wrap     |
+   +-------------------------------+-------------+--------------------+
+   | id-MLKEM512-RSA2048-KMAC128   | KMAC128/256 | id-aes128-Wrap     |
+   +-------------------------------+-------------+--------------------+
+   | id-MLKEM512-RSA3072-KMAC128   | KMAC128/256 | id-aes128-Wrap     |
+   +-------------------------------+-------------+--------------------+
+   | id-MLKEM768-ECDH-P256-KMAC256 | KMAC256/384 | id-aes192-Wrap     |
+   +-------------------------------+-------------+--------------------+
+   | id-MLKEM768-ECDH-             | KMAC256/384 | id-aes192-Wrap     |
+   | brainpoolP256r1-KMAC256       |             |                    |
+   +-------------------------------+-------------+--------------------+
+   | id-MLKEM768-X25519-KMAC256    | KMAC256/384 | id-aes192-Wrap     |
+   +-------------------------------+-------------+--------------------+
+   | id-MLKEM1024-ECDH-            | KMAC256/512 | id-aes256-Wrap     |
+   | P384-KMAC256                  |             |                    |
+   +-------------------------------+-------------+--------------------+
+   | id-MLKEM1024-ECDH-            | KMAC256/512 | id-aes256-Wrap     |
+   | brainpoolP384r1-KMAC256       |             |                    |
+   +-------------------------------+-------------+--------------------+
+   | id-MLKEM1024-X448-KMAC256     | KMAC256/512 | id-aes256-Wrap     |
+   +-------------------------------+-------------+--------------------+
 
-              Table 4: REQUIRED pairings for CMS KDF and WRAP
-
-   [EDNOTE: OIDs for KMAC-based KDFs are expected.  Should they be used
-   in place of the HKDF-with-sha3 OIDs above?]
+             Table 4: REQUIRED pairings for CMS KDF and WRAP
 
    where:
 
-   *  id-alg-hkdf-with-sha3-* are defined in
-      [I-D.ietf-lamps-cms-sha3-hash].
+   *  KMAC KDF instantiations are defined in Section 4.3.1.
 
    *  id-aes*-Wrap are defined in [RFC3394].
 
@@ -857,9 +867,9 @@ Table of Contents
 
    When a composite KEM Algorithm is employed for a recipient, the
    RecipientInfo alternative for that recipient MUST be
-   OtherRecipientInfo using the KEMRecipientInfo structure [I-D.ietf-
-   lamps-cms-kemri].  The fields of the KEMRecipientInfo MUST have the
-   following values:
+   OtherRecipientInfo using the KEMRecipientInfo structure
+   [I-D.ietf-lamps-cms-kemri].  The fields of the KEMRecipientInfo MUST
+   have the following values:
 
    version is the syntax version number; it MUST be 0.
 
@@ -1411,6 +1421,14 @@ Table of Contents
               Standard", August 2023,
               <https://nvlpubs.nist.gov/nistpubs/FIPS/
               NIST.FIPS.203.ipd.pdf>.
+
+   [I-D.ietf-lamps-cms-kemri]
+              Housley, R., Gray, J., and T. Okubo, "Using Key
+              Encapsulation Mechanism (KEM) Algorithms in the
+              Cryptographic Message Syntax (CMS)", Work in Progress,
+              Internet-Draft, draft-ietf-lamps-cms-kemri-08, 6 February
+              2024, <https://datatracker.ietf.org/doc/html/draft-ietf-
+              lamps-cms-kemri-08>.
 
    [I-D.ietf-lamps-cms-sha3-hash]
               Housley, R., "Use of the SHA3 One-way Hash Functions in
