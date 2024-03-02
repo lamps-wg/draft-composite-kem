@@ -192,6 +192,7 @@ This document assumes that all component algorithms are KEMs, and therefore it d
 * Added Max Pala, Jan Klaußner, and Scott Fluhrer as authors.
 * Added text to Introduction to justify where and why this mechanism would be used.
 * Added section "Use in CMS".
+* Switched all KDFs for both the combiner and the CMS KEMRI to use id-kmac128 or id-kmac256 from I-D.ietf-lamps-cms-sha3-hash.
 
 
 Still to do in a future version:
@@ -513,24 +514,35 @@ Each registered composite KEM algorithm must specify the choice of `KDF`, `fixed
 
 See {{sec-cons-kem-combiner}} for further discussion of the security considerations of this KEM combiner.
 
+### KMAC-KDF {#sec-kmac-kdf}
 
-### Named KEM Combiner parameter sets
+KMAC128-KDF and KMAC256-KDF are KMAC-based KDFs specified for use in CMS in {{!I-D.ietf-lamps-cms-sha3-hash}}.  Here, KMAC# indicates the use of either KMAC128-KDF or KMAC256-KDF.
+
+KMAC#(K, X, L, S) takes the following parameters:
+
+> K: the input key-derivation key.  In this document this is the shared secret outputted from the Encapsulate() or Decapsulate() functions.  This corresponds to the IKM KDF input from Section 5 of {{!I-D.ietf-lamps-cms-kemri}}.
+
+> X: the context, which is the info KDF input.
+
+> L: the output length, in bits.
+
+> S: the optional customization label.  In this document this parameter is unused, that is it is the zero-length string "".
+
+The object identifier for KMAC128-KDF is id-kmac128 as defined in {{!I-D.ietf-lamps-cms-sha3-hash}}.
+
+The object identifier for KMAC256-KDF is id-kmac256 as defined in {{!I-D.ietf-lamps-cms-sha3-hash}}.
+
+Since the customization label to KMAC# is not used, the parameter field MUST be absent when id-kmac128 or id-kmac256 is used as part of an algorithm identifier specifying the KDF to use for ML-KEM in KemRecipientInfo.
 
 This specification references KEM combiner instantiations according to the following names:
 
-| KEM Combiner Name | KDF     | outputBits |
-| ---               | ------- |---         |
-| KMAC128/256       | KMAC128 | 256 |
-| KMAC256/384       | KMAC256 | 384 |
-| KMAC256/512       | KMAC256 | 512 |
+| KEM Combiner Name | KDF        | outputBits |
+| ---               | -------    |---         |
+| KMAC128/256       | id-kmac128 | 256        |
+| KMAC256/384       | id-kmac256 | 384        |
+| KMAC256/512       | id-kmac256 | 512        |
 {: #tab-kem-combiners title="KEM Combiners"}
 
-KMAC is defined in NIST SP 800-185 [SP800-185]. The `KMAC(K, X, L, S)` parameters are instantiated as follows:
-
-* `K`: the ASCII value of the name of the Kem Type OID.
-* `X`: the message input to `KDF()`, as defined above.
-* `L`: integer representation of `outputBits`.
-* `S`: empty string.
 
 BEGIN EDNOTE
 
@@ -636,26 +648,25 @@ An implementation MAY also support other key-derivation functions and other key-
 The following table lists the REQUIRED KDF and key-encryption algorithms to preserve security and performance characteristics of each composite algorithm.
 
 
-| Composite KEM OID                         | KDF                       | Key Encryption Alg |
-|---------                                  | ---                       | ---              |
-| id-MLKEM512-ECDH-P256-KMAC128             | id-alg-hkdf-with-sha3-256 | id-aes128-Wrap   |
-| id-MLKEM512-ECDH-brainpoolP256r1-KMAC128  | id-alg-hkdf-with-sha3-256 | id-aes128-Wrap   |
-| id-MLKEM512-X25519-KMAC128                | id-alg-hkdf-with-sha3-256 | id-aes128-Wrap   |
-| id-MLKEM512-RSA2048-KMAC128               | id-alg-hkdf-with-sha3-256 | id-aes128-Wrap   |
-| id-MLKEM512-RSA3072-KMAC128               | id-alg-hkdf-with-sha3-256 | id-aes128-Wrap   |
-| id-MLKEM768-ECDH-P256-KMAC256             | id-alg-hkdf-with-sha3-384 | id-aes192-Wrap   |
-| id-MLKEM768-ECDH-brainpoolP256r1-KMAC256  | id-alg-hkdf-with-sha3-384 | id-aes192-Wrap   |
-| id-MLKEM768-X25519-KMAC256                | id-alg-hkdf-with-sha3-384 | id-aes192-Wrap   |
-| id-MLKEM1024-ECDH-P384-KMAC256            | id-alg-hkdf-with-sha3-512 | id-aes256-Wrap   |
-| id-MLKEM1024-ECDH-brainpoolP384r1-KMAC256 | id-alg-hkdf-with-sha3-512 | id-aes256-Wrap   |
-| id-MLKEM1024-X448-KMAC256                 | id-alg-hkdf-with-sha3-512 | id-aes256-Wrap   |
+| Composite KEM OID                         | KDF         | Key Encryption Alg |
+|---------                                  | ---         | ---                |
+| id-MLKEM512-ECDH-P256-KMAC128             | KMAC128/256 | id-aes128-Wrap     |
+| id-MLKEM512-ECDH-brainpoolP256r1-KMAC128  | KMAC128/256 | id-aes128-Wrap     |
+| id-MLKEM512-X25519-KMAC128                | KMAC128/256 | id-aes128-Wrap     |
+| id-MLKEM512-RSA2048-KMAC128               | KMAC128/256 | id-aes128-Wrap     |
+| id-MLKEM512-RSA3072-KMAC128               | KMAC128/256 | id-aes128-Wrap     |
+| id-MLKEM768-ECDH-P256-KMAC256             | KMAC256/384 | id-aes192-Wrap     |
+| id-MLKEM768-ECDH-brainpoolP256r1-KMAC256  | KMAC256/384 | id-aes192-Wrap     |
+| id-MLKEM768-X25519-KMAC256                | KMAC256/384 | id-aes192-Wrap     |
+| id-MLKEM1024-ECDH-P384-KMAC256            | KMAC256/512 | id-aes256-Wrap     |
+| id-MLKEM1024-ECDH-brainpoolP384r1-KMAC256 | KMAC256/512 | id-aes256-Wrap     |
+| id-MLKEM1024-X448-KMAC256                 | KMAC256/512 | id-aes256-Wrap     |
 {: #tab-cms-kdf-wrap title="REQUIRED pairings for CMS KDF and WRAP"}
 
-\[EDNOTE: OIDs for KMAC-based KDFs are expected. Should they be used in place of the HKDF-with-sha3 OIDs above?]
 
 where:
 
-* `id-alg-hkdf-with-sha3-*` are defined in {{I-D.ietf-lamps-cms-sha3-hash}}.
+* KMAC KDF instantiations are defined in {{sec-kmac-kdf}}.
 * `id-aes*-Wrap` are defined in [RFC3394].
 
 Implementers MAY safely substitute stronger KDF and key-encryption algorithms than those indicated; for example `id-alg-hkdf-with-sha3-512` and `id-aes256-Wrap` MAY be safely used in place of `id-alg-hkdf-with-sha3-384`and `id-aes192-Wrap`, for example, where SHA3-384 or AES-192 are not supported.
