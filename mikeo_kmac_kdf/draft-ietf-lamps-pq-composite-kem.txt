@@ -146,6 +146,9 @@ Table of Contents
 
    *  Added section "Use in CMS".
 
+   *  Switched all KDFs for both the combiner and the CMS KEMRI to use
+      id-kmac128 or id-kmac256 from I-D.ietf-lamps-cms-sha3-hash.
+
    Still to do in a future version:
 
    [ ] We need PEM samples ... 118 hackathon?  OQS friends?  David @ BC?
