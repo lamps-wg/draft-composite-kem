@@ -202,7 +202,7 @@ Still to do in a future version:
 # Introduction {#sec-intro}
 
 
-The migration to post-quantum cryptography is unique in the history of modern digital cryptography in that neither the old outgoing nor the new incoming algorithms are fully trusted to protect data for long data lifetimes. The outgoing algorithms, such as RSA and elliptic curve, may fall to quantum cryptalanysis, while the incoming post-quantum algorithms face uncertainty about both the underlying mathematics falling to classical algorithmic attacks as well as hardware and software implementations that have not had sufficient maturing time to rule out catestrophic implementation bugs. Unlike previous cryptographic algorithm migrations, the choice of when to migrate and which algorithms to migrate to, is not so clear.
+The migration to post-quantum cryptography is unique in the history of modern digital cryptography in that neither the old outgoing nor the new incoming algorithms are fully trusted to protect data for long data lifetimes. The outgoing algorithms, such as RSA and elliptic curve, may fall to quantum cryptalanysis, while the incoming post-quantum algorithms face uncertainty about both the underlying mathematics falling to classical algorithmic attacks as well as hardware and software implementations that have not had sufficient maturing time to rule out catastrophic implementation bugs. Unlike previous cryptographic algorithm migrations, the choice of when to migrate and which algorithms to migrate to, is not so clear.
 
 Cautious implementers may wish to combine cryptographic algorithms such that an attacker would need to break all of them in order to compromise the data being protected. Such mechanisms are referred to as Post-Quantum / Traditional Hybrids {{I-D.driscoll-pqt-hybrid-terminology}}.
 
@@ -259,7 +259,7 @@ In addition, the following terms are used in this document:
   A value established between two communicating parties for use as
   cryptographic key material, but which cannot be learned by an active
   or passive adversary. This document is concerned with shared
-  secrets established via public key cryptagraphic operations.
+  secrets established via public key cryptographic operations.
 
 ## Composite Design Philosophy
 
@@ -492,9 +492,9 @@ A composite KEM and `CompositeCipherTextValue` MAY be associated with a composit
 
 ## KEM Combiner {#sec-kem-combiner}
 
-TODO: as per https://www.enisa.europa.eu/publications/post-quantum-cryptography-integration-study section 4.2, might need to specify behaviour in light of KEMs with a non-zero failure probility.
+TODO: as per https://www.enisa.europa.eu/publications/post-quantum-cryptography-integration-study section 4.2, might need to specify behaviour in light of KEMs with a non-zero failure probability.
 
-This document follows the construction of {{I-D.ounsworth-cfrg-kem-combiners}}, which is repeated here for clarity and simplified to take two imput shared secrets:
+This document follows the construction of {{I-D.ounsworth-cfrg-kem-combiners}}, which is repeated here for clarity and simplified to take two input shared secrets:
 
 ~~~
 Combiner(ct1, ss1, ct2, ss2, fixedInfo) =
@@ -506,12 +506,12 @@ where:
 
 * `KDF(message, outputBits)` represents a hash function suitable to the chosen KEMs according to {tab-kem-combiners}.
 * `fixedInfo` SHALL be the ASCII-encoded string name of the composite KEM algorithm as listed in {{tab-kem-algs}}.
-* `counter` SHALL be the fixed 32-bit value `0x00000001` which is placed here soly for the purposes of easy compliance with [SP.800-56Cr2].
+* `counter` SHALL be the fixed 32-bit value `0x00000001` which is placed here solely for the purposes of easy compliance with [SP.800-56Cr2].
 * `||` represents concatenation.
 
 Each registered composite KEM algorithm must specify the choice of `KDF`, `fixedInfo`, and `outputBits` to be used.
 
-See {{sec-cons-kem-combiner}} for further discussion of the security coniserations of this KEM combiner.
+See {{sec-cons-kem-combiner}} for further discussion of the security considerations of this KEM combiner.
 
 
 ### Named KEM Combiner parameter sets
@@ -527,7 +527,7 @@ This specification references KEM combiner instantiations according to the follo
 
 KMAC is defined in NIST SP 800-185 [SP800-185]. The `KMAC(K, X, L, S)` parameters are instantiated as follows:
 
-* `K`: the ASCI value of the name of the Kem Type OID.
+* `K`: the ASCII value of the name of the Kem Type OID.
 * `X`: the message input to `KDF()`, as defined above.
 * `L`: integer representation of `outputBits`.
 * `S`: empty string.
@@ -593,7 +593,7 @@ Full specifications for the referenced algorithms can be found as follows:
 
 Note that all ECDH as well as X25519 and X448 algorithms MUST be promoted into KEMs according to {{I-D.ounsworth-lamps-cms-dhkem}}.
 
-EDNOTE: I believe that [SP.800-56Ar3] and [BSI-ECC] give equivalent and interoperable algorithms, so maybe this is extranuous detail to include?
+EDNOTE: I believe that [SP.800-56Ar3] and [BSI-ECC] give equivalent and interoperable algorithms, so maybe this is extraneous detail to include?
 
 The "KEM Combiner" column refers to the definitions in {{sec-kem-combiner}}.
 
@@ -658,7 +658,7 @@ where:
 * `id-alg-hkdf-with-sha3-*` are defined in {{I-D.ietf-lamps-cms-sha3-hash}}.
 * `id-aes*-Wrap` are defined in [RFC3394].
 
-Implementors MAY safely substitute stronger KDF and key-encryption algorithms than those indicated; for example `id-alg-hkdf-with-sha3-512` and `id-aes256-Wrap` MAY be safely used in place of `id-alg-hkdf-with-sha3-384`and `id-aes192-Wrap`, for example, where SHA3-384 or AES-192 are not supported.
+Implementers MAY safely substitute stronger KDF and key-encryption algorithms than those indicated; for example `id-alg-hkdf-with-sha3-512` and `id-aes256-Wrap` MAY be safely used in place of `id-alg-hkdf-with-sha3-384`and `id-aes192-Wrap`, for example, where SHA3-384 or AES-192 are not supported.
 
 
 ## RecipientInfo Conventions
@@ -693,7 +693,7 @@ The intended application for the public key MAY be indicated in the key usage ce
 
 keyEncipherment
 
-The digitalSignature and dataEncipherment values MUST NOT be present. That is, a public key intended to be employed only with a composite KEM algorithm MUST NOT also be employed for data encryption or for digital signatures. This requirement does not carry any particular security consideration; only the convention that KEM keys be identifed with the `keyEncipherment` key usage.
+The digitalSignature and dataEncipherment values MUST NOT be present. That is, a public key intended to be employed only with a composite KEM algorithm MUST NOT also be employed for data encryption or for digital signatures. This requirement does not carry any particular security consideration; only the convention that KEM keys be identified with the `keyEncipherment` key usage.
 
 
 ## SMIMECapabilities Attribute Conventions
@@ -790,7 +790,7 @@ Traditionally, a public key or certificate contains a single cryptographic algor
 
 In the composite model this is less obvious since implementers may decide that certain cryptographic algorithms have complementary security properties and are acceptable in combination even though one or both algorithms are deprecated for individual use. As such, a single composite public key or certificate may contain a mixture of deprecated and non-deprecated algorithms.
 
-Since composite algorithms are registered independently of their component algorithms, their deprecation can be handled indpendently from that of their component algorithms. For example a cryptographic policy might continue to allow `id-MLKEM512-ECDH-P256-KMAC128` even after ECDH-P256 is deprecated.
+Since composite algorithms are registered independently of their component algorithms, their deprecation can be handled independently from that of their component algorithms. For example a cryptographic policy might continue to allow `id-MLKEM512-ECDH-P256-KMAC128` even after ECDH-P256 is deprecated.
 
 The composite KEM design specified in this document, and especially that of the KEM combiner specified in {{sec-kem-combiner}} means that the overall composite KEM algorithm should be considered to have the security strength of the strongest of its component algorithms; ie as long as one component algorithm remains strong, then the overall composite algorithm remains strong.
 
@@ -822,7 +822,7 @@ TBD
 
 One of the primary design goals of this specification is for the overall composite algorithm to be able to be considered FIPS-approved even when one of the component algorithms is not. The combiner presented in {{sec-kem-combiner}} was chosen to align with [SP.800-56Cr2] for this reason.
 
-Implementors seeking FIPS certification of a composite KEM algorithm where only one of the component algorithms has been FIPS-validated or FIPS-approved should credit the FIPS-validated component algorithm with full security strength, the non-FIPS-validated component algorith with zero security, and the overall composite should be considered full strength and thus FIPS-approved.
+Implementers seeking FIPS certification of a composite KEM algorithm where only one of the component algorithms has been FIPS-validated or FIPS-approved should credit the FIPS-validated component algorithm with full security strength, the non-FIPS-validated component algorithm with zero security, and the overall composite should be considered full strength and thus FIPS-approved.
 
 The authors wish to note that this gives composite algorithms great future utility both for future cryptographic migrations as well as bridging across jurisdictions; for example defining composite algorithms which combine FIPS cryptography with cryptography from a different national standards body.
 
@@ -862,7 +862,7 @@ EDNOTE TODO: Check with Max Pala whether this IPR actually applies to this draft
 
 
 
-# Contributors and Acknowledgements
+# Contributors and Acknowledgments
 
 This document incorporates contributions and comments from a large group of experts. The Editors would especially like to acknowledge the expertise and tireless dedication of the following people, who attended many long meetings and generated millions of bytes of electronic mail and VOIP traffic over the past year in pursuit of this document:
 
