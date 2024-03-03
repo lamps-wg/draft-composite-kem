@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-02-29T01:12:54.076981+00:00",
+  "timestamp": "2024-03-03T01:16:59.655548+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -127,15 +127,15 @@
       "id": "I_kwDOKRPFO859-Xx1",
       "title": "Add a section \"Use in CMS\"",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/12",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "This draft should define how you take a composite KEM and stuff it into a KEMRI.",
       "createdAt": "2024-02-01T21:18:51Z",
-      "updatedAt": "2024-02-01T21:18:51Z",
-      "closedAt": null,
+      "updatedAt": "2024-03-02T22:17:51Z",
+      "closedAt": "2024-03-02T22:17:51Z",
       "comments": []
     },
     {
@@ -143,16 +143,24 @@
       "id": "I_kwDOKRPFO85-a9m-",
       "title": "If the X-Wing PR does not get merged, then re-run aspell",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/13",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "I ran the aspell spell checker on #11 and found some embarrassing spelling mistakes. If that PR is ultimately rejected, then re-run aspell over the main branch. ",
       "createdAt": "2024-02-06T14:59:43Z",
-      "updatedAt": "2024-02-06T14:59:43Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2024-03-02T22:24:49Z",
+      "closedAt": "2024-03-02T22:24:49Z",
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Done on main.",
+          "createdAt": "2024-03-02T22:24:49Z",
+          "updatedAt": "2024-03-02T22:24:49Z"
+        }
+      ]
     },
     {
       "number": 16,
@@ -197,7 +205,7 @@
     {
       "number": 20,
       "id": "I_kwDOKRPFO85_fTKA",
-      "title": "Add a new section: explicitely list SPKI AlgIds",
+      "title": "Add a new section: explicitly list SPKI AlgIds",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/20",
       "state": "OPEN",
       "author": "ounsworth",
@@ -206,7 +214,7 @@
       "labels": [],
       "body": "We should add a section listing explicitly the DER-encoded AlgorithmIdentifiers for the components of each composite public key and signature algorithm. This is important to resolve ambiguity on, for example, whether the RSA should have a NULL param, and the ECC curve params.\r\n\r\nExample, for id-MLDSA44-ECDSA-P256-SHA256 the ML-DSA SPKI would have an AlgorithmIdentifier of:\r\n\r\n   AlgorithmIdentifier  ::=  SEQUENCE  {\r\n        id-ml-dsa\r\n    }\r\nwhich is:\r\n\r\nAlgorithmIdentifier  ::=  SEQUENCE  {\r\n        {\r\n     1.3.6.1.4.1.2.267.12.4.4\r\n      }\r\n  }\r\nAnd the ECDSA-P256-SHA256 would have a SPKI would have an AlgorithmIdentifier of:\r\n\r\n   AlgorithmIdentifier  ::=  SEQUENCE  {\r\n        id-ecPublicKey,\r\n       secp256r1  \r\n  }\r\nwhich is:\r\n\r\n   AlgorithmIdentifier  ::=  SEQUENCE  {\r\n        {\r\n     iso(1) member-body(2) us(840) ansi-X9-62(10045) keyType(2) 1 },\r\n       iso(1) member-body(2) us(840) ansi-X9-62(10045) curves(3) prime(1) 7}\r\nAnd the signature algorithm for id-MLDSA44-ECDSA-P256-SHA256, the first component signature algorithm would have an AlgorithmIdentifier of\r\n\r\n   AlgorithmIdentifier  ::=  SEQUENCE  {\r\n        id-ml-dsa\r\n    }\r\nwhich is:\r\n\r\nAlgorithmIdentifier  ::=  SEQUENCE  {\r\n        {\r\n     1.3.6.1.4.1.2.267.12.4.4\r\n      }\r\n  }\r\nand the second component signature algorithm would have an AlgorithmIdentifier of\r\n\r\n   AlgorithmIdentifier  ::=  SEQUENCE  {\r\n          ecdsa-with-SHA256\r\n  }\r\nwhich is:\r\n\r\nAlgorithmIdentifier  ::=  SEQUENCE  {\r\n           {\r\n     iso(1) member-body(2) us(840) ansi-X9-62(10045) signatures(4) ecdsa-with-SHA2(3) 2\r\n       }\r\n  }\r\nWith that done, we should replace the message prefix values in Sectien 2.4 with the SHA256 hash of the signature AlgorithmIdentifiers. This has two nice properties that are better than using the ASCII encoding of the OID name: 1) they are all the same length (ie the length of SHA256), and 2) if the inner OIDs change, for example with a new Kyber version, then the message prefix changes, which prevents cryptographic compatibility issues; or otherwise stated: provides signature domain-separation based on the component OIDs.\r\n\r\n--- SHA256 of the DER encoding of the following ASN.1 value\r\n--- Security Consideration note: the choice of SHA256 here is not security-relevant since it is only to generate fixed string values.\r\n\r\nSEQUENCE {\r\nAlgorithmIdentifier  ::=  SEQUENCE  {\r\n        {\r\n     1.3.6.1.4.1.2.267.12.4.4\r\n      }\r\n  },\r\nAlgorithmIdentifier  ::=  SEQUENCE  {\r\n           {\r\n     iso(1) member-body(2) us(840) ansi-X9-62(10045) signatures(4) ecdsa-with-SHA2(3) 2\r\n       }\r\n  }\r\n}\r\n",
       "createdAt": "2024-02-16T16:01:24Z",
-      "updatedAt": "2024-02-16T16:01:24Z",
+      "updatedAt": "2024-03-02T22:33:29Z",
       "closedAt": null,
       "comments": []
     },
@@ -233,6 +241,46 @@
           "updatedAt": "2024-02-20T21:13:11Z"
         }
       ]
+    },
+    {
+      "number": 22,
+      "id": "I_kwDOKRPFO86BCuSl",
+      "title": "Use KMAC KDF",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/22",
+      "state": "CLOSED",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Russ updated [https://datatracker.ietf.org/doc/draft-ietf-lamps-cms-sha3-hash/](https://urldefense.com/v3/__https:/datatracker.ietf.org/doc/draft-ietf-lamps-cms-sha3-hash/__;!!FJ-Y8qCqXTj2!cYbj0IFUu8cOAbr5KOWWSxyYfXh5w296ho-g74KbHiGYlyk4u-kb3ezx67vbdcKnOz-kTEU2FZYFBrVeQy500d5Kp4AOfwQq3r6ZVBFpCAo$) with KMAC KDF OIDs, so I\u2019ve updated cms-kyber to specify KMAC KDF as MTI instead of HKDF-with-SHA3.",
+      "createdAt": "2024-03-02T20:52:34Z",
+      "updatedAt": "2024-03-02T22:55:45Z",
+      "closedAt": "2024-03-02T22:55:45Z",
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Just steal it from\r\n\r\nhttps://github.com/lamps-wg/cms-kyber/pull/7",
+          "createdAt": "2024-03-02T21:08:49Z",
+          "updatedAt": "2024-03-02T21:08:49Z"
+        }
+      ]
+    },
+    {
+      "number": 24,
+      "id": "I_kwDOKRPFO86BC5Oy",
+      "title": "Is section \"## RSA-KEM Parameters\" actually needed?",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/24",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": " Go read 5990bis more carefully.\r\n\r\nAlso, maybe not needed at all if we go with RSA-OAEP.",
+      "createdAt": "2024-03-02T23:03:41Z",
+      "updatedAt": "2024-03-02T23:03:41Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
@@ -694,24 +742,26 @@
       "id": "PR_kwDOKRPFO85mL58Q",
       "title": "Added a Use In CMS section",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/15",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Adding this section here avoids the need for a wrapper draft telling you how to use composite KEM in CMS.\r\n\r\nCloses #12 ",
       "createdAt": "2024-02-06T20:03:04Z",
-      "updatedAt": "2024-02-23T09:35:15Z",
+      "updatedAt": "2024-03-02T22:18:04Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
-      "baseRefOid": "cad051fe5dbcc17e8e4004bfd1c5333b9d47749f",
+      "baseRefOid": "7c67eb88a0e162b00965b20289623482461fc5e3",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_use_in_cms",
-      "headRefOid": "3d773920b4dc888742e2a0196fdcc035beb46764",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "b4d7f10d0d9df568418bbd00d2ad28a9c2cd11fa",
+      "closedAt": "2024-03-02T22:17:51Z",
+      "mergedAt": "2024-03-02T22:17:50Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "5c2e3c04d64682a6b556fa3114836149b935c64a"
+      },
       "comments": [
         {
           "author": "ounsworth",
@@ -733,6 +783,20 @@
           "body": "We also need to add the SMIME-CAPS to the ASN.1 (find a good example doc).",
           "createdAt": "2024-02-16T15:50:47Z",
           "updatedAt": "2024-02-16T15:50:47Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Thanks for the review @danvangeest \r\n\r\nStill TODO:\r\n\r\n* We also need to add the SMIME-CAPS to the ASN.1 (find a good example doc).\r\n  * UPDATE: done.",
+          "createdAt": "2024-02-29T23:10:58Z",
+          "updatedAt": "2024-03-01T16:35:39Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Review comments from Russ:\r\n\r\n> Mike:\r\n>\r\n>You are using a mix of \"wrap algorithm\" and \"key-encryption algorithm\".  CMS usually uses the later.  Line 683 got it just right.  That is, id-aes256-Wrap identifies a particular key-encryption algorithm.  I am not sure the text at the top is aligned.\r\n>\r\n>Line 663: I think you need o say how that happens.  In some cases a different OID is used, but in others a different parameter value is used.\r\n>\r\n>Line 675: make it clear thet it is the KEM.Encaps(pk).  The function is specific to the KEM identified in 'kem'.\r\n>\r\n>Line 681: Do any of your composite KEM algorithms REQUIRE a ukm?  I can imagine a way to use DH and ECDH that require a UKM.\r\n>\r\n>Russ\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n",
+          "createdAt": "2024-03-01T19:09:56Z",
+          "updatedAt": "2024-03-01T19:09:56Z"
         }
       ],
       "reviews": [
@@ -782,7 +846,7 @@
             "abbreviatedOid": "3d77392"
           },
           "author": "danvangeest",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "state": "COMMENTED",
           "body": "",
           "createdAt": "2024-02-15T09:05:24Z",
@@ -808,9 +872,9 @@
             },
             {
               "originalPosition": 130,
-              "body": "```suggestion\r\n\r\n\\[EDNOTE: OIDs for KMAC-based KDFs are expected and will be used in place of the HKDF-with-sha3 OIDs above]\r\n\r\nwhere:\r\n```\r\nI assume this because SHA3 isn't great to use with HKDF, and implementers will need KMAC KDF implementations anyways.\r\n",
+              "body": "```suggestion\r\n\r\n\\[EDNOTE: OIDs for KMAC-based KDFs are expected. Should they be used in place of the HKDF-with-sha3 OIDs above?]\r\n\r\nwhere:\r\n```\r\nI assume this because SHA3 isn't great to use with HKDF, and implementers will need KMAC KDF implementations anyways.\r\n",
               "createdAt": "2024-02-15T10:11:14Z",
-              "updatedAt": "2024-02-15T10:43:04Z"
+              "updatedAt": "2024-02-29T23:09:43Z"
             },
             {
               "originalPosition": 135,
@@ -844,12 +908,52 @@
             "abbreviatedOid": "3d77392"
           },
           "author": "danvangeest",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "state": "COMMENTED",
           "body": "Sorry! I created this review last week but forgot to actually submit it!",
           "createdAt": "2024-02-23T09:35:15Z",
           "updatedAt": "2024-02-23T09:35:15Z",
           "comments": []
+        },
+        {
+          "id": "PRR_kwDOKRPFO85x_TDm",
+          "commit": {
+            "abbreviatedOid": "b38b617"
+          },
+          "author": "danvangeest",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-03-02T00:56:26Z",
+          "updatedAt": "2024-03-02T00:56:26Z",
+          "comments": [
+            {
+              "originalPosition": 18,
+              "body": "I don't know anything about ASN.1 but shouldn't these be `kema-MLKEM512-ECDH-P256-KMAC128.&smimeCaps`, etc.  I just base this on what I see in RFC 5911.",
+              "createdAt": "2024-03-02T00:56:26Z",
+              "updatedAt": "2024-03-02T00:56:26Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO85yAjuJ",
+          "commit": {
+            "abbreviatedOid": "b38b617"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-03-02T22:13:53Z",
+          "updatedAt": "2024-03-02T22:13:53Z",
+          "comments": [
+            {
+              "originalPosition": 18,
+              "body": "Yup, sure should. Good catch.",
+              "createdAt": "2024-03-02T22:13:53Z",
+              "updatedAt": "2024-03-02T22:13:53Z"
+            }
+          ]
         }
       ]
     },
@@ -905,6 +1009,34 @@
       "mergedBy": "ounsworth",
       "mergeCommit": {
         "oid": "cbbf3553e9500e82bfb603e1020ad80ab99e35be"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 23,
+      "id": "PR_kwDOKRPFO85ofl_1",
+      "title": "Swapped from hkdf-sha3 to kmac-kdf",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/23",
+      "state": "MERGED",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Closes #22 ",
+      "createdAt": "2024-03-02T22:52:30Z",
+      "updatedAt": "2024-03-02T22:55:48Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "f3cbed9e55465cf52a19b176ec3866d630d50d60",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_kmac_kdf",
+      "headRefOid": "29996ec0b628b5b9d5b729e7d474e6f767b00355",
+      "closedAt": "2024-03-02T22:55:44Z",
+      "mergedAt": "2024-03-02T22:55:44Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "7182d2070fb8cc90f20c0aee2995fadd4c73f629"
       },
       "comments": [],
       "reviews": []
