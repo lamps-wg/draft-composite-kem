@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-03-03T01:16:59.655548+00:00",
+  "timestamp": "2024-03-05T01:12:56.404885+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -279,6 +279,22 @@
       "body": " Go read 5990bis more carefully.\r\n\r\nAlso, maybe not needed at all if we go with RSA-OAEP.",
       "createdAt": "2024-03-02T23:03:41Z",
       "updatedAt": "2024-03-02T23:03:41Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 25,
+      "id": "I_kwDOKRPFO86BDDgi",
+      "title": "Consider lifting AES-192 to AES-256",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/25",
+      "state": "OPEN",
+      "author": "danvangeest",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "In cms-kyber, we specified id-aes256-wrap for NIST level 3 / 192 bit security, even though it's stronger than necessary, because of a suggestion from Scott that AES-192 isn't as widely supported.  Consider doing the same here.",
+      "createdAt": "2024-03-03T01:20:43Z",
+      "updatedAt": "2024-03-03T01:20:43Z",
       "closedAt": null,
       "comments": []
     }
