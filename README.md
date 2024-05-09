@@ -1,6 +1,6 @@
 # Composite KEM
 
-This is the working area for the individual Internet-Draft, "Use of Attestation with Certification Signing Requests".
+This is the working area for the individual Internet-Draft, "Composite KEMs For Use In Internet PKI".
 
 * [Editor's Copy](https://lamps-wg.github.io/draft-composite-kem/draft-ietf-lamps-pq-composite-kem.html)
 * [Datatracker Page](https://datatracker.ietf.org/doc/draft-ietf-lamps-pq-composite-kem)
@@ -10,12 +10,7 @@ This is the working area for the individual Internet-Draft, "Use of Attestation 
 
 ## Contributing
 
-See the
-[guidelines for contributions](https://github.com/lamps-wg/draft-composite-kem/blob/main/CONTRIBUTING.md).
-
-Contributions can be made by creating pull requests.
-The GitHub interface supports creating pull requests using the Edit (✏) button.
-
+We weclome contributions via pull requests, github issues, or emails to the authors.
 
 ## Command Line Usage
 
