@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-05-07T01:18:40.342853+00:00",
+  "timestamp": "2024-05-09T01:18:12.179571+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -310,9 +310,17 @@
       "labels": [],
       "body": "In NIST's guidelines for key derivation (see https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-56Cr2.pdf) in section 2 they specify an approved method for combining a compliant secret with auxiliary shared secret like so:\r\n\r\n> In addition to the currently approved techniques for the generation of the shared secret Z as\r\n> specified in SP 800-56A and SP 800-56B, this Recommendation permits the use of a \u201chybrid\u201d\r\n> shared secret of the form Z\u2032 = Z || T, a concatenation consisting of a \u201cstandard\u201d shared secret Z that\r\n> was generated during the execution of a key-establishment scheme (as currently specified in [SP\r\n> 800-56A] or [SP 800-56B]) followed by an auxiliary shared secret T that has been generated using\r\n> some other method. The content, format, length, and method used to generate T must be known\r\n> and agreed upon by all parties that will rely upon the derived keying material, as well as by any\r\n> agents trusted to act on their behalf.\r\n\r\nThe present combiner in this draft doesn't include the secret from an approved method first in the input of the KDF:\r\n\r\n> Combiner(ct1, ss1, ct2, ss2, fixedInfo) =\r\n>   KDF(counter || ct1 || ss1 || ct2 || ss2 || fixedInfo, outputBits)\r\n\r\nWe suggest moving either ss1 or ss2 to the beginning of the input to the KDF since concatenating any auxiliary secret to a compliant secret will result in a compliant key when feeding it to a compliant KDF. Even better, if we choose the classical key to be at the beginning (ss2 in the proposed combinations) it would mean that this construction would be considered compliant by NIST even if used with a non-standardized/compliant post-quantum algorithm.\r\n\r\nThe fixed counter value was added to in this draft to be compliant, but in the nist specification the counter must be followed by the compliant secret. In this specification ct1 is not a compliant secret, so this doesn't seem to be a good solution.",
       "createdAt": "2024-04-17T13:49:28Z",
-      "updatedAt": "2024-04-17T13:51:20Z",
+      "updatedAt": "2024-05-08T14:43:14Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Thank you for the comment! That is an interesting point.\r\n\r\nEarlier versions of this draft had exactly that: the shared secrets before the ciphertexts. We received feedback that we should swap the order so that it is more friendly to embedded devices: the device will have access to the ciphertext first, and only later will it have access to the shared secret, so if it can stream the ciphertext into the combiner hash function, then it does not need to keep the ciphertext in memory.\r\n\r\nRegardless, if this change makes it impossible to FIPS-certify this under SP 800-56Cr2 (or the r3 that is coming to explicitly allow these hybrids), then that could be a more important consideration.\r\n\r\nI will ask a contact at NIST.",
+          "createdAt": "2024-05-08T14:43:13Z",
+          "updatedAt": "2024-05-08T14:43:13Z"
+        }
+      ]
     }
   ],
   "pulls": [
