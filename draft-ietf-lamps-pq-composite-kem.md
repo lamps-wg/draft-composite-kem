@@ -30,50 +30,47 @@ pi:    # can use array (if all yes) or hash here
   symrefs: yes
 
 author:
-    -
-      ins: M. Ounsworth
-      name: Mike Ounsworth
-      org: Entrust Limited
-      abbrev: Entrust
-      street: 2500 Solandt Road – Suite 100
-      city: Ottawa, Ontario
-      country: Canada
-      code: K2K 3G5
-      email: mike.ounsworth@entrust.com
-    -
-      ins: J. Gray
-      name: John Gray
-      org: Entrust Limited
-      abbrev: Entrust
-      street: 2500 Solandt Road – Suite 100
-      city: Ottawa, Ontario
-      country: Canada
-      code: K2K 3G5
-      email: john.gray@entrust.com
-    -
-      ins: M. Pala
-      fullname: Massimiliano Pala
-      org: OpenCA Labs
-      street: 858 Coal Creek Cir
-      city: Louisville, Colorado
-      country: United States of America
-      code: 80027
-      email: director@openca.org
-    -
-      ins: J. Klaußner
-      fullname: Jan Klaußner
-      asciiFullname: Jan Klaussner
-      org: D-Trust GmbH
-      email: jan.klaussner@d-trust.net
-      street: Kommandantenstr. 15
-      code: 10969
-      city: Berlin
-      country: Germany
-    -
-      ins: S. Fluhrer
-      name: Scott Fluhrer
-      org: Cisco Systems
-      email: sfluhrer@cisco.com
+  -
+    ins: M. Ounsworth
+    name: Mike Ounsworth
+    org: Entrust Limited
+    abbrev: Entrust
+    street: 2500 Solandt Road – Suite 100
+    city: Ottawa, Ontario
+    country: Canada
+    code: K2K 3G5
+    email: mike.ounsworth@entrust.com
+  -
+    ins: J. Gray
+    name: John Gray
+    org: Entrust Limited
+    abbrev: Entrust
+    street: 2500 Solandt Road – Suite 100
+    city: Ottawa, Ontario
+    country: Canada
+    code: K2K 3G5
+    email: john.gray@entrust.com
+  -
+    ins: M. Pala
+    name: Massimiliano Pala
+    org: OpenCA Labs
+    city: New York City, New York
+    country: United States of America
+    email: director@openca.org
+  -
+    ins: J. Klaussner
+    name: Jan Klaussner
+    org: Bundesdruckerei GmbH
+    email: jan.klaussner@bdr.de
+    street: Kommandantenstr. 15
+    code: 10969
+    city: Berlin
+    country: Germany
+  -
+    ins: S. Fluhrer
+    name: Scott Fluhrer
+    org: Cisco Systems
+    email: sfluhrer@cisco.com
 
 
 normative:
