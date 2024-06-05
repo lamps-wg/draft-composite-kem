@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 3 September 2024                                        M. Pala
+Expires: 7 December 2024                                         M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                             D-Trust GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                            2 March 2024
+                                                             5 June 2024
 
 
 Composite ML-KEM for Use in the Internet X.509 Public Key Infrastructure
@@ -67,7 +67,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 3 September 2024.
+   This Internet-Draft will expire on 7 December 2024.
 
 Copyright Notice
 
@@ -1433,9 +1433,9 @@ Table of Contents
    [I-D.ietf-lamps-cms-sha3-hash]
               Housley, R., "Use of the SHA3 One-way Hash Functions in
               the Cryptographic Message Syntax (CMS)", Work in Progress,
-              Internet-Draft, draft-ietf-lamps-cms-sha3-hash-01, 1 March
+              Internet-Draft, draft-ietf-lamps-cms-sha3-hash-04, 16 May
               2024, <https://datatracker.ietf.org/doc/html/draft-ietf-
-              lamps-cms-sha3-hash-01>.
+              lamps-cms-sha3-hash-04>.
 
    [I-D.ietf-lamps-rfc5990bis]
               Housley, R. and S. Turner, "Use of the RSA-KEM Algorithm
@@ -1775,8 +1775,7 @@ Authors' Addresses
 
    Massimiliano Pala
    OpenCA Labs
-   858 Coal Creek Cir
-   Louisville, Colorado,  80027
+   New York City, New York,
    United States of America
    Email: director@openca.org
 
