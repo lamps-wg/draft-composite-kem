@@ -54,10 +54,8 @@ author:
       ins: M. Pala
       fullname: Massimiliano Pala
       org: OpenCA Labs
-      street: 858 Coal Creek Cir
-      city: Louisville, Colorado
+      city: New York City, New York
       country: United States of America
-      code: 80027
       email: director@openca.org
     -
       ins: J. Klaußner
