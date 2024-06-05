@@ -8,7 +8,7 @@ Intended status: Standards Track                                 Entrust
 Expires: 7 December 2024                                         M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
-                                                            D-Trust GmbH
+                                                    Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
                                                              5 June 2024
@@ -1781,11 +1781,11 @@ Authors' Addresses
 
 
    Jan Klaussner
-   D-Trust GmbH
+   Bundesdruckerei GmbH
    Kommandantenstr. 15
    10969 Berlin
    Germany
-   Email: jan.klaussner@d-trust.net
+   Email: jan.klaussner@bdr.de
 
 
    Scott Fluhrer
