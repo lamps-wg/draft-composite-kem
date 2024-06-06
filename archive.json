@@ -1,0 +1,1085 @@
+{
+  "magic": "E!vIA5L86J2I",
+  "timestamp": "2024-06-06T01:21:38.586554+00:00",
+  "repo": "lamps-wg/draft-composite-kem",
+  "labels": [
+    {
+      "name": "bug",
+      "description": "Something isn't working",
+      "color": "d73a4a"
+    },
+    {
+      "name": "documentation",
+      "description": "Improvements or additions to documentation",
+      "color": "0075ca"
+    },
+    {
+      "name": "duplicate",
+      "description": "This issue or pull request already exists",
+      "color": "cfd3d7"
+    },
+    {
+      "name": "enhancement",
+      "description": "New feature or request",
+      "color": "a2eeef"
+    },
+    {
+      "name": "good first issue",
+      "description": "Good for newcomers",
+      "color": "7057ff"
+    },
+    {
+      "name": "help wanted",
+      "description": "Extra attention is needed",
+      "color": "008672"
+    },
+    {
+      "name": "invalid",
+      "description": "This doesn't seem right",
+      "color": "e4e669"
+    },
+    {
+      "name": "question",
+      "description": "Further information is requested",
+      "color": "d876e3"
+    },
+    {
+      "name": "wontfix",
+      "description": "This will not be worked on",
+      "color": "ffffff"
+    }
+  ],
+  "issues": [
+    {
+      "number": 1,
+      "id": "I_kwDOKRPFO85wlqLV",
+      "title": "Comments from Stephen Ferrell",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/1",
+      "state": "CLOSED",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "(June 20, 2023)\r\n\r\nA couple of specific comments in case those help:\r\n\r\n    the title refers to \"Internet PKI\" so I don't know if it\r\n    will in fact be possible to usefully unwind this from the\r\n    other composite drafts\r\n\r\n[[MO]] We haven't changed the title since draft-ounsworth-pq-composite-sigs-00 in 2019. Happy to change that.\r\n\r\n    describing this as layering seems wrong\r\n\r\n    kema-CompositeKEM and the other ASN.1 structures seem very\r\n    complex and overly-generic\r\n    [[MO]] It's really just machinery to make the ASN.1 module shorter. Without it, the module would be many hundreds of lines longer. We can unroll it if that's the will of the WG.\r\n\r\n    PUBLIC-KEYS in table 1 refers to signatures, I didn't get\r\n    why?\r\n    [[MO]] copy&paste error. Thanks.\r\n\r\n    section 7.2 (\"OR\" modes) seems odd\r\n    [[MO]] OR modes are now covered by draft-pala-klaussner-composite-kofn; that section should have been removed.\r\n\r\n    appendix C confused me: this I-D has no IPR declaration\r\n    but states that an IPR declaration \"relates\" to this\r\n    draft\r\n    [[MO]] There's IPR on draft-ounsworth-pq-composite-sigs, which probably applies to all three drafts.\r\n",
+      "createdAt": "2023-08-23T21:04:10Z",
+      "updatedAt": "2024-02-14T15:44:01Z",
+      "closedAt": "2024-02-14T15:44:01Z",
+      "comments": []
+    },
+    {
+      "number": 2,
+      "id": "I_kwDOKRPFO85wlqMj",
+      "title": "WGLC issue: Remove Informative reference to draft-cfrg-kem-combiners ?",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/2",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This is a procedural issue: this draft is adopted by LAMPS, but it depends Informatively on draft-ounsworth-cfrg-kem-combiners, which is not yet adopted by CFRG. That will cause a problem at WGLC.\r\n\r\nI propose to leave this issue for now and revisit it as we approach WGLC.",
+      "createdAt": "2023-08-23T21:03:13Z",
+      "updatedAt": "2024-02-06T14:22:44Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 9,
+      "id": "I_kwDOKRPFO8506Rus",
+      "title": "Add Max, Jan, Scott as co-authors",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/9",
+      "state": "CLOSED",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "They are equally part of the author's group.",
+      "createdAt": "2023-10-25T13:29:03Z",
+      "updatedAt": "2024-02-06T15:33:08Z",
+      "closedAt": "2024-02-06T15:33:08Z",
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Closed by https://github.com/lamps-wg/draft-composite-kem/commit/29abd8be525ad993279667b166571e5e56bfdce2",
+          "createdAt": "2024-02-06T15:33:04Z",
+          "updatedAt": "2024-02-06T15:33:04Z"
+        }
+      ]
+    },
+    {
+      "number": 10,
+      "id": "I_kwDOKRPFO851Oimq",
+      "title": "Fix references to both id-sha3-256 and mda-shake256",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/10",
+      "state": "CLOSED",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "It should be one or the other, but not both.",
+      "createdAt": "2023-10-28T21:32:12Z",
+      "updatedAt": "2024-02-06T15:39:00Z",
+      "closedAt": "2024-02-06T15:39:00Z",
+      "comments": []
+    },
+    {
+      "number": 12,
+      "id": "I_kwDOKRPFO859-Xx1",
+      "title": "Add a section \"Use in CMS\"",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/12",
+      "state": "CLOSED",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This draft should define how you take a composite KEM and stuff it into a KEMRI.",
+      "createdAt": "2024-02-01T21:18:51Z",
+      "updatedAt": "2024-03-02T22:17:51Z",
+      "closedAt": "2024-03-02T22:17:51Z",
+      "comments": []
+    },
+    {
+      "number": 13,
+      "id": "I_kwDOKRPFO85-a9m-",
+      "title": "If the X-Wing PR does not get merged, then re-run aspell",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/13",
+      "state": "CLOSED",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "I ran the aspell spell checker on #11 and found some embarrassing spelling mistakes. If that PR is ultimately rejected, then re-run aspell over the main branch. ",
+      "createdAt": "2024-02-06T14:59:43Z",
+      "updatedAt": "2024-03-02T22:24:49Z",
+      "closedAt": "2024-03-02T22:24:49Z",
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Done on main.",
+          "createdAt": "2024-03-02T22:24:49Z",
+          "updatedAt": "2024-03-02T22:24:49Z"
+        }
+      ]
+    },
+    {
+      "number": 16,
+      "id": "I_kwDOKRPFO85-dY23",
+      "title": "I think info should be ASN.1 DER TLV for the combiner OID",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/16",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Motivation: converting the ASCII name of the OID to bytes could be a source interop problems.\r\nComment from Ilari: https://mailarchive.ietf.org/arch/msg/spasm/JUISSb8kzHvly6iwEaY4jYGG_yE/",
+      "createdAt": "2024-02-06T20:42:51Z",
+      "updatedAt": "2024-02-13T22:43:02Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "It is worth putting an EDNOTE in the document that once we do this, we will need IANA to pre-allocate the OIDs so that we can re-compile the domain separators and update the table in the doc.\r\n(and also put the same EDNOTE in composite-sigs)",
+          "createdAt": "2024-02-13T20:45:06Z",
+          "updatedAt": "2024-02-13T22:43:02Z"
+        }
+      ]
+    },
+    {
+      "number": 17,
+      "id": "I_kwDOKRPFO85-0YTv",
+      "title": "Copy the Key Usage section from composite-sigs",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/17",
+      "state": "CLOSED",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-02-09T18:31:50Z",
+      "updatedAt": "2024-02-14T15:42:33Z",
+      "closedAt": "2024-02-14T15:42:33Z",
+      "comments": []
+    },
+    {
+      "number": 20,
+      "id": "I_kwDOKRPFO85_fTKA",
+      "title": "Add a new section: explicitly list SPKI AlgIds",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/20",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "We should add a section listing explicitly the DER-encoded AlgorithmIdentifiers for the components of each composite public key and signature algorithm. This is important to resolve ambiguity on, for example, whether the RSA should have a NULL param, and the ECC curve params.\r\n\r\nExample, for id-MLDSA44-ECDSA-P256-SHA256 the ML-DSA SPKI would have an AlgorithmIdentifier of:\r\n\r\n   AlgorithmIdentifier  ::=  SEQUENCE  {\r\n        id-ml-dsa\r\n    }\r\nwhich is:\r\n\r\nAlgorithmIdentifier  ::=  SEQUENCE  {\r\n        {\r\n     1.3.6.1.4.1.2.267.12.4.4\r\n      }\r\n  }\r\nAnd the ECDSA-P256-SHA256 would have a SPKI would have an AlgorithmIdentifier of:\r\n\r\n   AlgorithmIdentifier  ::=  SEQUENCE  {\r\n        id-ecPublicKey,\r\n       secp256r1  \r\n  }\r\nwhich is:\r\n\r\n   AlgorithmIdentifier  ::=  SEQUENCE  {\r\n        {\r\n     iso(1) member-body(2) us(840) ansi-X9-62(10045) keyType(2) 1 },\r\n       iso(1) member-body(2) us(840) ansi-X9-62(10045) curves(3) prime(1) 7}\r\nAnd the signature algorithm for id-MLDSA44-ECDSA-P256-SHA256, the first component signature algorithm would have an AlgorithmIdentifier of\r\n\r\n   AlgorithmIdentifier  ::=  SEQUENCE  {\r\n        id-ml-dsa\r\n    }\r\nwhich is:\r\n\r\nAlgorithmIdentifier  ::=  SEQUENCE  {\r\n        {\r\n     1.3.6.1.4.1.2.267.12.4.4\r\n      }\r\n  }\r\nand the second component signature algorithm would have an AlgorithmIdentifier of\r\n\r\n   AlgorithmIdentifier  ::=  SEQUENCE  {\r\n          ecdsa-with-SHA256\r\n  }\r\nwhich is:\r\n\r\nAlgorithmIdentifier  ::=  SEQUENCE  {\r\n           {\r\n     iso(1) member-body(2) us(840) ansi-X9-62(10045) signatures(4) ecdsa-with-SHA2(3) 2\r\n       }\r\n  }\r\nWith that done, we should replace the message prefix values in Sectien 2.4 with the SHA256 hash of the signature AlgorithmIdentifiers. This has two nice properties that are better than using the ASCII encoding of the OID name: 1) they are all the same length (ie the length of SHA256), and 2) if the inner OIDs change, for example with a new Kyber version, then the message prefix changes, which prevents cryptographic compatibility issues; or otherwise stated: provides signature domain-separation based on the component OIDs.\r\n\r\n--- SHA256 of the DER encoding of the following ASN.1 value\r\n--- Security Consideration note: the choice of SHA256 here is not security-relevant since it is only to generate fixed string values.\r\n\r\nSEQUENCE {\r\nAlgorithmIdentifier  ::=  SEQUENCE  {\r\n        {\r\n     1.3.6.1.4.1.2.267.12.4.4\r\n      }\r\n  },\r\nAlgorithmIdentifier  ::=  SEQUENCE  {\r\n           {\r\n     iso(1) member-body(2) us(840) ansi-X9-62(10045) signatures(4) ecdsa-with-SHA2(3) 2\r\n       }\r\n  }\r\n}\r\n",
+      "createdAt": "2024-02-16T16:01:24Z",
+      "updatedAt": "2024-03-02T22:33:29Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 21,
+      "id": "I_kwDOKRPFO85_3gER",
+      "title": "Should we instead or in addition support RSA-OAEP?",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/21",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Sophie Schmieg made the excellent point:\r\n\r\n> on the classical side, nobody uses RSA-KEM (a shame, but alas), leaving RSA-OAEP",
+      "createdAt": "2024-02-20T20:48:46Z",
+      "updatedAt": "2024-02-20T21:13:11Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "What about RSA-PKCS#1 ?",
+          "createdAt": "2024-02-20T21:13:11Z",
+          "updatedAt": "2024-02-20T21:13:11Z"
+        }
+      ]
+    },
+    {
+      "number": 22,
+      "id": "I_kwDOKRPFO86BCuSl",
+      "title": "Use KMAC KDF",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/22",
+      "state": "CLOSED",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Russ updated [https://datatracker.ietf.org/doc/draft-ietf-lamps-cms-sha3-hash/](https://urldefense.com/v3/__https:/datatracker.ietf.org/doc/draft-ietf-lamps-cms-sha3-hash/__;!!FJ-Y8qCqXTj2!cYbj0IFUu8cOAbr5KOWWSxyYfXh5w296ho-g74KbHiGYlyk4u-kb3ezx67vbdcKnOz-kTEU2FZYFBrVeQy500d5Kp4AOfwQq3r6ZVBFpCAo$) with KMAC KDF OIDs, so I\u2019ve updated cms-kyber to specify KMAC KDF as MTI instead of HKDF-with-SHA3.",
+      "createdAt": "2024-03-02T20:52:34Z",
+      "updatedAt": "2024-03-02T22:55:45Z",
+      "closedAt": "2024-03-02T22:55:45Z",
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Just steal it from\r\n\r\nhttps://github.com/lamps-wg/cms-kyber/pull/7",
+          "createdAt": "2024-03-02T21:08:49Z",
+          "updatedAt": "2024-03-02T21:08:49Z"
+        }
+      ]
+    },
+    {
+      "number": 24,
+      "id": "I_kwDOKRPFO86BC5Oy",
+      "title": "Is section \"## RSA-KEM Parameters\" actually needed?",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/24",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": " Go read 5990bis more carefully.\r\n\r\nAlso, maybe not needed at all if we go with RSA-OAEP.",
+      "createdAt": "2024-03-02T23:03:41Z",
+      "updatedAt": "2024-03-02T23:03:41Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 25,
+      "id": "I_kwDOKRPFO86BDDgi",
+      "title": "Consider lifting AES-192 to AES-256",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/25",
+      "state": "OPEN",
+      "author": "danvangeest",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "In cms-kyber, we specified id-aes256-wrap for NIST level 3 / 192 bit security, even though it's stronger than necessary, because of a suggestion from Scott that AES-192 isn't as widely supported.  Consider doing the same here.",
+      "createdAt": "2024-03-03T01:20:43Z",
+      "updatedAt": "2024-03-03T01:20:43Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 26,
+      "id": "I_kwDOKRPFO86GAx2N",
+      "title": "Compliant KEM Combiner",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/26",
+      "state": "OPEN",
+      "author": "bencemali",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "In NIST's guidelines for key derivation (see https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-56Cr2.pdf) in section 2 they specify an approved method for combining a compliant secret with auxiliary shared secret like so:\r\n\r\n> In addition to the currently approved techniques for the generation of the shared secret Z as\r\n> specified in SP 800-56A and SP 800-56B, this Recommendation permits the use of a \u201chybrid\u201d\r\n> shared secret of the form Z\u2032 = Z || T, a concatenation consisting of a \u201cstandard\u201d shared secret Z that\r\n> was generated during the execution of a key-establishment scheme (as currently specified in [SP\r\n> 800-56A] or [SP 800-56B]) followed by an auxiliary shared secret T that has been generated using\r\n> some other method. The content, format, length, and method used to generate T must be known\r\n> and agreed upon by all parties that will rely upon the derived keying material, as well as by any\r\n> agents trusted to act on their behalf.\r\n\r\nThe present combiner in this draft doesn't include the secret from an approved method first in the input of the KDF:\r\n\r\n> Combiner(ct1, ss1, ct2, ss2, fixedInfo) =\r\n>   KDF(counter || ct1 || ss1 || ct2 || ss2 || fixedInfo, outputBits)\r\n\r\nWe suggest moving either ss1 or ss2 to the beginning of the input to the KDF since concatenating any auxiliary secret to a compliant secret will result in a compliant key when feeding it to a compliant KDF. Even better, if we choose the classical key to be at the beginning (ss2 in the proposed combinations) it would mean that this construction would be considered compliant by NIST even if used with a non-standardized/compliant post-quantum algorithm.\r\n\r\nThe fixed counter value was added to in this draft to be compliant, but in the nist specification the counter must be followed by the compliant secret. In this specification ct1 is not a compliant secret, so this doesn't seem to be a good solution.",
+      "createdAt": "2024-04-17T13:49:28Z",
+      "updatedAt": "2024-05-08T14:43:14Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Thank you for the comment! That is an interesting point.\r\n\r\nEarlier versions of this draft had exactly that: the shared secrets before the ciphertexts. We received feedback that we should swap the order so that it is more friendly to embedded devices: the device will have access to the ciphertext first, and only later will it have access to the shared secret, so if it can stream the ciphertext into the combiner hash function, then it does not need to keep the ciphertext in memory.\r\n\r\nRegardless, if this change makes it impossible to FIPS-certify this under SP 800-56Cr2 (or the r3 that is coming to explicitly allow these hybrids), then that could be a more important consideration.\r\n\r\nI will ask a contact at NIST.",
+          "createdAt": "2024-05-08T14:43:13Z",
+          "updatedAt": "2024-05-08T14:43:13Z"
+        }
+      ]
+    }
+  ],
+  "pulls": [
+    {
+      "number": 3,
+      "id": "PR_kwDOKRPFO85bsBcD",
+      "title": "Adding a ML-KEM512_RSA2048 combo",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/3",
+      "state": "CLOSED",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-10-02T15:59:27Z",
+      "updatedAt": "2023-10-02T22:53:29Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "8ecdef1572329af10c78e3ebb26ed087116dd22e",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mlkem512-rsa2048",
+      "headRefOid": "fc99e0e2f27f08b26cc5c858b17cbbf901122c3e",
+      "closedAt": "2023-10-02T22:53:29Z",
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I have changed the ASN.1 substantially enough in #4 that it's easier to just start this PR over again once that PR is merged.",
+          "createdAt": "2023-10-02T22:53:29Z",
+          "updatedAt": "2023-10-02T22:53:29Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 4,
+      "id": "PR_kwDOKRPFO85buNe6",
+      "title": "Removing CompositeKEMParams",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/4",
+      "state": "MERGED",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-10-02T22:17:04Z",
+      "updatedAt": "2023-10-03T14:22:46Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "e18c3c43c266b1c703dc03e6e438d5b2ef91046d",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mike_asn1_remove_params",
+      "headRefOid": "3e56992462b1c2adcfb2e2194d96c1dbbcc43697",
+      "closedAt": "2023-10-03T14:22:20Z",
+      "mergedAt": "2023-10-03T14:22:20Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "1fb6913195222dfd8e61349c1fc2e7f73b9e494e"
+      },
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> Looks good! Other than needing to define the ASN.1 module OID: id-mod-composite-kems\r\n> \r\n> I was able to compile the ASN.1, so that is great!\r\n\r\nYeah, I replace the `TBDMOD` with `999` when I'm test-compiling, but I've gotta leave something that's easy for IANA to CTRL+F replace.",
+          "createdAt": "2023-10-03T14:18:19Z",
+          "updatedAt": "2023-10-03T14:18:19Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO85ikr5T",
+          "commit": {
+            "abbreviatedOid": "3a3f3d3"
+          },
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "Looks good!   Other than needing to define the ASN.1 module OID:\r\nid-mod-composite-kems\r\n\r\nI was able to compile the ASN.1, so that is great!",
+          "createdAt": "2023-10-03T00:02:33Z",
+          "updatedAt": "2023-10-03T00:02:33Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 5,
+      "id": "PR_kwDOKRPFO85bzF-Z",
+      "title": "Added id-MLKEM512-RSA2048-KMAC128",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/5",
+      "state": "MERGED",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-10-03T14:30:06Z",
+      "updatedAt": "2023-10-04T15:23:29Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "1fb6913195222dfd8e61349c1fc2e7f73b9e494e",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mike_add_MLKEM512-RSA2048",
+      "headRefOid": "4cdaef1fa7c88ec971b57ec0a16dd0c9476d189a",
+      "closedAt": "2023-10-04T15:23:20Z",
+      "mergedAt": "2023-10-04T15:23:20Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "dc2a6d100628b032e9bfac40a57edf842ef43e09"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 6,
+      "id": "PR_kwDOKRPFO85b61Iv",
+      "title": "Demoted RSA 3072 to 128-bit Level 1",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/6",
+      "state": "CLOSED",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This relates to the LAMPS mailist discussion:\r\n\r\nhttps://mailarchive.ietf.org/arch/msg/spasm/xSKIRjtMSJ8M7N7Fx3X09ASUHC8/\r\n\r\nThe main branch is option 3.1.\r\nThis PR is option 3.2.\r\n\r\nWe should wait to merge this PR pending the results of that discussion thread.",
+      "createdAt": "2023-10-04T16:09:56Z",
+      "updatedAt": "2023-10-24T17:56:28Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "6f3d6ee7dfb5df2492b5d6a8bcd2495884ae6e27",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mike_downgrade_RSA3072",
+      "headRefOid": "efba46de1223f1868aa6d0e94686fdd96ad239d2",
+      "closedAt": "2023-10-24T17:56:27Z",
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "body": "This was already included in the john_integration branch Merge #8 ",
+          "createdAt": "2023-10-24T17:56:28Z",
+          "updatedAt": "2023-10-24T17:56:28Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO85jHrif",
+          "commit": {
+            "abbreviatedOid": "efba46d"
+          },
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "state": "CHANGES_REQUESTED",
+          "body": "",
+          "createdAt": "2023-10-07T01:46:16Z",
+          "updatedAt": "2023-10-07T01:46:41Z",
+          "comments": [
+            {
+              "originalPosition": 1,
+              "body": "On Line 12 you do not need to import SIGNATURE-ALGORITHM or ParamOptions.   I removed them and was able to compile this ASN.1  ",
+              "createdAt": "2023-10-07T01:46:16Z",
+              "updatedAt": "2023-10-07T01:46:41Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 7,
+      "id": "PR_kwDOKRPFO85b9Pfi",
+      "title": "synced with cfrg-kem-combiners-04 and rfc5990bis-05",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/7",
+      "state": "MERGED",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-10-05T02:31:29Z",
+      "updatedAt": "2023-10-24T17:53:45Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "6f3d6ee7dfb5df2492b5d6a8bcd2495884ae6e27",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mike_sync_cfrg-kem-combiner-04",
+      "headRefOid": "12f2ba3d9e6f87ab863797c798e0746d5e834309",
+      "closedAt": "2023-10-24T17:53:45Z",
+      "mergedAt": "2023-10-24T17:53:45Z",
+      "mergedBy": "johngray-dev",
+      "mergeCommit": {
+        "oid": "12f2ba3d9e6f87ab863797c798e0746d5e834309"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO85jHrcO",
+          "commit": {
+            "abbreviatedOid": "12f2ba3"
+          },
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "Changes look good Mike.   Thanks for making sure it is up to date.",
+          "createdAt": "2023-10-07T01:43:27Z",
+          "updatedAt": "2023-10-07T01:43:27Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOKRPFO85k8PYr",
+          "commit": {
+            "abbreviatedOid": "12f2ba3"
+          },
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "Changes look great!",
+          "createdAt": "2023-10-23T21:00:18Z",
+          "updatedAt": "2023-10-23T21:00:18Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 8,
+      "id": "PR_kwDOKRPFO85dqxZ6",
+      "title": "John integration",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/8",
+      "state": "MERGED",
+      "author": "johngray-dev",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "The version of this .md file and asn1 module integrated Mike's other two pull request plus fixes up a few other nits.   ",
+      "createdAt": "2023-10-24T17:52:40Z",
+      "updatedAt": "2023-10-24T17:53:42Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "945a58d29ce79bd8ad302f47e03cf5d52869378e",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "john_integration",
+      "headRefOid": "746c0b1eb4d160cf9df130d8ebffe186310a22dc",
+      "closedAt": "2023-10-24T17:53:42Z",
+      "mergedAt": "2023-10-24T17:53:42Z",
+      "mergedBy": "johngray-dev",
+      "mergeCommit": {
+        "oid": "d6a1ebdc2a5b920fbbd20f1cc33410304471e3c3"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 11,
+      "id": "PR_kwDOKRPFO85lPYQe",
+      "title": "Aligned with X-Wing",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/11",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-01-27T22:50:55Z",
+      "updatedAt": "2024-02-16T16:54:44Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "d6a1ebdc2a5b920fbbd20f1cc33410304471e3c3",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_xwing",
+      "headRefOid": "a06a8eba6c6e94e299a874943a06f36f846d9fe2",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Closes #13 ",
+          "createdAt": "2024-02-06T14:59:53Z",
+          "updatedAt": "2024-02-06T14:59:53Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO85uG_7x",
+          "commit": {
+            "abbreviatedOid": "5fb7140"
+          },
+          "author": "bwesterb",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-01-27T23:41:09Z",
+          "updatedAt": "2024-01-27T23:41:09Z",
+          "comments": [
+            {
+              "originalPosition": 39,
+              "body": "Nice to see X-Wing is a FIPS standard ;).",
+              "createdAt": "2024-01-27T23:41:09Z",
+              "updatedAt": "2024-01-27T23:41:10Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO85uHdDk",
+          "commit": {
+            "abbreviatedOid": "5fb7140"
+          },
+          "author": "dconnolly",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-01-28T09:03:21Z",
+          "updatedAt": "2024-01-28T09:05:56Z",
+          "comments": [
+            {
+              "originalPosition": 257,
+              "body": "\ud83d\udc4d",
+              "createdAt": "2024-01-28T09:03:21Z",
+              "updatedAt": "2024-01-28T09:05:56Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO85uHihZ",
+          "commit": {
+            "abbreviatedOid": "5fb7140"
+          },
+          "author": "dconnolly",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-01-28T09:47:04Z",
+          "updatedAt": "2024-01-28T09:47:29Z",
+          "comments": [
+            {
+              "originalPosition": 130,
+              "body": "```suggestion\nHowever, optimizations may be made in the following ways:\n```\n",
+              "createdAt": "2024-01-28T09:47:05Z",
+              "updatedAt": "2024-01-28T09:47:29Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO85uHi48",
+          "commit": {
+            "abbreviatedOid": "5fb7140"
+          },
+          "author": "dconnolly",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-01-28T09:54:15Z",
+          "updatedAt": "2024-01-28T09:54:19Z",
+          "comments": [
+            {
+              "originalPosition": 93,
+              "body": "This is a good question, not sure yet",
+              "createdAt": "2024-01-28T09:54:15Z",
+              "updatedAt": "2024-01-28T09:54:19Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO85vL6sc",
+          "commit": {
+            "abbreviatedOid": "5fb7140"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-02-06T14:33:41Z",
+          "updatedAt": "2024-02-06T14:33:41Z",
+          "comments": [
+            {
+              "originalPosition": 39,
+              "body": "Good catch. Fixed.",
+              "createdAt": "2024-02-06T14:33:41Z",
+              "updatedAt": "2024-02-06T14:33:41Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO85vhC6P",
+          "commit": {
+            "abbreviatedOid": "5fb7140"
+          },
+          "author": "csosto-pk",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-02-08T18:12:55Z",
+          "updatedAt": "2024-02-08T18:12:55Z",
+          "comments": [
+            {
+              "originalPosition": 257,
+              "body": "> Similarly, RSA-KEM {{I-D.ietf-lamps-rfc5990bis}} is a bijective map between the shared secret `Z` and the ciphertext `C` and so is naturally immune to ciphertext collision. This leaves only ECDH, X25519 and X448 which are not ciphertext collision resistant and for which the ciphertexts need to be included in the derivation of the shared secret.\r\n\r\nI am not sure I get that. Why is RSA-KEM in rfc5990bis CCR?\r\n\r\nrfc5990bis defines\r\n\r\n```\r\nCEK <-  random 256-bits\r\nz <-$ [0, n);\r\nc <- z^e mod n;\r\nWK <- ENCRYPT(KDF(z), CEK);\r\nCC <- (WK, c)\r\nRSA-ENCAPS(pubkey=(e,n)) :=  (CC, CEK) \r\n```\r\n\r\nSomeone that can break `c` or `WK` can produce a different `CC'` which leads to the same `CEK` by producing a different value of  `c`. ML-KEM did not have that issue because there is only one random `m` used for the encapsulation.\r\n\r\n",
+              "createdAt": "2024-02-08T18:12:55Z",
+              "updatedAt": "2024-02-08T18:12:55Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO85wTysv",
+          "commit": {
+            "abbreviatedOid": "5fb7140"
+          },
+          "author": "dstebila",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-02-16T02:56:57Z",
+          "updatedAt": "2024-02-16T02:56:57Z",
+          "comments": [
+            {
+              "originalPosition": 257,
+              "body": "I'm just looking at this now, so apologies if I'm mistaken. But I think the argument that the mapping between RSA ciphertext and plaintext is bijective only holds once you fix the modulus.  So I think you would need some binding to the modulus in the KDF input to achieve bijectivity.  (But do not take this as a proof that it's okay if you have this -- would need more careful consideration than I've given it so far.)",
+              "createdAt": "2024-02-16T02:56:57Z",
+              "updatedAt": "2024-02-16T02:56:57Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 14,
+      "id": "PR_kwDOKRPFO85mKTX8",
+      "title": "Changed title from 'Internet PKI' to 'PKIX and CMS'. Closes #1",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/14",
+      "state": "MERGED",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-02-06T15:48:58Z",
+      "updatedAt": "2024-02-14T15:44:03Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "cad051fe5dbcc17e8e4004bfd1c5333b9d47749f",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_sf_comments",
+      "headRefOid": "0a978937cc7192e6dea167eec971384282ab1423",
+      "closedAt": "2024-02-14T15:44:00Z",
+      "mergedAt": "2024-02-14T15:44:00Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "35040231761a50c992c75598c14014d66e36d5ad"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 15,
+      "id": "PR_kwDOKRPFO85mL58Q",
+      "title": "Added a Use In CMS section",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/15",
+      "state": "MERGED",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Adding this section here avoids the need for a wrapper draft telling you how to use composite KEM in CMS.\r\n\r\nCloses #12 ",
+      "createdAt": "2024-02-06T20:03:04Z",
+      "updatedAt": "2024-03-02T22:18:04Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "7c67eb88a0e162b00965b20289623482461fc5e3",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_use_in_cms",
+      "headRefOid": "b4d7f10d0d9df568418bbd00d2ad28a9c2cd11fa",
+      "closedAt": "2024-03-02T22:17:51Z",
+      "mergedAt": "2024-03-02T22:17:50Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "5c2e3c04d64682a6b556fa3114836149b935c64a"
+      },
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Note-to-self: look at whether we need to specify higher levels of KDF and WRAP for the stronger algorithms -- see how DVG did it in the CMS-Kyber draft.\r\n\r\nUPDATE: done.",
+          "createdAt": "2024-02-13T20:41:49Z",
+          "updatedAt": "2024-02-14T18:14:36Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Question: does the `## Certificate Conventions` section collide with the recently-merged Key Usage section?\r\n\r\nUPDATE: I think this is fine because this section is intended to be able to be standalone if LAMPS wants the alg definitions, and the \"Use in CMS\" to become separate documents.",
+          "createdAt": "2024-02-14T15:41:32Z",
+          "updatedAt": "2024-02-14T18:14:28Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "We also need to add the SMIME-CAPS to the ASN.1 (find a good example doc).",
+          "createdAt": "2024-02-16T15:50:47Z",
+          "updatedAt": "2024-02-16T15:50:47Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Thanks for the review @danvangeest \r\n\r\nStill TODO:\r\n\r\n* We also need to add the SMIME-CAPS to the ASN.1 (find a good example doc).\r\n  * UPDATE: done.",
+          "createdAt": "2024-02-29T23:10:58Z",
+          "updatedAt": "2024-03-01T16:35:39Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Review comments from Russ:\r\n\r\n> Mike:\r\n>\r\n>You are using a mix of \"wrap algorithm\" and \"key-encryption algorithm\".  CMS usually uses the later.  Line 683 got it just right.  That is, id-aes256-Wrap identifies a particular key-encryption algorithm.  I am not sure the text at the top is aligned.\r\n>\r\n>Line 663: I think you need o say how that happens.  In some cases a different OID is used, but in others a different parameter value is used.\r\n>\r\n>Line 675: make it clear thet it is the KEM.Encaps(pk).  The function is specific to the KEM identified in 'kem'.\r\n>\r\n>Line 681: Do any of your composite KEM algorithms REQUIRE a ukm?  I can imagine a way to use DH and ECDH that require a UKM.\r\n>\r\n>Russ\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n",
+          "createdAt": "2024-03-01T19:09:56Z",
+          "updatedAt": "2024-03-01T19:09:56Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO85vPR3s",
+          "commit": {
+            "abbreviatedOid": "abebe14"
+          },
+          "author": "job",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-02-06T20:40:04Z",
+          "updatedAt": "2024-02-06T20:40:05Z",
+          "comments": [
+            {
+              "originalPosition": 72,
+              "body": "Typo: \u201cwith with\u201d",
+              "createdAt": "2024-02-06T20:40:05Z",
+              "updatedAt": "2024-02-06T20:40:05Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO85v_HOG",
+          "commit": {
+            "abbreviatedOid": "abebe14"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-02-13T20:04:18Z",
+          "updatedAt": "2024-02-13T20:04:19Z",
+          "comments": [
+            {
+              "originalPosition": 72,
+              "body": "Thanks. Fixed.",
+              "createdAt": "2024-02-13T20:04:19Z",
+              "updatedAt": "2024-02-13T20:04:19Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO85wL5I0",
+          "commit": {
+            "abbreviatedOid": "3d77392"
+          },
+          "author": "danvangeest",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-02-15T09:05:24Z",
+          "updatedAt": "2024-02-15T10:43:04Z",
+          "comments": [
+            {
+              "originalPosition": 151,
+              "body": "```suggestion\r\n`kdf` identifies the key-derivation function (KDF). Note that the KDF used for CMS RecipientInfo process MAY be different than the KDF used within the composite KEM Algorithm, which MAY be different than the KDFs (if any) used within the component KEMs of the composite KEM Algorithm.\r\n```",
+              "createdAt": "2024-02-15T09:08:13Z",
+              "updatedAt": "2024-02-15T10:43:04Z"
+            },
+            {
+              "originalPosition": 171,
+              "body": "```suggestion\r\nThe digitalSignature and dataEncipherment values MUST NOT be present. That is, a public key intended to be employed only with a composite KEM algorithm MUST NOT also be employed for data encryption or for digital signatures. This requirement does not carry any particular security consideration; only the convention that KEM keys be identifed with the `keyEncipherment` key usage.\r\n```",
+              "createdAt": "2024-02-15T10:09:11Z",
+              "updatedAt": "2024-02-15T10:43:04Z"
+            },
+            {
+              "originalPosition": 128,
+              "body": "```suggestion\r\n{: #tab-cms-kdf-wrap title=\"REQUIRED pairings for CMS KDF and WRAP\"}\r\n```",
+              "createdAt": "2024-02-15T10:10:43Z",
+              "updatedAt": "2024-02-15T10:43:04Z"
+            },
+            {
+              "originalPosition": 130,
+              "body": "```suggestion\r\n\r\n\\[EDNOTE: OIDs for KMAC-based KDFs are expected. Should they be used in place of the HKDF-with-sha3 OIDs above?]\r\n\r\nwhere:\r\n```\r\nI assume this because SHA3 isn't great to use with HKDF, and implementers will need KMAC KDF implementations anyways.\r\n",
+              "createdAt": "2024-02-15T10:11:14Z",
+              "updatedAt": "2024-02-29T23:09:43Z"
+            },
+            {
+              "originalPosition": 135,
+              "body": "```suggestion\r\nImplementors MAY safely substitute stronger KDF and WRAP algorithms than those indicated; for example `id-alg-hkdf-with-sha3-512` and `id-aes256-Wrap` MAY be safely used in place of `id-alg-hkdf-with-sha3-384`and `id-aes192-Wrap`, for example, where SHA3-384 or AES-192 are not supported.\r\n```",
+              "createdAt": "2024-02-15T10:11:52Z",
+              "updatedAt": "2024-02-15T10:43:04Z"
+            },
+            {
+              "originalPosition": 106,
+              "body": "```suggestion\r\nWhen a particular Composite KEM OID is supported, an implementation MUST support the corresponding KDF algorithm identifier in {{tab-cms-kdf-wrap}}.\r\n```\r\nid-alg-hkdf-with-sha3-256 is too low a bar for NIST level 5 KEMs.",
+              "createdAt": "2024-02-15T10:14:22Z",
+              "updatedAt": "2024-02-15T10:43:04Z"
+            },
+            {
+              "originalPosition": 108,
+              "body": "```suggestion\r\nWhen a particular Composite KEM OID is supported, an implementation MUST support the corresponding WRAP algorithm identifier in {{tab-cms-kdf-wrap}}.\r\n```\r\nAES-Wrap-128 is too low a bar for NIST level 5 KEMs.",
+              "createdAt": "2024-02-15T10:14:40Z",
+              "updatedAt": "2024-02-15T10:43:04Z"
+            },
+            {
+              "originalPosition": 112,
+              "body": "```suggestion\r\nThe following table lists the REQUIRED KDF and WRAP algorithms to preserve security and performance characteristics of each composite algorithm.\r\n```",
+              "createdAt": "2024-02-15T10:14:52Z",
+              "updatedAt": "2024-02-15T10:43:04Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO85xHL4Y",
+          "commit": {
+            "abbreviatedOid": "3d77392"
+          },
+          "author": "danvangeest",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "Sorry! I created this review last week but forgot to actually submit it!",
+          "createdAt": "2024-02-23T09:35:15Z",
+          "updatedAt": "2024-02-23T09:35:15Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOKRPFO85x_TDm",
+          "commit": {
+            "abbreviatedOid": "b38b617"
+          },
+          "author": "danvangeest",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-03-02T00:56:26Z",
+          "updatedAt": "2024-03-02T00:56:26Z",
+          "comments": [
+            {
+              "originalPosition": 18,
+              "body": "I don't know anything about ASN.1 but shouldn't these be `kema-MLKEM512-ECDH-P256-KMAC128.&smimeCaps`, etc.  I just base this on what I see in RFC 5911.",
+              "createdAt": "2024-03-02T00:56:26Z",
+              "updatedAt": "2024-03-02T00:56:26Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO85yAjuJ",
+          "commit": {
+            "abbreviatedOid": "b38b617"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-03-02T22:13:53Z",
+          "updatedAt": "2024-03-02T22:13:53Z",
+          "comments": [
+            {
+              "originalPosition": 18,
+              "body": "Yup, sure should. Good catch.",
+              "createdAt": "2024-03-02T22:13:53Z",
+              "updatedAt": "2024-03-02T22:13:53Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 18,
+      "id": "PR_kwDOKRPFO85myUbx",
+      "title": "Added a Key Usage section.",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/18",
+      "state": "MERGED",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-02-13T18:59:24Z",
+      "updatedAt": "2024-02-14T15:42:35Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "d715b285547da9e1e5cdcc6402f9ee12467293b0",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_keyusage",
+      "headRefOid": "883493f8be12e12f0f990747504fb602a571a40f",
+      "closedAt": "2024-02-14T15:42:32Z",
+      "mergedAt": "2024-02-14T15:42:32Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "c7d185a40c1fab7398209130efaf9f9e7d68355f"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 19,
+      "id": "PR_kwDOKRPFO85myV9-",
+      "title": "Added a justification referencing BSI and ANSSI",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/19",
+      "state": "MERGED",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-02-13T19:04:51Z",
+      "updatedAt": "2024-02-14T15:38:46Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "d715b285547da9e1e5cdcc6402f9ee12467293b0",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_justification",
+      "headRefOid": "b3d679177abaf074a95648a7f30e431b7f151f3f",
+      "closedAt": "2024-02-14T15:38:46Z",
+      "mergedAt": "2024-02-14T15:38:46Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "cbbf3553e9500e82bfb603e1020ad80ab99e35be"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 23,
+      "id": "PR_kwDOKRPFO85ofl_1",
+      "title": "Swapped from hkdf-sha3 to kmac-kdf",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/23",
+      "state": "MERGED",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Closes #22 ",
+      "createdAt": "2024-03-02T22:52:30Z",
+      "updatedAt": "2024-03-02T22:55:48Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "f3cbed9e55465cf52a19b176ec3866d630d50d60",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_kmac_kdf",
+      "headRefOid": "29996ec0b628b5b9d5b729e7d474e6f767b00355",
+      "closedAt": "2024-03-02T22:55:44Z",
+      "mergedAt": "2024-03-02T22:55:44Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "7182d2070fb8cc90f20c0aee2995fadd4c73f629"
+      },
+      "comments": [],
+      "reviews": []
+    }
+  ]
+}
