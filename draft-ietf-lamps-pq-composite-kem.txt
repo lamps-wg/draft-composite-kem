@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 7 December 2024                                         M. Pala
+Expires: 21 December 2024                                        M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                             5 June 2024
+                                                            19 June 2024
 
 
 Composite ML-KEM for Use in the Internet X.509 Public Key Infrastructure
@@ -67,7 +67,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 7 December 2024.
+   This Internet-Draft will expire on 21 December 2024.
 
 Copyright Notice
 
@@ -812,9 +812,6 @@ Table of Contents
    MUST support the corresponding key-encryption algorithm identifier in
    Table 4.
 
-   An implementation MAY also support other key-derivation functions and
-   other key-encryption algorithms as well.
-
    The following table lists the REQUIRED KDF and key-encryption
    algorithms to preserve security and performance characteristics of
    each composite algorithm.
@@ -856,12 +853,6 @@ Table of Contents
    *  KMAC KDF instantiations are defined in Section 4.3.1.
 
    *  id-aes*-Wrap are defined in [RFC3394].
-
-   Implementers MAY safely substitute stronger KDF and key-encryption
-   algorithms than those indicated; for example id-alg-hkdf-with-
-   sha3-512 and id-aes256-Wrap MAY be safely used in place of id-alg-
-   hkdf-with-sha3-384and id-aes192-Wrap, for example, where SHA3-384 or
-   AES-192 are not supported.
 
 7.2.  RecipientInfo Conventions
 
