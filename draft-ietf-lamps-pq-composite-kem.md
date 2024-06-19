@@ -640,8 +640,6 @@ When a particular Composite KEM OID is supported, an implementation MUST support
 
 When a particular Composite KEM OID is supported, an implementation MUST support the corresponding key-encryption algorithm identifier in {{tab-cms-kdf-wrap}}.
 
-An implementation MAY also support other key-derivation functions and other key-encryption algorithms as well.
-
 The following table lists the REQUIRED KDF and key-encryption algorithms to preserve security and performance characteristics of each composite algorithm.
 
 
@@ -665,8 +663,6 @@ where:
 
 * KMAC KDF instantiations are defined in {{sec-kmac-kdf}}.
 * `id-aes*-Wrap` are defined in [RFC3394].
-
-Implementers MAY safely substitute stronger KDF and key-encryption algorithms than those indicated; for example `id-alg-hkdf-with-sha3-512` and `id-aes256-Wrap` MAY be safely used in place of `id-alg-hkdf-with-sha3-384`and `id-aes192-Wrap`, for example, where SHA3-384 or AES-192 are not supported.
 
 
 ## RecipientInfo Conventions
