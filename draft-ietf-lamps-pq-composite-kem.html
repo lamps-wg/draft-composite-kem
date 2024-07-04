@@ -18,14 +18,14 @@
 
 
     " name="description">
-<meta content="xml2rfc 3.21.0" name="generator">
+<meta content="xml2rfc 3.22.0" name="generator">
 <meta content="X.509" name="keyword">
 <meta content="CMS" name="keyword">
 <meta content="Post-Quantum" name="keyword">
 <meta content="KEM" name="keyword">
 <meta content="draft-ietf-lamps-pq-composite-kem-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.21.0
+  xml2rfc 3.22.0
     Python 3.12.3
     ConfigArgParse 1.7
     google-i18n-address 3.1.0
@@ -35,9 +35,8 @@
     platformdirs 4.2.2
     pycountry 22.3.5
     PyYAML 6.0.1
-    requests 2.31.0
+    requests 2.32.3
     setuptools 69.5.1
-    six 1.16.0
     wcwidth 0.2.13
 -->
 <link href="draft-ietf-lamps-pq-composite-kem.xml" rel="alternate" type="application/rfc+xml">
@@ -1037,11 +1036,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">Composite KEMs</td>
-<td class="right">June 2024</td>
+<td class="right">July 2024</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Ounsworth, et al.</td>
-<td class="center">Expires 21 December 2024</td>
+<td class="center">Expires 5 January 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1054,12 +1053,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-lamps-pq-composite-kem-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2024-06-19" class="published">19 June 2024</time>
+<time datetime="2024-07-04" class="published">4 July 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2024-12-21">21 December 2024</time></dd>
+<dd class="expires"><time datetime="2025-01-05">5 January 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1126,7 +1125,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 21 December 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 5 January 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1156,7 +1155,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         </h2>
 <nav class="toc"><ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1">
-            <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="auto internal xref">1</a>.  <a href="#name-changes-in-version-03" class="internal xref">Changes in version -03</a></p>
+            <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="auto internal xref">1</a>.  <a href="#name-changes-in-version-04" class="internal xref">Changes in version -04</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2">
             <p id="section-toc.1-1.2.1"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-introduction" class="internal xref">Introduction</a></p>
@@ -1183,6 +1182,9 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.4">
                 <p id="section-toc.1-1.2.2.4.1"><a href="#section-2.4" class="auto internal xref">2.4</a>.  <a href="#name-component-algorithm-selecti" class="internal xref">Component Algorithm Selection Criteria</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.5">
+                <p id="section-toc.1-1.2.2.5.1"><a href="#section-2.5" class="auto internal xref">2.5</a>.  <a href="#name-domain-separators" class="internal xref">Domain Separators</a></p>
 </li>
             </ul>
 </li>
@@ -1326,26 +1328,14 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </nav>
 </section>
 </div>
-<div id="changes-in-version-03">
+<div id="changes-in-version-04">
 <section id="section-1">
-      <h2 id="name-changes-in-version-03">
-<a href="#section-1" class="section-number selfRef">1. </a><a href="#name-changes-in-version-03" class="section-name selfRef">Changes in version -03</a>
+      <h2 id="name-changes-in-version-04">
+<a href="#section-1" class="section-number selfRef">1. </a><a href="#name-changes-in-version-04" class="section-name selfRef">Changes in version -04</a>
       </h2>
 <ul class="normal">
 <li class="normal" id="section-1-1.1">
-          <p id="section-1-1.1.1">Changed the title to reflect that it is specific to ML-KEM.<a href="#section-1-1.1.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="section-1-1.2">
-          <p id="section-1-1.2.1">Added Max Pala, Jan Klaussner, and Scott Fluhrer as authors.<a href="#section-1-1.2.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="section-1-1.3">
-          <p id="section-1-1.3.1">Added text to Introduction to justify where and why this mechanism would be used.<a href="#section-1-1.3.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="section-1-1.4">
-          <p id="section-1-1.4.1">Added section "Use in CMS".<a href="#section-1-1.4.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="section-1-1.5">
-          <p id="section-1-1.5.1">Switched all KDFs for both the combiner and the CMS KEMRI to use id-kmac128 or id-kmac256 from I-D.ietf-lamps-cms-sha3-hash.<a href="#section-1-1.5.1" class="pilcrow">¶</a></p>
+          <p id="section-1-1.1.1">Specified the fixedInfo domain separators as the DER encoded object identifiers<a href="#section-1-1.1.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <p id="section-1-2">Still to do in a future version:<a href="#section-1-2" class="pilcrow">¶</a></p>
@@ -1544,6 +1534,74 @@ Decaps(sk, ct):
 <p id="section-2.4-4">The composite structures defined in this specification allow only for pairs of algorithms. This also does not preclude future specification from extending these structures to define combinations with three or more components.<a href="#section-2.4-4" class="pilcrow">¶</a></p>
 </section>
 </div>
+<div id="sec-domain">
+<section id="section-2.5">
+        <h3 id="name-domain-separators">
+<a href="#section-2.5" class="section-number selfRef">2.5. </a><a href="#name-domain-separators" class="section-name selfRef">Domain Separators</a>
+        </h3>
+<p id="section-2.5-1">In section <a href="#sec-kem-combiner" class="auto internal xref">Section 4.3</a> the fixedInfo value is defined as the DER encoding of the OID and is used as a domain separator for the Composite KEM combiner.  The following table shows the HEX encoding for each Composite KEM AlgorithmID.<a href="#section-2.5-1" class="pilcrow">¶</a></p>
+<span id="name-composite-kem-fixedinfo-dom"></span><div id="tab-kem-domains">
+<table class="center" id="table-1">
+          <caption>
+<a href="#table-1" class="selfRef">Table 1</a>:
+<a href="#name-composite-kem-fixedinfo-dom" class="selfRef">Composite KEM fixedInfo Domain Separators</a>
+          </caption>
+<thead>
+            <tr>
+              <th class="text-left" rowspan="1" colspan="1">Composite KEM AlgorithmID</th>
+              <th class="text-left" rowspan="1" colspan="1">Domain Separator (in Hex encoding)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">id-MLKEM512-ECDH-P256-KMAC128</td>
+              <td class="text-left" rowspan="1" colspan="1">060B6086480186FA6B50050201</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">id-MLKEM512-ECDH-brainpoolP256r1-KMAC128</td>
+              <td class="text-left" rowspan="1" colspan="1">060B6086480186FA6B50050202</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">id-MLKEM512-X25519-KMAC128</td>
+              <td class="text-left" rowspan="1" colspan="1">060B6086480186FA6B50050203</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">id-MLKEM512-RSA2048-KMAC128</td>
+              <td class="text-left" rowspan="1" colspan="1">060B6086480186FA6B5005020D</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">id-MLKEM512-RSA3072-KMAC128</td>
+              <td class="text-left" rowspan="1" colspan="1">060B6086480186FA6B50050204</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-ECDH-P256-KMAC256</td>
+              <td class="text-left" rowspan="1" colspan="1">060B6086480186FA6B50050205</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-ECDH-brainpoolP256r1-KMAC256</td>
+              <td class="text-left" rowspan="1" colspan="1">060B6086480186FA6B50050206</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-X25519-KMAC256</td>
+              <td class="text-left" rowspan="1" colspan="1">060B6086480186FA6B50050207</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">id-MLKEM1024-ECDH-P384-KMAC256</td>
+              <td class="text-left" rowspan="1" colspan="1">060B6086480186FA6B50050208</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">id-MLKEM1024-ECDH-brainpoolP384r1-KMAC256</td>
+              <td class="text-left" rowspan="1" colspan="1">060B6086480186FA6B50050209</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">id-MLKEM1024-X448-KMAC256</td>
+              <td class="text-left" rowspan="1" colspan="1">060B6086480186FA6B5005020A</td>
+            </tr>
+          </tbody>
+        </table>
+</div>
+</section>
+</div>
 </section>
 </div>
 <div id="sec-composite-keys">
@@ -1597,7 +1655,7 @@ CompositeKEMPublicKey ::= SEQUENCE SIZE (2) OF BIT STRING
 </pre><a href="#section-3.2-2" class="pilcrow">¶</a>
 </div>
 <p id="section-3.2-3">A composite key MUST contain two component public keys. The order of the component keys is determined by the definition of the corresponding algorithm identifier as defined in section <a href="#sec-alg-ids" class="auto internal xref">Section 6</a>.<a href="#section-3.2-3" class="pilcrow">¶</a></p>
-<p id="section-3.2-4">Some applications may need to reconstruct the <code>SubjectPublicKeyInfo</code> objects corresponding to each component public key. <a href="#tab-kem-algs" class="auto internal xref">Table 2</a> in <a href="#sec-alg-ids" class="auto internal xref">Section 6</a> provides the necessary mapping between composite and their component algorithms for doing this reconstruction. This also motivates the design choice of <code>SEQUENCE OF BIT STRING</code> instead of <code>SEQUENCE OF OCTET STRING</code>; using <code>BIT STRING</code> allows for easier transcription between CompositeKEMPublicKey and SubjectPublicKeyInfo.<a href="#section-3.2-4" class="pilcrow">¶</a></p>
+<p id="section-3.2-4">Some applications may need to reconstruct the <code>SubjectPublicKeyInfo</code> objects corresponding to each component public key. <a href="#tab-kem-algs" class="auto internal xref">Table 3</a> in <a href="#sec-alg-ids" class="auto internal xref">Section 6</a> provides the necessary mapping between composite and their component algorithms for doing this reconstruction. This also motivates the design choice of <code>SEQUENCE OF BIT STRING</code> instead of <code>SEQUENCE OF OCTET STRING</code>; using <code>BIT STRING</code> allows for easier transcription between CompositeKEMPublicKey and SubjectPublicKeyInfo.<a href="#section-3.2-4" class="pilcrow">¶</a></p>
 <p id="section-3.2-5">When the CompositeKEMPublicKey must be provided in octet string or bit string format, the data structure is encoded as specified in <a href="#sec-encoding-rules" class="auto internal xref">Section 3.4</a>.<a href="#section-3.2-5" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1719,7 +1777,7 @@ Combiner(ct1, ss1, ct2, ss2, fixedInfo) =
             <p id="section-4.3-5.1.1"><code>KDF(message, outputBits)</code> represents a hash function suitable to the chosen KEMs according to {tab-kem-combiners}.<a href="#section-4.3-5.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-4.3-5.2">
-            <p id="section-4.3-5.2.1"><code>fixedInfo</code> SHALL be the ASCII-encoded string name of the composite KEM algorithm as listed in <a href="#tab-kem-algs" class="auto internal xref">Table 2</a>.<a href="#section-4.3-5.2.1" class="pilcrow">¶</a></p>
+            <p id="section-4.3-5.2.1"><code>fixedInfo</code> SHALL be the DER encoded value of the object identifier of the composite KEM algorithm as listed in <a href="#sec-domain" class="auto internal xref">Section 2.5</a>.<a href="#section-4.3-5.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-4.3-5.3">
             <p id="section-4.3-5.3.1"><code>counter</code> SHALL be the fixed 32-bit value <code>0x00000001</code> which is placed here solely for the purposes of easy compliance with <span>[<a href="#SP.800-56Cr2" class="cite xref">SP.800-56Cr2</a>]</span>.<a href="#section-4.3-5.3.1" class="pilcrow">¶</a></p>
@@ -1762,9 +1820,9 @@ Combiner(ct1, ss1, ct2, ss2, fixedInfo) =
 <p id="section-4.3.1-9">Since the customization label to KMAC# is not used, the parameter field MUST be absent when id-kmac128 or id-kmac256 is used as part of an algorithm identifier specifying the KDF to use for ML-KEM in KemRecipientInfo.<a href="#section-4.3.1-9" class="pilcrow">¶</a></p>
 <p id="section-4.3.1-10">This specification references KEM combiner instantiations according to the following names:<a href="#section-4.3.1-10" class="pilcrow">¶</a></p>
 <span id="name-kem-combiners"></span><div id="tab-kem-combiners">
-<table class="center" id="table-1">
+<table class="center" id="table-2">
             <caption>
-<a href="#table-1" class="selfRef">Table 1</a>:
+<a href="#table-2" class="selfRef">Table 2</a>:
 <a href="#name-kem-combiners" class="selfRef">KEM Combiners</a>
             </caption>
 <thead>
@@ -1818,7 +1876,7 @@ Combiner(ct1, ss1, ct2, ss2, fixedInfo) =
       <h2 id="name-example-kem-combiner-instan">
 <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-example-kem-combiner-instan" class="section-name selfRef">Example KEM Combiner instantiation</a>
       </h2>
-<p id="section-5-1">For example, the KEM combiner used with the first entry of <a href="#tab-kem-algs" class="auto internal xref">Table 2</a>, <code>id-MLKEM512-ECDH-P256-KMAC128</code> would be:<a href="#section-5-1" class="pilcrow">¶</a></p>
+<p id="section-5-1">For example, the KEM combiner used with the first entry of <a href="#tab-kem-algs" class="auto internal xref">Table 3</a>, <code>id-MLKEM512-ECDH-P256-KMAC128</code> would be:<a href="#section-5-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-5-2">
 <pre>
 Combiner(ct1, ss1, ct2, ss2, "id-MLKEM512-ECDH-P256-KMAC128") =
@@ -1838,9 +1896,9 @@ Combiner(ct1, ss1, ct2, ss2, "id-MLKEM512-ECDH-P256-KMAC128") =
 <p id="section-6-3">TODO: OIDs to be replaced by IANA.<a href="#section-6-3" class="pilcrow">¶</a></p>
 <p id="section-6-4">Therefore &lt;CompKEM&gt;.1 is equal to 2.16.840.1.114027.80.5.2.1<a href="#section-6-4" class="pilcrow">¶</a></p>
 <span id="name-composite-kem-key-types"></span><div id="tab-kem-algs">
-<table class="center" id="table-2">
+<table class="center" id="table-3">
         <caption>
-<a href="#table-2" class="selfRef">Table 2</a>:
+<a href="#table-3" class="selfRef">Table 3</a>:
 <a href="#name-composite-kem-key-types" class="selfRef">Composite KEM key types</a>
         </caption>
 <thead>
@@ -1969,9 +2027,9 @@ Combiner(ct1, ss1, ct2, ss2, "id-MLKEM512-ECDH-P256-KMAC128") =
 <p id="section-6.1-2">The RSA component keys MUST be generated at the 2048-bit and 3072-bit security level respectively.<a href="#section-6.1-2" class="pilcrow">¶</a></p>
 <p id="section-6.1-3">As with the other composite KEM algorithms, when <code>id-MLKEM512-RSA2048-KMAC128</code> or <code>id-MLKEM512-RSA3072-KMAC128</code> is used in an AlgorithmIdentifier, the parameters MUST be absent. The RSA-KEM SHALL be instantiated with the following parameters:<a href="#section-6.1-3" class="pilcrow">¶</a></p>
 <span id="name-rsa-kem-2048-parameters"></span><div id="rsa-kem-params2048">
-<table class="center" id="table-3">
+<table class="center" id="table-4">
           <caption>
-<a href="#table-3" class="selfRef">Table 3</a>:
+<a href="#table-4" class="selfRef">Table 4</a>:
 <a href="#name-rsa-kem-2048-parameters" class="selfRef">RSA-KEM 2048 Parameters</a>
           </caption>
 <thead>
@@ -2018,13 +2076,13 @@ Combiner(ct1, ss1, ct2, ss2, "id-MLKEM512-ECDH-P256-KMAC128") =
 <a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-underlying-components" class="section-name selfRef">Underlying Components</a>
         </h3>
 <p id="section-7.1-1">A CMS implementation that supports a composite KEM algorithm MUST support at least the following underlying components:<a href="#section-7.1-1" class="pilcrow">¶</a></p>
-<p id="section-7.1-2">When a particular Composite KEM OID is supported, an implementation MUST support the corresponding KDF algorithm identifier in <a href="#tab-cms-kdf-wrap" class="auto internal xref">Table 4</a>.<a href="#section-7.1-2" class="pilcrow">¶</a></p>
-<p id="section-7.1-3">When a particular Composite KEM OID is supported, an implementation MUST support the corresponding key-encryption algorithm identifier in <a href="#tab-cms-kdf-wrap" class="auto internal xref">Table 4</a>.<a href="#section-7.1-3" class="pilcrow">¶</a></p>
+<p id="section-7.1-2">When a particular Composite KEM OID is supported, an implementation MUST support the corresponding KDF algorithm identifier in <a href="#tab-cms-kdf-wrap" class="auto internal xref">Table 5</a>.<a href="#section-7.1-2" class="pilcrow">¶</a></p>
+<p id="section-7.1-3">When a particular Composite KEM OID is supported, an implementation MUST support the corresponding key-encryption algorithm identifier in <a href="#tab-cms-kdf-wrap" class="auto internal xref">Table 5</a>.<a href="#section-7.1-3" class="pilcrow">¶</a></p>
 <p id="section-7.1-4">The following table lists the REQUIRED KDF and key-encryption algorithms to preserve security and performance characteristics of each composite algorithm.<a href="#section-7.1-4" class="pilcrow">¶</a></p>
 <span id="name-required-pairings-for-cms-k"></span><div id="tab-cms-kdf-wrap">
-<table class="center" id="table-4">
+<table class="center" id="table-5">
           <caption>
-<a href="#table-4" class="selfRef">Table 4</a>:
+<a href="#table-5" class="selfRef">Table 5</a>:
 <a href="#name-required-pairings-for-cms-k" class="selfRef">REQUIRED pairings for CMS KDF and WRAP</a>
           </caption>
 <thead>
@@ -2112,7 +2170,7 @@ Combiner(ct1, ss1, ct2, ss2, "id-MLKEM512-ECDH-P256-KMAC128") =
 <p id="section-7.2-1">When a composite KEM Algorithm is employed for a recipient, the RecipientInfo alternative for that recipient MUST be OtherRecipientInfo using the KEMRecipientInfo structure <span>[<a href="#I-D.ietf-lamps-cms-kemri" class="cite xref">I-D.ietf-lamps-cms-kemri</a>]</span>. The fields of the KEMRecipientInfo MUST have the following values:<a href="#section-7.2-1" class="pilcrow">¶</a></p>
 <p id="section-7.2-2"><code>version</code> is the syntax version number; it MUST be 0.<a href="#section-7.2-2" class="pilcrow">¶</a></p>
 <p id="section-7.2-3"><code>rid</code> identifies the recipient's certificate or public key.<a href="#section-7.2-3" class="pilcrow">¶</a></p>
-<p id="section-7.2-4"><code>kem</code> identifies the KEM algorithm; it MUST contain one of the OIDs listed in <a href="#tab-kem-algs" class="auto internal xref">Table 2</a>.<a href="#section-7.2-4" class="pilcrow">¶</a></p>
+<p id="section-7.2-4"><code>kem</code> identifies the KEM algorithm; it MUST contain one of the OIDs listed in <a href="#tab-kem-algs" class="auto internal xref">Table 3</a>.<a href="#section-7.2-4" class="pilcrow">¶</a></p>
 <p id="section-7.2-5"><code>kemct</code> is the ciphertext produced for this recipient; it contains the <code>ct</code> output from <code>Encaps(pk)</code> of the KEM algorithm identified in the <code>kem</code> parameter.<a href="#section-7.2-5" class="pilcrow">¶</a></p>
 <p id="section-7.2-6"><code>kdf</code> identifies the key-derivation function (KDF). Note that the KDF used for CMS RecipientInfo process MAY be different than the KDF used within the composite KEM Algorithm, which MAY be different than the KDFs (if any) used within the component KEMs of the composite KEM Algorithm.<a href="#section-7.2-6" class="pilcrow">¶</a></p>
 <p id="section-7.2-7"><code>kekLength</code> is the size of the key-encryption key in octets.<a href="#section-7.2-7" class="pilcrow">¶</a></p>
@@ -2139,7 +2197,7 @@ Combiner(ct1, ss1, ct2, ss2, "id-MLKEM512-ECDH-P256-KMAC128") =
 <a href="#section-7.4" class="section-number selfRef">7.4. </a><a href="#name-smimecapabilities-attribute" class="section-name selfRef">SMIMECapabilities Attribute Conventions</a>
         </h3>
 <p id="section-7.4-1">Section 2.5.2 of <span>[<a href="#RFC8551" class="cite xref">RFC8551</a>]</span> defines the SMIMECapabilities attribute to announce a partial list of algorithms that an S/MIME implementation can support. When constructing a CMS signed-data content type <span>[<a href="#RFC5652" class="cite xref">RFC5652</a>]</span>, a compliant implementation MAY include the SMIMECapabilities attribute that announces support for the RSA-KEM Algorithm.<a href="#section-7.4-1" class="pilcrow">¶</a></p>
-<p id="section-7.4-2">The SMIMECapability SEQUENCE representing a composite KEM Algorithm MUST include the appropriate object identifier as per <a href="#tab-kem-algs" class="auto internal xref">Table 2</a> in the capabilityID field.<a href="#section-7.4-2" class="pilcrow">¶</a></p>
+<p id="section-7.4-2">The SMIMECapability SEQUENCE representing a composite KEM Algorithm MUST include the appropriate object identifier as per <a href="#tab-kem-algs" class="auto internal xref">Table 3</a> in the capabilityID field.<a href="#section-7.4-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2475,7 +2533,7 @@ END
         <h3 id="name-object-identifier-allocatio">
 <a href="#section-9.1" class="section-number selfRef">9.1. </a><a href="#name-object-identifier-allocatio" class="section-name selfRef">Object Identifier Allocations</a>
         </h3>
-<p id="section-9.1-1">EDNOTE to IANA: OIDs will need to be replaced in both the ASN.1 module and in <a href="#tab-kem-algs" class="auto internal xref">Table 2</a>.<a href="#section-9.1-1" class="pilcrow">¶</a></p>
+<p id="section-9.1-1">EDNOTE to IANA: OIDs will need to be replaced in both the ASN.1 module and in <a href="#tab-kem-algs" class="auto internal xref">Table 3</a>.<a href="#section-9.1-1" class="pilcrow">¶</a></p>
 <div id="module-registration-smi-security-for-pkix-module-identifier">
 <section id="section-9.1.1">
           <h4 id="name-module-registration-smi-sec">
