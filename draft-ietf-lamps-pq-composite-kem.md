@@ -183,14 +183,9 @@ This document assumes that all component algorithms are KEMs, and therefore it d
 
 --- middle
 
-# Changes in version -03
+# Changes in version -04
 
-* Changed the title to reflect that it is specific to ML-KEM.
-* Added Max Pala, Jan Klaußner, and Scott Fluhrer as authors.
-* Added text to Introduction to justify where and why this mechanism would be used.
-* Added section "Use in CMS".
-* Switched all KDFs for both the combiner and the CMS KEMRI to use id-kmac128 or id-kmac256 from I-D.ietf-lamps-cms-sha3-hash.
-
+* Specified the fixedInfo domain separators as the DER encoded object identifiers
 
 Still to do in a future version:
 
@@ -358,6 +353,24 @@ The composite structures defined in this specification allow only for pairs of a
 
 <!-- End of Introduction section -->
 
+## Domain Separators {#sec-domain}
+
+In section {{sec-kem-combiner}} the fixedInfo value is defined as the DER encoding of the OID and is used as a domain separator for the Composite KEM combiner.  The following table shows the HEX encoding for each Composite KEM AlgorithmID.
+
+| Composite KEM AlgorithmID | Domain Separator (in Hex encoding)|
+| ----------- | ----------- |
+| id-MLKEM512-ECDH-P256-KMAC128 | 060B6086480186FA6B50050201|
+| id-MLKEM512-ECDH-brainpoolP256r1-KMAC128 | 060B6086480186FA6B50050202|
+| id-MLKEM512-X25519-KMAC128 |060B6086480186FA6B50050203|
+| id-MLKEM512-RSA2048-KMAC128 |060B6086480186FA6B5005020D|
+| id-MLKEM512-RSA3072-KMAC128 |060B6086480186FA6B50050204|
+| id-MLKEM768-ECDH-P256-KMAC256 |060B6086480186FA6B50050205|
+| id-MLKEM768-ECDH-brainpoolP256r1-KMAC256 |060B6086480186FA6B50050206|
+| id-MLKEM768-X25519-KMAC256 |060B6086480186FA6B50050207|
+| id-MLKEM1024-ECDH-P384-KMAC256 | 060B6086480186FA6B50050208|
+| id-MLKEM1024-ECDH-brainpoolP384r1-KMAC256 |060B6086480186FA6B50050209|
+| id-MLKEM1024-X448-KMAC256 |060B6086480186FA6B5005020A|
+{: #tab-kem-domains title="Composite KEM fixedInfo Domain Separators"}
 
 # Composite Key Structures {#sec-composite-keys}
 
@@ -503,7 +516,7 @@ Combiner(ct1, ss1, ct2, ss2, fixedInfo) =
 where:
 
 * `KDF(message, outputBits)` represents a hash function suitable to the chosen KEMs according to {tab-kem-combiners}.
-* `fixedInfo` SHALL be the ASCII-encoded string name of the composite KEM algorithm as listed in {{tab-kem-algs}}.
+* `fixedInfo` SHALL be the DER encoded value of the object identifier of the composite KEM algorithm as listed in {{sec-domain}}.
 * `counter` SHALL be the fixed 32-bit value `0x00000001` which is placed here solely for the purposes of easy compliance with [SP.800-56Cr2].
 * `||` represents concatenation.
 
