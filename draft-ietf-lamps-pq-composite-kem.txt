@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 21 December 2024                                        M. Pala
+Expires: 5 January 2025                                          M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                            19 June 2024
+                                                             4 July 2024
 
 
 Composite ML-KEM for Use in the Internet X.509 Public Key Infrastructure
@@ -67,7 +67,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 21 December 2024.
+   This Internet-Draft will expire on 5 January 2025.
 
 Copyright Notice
 
@@ -85,7 +85,7 @@ Copyright Notice
 
 Table of Contents
 
-   1.  Changes in version -03
+   1.  Changes in version -04
    2.  Introduction
      2.1.  Terminology
      2.2.  Composite Design Philosophy
@@ -94,6 +94,7 @@ Table of Contents
        2.3.2.  Composite Encaps
        2.3.3.  Composite Decaps
      2.4.  Component Algorithm Selection Criteria
+     2.5.  Domain Separators
    3.  Composite Key Structures
      3.1.  pk-CompositeKEM
      3.2.  CompositeKEMPublicKey
@@ -135,19 +136,10 @@ Table of Contents
    Appendix D.  Contributors and Acknowledgments
    Authors' Addresses
 
-1.  Changes in version -03
+1.  Changes in version -04
 
-   *  Changed the title to reflect that it is specific to ML-KEM.
-
-   *  Added Max Pala, Jan Klaussner, and Scott Fluhrer as authors.
-
-   *  Added text to Introduction to justify where and why this mechanism
-      would be used.
-
-   *  Added section "Use in CMS".
-
-   *  Switched all KDFs for both the combiner and the CMS KEMRI to use
-      id-kmac128 or id-kmac256 from I-D.ietf-lamps-cms-sha3-hash.
+   *  Specified the fixedInfo domain separators as the DER encoded
+      object identifiers
 
    Still to do in a future version:
 
@@ -412,6 +404,51 @@ Table of Contents
    specification from extending these structures to define combinations
    with three or more components.
 
+2.5.  Domain Separators
+
+   In section Section 4.3 the fixedInfo value is defined as the DER
+   encoding of the OID and is used as a domain separator for the
+   Composite KEM combiner.  The following table shows the HEX encoding
+   for each Composite KEM AlgorithmID.
+
+    +===========================+====================================+
+    | Composite KEM AlgorithmID | Domain Separator (in Hex encoding) |
+    +===========================+====================================+
+    | id-MLKEM512-ECDH-         | 060B6086480186FA6B50050201         |
+    | P256-KMAC128              |                                    |
+    +---------------------------+------------------------------------+
+    | id-MLKEM512-ECDH-         | 060B6086480186FA6B50050202         |
+    | brainpoolP256r1-KMAC128   |                                    |
+    +---------------------------+------------------------------------+
+    | id-                       | 060B6086480186FA6B50050203         |
+    | MLKEM512-X25519-KMAC128   |                                    |
+    +---------------------------+------------------------------------+
+    | id-                       | 060B6086480186FA6B5005020D         |
+    | MLKEM512-RSA2048-KMAC128  |                                    |
+    +---------------------------+------------------------------------+
+    | id-                       | 060B6086480186FA6B50050204         |
+    | MLKEM512-RSA3072-KMAC128  |                                    |
+    +---------------------------+------------------------------------+
+    | id-MLKEM768-ECDH-         | 060B6086480186FA6B50050205         |
+    | P256-KMAC256              |                                    |
+    +---------------------------+------------------------------------+
+    | id-MLKEM768-ECDH-         | 060B6086480186FA6B50050206         |
+    | brainpoolP256r1-KMAC256   |                                    |
+    +---------------------------+------------------------------------+
+    | id-                       | 060B6086480186FA6B50050207         |
+    | MLKEM768-X25519-KMAC256   |                                    |
+    +---------------------------+------------------------------------+
+    | id-MLKEM1024-ECDH-        | 060B6086480186FA6B50050208         |
+    | P384-KMAC256              |                                    |
+    +---------------------------+------------------------------------+
+    | id-MLKEM1024-ECDH-        | 060B6086480186FA6B50050209         |
+    | brainpoolP384r1-KMAC256   |                                    |
+    +---------------------------+------------------------------------+
+    | id-MLKEM1024-X448-KMAC256 | 060B6086480186FA6B5005020A         |
+    +---------------------------+------------------------------------+
+
+            Table 1: Composite KEM fixedInfo Domain Separators
+
 3.  Composite Key Structures
 
 3.1.  pk-CompositeKEM
@@ -454,7 +491,7 @@ Table of Contents
    corresponding algorithm identifier as defined in section Section 6.
 
    Some applications may need to reconstruct the SubjectPublicKeyInfo
-   objects corresponding to each component public key.  Table 2 in
+   objects corresponding to each component public key.  Table 3 in
    Section 6 provides the necessary mapping between composite and their
    component algorithms for doing this reconstruction.  This also
    motivates the design choice of SEQUENCE OF BIT STRING instead of
@@ -582,8 +619,8 @@ Table of Contents
    *  KDF(message, outputBits) represents a hash function suitable to
       the chosen KEMs according to {tab-kem-combiners}.
 
-   *  fixedInfo SHALL be the ASCII-encoded string name of the composite
-      KEM algorithm as listed in Table 2.
+   *  fixedInfo SHALL be the DER encoded value of the object identifier
+      of the composite KEM algorithm as listed in Section 2.5.
 
    *  counter SHALL be the fixed 32-bit value 0x00000001 which is placed
       here solely for the purposes of easy compliance with
@@ -641,7 +678,7 @@ Table of Contents
               | KMAC256/512       | id-kmac256 | 512        |
               +-------------------+------------+------------+
 
-                           Table 1: KEM Combiners
+                           Table 2: KEM Combiners
 
    BEGIN EDNOTE
 
@@ -658,7 +695,7 @@ Table of Contents
 
 5.  Example KEM Combiner instantiation
 
-   For example, the KEM combiner used with the first entry of Table 2,
+   For example, the KEM combiner used with the first entry of Table 3,
    id-MLKEM512-ECDH-P256-KMAC128 would be:
 
    Combiner(ct1, ss1, ct2, ss2, "id-MLKEM512-ECDH-P256-KMAC128") =
@@ -717,7 +754,7 @@ Table of Contents
    |MLKEM1024-X448-KMAC256  |            |         |               |           |
    +------------------------+------------+---------+---------------+-----------+
 
-                      Table 2: Composite KEM key types
+                      Table 3: Composite KEM key types
 
    The table above contains everything needed to implement the listed
    explicit composite algorithms, with the exception of some special
@@ -775,7 +812,7 @@ Table of Contents
            | keyLength             | 128                       |
            +-----------------------+---------------------------+
 
-                      Table 3: RSA-KEM 2048 Parameters
+                      Table 4: RSA-KEM 2048 Parameters
 
    where:
 
@@ -806,11 +843,11 @@ Table of Contents
    support at least the following underlying components:
 
    When a particular Composite KEM OID is supported, an implementation
-   MUST support the corresponding KDF algorithm identifier in Table 4.
+   MUST support the corresponding KDF algorithm identifier in Table 5.
 
    When a particular Composite KEM OID is supported, an implementation
    MUST support the corresponding key-encryption algorithm identifier in
-   Table 4.
+   Table 5.
 
    The following table lists the REQUIRED KDF and key-encryption
    algorithms to preserve security and performance characteristics of
@@ -846,7 +883,7 @@ Table of Contents
    | id-MLKEM1024-X448-KMAC256     | KMAC256/512 | id-aes256-Wrap     |
    +-------------------------------+-------------+--------------------+
 
-             Table 4: REQUIRED pairings for CMS KDF and WRAP
+             Table 5: REQUIRED pairings for CMS KDF and WRAP
 
    where:
 
@@ -867,7 +904,7 @@ Table of Contents
    rid identifies the recipient's certificate or public key.
 
    kem identifies the KEM algorithm; it MUST contain one of the OIDs
-   listed in Table 2.
+   listed in Table 3.
 
    kemct is the ciphertext produced for this recipient; it contains the
    ct output from Encaps(pk) of the KEM algorithm identified in the kem
@@ -928,7 +965,7 @@ Table of Contents
    Algorithm.
 
    The SMIMECapability SEQUENCE representing a composite KEM Algorithm
-   MUST include the appropriate object identifier as per Table 2 in the
+   MUST include the appropriate object identifier as per Table 3 in the
    capabilityID field.
 
 8.  ASN.1 Module
@@ -1248,7 +1285,7 @@ Table of Contents
 9.1.  Object Identifier Allocations
 
    EDNOTE to IANA: OIDs will need to be replaced in both the ASN.1
-   module and in Table 2.
+   module and in Table 3.
 
 9.1.1.  Module Registration - SMI Security for PKIX Module Identifier
 
