@@ -1,5 +1,5 @@
 ---
-title: Composite ML-KEM For Use In Internet PKI
+title: Composite ML-KEM for Use in the Internet X.509 Public Key Infrastructure and CMS
 abbrev: Composite KEMs
 docname: draft-ietf-lamps-pq-composite-kem-latest
 
@@ -30,30 +30,52 @@ pi:    # can use array (if all yes) or hash here
   symrefs: yes
 
 author:
-    -
-      ins: M. Ounsworth
-      name: Mike Ounsworth
-      org: Entrust Limited
-      abbrev: Entrust
-      street: 2500 Solandt Road – Suite 100
-      city: Ottawa, Ontario
-      country: Canada
-      code: K2K 3G5
-      email: mike.ounsworth@entrust.com
+  -
+    ins: M. Ounsworth
+    name: Mike Ounsworth
+    org: Entrust Limited
+    abbrev: Entrust
+    street: 2500 Solandt Road – Suite 100
+    city: Ottawa, Ontario
+    country: Canada
+    code: K2K 3G5
+    email: mike.ounsworth@entrust.com
+  -
+    ins: J. Gray
+    name: John Gray
+    org: Entrust Limited
+    abbrev: Entrust
+    street: 2500 Solandt Road – Suite 100
+    city: Ottawa, Ontario
+    country: Canada
+    code: K2K 3G5
+    email: john.gray@entrust.com
+  -
+    ins: M. Pala
+    name: Massimiliano Pala
+    org: OpenCA Labs
+    city: New York City, New York
+    country: United States of America
+    email: director@openca.org
+  -
+    ins: J. Klaussner
+    name: Jan Klaussner
+    org: Bundesdruckerei GmbH
+    email: jan.klaussner@bdr.de
+    street: Kommandantenstr. 15
+    code: 10969
+    city: Berlin
+    country: Germany
+  -
+    ins: S. Fluhrer
+    name: Scott Fluhrer
+    org: Cisco Systems
+    email: sfluhrer@cisco.com
 
-    -
-      ins: J. Gray
-      name: John Gray
-      org: Entrust Limited
-      abbrev: Entrust
-      street: 2500 Solandt Road – Suite 100
-      city: Ottawa, Ontario
-      country: Canada
-      code: K2K 3G5
-      email: john.gray@entrust.com
 
 normative:
   RFC2119:
+  RFC3394:
   RFC5280:
   RFC5652:
   RFC5958:
@@ -61,7 +83,8 @@ normative:
   RFC8410:
   RFC8411:
   I-D.draft-ietf-lamps-rfc5990bis-04:
-  I-D.draft-housley-lamps-cms-sha3-hash-01:
+  I-D.draft-ietf-lamps-cms-kemri-08:
+  I-D.draft-ietf-lamps-cms-sha3-hash-04:
   ANS-X9.44:
     title: "Public Key
               Cryptography for the Financial Services Industry -- Key
@@ -70,18 +93,18 @@ normative:
       org: "American National Standards Institute"
     date: 2007
     seriesinfo: American National Standard X9.44
-  # SHA3:
-  #   title: "SHA-3 Standard: Permutation-Based Hash and Extendable-Output Functions, FIPS PUB 202, DOI 10.6028/NIST.FIPS.202"
-  #   author:
-  #     org: "National Institute of Standards and Technology (NIST)"
-  #   date: August 2015
-  #   target: https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.202.pdf
-  SP800-185:
-    title: "SHA-3 Derived Functions: cSHAKE, KMAC, TupleHash and ParallelHash"
+  SHA3:
+    title: "SHA-3 Standard: Permutation-Based Hash and Extendable-Output Functions, FIPS PUB 202, DOI 10.6028/NIST.FIPS.202"
     author:
       org: "National Institute of Standards and Technology (NIST)"
-    date: December 2016
-    target: https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-185.pdf
+    date: August 2015
+    target: https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.202.pdf
+  # SP800-185:
+  #   title: "SHA-3 Derived Functions: cSHAKE, KMAC, TupleHash and ParallelHash"
+  #   author:
+  #     org: "National Institute of Standards and Technology (NIST)"
+  #   date: December 2016
+  #   target: https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-185.pdf
   X.690:
       title: "Information technology - ASN.1 encoding Rules: Specification of Basic Encoding Rules (BER), Canonical Encoding Rules (CER) and Distinguished Encoding Rules (DER)"
       date: November 2015
@@ -118,6 +141,8 @@ informative:
   RFC2986:
   RFC4210:
   RFC4211:
+  RFC4262:
+  RFC5083:
   RFC5639:
   RFC5914:
   RFC6090:
@@ -126,9 +151,9 @@ informative:
   RFC7748:
   RFC8446:
   RFC8551:
+  RFC9180:
   I-D.draft-ietf-tls-hybrid-design-04:
   I-D.draft-driscoll-pqt-hybrid-terminology-01:
-  I-D.draft-ounsworth-cfrg-kem-combiners-04:
   I-D.draft-ietf-lamps-kyber-certificates-01:
   I-D.draft-becker-guthrie-noncomposite-hybrid-auth-00:
   I-D.draft-housley-lamps-cms-kemri-02:
@@ -158,6 +183,20 @@ informative:
         ins: B. Westerbaan
         name: Bas Westerbaan
     target: https://eprint.iacr.org/2024/039.pdf
+  BSI2021:
+    title: "Quantum-safe cryptography - fundamentals, current developments and recommendations"
+    target: https://www.bsi.bund.de/SharedDocs/Downloads/EN/BSI/Publications/Brochure/quantum-safe-cryptography.pdf
+    author:
+      - org: "Federal Office for Information Security (BSI)"
+    date: October 2021
+  ANSSI2024:
+    title: "Position Paper on Quantum Key Distribution"
+    target: https://cyber.gouv.fr/sites/default/files/document/Quantum_Key_Distribution_Position_Paper.pdf
+    author:
+      - org: "French Cybersecurity Agency (ANSSI)"
+      - org: "Federal Office for Information Security (BSI)"
+      - org: "Netherlands National Communications Security Agency (NLNCSA)"
+      - org: "Swedish National Communications Security Authority, Swedish Armed Forces"
 
 
 --- abstract
@@ -169,7 +208,12 @@ This document defines Post-Quantum / Traditional composite Key Encapsulation Mec
 
 --- middle
 
-# Changes in version -03
+# Changes in version -04
+
+* Specified the fixedInfo domain separators as the DER encoded object identifiers.
+* Adjusted the combiner to be compliant with NIST SP800-56C as per https://mailarchive.ietf.org/arch/msg/spasm/nlyQF1i7ndp5A7zzcTsdYF_S9mI/ -- also aligns with X-Wing changes below.
+* Removed reference to draft-ounsworth-cfrg-kem-combiners so that we don't end up in a downref situation.
+* Removed reference to
 
 Changes to sync with X-Wing:
 
@@ -177,13 +221,14 @@ Changes to sync with X-Wing:
     - Changed title to be ML-KEM specific.
   - Removed RSA-KEM ciphertext from KDF.
   - Changed the KDF from KMAC to SHA3.
-  - Removed references to I-D.ounsworth-lamps-cms-dhkem since we'll just inline it and don't need a DHKEM wrapper.
+  - Removed references to I-D.ounsworth-lamps-cms-dhkem since we'll just inline a simplified version of RFC9180's DHKEM.
 
 
 Still to do in a future version:
 
-  `[ ]` We need PEM samples … 118 hackathon? OQS friends? David @ BC? The right format for samples is probably to follow the hackathon ... a Dilithium or ECDSA trust anchor certificate, a composite KEM end entity certificate, and a CMS EnvolepedData sample encrypted for that composite KEM certificate.
+  `[ ]` We need PEM samples … hackathon? OQS friends? David @ BC? The right format for samples is probably to follow the hackathon ... a Dilithium or ECDSA trust anchor certificate, a composite KEM end entity certificate, and a CMS EnvolepedData sample encrypted for that composite KEM certificate.
   `[ ]` Open question: do we need to include the ECDH, X25519, X448, and RSA public keys in the KDF? X-Wing does, but previous versions of this spec do not. In general existing ECC and RSA hardware decryptor implementations might not know their own public key.
+
 
 # Introduction {#sec-intro}
 
@@ -191,6 +236,25 @@ Still to do in a future version:
 The migration to post-quantum cryptography is unique in the history of modern digital cryptography in that neither the old outgoing nor the new incoming algorithms are fully trusted to protect data for long data lifetimes. The outgoing algorithms, such as RSA and elliptic curve, may fall to quantum cryptalanysis, while the incoming post-quantum algorithms face uncertainty about both the underlying mathematics falling to classical algorithmic attacks as well as hardware and software implementations that have not had sufficient maturing time to rule out catastrophic implementation bugs. Unlike previous cryptographic algorithm migrations, the choice of when to migrate and which algorithms to migrate to, is not so clear.
 
 Cautious implementers may wish to combine cryptographic algorithms such that an attacker would need to break all of them in order to compromise the data being protected. Such mechanisms are referred to as Post-Quantum / Traditional Hybrids {{I-D.driscoll-pqt-hybrid-terminology}}.
+
+In particular, certain jurisdictions are recommending or requiring that PQC lattice schemes only be used within a PQ/T hybrid. As an example, we point to [BSI2021] which includes the following recommendation:
+
+"Therefore, quantum computer-resistant methods should
+not be used alone - at least in a transitional period - but
+only in hybrid mode, i.e. in combination with a classical
+method. For this purpose, protocols must be modified
+or supplemented accordingly. In addition, public key
+infrastructures, for example, must also be adapted"
+
+In addition, [BSI2021] specifically references this specification as a concrete example of hybrid X.509 certificates.
+
+A more recent example is [ANSSI2024], a document co-authored by French Cybersecurity Agency (ANSSI),
+Federal Office for Information Security (BSI), Netherlands National Communications Security Agency (NLNCSA), and
+Swedish National Communications Security Authority, Swedish Armed Forces which makes the following statement:
+
+“In light of the urgent need to stop relying only on quantum-vulnerable public-key cryptography for key establishment, the clear priority should therefore be the migration to post-quantum cryptography in hybrid solutions”
+
+This specification represents the straightforward implementation of the hybrid solutions called for by European cyber security agencies.
 
 PQ/T Hybrid cryptography can, in general, provide solutions to two migration problems:
 
@@ -265,6 +329,27 @@ A composite KEM allows two or more underlying key transport, key agreement, or K
 
 The `KeyGen() -> (pk, sk)` of a composite KEM algorithm will perform the `KeyGen()` of the respective component KEM algorithms and it produces a composite public key `pk` as per {{sec-composite-pub-keys}} and a composite secret key `sk` is per {{sec-priv-key}}.
 
+### Promotion of RSA into a KEM
+
+Promotion of the RSA encryption primitive into a KEM is accomplished via {{I-D.ietf-lamps-rfc5990bis}}.
+
+### Promotion of ECDH into a KEM
+
+This is accomplished with a simplified version of the DHKEM definition from [RFC9180].
+
+This construction applies for all variants of elliptic curve Diffie-Hellman used in this specification: ECDH, X25519, and X448.
+
+~~~
+DHKEM.Encaps(pkR):
+  skE, pkE = GenerateKeyPair()
+  shared_secret = DH(skE, pkR)
+  enc = SerializePublicKey(pkE)
+
+  return shared_secret, enc
+~~~
+
+The simplifications from the DHKEM definition in [RFC9180] is that since the ciphertext and receiver's public key are included explicitely in the composite KEM combiner, there is no need to construct the `kem_context` object, and since a domain separator is included explicitely in the composite KEM combiner there is no need to perform `ExtractAndExpand()`.
+
 ### Composite Encaps
 
 The `Encaps(pk) -> (ct, ss)` of a composite KEM algorithm is defined as:
@@ -272,45 +357,51 @@ The `Encaps(pk) -> (ct, ss)` of a composite KEM algorithm is defined as:
 ~~~
 Encaps(pk):
   # Split the component public keys
-  pk1 = pk[0]
-  pk2 = pk[1]
+  mlkemPK = pk[0]
+  tradPK  = pk[1]
 
   # Perform the respective component Encaps operations
-  (ct1, ss1) = ComponentKEM1.Encaps(pk1)
-  (ct2, ss2) = ComponentKEM2.Encaps(pk2)
+  (mlkemCT, mlkemSS) = MLKEM.Encaps(mlkemPK)
+  (tradCT, tradSS) = TradKEM.Encaps(tradPK)
 
-  # combine
+  # Combine
+  # note that the order of the traditional and ML-KEM components is flipped
+  # here in order to satisfy NIST SP800-56Cr2.
   ct = CompositeCiphertextValue(ct1, ct2)
-  ss = Combiner(ct1, ss1, ct2, ss2, algName)
+  ss = Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep)
 
   return (ct, ss)
 ~~~
-{: #alg-composite-encaps title="Composite Encaps(pk)"}
+{: #alg-composite-encaps title="Composite ML-KEM Encaps(pk)"}
 
-where `Combiner(ct1, ss1, ct2, ss2, fixedInfo)` is defined in general in {{sec-kem-combiner}} with specific instantiations per composite KEM algorithm in {{sec-alg-ids}} and `CompositeCiphertextValue` is defined in {{sec-CompositeCiphertextValue}}.
+where `Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep)` is defined in general in {{sec-kem-combiner}} with specific values for `domSep` per composite KEM algorithm in {{sec-alg-ids}} and `CompositeCiphertextValue` is defined in {{sec-CompositeCiphertextValue}}.
 
 ### Composite Decaps
 
 The `Decaps(sk, ct) -> ss` of a composite KEM algorithm is defined as:
 
 ~~~
-Decaps(sk, ct):
-  # Sptil the component ciphertexts
-  ct1 = ct[0]
-  ct2 = ct[1]
+Decaps(ct, mlkemSK, tradSK):
+  # split the component ciphertexts
+  mlkemCT = ct[0]
+  tradCT  = ct[1]
 
   # Perform the respective component Decaps operations
-  ss1 = ComponentKEM1.Encaps(sk1, ct1)
-  ss2 = ComponentKEM2.Encaps(sk2, ct2)
+  mlkemSS = MLKEM.Decaps(mlkemSK, mlkemCT)
+  tradSS  = TradKEM.Decaps(tradSK, tradCT)
 
-  # combine
-  ss = Combiner(ct1, ss1, ct2, ss2, algName)
+  # Combine
+  # note that the order of the traditional and ML-KEM components is flipped
+  # here in order to satisfy NIST SP800-56Cr2.
+  ss = Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep)
 
   return ss
 ~~~
-{: #alg-composite-decaps title="Composite Decaps(sk, ct)"}
+{: #alg-composite-decaps title="Composite (ct, mlkemSK, tradSK)"}
 
-where `Combiner(ct1, ss1, ct2, ss2, fixedInfo)` is defined in {sec-kem-combiner}.
+where `Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep)` is defined in general in {{sec-kem-combiner}} with specific values for `domSep` per composite KEM algorithm in {{sec-alg-ids}} and `CompositeCiphertextValue` is defined in {{sec-CompositeCiphertextValue}}.
+
+Here the secret key values `mlkemSK` and `tradSK` may be interpreted as either literal secret key values, or references to a cryptographic module which holds the secret key and is capable of performing the secret key operation.
 
 
 ## Component Algorithm Selection Criteria {#sec-selection-criteria}
@@ -327,6 +418,26 @@ The composite structures defined in this specification allow only for pairs of a
 
 <!-- End of Introduction section -->
 
+## Domain Separators {#sec-domain}
+
+In section {{sec-kem-combiner}} the fixedInfo value is defined as the DER encoding of the OID and is used as a domain separator for the Composite KEM combiner.  The following table shows the HEX encoding for each Composite KEM AlgorithmID.
+
+| Composite KEM AlgorithmID | Domain Separator (in Hex encoding)|
+| ----------- | ----------- |
+| id-MLKEM512-ECDH-P256     | 060B6086480186FA6B50050201|
+| id-MLKEM512-ECDH-brainpoolP256r1 | 060B6086480186FA6B50050202|
+| id-MLKEM512-X25519        | 060B6086480186FA6B50050203|
+| id-MLKEM512-RSA2048       | 060B6086480186FA6B5005020D|
+| id-MLKEM512-RSA3072       | 060B6086480186FA6B50050204|
+| id-MLKEM768-ECDH-P256     | 060B6086480186FA6B50050205|
+| id-MLKEM768-ECDH-brainpoolP256r1 |060B6086480186FA6B50050206|
+| id-MLKEM768-X25519        | 060B6086480186FA6B50050207|
+| id-MLKEM1024-ECDH-P384    | 060B6086480186FA6B50050208|
+| id-MLKEM1024-ECDH-brainpoolP384r1 |060B6086480186FA6B50050209|
+| id-MLKEM1024-X448         | 060B6086480186FA6B5005020A|
+{: #tab-kem-domains title="Composite KEM fixedInfo Domain Separators"}
+
+EDNOTE: these domain separators are based on the prototyping OIDs assigned on the Entrust arc. We will need to ask for IANA early allocation of these OIDs so that we can re-compute the domain separators over the final OIDs.
 
 # Composite Key Structures {#sec-composite-keys}
 
@@ -418,6 +529,15 @@ CompositeKEMPublicKeyBs ::= BIT STRING (CONTAINING CompositeKEMPublicKey ENCODED
 
 
 
+## Key Usage Bits
+
+For protocols such as X.509 [RFC5280] that specify key usage along with the public key, then the composite public key associated with a composite KEM algorithm MUST contain only a `keyEncipherment` key usage, all other key usages MUST NOT be used.
+This is because the composite public key can only be used in situations
+that are appropriate for both component algorithms, so even if the
+classical component key supports both signing and encryption,
+the post-quantum algorithms do not.
+
+
 # Composite KEM Structures
 
 ## kema-CompositeKEM {#sec-kema-CompositeKEM}
@@ -452,47 +572,38 @@ A composite KEM and `CompositeCipherTextValue` MAY be associated with a composit
 
 TODO: as per https://www.enisa.europa.eu/publications/post-quantum-cryptography-integration-study section 4.2, might need to specify behaviour in light of KEMs with a non-zero failure probability.
 
-This document follows the construction of {{I-D.ounsworth-cfrg-kem-combiners}}, which is repeated here for clarity, however it has been simplified to take two input shared secrets, and to take advantage of ML-KEM specific optimizations as per [X-Wing].
-
-The general combiner defined in {{I-D.ounsworth-cfrg-kem-combiners}} is:
+The KEM combiner construction is as follows:
 
 ~~~
-Combiner(ct1, ss1, ct2, ss2, fixedInfo) =
-  KDF(counter || ct1 || ss1 || ct2 || ss2 || fixedInfo, outputBits)
+KEK = Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep) =
+  KDF(counter || tradSS || mlkemSS || tradCT || tradPK ||
+       domSep, outputBits)
 ~~~
 {: #code-generic-kem-combiner title="Generic KEM combiner construction"}
 
 where:
 
 * `KDF(message, outputBits)` represents a hash function suitable to the chosen KEMs according to {tab-kem-combiners}.
-* `fixedInfo` SHALL be the ASCII-encoded string name of the composite KEM algorithm as listed in {{tab-kem-algs}}.
+* `tradSS` is the shared secret from the traditional component (elliptic curve or RSA).
+* `mlkemSS` is the shared secret from the ML-KEM componont.
+* `tradCT` is the ciphertext from the traditional component (elliptic curve or RSA).
+* `tradPK` is the public key of the traditional component (elliptic curve or RSA).
+* `domSep` SHALL be the DER encoded value of the object identifier of the composite KEM algorithm as listed in {{sec-domain}}.
 * `counter` SHALL be the fixed 32-bit value `0x00000001` which is placed here solely for the purposes of easy compliance with [SP.800-56Cr2].
 * `||` represents concatenation.
 
-Each registered composite KEM algorithm must specify the choice of `KDF`, `fixedInfo`, and `outputBits` to be used.
+Each registered composite KEM algorithm must specify the choice of `KDF`, `demSep`, and `outputBits` to be used.
 
 See {{sec-cons-kem-combiner}} for further discussion of the security considerations of this KEM combiner.
 
-However, optimizations may be made in the following ways:
+## FIPS Compliance
 
-* As discussed in {{sec-cons-ct-collision}}, the ML-KEM ciphertext may be safely omitted.
-* As discussed in {{sec-cons-ct-collision}}, the RSA-KEM ciphertext may be safely omitted.
-* As the KDF we use everywhere SHA3-256 or SHA3-512.
+FIPS compliance with [SP.800-56Cr2]:
+This construction is specifically designed to conform with Section 4.1 Option 1 (when KDF is SHA3) or Option 3 (when KDF is KMAC) in the following way:
 
-That yields combiners of the form
+In both cases we match exactly the construction using the allowed "hybrid" shared secret of the form `Z' = Z || T` to yield the construction `counter || Z || T || FixedInfo` where `Z = tradSS` is the algorithm assumed to always be FIPS-approved from a FIPS-certified implementation which is expected to be true during the period where ML-KEM implementations may not yet have received FIPS certification, `T = mlkemSS`, and `FixedInfo = tradCT || tradPK || domSep`.
 
-~~~
-SHA3-256(counter || ss1 || ct2 || ss2 || fixedInfo, outputBits)
-~~~
-{: #code-optimized-kem-combiner title="Optimized KEM combiner construction"}
-
-
-For example, the KEM combiner used with the first entry of {{tab-kem-algs}}, `id-MLKEM512-ECDH-P256` would be:
-
-~~~
-SHA3-256( 0x00000001 || ss_mlkem || ct_ecdh-p256 || ss_ecdh-p256
-            || "id-MLKEM512-ECDH-P256", "")
-~~~
+In the case that KDF is KMAC, the message to be hashed MUST be post-pended with `H_outputBits` and the byte string `01001011 || 01000100 || 01000110`, which represents the sequence of characters “K”, “D,” and “F” in 8-bit ASCII, as required by [SP.800-56Cr2] section 4.1 Option 3. `salt` is left empty since KMAC is only required to behave as a hash function and not as a keyed MAC.
 
 
 # Algorithm Identifiers {#sec-alg-ids}
@@ -505,22 +616,20 @@ TODO: OIDs to be replaced by IANA.
 
 Therefore &lt;CompKEM&gt;.1 is equal to 2.16.840.1.114027.80.5.2.1
 
-| KEM Type                          | OID                | First Algorithm | Second Algorithm     |
-|---------                          | -----------------  | ----------      | ----------           |
-| id-MLKEM512-ECDH-P256             | &lt;CompKEM&gt;.1  | MLKEM512        | ECDH-P256            |
-| id-MLKEM512-ECDH-brainpoolP256r1  | &lt;CompKEM&gt;.2  | MLKEM512        | ECDH-brainpoolp256r1 |
-| id-MLKEM512-X25519                | &lt;CompKEM&gt;.3  | MLKEM512        | X25519               |
-| id-MLKEM512-RSA2048               | &lt;CompKEM&gt;.13 | MLKEM512        | RSA-KEM 2048         |
-| id-MLKEM512-RSA3072               | &lt;CompKEM&gt;.4  | MLKEM512        | RSA-KEM 3072         |
-| id-MLKEM768-ECDH-P256             | &lt;CompKEM&gt;.5  | MLKEM768        | ECDH-P256            |
-| id-MLKEM768-ECDH-brainpoolP256r1  | &lt;CompKEM&gt;.6  | MLKEM768        | ECDH-brainpoolp256r1 |
-| id-MLKEM768-X25519                | &lt;CompKEM&gt;.7  | MLKEM768        | X25519               |
-| id-MLKEM1024-ECDH-P384            | &lt;CompKEM&gt;.8  | MLKEM1024       | ECDH-P384            |
-| id-MLKEM1024-ECDH-brainpoolP384r1 | &lt;CompKEM&gt;.9  | MLKEM1024       | ECDH-brainpoolP384r1 |
-| id-MLKEM1024-X448                 | &lt;CompKEM&gt;.10 | MLKEM1024       | X448                 |
+| KEM Type                          | OID                | First Algorithm | Second Algorithm     | KDF      |
+|---------                          | -----------------  | ----------      | ----------           | -------- |
+| id-MLKEM512-ECDH-P256             | &lt;CompKEM&gt;.1  | MLKEM512        | ECDH-P256            | SHA3-256 |
+| id-MLKEM512-ECDH-brainpoolP256r1  | &lt;CompKEM&gt;.2  | MLKEM512        | ECDH-brainpoolp256r1 | SHA3-256 |
+| id-MLKEM512-X25519                | &lt;CompKEM&gt;.3  | MLKEM512        | X25519               | SHA3-256 |
+| id-MLKEM512-RSA2048               | &lt;CompKEM&gt;.13 | MLKEM512        | RSA-KEM 2048         | SHA3-256 |
+| id-MLKEM512-RSA3072               | &lt;CompKEM&gt;.4  | MLKEM512        | RSA-KEM 3072         | SHA3-256 |
+| id-MLKEM768-ECDH-P256             | &lt;CompKEM&gt;.5  | MLKEM768        | ECDH-P256            | SHA3-384 |
+| id-MLKEM768-ECDH-brainpoolP256r1  | &lt;CompKEM&gt;.6  | MLKEM768        | ECDH-brainpoolp256r1 | SHA3-384 |
+| id-MLKEM768-X25519                | &lt;CompKEM&gt;.7  | MLKEM768        | X25519               | SHA3-384 |
+| id-MLKEM1024-ECDH-P384            | &lt;CompKEM&gt;.8  | MLKEM1024       | ECDH-P384            | SHA3-512 |
+| id-MLKEM1024-ECDH-brainpoolP384r1 | &lt;CompKEM&gt;.9  | MLKEM1024       | ECDH-brainpoolP384r1 | SHA3-512 |
+| id-MLKEM1024-X448                 | &lt;CompKEM&gt;.10 | MLKEM1024       | X448                 | SHA3-512 |
 {: #tab-kem-algs title="Composite KEM key types"}
-
-EDNOTE: The original reason for using KMAC was that RSA, in general, allows for the attacker to choose the shared secret ss, but with RSA-KEM I think this is actually not the case since the final step of RSA-KEM is SS = KDF(Z), so SHA3 should be fine.
 
 Full specifications for the referenced algorithms can be found as follows:
 
@@ -533,28 +642,7 @@ Full specifications for the referenced algorithms can be found as follows:
 
 EDNOTE: I believe that [SP.800-56Ar3] and [BSI-ECC] give equivalent and inter-operable algorithms, so maybe this is extraneous detail to include?
 
-The KEM combiners for each algorithm are instantiated as follows
-
-
-| KEM Type                          | KDF      | KDF Input X            |
-|---------                          | -------- | -------------          |
-| id-MLKEM512-ECDH-P256             | SHA3-256 | ss1 \|\| ss2 \|\| ct2  |
-| id-MLKEM512-ECDH-brainpoolP256r1  | SHA3-256 | ss1 \|\| ss2 \|\| ct2  |
-| id-MLKEM512-X25519                | SHA3-256 | ss1 \|\| ss2 \|\| ct2  |
-| id-MLKEM512-RSA2048               | SHA3-256 | ss1 \|\| ss2 \|\| ct2  |
-| id-MLKEM512-RSA3072               | SHA3-256 | ss1 \|\| ss2 \|\| ct2  |
-| id-MLKEM768-ECDH-P256             | SHA3-384 | ss1 \|\| ss2 \|\| ct2  |
-| id-MLKEM768-ECDH-brainpoolP256r1  | SHA3-384 | ss1 \|\| ss2 \|\| ct2  |
-| id-MLKEM768-X25519                | SHA3-384 | ss1 \|\| ss2 \|\| ct2  |
-| id-MLKEM1024-ECDH-P384            | SHA3-512 | ss1 \|\| ss2 \|\| ct2  |
-| id-MLKEM1024-ECDH-brainpoolP384r1 | SHA3-512 | ss1 \|\| ss2 \|\| ct2  |
-| id-MLKEM1024-X448                 | SHA3-512 | ss1 \|\| ss2 \|\| ct2  |
-{: #tab-kem-combiner-instantiations title="KEM Combiner Instantiations"}
-
-
-The tables above contains everything needed to implement the listed explicit composite algorithms, with the exception of some special notes found below in this section. See the ASN.1 module in section {{sec-asn1-module}} for the explicit definitions of the above Composite signature algorithms.
-
-
+The table above contains everything needed to implement the listed explicit composite algorithms, with the exception of some special notes found below in this section. See the ASN.1 module in section {{sec-asn1-module}} for the explicit definitions of the above Composite signature algorithms.
 
 ## RSA-KEM Parameters
 
@@ -573,8 +661,88 @@ As with the other composite KEM algorithms, when `id-MLKEM512-RSA2048` or `id-ML
 where:
 
 * `kda-kdf3` is defined in {{I-D.ietf-lamps-rfc5990bis}} which references it from [ANS-X9.44].
-* `mda-shake256` is defined in {{I-D.housley-lamps-cms-sha3-hash}}.
+* `id-sha3-256` is defined in {{I-D.ietf-lamps-cms-sha3-hash}} which references it from [SHA3].
 
+
+# Use in CMS
+
+\[EDNOTE: The convention in LAMPS is to specify algorithms and their CMS conventions in separate documents. Here we have presented them in the same document, but this section has been written so that it can easily be moved to a standalone document.\]
+
+Composite KEM algorithms MAY be employed for one or more recipients in the CMS enveloped-data content type [RFC5652], the CMS authenticated-data content type [RFC5652], or the CMS authenticated-enveloped-data content type [RFC5083]. In each case, the KEMRecipientInfo {{I-D.ietf-lamps-cms-kemri}} is used with the chosen composite KEM Algorithm to securely transfer the content-encryption key from the originator to the recipient.
+
+## Underlying Components
+
+A CMS implementation that supports a composite KEM algorithm MUST support at least the following underlying components:
+
+When a particular Composite KEM OID is supported, an implementation MUST support the corresponding KDF algorithm identifier in {{tab-cms-kdf-wrap}}.
+
+When a particular Composite KEM OID is supported, an implementation MUST support the corresponding key-encryption algorithm identifier in {{tab-cms-kdf-wrap}}.
+
+The following table lists the REQUIRED KDF and key-encryption algorithms to preserve security and performance characteristics of each composite algorithm.
+
+
+| Composite KEM OID                 | KDF         | Key Encryption Alg |
+|---------                          | ---         | ---                |
+| id-MLKEM512-ECDH-P256             | SHA3-256 | id-aes128-Wrap     |
+| id-MLKEM512-ECDH-brainpoolP256r1  | SHA3-256 | id-aes128-Wrap     |
+| id-MLKEM512-X25519                | SHA3-256 | id-aes128-Wrap     |
+| id-MLKEM512-RSA2048               | SHA3-256 | id-aes128-Wrap     |
+| id-MLKEM512-RSA3072               | SHA3-256 | id-aes128-Wrap     |
+| id-MLKEM768-ECDH-P256             | SHA3-384 | id-aes192-Wrap     |
+| id-MLKEM768-ECDH-brainpoolP256r1  | SHA3-384 | id-aes192-Wrap     |
+| id-MLKEM768-X25519                | SHA3-384 | id-aes192-Wrap     |
+| id-MLKEM1024-ECDH-P384            | SHA3-512 | id-aes256-Wrap     |
+| id-MLKEM1024-ECDH-brainpoolP384r1 | SHA3-512 | id-aes256-Wrap     |
+| id-MLKEM1024-X448                 | SHA3-512 | id-aes256-Wrap     |
+{: #tab-cms-kdf-wrap title="REQUIRED pairings for CMS KDF and WRAP"}
+
+
+where:
+
+* SHA3-* KDF instantiations are defined in {{I-D.ietf-lamps-cms-sha3-hash}}.
+* `id-aes*-Wrap` are defined in [RFC3394].
+
+
+## RecipientInfo Conventions
+
+When a composite KEM Algorithm is employed for a recipient, the RecipientInfo alternative for that recipient MUST be OtherRecipientInfo using the KEMRecipientInfo structure {{I-D.ietf-lamps-cms-kemri}}. The fields of the KEMRecipientInfo MUST have the following values:
+
+`version` is the syntax version number; it MUST be 0.
+
+`rid` identifies the recipient's certificate or public key.
+
+`kem` identifies the KEM algorithm; it MUST contain one of the OIDs listed in {{tab-kem-algs}}.
+
+`kemct` is the ciphertext produced for this recipient; it contains the `ct` output from `Encaps(pk)` of the KEM algorithm identified in the `kem` parameter.
+
+`kdf` identifies the key-derivation function (KDF). Note that the KDF used for CMS RecipientInfo process MAY be different than the KDF used within the composite KEM Algorithm, which MAY be different than the KDFs (if any) used within the component KEMs of the composite KEM Algorithm.
+
+`kekLength` is the size of the key-encryption key in octets.
+
+`ukm` is an optional random input to the key-derivation function.
+
+`wrap` identifies a key-encryption algorithm used to encrypt the keying material.
+
+`encryptedKey` is the result of encrypting the keying material with the key-encryption key. When used with the CMS enveloped-data content type [RFC5652], the keying material is a content-encryption key. When used with the CMS authenticated-data content type [RFC5652], the keying material is a message-authentication key. When used with the CMS authenticated-enveloped-data content type [RFC5083], the keying material is a content-authenticated-encryption key.
+
+## Certificate Conventions
+
+The conventions specified in this section augment RFC 5280 [RFC5280].
+
+The willingness to accept a composite KEM Algorithm MAY be signaled by the use of the SMIMECapabilities Attribute as specified in Section 2.5.2. of [RFC8551] or the SMIMECapabilities certificate extension as specified in [RFC4262].
+
+The intended application for the public key MAY be indicated in the key usage certificate extension as specified in Section 4.2.1.3 of [RFC5280]. If the keyUsage extension is present in a certificate that conveys a composite KEM public key, then the key usage extension MUST contain only the following value:
+
+keyEncipherment
+
+The digitalSignature and dataEncipherment values MUST NOT be present. That is, a public key intended to be employed only with a composite KEM algorithm MUST NOT also be employed for data encryption or for digital signatures. This requirement does not carry any particular security consideration; only the convention that KEM keys be identified with the `keyEncipherment` key usage.
+
+
+## SMIMECapabilities Attribute Conventions
+
+Section 2.5.2 of [RFC8551] defines the SMIMECapabilities attribute to announce a partial list of algorithms that an S/MIME implementation can support. When constructing a CMS signed-data content type [RFC5652], a compliant implementation MAY include the SMIMECapabilities attribute that announces support for the RSA-KEM Algorithm.
+
+The SMIMECapability SEQUENCE representing a composite KEM Algorithm MUST include the appropriate object identifier as per {{tab-kem-algs}} in the capabilityID field.
 
 # ASN.1 Module {#sec-asn1-module}
 
@@ -669,16 +837,12 @@ Since composite algorithms are registered independently of their component algor
 The composite KEM design specified in this document, and especially that of the KEM combiner specified in {{sec-kem-combiner}} means that the overall composite KEM algorithm should be considered to have the security strength of the strongest of its component algorithms; ie as long as one component algorithm remains strong, then the overall composite algorithm remains strong.
 
 
-## KEM Combiner {#sec-cons-kem-combiner}
+## KEM Combiner Security Analysis {#sec-cons-kem-combiner}
 
-This document uses directly the KEM Combiner defined in {{I-D.ounsworth-cfrg-kem-combiners}} and therefore IND-CCA2 of any of its ingredient KEMs, i.e. the newly formed combined KEM is IND-CCA2 secure as long as at least one of the ingredient KEMs is
+TODO
 
-{{I-D.ounsworth-cfrg-kem-combiners}} provides two different constructions depending on the properties of the component KEMs:
+EDNOTE: the exact text to put here depends on the outcome of the CFRG KEM Combiners and X-Wing discussion. If CFRG doesn't move fast enough for us, then we may need to leverage this security consideration directly on top of the X-Wing paper [X-Wing].
 
-> If both the secret share `ss_i` and the ciphertext `ct_i` are constant length, then k_i MAY be constructed concatenating the two values.
-> If `ss_i` or `ct_i` are not guaranteed to have constant length, it is REQUIRED to append the rlen encoded length when concatenating, prior to inclusion in the overall construction.
-
-The component KEMs used in this specification are RSA-KEM {{I-D.ietf-lamps-rfc5990bis}}, ECDH, X25519, X448, and ML-KEM {{FIPS.203-ipd}} all of which meet the criteria of having constant-length shared secrets and ciphertexts and therefore we justify using the simpler construction that omits the length tag.
 
 ### Ciphertext collision resistance {#sec-cons-ct-collision}
 
@@ -744,7 +908,7 @@ EDNOTE TODO: Check with Max Pala whether this IPR actually applies to this draft
 
 This document incorporates contributions and comments from a large group of experts. The Editors would especially like to acknowledge the expertise and tireless dedication of the following people, who attended many long meetings and generated millions of bytes of electronic mail and VOIP traffic over the past year in pursuit of this document:
 
-Serge Mister (Entrust), Ali Noman (Entrust), Scott Fluhrer (Cisco), Jan Klaußner (D-Trust), Max Pala (CableLabs), and
+Serge Mister (Entrust), Ali Noman (Entrust), and
 Douglas Stebila (University of Waterloo).
 
 We are grateful to all, including any contributors who may have
