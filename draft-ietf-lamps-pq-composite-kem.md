@@ -99,12 +99,12 @@ normative:
       org: "National Institute of Standards and Technology (NIST)"
     date: August 2015
     target: https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.202.pdf
-  SP800-185:
-    title: "SHA-3 Derived Functions: cSHAKE, KMAC, TupleHash and ParallelHash"
-    author:
-      org: "National Institute of Standards and Technology (NIST)"
-    date: December 2016
-    target: https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-185.pdf
+  # SP800-185:
+  #   title: "SHA-3 Derived Functions: cSHAKE, KMAC, TupleHash and ParallelHash"
+  #   author:
+  #     org: "National Institute of Standards and Technology (NIST)"
+  #   date: December 2016
+  #   target: https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-185.pdf
   X.690:
       title: "Information technology - ASN.1 encoding Rules: Specification of Basic Encoding Rules (BER), Canonical Encoding Rules (CER) and Distinguished Encoding Rules (DER)"
       date: November 2015
@@ -141,6 +141,7 @@ informative:
   RFC2986:
   RFC4210:
   RFC4211:
+  RFC4262:
   RFC5083:
   RFC5639:
   RFC5914:
@@ -152,7 +153,6 @@ informative:
   RFC8551:
   I-D.draft-ietf-tls-hybrid-design-04:
   I-D.draft-driscoll-pqt-hybrid-terminology-01:
-  I-D.draft-ounsworth-cfrg-kem-combiners-04:
   I-D.draft-ietf-lamps-kyber-certificates-01:
   I-D.draft-becker-guthrie-noncomposite-hybrid-auth-00:
   I-D.draft-housley-lamps-cms-kemri-02:
@@ -174,9 +174,7 @@ informative:
 
 --- abstract
 
-This document defines Post-Quantum / Traditional composite Key Encapsulation Mechanism (KEM) algorithms suitable for use within X.509, PKIX and CMS protocols. Composite algorithms are provided which combine ML-KEM with RSA-KEM and ECDH-KEM. The provided set of composite algorithms should meet most Internet needs.
-
-This document assumes that all component algorithms are KEMs, and therefore it depends on {{I-D.ietf-lamps-rfc5990bis}} and {{I-D.ounsworth-lamps-cms-dhkem}} in order to promote RSA and ECDH respectively into KEMs. For the purpose of combining KEMs, the combiner function from {{I-D.ounsworth-cfrg-kem-combiners}} is used. For use within CMS, this document is intended to be coupled with the CMS KEMRecipientInfo mechanism in {{I-D.housley-lamps-cms-kemri}}.
+This document defines Post-Quantum / Traditional composite Key Encapsulation Mechanism (KEM) algorithms suitable for use within X.509, PKIX and CMS protocols. Composite algorithms are provided which combine ML-KEM with RSA-KEM and ECDH-KEM. The provided set of composite algorithms should meet most Internet needs. For use within CMS, this document is intended to be coupled with the CMS KEMRecipientInfo mechanism in {{I-D.housley-lamps-cms-kemri}}.
 
 <!-- End of Abstract -->
 
@@ -185,11 +183,13 @@ This document assumes that all component algorithms are KEMs, and therefore it d
 
 # Changes in version -04
 
-* Specified the fixedInfo domain separators as the DER encoded object identifiers
+* Specified the fixedInfo domain separators as the DER encoded object identifiers.
+* Adjusted the combiner to be compliant with NIST SP800-56C as per https://mailarchive.ietf.org/arch/msg/spasm/nlyQF1i7ndp5A7zzcTsdYF_S9mI/
+* Removed reference to draft-ounsworth-cfrg-kem-combiners so that we don't end up in a downref situation
 
 Still to do in a future version:
 
-  `[ ]` We need PEM samples … 118 hackathon? OQS friends? David @ BC? The right format for samples is probably to follow the hackathon ... a Dilithium or ECDSA trust anchor certificate, a composite KEM end entity certificate, and a CMS EnvolepedData sample encrypted for that composite KEM certificate.
+  `[ ]` We need PEM samples … hackathon? OQS friends? David @ BC? The right format for samples is probably to follow the hackathon ... a Dilithium or ECDSA trust anchor certificate, a composite KEM end entity certificate, and a CMS EnvolepedData sample encrypted for that composite KEM certificate.
 
 
 # Introduction {#sec-intro}
@@ -505,24 +505,39 @@ A composite KEM and `CompositeCipherTextValue` MAY be associated with a composit
 
 TODO: as per https://www.enisa.europa.eu/publications/post-quantum-cryptography-integration-study section 4.2, might need to specify behaviour in light of KEMs with a non-zero failure probability.
 
-This document follows the construction of {{I-D.ounsworth-cfrg-kem-combiners}}, which is repeated here for clarity and simplified to take two input shared secrets:
+The KEM combiner construction is as follows:
 
 ~~~
-Combiner(ct1, ss1, ct2, ss2, fixedInfo) =
-  KDF(counter || ct1 || ss1 || ct2 || ss2 || fixedInfo, outputBits)
+KEK = Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep) =
+  KDF(counter || tradSS || mlkemSS || tradCT || tradPK ||
+       domSep, outputBits)
 ~~~
 {: #code-generic-kem-combiner title="Generic KEM combiner construction"}
 
 where:
 
 * `KDF(message, outputBits)` represents a hash function suitable to the chosen KEMs according to {tab-kem-combiners}.
-* `fixedInfo` SHALL be the DER encoded value of the object identifier of the composite KEM algorithm as listed in {{sec-domain}}.
+* `tradSS` is the shared secret from the traditional component (elliptic curve or RSA).
+* `mlkemSS` is the shared secret from the ML-KEM componont.
+* `tradCT` is the ciphertext from the traditional component (elliptic curve or RSA).
+* `tradPK` is the public key of the traditional component (elliptic curve or RSA).
+* `domSep` SHALL be the DER encoded value of the object identifier of the composite KEM algorithm as listed in {{sec-domain}}.
 * `counter` SHALL be the fixed 32-bit value `0x00000001` which is placed here solely for the purposes of easy compliance with [SP.800-56Cr2].
 * `||` represents concatenation.
 
-Each registered composite KEM algorithm must specify the choice of `KDF`, `fixedInfo`, and `outputBits` to be used.
+Each registered composite KEM algorithm must specify the choice of `KDF`, `demSep`, and `outputBits` to be used.
 
 See {{sec-cons-kem-combiner}} for further discussion of the security considerations of this KEM combiner.
+
+## FIPS Compliance
+
+FIPS compliance with [SP.800-56Cr2]:
+This construction is specifically designed to conform with Section 4.1 Option 1 (when KDF is SHA3) or Option 3 (when KDF is KMAC) in the following way:
+
+In both cases we match exactly the construction using the allowed "hybrid" shared secret of the form `Z' = Z || T` to yield the construction `counter || Z || T || FixedInfo` where `Z = tradSS` is the algorithm assumed to always be FIPS-approved from a FIPS-certified implementation, `T = mlkemSS`, and `FixedInfo = tradCT || tradPK || domSep`.
+
+In the case that KDF is KMAC, the message to be hashed MUST be post-pended with `H_outputBits` and the byte string `01001011 || 01000100 || 01000110`, which represents the sequence of characters “K”, “D,” and “F” in 8-bit ASCII, as required by [SP.800-56Cr2] section 4.1 Option 3. `salt` is left empty since KMAC is only required to behave as a hash function and not as a keyed MAC.
+
 
 ### KMAC-KDF {#sec-kmac-kdf}
 
@@ -814,15 +829,9 @@ The composite KEM design specified in this document, and especially that of the 
 
 ## KEM Combiner {#sec-cons-kem-combiner}
 
-This document uses directly the KEM Combiner defined in {{I-D.ounsworth-cfrg-kem-combiners}} and therefore IND-CCA2 of any of its ingredient KEMs, i.e. the newly formed combined KEM is IND-CCA2 secure as long as at least one of the ingredient KEMs is
+TODO
 
-{{I-D.ounsworth-cfrg-kem-combiners}} provides two different constructions depending on the properties of the component KEMs:
-
-> If both the secret share `ss_i` and the ciphertext `ct_i` are constant length, then k_i MAY be constructed concatenating the two values.
-> If `ss_i` or `ct_i` are not guaranteed to have constant length, it is REQUIRED to append the rlen encoded length when concatenating, prior to inclusion in the overall construction.
-
-The component KEMs used in this specification are RSA-KEM {{I-D.ietf-lamps-rfc5990bis}}, ECDH KEM {{I-D.ounsworth-lamps-cms-dhkem}} and ML-KEM {{FIPS.203-ipd}} all of which meet the criteria of having constant-length shared secrets and ciphertexts and therefore we justify using the simpler construction that omits the length tag.
-
+EDNOTE: the exact text to put here depends on the outcome of the CFRG KEM Combiners and X-Wing discussion. If CFRG doesn't move fast enough for us, then we may need to leverage this security consideration directly on top of the X-Wing paper.
 
 <!-- End of Security Considerations section -->
 
