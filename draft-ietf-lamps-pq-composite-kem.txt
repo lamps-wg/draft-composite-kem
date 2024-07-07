@@ -151,6 +151,9 @@ Table of Contents
       combinations were lifted from id-aes192-Wrap to id-aes256-Wrap
       because the latter is believed to have better general adoption.
 
+   *  Added an appendix "Fixed Component Algorithm Identifiers" -- not
+      finished, needs more work.
+
    Changes to sync with X-Wing:
 
    *  Removed ML-KEM ciphertext from KDF as per X-Wing proof -- this
