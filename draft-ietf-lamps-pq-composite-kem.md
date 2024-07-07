@@ -76,29 +76,30 @@ author:
 normative:
   RFC2119:
   RFC3394:
+  RFC3560:
+  RFC4055:
   RFC5280:
   RFC5652:
   RFC5958:
   RFC8174:
   RFC8410:
   RFC8411:
-  I-D.draft-ietf-lamps-rfc5990bis-04:
   I-D.draft-ietf-lamps-cms-kemri-08:
   I-D.draft-ietf-lamps-cms-sha3-hash-04:
-  ANS-X9.44:
-    title: "Public Key
-              Cryptography for the Financial Services Industry -- Key
-              Establishment Using Integer Factorization Cryptography"
-    author:
-      org: "American National Standards Institute"
-    date: 2007
-    seriesinfo: American National Standard X9.44
-  SHA3:
-    title: "SHA-3 Standard: Permutation-Based Hash and Extendable-Output Functions, FIPS PUB 202, DOI 10.6028/NIST.FIPS.202"
-    author:
-      org: "National Institute of Standards and Technology (NIST)"
-    date: August 2015
-    target: https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.202.pdf
+  # ANS-X9.44:
+  #   title: "Public Key
+  #             Cryptography for the Financial Services Industry -- Key
+  #             Establishment Using Integer Factorization Cryptography"
+  #   author:
+  #     org: "American National Standards Institute"
+  #   date: 2007
+  #   seriesinfo: American National Standard X9.44
+  # SHA3:
+  #   title: "SHA-3 Standard: Permutation-Based Hash and Extendable-Output Functions, FIPS PUB 202, DOI 10.6028/NIST.FIPS.202"
+  #   author:
+  #     org: "National Institute of Standards and Technology (NIST)"
+  #   date: August 2015
+  #   target: https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.202.pdf
   # SP800-185:
   #   title: "SHA-3 Derived Functions: cSHAKE, KMAC, TupleHash and ParallelHash"
   #   author:
@@ -145,17 +146,18 @@ informative:
   RFC5083:
   RFC5639:
   RFC5914:
+  RFC5990:
   RFC6090:
   RFC7292:
   RFC7296:
   RFC7748:
+  RFC8017:
   RFC8446:
   RFC8551:
   RFC9180:
   I-D.draft-ietf-tls-hybrid-design-04:
   I-D.draft-driscoll-pqt-hybrid-terminology-01:
   I-D.draft-ietf-lamps-kyber-certificates-01:
-  I-D.draft-becker-guthrie-noncomposite-hybrid-auth-00:
   I-D.draft-housley-lamps-cms-kemri-02:
   X-Wing:
     title: "X-Wing The Hybrid KEM You’ve Been Looking For"
@@ -197,11 +199,20 @@ informative:
       - org: "Federal Office for Information Security (BSI)"
       - org: "Netherlands National Communications Security Agency (NLNCSA)"
       - org: "Swedish National Communications Security Authority, Swedish Armed Forces"
+  SP800-131Ar2:
+    title: "Transitioning the Use of Cryptographic Algorithms and Key Lengths"
+    target: https://nvlpubs.nist.gov/nistpubs/specialpublications/nist.sp.800-131ar2.pdf
+    author:
+      - ins: E. Barker
+        name: Elaine Barke
+      - ins: A. Roginksy
+        name: Allan Reginsky
+    org: National Institute of Standards and Technology (NIST)
 
 
 --- abstract
 
-This document defines Post-Quantum / Traditional composite Key Encapsulation Mechanism (KEM) algorithms suitable for use within X.509 and PKIX and CMS protocols. Composite algorithms are provided which combine ML-KEM with RSA-KEM, ECDH, X25519, and X448. The provided set of composite algorithms should meet most Internet PKI needs. For use within CMS, this document is intended to be coupled with the CMS KEMRecipientInfo mechanism in {{I-D.housley-lamps-cms-kemri}}.
+This document defines Post-Quantum / Traditional composite Key Encapsulation Mechanism (KEM) algorithms suitable for use within X.509 and PKIX and CMS protocols. Composite algorithms are provided which combine ML-KEM with RSA-OAEP, ECDH, X25519, and X448. The provided set of composite algorithms should meet most Internet PKI needs. For use within CMS, this document is intended to be coupled with the CMS KEMRecipientInfo mechanism in {{I-D.housley-lamps-cms-kemri}}.
 
 <!-- End of Abstract -->
 
@@ -215,12 +226,12 @@ This document defines Post-Quantum / Traditional composite Key Encapsulation Mec
 * Removed reference to draft-ounsworth-cfrg-kem-combiners so that we don't end up in a downref situation.
 * In the "Use in CMS > Underlying Components" section, the MLKEM768 combinations were lifted from id-aes192-Wrap to id-aes256-Wrap because the latter is believed to have better general adoption.
 * Added an appendix "Fixed Component Algorithm Identifiers" -- not finished, needs more work.
+*
 
 Changes to sync with X-Wing:
 
   - Removed ML-KEM ciphertext from KDF as per X-Wing proof -- this makes the KEM combiner ML-KEM specific, so:
     - Changed title to be ML-KEM specific.
-  - Removed RSA-KEM ciphertext from KDF.
   - Removed references to I-D.ounsworth-lamps-cms-dhkem since we'll just inline a simplified version of RFC9180's DHKEM.
 
 
@@ -261,7 +272,7 @@ PQ/T Hybrid cryptography can, in general, provide solutions to two migration pro
 - Algorithm strength uncertainty: During the transition period, some post-quantum signature and encryption algorithms will not be fully trusted, while also the trust in legacy public key algorithms will start to erode.  A relying party may learn some time after deployment that a public key algorithm has become untrustworthy, but in the interim, they may not know which algorithm an adversary has compromised.
 - Ease-of-migration: During the transition period, systems will require mechanisms that allow for staged migrations from fully classical to fully post-quantum-aware cryptography.
 
-This document defines a specific instantiation of the PQ/T Hybrid paradigm called "composite" where multiple cryptographic algorithms are combined to form a single key encapsulation mechanism (KEM) key and ciphertext such that they can be treated as a single atomic algorithm at the protocol level. Composite algorithms address algorithm strength uncertainty because the composite algorithm remains strong so long as one of its components remains strong. Concrete instantiations of composite KEM algorithms are provided based on ML-KEM, RSA-KEM and ECDH-KEM. Backwards compatibility is not directly covered in this document, but is the subject of {{sec-backwards-compat}}.
+This document defines a specific instantiation of the PQ/T Hybrid paradigm called "composite" where multiple cryptographic algorithms are combined to form a single key encapsulation mechanism (KEM) key and ciphertext such that they can be treated as a single atomic algorithm at the protocol level. Composite algorithms address algorithm strength uncertainty because the composite algorithm remains strong so long as one of its components remains strong. Concrete instantiations of composite KEM algorithms are provided based on ML-KEM, RSA-OAEP and ECDH. Backwards compatibility is not directly covered in this document, but is the subject of {{sec-backwards-compat}}.
 
 
 This document is intended for general applicability anywhere that key establishment or enveloped content encryption is used within PKIX or CMS structures.
@@ -320,16 +331,35 @@ We borrow here the definition of a key encapsulation mechanism (KEM) from {{I-D.
 
 The KEM interface defined above differs from both traditional key transport mechanism (for example for use with KeyTransRecipientInfo defined in {{RFC5652}}), and key agreement (for example for use with KeyAgreeRecipientInfo defined in {{RFC5652}}).
 
-The KEM interface was chosen as the interface for a composite key establishment because it allows for arbitrary combinations of component algorithm types since both key transport and key agreement mechanisms can be promoted into KEMs. This specification uses the Post-Quantum KEM ML-KEM as specified in {{I-D.ietf-lamps-kyber-certificates}} and [FIPS.203-ipd]. For Traditional KEMs, this document relies on the RSA-KEM construction defined in {{I-D.ietf-lamps-rfc5990bis}} while the Elliptic Curve Diffie-Hellman key agreement schemes are inlined directly. A combiner function is used to to combine the two component shared secrets into a single shared secret.
+The KEM interface was chosen as the interface for a composite key establishment because it allows for arbitrary combinations of component algorithm types since both key transport and key agreement mechanisms can be promoted into KEMs. This specification uses the Post-Quantum KEM ML-KEM as specified in {{I-D.ietf-lamps-kyber-certificates}} and [FIPS.203-ipd]. For Traditional KEMs, this document uses the RSA-OAEP algorithm defined in [RFC3560], the Elliptic Curve Diffie-Hellman key agreement schemes ECDH defined in section 5.7.1.2 of [SP.800-56Ar3], and X25519 / X448 which are defined in [RFC8410]. A combiner function is used to to combine the two component shared secrets into a single shared secret.
 
 
 ### Composite KeyGen
 
 The `KeyGen() -> (pk, sk)` of a composite KEM algorithm will perform the `KeyGen()` of the respective component KEM algorithms and it produces a composite public key `pk` as per {{sec-composite-pub-keys}} and a composite secret key `sk` is per {{sec-priv-key}}.
 
-### Promotion of RSA into a KEM
+### Promotion of RSA-OAEP into a KEM
 
-Promotion of the RSA encryption primitive into a KEM is accomplished via {{I-D.ietf-lamps-rfc5990bis}}.
+The RSA Optimal Asymmetric Encription Padding (OAEP), more specifically the RSAES-OAEP key transport algorithm as specified in [RFC3560] is a public key encryption algorithm used to transport key material from a sender to a reviever. It is promoted into a KEM by having the sender generat a randem 256 bit secret and encrypt it.
+
+~~~
+DHKEM.Encaps(pkR):
+  shared_secret = SecureRandom(ss_len)
+  enc = RSA-OAEP.Encrypt(pkR, shared_secret)
+
+  return enc, shared_secret
+~~~
+
+ `Decaps(sk, ct) -> ss` is accomplished in the analogous way.
+
+~~~
+DHKEM.Decap(skR, enc):
+  shared_secret = RSA-OAEP.Decrypt(skR, enc)
+
+  return shared_secret
+~~~
+
+The value of `ss_len` as well as the RSA-OAEP paramaters used within this specification can be found in {{sect-rsaoaep-params}}.
 
 ### Promotion of ECDH into a KEM
 
@@ -348,7 +378,7 @@ DHKEM.Encaps(pkR):
  `Decaps(sk, ct) -> ss` is accomplished in the analogous way.
 
 ~~~
-DHKEM.Decap(enc, skR):
+DHKEM.Decap(skR, enc):
   pkE = DeserializePublicKey(enc)
   shared_secret = DH(skR, pkE)
 
@@ -617,8 +647,8 @@ Therefore &lt;CompKEM&gt;.1 is equal to 2.16.840.1.114027.80.5.2.1
 | id-MLKEM512-ECDH-P256             | &lt;CompKEM&gt;.1  | MLKEM512        | ECDH-P256            | SHA3-256 |
 | id-MLKEM512-ECDH-brainpoolP256r1  | &lt;CompKEM&gt;.2  | MLKEM512        | ECDH-brainpoolp256r1 | SHA3-256 |
 | id-MLKEM512-X25519                | &lt;CompKEM&gt;.3  | MLKEM512        | X25519               | SHA3-256 |
-| id-MLKEM512-RSA2048               | &lt;CompKEM&gt;.13 | MLKEM512        | RSA-KEM 2048         | SHA3-256 |
-| id-MLKEM512-RSA3072               | &lt;CompKEM&gt;.4  | MLKEM512        | RSA-KEM 3072         | SHA3-256 |
+| id-MLKEM512-RSA2048               | &lt;CompKEM&gt;.13 | MLKEM512        | RSA-OAEP 2048         | SHA3-256 |
+| id-MLKEM512-RSA3072               | &lt;CompKEM&gt;.4  | MLKEM512        | RSA-OAEP 3072         | SHA3-256 |
 | id-MLKEM768-ECDH-P256             | &lt;CompKEM&gt;.5  | MLKEM768        | ECDH-P256            | SHA3-384 |
 | id-MLKEM768-ECDH-brainpoolP256r1  | &lt;CompKEM&gt;.6  | MLKEM768        | ECDH-brainpoolp256r1 | SHA3-384 |
 | id-MLKEM768-X25519                | &lt;CompKEM&gt;.7  | MLKEM768        | X25519               | SHA3-384 |
@@ -633,7 +663,7 @@ Full specifications for the referenced algorithms can be found as follows:
   * _ECDH NIST_: SHALL be Elliptic Curve Cryptography Cofactor Diffie-Hellman (ECC CDH) as defined in section 5.7.1.2 of [SP.800-56Ar3].
   * _ECDH BSI / brainpool_: SHALL be Elliptic Curve Key Agreement algorithm (ECKA) as defined in section 4.3.1 of [BSI-ECC]
 * _ML-KEM_: {{I-D.ietf-lamps-kyber-certificates}} and [FIPS.203-ipd]
-* _RSA-KEM_: {{I-D.ietf-lamps-rfc5990bis}}
+* _RSA-OAEP_: [RFC3560]
 * _X25519 / X448_: [RFC8410]
 
 EDNOTE: I believe that [SP.800-56Ar3] and [BSI-ECC] give equivalent and inter-operable algorithms, so maybe this is extraneous detail to include?
@@ -661,24 +691,29 @@ TODO: is this correct @John? -- The domain separator values are the SHA-256 hash
 
 EDNOTE: these domain separators are based on the prototyping OIDs assigned on the Entrust arc. We will need to ask for IANA early allocation of these OIDs so that we can re-compute the domain separators over the final OIDs.
 
-## RSA-KEM Parameters
+## RSA-OAEP Parameters {#sect-rsaoaep-params}
 
-Use of RSA-KEM {{I-D.ietf-lamps-rfc5990bis}} within `id-MLKEM512-RSA2048` and `id-MLKEM512-RSA3072` requires additional specification.
+Use of RSA-OAEP [RFC3560] within `id-MLKEM512-RSA2048` and `id-MLKEM512-RSA3072` requires additional specification.
 
-The RSA component keys MUST be generated at the 2048-bit and 3072-bit security level respectively.
+First, a quick note on the choice of RSA-OAEP as the supported RSA encryption pritimive. RSA-KEM [RFC5990] is more straightforward to work with, but it has fairly limited adoption and therefore is of limited backwards compatibility value. Also, while RSA-PKCS#1v1.5 [RFC8017] is still everywhere, but hard to make secure and no longer FIPS-approved as of the end of 2023 [SP800-131Ar2], so it is of limited forwards value. This leaves RSA-OAEP [RFC3560] as the remaining choice.
 
-As with the other composite KEM algorithms, when `id-MLKEM512-RSA2048` or `id-MLKEM512-RSA3072` is used in an AlgorithmIdentifier, the parameters MUST be absent. The RSA-KEM SHALL be instantiated with the following parameters:
+The RSA component keys MUST be generated at the 2048-bit and 3072-bit security levels respectively.
 
-| RSA-KEM Parameter          | Value                      |
-| -------------------------- | -------------------------- |
-| keyDerivationFunction      | kda-kdf3 with id-sha3-256  |
-| keyLength                  | 128                        |
-{: #rsa-kem-params2048 title="RSA-KEM 2048 Parameters"}
+As with the other composite KEM algorithms, when `id-MLKEM512-RSA2048` or `id-MLKEM512-RSA3072` is used in an AlgorithmIdentifier, the parameters MUST be absent. The RSA-OAEP SHALL be instantiated with the following hard-coded parameters which are the same for both the 2048 and 3072 bit security levels.
+
+| RSA-OAEP Parameter      | Value                            |
+| ---------------------- | ---------------                  |
+| hashFunc                  | id-sha2-256                   |
+| maskGenFunc               | mgf1SHA256Identifier          |
+| pSourceFunc           | DEFAULT pSpecifiedEmptyIdentifier |
+| ss_len                    | 256 bits                      |
+{: #rsa-oaep-params title="RSA-OAEP Parameters"}
 
 where:
 
-* `kda-kdf3` is defined in {{I-D.ietf-lamps-rfc5990bis}} which references it from [ANS-X9.44].
-* `id-sha3-256` is defined in {{I-D.ietf-lamps-cms-sha3-hash}} which references it from [SHA3].
+* `id-sha256` is defined in [RFC8017].
+* `mgf1SHA256Identifier` is defined in [RFC4055].
+* `pSpecifiedEmptyIdentifier` is defined in [RFC3560]
 
 
 # Use in CMS
@@ -758,7 +793,7 @@ The digitalSignature and dataEncipherment values MUST NOT be present. That is, a
 
 ## SMIMECapabilities Attribute Conventions
 
-Section 2.5.2 of [RFC8551] defines the SMIMECapabilities attribute to announce a partial list of algorithms that an S/MIME implementation can support. When constructing a CMS signed-data content type [RFC5652], a compliant implementation MAY include the SMIMECapabilities attribute that announces support for the RSA-KEM Algorithm.
+Section 2.5.2 of [RFC8551] defines the SMIMECapabilities attribute to announce a partial list of algorithms that an S/MIME implementation can support. When constructing a CMS signed-data content type [RFC5652], a compliant implementation MAY include the SMIMECapabilities attribute that announces support for the RSA-OAEP Algorithm.
 
 The SMIMECapability SEQUENCE representing a composite KEM Algorithm MUST include the appropriate object identifier as per {{tab-kem-algs}} in the capabilityID field.
 
@@ -864,7 +899,7 @@ EDNOTE: the exact text to put here depends on the outcome of the CFRG KEM Combin
 
 ### Ciphertext collision resistance {#sec-cons-ct-collision}
 
-The notion of a ciphertext collision resistant KEM is defined in [X-Wing] being the property that it is computationally difficult to find two different ciphertexts that will decapsulate to the same shared secret under the same public key. In [X-Wing] it is proven that ML-KEM has this property and therefore the ML-KEM ciphertext can safely be omitted from the KEM combiner. Ciphertext collision resistance is not guaranteed for either RSA-KEM or ECDH, therefore these ciphertexts are bound to the key derivation.
+The notion of a ciphertext collision resistant KEM is defined in [X-Wing] being the property that it is computationally difficult to find two different ciphertexts that will decapsulate to the same shared secret under the same public key. In [X-Wing] it is proven that ML-KEM has this property and therefore the ML-KEM ciphertext can safely be omitted from the KEM combiner. Ciphertext collision resistance is not guaranteed for either RSA-OAEP or ECDH, therefore these ciphertexts are bound to the key derivation.
 
 
 <!-- End of Security Considerations section -->
