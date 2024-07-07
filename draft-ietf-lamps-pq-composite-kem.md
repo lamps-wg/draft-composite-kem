@@ -611,7 +611,7 @@ TODO: OIDs to be replaced by IANA.
 
 Therefore &lt;CompKEM&gt;.1 is equal to 2.16.840.1.114027.80.5.2.1
 
-| KEM Type                          | OID                | First Algorithm | Second Algorithm     | KDF      |
+| Composite KEM                      | OID                | First Algorithm | Second Algorithm     | KDF      |
 |---------                          | -----------------  | ----------      | ----------           | -------- |
 | id-MLKEM512-ECDH-P256             | &lt;CompKEM&gt;.1  | MLKEM512        | ECDH-P256            | SHA3-256 |
 | id-MLKEM512-ECDH-brainpoolP256r1  | &lt;CompKEM&gt;.2  | MLKEM512        | ECDH-brainpoolp256r1 | SHA3-256 |
@@ -874,6 +874,15 @@ The notion of a ciphertext collision resistant KEM is defined in [X-Wing] being 
 
 TBD
 
+# Fixed Component Algorithm Identifiers
+
+The following table lists explicitely the DER encoded `AlgorithmID` that MUST be used when reconstructing `SubjectPublicKeyInfo` objects for each component public key, which may be required for example if cryptographic library requires the public key in this form in order to process each component algorithm. The public key `BIT STRING` should be taken directly from the respective component of the CompositeKEMPublicKey.
+
+| Composite KEM     | First AlgorithmID | Second AlgorithmID |
+| --------------    | ----------------- | ------------------ |
+| TODO              | TODO              | TODO               |
+
+TODO: see https://github.com/lamps-wg/draft-composite-kem/issues/20
 
 # Implementation Considerations {#sec-in-pract}
 
