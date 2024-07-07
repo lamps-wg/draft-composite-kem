@@ -214,6 +214,7 @@ This document defines Post-Quantum / Traditional composite Key Encapsulation Mec
 * Adjusted the combiner to be compliant with NIST SP800-56C as per https://mailarchive.ietf.org/arch/msg/spasm/nlyQF1i7ndp5A7zzcTsdYF_S9mI/ -- also aligns with X-Wing changes below.
 * Removed reference to draft-ounsworth-cfrg-kem-combiners so that we don't end up in a downref situation.
 * In the "Use in CMS > Underlying Components" section, the MLKEM768 combinations were lifted from id-aes192-Wrap to id-aes256-Wrap because the latter is believed to have better general adoption.
+* Added an appendix "Fixed Component Algorithm Identifiers" -- not finished, needs more work.
 
 Changes to sync with X-Wing:
 
