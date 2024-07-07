@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-07-04T01:24:02.320441+00:00",
+  "timestamp": "2024-07-07T01:36:52.068957+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -170,11 +170,13 @@
       "state": "OPEN",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
-      "assignees": [],
+      "assignees": [
+        "johngray-dev"
+      ],
       "labels": [],
       "body": "Motivation: converting the ASCII name of the OID to bytes could be a source interop problems.\r\nComment from Ilari: https://mailarchive.ietf.org/arch/msg/spasm/JUISSb8kzHvly6iwEaY4jYGG_yE/",
       "createdAt": "2024-02-06T20:42:51Z",
-      "updatedAt": "2024-02-13T22:43:02Z",
+      "updatedAt": "2024-07-04T21:09:13Z",
       "closedAt": null,
       "comments": [
         {
@@ -183,6 +185,20 @@
           "body": "It is worth putting an EDNOTE in the document that once we do this, we will need IANA to pre-allocate the OIDs so that we can re-compile the domain separators and update the table in the doc.\r\n(and also put the same EDNOTE in composite-sigs)",
           "createdAt": "2024-02-13T20:45:06Z",
           "updatedAt": "2024-02-13T22:43:02Z"
+        },
+        {
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Align with composite signatures with a similar table for domain separators (DER encoded OID values).  ",
+          "createdAt": "2024-07-04T19:58:02Z",
+          "updatedAt": "2024-07-04T19:58:02Z"
+        },
+        {
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Added table in section 2.5, and also updated the definition of the fixedInfo value.   See Merge here:  https://github.com/lamps-wg/draft-composite-kem/commit/e9db1fa3e40edcca15acbee1d19db1c3b7ea9089\r\n",
+          "createdAt": "2024-07-04T21:09:12Z",
+          "updatedAt": "2024-07-04T21:09:12Z"
         }
       ]
     },
@@ -210,13 +226,23 @@
       "state": "OPEN",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
-      "assignees": [],
+      "assignees": [
+        "janklaussner"
+      ],
       "labels": [],
       "body": "We should add a section listing explicitly the DER-encoded AlgorithmIdentifiers for the components of each composite public key and signature algorithm. This is important to resolve ambiguity on, for example, whether the RSA should have a NULL param, and the ECC curve params.\r\n\r\nExample, for id-MLDSA44-ECDSA-P256-SHA256 the ML-DSA SPKI would have an AlgorithmIdentifier of:\r\n\r\n   AlgorithmIdentifier  ::=  SEQUENCE  {\r\n        id-ml-dsa\r\n    }\r\nwhich is:\r\n\r\nAlgorithmIdentifier  ::=  SEQUENCE  {\r\n        {\r\n     1.3.6.1.4.1.2.267.12.4.4\r\n      }\r\n  }\r\nAnd the ECDSA-P256-SHA256 would have a SPKI would have an AlgorithmIdentifier of:\r\n\r\n   AlgorithmIdentifier  ::=  SEQUENCE  {\r\n        id-ecPublicKey,\r\n       secp256r1  \r\n  }\r\nwhich is:\r\n\r\n   AlgorithmIdentifier  ::=  SEQUENCE  {\r\n        {\r\n     iso(1) member-body(2) us(840) ansi-X9-62(10045) keyType(2) 1 },\r\n       iso(1) member-body(2) us(840) ansi-X9-62(10045) curves(3) prime(1) 7}\r\nAnd the signature algorithm for id-MLDSA44-ECDSA-P256-SHA256, the first component signature algorithm would have an AlgorithmIdentifier of\r\n\r\n   AlgorithmIdentifier  ::=  SEQUENCE  {\r\n        id-ml-dsa\r\n    }\r\nwhich is:\r\n\r\nAlgorithmIdentifier  ::=  SEQUENCE  {\r\n        {\r\n     1.3.6.1.4.1.2.267.12.4.4\r\n      }\r\n  }\r\nand the second component signature algorithm would have an AlgorithmIdentifier of\r\n\r\n   AlgorithmIdentifier  ::=  SEQUENCE  {\r\n          ecdsa-with-SHA256\r\n  }\r\nwhich is:\r\n\r\nAlgorithmIdentifier  ::=  SEQUENCE  {\r\n           {\r\n     iso(1) member-body(2) us(840) ansi-X9-62(10045) signatures(4) ecdsa-with-SHA2(3) 2\r\n       }\r\n  }\r\nWith that done, we should replace the message prefix values in Sectien 2.4 with the SHA256 hash of the signature AlgorithmIdentifiers. This has two nice properties that are better than using the ASCII encoding of the OID name: 1) they are all the same length (ie the length of SHA256), and 2) if the inner OIDs change, for example with a new Kyber version, then the message prefix changes, which prevents cryptographic compatibility issues; or otherwise stated: provides signature domain-separation based on the component OIDs.\r\n\r\n--- SHA256 of the DER encoding of the following ASN.1 value\r\n--- Security Consideration note: the choice of SHA256 here is not security-relevant since it is only to generate fixed string values.\r\n\r\nSEQUENCE {\r\nAlgorithmIdentifier  ::=  SEQUENCE  {\r\n        {\r\n     1.3.6.1.4.1.2.267.12.4.4\r\n      }\r\n  },\r\nAlgorithmIdentifier  ::=  SEQUENCE  {\r\n           {\r\n     iso(1) member-body(2) us(840) ansi-X9-62(10045) signatures(4) ecdsa-with-SHA2(3) 2\r\n       }\r\n  }\r\n}\r\n",
       "createdAt": "2024-02-16T16:01:24Z",
-      "updatedAt": "2024-03-02T22:33:29Z",
+      "updatedAt": "2024-07-04T19:57:19Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Jan to work on this one and align with what is in composite signatures",
+          "createdAt": "2024-07-04T19:57:18Z",
+          "updatedAt": "2024-07-04T19:57:18Z"
+        }
+      ]
     },
     {
       "number": 21,
@@ -230,7 +256,7 @@
       "labels": [],
       "body": "Sophie Schmieg made the excellent point:\r\n\r\n> on the classical side, nobody uses RSA-KEM (a shame, but alas), leaving RSA-OAEP",
       "createdAt": "2024-02-20T20:48:46Z",
-      "updatedAt": "2024-02-20T21:13:11Z",
+      "updatedAt": "2024-07-04T19:56:34Z",
       "closedAt": null,
       "comments": [
         {
@@ -239,6 +265,13 @@
           "body": "What about RSA-PKCS#1 ?",
           "createdAt": "2024-02-20T21:13:11Z",
           "updatedAt": "2024-02-20T21:13:11Z"
+        },
+        {
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Asking Lamps WG about this at the IETF 120 presentation",
+          "createdAt": "2024-07-04T19:56:33Z",
+          "updatedAt": "2024-07-04T19:56:33Z"
         }
       ]
     },
@@ -294,9 +327,17 @@
       "labels": [],
       "body": "In cms-kyber, we specified id-aes256-wrap for NIST level 3 / 192 bit security, even though it's stronger than necessary, because of a suggestion from Scott that AES-192 isn't as widely supported.  Consider doing the same here.",
       "createdAt": "2024-03-03T01:20:43Z",
-      "updatedAt": "2024-03-03T01:20:43Z",
+      "updatedAt": "2024-07-04T19:32:51Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "body": "We will update this for IETF 120.",
+          "createdAt": "2024-07-04T19:32:50Z",
+          "updatedAt": "2024-07-04T19:32:50Z"
+        }
+      ]
     },
     {
       "number": 26,
@@ -310,7 +351,7 @@
       "labels": [],
       "body": "In NIST's guidelines for key derivation (see https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-56Cr2.pdf) in section 2 they specify an approved method for combining a compliant secret with auxiliary shared secret like so:\r\n\r\n> In addition to the currently approved techniques for the generation of the shared secret Z as\r\n> specified in SP 800-56A and SP 800-56B, this Recommendation permits the use of a \u201chybrid\u201d\r\n> shared secret of the form Z\u2032 = Z || T, a concatenation consisting of a \u201cstandard\u201d shared secret Z that\r\n> was generated during the execution of a key-establishment scheme (as currently specified in [SP\r\n> 800-56A] or [SP 800-56B]) followed by an auxiliary shared secret T that has been generated using\r\n> some other method. The content, format, length, and method used to generate T must be known\r\n> and agreed upon by all parties that will rely upon the derived keying material, as well as by any\r\n> agents trusted to act on their behalf.\r\n\r\nThe present combiner in this draft doesn't include the secret from an approved method first in the input of the KDF:\r\n\r\n> Combiner(ct1, ss1, ct2, ss2, fixedInfo) =\r\n>   KDF(counter || ct1 || ss1 || ct2 || ss2 || fixedInfo, outputBits)\r\n\r\nWe suggest moving either ss1 or ss2 to the beginning of the input to the KDF since concatenating any auxiliary secret to a compliant secret will result in a compliant key when feeding it to a compliant KDF. Even better, if we choose the classical key to be at the beginning (ss2 in the proposed combinations) it would mean that this construction would be considered compliant by NIST even if used with a non-standardized/compliant post-quantum algorithm.\r\n\r\nThe fixed counter value was added to in this draft to be compliant, but in the nist specification the counter must be followed by the compliant secret. In this specification ct1 is not a compliant secret, so this doesn't seem to be a good solution.",
       "createdAt": "2024-04-17T13:49:28Z",
-      "updatedAt": "2024-05-08T14:43:14Z",
+      "updatedAt": "2024-07-06T01:29:14Z",
       "closedAt": null,
       "comments": [
         {
@@ -319,8 +360,54 @@
           "body": "Thank you for the comment! That is an interesting point.\r\n\r\nEarlier versions of this draft had exactly that: the shared secrets before the ciphertexts. We received feedback that we should swap the order so that it is more friendly to embedded devices: the device will have access to the ciphertext first, and only later will it have access to the shared secret, so if it can stream the ciphertext into the combiner hash function, then it does not need to keep the ciphertext in memory.\r\n\r\nRegardless, if this change makes it impossible to FIPS-certify this under SP 800-56Cr2 (or the r3 that is coming to explicitly allow these hybrids), then that could be a more important consideration.\r\n\r\nI will ask a contact at NIST.",
           "createdAt": "2024-05-08T14:43:13Z",
           "updatedAt": "2024-05-08T14:43:13Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "LAMPS discussion thread about this:\r\n\r\nhttps://mailarchive.ietf.org/arch/msg/spasm/yHFJkBs5qhQ0PIXP4NPK1vC9DAs/",
+          "createdAt": "2024-07-04T19:14:59Z",
+          "updatedAt": "2024-07-04T19:14:59Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Conclusion of the LAMPS discussion is:\r\n\r\n> [Dang, Quynh H. (Fed)] The above is not compliant with 56C. it needs to be KDF(counter || ss1 || ss2 || ciphertexts).",
+          "createdAt": "2024-07-06T01:29:13Z",
+          "updatedAt": "2024-07-06T01:29:13Z"
         }
       ]
+    },
+    {
+      "number": 27,
+      "id": "I_kwDOKRPFO86OptfQ",
+      "title": "Place AlgID at the end of FixedInfo",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/27",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Falko said:\r\n> In order to avoid any possible collisions in the input it is important \r\nthe algID is placed at the end of the fixedInfo string. This ensures \r\nthat the string is uniquely parsable from the rear end, because algID \r\ndefines the lengths of the other strings.\r\n\r\nhttps://mailarchive.ietf.org/arch/msg/spasm/3Rul4GQ6kgpVZUXaE-kbr-bV9Ck/\r\n\r\nNeeds to be done after #20 .",
+      "createdAt": "2024-07-06T01:24:53Z",
+      "updatedAt": "2024-07-06T01:25:11Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 28,
+      "id": "I_kwDOKRPFO86OqEZI",
+      "title": "Slides for LAMPS 120",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/28",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "* I think we're converging on a consensus solution with LAMPS mailing list discussions, the parallel openpgp-pqc draft, and CFRG KEM Combiners DT (Mike Ounsworth is a member).\r\n* The goal is to get this \"within a stone's throw\" of ready so that we can finish it up and get it into WGLC shortly after FIPS 203 (ML-KEM) is final.\r\n* We're close.\r\n* (go through changelog)",
+      "createdAt": "2024-07-06T05:01:56Z",
+      "updatedAt": "2024-07-06T05:01:56Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
@@ -586,13 +673,13 @@
       "labels": [],
       "body": "",
       "createdAt": "2024-01-27T22:50:55Z",
-      "updatedAt": "2024-02-16T16:54:44Z",
+      "updatedAt": "2024-07-06T04:17:21Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
-      "baseRefOid": "d6a1ebdc2a5b920fbbd20f1cc33410304471e3c3",
+      "baseRefOid": "e9db1fa3e40edcca15acbee1d19db1c3b7ea9089",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_xwing",
-      "headRefOid": "a06a8eba6c6e94e299a874943a06f36f846d9fe2",
+      "headRefOid": "304a37d8b11c82d5dcaf5d9d9987cbb4c73f687b",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
@@ -604,6 +691,27 @@
           "body": "Closes #13 ",
           "createdAt": "2024-02-06T14:59:53Z",
           "updatedAt": "2024-02-06T14:59:53Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Should align with the openpgp-pqc draft:\r\n\r\n~~~\r\nKEK = SHA3-256(counter || ecdhKeyShare || mlkemKeyShare || ecdhCipherText ||\r\n ecdhPublicKey  || mlkemCipherText || mlkemPublicKey || domSep || len(domSep) \r\n || algID )\r\n~~~\r\n\r\nSee parallel github issue: \r\nhttps://github.com/openpgp-pqc/draft-openpgp-pqc/issues/127",
+          "createdAt": "2024-07-06T01:33:02Z",
+          "updatedAt": "2024-07-06T01:33:02Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "TODO: this is a massive PR. Review again when I'm less sleep-deprived.",
+          "createdAt": "2024-07-06T04:15:02Z",
+          "updatedAt": "2024-07-06T04:15:02Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Closes #27 \r\nCloses #2 \r\nCloses #26 ",
+          "createdAt": "2024-07-06T04:15:27Z",
+          "updatedAt": "2024-07-06T04:17:17Z"
         }
       ],
       "reviews": [
@@ -744,6 +852,26 @@
               "body": "I'm just looking at this now, so apologies if I'm mistaken. But I think the argument that the mapping between RSA ciphertext and plaintext is bijective only holds once you fix the modulus.  So I think you would need some binding to the modulus in the KDF input to achieve bijectivity.  (But do not take this as a proof that it's okay if you have this -- would need more careful consideration than I've given it so far.)",
               "createdAt": "2024-02-16T02:56:57Z",
               "updatedAt": "2024-02-16T02:56:57Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO86A1Adq",
+          "commit": {
+            "abbreviatedOid": "5fb7140"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-07-06T04:14:40Z",
+          "updatedAt": "2024-07-06T04:14:41Z",
+          "comments": [
+            {
+              "originalPosition": 257,
+              "body": "To err on the safe side, this has been changed to:\r\n\r\n> Ciphertext collision resistance is not guaranteed for either RSA-KEM or ECDH, therefore these ciphertexts are bound to the key derivation.",
+              "createdAt": "2024-07-06T04:14:41Z",
+              "updatedAt": "2024-07-06T04:14:41Z"
             }
           ]
         }
