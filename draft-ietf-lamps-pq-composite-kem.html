@@ -11,7 +11,7 @@
 <meta content="Jan Klaussner" name="author">
 <meta content="Scott Fluhrer" name="author">
 <meta content="
-       This document defines Post-Quantum / Traditional composite Key Encapsulation Mechanism (KEM) algorithms suitable for use within X.509 and PKIX and CMS protocols. Composite algorithms are provided which combine ML-KEM with RSA-KEM, ECDH, X25519, and X448. The provided set of composite algorithms should meet most Internet PKI needs. For use within CMS, this document is intended to be coupled with the CMS KEMRecipientInfo mechanism in  . 
+       This document defines Post-Quantum / Traditional composite Key Encapsulation Mechanism (KEM) algorithms suitable for use within X.509 and PKIX and CMS protocols. Composite algorithms are provided which combine ML-KEM with RSA-OAEP, ECDH, X25519, and X448. The provided set of composite algorithms should meet most Internet PKI needs. For use within CMS, this document is intended to be coupled with the CMS KEMRecipientInfo mechanism in  . 
        
 
 
@@ -1086,7 +1086,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <h1 id="title">Composite ML-KEM for Use in the Internet X.509 Public Key Infrastructure and CMS</h1>
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
-<p id="section-abstract-1">This document defines Post-Quantum / Traditional composite Key Encapsulation Mechanism (KEM) algorithms suitable for use within X.509 and PKIX and CMS protocols. Composite algorithms are provided which combine ML-KEM with RSA-KEM, ECDH, X25519, and X448. The provided set of composite algorithms should meet most Internet PKI needs. For use within CMS, this document is intended to be coupled with the CMS KEMRecipientInfo mechanism in <span>[<a href="#I-D.housley-lamps-cms-kemri" class="cite xref">I-D.housley-lamps-cms-kemri</a>]</span>.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+<p id="section-abstract-1">This document defines Post-Quantum / Traditional composite Key Encapsulation Mechanism (KEM) algorithms suitable for use within X.509 and PKIX and CMS protocols. Composite algorithms are provided which combine ML-KEM with RSA-OAEP, ECDH, X25519, and X448. The provided set of composite algorithms should meet most Internet PKI needs. For use within CMS, this document is intended to be coupled with the CMS KEMRecipientInfo mechanism in <span>[<a href="#I-D.housley-lamps-cms-kemri" class="cite xref">I-D.housley-lamps-cms-kemri</a>]</span>.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-about-this-document">
@@ -1171,7 +1171,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
                     <p id="section-toc.1-1.2.2.3.2.1.1"><a href="#section-2.3.1" class="auto internal xref">2.3.1</a>.  <a href="#name-composite-keygen" class="internal xref">Composite KeyGen</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.3.2.2">
-                    <p id="section-toc.1-1.2.2.3.2.2.1"><a href="#section-2.3.2" class="auto internal xref">2.3.2</a>.  <a href="#name-promotion-of-rsa-into-a-kem" class="internal xref">Promotion of RSA into a KEM</a></p>
+                    <p id="section-toc.1-1.2.2.3.2.2.1"><a href="#section-2.3.2" class="auto internal xref">2.3.2</a>.  <a href="#name-promotion-of-rsa-oaep-into-" class="internal xref">Promotion of RSA-OAEP into a KEM</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.3.2.3">
                     <p id="section-toc.1-1.2.2.3.2.3.1"><a href="#section-2.3.3" class="auto internal xref">2.3.3</a>.  <a href="#name-promotion-of-ecdh-into-a-ke" class="internal xref">Promotion of ECDH into a KEM</a></p>
@@ -1233,7 +1233,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
                 <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-domain-separators" class="internal xref">Domain Separators</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2">
-                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="auto internal xref">5.2</a>.  <a href="#name-rsa-kem-parameters" class="internal xref">RSA-KEM Parameters</a></p>
+                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="auto internal xref">5.2</a>.  <a href="#name-rsa-oaep-parameters" class="internal xref">RSA-OAEP Parameters</a></p>
 </li>
             </ul>
 </li>
@@ -1354,7 +1354,8 @@ svg :is([fill="white"], [fill^="#fff"]) {
           <p id="section-1-1.4.1">In the "Use in CMS &gt; Underlying Components" section, the MLKEM768 combinations were lifted from id-aes192-Wrap to id-aes256-Wrap because the latter is believed to have better general adoption.<a href="#section-1-1.4.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-1-1.5">
-          <p id="section-1-1.5.1">Added an appendix "Fixed Component Algorithm Identifiers" -- not finished, needs more work.<a href="#section-1-1.5.1" class="pilcrow">¶</a></p>
+          <p id="section-1-1.5.1">Added an appendix "Fixed Component Algorithm Identifiers" -- not finished, needs more work.
+*<a href="#section-1-1.5.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <p id="section-1-2">Changes to sync with X-Wing:<a href="#section-1-2" class="pilcrow">¶</a></p>
@@ -1368,10 +1369,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
           </ul>
 </li>
         <li class="normal" id="section-1-3.2">
-          <p id="section-1-3.2.1">Removed RSA-KEM ciphertext from KDF.<a href="#section-1-3.2.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="section-1-3.3">
-          <p id="section-1-3.3.1">Removed references to I-D.ounsworth-lamps-cms-dhkem since we'll just inline a simplified version of RFC9180's DHKEM.<a href="#section-1-3.3.1" class="pilcrow">¶</a></p>
+          <p id="section-1-3.2.1">Removed references to I-D.ounsworth-lamps-cms-dhkem since we'll just inline a simplified version of RFC9180's DHKEM.<a href="#section-1-3.2.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <p id="section-1-4">Still to do in a future version:<a href="#section-1-4" class="pilcrow">¶</a></p>
@@ -1422,7 +1420,7 @@ Swedish National Communications Security Authority, Swedish Armed Forces which m
           <p id="section-2-10.2.1">Ease-of-migration: During the transition period, systems will require mechanisms that allow for staged migrations from fully classical to fully post-quantum-aware cryptography.<a href="#section-2-10.2.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-2-11">This document defines a specific instantiation of the PQ/T Hybrid paradigm called "composite" where multiple cryptographic algorithms are combined to form a single key encapsulation mechanism (KEM) key and ciphertext such that they can be treated as a single atomic algorithm at the protocol level. Composite algorithms address algorithm strength uncertainty because the composite algorithm remains strong so long as one of its components remains strong. Concrete instantiations of composite KEM algorithms are provided based on ML-KEM, RSA-KEM and ECDH-KEM. Backwards compatibility is not directly covered in this document, but is the subject of <a href="#sec-backwards-compat" class="auto internal xref">Appendix C.2</a>.<a href="#section-2-11" class="pilcrow">¶</a></p>
+<p id="section-2-11">This document defines a specific instantiation of the PQ/T Hybrid paradigm called "composite" where multiple cryptographic algorithms are combined to form a single key encapsulation mechanism (KEM) key and ciphertext such that they can be treated as a single atomic algorithm at the protocol level. Composite algorithms address algorithm strength uncertainty because the composite algorithm remains strong so long as one of its components remains strong. Concrete instantiations of composite KEM algorithms are provided based on ML-KEM, RSA-OAEP and ECDH. Backwards compatibility is not directly covered in this document, but is the subject of <a href="#sec-backwards-compat" class="auto internal xref">Appendix C.2</a>.<a href="#section-2-11" class="pilcrow">¶</a></p>
 <p id="section-2-12">This document is intended for general applicability anywhere that key establishment or enveloped content encryption is used within PKIX or CMS structures.<a href="#section-2-12" class="pilcrow">¶</a></p>
 <div id="sec-terminology">
 <section id="section-2.1">
@@ -1487,7 +1485,7 @@ secret <code>ss</code>, or in some cases a distinguished error value.<a href="#s
 </li>
         </ul>
 <p id="section-2.3-3">The KEM interface defined above differs from both traditional key transport mechanism (for example for use with KeyTransRecipientInfo defined in <span>[<a href="#RFC5652" class="cite xref">RFC5652</a>]</span>), and key agreement (for example for use with KeyAgreeRecipientInfo defined in <span>[<a href="#RFC5652" class="cite xref">RFC5652</a>]</span>).<a href="#section-2.3-3" class="pilcrow">¶</a></p>
-<p id="section-2.3-4">The KEM interface was chosen as the interface for a composite key establishment because it allows for arbitrary combinations of component algorithm types since both key transport and key agreement mechanisms can be promoted into KEMs. This specification uses the Post-Quantum KEM ML-KEM as specified in <span>[<a href="#I-D.ietf-lamps-kyber-certificates" class="cite xref">I-D.ietf-lamps-kyber-certificates</a>]</span> and <span>[<a href="#FIPS.203-ipd" class="cite xref">FIPS.203-ipd</a>]</span>. For Traditional KEMs, this document relies on the RSA-KEM construction defined in <span>[<a href="#I-D.ietf-lamps-rfc5990bis" class="cite xref">I-D.ietf-lamps-rfc5990bis</a>]</span> while the Elliptic Curve Diffie-Hellman key agreement schemes are inlined directly. A combiner function is used to to combine the two component shared secrets into a single shared secret.<a href="#section-2.3-4" class="pilcrow">¶</a></p>
+<p id="section-2.3-4">The KEM interface was chosen as the interface for a composite key establishment because it allows for arbitrary combinations of component algorithm types since both key transport and key agreement mechanisms can be promoted into KEMs. This specification uses the Post-Quantum KEM ML-KEM as specified in <span>[<a href="#I-D.ietf-lamps-kyber-certificates" class="cite xref">I-D.ietf-lamps-kyber-certificates</a>]</span> and <span>[<a href="#FIPS.203-ipd" class="cite xref">FIPS.203-ipd</a>]</span>. For Traditional KEMs, this document uses the RSA-OAEP algorithm defined in <span>[<a href="#RFC3560" class="cite xref">RFC3560</a>]</span>, the Elliptic Curve Diffie-Hellman key agreement schemes ECDH defined in section 5.7.1.2 of <span>[<a href="#SP.800-56Ar3" class="cite xref">SP.800-56Ar3</a>]</span>, and X25519 / X448 which are defined in <span>[<a href="#RFC8410" class="cite xref">RFC8410</a>]</span>. A combiner function is used to to combine the two component shared secrets into a single shared secret.<a href="#section-2.3-4" class="pilcrow">¶</a></p>
 <div id="composite-keygen">
 <section id="section-2.3.1">
           <h4 id="name-composite-keygen">
@@ -1496,12 +1494,31 @@ secret <code>ss</code>, or in some cases a distinguished error value.<a href="#s
 <p id="section-2.3.1-1">The <code>KeyGen() -&gt; (pk, sk)</code> of a composite KEM algorithm will perform the <code>KeyGen()</code> of the respective component KEM algorithms and it produces a composite public key <code>pk</code> as per <a href="#sec-composite-pub-keys" class="auto internal xref">Section 3.2</a> and a composite secret key <code>sk</code> is per <a href="#sec-priv-key" class="auto internal xref">Section 3.3</a>.<a href="#section-2.3.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="promotion-of-rsa-into-a-kem">
+<div id="promotion-of-rsa-oaep-into-a-kem">
 <section id="section-2.3.2">
-          <h4 id="name-promotion-of-rsa-into-a-kem">
-<a href="#section-2.3.2" class="section-number selfRef">2.3.2. </a><a href="#name-promotion-of-rsa-into-a-kem" class="section-name selfRef">Promotion of RSA into a KEM</a>
+          <h4 id="name-promotion-of-rsa-oaep-into-">
+<a href="#section-2.3.2" class="section-number selfRef">2.3.2. </a><a href="#name-promotion-of-rsa-oaep-into-" class="section-name selfRef">Promotion of RSA-OAEP into a KEM</a>
           </h4>
-<p id="section-2.3.2-1">Promotion of the RSA encryption primitive into a KEM is accomplished via <span>[<a href="#I-D.ietf-lamps-rfc5990bis" class="cite xref">I-D.ietf-lamps-rfc5990bis</a>]</span>.<a href="#section-2.3.2-1" class="pilcrow">¶</a></p>
+<p id="section-2.3.2-1">The RSA Optimal Asymmetric Encription Padding (OAEP), more specifically the RSAES-OAEP key transport algorithm as specified in <span>[<a href="#RFC3560" class="cite xref">RFC3560</a>]</span> is a public key encryption algorithm used to transport key material from a sender to a reviever. It is promoted into a KEM by having the sender generat a randem 256 bit secret and encrypt it.<a href="#section-2.3.2-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-2.3.2-2">
+<pre>
+DHKEM.Encaps(pkR):
+  shared_secret = SecureRandom(ss_len)
+  enc = RSA-OAEP.Encrypt(pkR, shared_secret)
+
+  return enc, shared_secret
+</pre><a href="#section-2.3.2-2" class="pilcrow">¶</a>
+</div>
+<p id="section-2.3.2-3"><code>Decaps(sk, ct) -&gt; ss</code> is accomplished in the analogous way.<a href="#section-2.3.2-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-2.3.2-4">
+<pre>
+DHKEM.Decap(skR, enc):
+  shared_secret = RSA-OAEP.Decrypt(skR, enc)
+
+  return shared_secret
+</pre><a href="#section-2.3.2-4" class="pilcrow">¶</a>
+</div>
+<p id="section-2.3.2-5">The value of <code>ss_len</code> as well as the RSA-OAEP paramaters used within this specification can be found in <a href="#sect-rsaoaep-params" class="auto internal xref">Section 5.2</a>.<a href="#section-2.3.2-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="promotion-of-ecdh-into-a-kem">
@@ -1523,7 +1540,7 @@ DHKEM.Encaps(pkR):
 <p id="section-2.3.3-3"><code>Decaps(sk, ct) -&gt; ss</code> is accomplished in the analogous way.<a href="#section-2.3.3-3" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-2.3.3-4">
 <pre>
-DHKEM.Decap(enc, skR):
+DHKEM.Decap(skR, enc):
   pkE = DeserializePublicKey(enc)
   shared_secret = DH(skR, pkE)
 
@@ -1892,14 +1909,14 @@ KEK &lt;- Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep) =
             <td class="text-left" rowspan="1" colspan="1">id-MLKEM512-RSA2048</td>
             <td class="text-left" rowspan="1" colspan="1">&lt;CompKEM&gt;.13</td>
             <td class="text-left" rowspan="1" colspan="1">MLKEM512</td>
-            <td class="text-left" rowspan="1" colspan="1">RSA-KEM 2048</td>
+            <td class="text-left" rowspan="1" colspan="1">RSA-OAEP 2048</td>
             <td class="text-left" rowspan="1" colspan="1">SHA3-256</td>
           </tr>
           <tr>
             <td class="text-left" rowspan="1" colspan="1">id-MLKEM512-RSA3072</td>
             <td class="text-left" rowspan="1" colspan="1">&lt;CompKEM&gt;.4</td>
             <td class="text-left" rowspan="1" colspan="1">MLKEM512</td>
-            <td class="text-left" rowspan="1" colspan="1">RSA-KEM 3072</td>
+            <td class="text-left" rowspan="1" colspan="1">RSA-OAEP 3072</td>
             <td class="text-left" rowspan="1" colspan="1">SHA3-256</td>
           </tr>
           <tr>
@@ -1964,7 +1981,7 @@ KEK &lt;- Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep) =
           <p id="section-5-7.2.1"><em>ML-KEM</em>: <span>[<a href="#I-D.ietf-lamps-kyber-certificates" class="cite xref">I-D.ietf-lamps-kyber-certificates</a>]</span> and <span>[<a href="#FIPS.203-ipd" class="cite xref">FIPS.203-ipd</a>]</span><a href="#section-5-7.2.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-5-7.3">
-          <p id="section-5-7.3.1"><em>RSA-KEM</em>: <span>[<a href="#I-D.ietf-lamps-rfc5990bis" class="cite xref">I-D.ietf-lamps-rfc5990bis</a>]</span><a href="#section-5-7.3.1" class="pilcrow">¶</a></p>
+          <p id="section-5-7.3.1"><em>RSA-OAEP</em>: <span>[<a href="#RFC3560" class="cite xref">RFC3560</a>]</span><a href="#section-5-7.3.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-5-7.4">
           <p id="section-5-7.4.1"><em>X25519 / X448</em>: <span>[<a href="#RFC8410" class="cite xref">RFC8410</a>]</span><a href="#section-5-7.4.1" class="pilcrow">¶</a></p>
@@ -2041,45 +2058,57 @@ KEK &lt;- Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep) =
 <p id="section-5.1-4">EDNOTE: these domain separators are based on the prototyping OIDs assigned on the Entrust arc. We will need to ask for IANA early allocation of these OIDs so that we can re-compute the domain separators over the final OIDs.<a href="#section-5.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="rsa-kem-parameters">
+<div id="sect-rsaoaep-params">
 <section id="section-5.2">
-        <h3 id="name-rsa-kem-parameters">
-<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-rsa-kem-parameters" class="section-name selfRef">RSA-KEM Parameters</a>
+        <h3 id="name-rsa-oaep-parameters">
+<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-rsa-oaep-parameters" class="section-name selfRef">RSA-OAEP Parameters</a>
         </h3>
-<p id="section-5.2-1">Use of RSA-KEM <span>[<a href="#I-D.ietf-lamps-rfc5990bis" class="cite xref">I-D.ietf-lamps-rfc5990bis</a>]</span> within <code>id-MLKEM512-RSA2048</code> and <code>id-MLKEM512-RSA3072</code> requires additional specification.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
-<p id="section-5.2-2">The RSA component keys MUST be generated at the 2048-bit and 3072-bit security level respectively.<a href="#section-5.2-2" class="pilcrow">¶</a></p>
-<p id="section-5.2-3">As with the other composite KEM algorithms, when <code>id-MLKEM512-RSA2048</code> or <code>id-MLKEM512-RSA3072</code> is used in an AlgorithmIdentifier, the parameters MUST be absent. The RSA-KEM SHALL be instantiated with the following parameters:<a href="#section-5.2-3" class="pilcrow">¶</a></p>
-<span id="name-rsa-kem-2048-parameters"></span><div id="rsa-kem-params2048">
+<p id="section-5.2-1">Use of RSA-OAEP <span>[<a href="#RFC3560" class="cite xref">RFC3560</a>]</span> within <code>id-MLKEM512-RSA2048</code> and <code>id-MLKEM512-RSA3072</code> requires additional specification.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
+<p id="section-5.2-2">First, a quick note on the choice of RSA-OAEP as the supported RSA encryption pritimive. RSA-KEM <span>[<a href="#RFC5990" class="cite xref">RFC5990</a>]</span> is more straightforward to work with, but it has fairly limited adoption and therefore is of limited backwards compatibility value. Also, while RSA-PKCS#1v1.5 <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span> is still everywhere, but hard to make secure and no longer FIPS-approved as of the end of 2023 <span>[<a href="#SP800-131Ar2" class="cite xref">SP800-131Ar2</a>]</span>, so it is of limited forwards value. This leaves RSA-OAEP <span>[<a href="#RFC3560" class="cite xref">RFC3560</a>]</span> as the remaining choice.<a href="#section-5.2-2" class="pilcrow">¶</a></p>
+<p id="section-5.2-3">The RSA component keys MUST be generated at the 2048-bit and 3072-bit security levels respectively.<a href="#section-5.2-3" class="pilcrow">¶</a></p>
+<p id="section-5.2-4">As with the other composite KEM algorithms, when <code>id-MLKEM512-RSA2048</code> or <code>id-MLKEM512-RSA3072</code> is used in an AlgorithmIdentifier, the parameters MUST be absent. The RSA-OAEP SHALL be instantiated with the following hard-coded parameters which are the same for both the 2048 and 3072 bit security levels.<a href="#section-5.2-4" class="pilcrow">¶</a></p>
+<span id="name-rsa-oaep-parameters-2"></span><div id="rsa-oaep-params">
 <table class="center" id="table-3">
           <caption>
 <a href="#table-3" class="selfRef">Table 3</a>:
-<a href="#name-rsa-kem-2048-parameters" class="selfRef">RSA-KEM 2048 Parameters</a>
+<a href="#name-rsa-oaep-parameters-2" class="selfRef">RSA-OAEP Parameters</a>
           </caption>
 <thead>
             <tr>
-              <th class="text-left" rowspan="1" colspan="1">RSA-KEM Parameter</th>
+              <th class="text-left" rowspan="1" colspan="1">RSA-OAEP Parameter</th>
               <th class="text-left" rowspan="1" colspan="1">Value</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td class="text-left" rowspan="1" colspan="1">keyDerivationFunction</td>
-              <td class="text-left" rowspan="1" colspan="1">kda-kdf3 with id-sha3-256</td>
+              <td class="text-left" rowspan="1" colspan="1">hashFunc</td>
+              <td class="text-left" rowspan="1" colspan="1">id-sha2-256</td>
             </tr>
             <tr>
-              <td class="text-left" rowspan="1" colspan="1">keyLength</td>
-              <td class="text-left" rowspan="1" colspan="1">128</td>
+              <td class="text-left" rowspan="1" colspan="1">maskGenFunc</td>
+              <td class="text-left" rowspan="1" colspan="1">mgf1SHA256Identifier</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">pSourceFunc</td>
+              <td class="text-left" rowspan="1" colspan="1">DEFAULT pSpecifiedEmptyIdentifier</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">ss_len</td>
+              <td class="text-left" rowspan="1" colspan="1">256 bits</td>
             </tr>
           </tbody>
         </table>
 </div>
-<p id="section-5.2-5">where:<a href="#section-5.2-5" class="pilcrow">¶</a></p>
+<p id="section-5.2-6">where:<a href="#section-5.2-6" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-5.2-6.1">
-            <p id="section-5.2-6.1.1"><code>kda-kdf3</code> is defined in <span>[<a href="#I-D.ietf-lamps-rfc5990bis" class="cite xref">I-D.ietf-lamps-rfc5990bis</a>]</span> which references it from <span>[<a href="#ANS-X9.44" class="cite xref">ANS-X9.44</a>]</span>.<a href="#section-5.2-6.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-5.2-7.1">
+            <p id="section-5.2-7.1.1"><code>id-sha256</code> is defined in <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span>.<a href="#section-5.2-7.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-5.2-6.2">
-            <p id="section-5.2-6.2.1"><code>id-sha3-256</code> is defined in <span>[<a href="#I-D.ietf-lamps-cms-sha3-hash" class="cite xref">I-D.ietf-lamps-cms-sha3-hash</a>]</span> which references it from <span>[<a href="#SHA3" class="cite xref">SHA3</a>]</span>.<a href="#section-5.2-6.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-5.2-7.2">
+            <p id="section-5.2-7.2.1"><code>mgf1SHA256Identifier</code> is defined in <span>[<a href="#RFC4055" class="cite xref">RFC4055</a>]</span>.<a href="#section-5.2-7.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.2-7.3">
+            <p id="section-5.2-7.3.1"><code>pSpecifiedEmptyIdentifier</code> is defined in <span>[<a href="#RFC3560" class="cite xref">RFC3560</a>]</span><a href="#section-5.2-7.3.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
@@ -2220,7 +2249,7 @@ KEK &lt;- Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep) =
         <h3 id="name-smimecapabilities-attribute">
 <a href="#section-6.4" class="section-number selfRef">6.4. </a><a href="#name-smimecapabilities-attribute" class="section-name selfRef">SMIMECapabilities Attribute Conventions</a>
         </h3>
-<p id="section-6.4-1">Section 2.5.2 of <span>[<a href="#RFC8551" class="cite xref">RFC8551</a>]</span> defines the SMIMECapabilities attribute to announce a partial list of algorithms that an S/MIME implementation can support. When constructing a CMS signed-data content type <span>[<a href="#RFC5652" class="cite xref">RFC5652</a>]</span>, a compliant implementation MAY include the SMIMECapabilities attribute that announces support for the RSA-KEM Algorithm.<a href="#section-6.4-1" class="pilcrow">¶</a></p>
+<p id="section-6.4-1">Section 2.5.2 of <span>[<a href="#RFC8551" class="cite xref">RFC8551</a>]</span> defines the SMIMECapabilities attribute to announce a partial list of algorithms that an S/MIME implementation can support. When constructing a CMS signed-data content type <span>[<a href="#RFC5652" class="cite xref">RFC5652</a>]</span>, a compliant implementation MAY include the SMIMECapabilities attribute that announces support for the RSA-OAEP Algorithm.<a href="#section-6.4-1" class="pilcrow">¶</a></p>
 <p id="section-6.4-2">The SMIMECapability SEQUENCE representing a composite KEM Algorithm MUST include the appropriate object identifier as per <a href="#tab-kem-algs" class="auto internal xref">Table 1</a> in the capabilityID field.<a href="#section-6.4-2" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -2757,7 +2786,7 @@ END
           <h4 id="name-ciphertext-collision-resist">
 <a href="#section-9.2.1" class="section-number selfRef">9.2.1. </a><a href="#name-ciphertext-collision-resist" class="section-name selfRef">Ciphertext collision resistance</a>
           </h4>
-<p id="section-9.2.1-1">The notion of a ciphertext collision resistant KEM is defined in <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span> being the property that it is computationally difficult to find two different ciphertexts that will decapsulate to the same shared secret under the same public key. In <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span> it is proven that ML-KEM has this property and therefore the ML-KEM ciphertext can safely be omitted from the KEM combiner. Ciphertext collision resistance is not guaranteed for either RSA-KEM or ECDH, therefore these ciphertexts are bound to the key derivation.<a href="#section-9.2.1-1" class="pilcrow">¶</a></p>
+<p id="section-9.2.1-1">The notion of a ciphertext collision resistant KEM is defined in <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span> being the property that it is computationally difficult to find two different ciphertexts that will decapsulate to the same shared secret under the same public key. In <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span> it is proven that ML-KEM has this property and therefore the ML-KEM ciphertext can safely be omitted from the KEM combiner. Ciphertext collision resistance is not guaranteed for either RSA-OAEP or ECDH, therefore these ciphertexts are bound to the key derivation.<a href="#section-9.2.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2774,10 +2803,6 @@ END
 <a href="#section-10.1" class="section-number selfRef">10.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
         </h3>
 <dl class="references">
-<dt id="ANS-X9.44">[ANS-X9.44]</dt>
-        <dd>
-<span class="refAuthor">American National Standards Institute</span>, <span class="refTitle">"Public Key Cryptography for the Financial Services Industry -- Key Establishment Using Integer Factorization Cryptography"</span>, <span class="seriesInfo">American National Standard X9.44 </span>, <time datetime="2007" class="refDate">2007</time>. </dd>
-<dd class="break"></dd>
 <dt id="BSI-ECC">[BSI-ECC]</dt>
         <dd>
 <span class="refAuthor">Federal Office for Information Security (BSI)</span>, <span class="refTitle">"Technical Guideline BSI TR-03111: Elliptic Curve Cryptography. Version 2.10"</span>, <time datetime="2018-06-01" class="refDate">1 June 2018</time>. </dd>
@@ -2794,10 +2819,6 @@ END
         <dd>
 <span class="refAuthor">Housley, R.</span>, <span class="refTitle">"Use of the SHA3 One-way Hash Functions in the Cryptographic Message Syntax (CMS)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-lamps-cms-sha3-hash-04</span>, <time datetime="2024-05-16" class="refDate">16 May 2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-lamps-cms-sha3-hash-04">https://datatracker.ietf.org/doc/html/draft-ietf-lamps-cms-sha3-hash-04</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="I-D.ietf-lamps-rfc5990bis">[I-D.ietf-lamps-rfc5990bis]</dt>
-        <dd>
-<span class="refAuthor">Housley, R.</span> and <span class="refAuthor">S. Turner</span>, <span class="refTitle">"Use of the RSA-KEM Algorithm in the Cryptographic Message Syntax (CMS)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-lamps-rfc5990bis-04</span>, <time datetime="2023-10-19" class="refDate">19 October 2023</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-lamps-rfc5990bis-04">https://datatracker.ietf.org/doc/html/draft-ietf-lamps-rfc5990bis-04</a>&gt;</span>. </dd>
-<dd class="break"></dd>
 <dt id="RFC2119">[RFC2119]</dt>
         <dd>
 <span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc2119">https://www.rfc-editor.org/info/rfc2119</a>&gt;</span>. </dd>
@@ -2805,6 +2826,14 @@ END
 <dt id="RFC3394">[RFC3394]</dt>
         <dd>
 <span class="refAuthor">Schaad, J.</span> and <span class="refAuthor">R. Housley</span>, <span class="refTitle">"Advanced Encryption Standard (AES) Key Wrap Algorithm"</span>, <span class="seriesInfo">RFC 3394</span>, <span class="seriesInfo">DOI 10.17487/RFC3394</span>, <time datetime="2002-09" class="refDate">September 2002</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc3394">https://www.rfc-editor.org/info/rfc3394</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC3560">[RFC3560]</dt>
+        <dd>
+<span class="refAuthor">Housley, R.</span>, <span class="refTitle">"Use of the RSAES-OAEP Key Transport Algorithm in Cryptographic Message Syntax (CMS)"</span>, <span class="seriesInfo">RFC 3560</span>, <span class="seriesInfo">DOI 10.17487/RFC3560</span>, <time datetime="2003-07" class="refDate">July 2003</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc3560">https://www.rfc-editor.org/info/rfc3560</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC4055">[RFC4055]</dt>
+        <dd>
+<span class="refAuthor">Schaad, J.</span>, <span class="refAuthor">Kaliski, B.</span>, and <span class="refAuthor">R. Housley</span>, <span class="refTitle">"Additional Algorithms and Identifiers for RSA Cryptography for use in the Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile"</span>, <span class="seriesInfo">RFC 4055</span>, <span class="seriesInfo">DOI 10.17487/RFC4055</span>, <time datetime="2005-06" class="refDate">June 2005</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc4055">https://www.rfc-editor.org/info/rfc4055</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC5280">[RFC5280]</dt>
         <dd>
@@ -2829,10 +2858,6 @@ END
 <dt id="RFC8411">[RFC8411]</dt>
         <dd>
 <span class="refAuthor">Schaad, J.</span> and <span class="refAuthor">R. Andrews</span>, <span class="refTitle">"IANA Registration for the Cryptographic Algorithm Object Identifier Range"</span>, <span class="seriesInfo">RFC 8411</span>, <span class="seriesInfo">DOI 10.17487/RFC8411</span>, <time datetime="2018-08" class="refDate">August 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8411">https://www.rfc-editor.org/info/rfc8411</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="SHA3">[SHA3]</dt>
-        <dd>
-<span class="refAuthor">National Institute of Standards and Technology (NIST)</span>, <span class="refTitle">"SHA-3 Standard: Permutation-Based Hash and Extendable-Output Functions, FIPS PUB 202, DOI 10.6028/NIST.FIPS.202"</span>, <time datetime="2015-08" class="refDate">August 2015</time>, <span>&lt;<a href="https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.202.pdf">https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.202.pdf</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="SP.800-56Ar3">[SP.800-56Ar3]</dt>
         <dd>
@@ -2862,10 +2887,6 @@ END
 <dt id="BSI2021">[BSI2021]</dt>
         <dd>
 <span class="refAuthor">Federal Office for Information Security (BSI)</span>, <span class="refTitle">"Quantum-safe cryptography - fundamentals, current developments and recommendations"</span>, <time datetime="2021-10" class="refDate">October 2021</time>, <span>&lt;<a href="https://www.bsi.bund.de/SharedDocs/Downloads/EN/BSI/Publications/Brochure/quantum-safe-cryptography.pdf">https://www.bsi.bund.de/SharedDocs/Downloads/EN/BSI/Publications/Brochure/quantum-safe-cryptography.pdf</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="I-D.becker-guthrie-noncomposite-hybrid-auth">[I-D.becker-guthrie-noncomposite-hybrid-auth]</dt>
-        <dd>
-<span class="refAuthor">Becker, A.</span>, <span class="refAuthor">Guthrie, R.</span>, and <span class="refAuthor">M. J. Jenkins</span>, <span class="refTitle">"Non-Composite Hybrid Authentication in PKIX and Applications to Internet Protocols"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-becker-guthrie-noncomposite-hybrid-auth-00</span>, <time datetime="2022-03-22" class="refDate">22 March 2022</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-becker-guthrie-noncomposite-hybrid-auth-00">https://datatracker.ietf.org/doc/html/draft-becker-guthrie-noncomposite-hybrid-auth-00</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.driscoll-pqt-hybrid-terminology">[I-D.driscoll-pqt-hybrid-terminology]</dt>
         <dd>
@@ -2911,6 +2932,10 @@ END
         <dd>
 <span class="refAuthor">Housley, R.</span>, <span class="refAuthor">Ashmore, S.</span>, and <span class="refAuthor">C. Wallace</span>, <span class="refTitle">"Trust Anchor Format"</span>, <span class="seriesInfo">RFC 5914</span>, <span class="seriesInfo">DOI 10.17487/RFC5914</span>, <time datetime="2010-06" class="refDate">June 2010</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc5914">https://www.rfc-editor.org/info/rfc5914</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="RFC5990">[RFC5990]</dt>
+        <dd>
+<span class="refAuthor">Randall, J.</span>, <span class="refAuthor">Kaliski, B.</span>, <span class="refAuthor">Brainard, J.</span>, and <span class="refAuthor">S. Turner</span>, <span class="refTitle">"Use of the RSA-KEM Key Transport Algorithm in the Cryptographic Message Syntax (CMS)"</span>, <span class="seriesInfo">RFC 5990</span>, <span class="seriesInfo">DOI 10.17487/RFC5990</span>, <time datetime="2010-09" class="refDate">September 2010</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc5990">https://www.rfc-editor.org/info/rfc5990</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC6090">[RFC6090]</dt>
         <dd>
 <span class="refAuthor">McGrew, D.</span>, <span class="refAuthor">Igoe, K.</span>, and <span class="refAuthor">M. Salter</span>, <span class="refTitle">"Fundamental Elliptic Curve Cryptography Algorithms"</span>, <span class="seriesInfo">RFC 6090</span>, <span class="seriesInfo">DOI 10.17487/RFC6090</span>, <time datetime="2011-02" class="refDate">February 2011</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc6090">https://www.rfc-editor.org/info/rfc6090</a>&gt;</span>. </dd>
@@ -2927,6 +2952,10 @@ END
         <dd>
 <span class="refAuthor">Langley, A.</span>, <span class="refAuthor">Hamburg, M.</span>, and <span class="refAuthor">S. Turner</span>, <span class="refTitle">"Elliptic Curves for Security"</span>, <span class="seriesInfo">RFC 7748</span>, <span class="seriesInfo">DOI 10.17487/RFC7748</span>, <time datetime="2016-01" class="refDate">January 2016</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc7748">https://www.rfc-editor.org/info/rfc7748</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="RFC8017">[RFC8017]</dt>
+        <dd>
+<span class="refAuthor">Moriarty, K., Ed.</span>, <span class="refAuthor">Kaliski, B.</span>, <span class="refAuthor">Jonsson, J.</span>, and <span class="refAuthor">A. Rusch</span>, <span class="refTitle">"PKCS #1: RSA Cryptography Specifications Version 2.2"</span>, <span class="seriesInfo">RFC 8017</span>, <span class="seriesInfo">DOI 10.17487/RFC8017</span>, <time datetime="2016-11" class="refDate">November 2016</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8017">https://www.rfc-editor.org/info/rfc8017</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC8446">[RFC8446]</dt>
         <dd>
 <span class="refAuthor">Rescorla, E.</span>, <span class="refTitle">"The Transport Layer Security (TLS) Protocol Version 1.3"</span>, <span class="seriesInfo">RFC 8446</span>, <span class="seriesInfo">DOI 10.17487/RFC8446</span>, <time datetime="2018-08" class="refDate">August 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8446">https://www.rfc-editor.org/info/rfc8446</a>&gt;</span>. </dd>
@@ -2938,6 +2967,10 @@ END
 <dt id="RFC9180">[RFC9180]</dt>
         <dd>
 <span class="refAuthor">Barnes, R.</span>, <span class="refAuthor">Bhargavan, K.</span>, <span class="refAuthor">Lipp, B.</span>, and <span class="refAuthor">C. Wood</span>, <span class="refTitle">"Hybrid Public Key Encryption"</span>, <span class="seriesInfo">RFC 9180</span>, <span class="seriesInfo">DOI 10.17487/RFC9180</span>, <time datetime="2022-02" class="refDate">February 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc9180">https://www.rfc-editor.org/info/rfc9180</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="SP800-131Ar2">[SP800-131Ar2]</dt>
+        <dd>
+<span class="refAuthor">Barker, E.</span> and <span class="refAuthor">A. Roginksy</span>, <span class="refTitle">"Transitioning the Use of Cryptographic Algorithms and Key Lengths"</span>, <span>n.d.</span>, <span>&lt;<a href="https://nvlpubs.nist.gov/nistpubs/specialpublications/nist.sp.800-131ar2.pdf">https://nvlpubs.nist.gov/nistpubs/specialpublications/nist.sp.800-131ar2.pdf</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="X-Wing">[X-Wing]</dt>
       <dd>
