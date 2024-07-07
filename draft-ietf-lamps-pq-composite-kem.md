@@ -213,7 +213,7 @@ This document defines Post-Quantum / Traditional composite Key Encapsulation Mec
 * Specified the fixedInfo domain separators as the DER encoded object identifiers.
 * Adjusted the combiner to be compliant with NIST SP800-56C as per https://mailarchive.ietf.org/arch/msg/spasm/nlyQF1i7ndp5A7zzcTsdYF_S9mI/ -- also aligns with X-Wing changes below.
 * Removed reference to draft-ounsworth-cfrg-kem-combiners so that we don't end up in a downref situation.
-* Removed reference to
+* In the "Use in CMS > Underlying Components" section, the MLKEM768 combinations were lifted from id-aes192-Wrap to id-aes256-Wrap because the latter is believed to have better general adoption.
 
 Changes to sync with X-Wing:
 
@@ -704,14 +704,15 @@ The following table lists the REQUIRED KDF and key-encryption algorithms to pres
 | id-MLKEM512-X25519                | SHA3-256 | id-aes128-Wrap     |
 | id-MLKEM512-RSA2048               | SHA3-256 | id-aes128-Wrap     |
 | id-MLKEM512-RSA3072               | SHA3-256 | id-aes128-Wrap     |
-| id-MLKEM768-ECDH-P256             | SHA3-384 | id-aes192-Wrap     |
-| id-MLKEM768-ECDH-brainpoolP256r1  | SHA3-384 | id-aes192-Wrap     |
-| id-MLKEM768-X25519                | SHA3-384 | id-aes192-Wrap     |
+| id-MLKEM768-ECDH-P256             | SHA3-384 | id-aes256-Wrap     |
+| id-MLKEM768-ECDH-brainpoolP256r1  | SHA3-384 | id-aes256-Wrap     |
+| id-MLKEM768-X25519                | SHA3-384 | id-aes256-Wrap     |
 | id-MLKEM1024-ECDH-P384            | SHA3-512 | id-aes256-Wrap     |
 | id-MLKEM1024-ECDH-brainpoolP384r1 | SHA3-512 | id-aes256-Wrap     |
 | id-MLKEM1024-X448                 | SHA3-512 | id-aes256-Wrap     |
 {: #tab-cms-kdf-wrap title="REQUIRED pairings for CMS KDF and WRAP"}
 
+Note: `id-aes256-Wrap` is stronger than necessary for the MLKEM768 combinations at the NIST level 3 192 bit security level, however `id-aes256-Wrap` was chosen because it has better general adoption than `id-aes192-Wrap`.
 
 where:
 
