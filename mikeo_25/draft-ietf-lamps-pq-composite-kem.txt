@@ -146,7 +146,9 @@ Table of Contents
    *  Removed reference to draft-ounsworth-cfrg-kem-combiners so that we
       don't end up in a downref situation.
 
-   *  Removed reference to
+   *  In the "Use in CMS > Underlying Components" section, the MLKEM768
+      combinations were lifted from id-aes192-Wrap to id-aes256-Wrap
+      because the latter is believed to have better general adoption.
 
    Changes to sync with X-Wing:
 
