@@ -1304,29 +1304,32 @@ svg :is([fill="white"], [fill^="#fff"]) {
             <p id="section-toc.1-1.11.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-samples" class="internal xref">Samples</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
-            <p id="section-toc.1-1.12.1"><a href="#appendix-B" class="auto internal xref">Appendix B</a>.  <a href="#name-implementation-consideratio" class="internal xref">Implementation Considerations</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.1">
-                <p id="section-toc.1-1.12.2.1.1"><a href="#appendix-B.1" class="auto internal xref">B.1</a>.  <a href="#name-fips-certification" class="internal xref">FIPS certification</a></p>
+            <p id="section-toc.1-1.12.1"><a href="#appendix-B" class="auto internal xref">Appendix B</a>.  <a href="#name-fixed-component-algorithm-i" class="internal xref">Fixed Component Algorithm Identifiers</a></p>
 </li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.2">
-                <p id="section-toc.1-1.12.2.2.1"><a href="#appendix-B.2" class="auto internal xref">B.2</a>.  <a href="#name-backwards-compatibility" class="internal xref">Backwards Compatibility</a></p>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13">
+            <p id="section-toc.1-1.13.1"><a href="#appendix-C" class="auto internal xref">Appendix C</a>.  <a href="#name-implementation-consideratio" class="internal xref">Implementation Considerations</a></p>
 <ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.2.2.1">
-                    <p id="section-toc.1-1.12.2.2.2.1.1"><a href="#appendix-B.2.1" class="auto internal xref">B.2.1</a>.  <a href="#name-parallel-pkis" class="internal xref">Parallel PKIs</a></p>
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.1">
+                <p id="section-toc.1-1.13.2.1.1"><a href="#appendix-C.1" class="auto internal xref">C.1</a>.  <a href="#name-fips-certification" class="internal xref">FIPS certification</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.2">
+                <p id="section-toc.1-1.13.2.2.1"><a href="#appendix-C.2" class="auto internal xref">C.2</a>.  <a href="#name-backwards-compatibility" class="internal xref">Backwards Compatibility</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.2.2.1">
+                    <p id="section-toc.1-1.13.2.2.2.1.1"><a href="#appendix-C.2.1" class="auto internal xref">C.2.1</a>.  <a href="#name-parallel-pkis" class="internal xref">Parallel PKIs</a></p>
 </li>
                 </ul>
 </li>
             </ul>
 </li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13">
-            <p id="section-toc.1-1.13.1"><a href="#appendix-C" class="auto internal xref">Appendix C</a>.  <a href="#name-intellectual-property-consi" class="internal xref">Intellectual Property Considerations</a></p>
-</li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14">
-            <p id="section-toc.1-1.14.1"><a href="#appendix-D" class="auto internal xref">Appendix D</a>.  <a href="#name-contributors-and-acknowledg" class="internal xref">Contributors and Acknowledgments</a></p>
+            <p id="section-toc.1-1.14.1"><a href="#appendix-D" class="auto internal xref">Appendix D</a>.  <a href="#name-intellectual-property-consi" class="internal xref">Intellectual Property Considerations</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15">
-            <p id="section-toc.1-1.15.1"><a href="#appendix-E" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
+            <p id="section-toc.1-1.15.1"><a href="#appendix-E" class="auto internal xref">Appendix E</a>.  <a href="#name-contributors-and-acknowledg" class="internal xref">Contributors and Acknowledgments</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16">
+            <p id="section-toc.1-1.16.1"><a href="#appendix-F" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
 </li>
         </ul>
 </nav>
@@ -1416,7 +1419,7 @@ Swedish National Communications Security Authority, Swedish Armed Forces which m
           <p id="section-2-10.2.1">Ease-of-migration: During the transition period, systems will require mechanisms that allow for staged migrations from fully classical to fully post-quantum-aware cryptography.<a href="#section-2-10.2.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-2-11">This document defines a specific instantiation of the PQ/T Hybrid paradigm called "composite" where multiple cryptographic algorithms are combined to form a single key encapsulation mechanism (KEM) key and ciphertext such that they can be treated as a single atomic algorithm at the protocol level. Composite algorithms address algorithm strength uncertainty because the composite algorithm remains strong so long as one of its components remains strong. Concrete instantiations of composite KEM algorithms are provided based on ML-KEM, RSA-KEM and ECDH-KEM. Backwards compatibility is not directly covered in this document, but is the subject of <a href="#sec-backwards-compat" class="auto internal xref">Appendix B.2</a>.<a href="#section-2-11" class="pilcrow">¶</a></p>
+<p id="section-2-11">This document defines a specific instantiation of the PQ/T Hybrid paradigm called "composite" where multiple cryptographic algorithms are combined to form a single key encapsulation mechanism (KEM) key and ciphertext such that they can be treated as a single atomic algorithm at the protocol level. Composite algorithms address algorithm strength uncertainty because the composite algorithm remains strong so long as one of its components remains strong. Concrete instantiations of composite KEM algorithms are provided based on ML-KEM, RSA-KEM and ECDH-KEM. Backwards compatibility is not directly covered in this document, but is the subject of <a href="#sec-backwards-compat" class="auto internal xref">Appendix C.2</a>.<a href="#section-2-11" class="pilcrow">¶</a></p>
 <p id="section-2-12">This document is intended for general applicability anywhere that key establishment or enveloped content encryption is used within PKIX or CMS structures.<a href="#section-2-12" class="pilcrow">¶</a></p>
 <div id="sec-terminology">
 <section id="section-2.1">
@@ -1681,7 +1684,7 @@ CompositeKEMPrivateKey ::= SEQUENCE SIZE (2) OF OneAsymmetricKey
 <p id="section-3.3-4">The parameters field MUST be absent.<a href="#section-3.3-4" class="pilcrow">¶</a></p>
 <p id="section-3.3-5">The order of the component keys is the same as the order defined in <a href="#sec-composite-pub-keys" class="auto internal xref">Section 3.2</a> for the components of CompositeKEMPublicKey.<a href="#section-3.3-5" class="pilcrow">¶</a></p>
 <p id="section-3.3-6">When a <code>CompositePrivateKey</code> is conveyed inside a OneAsymmetricKey structure (version 1 of which is also known as PrivateKeyInfo) <span>[<a href="#RFC5958" class="cite xref">RFC5958</a>]</span>, the privateKeyAlgorithm field SHALL be set to the corresponding composite algorithm identifier defined according to <a href="#sec-alg-ids" class="auto internal xref">Section 5</a>, the privateKey field SHALL contain the CompositeKEMPrivateKey, and the publicKey field MUST NOT be present. Associated public key material MAY be present in the CompositeKEMPrivateKey.<a href="#section-3.3-6" class="pilcrow">¶</a></p>
-<p id="section-3.3-7">In some use-cases the private keys that comprise a composite key may not be represented in a single structure or even be contained in a single cryptographic module; for example if one component is within the FIPS boundary of a cryptographic module and the other is not; see <a href="#sec-fips" class="auto internal xref">Appendix B.1</a> for more discussion. The establishment of correspondence between public keys in a CompositeKEMPublicKey and private keys not represented in a single composite structure is beyond the scope of this document.<a href="#section-3.3-7" class="pilcrow">¶</a></p>
+<p id="section-3.3-7">In some use-cases the private keys that comprise a composite key may not be represented in a single structure or even be contained in a single cryptographic module; for example if one component is within the FIPS boundary of a cryptographic module and the other is not; see <a href="#sec-fips" class="auto internal xref">Appendix C.1</a> for more discussion. The establishment of correspondence between public keys in a CompositeKEMPublicKey and private keys not represented in a single composite structure is beyond the scope of this document.<a href="#section-3.3-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-encoding-rules">
@@ -1853,7 +1856,7 @@ KEK &lt;- Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep) =
         </caption>
 <thead>
           <tr>
-            <th class="text-left" rowspan="1" colspan="1">KEM Type</th>
+            <th class="text-left" rowspan="1" colspan="1">Composite KEM</th>
             <th class="text-left" rowspan="1" colspan="1">OID</th>
             <th class="text-left" rowspan="1" colspan="1">First Algorithm</th>
             <th class="text-left" rowspan="1" colspan="1">Second Algorithm</th>
@@ -2949,40 +2952,66 @@ END
 <p id="appendix-A-1">TBD<a href="#appendix-A-1" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="sec-in-pract">
+<div id="fixed-component-algorithm-identifiers">
 <section id="appendix-B">
+      <h2 id="name-fixed-component-algorithm-i">
+<a href="#appendix-B" class="section-number selfRef">Appendix B. </a><a href="#name-fixed-component-algorithm-i" class="section-name selfRef">Fixed Component Algorithm Identifiers</a>
+      </h2>
+<p id="appendix-B-1">The following table lists explicitely the DER encoded <code>AlgorithmID</code> that MUST be used when reconstructing <code>SubjectPublicKeyInfo</code> objects for each component public key, which may be required for example if cryptographic library requires the public key in this form in order to process each component algorithm. The public key <code>BIT STRING</code> should be taken directly from the respective component of the CompositeKEMPublicKey.<a href="#appendix-B-1" class="pilcrow">¶</a></p>
+<table class="center" id="table-5">
+        <caption><a href="#table-5" class="selfRef">Table 5</a></caption>
+<thead>
+          <tr>
+            <th class="text-left" rowspan="1" colspan="1">Composite KEM</th>
+            <th class="text-left" rowspan="1" colspan="1">First AlgorithmID</th>
+            <th class="text-left" rowspan="1" colspan="1">Second AlgorithmID</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">TODO</td>
+            <td class="text-left" rowspan="1" colspan="1">TODO</td>
+            <td class="text-left" rowspan="1" colspan="1">TODO</td>
+          </tr>
+        </tbody>
+      </table>
+<p id="appendix-B-3">TODO: see https://github.com/lamps-wg/draft-composite-kem/issues/20<a href="#appendix-B-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="sec-in-pract">
+<section id="appendix-C">
       <h2 id="name-implementation-consideratio">
-<a href="#appendix-B" class="section-number selfRef">Appendix B. </a><a href="#name-implementation-consideratio" class="section-name selfRef">Implementation Considerations</a>
+<a href="#appendix-C" class="section-number selfRef">Appendix C. </a><a href="#name-implementation-consideratio" class="section-name selfRef">Implementation Considerations</a>
       </h2>
 <div id="sec-fips">
-<section id="appendix-B.1">
+<section id="appendix-C.1">
         <h3 id="name-fips-certification">
-<a href="#appendix-B.1" class="section-number selfRef">B.1. </a><a href="#name-fips-certification" class="section-name selfRef">FIPS certification</a>
+<a href="#appendix-C.1" class="section-number selfRef">C.1. </a><a href="#name-fips-certification" class="section-name selfRef">FIPS certification</a>
         </h3>
-<p id="appendix-B.1-1">One of the primary design goals of this specification is for the overall composite algorithm to be able to be considered FIPS-approved even when one of the component algorithms is not. The combiner presented in <a href="#sec-kem-combiner" class="auto internal xref">Section 4.3</a> was chosen to align with <span>[<a href="#SP.800-56Cr2" class="cite xref">SP.800-56Cr2</a>]</span> for this reason.<a href="#appendix-B.1-1" class="pilcrow">¶</a></p>
-<p id="appendix-B.1-2">Implementers seeking FIPS certification of a composite KEM algorithm where only one of the component algorithms has been FIPS-validated or FIPS-approved should credit the FIPS-validated component algorithm with full security strength, the non-FIPS-validated component algorithm with zero security, and the overall composite should be considered full strength and thus FIPS-approved.<a href="#appendix-B.1-2" class="pilcrow">¶</a></p>
-<p id="appendix-B.1-3">The authors wish to note that this gives composite algorithms great future utility both for future cryptographic migrations as well as bridging across jurisdictions; for example defining composite algorithms which combine FIPS cryptography with cryptography from a different national standards body.<a href="#appendix-B.1-3" class="pilcrow">¶</a></p>
+<p id="appendix-C.1-1">One of the primary design goals of this specification is for the overall composite algorithm to be able to be considered FIPS-approved even when one of the component algorithms is not. The combiner presented in <a href="#sec-kem-combiner" class="auto internal xref">Section 4.3</a> was chosen to align with <span>[<a href="#SP.800-56Cr2" class="cite xref">SP.800-56Cr2</a>]</span> for this reason.<a href="#appendix-C.1-1" class="pilcrow">¶</a></p>
+<p id="appendix-C.1-2">Implementers seeking FIPS certification of a composite KEM algorithm where only one of the component algorithms has been FIPS-validated or FIPS-approved should credit the FIPS-validated component algorithm with full security strength, the non-FIPS-validated component algorithm with zero security, and the overall composite should be considered full strength and thus FIPS-approved.<a href="#appendix-C.1-2" class="pilcrow">¶</a></p>
+<p id="appendix-C.1-3">The authors wish to note that this gives composite algorithms great future utility both for future cryptographic migrations as well as bridging across jurisdictions; for example defining composite algorithms which combine FIPS cryptography with cryptography from a different national standards body.<a href="#appendix-C.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-backwards-compat">
-<section id="appendix-B.2">
+<section id="appendix-C.2">
         <h3 id="name-backwards-compatibility">
-<a href="#appendix-B.2" class="section-number selfRef">B.2. </a><a href="#name-backwards-compatibility" class="section-name selfRef">Backwards Compatibility</a>
+<a href="#appendix-C.2" class="section-number selfRef">C.2. </a><a href="#name-backwards-compatibility" class="section-name selfRef">Backwards Compatibility</a>
         </h3>
-<p id="appendix-B.2-1">As noted in the introduction, the post-quantum cryptographic migration will face challenges in both ensuring cryptographic strength against adversaries of unknown capabilities, as well as providing ease of migration. The composite mechanisms defined in this document primarily address cryptographic strength, however this section contains notes on how backwards compatibility may be obtained.<a href="#appendix-B.2-1" class="pilcrow">¶</a></p>
-<p id="appendix-B.2-2">The term "ease of migration" is used here to mean that existing systems can be gracefully transitioned to the new technology without requiring large service disruptions or expensive upgrades. The term "backwards compatibility" is used here to mean something more specific; that existing systems as they are deployed today can inter-operate with the upgraded systems of the future.<a href="#appendix-B.2-2" class="pilcrow">¶</a></p>
-<p id="appendix-B.2-3">These migration and interoperability concerns need to be thought about in the context of various types of protocols that make use of X.509 and PKIX with relation to key establishment and content encryption, from online negotiated protocols such as TLS 1.3 <span>[<a href="#RFC8446" class="cite xref">RFC8446</a>]</span> and IKEv2 <span>[<a href="#RFC7296" class="cite xref">RFC7296</a>]</span>, to non-negotiated asynchronous protocols such as S/MIME signed email <span>[<a href="#RFC8551" class="cite xref">RFC8551</a>]</span>, as well as myriad other standardized and proprietary protocols and applications that leverage CMS <span>[<a href="#RFC5652" class="cite xref">RFC5652</a>]</span> encrypted structures.<a href="#appendix-B.2-3" class="pilcrow">¶</a></p>
+<p id="appendix-C.2-1">As noted in the introduction, the post-quantum cryptographic migration will face challenges in both ensuring cryptographic strength against adversaries of unknown capabilities, as well as providing ease of migration. The composite mechanisms defined in this document primarily address cryptographic strength, however this section contains notes on how backwards compatibility may be obtained.<a href="#appendix-C.2-1" class="pilcrow">¶</a></p>
+<p id="appendix-C.2-2">The term "ease of migration" is used here to mean that existing systems can be gracefully transitioned to the new technology without requiring large service disruptions or expensive upgrades. The term "backwards compatibility" is used here to mean something more specific; that existing systems as they are deployed today can inter-operate with the upgraded systems of the future.<a href="#appendix-C.2-2" class="pilcrow">¶</a></p>
+<p id="appendix-C.2-3">These migration and interoperability concerns need to be thought about in the context of various types of protocols that make use of X.509 and PKIX with relation to key establishment and content encryption, from online negotiated protocols such as TLS 1.3 <span>[<a href="#RFC8446" class="cite xref">RFC8446</a>]</span> and IKEv2 <span>[<a href="#RFC7296" class="cite xref">RFC7296</a>]</span>, to non-negotiated asynchronous protocols such as S/MIME signed email <span>[<a href="#RFC8551" class="cite xref">RFC8551</a>]</span>, as well as myriad other standardized and proprietary protocols and applications that leverage CMS <span>[<a href="#RFC5652" class="cite xref">RFC5652</a>]</span> encrypted structures.<a href="#appendix-C.2-3" class="pilcrow">¶</a></p>
 <div id="parallel-pkis">
-<section id="appendix-B.2.1">
+<section id="appendix-C.2.1">
           <h4 id="name-parallel-pkis">
-<a href="#appendix-B.2.1" class="section-number selfRef">B.2.1. </a><a href="#name-parallel-pkis" class="section-name selfRef">Parallel PKIs</a>
+<a href="#appendix-C.2.1" class="section-number selfRef">C.2.1. </a><a href="#name-parallel-pkis" class="section-name selfRef">Parallel PKIs</a>
           </h4>
-<p id="appendix-B.2.1-1">EDNOTE: remove this section?<a href="#appendix-B.2.1-1" class="pilcrow">¶</a></p>
-<p id="appendix-B.2.1-2">We present the term "Parallel PKI" to refer to the setup where a PKI end entity possesses two or more distinct public keys or certificates for the same identity (name), but containing keys for different cryptographic algorithms. One could imagine a set of parallel PKIs where an existing PKI using legacy algorithms (RSA, ECC) is left operational during the post-quantum migration but is shadowed by one or more parallel PKIs using pure post quantum algorithms or composite algorithms (legacy and post-quantum).<a href="#appendix-B.2.1-2" class="pilcrow">¶</a></p>
-<p id="appendix-B.2.1-3">Equipped with a set of parallel public keys in this way, a client would have the flexibility to choose which public key(s) or certificate(s) to use in a given signature operation.<a href="#appendix-B.2.1-3" class="pilcrow">¶</a></p>
-<p id="appendix-B.2.1-4">For negotiated protocols, the client could choose which public key(s) or certificate(s) to use based on the negotiated algorithms.<a href="#appendix-B.2.1-4" class="pilcrow">¶</a></p>
-<p id="appendix-B.2.1-5">For non-negotiated protocols, the details for obtaining backwards compatibility will vary by protocol, but for example in CMS <span>[<a href="#RFC5652" class="cite xref">RFC5652</a>]</span>.<a href="#appendix-B.2.1-5" class="pilcrow">¶</a></p>
-<p id="appendix-B.2.1-6">EDNOTE: I copied and pruned this text from I-D.ounsworth-pq-composite-sigs. It probably needs to be fleshed out more as we better understand the implementation concerns around composite encryption.<a href="#appendix-B.2.1-6" class="pilcrow">¶</a></p>
+<p id="appendix-C.2.1-1">EDNOTE: remove this section?<a href="#appendix-C.2.1-1" class="pilcrow">¶</a></p>
+<p id="appendix-C.2.1-2">We present the term "Parallel PKI" to refer to the setup where a PKI end entity possesses two or more distinct public keys or certificates for the same identity (name), but containing keys for different cryptographic algorithms. One could imagine a set of parallel PKIs where an existing PKI using legacy algorithms (RSA, ECC) is left operational during the post-quantum migration but is shadowed by one or more parallel PKIs using pure post quantum algorithms or composite algorithms (legacy and post-quantum).<a href="#appendix-C.2.1-2" class="pilcrow">¶</a></p>
+<p id="appendix-C.2.1-3">Equipped with a set of parallel public keys in this way, a client would have the flexibility to choose which public key(s) or certificate(s) to use in a given signature operation.<a href="#appendix-C.2.1-3" class="pilcrow">¶</a></p>
+<p id="appendix-C.2.1-4">For negotiated protocols, the client could choose which public key(s) or certificate(s) to use based on the negotiated algorithms.<a href="#appendix-C.2.1-4" class="pilcrow">¶</a></p>
+<p id="appendix-C.2.1-5">For non-negotiated protocols, the details for obtaining backwards compatibility will vary by protocol, but for example in CMS <span>[<a href="#RFC5652" class="cite xref">RFC5652</a>]</span>.<a href="#appendix-C.2.1-5" class="pilcrow">¶</a></p>
+<p id="appendix-C.2.1-6">EDNOTE: I copied and pruned this text from I-D.ounsworth-pq-composite-sigs. It probably needs to be fleshed out more as we better understand the implementation concerns around composite encryption.<a href="#appendix-C.2.1-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2990,31 +3019,31 @@ END
 </section>
 </div>
 <div id="intellectual-property-considerations">
-<section id="appendix-C">
+<section id="appendix-D">
       <h2 id="name-intellectual-property-consi">
-<a href="#appendix-C" class="section-number selfRef">Appendix C. </a><a href="#name-intellectual-property-consi" class="section-name selfRef">Intellectual Property Considerations</a>
+<a href="#appendix-D" class="section-number selfRef">Appendix D. </a><a href="#name-intellectual-property-consi" class="section-name selfRef">Intellectual Property Considerations</a>
       </h2>
-<p id="appendix-C-1">The following IPR Disclosure relates to this draft:<a href="#appendix-C-1" class="pilcrow">¶</a></p>
-<p id="appendix-C-2">https://datatracker.ietf.org/ipr/3588/<a href="#appendix-C-2" class="pilcrow">¶</a></p>
-<p id="appendix-C-3">EDNOTE TODO: Check with Max Pala whether this IPR actually applies to this draft.<a href="#appendix-C-3" class="pilcrow">¶</a></p>
+<p id="appendix-D-1">The following IPR Disclosure relates to this draft:<a href="#appendix-D-1" class="pilcrow">¶</a></p>
+<p id="appendix-D-2">https://datatracker.ietf.org/ipr/3588/<a href="#appendix-D-2" class="pilcrow">¶</a></p>
+<p id="appendix-D-3">EDNOTE TODO: Check with Max Pala whether this IPR actually applies to this draft.<a href="#appendix-D-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="contributors-and-acknowledgments">
-<section id="appendix-D">
+<section id="appendix-E">
       <h2 id="name-contributors-and-acknowledg">
-<a href="#appendix-D" class="section-number selfRef">Appendix D. </a><a href="#name-contributors-and-acknowledg" class="section-name selfRef">Contributors and Acknowledgments</a>
+<a href="#appendix-E" class="section-number selfRef">Appendix E. </a><a href="#name-contributors-and-acknowledg" class="section-name selfRef">Contributors and Acknowledgments</a>
       </h2>
-<p id="appendix-D-1">This document incorporates contributions and comments from a large group of experts. The Editors would especially like to acknowledge the expertise and tireless dedication of the following people, who attended many long meetings and generated millions of bytes of electronic mail and VOIP traffic over the past year in pursuit of this document:<a href="#appendix-D-1" class="pilcrow">¶</a></p>
-<p id="appendix-D-2">Serge Mister (Entrust), Ali Noman (Entrust), and
-Douglas Stebila (University of Waterloo).<a href="#appendix-D-2" class="pilcrow">¶</a></p>
-<p id="appendix-D-3">We are grateful to all, including any contributors who may have
-been inadvertently omitted from this list.<a href="#appendix-D-3" class="pilcrow">¶</a></p>
-<p id="appendix-D-4">This document borrows text from similar documents, including those referenced below. Thanks go to the authors of those
-   documents.  "Copying always makes things easier and less error prone" - <span>[<a href="#RFC8411" class="cite xref">RFC8411</a>]</span>.<a href="#appendix-D-4" class="pilcrow">¶</a></p>
+<p id="appendix-E-1">This document incorporates contributions and comments from a large group of experts. The Editors would especially like to acknowledge the expertise and tireless dedication of the following people, who attended many long meetings and generated millions of bytes of electronic mail and VOIP traffic over the past year in pursuit of this document:<a href="#appendix-E-1" class="pilcrow">¶</a></p>
+<p id="appendix-E-2">Serge Mister (Entrust), Ali Noman (Entrust), and
+Douglas Stebila (University of Waterloo).<a href="#appendix-E-2" class="pilcrow">¶</a></p>
+<p id="appendix-E-3">We are grateful to all, including any contributors who may have
+been inadvertently omitted from this list.<a href="#appendix-E-3" class="pilcrow">¶</a></p>
+<p id="appendix-E-4">This document borrows text from similar documents, including those referenced below. Thanks go to the authors of those
+   documents.  "Copying always makes things easier and less error prone" - <span>[<a href="#RFC8411" class="cite xref">RFC8411</a>]</span>.<a href="#appendix-E-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="authors-addresses">
-<section id="appendix-E">
+<section id="appendix-F">
       <h2 id="name-authors-addresses">
 <a href="#name-authors-addresses" class="section-name selfRef">Authors' Addresses</a>
       </h2>

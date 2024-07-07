@@ -125,12 +125,13 @@ Table of Contents
      10.1.  Normative References
      10.2.  Informative References
    Appendix A.  Samples
-   Appendix B.  Implementation Considerations
-     B.1.  FIPS certification
-     B.2.  Backwards Compatibility
-       B.2.1.  Parallel PKIs
-   Appendix C.  Intellectual Property Considerations
-   Appendix D.  Contributors and Acknowledgments
+   Appendix B.  Fixed Component Algorithm Identifiers
+   Appendix C.  Implementation Considerations
+     C.1.  FIPS certification
+     C.2.  Backwards Compatibility
+       C.2.1.  Parallel PKIs
+   Appendix D.  Intellectual Property Considerations
+   Appendix E.  Contributors and Acknowledgments
    Authors' Addresses
 
 1.  Changes in version -04
@@ -250,7 +251,7 @@ Table of Contents
    Concrete instantiations of composite KEM algorithms are provided
    based on ML-KEM, RSA-KEM and ECDH-KEM.  Backwards compatibility is
    not directly covered in this document, but is the subject of
-   Appendix B.2.
+   Appendix C.2.
 
    This document is intended for general applicability anywhere that key
    establishment or enveloped content encryption is used within PKIX or
@@ -555,7 +556,7 @@ Table of Contents
    not be represented in a single structure or even be contained in a
    single cryptographic module; for example if one component is within
    the FIPS boundary of a cryptographic module and the other is not; see
-   Appendix B.1 for more discussion.  The establishment of
+   Appendix C.1 for more discussion.  The establishment of
    correspondence between public keys in a CompositeKEMPublicKey and
    private keys not represented in a single composite structure is
    beyond the scope of this document.
@@ -718,7 +719,7 @@ Table of Contents
    Therefore <CompKEM>.1 is equal to 2.16.840.1.114027.80.5.2.1
 
    +===================+============+=========+===============+========+
-   | KEM Type          |OID         |First    |Second         |KDF     |
+   | Composite KEM     |OID         |First    |Second         |KDF     |
    |                   |            |Algorithm|Algorithm      |        |
    +===================+============+=========+===============+========+
    | id-MLKEM512-      |<CompKEM>.1 |MLKEM512 |ECDH-P256      |SHA3-256|
@@ -1705,9 +1706,29 @@ Appendix A.  Samples
 
    TBD
 
-Appendix B.  Implementation Considerations
+Appendix B.  Fixed Component Algorithm Identifiers
 
-B.1.  FIPS certification
+   The following table lists explicitely the DER encoded AlgorithmID
+   that MUST be used when reconstructing SubjectPublicKeyInfo objects
+   for each component public key, which may be required for example if
+   cryptographic library requires the public key in this form in order
+   to process each component algorithm.  The public key BIT STRING
+   should be taken directly from the respective component of the
+   CompositeKEMPublicKey.
+
+        +===============+===================+====================+
+        | Composite KEM | First AlgorithmID | Second AlgorithmID |
+        +===============+===================+====================+
+        | TODO          | TODO              | TODO               |
+        +---------------+-------------------+--------------------+
+
+                                 Table 5
+
+   TODO: see https://github.com/lamps-wg/draft-composite-kem/issues/20
+
+Appendix C.  Implementation Considerations
+
+C.1.  FIPS certification
 
    One of the primary design goals of this specification is for the
    overall composite algorithm to be able to be considered FIPS-approved
@@ -1728,7 +1749,7 @@ B.1.  FIPS certification
    algorithms which combine FIPS cryptography with cryptography from a
    different national standards body.
 
-B.2.  Backwards Compatibility
+C.2.  Backwards Compatibility
 
    As noted in the introduction, the post-quantum cryptographic
    migration will face challenges in both ensuring cryptographic
@@ -1754,7 +1775,7 @@ B.2.  Backwards Compatibility
    other standardized and proprietary protocols and applications that
    leverage CMS [RFC5652] encrypted structures.
 
-B.2.1.  Parallel PKIs
+C.2.1.  Parallel PKIs
 
    EDNOTE: remove this section?
 
@@ -1783,7 +1804,7 @@ B.2.1.  Parallel PKIs
    better understand the implementation concerns around composite
    encryption.
 
-Appendix C.  Intellectual Property Considerations
+Appendix D.  Intellectual Property Considerations
 
    The following IPR Disclosure relates to this draft:
 
@@ -1792,7 +1813,7 @@ Appendix C.  Intellectual Property Considerations
    EDNOTE TODO: Check with Max Pala whether this IPR actually applies to
    this draft.
 
-Appendix D.  Contributors and Acknowledgments
+Appendix E.  Contributors and Acknowledgments
 
    This document incorporates contributions and comments from a large
    group of experts.  The Editors would especially like to acknowledge
