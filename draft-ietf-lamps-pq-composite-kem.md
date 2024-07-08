@@ -338,6 +338,14 @@ The KEM interface was chosen as the interface for a composite key establishment 
 
 The `KeyGen() -> (pk, sk)` of a composite KEM algorithm will perform the `KeyGen()` of the respective component KEM algorithms and it produces a composite public key `pk` as per {{sec-composite-pub-keys}} and a composite secret key `sk` is per {{sec-priv-key}}.
 
+~~~
+CompositeKEM.KeyGen():
+  (compositePK[0], compositeSK[0]) = MLKEM.KeyGen()
+  (compositePK[1], compositeSK[1]) = TradKEM.KeyGen()
+
+  return (compositePK, compositeSK)
+~~~
+
 ### Promotion of RSA-OAEP into a KEM
 
 The RSA Optimal Asymmetric Encription Padding (OAEP), more specifically the RSAES-OAEP key transport algorithm as specified in [RFC3560] is a public key encryption algorithm used to transport key material from a sender to a reviever. It is promoted into a KEM by having the sender generat a randem 256 bit secret and encrypt it.
@@ -440,18 +448,6 @@ where `Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep)` is defined in general 
 
 Here the secret key values `mlkemSK` and `tradSK` may be interpreted as either literal secret key values, or as a handle to a cryptographic module which holds the secret key and is capable of performing the secret key operation.
 
-
-## Component Algorithm Selection Criteria {#sec-selection-criteria}
-
-The composite algorithm combinations defined in this document were chosen according to the following guidelines:
-
-1. RSA combinations are provided at key sizes of 2048 and 3072 bits. Since RSA 2048 and 3072 are considered to have 112 and 128 bits of classical security respectively, they are both matched with NIST PQC Level 1 algorithms and 128-bit symmetric algorithms.
-1. Elliptic curve algorithms are provided with combinations on each of the NIST [RFC6090], Brainpool [RFC5639], and Edwards [RFC7748] curves. NIST PQC Levels 1 - 3 algorithms are matched with 256-bit curves, while NIST levels 4 - 5 are matched with 384-bit elliptic curves. This provides a balance between matching classical security levels of post-quantum and traditional algorithms, and also selecting elliptic curves which already have wide adoption.
-1. NIST level 1 candidates are provided, matched with 256-bit elliptic curves, intended for constrained use cases.
-
-If other combinations are needed, a separate specification should be submitted to the IETF LAMPS working group.  To ease implementation, these specifications are encouraged to follow the construction pattern of the algorithms specified in this document.
-
-The composite structures defined in this specification allow only for pairs of algorithms. This also does not preclude future specification from extending these structures to define combinations with three or more components.
 
 <!-- End of Introduction section -->
 
@@ -878,6 +874,18 @@ EDNOTE to IANA: OIDs will need to be replaced in both the ASN.1 module and in {{
 
 
 # Security Considerations
+
+## Component Algorithm Selection Criteria {#sec-selection-criteria}
+
+The composite algorithm combinations defined in this document were chosen according to the following guidelines:
+
+1. RSA combinations are provided at key sizes of 2048 and 3072 bits. Since RSA 2048 and 3072 are considered to have 112 and 128 bits of classical security respectively, they are both matched with NIST PQC Level 1 algorithms and 128-bit symmetric algorithms.
+1. Elliptic curve algorithms are provided with combinations on each of the NIST [RFC6090], Brainpool [RFC5639], and Edwards [RFC7748] curves. NIST PQC Levels 1 - 3 algorithms are matched with 256-bit curves, while NIST levels 4 - 5 are matched with 384-bit elliptic curves. This provides a balance between matching classical security levels of post-quantum and traditional algorithms, and also selecting elliptic curves which already have wide adoption.
+1. NIST level 1 candidates are provided, matched with 256-bit elliptic curves, intended for constrained use cases.
+
+If other combinations are needed, a separate specification should be submitted to the IETF LAMPS working group.  To ease implementation, these specifications are encouraged to follow the construction pattern of the algorithms specified in this document.
+
+The composite structures defined in this specification allow only for pairs of algorithms. This also does not preclude future specification from extending these structures to define combinations with three or more components.
 
 ## Policy for Deprecated and Acceptable Algorithms
 
