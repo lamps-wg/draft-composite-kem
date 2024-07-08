@@ -90,7 +90,6 @@ Table of Contents
        2.3.3.  Promotion of ECDH into a KEM
        2.3.4.  Composite Encaps
        2.3.5.  Composite Decaps
-     2.4.  Component Algorithm Selection Criteria
    3.  Composite Key Structures
      3.1.  pk-CompositeKEM
      3.2.  CompositeKEMPublicKey
@@ -118,9 +117,10 @@ Table of Contents
        8.1.2.  Object Identifier Registrations - SMI Security for PKIX
                Algorithms
    9.  Security Considerations
-     9.1.  Policy for Deprecated and Acceptable Algorithms
-     9.2.  KEM Combiner Security Analysis
-       9.2.1.  Ciphertext collision resistance
+     9.1.  Component Algorithm Selection Criteria
+     9.2.  Policy for Deprecated and Acceptable Algorithms
+     9.3.  KEM Combiner Security Analysis
+       9.3.1.  Ciphertext collision resistance
    10. References
      10.1.  Normative References
      10.2.  Informative References
@@ -349,6 +349,12 @@ Table of Contents
    produces a composite public key pk as per Section 3.2 and a composite
    secret key sk is per Section 3.3.
 
+   CompositeKEM.KeyGen():
+     (compositePK[0], compositeSK[0]) = MLKEM.KeyGen()
+     (compositePK[1], compositeSK[1]) = TradKEM.KeyGen()
+
+     return (compositePK, compositeSK)
+
 2.3.2.  Promotion of RSA-OAEP into a KEM
 
    The RSA Optimal Asymmetric Encription Padding (OAEP), more
@@ -460,38 +466,6 @@ Table of Contents
    either literal secret key values, or as a handle to a cryptographic
    module which holds the secret key and is capable of performing the
    secret key operation.
-
-2.4.  Component Algorithm Selection Criteria
-
-   The composite algorithm combinations defined in this document were
-   chosen according to the following guidelines:
-
-   1.  RSA combinations are provided at key sizes of 2048 and 3072 bits.
-       Since RSA 2048 and 3072 are considered to have 112 and 128 bits
-       of classical security respectively, they are both matched with
-       NIST PQC Level 1 algorithms and 128-bit symmetric algorithms.
-
-   2.  Elliptic curve algorithms are provided with combinations on each
-       of the NIST [RFC6090], Brainpool [RFC5639], and Edwards [RFC7748]
-       curves.  NIST PQC Levels 1 - 3 algorithms are matched with
-       256-bit curves, while NIST levels 4 - 5 are matched with 384-bit
-       elliptic curves.  This provides a balance between matching
-       classical security levels of post-quantum and traditional
-       algorithms, and also selecting elliptic curves which already have
-       wide adoption.
-
-   3.  NIST level 1 candidates are provided, matched with 256-bit
-       elliptic curves, intended for constrained use cases.
-
-   If other combinations are needed, a separate specification should be
-   submitted to the IETF LAMPS working group.  To ease implementation,
-   these specifications are encouraged to follow the construction
-   pattern of the algorithms specified in this document.
-
-   The composite structures defined in this specification allow only for
-   pairs of algorithms.  This also does not preclude future
-   specification from extending these structures to define combinations
-   with three or more components.
 
 3.  Composite Key Structures
 
@@ -680,7 +654,7 @@ Table of Contents
    Each registered composite KEM algorithm must specify the choice of
    KDF, demSep, and outputBits to be used.
 
-   See Section 9.2 for further discussion of the security considerations
+   See Section 9.3 for further discussion of the security considerations
    of this KEM combiner.
 
 4.4.  FIPS Compliance
@@ -1455,7 +1429,39 @@ Table of Contents
 
 9.  Security Considerations
 
-9.1.  Policy for Deprecated and Acceptable Algorithms
+9.1.  Component Algorithm Selection Criteria
+
+   The composite algorithm combinations defined in this document were
+   chosen according to the following guidelines:
+
+   1.  RSA combinations are provided at key sizes of 2048 and 3072 bits.
+       Since RSA 2048 and 3072 are considered to have 112 and 128 bits
+       of classical security respectively, they are both matched with
+       NIST PQC Level 1 algorithms and 128-bit symmetric algorithms.
+
+   2.  Elliptic curve algorithms are provided with combinations on each
+       of the NIST [RFC6090], Brainpool [RFC5639], and Edwards [RFC7748]
+       curves.  NIST PQC Levels 1 - 3 algorithms are matched with
+       256-bit curves, while NIST levels 4 - 5 are matched with 384-bit
+       elliptic curves.  This provides a balance between matching
+       classical security levels of post-quantum and traditional
+       algorithms, and also selecting elliptic curves which already have
+       wide adoption.
+
+   3.  NIST level 1 candidates are provided, matched with 256-bit
+       elliptic curves, intended for constrained use cases.
+
+   If other combinations are needed, a separate specification should be
+   submitted to the IETF LAMPS working group.  To ease implementation,
+   these specifications are encouraged to follow the construction
+   pattern of the algorithms specified in this document.
+
+   The composite structures defined in this specification allow only for
+   pairs of algorithms.  This also does not preclude future
+   specification from extending these structures to define combinations
+   with three or more components.
+
+9.2.  Policy for Deprecated and Acceptable Algorithms
 
    Traditionally, a public key or certificate contains a single
    cryptographic algorithm.  If and when an algorithm becomes deprecated
@@ -1482,7 +1488,7 @@ Table of Contents
    long as one component algorithm remains strong, then the overall
    composite algorithm remains strong.
 
-9.2.  KEM Combiner Security Analysis
+9.3.  KEM Combiner Security Analysis
 
    TODO
 
@@ -1491,7 +1497,7 @@ Table of Contents
    enough for us, then we may need to leverage this security
    consideration directly on top of the X-Wing paper [X-Wing].
 
-9.2.1.  Ciphertext collision resistance
+9.3.1.  Ciphertext collision resistance
 
    The notion of a ciphertext collision resistant KEM is defined in
    [X-Wing] being the property that it is computationally difficult to
