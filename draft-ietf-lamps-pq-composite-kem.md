@@ -212,7 +212,7 @@ informative:
 
 --- abstract
 
-This document introduces a set of Key Encapsulation Mechanism (KEM) schemes that use pairs of cryptographic elements such as public keys and cipher texts to combine their security properties. These schemes effectively mitigate risks associated with the adoption of post-quantum cryptography and are fully compatible with existing X.509, PKIX, and CMS data structures and protocols. This document defines eleven specific pairwise combinations, namely ML-KEM Composite Schemes, that blend ML-KEM with traditional algorithms such as RSA-OAEP, ECDH, X25519, and X448. For use within CMS, this document is intended to be coupled with the CMS KEMRecipientInfo mechanism in {{I-D.housley-lamps-cms-kemri}}. These combinations are tailored to meet security best practices and regulatory requirements. 
+This document introduces a set of Key Encapsulation Mechanism (KEM) schemes that use pairs of cryptographic elements such as public keys and cipher texts to combine their security properties. These schemes effectively mitigate risks associated with the adoption of post-quantum cryptography and are fully compatible with existing X.509, PKIX, and CMS data structures and protocols. This document defines eleven specific pairwise combinations, namely ML-KEM Composite Schemes, that blend ML-KEM with traditional algorithms such as RSA-OAEP, ECDH, X25519, and X448. For use within CMS, this document is intended to be coupled with the CMS KEMRecipientInfo mechanism in {{I-D.housley-lamps-cms-kemri}}. These combinations are tailored to meet security best practices and regulatory requirements.
 
 <!-- End of Abstract -->
 
