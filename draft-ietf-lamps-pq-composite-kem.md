@@ -238,8 +238,8 @@ This document introduces a set of Key Encapsulation Mechanism (KEM) schemes that
 
 Still to do in a future version:
 
- - `[ ]` We need PEM samples … hackathon? OQS friends? David @ BC? The right format for samples is probably to follow the hackathon ... a Dilithium or ECDSA trust anchor certificate, a composite KEM end entity certificate, and a CMS EnvolepedData sample encrypted for that composite KEM certificate.
- - `[ ]` Open question: do we need to include the ECDH, X25519, X448, and RSA public keys in the KDF? X-Wing does, but previous versions of this spec do not. In general existing ECC and RSA hardware decryptor implementations might not know their own public key.
+ - `[ ]` We need PEM samples … hackathon? OQS friends? David @ BC? The right format for samples is probably to follow the hackathon ... a Dilithium or ECDSA trust anchor certificate, a composite KEM end entity certificate, and a CMS EnvelopedData sample encrypted for that composite KEM certificate.
+ - `[ ]` Open question: do we need to include the ECDH, X25519, X448, and RSA public keys in the KDF? X-Wing does, but previous versions of this spec do not. In general existing ECC and RSA hardware decrypter implementations might not know their own public key.
 
 
 # Introduction {#sec-intro}
@@ -325,7 +325,7 @@ We borrow here the definition of a key encapsulation mechanism (KEM) from {{I-D.
 
 The KEM interface defined above differs from both traditional key transport mechanism (for example for use with KeyTransRecipientInfo defined in {{RFC5652}}), and key agreement (for example for use with KeyAgreeRecipientInfo defined in {{RFC5652}}).
 
-The KEM interface was chosen as the interface for a composite key establishment because it allows for arbitrary combinations of component algorithm types since both key transport and key agreement mechanisms can be promoted into KEMs. This specification uses the Post-Quantum KEM ML-KEM as specified in {{I-D.ietf-lamps-kyber-certificates}} and [FIPS.203-ipd]. For Traditional KEMs, this document uses the RSA-OAEP algorithm defined in [RFC3560], the Elliptic Curve Diffie-Hellman key agreement schemes ECDH defined in section 5.7.1.2 of [SP.800-56Ar3], and X25519 / X448 which are defined in [RFC8410]. A combiner function is used to to combine the two component shared secrets into a single shared secret.
+The KEM interface was chosen as the interface for a composite key establishment because it allows for arbitrary combinations of component algorithm types since both key transport and key agreement mechanisms can be promoted into KEMs. This specification uses the Post-Quantum KEM ML-KEM as specified in {{I-D.ietf-lamps-kyber-certificates}} and [FIPS.203-ipd]. For Traditional KEMs, this document uses the RSA-OAEP algorithm defined in [RFC3560], the Elliptic Curve Diffie-Hellman key agreement schemes ECDH defined in section 5.7.1.2 of [SP.800-56Ar3], and X25519 / X448 which are defined in [RFC8410]. A combiner function is used to combine the two component shared secrets into a single shared secret.
 
 
 ### Composite KeyGen
@@ -342,7 +342,7 @@ CompositeKEM.KeyGen():
 
 ### Promotion of RSA-OAEP into a KEM
 
-The RSA Optimal Asymmetric Encription Padding (OAEP), more specifically the RSAES-OAEP key transport algorithm as specified in [RFC3560] is a public key encryption algorithm used to transport key material from a sender to a reviever. It is promoted into a KEM by having the sender generate a random 256 bit secret and encrypt it.
+The RSA Optimal Asymmetric Encryption Padding (OAEP), more specifically the RSAES-OAEP key transport algorithm as specified in [RFC3560] is a public key encryption algorithm used to transport key material from a sender to a receiver. It is promoted into a KEM by having the sender generate a random 256 bit secret and encrypt it.
 
 ~~~
 DHKEM.Encaps(pkR):
@@ -361,7 +361,7 @@ DHKEM.Decap(skR, enc):
   return shared_secret
 ~~~
 
-The value of `ss_len` as well as the RSA-OAEP paramaters used within this specification can be found in {{sect-rsaoaep-params}}.
+The value of `ss_len` as well as the RSA-OAEP parameters used within this specification can be found in {{sect-rsaoaep-params}}.
 
 ### Promotion of ECDH into a KEM
 
@@ -389,7 +389,7 @@ DHKEM.Decap(skR, enc):
 
 This construction applies for all variants of elliptic curve Diffie-Hellman used in this specification: ECDH, X25519, and X448.
 
-The simplifications from the DHKEM definition in [RFC9180] is that since the ciphertext and receiver's public key are included explicitely in the composite KEM combiner, there is no need to construct the `kem_context` object, and since a domain separator is included explicitely in the composite KEM combiner there is no need to perform the labelled steps of `ExtractAndExpand()`.
+The simplifications from the DHKEM definition in [RFC9180] is that since the ciphertext and receiver's public key are included explicitly in the composite KEM combiner, there is no need to construct the `kem_context` object, and since a domain separator is included explicitly in the composite KEM combiner there is no need to perform the labelled steps of `ExtractAndExpand()`.
 
 ### Composite Encaps
 
@@ -607,7 +607,7 @@ See {{sec-cons-kem-combiner}} for further discussion of the security considerati
 
 ## FIPS Compliance {#sec-fips-compliance}
 
-This specification is compliant with [SP.800-56Cr2] which allows for multiple sources of shared secret material to be combined into a single shared secret and the combined shared secret to be considered FIPS compliant so long as the first input shared secret is the result of a FIPS compliant algorithm. In order to ease FIPS compliance issues during the transitition period, this specification uses the tradational algorithm as the first input to the combiner so that the combiner is FIPS compliant so long as the traditional component is FIPS compliant.
+This specification is compliant with [SP.800-56Cr2] which allows for multiple sources of shared secret material to be combined into a single shared secret and the combined shared secret to be considered FIPS compliant so long as the first input shared secret is the result of a FIPS compliant algorithm. In order to ease FIPS compliance issues during the transition period, this specification uses the traditional algorithm as the first input to the combiner so that the combiner is FIPS compliant so long as the traditional component is FIPS compliant.
 
 This construction is specifically designed to conform with Section 4.1 Option 1 (when KDF is SHA3) or Option 3 (when KDF is KMAC) in the following way:
 
@@ -687,7 +687,7 @@ EDNOTE: these domain separators are based on the prototyping OIDs assigned on th
 
 Use of RSA-OAEP [RFC3560] within `id-MLKEM512-RSA2048` and `id-MLKEM512-RSA3072` requires additional specification.
 
-First, a quick note on the choice of RSA-OAEP as the supported RSA encryption pritimive. RSA-KEM [RFC5990] is more straightforward to work with, but it has fairly limited adoption and therefore is of limited backwards compatibility value. Also, while RSA-PKCS#1v1.5 [RFC8017] is still everywhere, but hard to make secure and no longer FIPS-approved as of the end of 2023 [SP800-131Ar2], so it is of limited forwards value. This leaves RSA-OAEP [RFC3560] as the remaining choice.
+First, a quick note on the choice of RSA-OAEP as the supported RSA encryption primitive. RSA-KEM [RFC5990] is more straightforward to work with, but it has fairly limited adoption and therefore is of limited backwards compatibility value. Also, while RSA-PKCS#1v1.5 [RFC8017] is still everywhere, but hard to make secure and no longer FIPS-approved as of the end of 2023 [SP800-131Ar2], so it is of limited forwards value. This leaves RSA-OAEP [RFC3560] as the remaining choice.
 
 The RSA component keys MUST be generated at the 2048-bit and 3072-bit security levels respectively.
 
@@ -916,7 +916,7 @@ TBD
 
 # Fixed Component Algorithm Identifiers
 
-The following table lists explicitely the DER encoded `AlgorithmID` that MUST be used when reconstructing `SubjectPublicKeyInfo` objects for each component public key, which may be required for example if cryptographic library requires the public key in this form in order to process each component algorithm. The public key `BIT STRING` should be taken directly from the respective component of the CompositeKEMPublicKey.
+The following table lists explicitly the DER encoded `AlgorithmID` that MUST be used when reconstructing `SubjectPublicKeyInfo` objects for each component public key, which may be required for example if cryptographic library requires the public key in this form in order to process each component algorithm. The public key `BIT STRING` should be taken directly from the respective component of the CompositeKEMPublicKey.
 
 | Composite KEM     | First AlgorithmID | Second AlgorithmID |
 | --------------    | ----------------- | ------------------ |
