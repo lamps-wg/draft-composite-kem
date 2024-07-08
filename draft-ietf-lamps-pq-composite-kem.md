@@ -1,6 +1,6 @@
 ---
 title: Composite ML-KEM for Use in the Internet X.509 Public Key Infrastructure and CMS
-abbrev: Composite KEMs
+abbrev: Composite ML-KEM
 docname: draft-ietf-lamps-pq-composite-kem-latest
 
 # <!-- stand_alone: true -->
@@ -224,15 +224,16 @@ This document defines Post-Quantum / Traditional composite Key Encapsulation Mec
 * Specified the fixedInfo domain separators as the DER encoded object identifiers.
 * Adjusted the combiner to be compliant with NIST SP800-56C as per https://mailarchive.ietf.org/arch/msg/spasm/nlyQF1i7ndp5A7zzcTsdYF_S9mI/ -- also aligns with X-Wing changes below.
 * Removed reference to draft-ounsworth-cfrg-kem-combiners so that we don't end up in a downref situation.
+* Changes inspired by X-Wing:
+  * Combiner does not need ML-KEM ciphertext.
+  * Combiner needs traditional ciphertext and public key.
+  * KDF is now SHA3 and not KMAC.
+* Since all combinations use ML-KEM; changed the document title to "Composite ML-KEM".
 * In the "Use in CMS > Underlying Components" section, the MLKEM768 combinations were lifted from id-aes192-Wrap to id-aes256-Wrap because the latter is believed to have better general adoption.
 * Added an appendix "Fixed Component Algorithm Identifiers" -- not finished, needs more work.
-*
-
-Changes to sync with X-Wing:
-
-  - Removed ML-KEM ciphertext from KDF as per X-Wing proof -- this makes the KEM combiner ML-KEM specific, so:
-    - Changed title to be ML-KEM specific.
-  - Removed references to I-D.ounsworth-lamps-cms-dhkem since we'll just inline a simplified version of RFC9180's DHKEM.
+* Replaced RSA-KEM [RFC5990] with RSA-OAEP.
+* Added a section "Promotion of RSA-OAEP into a KEM".
+* Removed references to I-D.ounsworth-lamps-cms-dhkem since we'll just inline a simplified version of RFC9180's DHKEM.
 
 
 Still to do in a future version:
@@ -348,7 +349,7 @@ CompositeKEM.KeyGen():
 
 ### Promotion of RSA-OAEP into a KEM
 
-The RSA Optimal Asymmetric Encription Padding (OAEP), more specifically the RSAES-OAEP key transport algorithm as specified in [RFC3560] is a public key encryption algorithm used to transport key material from a sender to a reviever. It is promoted into a KEM by having the sender generat a randem 256 bit secret and encrypt it.
+The RSA Optimal Asymmetric Encription Padding (OAEP), more specifically the RSAES-OAEP key transport algorithm as specified in [RFC3560] is a public key encryption algorithm used to transport key material from a sender to a reviever. It is promoted into a KEM by having the sender generate a random 256 bit secret and encrypt it.
 
 ~~~
 DHKEM.Encaps(pkR):
@@ -597,21 +598,23 @@ KEK <- Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep) =
 where:
 
 * `KDF(message, outputBits)` represents a hash function suitable to the chosen KEMs according to {tab-kem-combiners}.
+* `counter` SHALL be the fixed 32-bit value `0x00000001` which is placed here solely for the purposes of compliance with [SP.800-56Cr2].
 * `tradSS` is the shared secret from the traditional component (elliptic curve or RSA).
 * `mlkemSS` is the shared secret from the ML-KEM componont.
 * `tradCT` is the ciphertext from the traditional component (elliptic curve or RSA).
 * `tradPK` is the public key of the traditional component (elliptic curve or RSA).
 * `domSep` SHALL be the DER encoded value of the object identifier of the composite KEM algorithm as listed in {{sec-domain}}.
-* `counter` SHALL be the fixed 32-bit value `0x00000001` which is placed here solely for the purposes of easy compliance with [SP.800-56Cr2].
 * `||` represents concatenation.
 
 Each registered composite KEM algorithm must specify the choice of `KDF`, `demSep`, and `outputBits` to be used.
 
+Some of the design choices for the combiner, specifically to place `tradSS` first, and to allow `tradCT || tradPK || domSep` to be treated together as a FixedInfo block are made for the purposes of compliance with [SP.800-56Cr2]; see {{sec-fips-compliance}} for more discussion.
+
 See {{sec-cons-kem-combiner}} for further discussion of the security considerations of this KEM combiner.
 
-## FIPS Compliance
+## FIPS Compliance {#sec-fips-compliance}
 
-This specificaion is compliant with [SP.800-56Cr2] which allows for multiple sources of shared secret material to be combined into a single shared secret and the combined shared secret is considered FIPS compliant so long is the first input shared secret is the result of a FIPS compliant algorithm. In order to ease FIPS compliance issues during the transitition period, this specification uses the tradational algorithm as the first input to the combiner so that the combiner is FIPS compliant so long as the traditional component is FIPS compliant.
+This specification is compliant with [SP.800-56Cr2] which allows for multiple sources of shared secret material to be combined into a single shared secret and the combined shared secret to be considered FIPS compliant so long as the first input shared secret is the result of a FIPS compliant algorithm. In order to ease FIPS compliance issues during the transitition period, this specification uses the tradational algorithm as the first input to the combiner so that the combiner is FIPS compliant so long as the traditional component is FIPS compliant.
 
 This construction is specifically designed to conform with Section 4.1 Option 1 (when KDF is SHA3) or Option 3 (when KDF is KMAC) in the following way:
 
@@ -666,9 +669,9 @@ EDNOTE: I believe that [SP.800-56Ar3] and [BSI-ECC] give equivalent and inter-op
 
 ## Domain Separators {#sec-domain}
 
-The KEM combiner defined in section {{sec-kem-combiner}} requires a domain separator `domSep` input.  The following table shows the HEX-encoded domain separator for each Composite KEM AlgorithmID; to use it, the value should be HEX-decoded and used in binary form.
+The KEM combiner defined in section {{sec-kem-combiner}} requires a domain separator `domSep` input.  The following table shows the HEX-encoded domain separator for each Composite KEM AlgorithmID; to use it, the value should be HEX-decoded and used in binary form. The domain separator is simply the DER encoding of the composite algorithm OID.
 
-TODO: is this correct @John? -- The domain separator values are the SHA-256 hash of the DER encoding of the corresponding composite algorithm OID.
+EDNOTE: Should the domain separator values be the SHA-256 hash of the DER encoding of the corresponding composite algorithm OID? That way they would be fixed-length even if the OIDs are different lengths. See https://github.com/lamps-wg/draft-composite-sigs/issues/19
 
 | Composite KEM AlgorithmID | Domain Separator (in Hex encoding)|
 | ----------- | ----------- |
