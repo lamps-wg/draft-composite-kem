@@ -181,13 +181,13 @@ Table of Contents
    *  [ ] We need PEM samples ... hackathon?  OQS friends?  David @ BC?
       The right format for samples is probably to follow the hackathon
       ... a Dilithium or ECDSA trust anchor certificate, a composite KEM
-      end entity certificate, and a CMS EnvolepedData sample encrypted
+      end entity certificate, and a CMS EnvelopedData sample encrypted
       for that composite KEM certificate.
 
    *  [ ] Open question: do we need to include the ECDH, X25519, X448,
       and RSA public keys in the KDF?  X-Wing does, but previous
       versions of this spec do not.  In general existing ECC and RSA
-      hardware decryptor implementations might not know their own public
+      hardware decrypter implementations might not know their own public
       key.
 
 2.  Introduction
@@ -350,7 +350,7 @@ Table of Contents
    Traditional KEMs, this document uses the RSA-OAEP algorithm defined
    in [RFC3560], the Elliptic Curve Diffie-Hellman key agreement schemes
    ECDH defined in section 5.7.1.2 of [SP.800-56Ar3], and X25519 / X448
-   which are defined in [RFC8410].  A combiner function is used to to
+   which are defined in [RFC8410].  A combiner function is used to
    combine the two component shared secrets into a single shared secret.
 
 2.3.1.  Composite KeyGen
@@ -368,10 +368,10 @@ Table of Contents
 
 2.3.2.  Promotion of RSA-OAEP into a KEM
 
-   The RSA Optimal Asymmetric Encription Padding (OAEP), more
+   The RSA Optimal Asymmetric Encryption Padding (OAEP), more
    specifically the RSAES-OAEP key transport algorithm as specified in
    [RFC3560] is a public key encryption algorithm used to transport key
-   material from a sender to a reviever.  It is promoted into a KEM by
+   material from a sender to a receiver.  It is promoted into a KEM by
    having the sender generate a random 256 bit secret and encrypt it.
 
    DHKEM.Encaps(pkR):
@@ -387,7 +387,7 @@ Table of Contents
 
      return shared_secret
 
-   The value of ss_len as well as the RSA-OAEP paramaters used within
+   The value of ss_len as well as the RSA-OAEP parameters used within
    this specification can be found in Section 5.2.
 
 2.3.3.  Promotion of ECDH into a KEM
@@ -416,10 +416,10 @@ Table of Contents
 
    The simplifications from the DHKEM definition in [RFC9180] is that
    since the ciphertext and receiver's public key are included
-   explicitely in the composite KEM combiner, there is no need to
+   explicitly in the composite KEM combiner, there is no need to
    construct the kem_context object, and since a domain separator is
-   included explicitely in the composite KEM combiner there is no need
-   to perform the labelled steps of ExtractAndExpand().
+   included explicitly in the composite KEM combiner there is no need to
+   perform the labelled steps of ExtractAndExpand().
 
 2.3.4.  Composite Encaps
 
@@ -679,8 +679,8 @@ Table of Contents
    single shared secret and the combined shared secret to be considered
    FIPS compliant so long as the first input shared secret is the result
    of a FIPS compliant algorithm.  In order to ease FIPS compliance
-   issues during the transitition period, this specification uses the
-   tradational algorithm as the first input to the combiner so that the
+   issues during the transition period, this specification uses the
+   traditional algorithm as the first input to the combiner so that the
    combiner is FIPS compliant so long as the traditional component is
    FIPS compliant.
 
@@ -846,7 +846,7 @@ Table of Contents
    MLKEM512-RSA3072 requires additional specification.
 
    First, a quick note on the choice of RSA-OAEP as the supported RSA
-   encryption pritimive.  RSA-KEM [RFC5990] is more straightforward to
+   encryption primitive.  RSA-KEM [RFC5990] is more straightforward to
    work with, but it has fairly limited adoption and therefore is of
    limited backwards compatibility value.  Also, while RSA-PKCS#1v1.5
    [RFC8017] is still everywhere, but hard to make secure and no longer
@@ -1766,9 +1766,9 @@ Appendix A.  Samples
 
 Appendix B.  Fixed Component Algorithm Identifiers
 
-   The following table lists explicitely the DER encoded AlgorithmID
-   that MUST be used when reconstructing SubjectPublicKeyInfo objects
-   for each component public key, which may be required for example if
+   The following table lists explicitly the DER encoded AlgorithmID that
+   MUST be used when reconstructing SubjectPublicKeyInfo objects for
+   each component public key, which may be required for example if
    cryptographic library requires the public key in this form in order
    to process each component algorithm.  The public key BIT STRING
    should be taken directly from the respective component of the
