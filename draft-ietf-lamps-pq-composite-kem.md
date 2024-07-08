@@ -62,7 +62,7 @@ author:
     name: Jan Klaussner
     org: Bundesdruckerei GmbH
     email: jan.klaussner@bdr.de
-    street: Kommandantenstr. 15
+    street: Kommandantenstr. 18
     code: 10969
     city: Berlin
     country: Germany
