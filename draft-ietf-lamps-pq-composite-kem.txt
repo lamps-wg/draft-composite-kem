@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 9 January 2025                                          M. Pala
+Expires: 10 January 2025                                         M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                             8 July 2024
+                                                             9 July 2024
 
 
 Composite ML-KEM for Use in the Internet X.509 Public Key Infrastructure
@@ -66,7 +66,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 9 January 2025.
+   This Internet-Draft will expire on 10 January 2025.
 
 Copyright Notice
 
@@ -374,7 +374,7 @@ Table of Contents
    material from a sender to a receiver.  It is promoted into a KEM by
    having the sender generate a random 256 bit secret and encrypt it.
 
-   DHKEM.Encaps(pkR):
+   RSAKEM.Encaps(pkR):
      shared_secret = SecureRandom(ss_len)
      enc = RSA-OAEP.Encrypt(pkR, shared_secret)
 
@@ -382,7 +382,7 @@ Table of Contents
 
    Decaps(sk, ct) -> ss is accomplished in the analogous way.
 
-   DHKEM.Decap(skR, enc):
+   RSAKEM.Decap(skR, enc):
      shared_secret = RSA-OAEP.Decrypt(skR, enc)
 
      return shared_secret
