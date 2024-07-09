@@ -345,7 +345,7 @@ CompositeKEM.KeyGen():
 The RSA Optimal Asymmetric Encryption Padding (OAEP), more specifically the RSAES-OAEP key transport algorithm as specified in [RFC3560] is a public key encryption algorithm used to transport key material from a sender to a receiver. It is promoted into a KEM by having the sender generate a random 256 bit secret and encrypt it.
 
 ~~~
-DHKEM.Encaps(pkR):
+RSAKEM.Encaps(pkR):
   shared_secret = SecureRandom(ss_len)
   enc = RSA-OAEP.Encrypt(pkR, shared_secret)
 
@@ -355,7 +355,7 @@ DHKEM.Encaps(pkR):
  `Decaps(sk, ct) -> ss` is accomplished in the analogous way.
 
 ~~~
-DHKEM.Decap(skR, enc):
+RSAKEM.Decap(skR, enc):
   shared_secret = RSA-OAEP.Decrypt(skR, enc)
 
   return shared_secret
