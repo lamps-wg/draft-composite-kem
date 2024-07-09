@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-07-07T01:36:52.068957+00:00",
+  "timestamp": "2024-07-09T01:25:22.144532+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -71,15 +71,15 @@
       "id": "I_kwDOKRPFO85wlqMj",
       "title": "WGLC issue: Remove Informative reference to draft-cfrg-kem-combiners ?",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/2",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "This is a procedural issue: this draft is adopted by LAMPS, but it depends Informatively on draft-ounsworth-cfrg-kem-combiners, which is not yet adopted by CFRG. That will cause a problem at WGLC.\r\n\r\nI propose to leave this issue for now and revisit it as we approach WGLC.",
       "createdAt": "2023-08-23T21:03:13Z",
-      "updatedAt": "2024-02-06T14:22:44Z",
-      "closedAt": null,
+      "updatedAt": "2024-07-07T15:01:40Z",
+      "closedAt": "2024-07-07T15:01:40Z",
       "comments": []
     },
     {
@@ -167,7 +167,7 @@
       "id": "I_kwDOKRPFO85-dY23",
       "title": "I think info should be ASN.1 DER TLV for the combiner OID",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/16",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -176,8 +176,8 @@
       "labels": [],
       "body": "Motivation: converting the ASCII name of the OID to bytes could be a source interop problems.\r\nComment from Ilari: https://mailarchive.ietf.org/arch/msg/spasm/JUISSb8kzHvly6iwEaY4jYGG_yE/",
       "createdAt": "2024-02-06T20:42:51Z",
-      "updatedAt": "2024-07-04T21:09:13Z",
-      "closedAt": null,
+      "updatedAt": "2024-07-07T14:18:49Z",
+      "closedAt": "2024-07-07T14:18:49Z",
       "comments": [
         {
           "author": "ounsworth",
@@ -232,7 +232,7 @@
       "labels": [],
       "body": "We should add a section listing explicitly the DER-encoded AlgorithmIdentifiers for the components of each composite public key and signature algorithm. This is important to resolve ambiguity on, for example, whether the RSA should have a NULL param, and the ECC curve params.\r\n\r\nExample, for id-MLDSA44-ECDSA-P256-SHA256 the ML-DSA SPKI would have an AlgorithmIdentifier of:\r\n\r\n   AlgorithmIdentifier  ::=  SEQUENCE  {\r\n        id-ml-dsa\r\n    }\r\nwhich is:\r\n\r\nAlgorithmIdentifier  ::=  SEQUENCE  {\r\n        {\r\n     1.3.6.1.4.1.2.267.12.4.4\r\n      }\r\n  }\r\nAnd the ECDSA-P256-SHA256 would have a SPKI would have an AlgorithmIdentifier of:\r\n\r\n   AlgorithmIdentifier  ::=  SEQUENCE  {\r\n        id-ecPublicKey,\r\n       secp256r1  \r\n  }\r\nwhich is:\r\n\r\n   AlgorithmIdentifier  ::=  SEQUENCE  {\r\n        {\r\n     iso(1) member-body(2) us(840) ansi-X9-62(10045) keyType(2) 1 },\r\n       iso(1) member-body(2) us(840) ansi-X9-62(10045) curves(3) prime(1) 7}\r\nAnd the signature algorithm for id-MLDSA44-ECDSA-P256-SHA256, the first component signature algorithm would have an AlgorithmIdentifier of\r\n\r\n   AlgorithmIdentifier  ::=  SEQUENCE  {\r\n        id-ml-dsa\r\n    }\r\nwhich is:\r\n\r\nAlgorithmIdentifier  ::=  SEQUENCE  {\r\n        {\r\n     1.3.6.1.4.1.2.267.12.4.4\r\n      }\r\n  }\r\nand the second component signature algorithm would have an AlgorithmIdentifier of\r\n\r\n   AlgorithmIdentifier  ::=  SEQUENCE  {\r\n          ecdsa-with-SHA256\r\n  }\r\nwhich is:\r\n\r\nAlgorithmIdentifier  ::=  SEQUENCE  {\r\n           {\r\n     iso(1) member-body(2) us(840) ansi-X9-62(10045) signatures(4) ecdsa-with-SHA2(3) 2\r\n       }\r\n  }\r\nWith that done, we should replace the message prefix values in Sectien 2.4 with the SHA256 hash of the signature AlgorithmIdentifiers. This has two nice properties that are better than using the ASCII encoding of the OID name: 1) they are all the same length (ie the length of SHA256), and 2) if the inner OIDs change, for example with a new Kyber version, then the message prefix changes, which prevents cryptographic compatibility issues; or otherwise stated: provides signature domain-separation based on the component OIDs.\r\n\r\n--- SHA256 of the DER encoding of the following ASN.1 value\r\n--- Security Consideration note: the choice of SHA256 here is not security-relevant since it is only to generate fixed string values.\r\n\r\nSEQUENCE {\r\nAlgorithmIdentifier  ::=  SEQUENCE  {\r\n        {\r\n     1.3.6.1.4.1.2.267.12.4.4\r\n      }\r\n  },\r\nAlgorithmIdentifier  ::=  SEQUENCE  {\r\n           {\r\n     iso(1) member-body(2) us(840) ansi-X9-62(10045) signatures(4) ecdsa-with-SHA2(3) 2\r\n       }\r\n  }\r\n}\r\n",
       "createdAt": "2024-02-16T16:01:24Z",
-      "updatedAt": "2024-07-04T19:57:19Z",
+      "updatedAt": "2024-07-08T15:16:24Z",
       "closedAt": null,
       "comments": [
         {
@@ -241,6 +241,20 @@
           "body": "Jan to work on this one and align with what is in composite signatures",
           "createdAt": "2024-07-04T19:57:18Z",
           "updatedAt": "2024-07-04T19:57:18Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "For now I have added the following section as an appendix. We'll need to fill it out later.\r\n\r\n# Fixed Component Algorithm Identifiers\r\n\r\nThe following table lists explicitely the DER encoded `AlgorithmID` that MUST be used when reconstructing `SubjectPublicKeyInfo` objects for each component public key, which may be required for example if cryptographic library requires the public key in this form in order to process each component algorithm. The public key `BIT STRING` should be taken directly from the respective component of the CompositeKEMPublicKey.\r\n\r\n| Composite KEM     | First AlgorithmID | Second AlgorithmID |\r\n| --------------    | ----------------- | ------------------ |\r\n| TODO              | TODO              | TODO               |\r\n",
+          "createdAt": "2024-07-07T15:20:38Z",
+          "updatedAt": "2024-07-07T15:20:53Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "See parallel issue in composite-sigs: https://github.com/lamps-wg/draft-composite-sigs/issues/7",
+          "createdAt": "2024-07-07T15:24:09Z",
+          "updatedAt": "2024-07-08T15:16:24Z"
         }
       ]
     },
@@ -249,15 +263,15 @@
       "id": "I_kwDOKRPFO85_3gER",
       "title": "Should we instead or in addition support RSA-OAEP?",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/21",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Sophie Schmieg made the excellent point:\r\n\r\n> on the classical side, nobody uses RSA-KEM (a shame, but alas), leaving RSA-OAEP",
       "createdAt": "2024-02-20T20:48:46Z",
-      "updatedAt": "2024-07-04T19:56:34Z",
-      "closedAt": null,
+      "updatedAt": "2024-07-07T20:05:40Z",
+      "closedAt": "2024-07-07T20:05:40Z",
       "comments": [
         {
           "author": "ounsworth",
@@ -304,15 +318,15 @@
       "id": "I_kwDOKRPFO86BC5Oy",
       "title": "Is section \"## RSA-KEM Parameters\" actually needed?",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/24",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": " Go read 5990bis more carefully.\r\n\r\nAlso, maybe not needed at all if we go with RSA-OAEP.",
       "createdAt": "2024-03-02T23:03:41Z",
-      "updatedAt": "2024-03-02T23:03:41Z",
-      "closedAt": null,
+      "updatedAt": "2024-07-07T20:05:40Z",
+      "closedAt": "2024-07-07T20:05:40Z",
       "comments": []
     },
     {
@@ -320,15 +334,15 @@
       "id": "I_kwDOKRPFO86BDDgi",
       "title": "Consider lifting AES-192 to AES-256",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/25",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "danvangeest",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "In cms-kyber, we specified id-aes256-wrap for NIST level 3 / 192 bit security, even though it's stronger than necessary, because of a suggestion from Scott that AES-192 isn't as widely supported.  Consider doing the same here.",
       "createdAt": "2024-03-03T01:20:43Z",
-      "updatedAt": "2024-07-04T19:32:51Z",
-      "closedAt": null,
+      "updatedAt": "2024-07-07T15:11:23Z",
+      "closedAt": "2024-07-07T15:11:23Z",
       "comments": [
         {
           "author": "johngray-dev",
@@ -344,15 +358,15 @@
       "id": "I_kwDOKRPFO86GAx2N",
       "title": "Compliant KEM Combiner",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/26",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "bencemali",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "In NIST's guidelines for key derivation (see https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-56Cr2.pdf) in section 2 they specify an approved method for combining a compliant secret with auxiliary shared secret like so:\r\n\r\n> In addition to the currently approved techniques for the generation of the shared secret Z as\r\n> specified in SP 800-56A and SP 800-56B, this Recommendation permits the use of a \u201chybrid\u201d\r\n> shared secret of the form Z\u2032 = Z || T, a concatenation consisting of a \u201cstandard\u201d shared secret Z that\r\n> was generated during the execution of a key-establishment scheme (as currently specified in [SP\r\n> 800-56A] or [SP 800-56B]) followed by an auxiliary shared secret T that has been generated using\r\n> some other method. The content, format, length, and method used to generate T must be known\r\n> and agreed upon by all parties that will rely upon the derived keying material, as well as by any\r\n> agents trusted to act on their behalf.\r\n\r\nThe present combiner in this draft doesn't include the secret from an approved method first in the input of the KDF:\r\n\r\n> Combiner(ct1, ss1, ct2, ss2, fixedInfo) =\r\n>   KDF(counter || ct1 || ss1 || ct2 || ss2 || fixedInfo, outputBits)\r\n\r\nWe suggest moving either ss1 or ss2 to the beginning of the input to the KDF since concatenating any auxiliary secret to a compliant secret will result in a compliant key when feeding it to a compliant KDF. Even better, if we choose the classical key to be at the beginning (ss2 in the proposed combinations) it would mean that this construction would be considered compliant by NIST even if used with a non-standardized/compliant post-quantum algorithm.\r\n\r\nThe fixed counter value was added to in this draft to be compliant, but in the nist specification the counter must be followed by the compliant secret. In this specification ct1 is not a compliant secret, so this doesn't seem to be a good solution.",
       "createdAt": "2024-04-17T13:49:28Z",
-      "updatedAt": "2024-07-06T01:29:14Z",
-      "closedAt": null,
+      "updatedAt": "2024-07-07T15:01:40Z",
+      "closedAt": "2024-07-07T15:01:40Z",
       "comments": [
         {
           "author": "ounsworth",
@@ -382,15 +396,15 @@
       "id": "I_kwDOKRPFO86OptfQ",
       "title": "Place AlgID at the end of FixedInfo",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/27",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Falko said:\r\n> In order to avoid any possible collisions in the input it is important \r\nthe algID is placed at the end of the fixedInfo string. This ensures \r\nthat the string is uniquely parsable from the rear end, because algID \r\ndefines the lengths of the other strings.\r\n\r\nhttps://mailarchive.ietf.org/arch/msg/spasm/3Rul4GQ6kgpVZUXaE-kbr-bV9Ck/\r\n\r\nNeeds to be done after #20 .",
       "createdAt": "2024-07-06T01:24:53Z",
-      "updatedAt": "2024-07-06T01:25:11Z",
-      "closedAt": null,
+      "updatedAt": "2024-07-07T15:01:40Z",
+      "closedAt": "2024-07-07T15:01:40Z",
       "comments": []
     },
     {
@@ -403,9 +417,57 @@
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
-      "body": "* I think we're converging on a consensus solution with LAMPS mailing list discussions, the parallel openpgp-pqc draft, and CFRG KEM Combiners DT (Mike Ounsworth is a member).\r\n* The goal is to get this \"within a stone's throw\" of ready so that we can finish it up and get it into WGLC shortly after FIPS 203 (ML-KEM) is final.\r\n* We're close.\r\n* (go through changelog)",
+      "body": "- [ ] I think we're converging on a consensus solution with LAMPS mailing list discussions, the parallel openpgp-pqc draft, and CFRG KEM Combiners DT (Mike Ounsworth is a member).\r\n- [ ] The goal is to get this \"within a stone's throw\" of ready so that we can finish it up and get it into WGLC shortly after FIPS 203 (ML-KEM) is final.\r\n- [ ] We're close.\r\n- [ ] Go through changelog\r\n- [ ] Go through open issues:\r\n   - [ ]  #29: The unnecessary OCTET STRING wrapping \r\n- [ ] Discuss Pros / Cons of including the `tradPK` in the combiner.\r\n- [ ] Why `KDF = SHA3` and without a SHA2 option?\r\n   - [ ] We are aware of the feedback (Deb, Joe) that some implementations will not have easy access to SHA-3 at the layer that is implementing the combiner. We have chosen SHA3 because that aligns security analysis with X-Wing and openpgp-pqc. We could _also_ add HMAC-SHA2 variants, but that will 2x the numbers of algs that we're registering (note: you can't just replace SHA3 with SHA2 without losing security properties; it has to be HMAC-SHA2).\r\n- [ ] binary compatibility with X-Wing b/c of LAMPS-specific domSep. Good? Bad?\r\n- [ ] Despite making breaking changes, we did not rev the OIDs; but we are unaware of any working implementations yet (hackathon), so we think this is ok.\r\n- [ ] We have included a USE IN CMS section, but traditionally LAMPS likes to specify the algorithms, and the CMS conventions in separate documents. Do you want us to split them?",
       "createdAt": "2024-07-06T05:01:56Z",
-      "updatedAt": "2024-07-06T05:01:56Z",
+      "updatedAt": "2024-07-08T18:27:36Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 29,
+      "id": "I_kwDOKRPFO86OsrLg",
+      "title": "ML-KEM public keys should be unwrapped BIT STRINGS with no ASN.1 typing",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/29",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "See parallel issue in composite-sigs:\r\n\r\n* https://github.com/lamps-wg/draft-composite-sigs/issues/9",
+      "createdAt": "2024-07-07T14:19:51Z",
+      "updatedAt": "2024-07-07T14:19:51Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 31,
+      "id": "I_kwDOKRPFO86OtEHv",
+      "title": "Synchronize sections and writing style of composite sigs and kems",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/31",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "By \"synchronize writing style\" I mean that there are probably very similar sections in both drafts that were written independently; we should choose the better text and apply it to both drafts.",
+      "createdAt": "2024-07-07T19:05:22Z",
+      "updatedAt": "2024-07-07T20:04:09Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 33,
+      "id": "I_kwDOKRPFO86Ot-R_",
+      "title": "Send an email to LAMPS about RSA-KEM -> RSA-OAEP",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/33",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Email draft:\r\n\r\nTO: Douglas Stebila <dstebila@uwaterloo.ca>; Deirdra; bas; Russ Housley <housley@vigilsec.com>; John Gray <John.Gray@entrust.com>; Max Pala <M.Pala@cablelabs.com>; Klau\u00dfner, Jan <Jan.Klaussner@bdr.de>; spams@ietf.org\r\n\r\n> Hi all,\r\n>\r\n>Based on discussion on-list, I have changed the RSA combinations from RSA-KEM [RFC5990] to  RSA-OAEP [RFC3560]. I am not >confident that I have made this change properly, so I would like review of the RSA parts of draft-ietf-lamps-pq-composite-kem-04.\r\n>\r\n>The pull request for just the RSA-KEM -> RSA-OAEP change can be found here:\r\n>\u2022\thttps://github.com/lamps-wg/draft-composite-kem/pull/32\r\n>\r\n>Thanks.\r\n",
+      "createdAt": "2024-07-08T01:48:48Z",
+      "updatedAt": "2024-07-08T17:58:34Z",
       "closedAt": null,
       "comments": []
     }
@@ -666,24 +728,26 @@
       "id": "PR_kwDOKRPFO85lPYQe",
       "title": "Aligned with X-Wing",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/11",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2024-01-27T22:50:55Z",
-      "updatedAt": "2024-07-06T04:17:21Z",
+      "updatedAt": "2024-07-07T15:01:47Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "e9db1fa3e40edcca15acbee1d19db1c3b7ea9089",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_xwing",
-      "headRefOid": "304a37d8b11c82d5dcaf5d9d9987cbb4c73f687b",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "b355af26d5fdfc0f009fee63d3a6d6739d78f57e",
+      "closedAt": "2024-07-07T15:01:39Z",
+      "mergedAt": "2024-07-07T15:01:39Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "5c9f8ea429ce1d2bcd9ff0c8e65908c19dc2911f"
+      },
       "comments": [
         {
           "author": "ounsworth",
@@ -741,7 +805,7 @@
             "abbreviatedOid": "5fb7140"
           },
           "author": "dconnolly",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "state": "COMMENTED",
           "body": "",
           "createdAt": "2024-01-28T09:03:21Z",
@@ -761,7 +825,7 @@
             "abbreviatedOid": "5fb7140"
           },
           "author": "dconnolly",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "state": "COMMENTED",
           "body": "",
           "createdAt": "2024-01-28T09:47:04Z",
@@ -781,7 +845,7 @@
             "abbreviatedOid": "5fb7140"
           },
           "author": "dconnolly",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "state": "COMMENTED",
           "body": "",
           "createdAt": "2024-01-28T09:54:15Z",
@@ -872,6 +936,26 @@
               "body": "To err on the safe side, this has been changed to:\r\n\r\n> Ciphertext collision resistance is not guaranteed for either RSA-KEM or ECDH, therefore these ciphertexts are bound to the key derivation.",
               "createdAt": "2024-07-06T04:14:41Z",
               "updatedAt": "2024-07-06T04:14:41Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO86A21dx",
+          "commit": {
+            "abbreviatedOid": "5fb7140"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-07-07T13:13:09Z",
+          "updatedAt": "2024-07-07T13:13:09Z",
+          "comments": [
+            {
+              "originalPosition": 257,
+              "body": "Isn't the definition of CCR that we care about here that you can't have `z -> c` and `z' -> c` where `z != z'` ? Since we're not borrowing the symmetric WRAP primitive from 5990, I don't see why that matters?",
+              "createdAt": "2024-07-07T13:13:09Z",
+              "updatedAt": "2024-07-07T13:13:09Z"
             }
           ]
         }
@@ -1205,6 +1289,70 @@
       "mergedBy": "ounsworth",
       "mergeCommit": {
         "oid": "7182d2070fb8cc90f20c0aee2995fadd4c73f629"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 30,
+      "id": "PR_kwDOKRPFO850nWea",
+      "title": "Lifted AES-192 to AES-256. Closes #25",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/30",
+      "state": "MERGED",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-07-07T15:05:48Z",
+      "updatedAt": "2024-07-08T14:37:27Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "5c9f8ea429ce1d2bcd9ff0c8e65908c19dc2911f",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_25",
+      "headRefOid": "c41d13fa5423c3fee6d6bfa6e57efbb183583788",
+      "closedAt": "2024-07-07T15:11:22Z",
+      "mergedAt": "2024-07-07T15:11:22Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "f2f42ca5d4cd09b4e6e2b6b796799b85475b909e"
+      },
+      "comments": [
+        {
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Thanks Mike.  Edits look really great and justification text is also good.",
+          "createdAt": "2024-07-08T14:37:26Z",
+          "updatedAt": "2024-07-08T14:37:26Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 32,
+      "id": "PR_kwDOKRPFO850nq02",
+      "title": "Replaced RSA-KEM with RSA-OAEP",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/32",
+      "state": "MERGED",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Closes #21 \r\nCloses #24 ",
+      "createdAt": "2024-07-07T20:01:19Z",
+      "updatedAt": "2024-07-07T20:05:53Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "854b646b1d5e4980d28fd8d0544cd41414fc7540",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_rsa-oaep",
+      "headRefOid": "aa69c0300a5ef1cb55f2fd8340888b1c01519c7e",
+      "closedAt": "2024-07-07T20:05:39Z",
+      "mergedAt": "2024-07-07T20:05:39Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "9c7c0842388dd2bc031ab56772088f4e74f36f8a"
       },
       "comments": [],
       "reviews": []
