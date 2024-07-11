@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-07-09T01:25:22.144532+00:00",
+  "timestamp": "2024-07-11T01:25:48.387577+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -460,14 +460,54 @@
       "id": "I_kwDOKRPFO86Ot-R_",
       "title": "Send an email to LAMPS about RSA-KEM -> RSA-OAEP",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/33",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Email draft:\r\n\r\nTO: Douglas Stebila <dstebila@uwaterloo.ca>; Deirdra; bas; Russ Housley <housley@vigilsec.com>; John Gray <John.Gray@entrust.com>; Max Pala <M.Pala@cablelabs.com>; Klau\u00dfner, Jan <Jan.Klaussner@bdr.de>; spams@ietf.org\r\n\r\n> Hi all,\r\n>\r\n>Based on discussion on-list, I have changed the RSA combinations from RSA-KEM [RFC5990] to  RSA-OAEP [RFC3560]. I am not >confident that I have made this change properly, so I would like review of the RSA parts of draft-ietf-lamps-pq-composite-kem-04.\r\n>\r\n>The pull request for just the RSA-KEM -> RSA-OAEP change can be found here:\r\n>\u2022\thttps://github.com/lamps-wg/draft-composite-kem/pull/32\r\n>\r\n>Thanks.\r\n",
       "createdAt": "2024-07-08T01:48:48Z",
-      "updatedAt": "2024-07-08T17:58:34Z",
+      "updatedAt": "2024-07-09T12:58:13Z",
+      "closedAt": "2024-07-09T12:58:13Z",
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Done:\r\nhttps://mailarchive.ietf.org/arch/msg/spasm/Z5746qbrg027Jvah8vI-S3ffCR8/",
+          "createdAt": "2024-07-09T12:58:12Z",
+          "updatedAt": "2024-07-09T12:58:12Z"
+        }
+      ]
+    },
+    {
+      "number": 34,
+      "id": "I_kwDOKRPFO86O8OhA",
+      "title": "Issues with the ASN.1 module",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/34",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "https://mailarchive.ietf.org/arch/msg/spasm/LDfrRz-vV8JAZyIk3Xmp7ijtnHE/",
+      "createdAt": "2024-07-09T12:58:46Z",
+      "updatedAt": "2024-07-09T12:58:47Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 35,
+      "id": "I_kwDOKRPFO86O83wq",
+      "title": "Russ feedback on RSA-OAEP",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/35",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "https://mailarchive.ietf.org/arch/msg/spasm/e7OlkcpDMtOWbGLPQB1hEPyyjXQ/\r\n\r\n---\r\nMike:\r\n\r\nI think you should reference Section 7.1 of RFC 8017 for the RSA-OAEP specification.\r\n\r\nThen, the description should use RSAES-OAEP-ENCRYPT and RSAES-OAEP-DECRYPT as specified there.\r\n\r\nI assume that you are thinking about the L parameter being an empty string.\r\n\r\nThe Mask Generation Function needs to be specified.  I assume you want to use MGF1 from Appendix B.2.1 of RFC 8017.  I think you can state the maskLen for the two cases that you are supporting.\r\n\r\nRuss\r\n\r\n\r\n",
+      "createdAt": "2024-07-09T14:02:42Z",
+      "updatedAt": "2024-07-09T14:02:42Z",
       "closedAt": null,
       "comments": []
     }
@@ -1341,7 +1381,7 @@
       "labels": [],
       "body": "Closes #21 \r\nCloses #24 ",
       "createdAt": "2024-07-07T20:01:19Z",
-      "updatedAt": "2024-07-07T20:05:53Z",
+      "updatedAt": "2024-07-09T21:11:20Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "854b646b1d5e4980d28fd8d0544cd41414fc7540",
@@ -1353,6 +1393,55 @@
       "mergedBy": "ounsworth",
       "mergeCommit": {
         "oid": "9c7c0842388dd2bc031ab56772088f4e74f36f8a"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO86BMYpc",
+          "commit": {
+            "abbreviatedOid": "aa69c03"
+          },
+          "author": "dstebila",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-07-09T21:11:20Z",
+          "updatedAt": "2024-07-09T21:11:20Z",
+          "comments": [
+            {
+              "originalPosition": 129,
+              "body": "Why is this title `DHKEM.Encaps` -- shouldn't it be something like `RSAOAEPKEM.Encaps`?",
+              "createdAt": "2024-07-09T21:11:20Z",
+              "updatedAt": "2024-07-09T21:11:20Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 36,
+      "id": "PR_kwDOKRPFO8505OXw",
+      "title": "Rename DHKEM to RSAKEM where appropriate",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/36",
+      "state": "MERGED",
+      "author": "dconnolly",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-07-09T22:52:24Z",
+      "updatedAt": "2024-07-09T23:29:52Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "20c8eba3deb1dc8a874c7e60610b72460c92cbac",
+      "headRepository": "dconnolly/draft-composite-kem",
+      "headRefName": "dconnolly-patch-1",
+      "headRefOid": "ea78b5561f196c12de0ab07bd1b3a277193344dc",
+      "closedAt": "2024-07-09T23:29:51Z",
+      "mergedAt": "2024-07-09T23:29:51Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "71b98a70e405b3d4c5848d40a4ce5afbde8d14b1"
       },
       "comments": [],
       "reviews": []
