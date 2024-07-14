@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-07-11T01:25:48.387577+00:00",
+  "timestamp": "2024-07-14T01:38:32.540957+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -508,6 +508,22 @@
       "body": "https://mailarchive.ietf.org/arch/msg/spasm/e7OlkcpDMtOWbGLPQB1hEPyyjXQ/\r\n\r\n---\r\nMike:\r\n\r\nI think you should reference Section 7.1 of RFC 8017 for the RSA-OAEP specification.\r\n\r\nThen, the description should use RSAES-OAEP-ENCRYPT and RSAES-OAEP-DECRYPT as specified there.\r\n\r\nI assume that you are thinking about the L parameter being an empty string.\r\n\r\nThe Mask Generation Function needs to be specified.  I assume you want to use MGF1 from Appendix B.2.1 of RFC 8017.  I think you can state the maskLen for the two cases that you are supporting.\r\n\r\nRuss\r\n\r\n\r\n",
       "createdAt": "2024-07-09T14:02:42Z",
       "updatedAt": "2024-07-09T14:02:42Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 37,
+      "id": "I_kwDOKRPFO86PbIhZ",
+      "title": "Create RSA-4096 combos",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/37",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "We have been asked to add RSA-4096 combos for existing infrastructures where deployed software or policy requires 4096 bit keys.\r\n\r\nSuggestion is that since RSA 4096 is not much above 128 bit security (certainly not as much as AES-192 or SHA-384), we should pair it with the same cipher suites as the RSA-3072 combo. Or maybe even replace the 4096 combo?",
+      "createdAt": "2024-07-12T20:01:06Z",
+      "updatedAt": "2024-07-12T20:01:06Z",
       "closedAt": null,
       "comments": []
     }
