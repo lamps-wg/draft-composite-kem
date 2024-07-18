@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-07-16T01:33:45.689435+00:00",
+  "timestamp": "2024-07-18T01:24:47.530710+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -524,6 +524,22 @@
       "body": "We have been asked to add RSA-4096 combos for existing infrastructures where deployed software or policy requires 4096 bit keys.\r\n\r\nSuggestion is that since RSA 4096 is not much above 128 bit security (certainly not as much as AES-192 or SHA-384), we should pair it with the same cipher suites as the RSA-3072 combo. Or maybe even replace the 4096 combo?",
       "createdAt": "2024-07-12T20:01:06Z",
       "updatedAt": "2024-07-12T20:01:06Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 38,
+      "id": "I_kwDOKRPFO86PxLVR",
+      "title": "Add back text to not reuse component keys",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/38",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "For the security proofs, it is imperative that the RSA / ECC keys be generated fresh for the composite and not re-used from existing deployments. I swear we had text to this effect. Certainly this deserves its own Security Consideration section.",
+      "createdAt": "2024-07-16T20:58:05Z",
+      "updatedAt": "2024-07-16T20:58:05Z",
       "closedAt": null,
       "comments": []
     }
