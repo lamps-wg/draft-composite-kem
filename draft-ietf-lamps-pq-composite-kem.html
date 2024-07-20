@@ -1039,7 +1039,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Ounsworth, et al.</td>
-<td class="center">Expires 10 January 2025</td>
+<td class="center">Expires 21 January 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1052,12 +1052,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-lamps-pq-composite-kem-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2024-07-09" class="published">9 July 2024</time>
+<time datetime="2024-07-20" class="published">20 July 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-01-10">10 January 2025</time></dd>
+<dd class="expires"><time datetime="2025-01-21">21 January 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1123,7 +1123,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 10 January 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 21 January 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1513,7 +1513,7 @@ CompositeKEM.KeyGen():
 <p id="section-2.3.2-1">The RSA Optimal Asymmetric Encryption Padding (OAEP), more specifically the RSAES-OAEP key transport algorithm as specified in <span>[<a href="#RFC3560" class="cite xref">RFC3560</a>]</span> is a public key encryption algorithm used to transport key material from a sender to a receiver. It is promoted into a KEM by having the sender generate a random 256 bit secret and encrypt it.<a href="#section-2.3.2-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-2.3.2-2">
 <pre>
-RSAKEM.Encaps(pkR):
+RSAOAEPKEM.Encaps(pkR):
   shared_secret = SecureRandom(ss_len)
   enc = RSA-OAEP.Encrypt(pkR, shared_secret)
 
@@ -1582,7 +1582,7 @@ CompositeKEM.Encaps(pk):
   # Combine
   # note that the order of the traditional and ML-KEM components
   # is flipped here in order to satisfy NIST SP800-56Cr2.
-  ct = CompositeCiphertextValue(ct1, ct2)
+  ct = CompositeCiphertextValue(tradCT, mlkemCT)
   ss = Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep)
 
   return (ct, ss)
@@ -1601,8 +1601,8 @@ CompositeKEM.Encaps(pk):
 <pre>
 CompositeKEM.Decaps(ct, mlkemSK, tradSK):
   # split the component ciphertexts
-  mlkemCT = ct[0]
-  tradCT  = ct[1]
+  tradCT  = ct[0]
+  mlkemCT = ct[1]
 
   # Perform the respective component Decaps operations
   mlkemSS = MLKEM.Decaps(mlkemSK, mlkemCT)
@@ -2805,6 +2805,7 @@ END
 </div>
 </section>
 </div>
+<div id="sec-combined-references">
 <section id="section-10">
       <h2 id="name-references">
 <a href="#section-10" class="section-number selfRef">10. </a><a href="#name-references" class="section-name selfRef">References</a>
@@ -2992,6 +2993,7 @@ END
 </section>
 </div>
 </section>
+</div>
 <div id="appdx-samples">
 <section id="appendix-A">
       <h2 id="name-samples">
