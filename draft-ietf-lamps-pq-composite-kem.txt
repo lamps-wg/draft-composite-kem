@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 10 January 2025                                         M. Pala
+Expires: 21 January 2025                                         M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                             9 July 2024
+                                                            20 July 2024
 
 
 Composite ML-KEM for Use in the Internet X.509 Public Key Infrastructure
@@ -66,7 +66,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 10 January 2025.
+   This Internet-Draft will expire on 21 January 2025.
 
 Copyright Notice
 
@@ -374,7 +374,7 @@ Table of Contents
    material from a sender to a receiver.  It is promoted into a KEM by
    having the sender generate a random 256 bit secret and encrypt it.
 
-   RSAKEM.Encaps(pkR):
+   RSAOAEPKEM.Encaps(pkR):
      shared_secret = SecureRandom(ss_len)
      enc = RSA-OAEP.Encrypt(pkR, shared_secret)
 
@@ -438,7 +438,7 @@ Table of Contents
      # Combine
      # note that the order of the traditional and ML-KEM components
      # is flipped here in order to satisfy NIST SP800-56Cr2.
-     ct = CompositeCiphertextValue(ct1, ct2)
+     ct = CompositeCiphertextValue(tradCT, mlkemCT)
      ss = Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep)
 
      return (ct, ss)
@@ -454,8 +454,8 @@ Table of Contents
 
    CompositeKEM.Decaps(ct, mlkemSK, tradSK):
      # split the component ciphertexts
-     mlkemCT = ct[0]
-     tradCT  = ct[1]
+     tradCT  = ct[0]
+     mlkemCT = ct[1]
 
      # Perform the respective component Decaps operations
      mlkemSS = MLKEM.Decaps(mlkemSK, mlkemCT)
