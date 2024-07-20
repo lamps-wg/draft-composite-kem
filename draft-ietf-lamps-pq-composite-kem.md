@@ -219,21 +219,9 @@ This document introduces a set of Key Encapsulation Mechanism (KEM) schemes that
 
 --- middle
 
-# Changes in version -04
+# Changes in version -05
 
-* Specified the fixedInfo domain separators as the DER encoded object identifiers.
-* Adjusted the combiner to be compliant with NIST SP800-56C as per https://mailarchive.ietf.org/arch/msg/spasm/nlyQF1i7ndp5A7zzcTsdYF_S9mI/ -- also aligns with X-Wing changes below.
-* Removed reference to draft-ounsworth-cfrg-kem-combiners so that we don't end up in a downref situation.
-* Changes inspired by X-Wing:
-  * Combiner does not need ML-KEM ciphertext.
-  * Combiner needs traditional ciphertext and public key.
-  * KDF is now SHA3 and not KMAC.
-* Since all combinations use ML-KEM; changed the document title to "Composite ML-KEM".
-* In the "Use in CMS > Underlying Components" section, the MLKEM768 combinations were lifted from id-aes192-Wrap to id-aes256-Wrap because the latter is believed to have better general adoption.
-* Added an appendix "Fixed Component Algorithm Identifiers" -- not finished, needs more work.
-* Replaced RSA-KEM [RFC5990] with RSA-OAEP.
-* Added a section "Promotion of RSA-OAEP into a KEM".
-* Removed references to I-D.ounsworth-lamps-cms-dhkem since we'll just inline a simplified version of RFC9180's DHKEM.
+* Fixed a bug in the definition of the Encaps() functions: KEMs, according to both RFC9180 and FIPS 203 should always return (ss, ct), but we had (ct, ss).
 
 
 Still to do in a future version:
@@ -315,7 +303,7 @@ We borrow here the definition of a key encapsulation mechanism (KEM) from {{I-D.
    *  `KeyGen() -> (pk, sk)`: A probabilistic key generation algorithm,
       which generates a public key `pk` and a secret key `sk`.
 
-   *  `Encaps(pk) -> (ct, ss)`: A probabilistic encapsulation algorithm,
+   *  `Encaps(pk) -> (ss, ct)`: A probabilistic encapsulation algorithm,
       which takes as input a public key `pk` and outputs a ciphertext `ct`
       and shared secret ss.
 
@@ -349,7 +337,7 @@ RSAOAEPKEM.Encaps(pkR):
   shared_secret = SecureRandom(ss_len)
   enc = RSA-OAEP.Encrypt(pkR, shared_secret)
 
-  return enc, shared_secret
+  return shared_secret, enc
 ~~~
 
  `Decaps(sk, ct) -> ss` is accomplished in the analogous way.
@@ -365,7 +353,7 @@ The value of `ss_len` as well as the RSA-OAEP parameters used within this specif
 
 ### Promotion of ECDH into a KEM
 
-An elliptic curve Diffie-Hellman key agreement is promoted into a KEM `Encaps(pk) -> (ct, ss)` using a simplified version of the DHKEM definition from [RFC9180].
+An elliptic curve Diffie-Hellman key agreement is promoted into a KEM `Encaps(pk) -> (ss, ct)` using a simplified version of the DHKEM definition from [RFC9180].
 
 
 ~~~
@@ -374,7 +362,7 @@ DHKEM.Encaps(pkR):
   shared_secret = DH(skE, pkR)
   enc = SerializePublicKey(pkE)
 
-  return enc, shared_secret
+  return shared_secret, enc
 ~~~
 
  `Decaps(sk, ct) -> ss` is accomplished in the analogous way.
@@ -393,7 +381,7 @@ The simplifications from the DHKEM definition in [RFC9180] is that since the cip
 
 ### Composite Encaps
 
-The `Encaps(pk) -> (ct, ss)` of a composite KEM algorithm is defined as:
+The `Encaps(pk) -> (ss, ct)` of a composite KEM algorithm is defined as:
 
 ~~~
 CompositeKEM.Encaps(pk):
@@ -408,10 +396,10 @@ CompositeKEM.Encaps(pk):
   # Combine
   # note that the order of the traditional and ML-KEM components
   # is flipped here in order to satisfy NIST SP800-56Cr2.
-  ct = CompositeCiphertextValue(tradCT, mlkemCT)
+  ct = CompositeCiphertextValue(mlkemCT, tradCT)
   ss = Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep)
 
-  return (ct, ss)
+  return (ss, ct)
 ~~~
 
 where `Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep)` is defined in general in {{sec-kem-combiner}} with specific values for `domSep` per composite KEM algorithm in {{sec-alg-ids}} and `CompositeCiphertextValue` is defined in {{sec-CompositeCiphertextValue}}.
@@ -423,8 +411,8 @@ The `Decaps(sk, ct) -> ss` of a composite KEM algorithm is defined as:
 ~~~
 CompositeKEM.Decaps(ct, mlkemSK, tradSK):
   # split the component ciphertexts
-  tradCT  = ct[0]
-  mlkemCT = ct[1]
+  mlkemCT = ct[0]
+  tradCT  = ct[1]
 
   # Perform the respective component Decaps operations
   mlkemSS = MLKEM.Decaps(mlkemSK, mlkemCT)
