@@ -345,7 +345,7 @@ CompositeKEM.KeyGen():
 The RSA Optimal Asymmetric Encryption Padding (OAEP), more specifically the RSAES-OAEP key transport algorithm as specified in [RFC3560] is a public key encryption algorithm used to transport key material from a sender to a receiver. It is promoted into a KEM by having the sender generate a random 256 bit secret and encrypt it.
 
 ~~~
-RSAKEM.Encaps(pkR):
+RSAOAEPKEM.Encaps(pkR):
   shared_secret = SecureRandom(ss_len)
   enc = RSA-OAEP.Encrypt(pkR, shared_secret)
 
@@ -408,7 +408,7 @@ CompositeKEM.Encaps(pk):
   # Combine
   # note that the order of the traditional and ML-KEM components
   # is flipped here in order to satisfy NIST SP800-56Cr2.
-  ct = CompositeCiphertextValue(ct1, ct2)
+  ct = CompositeCiphertextValue(tradCT, mlkemCT)
   ss = Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep)
 
   return (ct, ss)
@@ -423,8 +423,8 @@ The `Decaps(sk, ct) -> ss` of a composite KEM algorithm is defined as:
 ~~~
 CompositeKEM.Decaps(ct, mlkemSK, tradSK):
   # split the component ciphertexts
-  mlkemCT = ct[0]
-  tradCT  = ct[1]
+  tradCT  = ct[0]
+  mlkemCT = ct[1]
 
   # Perform the respective component Decaps operations
   mlkemSS = MLKEM.Decaps(mlkemSK, mlkemCT)
