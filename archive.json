@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-07-18T01:24:47.530710+00:00",
+  "timestamp": "2024-07-21T01:37:51.868831+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -412,15 +412,15 @@
       "id": "I_kwDOKRPFO86OqEZI",
       "title": "Slides for LAMPS 120",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/28",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "- [ ] I think we're converging on a consensus solution with LAMPS mailing list discussions, the parallel openpgp-pqc draft, and CFRG KEM Combiners DT (Mike Ounsworth is a member).\r\n- [ ] The goal is to get this \"within a stone's throw\" of ready so that we can finish it up and get it into WGLC shortly after FIPS 203 (ML-KEM) is final.\r\n- [ ] We're close.\r\n- [ ] Go through changelog\r\n- [ ] Go through open issues:\r\n   - [ ]  #29: The unnecessary OCTET STRING wrapping \r\n- [ ] Discuss Pros / Cons of including the `tradPK` in the combiner.\r\n- [ ] Why `KDF = SHA3` and without a SHA2 option?\r\n   - [ ] We are aware of the feedback (Deb, Joe) that some implementations will not have easy access to SHA-3 at the layer that is implementing the combiner. We have chosen SHA3 because that aligns security analysis with X-Wing and openpgp-pqc. We could _also_ add HMAC-SHA2 variants, but that will 2x the numbers of algs that we're registering (note: you can't just replace SHA3 with SHA2 without losing security properties; it has to be HMAC-SHA2).\r\n- [ ] binary compatibility with X-Wing b/c of LAMPS-specific domSep. Good? Bad?\r\n- [ ] Despite making breaking changes, we did not rev the OIDs; but we are unaware of any working implementations yet (hackathon), so we think this is ok.\r\n- [ ] We have included a USE IN CMS section, but traditionally LAMPS likes to specify the algorithms, and the CMS conventions in separate documents. Do you want us to split them?",
       "createdAt": "2024-07-06T05:01:56Z",
-      "updatedAt": "2024-07-08T18:27:36Z",
-      "closedAt": null,
+      "updatedAt": "2024-07-19T01:09:37Z",
+      "closedAt": "2024-07-19T01:09:37Z",
       "comments": []
     },
     {
