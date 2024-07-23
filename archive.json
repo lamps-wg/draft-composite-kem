@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-07-21T01:37:51.868831+00:00",
+  "timestamp": "2024-07-23T01:26:13.893648+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -542,6 +542,46 @@
       "updatedAt": "2024-07-16T20:58:05Z",
       "closedAt": null,
       "comments": []
+    },
+    {
+      "number": 39,
+      "id": "I_kwDOKRPFO86QccBJ",
+      "title": "NIST is suggesting that both PQ L3 + L5 should be paired with P-384",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/39",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "https://datatracker.ietf.org/doc/slides-120-openpgp-pqc-with-nist-and-brainpool-curves/",
+      "createdAt": "2024-07-22T17:19:21Z",
+      "updatedAt": "2024-07-22T17:19:21Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 40,
+      "id": "I_kwDOKRPFO86QcgDZ",
+      "title": "Both ss1||ss2 or ss2||ss1 are allowed in SP.800-56Cr2",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/40",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Wow. Ok. I completely mis-read Quynh's email to LAMPS:\r\nhttps://mailarchive.ietf.org/arch/msg/spasm/Yh5AelwiAOXhhdjEPzWPmWekYLA/\r\n\r\n> Similarly, the order of ss1 and ss2 may be in reverse and run the \"Process\" on page14 in SP 800-56r2 here: https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-56Cr2.pdf .\r\n\r\nThat means we can un-twist the order in which the ss inputs are fed into the KDF; because in fact we do not need to put the traditional alg first -- keep everything consistent with the order (mlkem, trad).",
+      "createdAt": "2024-07-22T17:28:56Z",
+      "updatedAt": "2024-07-22T17:30:39Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "To the extent possible, synchronize with the equivalent OpenPGP drafts:\r\n\r\nhttps://github.com/openpgp-pqc/draft-openpgp-pqc/issues/132#issuecomment-2220386567\r\n\r\nRequest a meeting with Quynh, Falko, Aron.",
+          "createdAt": "2024-07-22T17:30:38Z",
+          "updatedAt": "2024-07-22T17:30:38Z"
+        }
+      ]
     }
   ],
   "pulls": [
