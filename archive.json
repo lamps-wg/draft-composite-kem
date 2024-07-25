@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-07-23T01:26:13.893648+00:00",
+  "timestamp": "2024-07-25T01:26:04.774208+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -537,9 +537,9 @@
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
-      "body": "For the security proofs, it is imperative that the RSA / ECC keys be generated fresh for the composite and not re-used from existing deployments. I swear we had text to this effect. Certainly this deserves its own Security Consideration section.",
+      "body": "For the security proofs, it is imperative that the RSA / ECC keys be generated fresh for the composite and not re-used from existing deployments. I swear we had text to this effect. Certainly this deserves its own Security Consideration section.\r\n\r\nOnce we have this text ready, ping Sophie Schmieg to review it.",
       "createdAt": "2024-07-16T20:58:05Z",
-      "updatedAt": "2024-07-16T20:58:05Z",
+      "updatedAt": "2024-07-23T16:11:36Z",
       "closedAt": null,
       "comments": []
     },
@@ -582,6 +582,54 @@
           "updatedAt": "2024-07-22T17:30:38Z"
         }
       ]
+    },
+    {
+      "number": 41,
+      "id": "I_kwDOKRPFO86Qk3iK",
+      "title": "More comments from Carl",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/41",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Looking at this fresh today, I have a new question.\r\n\r\nSections 2.3.4 and 2.3.5 have this:\r\n\r\nss = Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep)\r\n\r\nSection 4.3 has this:\r\n\r\nKEK <- Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep) =\r\n  KDF(counter || tradSS || mlkemSS || tradCT || tradPK ||\r\n       domSep, outputBits)\r\n\r\nI don't understand the <- followed by =. Is it fair to say that 2.3.4 and 2.3.5 could be written this way:\r\n\r\ncompositeSS = Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep)\r\n\r\nAnd 4.3 written this way:\r\n\r\nKEK = KDF(counter || compositeSS, outputBits)\r\n\r\n\r\n\r\n\r\n\r\n\r\nLooking at this fresh today, I have a new question.\r\n\r\n\r\nSections 2.3.4 and 2.3.5 have this:\r\n\r\n\r\nss = Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep)\r\n\r\n\r\nSection 4.3 has this:\r\n\r\n\r\nKEK <- Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep) =\r\nKDF(counter || tradSS || mlkemSS || tradCT || tradPK ||\r\ndomSep, outputBits)\r\n\r\n\r\nI don't understand the <- followed by =. Is it fair to say that 2.3.4 and 2.3.5 could be written this way:\r\n\r\n\r\ncompositeSS = Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep)\r\n\r\n\r\nAnd 4.3 written this way:\r\n\r\n\r\nKEK = KDF(counter || compositeSS, outputBits)",
+      "createdAt": "2024-07-23T16:08:39Z",
+      "updatedAt": "2024-07-23T16:08:40Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 42,
+      "id": "I_kwDOKRPFO86QlCWx",
+      "title": "Add security consideration about reliance on X-Wing pre-image",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/42",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "https://mailarchive.ietf.org/arch/msg/spasm/Kxol5ZgDR777Y58XsLPHwvl6uY8/\r\n\r\n\r\nFrom Peter C:\r\n\r\n> Secondly, X-Wing fundamentally relies on ML-KEM remaining ciphertext second pre-image resistant.  This means that it cannot mitigate ML-KEM implementation vulnerabilities.  If decapsulation fails to perform the ciphertext check properly, for example, then it's trivial to find ML-KEM second pre-images and break the IND-CCA2 security of X-Wing.  This isn't an issue if your goal is only to mitigate algorithmic vulnerabilities, but you need to be explicit about that.  At the very least, you need to reconsider \"we also cannot immediately place complete trust in post-quantum replacements until they have undergone extensive scrutiny and real-world testing to uncover and rectify potential implementation flaws\" in the introduction.\r\n\r\n\r\nWe either need to add Security Consideration text to this effect, or strengthen the combiner. I believe that binding the ML-KEM CT and PK would solve this?",
+      "createdAt": "2024-07-23T16:31:37Z",
+      "updatedAt": "2024-07-23T16:31:37Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 43,
+      "id": "I_kwDOKRPFO86Qnc3R",
+      "title": "Clarify the SHA3 OIDs",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/43",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Mike Ounsworth: Yeah, it should be referencing id-sha3-256 and friends from here:\r\nhttps://datatracker.ietf.org/doc/html/draft-ietf-lamps-cms-sha3-hash-04#name-message-digest-algorithms\r\n\r\nThat should be made clearer in the composite-KEM draft and actually reference them by OID.",
+      "createdAt": "2024-07-23T23:10:05Z",
+      "updatedAt": "2024-07-23T23:10:05Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
