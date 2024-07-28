@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-07-25T01:26:04.774208+00:00",
+  "timestamp": "2024-07-28T01:38:22.982528+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -571,15 +571,15 @@
       "labels": [],
       "body": "Wow. Ok. I completely mis-read Quynh's email to LAMPS:\r\nhttps://mailarchive.ietf.org/arch/msg/spasm/Yh5AelwiAOXhhdjEPzWPmWekYLA/\r\n\r\n> Similarly, the order of ss1 and ss2 may be in reverse and run the \"Process\" on page14 in SP 800-56r2 here: https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-56Cr2.pdf .\r\n\r\nThat means we can un-twist the order in which the ss inputs are fed into the KDF; because in fact we do not need to put the traditional alg first -- keep everything consistent with the order (mlkem, trad).",
       "createdAt": "2024-07-22T17:28:56Z",
-      "updatedAt": "2024-07-22T17:30:39Z",
+      "updatedAt": "2024-07-26T22:18:14Z",
       "closedAt": null,
       "comments": [
         {
           "author": "ounsworth",
           "authorAssociation": "CONTRIBUTOR",
-          "body": "To the extent possible, synchronize with the equivalent OpenPGP drafts:\r\n\r\nhttps://github.com/openpgp-pqc/draft-openpgp-pqc/issues/132#issuecomment-2220386567\r\n\r\nRequest a meeting with Quynh, Falko, Aron.",
+          "body": "To the extent possible, synchronize with the equivalent OpenPGP drafts:\r\n\r\nhttps://github.com/openpgp-pqc/draft-openpgp-pqc/issues/132#issuecomment-2220386567\r\n\r\nRequest a meeting with Quynh, Falko, Aron.\r\nWe also want to discuss whether we can (and whether we should) synchronize domain separators so that our composite KEMs are binary compatible.",
           "createdAt": "2024-07-22T17:30:38Z",
-          "updatedAt": "2024-07-22T17:30:38Z"
+          "updatedAt": "2024-07-26T22:18:14Z"
         }
       ]
     },
@@ -611,9 +611,17 @@
       "labels": [],
       "body": "https://mailarchive.ietf.org/arch/msg/spasm/Kxol5ZgDR777Y58XsLPHwvl6uY8/\r\n\r\n\r\nFrom Peter C:\r\n\r\n> Secondly, X-Wing fundamentally relies on ML-KEM remaining ciphertext second pre-image resistant.  This means that it cannot mitigate ML-KEM implementation vulnerabilities.  If decapsulation fails to perform the ciphertext check properly, for example, then it's trivial to find ML-KEM second pre-images and break the IND-CCA2 security of X-Wing.  This isn't an issue if your goal is only to mitigate algorithmic vulnerabilities, but you need to be explicit about that.  At the very least, you need to reconsider \"we also cannot immediately place complete trust in post-quantum replacements until they have undergone extensive scrutiny and real-world testing to uncover and rectify potential implementation flaws\" in the introduction.\r\n\r\n\r\nWe either need to add Security Consideration text to this effect, or strengthen the combiner. I believe that binding the ML-KEM CT and PK would solve this?",
       "createdAt": "2024-07-23T16:31:37Z",
-      "updatedAt": "2024-07-23T16:31:37Z",
+      "updatedAt": "2024-07-26T22:21:06Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Comment from Britta Hale:\r\n\r\n> SHA3 does offer more properties...\r\n>Then, if all of the above holds, I would just suggest adding a remark that the draft is based on analyzed component choices, and should not be extrapolated to SHA2 or other constructions without analysis. (Basically, something to preempt someone making a draft in 5 yrs and saying \"but they did it, it must work generically!\").\r\n",
+          "createdAt": "2024-07-26T22:21:04Z",
+          "updatedAt": "2024-07-26T22:21:04Z"
+        }
+      ]
     },
     {
       "number": 43,
@@ -628,6 +636,126 @@
       "body": "Mike Ounsworth: Yeah, it should be referencing id-sha3-256 and friends from here:\r\nhttps://datatracker.ietf.org/doc/html/draft-ietf-lamps-cms-sha3-hash-04#name-message-digest-algorithms\r\n\r\nThat should be made clearer in the composite-KEM draft and actually reference them by OID.",
       "createdAt": "2024-07-23T23:10:05Z",
       "updatedAt": "2024-07-23T23:10:05Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 44,
+      "id": "I_kwDOKRPFO86Q5Eu3",
+      "title": "Update the acknowledgements",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/44",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Add\r\n\r\n> The authors thank the following people for providing review of the cryptographic constructs\r\n\r\nPeter C, Sophie Schmieg, Deirdre Connolly, Douglas Stebila, Falko",
+      "createdAt": "2024-07-25T19:55:01Z",
+      "updatedAt": "2024-07-25T19:55:44Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Make sure that Dan van Geest is also mentioned.",
+          "createdAt": "2024-07-25T19:55:43Z",
+          "updatedAt": "2024-07-25T19:55:43Z"
+        }
+      ]
+    },
+    {
+      "number": 45,
+      "id": "I_kwDOKRPFO86Q5LX1",
+      "title": "Can we remove the stupid counter?",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/45",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "From Falko:\r\n\r\n> Actually it seems the counter can be omitted if there is only one hash function invocation in the KDF: see Quynh's comment here: [https://github.com/openpgp-pqc/draft-ehlen-openpgp-nist-bp-comp/issues/10#issuecomment-2220090284](https://urldefense.com/v3/__https:/github.com/openpgp-pqc/draft-ehlen-openpgp-nist-bp-comp/issues/10*issuecomment-2220090284__;Iw!!FJ-Y8qCqXTj2!eom3NkR-W2xoJGcKEtuusgLkqyA-uDOgHpv07v2OjzKuONz1STgLKCE-u6KLON2NO08W7OUuyGCGEM-Tbn2hnr-0fygp6Q$)",
+      "createdAt": "2024-07-25T20:14:32Z",
+      "updatedAt": "2024-07-26T21:37:36Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Make sure to update the FIPS Compliance section, especially to reference  the secondary NIST documents that make this ok. -- basically we want someone to be able to hand this section to their FIPS lab, and the argument is all laid out for them.\r\n\r\nFrom Quynh on the above openpgp thread:\r\n> The counter is allowed to be skipped when the hash function is executed only once as specified on page 159 here: https://csrc.nist.gov/csrc/media/Projects/cryptographic-module-validation-program/documents/fips%20140-3/FIPS%20140-3%20IG.pdf\r\n> When X is a pseudorandom key, not a raw shared secret,  KMAC-KDF in SP 800-108 (on page 11 here: https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-108r1-upd1.pdf ) is an approved KDF where the Key Derivation Key (K) is a concatenation of multiple pseudorandom keys as specified in Section 6.3 pages 21 & 22 here :  https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-133r2.pdf",
+          "createdAt": "2024-07-26T21:37:35Z",
+          "updatedAt": "2024-07-26T21:37:35Z"
+        }
+      ]
+    },
+    {
+      "number": 46,
+      "id": "I_kwDOKRPFO86Q5YkH",
+      "title": "Editorial comments from Piotr",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/46",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "https://mailarchive.ietf.org/arch/msg/spasm/khasPf3y0_-Lq_0NtJe92unUw6o/\r\n\r\n2. Notes on the document \"Composite KEM\" version 4 (order of appearance)\r\na) Section 2.3.1\r\n> (\u2026) it produces a composite public key pk as per Section 3.2 and a composite\r\n>   secret key sk is per Section 3.3.\r\nit produces a composite public key pk as per Section 3.2 and a composite\r\nsecret key sk as per Section 3.3.\r\n\r\nb) Section 2.3.2\r\n> DHKEM.Encaps(pkR):\r\nRSA-OAEP.Encaps(pkR):\r\n\r\n> DHKEM.Decap(skR, enc):\r\nRSA-OAEP.Decap(skR, enc):\r\n\r\nc) Section 3.1\r\n> pk-MLKEM512-ECDH-P256 PUBLIC-KEY ::=\r\n>     pk-CompositeKEM {\r\n>       id-MLKEM512-ECDH-P256,\r\n>        OCTET STRING, ECPoint }\r\npk-MLKEM512-ECDH-P256 PUBLIC-KEY ::=\r\n     pk-CompositeKEM {\r\n       id-MLKEM512-ECDH-P256,\r\n       BIT STRING, ECPoint }\r\n\r\nd) Section 3.2\r\n> A composite key MUST contain two component public keys.  The order \r\n> of the component keys is determined by the definition of the corresponding\r\n> algorithm identifier as defined in section Section 5.\r\nA composite key MUST contain two component public keys as SEQUENCE of\r\ntwo bit strings.  The order of the component keys is determined by the\r\ndefinition of the corresponding algorithm identifier as defined in \r\nSection 5.\r\n\r\ne) Section 3.3\r\n> CompositeKEMPrivateKey ::= SEQUENCE SIZE (2) OF OneAsymmetricKey\r\n>\r\n>   Each element is a OneAsymmetricKey` [RFC5958] object for a component\r\n>   private key.\r\n>\r\n>   The parameters field MUST be absent.\r\n>\r\n>   The order of the component keys is the same as the order defined in\r\n>  Section 3.2 for the components of CompositeKEMPublicKey.\r\n>\r\n>   When a CompositePrivateKey is conveyed inside a OneAsymmetricKey\r\n>   structure (version 1 of which is also known as PrivateKeyInfo)\r\n>  [RFC5958], the privateKeyAlgorithm field SHALL be set to the\r\n>  corresponding composite algorithm identifier defined according to\r\n>   Section 5, the privateKey field\r\n>   SHALL contain the CompositeKEMPrivateKey, and the publicKey field MUST\r\n>   NOT be present. Associated public key material MAY be present in the\r\n>   CompositeKEMPrivateKey.\r\n\r\nCompositeKEMPrivateKey ::= SEQUENCE SIZE (2) OF OCTET STRING\r\n\r\n   Each element is a OneAsymmetricKey` [RFC5958] object for a component\r\n   private key (privateKey field).\r\n\r\n   The order of the component keys is the same as the order defined in\r\n   Section 3.2 for the components of CompositeKEMPublicKey.\r\n\r\n   When a CompositeKEMPrivateKey is conveyed inside a OneAsymmetricKey\r\n   structure (version 1 of which is also known as PrivateKeyInfo)\r\n   [RFC5958], the privateKeyAlgorithm field SHALL be set to the\r\n   corresponding composite algorithm identifier defined according to\r\n   Section 5 (the parameters field MUST be absent), the privateKey field\r\n   SHALL contain the CompositeKEMPrivateKey, and the publicKey field MUST\r\n   NOT be present. Associated public key material MAY be present in the\r\n   OneAsymmetricKey structure containing CompositeKEMPrivateKey and in\r\n   that case version is 2.\r\n\r\nf) Section 4.2\r\n> 4.2.  CompositeCiphertextValue\r\n>\r\n>   The compositeCipherTextValue is a concatenation of the\r\n>   ciphertexts of the underlying component algorithms.  It is represented\r\n>   in ASN.1 as follows:\r\n\r\n4.2.  CompositeCipherTextValue\r\n\r\n   The compositeCipherTextValue is a sequence of the\r\n   ciphertexts of the underlying component algorithms.  It is represented\r\n   in ASN.1 as follows:\r\n\r\ng) Section 4.3\r\n> KEK <- Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep) =\r\n>      KDF(counter || tradSS || mlkemSS || tradCT || tradPK ||\r\n>          domSep, outputBits)\r\n>\r\n>                Figure 1: Generic KEM combiner construction\r\n>\r\n>   where:\r\n>\r\n>   *  KDF(message, outputBits) represents a hash function suitable to\r\n>      the chosen KEMs according to {tab-kem-combiners}.\r\n>\r\n>   *  counter SHALL be the fixed 32-bit value 0x00000001 which is placed\r\n>      here solely for the purposes of compliance with [SP.800-56Cr2].\r\n>\r\n>   *  tradSS is the shared secret from the traditional component\r\n>      (elliptic curve or RSA).\r\n>\r\n>   *  mlkemSS is the shared secret from the ML-KEM componont.\r\n>\r\n>   *  tradCT is the ciphertext from the traditional component (elliptic\r\n>      curve or RSA).\r\n>\r\n>   *  tradPK is the public key of the traditional component (elliptic\r\n>      curve or RSA).\r\n>   *  domSep SHALL be the DER encoded value of the object identifier of\r\n>      the composite KEM algorithm as listed in Section 5.1.\r\n>\r\n>   *  || represents concatenation.\r\n> \r\n> Each registered composite KEM algorithm must specify the choice of\r\n>   KDF, demSep, and outputBits to be used.\r\nKEK <- Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep) =\r\n\r\n   SHA3(counter || tradSS || mlkemSS || tradCT || tradPK || domSep)\r\n         ([SP.800-56Cr2] Section 4.1 Option 1 (when KDF is SHA3))\r\n\r\n                Figure 1: Generic KEM combiner construction\r\n\r\n   where:\r\n\r\n   *  counter SHALL be the fixed 32-bit value 0x00000001 which is placed\r\n      here solely for the purposes of compliance with [SP.800-56Cr2].\r\n\r\n   *  tradSS is the shared secret from the traditional component (ECDH or RSA).\r\n\r\n   *  mlkemSS is the shared secret from the ML-KEM component.\r\n\r\n   *  tradCT is the ciphertext from the traditional component (ECDH or RSA).\r\n      Note: In the case of ECDH, this is the sender's ephemeral public key.\r\n\r\n   *  tradPK is the recipient's public key of the traditional component (ECDH or RSA).\r\n\r\n   *  domSep SHALL be the DER encoded value of the object identifier of\r\n      the composite KEM algorithm as listed in Section 5.1.\r\n\r\n   *  || represents concatenation.\r\n\r\n   Each registered composite KEM algorithm (see {tab-kem-combiners}) must\r\n   specify the choice of KDF (ie. type of SHA3 function) and domSep\r\n   to be used.\r\nComment:\r\n1. The use of the counter parameter is probably redundant - see Falko Strenzke email from 2024/07/24\r\n2. Removing outputBits is related to replacing KMAC with SHA3.\r\n\r\nh) Section 4.4\r\n> This construction is specifically designed to conform with\r\n>   Section 4.1 Option 1 (when KDF is SHA3) or Option 3 (when KDF is\r\n>   KMAC) in the following way:\r\n>\r\n>   In both cases we match exactly the construction using the allowed\r\n>   \"hybrid\" shared secret of the form Z' = Z || T to yield the\r\n>   construction\r\nThis construction is specifically designed to conform with [SP.800-\r\n56Cr2] Section 4.1 Option 1 (when KDF is SHA3). In any cases we match exactly the\r\nconstruction using the allowed \"hybrid\" shared secret of the form\r\n   Z' = Z || T (see Section 2 of the [SP.800-56Cr2]) to yield the construction:\r\n\r\n(\u2026)\r\nThe last sentence starting with: \u201cIn the case that KDF is KMAC,\u2026\u201d\r\nshould be removed.\r\n\r\n------\r\nPiotr Popis\r\n",
+      "createdAt": "2024-07-25T20:54:30Z",
+      "updatedAt": "2024-07-25T20:54:30Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 47,
+      "id": "I_kwDOKRPFO86Q5ZAy",
+      "title": "Reducing the algorithm list",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/47",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "https://mailarchive.ietf.org/arch/msg/spasm/khasPf3y0_-Lq_0NtJe92unUw6o/\r\n\r\nSophie suggests removing ML-KEM512 and possibly the ML-KEM1024 combinations.\r\n\r\nPiotr proposes a full updated table with a reduced list.",
+      "createdAt": "2024-07-25T20:55:51Z",
+      "updatedAt": "2024-07-25T20:59:06Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "The other consideration here is aligning with OpenPGP, and particularly the combinations suggested by Quynh Dang in his OpenPGP slides.\r\n\r\nhttps://datatracker.ietf.org/meeting/120/materials/slides-120-openpgp-pqc-with-nist-and-brainpool-curves",
+          "createdAt": "2024-07-25T20:59:06Z",
+          "updatedAt": "2024-07-25T20:59:06Z"
+        }
+      ]
+    },
+    {
+      "number": 48,
+      "id": "I_kwDOKRPFO86RBFo0",
+      "title": "Don't name-collide \"DHKEM\" with 9180",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/48",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Call it something else?\r\nNot sure what.\r\nThis with Peter Campbell's comment in LAMPS 120 chat.\r\n\r\nSophie suggested ECIES -- but I don't think that's quite right either since we are not doing the symmetric encryption + MAC step.\r\n\r\nPersonally, I think we should leave it as \"DHKEM\" -- I don't think 9180 should have a monopoly on this term.",
+      "createdAt": "2024-07-26T21:10:03Z",
+      "updatedAt": "2024-07-26T21:10:03Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 49,
+      "id": "I_kwDOKRPFO86RBNxj",
+      "title": "Are we sufficiently clear about what encoding of the public key to feed into the KDF?",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/49",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "I assume it should be the raw bits from the SPKI, and not hash in any ASN.1 wrapping. This will make it the most binary-compatible with OpenPGP and others.",
+      "createdAt": "2024-07-26T21:41:14Z",
+      "updatedAt": "2024-07-26T21:41:14Z",
       "closedAt": null,
       "comments": []
     }
