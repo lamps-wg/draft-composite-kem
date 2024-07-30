@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-07-28T01:38:22.982528+00:00",
+  "timestamp": "2024-07-30T01:26:35.387968+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -715,7 +715,7 @@
       "labels": [],
       "body": "https://mailarchive.ietf.org/arch/msg/spasm/khasPf3y0_-Lq_0NtJe92unUw6o/\r\n\r\nSophie suggests removing ML-KEM512 and possibly the ML-KEM1024 combinations.\r\n\r\nPiotr proposes a full updated table with a reduced list.",
       "createdAt": "2024-07-25T20:55:51Z",
-      "updatedAt": "2024-07-25T20:59:06Z",
+      "updatedAt": "2024-07-29T14:37:13Z",
       "closedAt": null,
       "comments": [
         {
@@ -724,6 +724,13 @@
           "body": "The other consideration here is aligning with OpenPGP, and particularly the combinations suggested by Quynh Dang in his OpenPGP slides.\r\n\r\nhttps://datatracker.ietf.org/meeting/120/materials/slides-120-openpgp-pqc-with-nist-and-brainpool-curves",
           "createdAt": "2024-07-25T20:59:06Z",
           "updatedAt": "2024-07-25T20:59:06Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "More comment from Sophie:\r\n\r\n> For compliance, the most important considerations are on the classic side of the hybrid, with the only PQC compliance requirements going beyond the security analysis above being CNSA's wish for ML-KEM1024. But CNSA2 also prefers non-hybrid solutions, so I'm not sure whether we should hybridize with ML-KEM1024 at all. For ML-KEM512, there currently seems to be no compliance forcing its adoption over ML-KEM768, with only some performance considerations having slight preferences, but in my opinion the security considerations weigh heavier here, and we should find other ways to alleviate the performance issues.",
+          "createdAt": "2024-07-29T14:37:12Z",
+          "updatedAt": "2024-07-29T14:37:12Z"
         }
       ]
     },
