@@ -634,6 +634,7 @@ Therefore &lt;CompKEM&gt;.1 is equal to 2.16.840.1.114027.80.5.2.1
 |---------                           | -----------------  | ----------      | ----------           | -------- |
 | id-MLKEM768-RSA2048                | &lt;CompKEM&gt;.13 | MLKEM512        | RSA-OAEP 2048        | SHA3-256 |
 | id-MLKEM768-RSA3072                | &lt;CompKEM&gt;.4  | MLKEM512        | RSA-OAEP 3072        | SHA3-256 |
+| id-MLKEM768-RSA4096                | &lt;CompKEM&gt;.TBD  | MLKEM512        | RSA-OAEP 4096        | SHA3-256 |
 | id-MLKEM768-ECDH-P384              | &lt;CompKEM&gt;.5  | MLKEM768        | ECDH-P384            | SHA3-384 |
 | id-MLKEM768-ECDH-brainpoolP256r1   | &lt;CompKEM&gt;.6  | MLKEM768        | ECDH-brainpoolp256r1 | SHA3-384 |
 | id-MLKEM768-X25519                 | &lt;CompKEM&gt;.7  | MLKEM768        | X25519               | SHA3-384 |
@@ -667,12 +668,9 @@ EDNOTE: Should the domain separator values be the SHA-256 hash of the DER encodi
 
 | Composite KEM AlgorithmID | Domain Separator (in Hex encoding)|
 | ----------- | ----------- |
-| id-MLKEM512-ECDH-P256     | 060B6086480186FA6B50050201|
-| id-MLKEM512-ECDH-brainpoolP256r1 | 060B6086480186FA6B50050202|
-| id-MLKEM512-X25519        | 060B6086480186FA6B50050203|
-| id-MLKEM512-RSA2048       | 060B6086480186FA6B5005020D|
-| id-MLKEM512-RSA3072       | 060B6086480186FA6B50050204|
-| id-MLKEM768-ECDH-P256     | 060B6086480186FA6B50050205|
+| id-MLKEM768-RSA2048       | 060B6086480186FA6B5005020D|
+| id-MLKEM768-RSA3072       | 060B6086480186FA6B50050204|
+| id-MLKEM768-ECDH-P384     | 060B6086480186FA6B50050205|
 | id-MLKEM768-ECDH-brainpoolP256r1 |060B6086480186FA6B50050206|
 | id-MLKEM768-X25519        | 060B6086480186FA6B50050207|
 | id-MLKEM1024-ECDH-P384    | 060B6086480186FA6B50050208|
@@ -684,7 +682,7 @@ EDNOTE: these domain separators are based on the prototyping OIDs assigned on th
 
 ## RSA-OAEP Parameters {#sect-rsaoaep-params}
 
-Use of RSA-OAEP [RFC3560] within `id-MLKEM512-RSA2048` and `id-MLKEM512-RSA3072` requires additional specification.
+Use of RSA-OAEP [RFC3560] within `id-MLKEM768-RSA2048`, `id-MLKEM768-RSA3072`, and `id-MLKEM768-RSA4096` requires additional specification.
 
 First, a quick note on the choice of RSA-OAEP as the supported RSA encryption primitive. RSA-KEM [RFC5990] is more straightforward to work with, but it has fairly limited adoption and therefore is of limited backwards compatibility value. Also, while RSA-PKCS#1v1.5 [RFC8017] is still everywhere, but hard to make secure and no longer FIPS-approved as of the end of 2023 [SP800-131Ar2], so it is of limited forwards value. This leaves RSA-OAEP [RFC3560] as the remaining choice.
 
@@ -726,12 +724,9 @@ The following table lists the REQUIRED KDF and key-encryption algorithms to pres
 
 | Composite KEM OID                 | KDF         | Key Encryption Alg |
 |---------                          | ---         | ---                |
-| id-MLKEM512-ECDH-P256             | SHA3-256 | id-aes128-Wrap     |
-| id-MLKEM512-ECDH-brainpoolP256r1  | SHA3-256 | id-aes128-Wrap     |
-| id-MLKEM512-X25519                | SHA3-256 | id-aes128-Wrap     |
-| id-MLKEM512-RSA2048               | SHA3-256 | id-aes128-Wrap     |
-| id-MLKEM512-RSA3072               | SHA3-256 | id-aes128-Wrap     |
-| id-MLKEM768-ECDH-P256             | SHA3-384 | id-aes256-Wrap     |
+| id-MLKEM768-RSA2048               | SHA3-256 | id-aes128-Wrap     |
+| id-MLKEM768-RSA3072               | SHA3-256 | id-aes128-Wrap     |
+| id-MLKEM768-ECDH-P384             | SHA3-384 | id-aes256-Wrap     |
 | id-MLKEM768-ECDH-brainpoolP256r1  | SHA3-384 | id-aes256-Wrap     |
 | id-MLKEM768-X25519                | SHA3-384 | id-aes256-Wrap     |
 | id-MLKEM1024-ECDH-P384            | SHA3-512 | id-aes256-Wrap     |
@@ -815,29 +810,25 @@ EDNOTE to IANA: OIDs will need to be replaced in both the ASN.1 module and in {{
 
 ###  Object Identifier Registrations - SMI Security for PKIX Algorithms
 
-- id-MLKEM512-ECDH-P256
+- id-MLKEM768-RSA2048
   - Decimal: IANA Assigned
-  - Description: id-MLKEM512-ECDH-P256
-  - References: This Document
-
-- id-MLKEM512-ECDH-brainpoolP256r1
-  - Decimal: IANA Assigned
-  - Description: id-MLKEM512-ECDH-brainpoolP256r1
-  - References: This Document
-
-- id-MLKEM512-X25519
-  - Decimal: IANA Assigned
-  - Description: id-MLKEM512-X25519
+  - Description: id-MLKEM768-RSA2048
   - References: This Document
 
 - id-MLKEM768-RSA3072
   - Decimal: IANA Assigned
-  - Description: id-MLKEM768-3072
+  - Description: id-MLKEM768-RSA3072
   - References: This Document
 
-- id-MLKEM768-ECDH-P256
+- id-MLKEM768-RSA4096
   - Decimal: IANA Assigned
-  - Description: id-MLKEM768-ECDH-P256
+  - Description: id-MLKEM768-RSA4096
+  - References: This Document
+
+
+- id-MLKEM768-ECDH-P384
+  - Decimal: IANA Assigned
+  - Description: id-MLKEM768-ECDH-P384
   - References: This Document
 
 - id-MLKEM768-ECDH-brainpoolP256r1
