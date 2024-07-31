@@ -208,6 +208,10 @@ informative:
       - ins: A. Roginksy
         name: Allan Reginsky
     org: National Institute of Standards and Technology (NIST)
+  CNSA2.0:
+    title: "Commercial National Security Algorithm Suite 2.0"
+    org: National Security Agency
+    target: https://media.defense.gov/2022/Sep/07/2003071834/-1/-1/0/CSA_CNSA_2.0_ALGORITHMS_.PDF
 
 
 --- abstract
@@ -222,6 +226,9 @@ This document introduces a set of Key Encapsulation Mechanism (KEM) schemes that
 # Changes in version -05
 
 * Fixed a bug in the definition of the Encaps() functions: KEMs, according to both RFC9180 and FIPS 203 should always return (ss, ct), but we had (ct, ss).
+* Aligning algorithm list with LAMPS WG on-list discussions and draft-openpgp-pqc
+  * ML-KEM-768 aligned with P-384 as per Quynh's OpenPGP presentation: https://datatracker.ietf.org/meeting/120/materials/slides-120-openpgp-pqc-with-nist-and-brainpool-curves
+  
 
 
 Still to do in a future version:
@@ -623,18 +630,18 @@ TODO: OIDs to be replaced by IANA.
 Therefore &lt;CompKEM&gt;.1 is equal to 2.16.840.1.114027.80.5.2.1
 
 | Composite KEM                      | OID                | First Algorithm | Second Algorithm     | KDF      |
-|---------                          | -----------------  | ----------      | ----------           | -------- |
-| id-MLKEM512-ECDH-P256             | &lt;CompKEM&gt;.1  | MLKEM512        | ECDH-P256            | SHA3-256 |
-| id-MLKEM512-ECDH-brainpoolP256r1  | &lt;CompKEM&gt;.2  | MLKEM512        | ECDH-brainpoolp256r1 | SHA3-256 |
-| id-MLKEM512-X25519                | &lt;CompKEM&gt;.3  | MLKEM512        | X25519               | SHA3-256 |
-| id-MLKEM512-RSA2048               | &lt;CompKEM&gt;.13 | MLKEM512        | RSA-OAEP 2048         | SHA3-256 |
-| id-MLKEM512-RSA3072               | &lt;CompKEM&gt;.4  | MLKEM512        | RSA-OAEP 3072         | SHA3-256 |
-| id-MLKEM768-ECDH-P256             | &lt;CompKEM&gt;.5  | MLKEM768        | ECDH-P256            | SHA3-384 |
-| id-MLKEM768-ECDH-brainpoolP256r1  | &lt;CompKEM&gt;.6  | MLKEM768        | ECDH-brainpoolp256r1 | SHA3-384 |
-| id-MLKEM768-X25519                | &lt;CompKEM&gt;.7  | MLKEM768        | X25519               | SHA3-384 |
-| id-MLKEM1024-ECDH-P384            | &lt;CompKEM&gt;.8  | MLKEM1024       | ECDH-P384            | SHA3-512 |
-| id-MLKEM1024-ECDH-brainpoolP384r1 | &lt;CompKEM&gt;.9  | MLKEM1024       | ECDH-brainpoolP384r1 | SHA3-512 |
-| id-MLKEM1024-X448                 | &lt;CompKEM&gt;.10 | MLKEM1024       | X448                 | SHA3-512 |
+|---------                           | -----------------  | ----------      | ----------           | -------- |
+| id-MLKEM512-ECDH-P256              | &lt;CompKEM&gt;.1  | MLKEM512        | ECDH-P256            | SHA3-256 |
+| id-MLKEM512-ECDH-brainpoolP256r1   | &lt;CompKEM&gt;.2  | MLKEM512        | ECDH-brainpoolp256r1 | SHA3-256 |
+| id-MLKEM512-X25519                 | &lt;CompKEM&gt;.3  | MLKEM512        | X25519               | SHA3-256 |
+| id-MLKEM512-RSA2048                | &lt;CompKEM&gt;.13 | MLKEM512        | RSA-OAEP 2048        | SHA3-256 |
+| id-MLKEM512-RSA3072                | &lt;CompKEM&gt;.4  | MLKEM512        | RSA-OAEP 3072        | SHA3-256 |
+| id-MLKEM768-ECDH-P384              | &lt;CompKEM&gt;.5  | MLKEM768        | ECDH-P384            | SHA3-384 |
+| id-MLKEM768-ECDH-brainpoolP256r1   | &lt;CompKEM&gt;.6  | MLKEM768        | ECDH-brainpoolp256r1 | SHA3-384 |
+| id-MLKEM768-X25519                 | &lt;CompKEM&gt;.7  | MLKEM768        | X25519               | SHA3-384 |
+| id-MLKEM1024-ECDH-P384             | &lt;CompKEM&gt;.8  | MLKEM1024       | ECDH-P384            | SHA3-512 |
+| id-MLKEM1024-ECDH-brainpoolP384r1  | &lt;CompKEM&gt;.9  | MLKEM1024       | ECDH-brainpoolP384r1 | SHA3-512 |
+| id-MLKEM1024-X448                  | &lt;CompKEM&gt;.10 | MLKEM1024       | X448                 | SHA3-512 |
 {: #tab-kem-algs title="Composite KEM key types"}
 
 Full specifications for the referenced algorithms can be found as follows:
@@ -647,6 +654,12 @@ Full specifications for the referenced algorithms can be found as follows:
 * _X25519 / X448_: [RFC8410]
 
 EDNOTE: I believe that [SP.800-56Ar3] and [BSI-ECC] give equivalent and inter-operable algorithms, so maybe this is extraneous detail to include?
+
+## Rationale for choices
+
+* Pair equivalent levels. 
+* NIST-P-384 is CNSA approved [CNSA2.0] for all classification levels.
+* 521 bit curve not widely used.
 
 ## Domain Separators {#sec-domain}
 
@@ -858,18 +871,6 @@ EDNOTE to IANA: OIDs will need to be replaced in both the ASN.1 module and in {{
 
 
 # Security Considerations
-
-## Component Algorithm Selection Criteria {#sec-selection-criteria}
-
-The composite algorithm combinations defined in this document were chosen according to the following guidelines:
-
-1. RSA combinations are provided at key sizes of 2048 and 3072 bits. Since RSA 2048 and 3072 are considered to have 112 and 128 bits of classical security respectively, they are both matched with NIST PQC Level 1 algorithms and 128-bit symmetric algorithms.
-1. Elliptic curve algorithms are provided with combinations on each of the NIST [RFC6090], Brainpool [RFC5639], and Edwards [RFC7748] curves. NIST PQC Levels 1 - 3 algorithms are matched with 256-bit curves, while NIST levels 4 - 5 are matched with 384-bit elliptic curves. This provides a balance between matching classical security levels of post-quantum and traditional algorithms, and also selecting elliptic curves which already have wide adoption.
-1. NIST level 1 candidates are provided, matched with 256-bit elliptic curves, intended for constrained use cases.
-
-If other combinations are needed, a separate specification should be submitted to the IETF LAMPS working group.  To ease implementation, these specifications are encouraged to follow the construction pattern of the algorithms specified in this document.
-
-The composite structures defined in this specification allow only for pairs of algorithms. This also does not preclude future specification from extending these structures to define combinations with three or more components.
 
 ## Policy for Deprecated and Acceptable Algorithms
 

@@ -188,19 +188,19 @@ kema-MLKEM512-RSA3072 KEM-ALGORITHM ::=
 
 
 -- TODO: OID to be replaced by IANA
-id-MLKEM768-ECDH-P256 OBJECT IDENTIFIER ::= {
+id-MLKEM768-ECDH-P384 OBJECT IDENTIFIER ::= {
   joint-iso-itu-t(2) country(16) us(840) organization(1) 
   entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 5 }
 
-pk-MLKEM768-ECDH-P256 PUBLIC-KEY ::= 
+pk-MLKEM768-ECDH-P384 PUBLIC-KEY ::= 
   pk-CompositeKEM {
-    id-MLKEM768-ECDH-P256, 
+    id-MLKEM768-ECDH-P384, 
     OCTET STRING, ECPoint }
 
-kema-MLKEM768-ECDH-P256 KEM-ALGORITHM ::= 
+kema-MLKEM768-ECDH-P384 KEM-ALGORITHM ::= 
     kema-CompositeKEM{
-      id-MLKEM768-ECDH-P256, 
-      pk-MLKEM768-ECDH-P256 }
+      id-MLKEM768-ECDH-P384, 
+      pk-MLKEM768-ECDH-P384 }
 
 
 -- TODO: OID to be replaced by IANA
