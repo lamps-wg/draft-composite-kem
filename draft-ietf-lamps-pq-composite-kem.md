@@ -228,6 +228,7 @@ This document introduces a set of Key Encapsulation Mechanism (KEM) schemes that
 * Fixed a bug in the definition of the Encaps() functions: KEMs, according to both RFC9180 and FIPS 203 should always return (ss, ct), but we had (ct, ss).
 * Aligning algorithm list with LAMPS WG on-list discussions and draft-openpgp-pqc
   * ML-KEM-768 aligned with P-384 as per Quynh's OpenPGP presentation: https://datatracker.ietf.org/meeting/120/materials/slides-120-openpgp-pqc-with-nist-and-brainpool-curves
+  * Removing ML-KEM-512 combinations as per Sophie's recommendation: https://mailarchive.ietf.org/arch/msg/spasm/khasPf3y0_-Lq_0NtJe92unUw6o/
   
 
 
@@ -631,11 +632,8 @@ Therefore &lt;CompKEM&gt;.1 is equal to 2.16.840.1.114027.80.5.2.1
 
 | Composite KEM                      | OID                | First Algorithm | Second Algorithm     | KDF      |
 |---------                           | -----------------  | ----------      | ----------           | -------- |
-| id-MLKEM512-ECDH-P256              | &lt;CompKEM&gt;.1  | MLKEM512        | ECDH-P256            | SHA3-256 |
-| id-MLKEM512-ECDH-brainpoolP256r1   | &lt;CompKEM&gt;.2  | MLKEM512        | ECDH-brainpoolp256r1 | SHA3-256 |
-| id-MLKEM512-X25519                 | &lt;CompKEM&gt;.3  | MLKEM512        | X25519               | SHA3-256 |
-| id-MLKEM512-RSA2048                | &lt;CompKEM&gt;.13 | MLKEM512        | RSA-OAEP 2048        | SHA3-256 |
-| id-MLKEM512-RSA3072                | &lt;CompKEM&gt;.4  | MLKEM512        | RSA-OAEP 3072        | SHA3-256 |
+| id-MLKEM768-RSA2048                | &lt;CompKEM&gt;.13 | MLKEM512        | RSA-OAEP 2048        | SHA3-256 |
+| id-MLKEM768-RSA3072                | &lt;CompKEM&gt;.4  | MLKEM512        | RSA-OAEP 3072        | SHA3-256 |
 | id-MLKEM768-ECDH-P384              | &lt;CompKEM&gt;.5  | MLKEM768        | ECDH-P384            | SHA3-384 |
 | id-MLKEM768-ECDH-brainpoolP256r1   | &lt;CompKEM&gt;.6  | MLKEM768        | ECDH-brainpoolp256r1 | SHA3-384 |
 | id-MLKEM768-X25519                 | &lt;CompKEM&gt;.7  | MLKEM768        | X25519               | SHA3-384 |
