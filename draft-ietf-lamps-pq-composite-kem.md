@@ -657,7 +657,7 @@ EDNOTE: I believe that [SP.800-56Ar3] and [BSI-ECC] give equivalent and inter-op
 
 ## Rationale for choices
 
-* Pair equivalent levels. 
+* Pair equivalent levels.
 * NIST-P-384 is CNSA approved [CNSA2.0] for all classification levels.
 * 521 bit curve not widely used.
 
