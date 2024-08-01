@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-07-30T01:26:35.387968+00:00",
+  "timestamp": "2024-08-01T01:40:08.460815+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -699,9 +699,17 @@
       "labels": [],
       "body": "https://mailarchive.ietf.org/arch/msg/spasm/khasPf3y0_-Lq_0NtJe92unUw6o/\r\n\r\n2. Notes on the document \"Composite KEM\" version 4 (order of appearance)\r\na) Section 2.3.1\r\n> (\u2026) it produces a composite public key pk as per Section 3.2 and a composite\r\n>   secret key sk is per Section 3.3.\r\nit produces a composite public key pk as per Section 3.2 and a composite\r\nsecret key sk as per Section 3.3.\r\n\r\nb) Section 2.3.2\r\n> DHKEM.Encaps(pkR):\r\nRSA-OAEP.Encaps(pkR):\r\n\r\n> DHKEM.Decap(skR, enc):\r\nRSA-OAEP.Decap(skR, enc):\r\n\r\nc) Section 3.1\r\n> pk-MLKEM512-ECDH-P256 PUBLIC-KEY ::=\r\n>     pk-CompositeKEM {\r\n>       id-MLKEM512-ECDH-P256,\r\n>        OCTET STRING, ECPoint }\r\npk-MLKEM512-ECDH-P256 PUBLIC-KEY ::=\r\n     pk-CompositeKEM {\r\n       id-MLKEM512-ECDH-P256,\r\n       BIT STRING, ECPoint }\r\n\r\nd) Section 3.2\r\n> A composite key MUST contain two component public keys.  The order \r\n> of the component keys is determined by the definition of the corresponding\r\n> algorithm identifier as defined in section Section 5.\r\nA composite key MUST contain two component public keys as SEQUENCE of\r\ntwo bit strings.  The order of the component keys is determined by the\r\ndefinition of the corresponding algorithm identifier as defined in \r\nSection 5.\r\n\r\ne) Section 3.3\r\n> CompositeKEMPrivateKey ::= SEQUENCE SIZE (2) OF OneAsymmetricKey\r\n>\r\n>   Each element is a OneAsymmetricKey` [RFC5958] object for a component\r\n>   private key.\r\n>\r\n>   The parameters field MUST be absent.\r\n>\r\n>   The order of the component keys is the same as the order defined in\r\n>  Section 3.2 for the components of CompositeKEMPublicKey.\r\n>\r\n>   When a CompositePrivateKey is conveyed inside a OneAsymmetricKey\r\n>   structure (version 1 of which is also known as PrivateKeyInfo)\r\n>  [RFC5958], the privateKeyAlgorithm field SHALL be set to the\r\n>  corresponding composite algorithm identifier defined according to\r\n>   Section 5, the privateKey field\r\n>   SHALL contain the CompositeKEMPrivateKey, and the publicKey field MUST\r\n>   NOT be present. Associated public key material MAY be present in the\r\n>   CompositeKEMPrivateKey.\r\n\r\nCompositeKEMPrivateKey ::= SEQUENCE SIZE (2) OF OCTET STRING\r\n\r\n   Each element is a OneAsymmetricKey` [RFC5958] object for a component\r\n   private key (privateKey field).\r\n\r\n   The order of the component keys is the same as the order defined in\r\n   Section 3.2 for the components of CompositeKEMPublicKey.\r\n\r\n   When a CompositeKEMPrivateKey is conveyed inside a OneAsymmetricKey\r\n   structure (version 1 of which is also known as PrivateKeyInfo)\r\n   [RFC5958], the privateKeyAlgorithm field SHALL be set to the\r\n   corresponding composite algorithm identifier defined according to\r\n   Section 5 (the parameters field MUST be absent), the privateKey field\r\n   SHALL contain the CompositeKEMPrivateKey, and the publicKey field MUST\r\n   NOT be present. Associated public key material MAY be present in the\r\n   OneAsymmetricKey structure containing CompositeKEMPrivateKey and in\r\n   that case version is 2.\r\n\r\nf) Section 4.2\r\n> 4.2.  CompositeCiphertextValue\r\n>\r\n>   The compositeCipherTextValue is a concatenation of the\r\n>   ciphertexts of the underlying component algorithms.  It is represented\r\n>   in ASN.1 as follows:\r\n\r\n4.2.  CompositeCipherTextValue\r\n\r\n   The compositeCipherTextValue is a sequence of the\r\n   ciphertexts of the underlying component algorithms.  It is represented\r\n   in ASN.1 as follows:\r\n\r\ng) Section 4.3\r\n> KEK <- Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep) =\r\n>      KDF(counter || tradSS || mlkemSS || tradCT || tradPK ||\r\n>          domSep, outputBits)\r\n>\r\n>                Figure 1: Generic KEM combiner construction\r\n>\r\n>   where:\r\n>\r\n>   *  KDF(message, outputBits) represents a hash function suitable to\r\n>      the chosen KEMs according to {tab-kem-combiners}.\r\n>\r\n>   *  counter SHALL be the fixed 32-bit value 0x00000001 which is placed\r\n>      here solely for the purposes of compliance with [SP.800-56Cr2].\r\n>\r\n>   *  tradSS is the shared secret from the traditional component\r\n>      (elliptic curve or RSA).\r\n>\r\n>   *  mlkemSS is the shared secret from the ML-KEM componont.\r\n>\r\n>   *  tradCT is the ciphertext from the traditional component (elliptic\r\n>      curve or RSA).\r\n>\r\n>   *  tradPK is the public key of the traditional component (elliptic\r\n>      curve or RSA).\r\n>   *  domSep SHALL be the DER encoded value of the object identifier of\r\n>      the composite KEM algorithm as listed in Section 5.1.\r\n>\r\n>   *  || represents concatenation.\r\n> \r\n> Each registered composite KEM algorithm must specify the choice of\r\n>   KDF, demSep, and outputBits to be used.\r\nKEK <- Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep) =\r\n\r\n   SHA3(counter || tradSS || mlkemSS || tradCT || tradPK || domSep)\r\n         ([SP.800-56Cr2] Section 4.1 Option 1 (when KDF is SHA3))\r\n\r\n                Figure 1: Generic KEM combiner construction\r\n\r\n   where:\r\n\r\n   *  counter SHALL be the fixed 32-bit value 0x00000001 which is placed\r\n      here solely for the purposes of compliance with [SP.800-56Cr2].\r\n\r\n   *  tradSS is the shared secret from the traditional component (ECDH or RSA).\r\n\r\n   *  mlkemSS is the shared secret from the ML-KEM component.\r\n\r\n   *  tradCT is the ciphertext from the traditional component (ECDH or RSA).\r\n      Note: In the case of ECDH, this is the sender's ephemeral public key.\r\n\r\n   *  tradPK is the recipient's public key of the traditional component (ECDH or RSA).\r\n\r\n   *  domSep SHALL be the DER encoded value of the object identifier of\r\n      the composite KEM algorithm as listed in Section 5.1.\r\n\r\n   *  || represents concatenation.\r\n\r\n   Each registered composite KEM algorithm (see {tab-kem-combiners}) must\r\n   specify the choice of KDF (ie. type of SHA3 function) and domSep\r\n   to be used.\r\nComment:\r\n1. The use of the counter parameter is probably redundant - see Falko Strenzke email from 2024/07/24\r\n2. Removing outputBits is related to replacing KMAC with SHA3.\r\n\r\nh) Section 4.4\r\n> This construction is specifically designed to conform with\r\n>   Section 4.1 Option 1 (when KDF is SHA3) or Option 3 (when KDF is\r\n>   KMAC) in the following way:\r\n>\r\n>   In both cases we match exactly the construction using the allowed\r\n>   \"hybrid\" shared secret of the form Z' = Z || T to yield the\r\n>   construction\r\nThis construction is specifically designed to conform with [SP.800-\r\n56Cr2] Section 4.1 Option 1 (when KDF is SHA3). In any cases we match exactly the\r\nconstruction using the allowed \"hybrid\" shared secret of the form\r\n   Z' = Z || T (see Section 2 of the [SP.800-56Cr2]) to yield the construction:\r\n\r\n(\u2026)\r\nThe last sentence starting with: \u201cIn the case that KDF is KMAC,\u2026\u201d\r\nshould be removed.\r\n\r\n------\r\nPiotr Popis\r\n",
       "createdAt": "2024-07-25T20:54:30Z",
-      "updatedAt": "2024-07-25T20:54:30Z",
+      "updatedAt": "2024-07-31T23:07:56Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "More editorial feedback here:\r\n\r\nhttps://mailarchive.ietf.org/arch/msg/spasm/khasPf3y0_-Lq_0NtJe92unUw6o/",
+          "createdAt": "2024-07-31T23:07:55Z",
+          "updatedAt": "2024-07-31T23:07:55Z"
+        }
+      ]
     },
     {
       "number": 47,
@@ -763,6 +771,54 @@
       "body": "I assume it should be the raw bits from the SPKI, and not hash in any ASN.1 wrapping. This will make it the most binary-compatible with OpenPGP and others.",
       "createdAt": "2024-07-26T21:41:14Z",
       "updatedAt": "2024-07-26T21:41:14Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 50,
+      "id": "I_kwDOKRPFO86Rcyi6",
+      "title": "Add text in private key section that requires the public key ",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/50",
+      "state": "OPEN",
+      "author": "johngray-dev",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "If we require binding of the public key for RSA/EC then we need to update the private key section to indicate the public key is needed (or a copy of it needs to be kept somewhere).\r\n",
+      "createdAt": "2024-07-31T14:45:10Z",
+      "updatedAt": "2024-07-31T14:45:36Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 51,
+      "id": "I_kwDOKRPFO86Rdc9A",
+      "title": "SHA2 and SHA3 combinations",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/51",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "The authors suggest, rather than 2x'ing the whole list, we do the following:\r\n\r\nAll RSA combinations use HKDF-SHA2.\r\nEach of the P256 and brainpoolP256 combinations are offered with both SHA3 (to align with X-Wing), and HKDF-SHA2. The new list would then be:\r\n\r\n```\r\n| Composite KEM                     | KDF       |\r\n|---------                          | --------  |\r\n| id-MLKEM512-ECDH-P256             | SHA3-256  |\r\n| id-MLKEM512-ECDH-P256             | HKDF-SHA2 |\r\n| id-MLKEM512-ECDH-brainpoolP256r1  | SHA3-256  |\r\n| id-MLKEM512-ECDH-brainpoolP256r1  | HKDF-SHA2 |\r\n| id-MLKEM512-X25519                | SHA3-256  |\r\n| id-MLKEM512-RSA2048               | HKDF-SHA2 |\r\n| id-MLKEM512-RSA3072               | HKDF-SHA2 |\r\n| id-MLKEM512-RSA4096\u2003\u2003\u2003\u2003        | HKDF-SHA2 |\r\n| id-MLKEM768-ECDH-P256             | SHA3-384  |\r\n| id-MLKEM768-ECDH-P256             | HKDF-SHA2 |\r\n| id-MLKEM768-ECDH-brainpoolP256r1  | SHA3-384  |\r\n| id-MLKEM768-ECDH-brainpoolP256r1  | HKDF-SHA2 |\r\n| id-MLKEM768-X25519                | SHA3-384  |\r\n| id-MLKEM1024-ECDH-P384            | SHA3-512  |\r\n| id-MLKEM1024-ECDH-brainpoolP384r1 | SHA3-512  |\r\n| id-MLKEM1024-X448                 | SHA3-512  |\r\n{: #tab-kem-algs title=\"Composite KEM key types\"}\r\n```",
+      "createdAt": "2024-07-31T16:09:54Z",
+      "updatedAt": "2024-07-31T16:09:54Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 52,
+      "id": "I_kwDOKRPFO86Rf-xg",
+      "title": "Re-assign all OIDs and update domain separators",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/52",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-07-31T22:54:23Z",
+      "updatedAt": "2024-07-31T23:10:12Z",
       "closedAt": null,
       "comments": []
     }
@@ -1699,6 +1755,40 @@
         "oid": "71b98a70e405b3d4c5848d40a4ce5afbde8d14b1"
       },
       "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 53,
+      "id": "PR_kwDOKRPFO853DCLJ",
+      "title": "List trim",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/53",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-07-31T22:56:40Z",
+      "updatedAt": "2024-07-31T23:15:54Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "2d6b93f6d35fa31c16c42d8da5795e11ee68f550",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_list_trim",
+      "headRefOid": "a7ff511fc4deae6bec608004e27c1c9f794bb8e9",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Closes #47 ",
+          "createdAt": "2024-07-31T23:02:17Z",
+          "updatedAt": "2024-07-31T23:02:17Z"
+        }
+      ],
       "reviews": []
     }
   ]
