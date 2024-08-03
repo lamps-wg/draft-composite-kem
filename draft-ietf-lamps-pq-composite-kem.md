@@ -648,9 +648,9 @@ Therefore &lt;CompKEM&gt;.1 is equal to 2.16.840.1.114027.80.5.2.1
 | id-MLKEM768-RSA2048                | &lt;CompKEM&gt;.13   | MLKEM512        | RSA-OAEP 2048        | HKDF-SHA256 |
 | id-MLKEM768-RSA3072                | &lt;CompKEM&gt;.4    | MLKEM512        | RSA-OAEP 3072        | HKDF-SHA256 |
 | id-MLKEM768-RSA4096                | &lt;CompKEM&gt;.TBD  | MLKEM512        | RSA-OAEP 4096        | HKDF-SHA256 |
+| id-MLKEM768-X25519                 | &lt;CompKEM&gt;.7    | MLKEM768        | X25519               | SHA3-256 |
 | id-MLKEM768-ECDH-P384              | &lt;CompKEM&gt;.5    | MLKEM768        | ECDH-P384            | HKDF-SHA384 |
 | id-MLKEM768-ECDH-brainpoolP256r1   | &lt;CompKEM&gt;.6    | MLKEM768        | ECDH-brainpoolp256r1 | HKDF-SHA384 |
-| id-MLKEM768-X25519                 | &lt;CompKEM&gt;.7    | MLKEM768        | X25519               | SHA3-384 |
 | id-MLKEM1024-ECDH-P384             | &lt;CompKEM&gt;.8    | MLKEM1024       | ECDH-P384            | SHA3-512 |
 | id-MLKEM1024-ECDH-brainpoolP384r1  | &lt;CompKEM&gt;.9    | MLKEM1024       | ECDH-brainpoolP384r1 | SHA3-512 |
 | id-MLKEM1024-X448                  | &lt;CompKEM&gt;.10   | MLKEM1024       | X448                 | SHA3-512 |
