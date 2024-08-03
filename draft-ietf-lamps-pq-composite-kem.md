@@ -208,6 +208,12 @@ informative:
       - ins: A. Roginksy
         name: Allan Reginsky
     org: National Institute of Standards and Technology (NIST)
+  FIPS-140-3-IG:
+    title: Implementation Guidance for FIPS 140-3 and the Cryptographic Module Validation Program
+    target: https://csrc.nist.gov/csrc/media/Projects/cryptographic-module-validation-program/documents/fips%20140-3/FIPS%20140-3%20IG.pdf
+    author:
+      org: National Institute of Standards and Technology (NIST)
+    date: July 26, 2024
 
 
 --- abstract
@@ -570,8 +576,8 @@ TODO: as per https://www.enisa.europa.eu/publications/post-quantum-cryptography-
 The KEM combiner construction is as follows:
 
 ~~~
-KEK <- Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep) =
-  KDF(counter || tradSS || mlkemSS || tradCT || tradPK ||
+
+KEK = KDF(tradSS || mlkemSS || tradCT || tradPK ||
        domSep, outputBits)
 ~~~
 {: #code-generic-kem-combiner title="Generic KEM combiner construction"}
@@ -579,7 +585,6 @@ KEK <- Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep) =
 where:
 
 * `KDF(message, outputBits)` represents a hash function suitable to the chosen KEMs according to {tab-kem-combiners}.
-* `counter` SHALL be the fixed 32-bit value `0x00000001` which is placed here solely for the purposes of compliance with [SP.800-56Cr2].
 * `tradSS` is the shared secret from the traditional component (elliptic curve or RSA).
 * `mlkemSS` is the shared secret from the ML-KEM componont.
 * `tradCT` is the ciphertext from the traditional component (elliptic curve or RSA).
@@ -921,6 +926,16 @@ One of the primary design goals of this specification is for the overall composi
 Implementers seeking FIPS certification of a composite KEM algorithm where only one of the component algorithms has been FIPS-validated or FIPS-approved should credit the FIPS-validated component algorithm with full security strength, the non-FIPS-validated component algorithm with zero security, and the overall composite should be considered full strength and thus FIPS-approved.
 
 The authors wish to note that this gives composite algorithms great future utility both for future cryptographic migrations as well as bridging across jurisdictions; for example defining composite algorithms which combine FIPS cryptography with cryptography from a different national standards body.
+
+### Compatibility with SP.800-56Cr2
+
+One of the primary NIST documents which is relevant for certification of a composite algorithm is NIST SP.800-56Cr2 [SP.800-56Cr2]. Compliance is acheived in the following way:
+
+SP.800-56Cr2 section 4 "One-Step Key Derivation" requires a `counter` which begins at the 4-byte value 0x00000001. However, the counter is allowed to be omitted when the hash function is executed only once, as specified on page 159 of the FIPS 140-3 Implementation Guidance [FIPS-140-3-IG].
+
+The HKDF-SHA2 options can be certified under SP.800-56Cr2 One-Step Key Derivation Option 1: `H(x) = hash(x)`.
+
+The SHA3 options can be certified under SP.800-56Cr2 One-Step Key Derivation Option 2: `H(x) = HMAC-hash(salt, x)` with the salt omitted.
 
 ## Backwards Compatibility {#sec-backwards-compat}
 
