@@ -242,7 +242,7 @@ This document introduces a set of Key Encapsulation Mechanism (KEM) schemes that
 * Aligning algorithm list with LAMPS WG on-list discussions and draft-openpgp-pqc
   * ML-KEM-768 aligned with P-384 as per Quynh's OpenPGP presentation: https://datatracker.ietf.org/meeting/120/materials/slides-120-openpgp-pqc-with-nist-and-brainpool-curves
   * Removing ML-KEM-512 combinations as per Sophie's recommendation: https://mailarchive.ietf.org/arch/msg/spasm/khasPf3y0_-Lq_0NtJe92unUw6o/
-  
+* Specified some options to use HKDF-SHA2, and some to use SHA3 to facilitate implementations that do not have easy access to SHA3 outside the ML-KEM module.
 
 
 Still to do in a future version:
@@ -675,8 +675,9 @@ Full specifications for the referenced algorithms can be found as follows:
 * NIST-P-384 is CNSA approved [CNSA2.0] for all classification levels.
 * 521 bit curve not widely used.
 
-The lower security levels are provided with HKDF-SHA2 as the KDF in order to facilitate implementations that do not have easy access to SHA3 outside of the ML-KEM function. Higher security levels are paired with SHA3 for computational efficiency, and the Edwards Curve (X25519 and X448) combinations are paired with SHA3 for compatibility with other similar spicifications.
+A single invocation of SHA3 is known to behave as a dual-PRF, and thus is sufficient for use as a KDF, see {{sec-cons-kem-combiner}}, however SHA2 is not us must be wrapped in the HKDF construction.
 
+The lower security levels are provided with HKDF-SHA2 as the KDF in order to facilitate implementations that do not have easy access to SHA3 outside of the ML-KEM function. Higher security levels are paired with SHA3 for computational efficiency, and the Edwards Curve (X25519 and X448) combinations are paired with SHA3 for compatibility with other similar spicifications.
 
 ## Domain Separators {#sec-domain}
 
@@ -893,6 +894,8 @@ The composite KEM design specified in this document, and especially that of the 
 ## KEM Combiner Security Analysis {#sec-cons-kem-combiner}
 
 TODO
+
+TODO: SHA3 is a dual PRF cite: x-wing
 
 EDNOTE: the exact text to put here depends on the outcome of the CFRG KEM Combiners and X-Wing discussion. If CFRG doesn't move fast enough for us, then we may need to leverage this security consideration directly on top of the X-Wing paper [X-Wing].
 
