@@ -80,6 +80,7 @@ normative:
   RFC4055:
   RFC5280:
   RFC5652:
+  RFC5869:
   RFC5958:
   RFC8174:
   RFC8410:
@@ -130,6 +131,18 @@ normative:
     author:
       org: "National Institute of Standards and Technology (NIST)"
     target: https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-56Cr2.pdf
+  FIPS.180-4:
+    title: FIPS Publication 180-4: Secure Hash Standard
+    date: August 2015
+    author:
+      org: National Institute of Standards and Technology (NIST)
+    target: https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf
+  FIPS.202:
+    title: SHA-3 Standard: Permutation-Based Hash and Extendable-Output Functions
+    date: August 2015
+    author:
+      org: National Institute of Standards and Technology (NIST)
+    target: https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.202.pdf
   FIPS.203-ipd:
     title: "Module-Lattice-based Key-Encapsulation Mechanism Standard"
     date: August 2023
@@ -630,17 +643,17 @@ TODO: OIDs to be replaced by IANA.
 
 Therefore &lt;CompKEM&gt;.1 is equal to 2.16.840.1.114027.80.5.2.1
 
-| Composite KEM                      | OID                | First Algorithm | Second Algorithm     | KDF      |
-|---------                           | -----------------  | ----------      | ----------           | -------- |
-| id-MLKEM768-RSA2048                | &lt;CompKEM&gt;.13 | MLKEM512        | RSA-OAEP 2048        | SHA3-256 |
-| id-MLKEM768-RSA3072                | &lt;CompKEM&gt;.4  | MLKEM512        | RSA-OAEP 3072        | SHA3-256 |
-| id-MLKEM768-RSA4096                | &lt;CompKEM&gt;.TBD  | MLKEM512        | RSA-OAEP 4096        | SHA3-256 |
-| id-MLKEM768-ECDH-P384              | &lt;CompKEM&gt;.5  | MLKEM768        | ECDH-P384            | SHA3-384 |
-| id-MLKEM768-ECDH-brainpoolP256r1   | &lt;CompKEM&gt;.6  | MLKEM768        | ECDH-brainpoolp256r1 | SHA3-384 |
-| id-MLKEM768-X25519                 | &lt;CompKEM&gt;.7  | MLKEM768        | X25519               | SHA3-384 |
-| id-MLKEM1024-ECDH-P384             | &lt;CompKEM&gt;.8  | MLKEM1024       | ECDH-P384            | SHA3-512 |
-| id-MLKEM1024-ECDH-brainpoolP384r1  | &lt;CompKEM&gt;.9  | MLKEM1024       | ECDH-brainpoolP384r1 | SHA3-512 |
-| id-MLKEM1024-X448                  | &lt;CompKEM&gt;.10 | MLKEM1024       | X448                 | SHA3-512 |
+| Composite KEM                      | OID                  | First Algorithm | Second Algorithm     | KDF      |
+|---------                           | -----------------    | ----------      | ----------           | -------- |
+| id-MLKEM768-RSA2048                | &lt;CompKEM&gt;.13   | MLKEM512        | RSA-OAEP 2048        | HKDF-SHA256 |
+| id-MLKEM768-RSA3072                | &lt;CompKEM&gt;.4    | MLKEM512        | RSA-OAEP 3072        | HKDF-SHA256 |
+| id-MLKEM768-RSA4096                | &lt;CompKEM&gt;.TBD  | MLKEM512        | RSA-OAEP 4096        | HKDF-SHA256 |
+| id-MLKEM768-ECDH-P384              | &lt;CompKEM&gt;.5    | MLKEM768        | ECDH-P384            | HKDF-SHA384 |
+| id-MLKEM768-ECDH-brainpoolP256r1   | &lt;CompKEM&gt;.6    | MLKEM768        | ECDH-brainpoolp256r1 | HKDF-SHA384 |
+| id-MLKEM768-X25519                 | &lt;CompKEM&gt;.7    | MLKEM768        | X25519               | SHA3-384 |
+| id-MLKEM1024-ECDH-P384             | &lt;CompKEM&gt;.8    | MLKEM1024       | ECDH-P384            | SHA3-512 |
+| id-MLKEM1024-ECDH-brainpoolP384r1  | &lt;CompKEM&gt;.9    | MLKEM1024       | ECDH-brainpoolP384r1 | SHA3-512 |
+| id-MLKEM1024-X448                  | &lt;CompKEM&gt;.10   | MLKEM1024       | X448                 | SHA3-512 |
 {: #tab-kem-algs title="Composite KEM key types"}
 
 Full specifications for the referenced algorithms can be found as follows:
@@ -651,14 +664,19 @@ Full specifications for the referenced algorithms can be found as follows:
 * _ML-KEM_: {{I-D.ietf-lamps-kyber-certificates}} and [FIPS.203-ipd]
 * _RSA-OAEP_: [RFC3560]
 * _X25519 / X448_: [RFC8410]
+* _HKDF_: [RFC5869]. Salt is not provided; ie the salt will be all zeros.
+* _SHA2_: [FIPS.180-4]
+* _SHA3_: [FIPS 202]
 
-EDNOTE: I believe that [SP.800-56Ar3] and [BSI-ECC] give equivalent and inter-operable algorithms, so maybe this is extraneous detail to include?
 
 ## Rationale for choices
 
 * Pair equivalent levels.
 * NIST-P-384 is CNSA approved [CNSA2.0] for all classification levels.
 * 521 bit curve not widely used.
+
+The lower security levels are provided with HKDF-SHA2 as the KDF in order to facilitate implementations that do not have easy access to SHA3 outside of the ML-KEM function. Higher security levels are paired with SHA3 for computational efficiency, and the Edwards Curve (X25519 and X448) combinations are paired with SHA3 for compatibility with other similar spicifications.
+
 
 ## Domain Separators {#sec-domain}
 
