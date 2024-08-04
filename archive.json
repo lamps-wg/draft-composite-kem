@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-08-01T01:40:08.460815+00:00",
+  "timestamp": "2024-08-04T01:38:48.090312+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -47,6 +47,11 @@
       "name": "wontfix",
       "description": "This will not be worked on",
       "color": "ffffff"
+    },
+    {
+      "name": "pull request",
+      "description": "This issue is addressed by an open PR",
+      "color": "67267D"
     }
   ],
   "issues": [
@@ -520,10 +525,12 @@
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "pull request"
+      ],
       "body": "We have been asked to add RSA-4096 combos for existing infrastructures where deployed software or policy requires 4096 bit keys.\r\n\r\nSuggestion is that since RSA 4096 is not much above 128 bit security (certainly not as much as AES-192 or SHA-384), we should pair it with the same cipher suites as the RSA-3072 combo. Or maybe even replace the 4096 combo?",
       "createdAt": "2024-07-12T20:01:06Z",
-      "updatedAt": "2024-07-12T20:01:06Z",
+      "updatedAt": "2024-08-03T23:18:13Z",
       "closedAt": null,
       "comments": []
     },
@@ -552,10 +559,12 @@
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "pull request"
+      ],
       "body": "https://datatracker.ietf.org/doc/slides-120-openpgp-pqc-with-nist-and-brainpool-curves/",
       "createdAt": "2024-07-22T17:19:21Z",
-      "updatedAt": "2024-07-22T17:19:21Z",
+      "updatedAt": "2024-08-03T23:18:26Z",
       "closedAt": null,
       "comments": []
     },
@@ -568,10 +577,12 @@
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "pull request"
+      ],
       "body": "Wow. Ok. I completely mis-read Quynh's email to LAMPS:\r\nhttps://mailarchive.ietf.org/arch/msg/spasm/Yh5AelwiAOXhhdjEPzWPmWekYLA/\r\n\r\n> Similarly, the order of ss1 and ss2 may be in reverse and run the \"Process\" on page14 in SP 800-56r2 here: https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-56Cr2.pdf .\r\n\r\nThat means we can un-twist the order in which the ss inputs are fed into the KDF; because in fact we do not need to put the traditional alg first -- keep everything consistent with the order (mlkem, trad).",
       "createdAt": "2024-07-22T17:28:56Z",
-      "updatedAt": "2024-07-26T22:18:14Z",
+      "updatedAt": "2024-08-04T00:00:17Z",
       "closedAt": null,
       "comments": [
         {
@@ -633,9 +644,9 @@
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
-      "body": "Mike Ounsworth: Yeah, it should be referencing id-sha3-256 and friends from here:\r\nhttps://datatracker.ietf.org/doc/html/draft-ietf-lamps-cms-sha3-hash-04#name-message-digest-algorithms\r\n\r\nThat should be made clearer in the composite-KEM draft and actually reference them by OID.",
+      "body": "Mike Ounsworth: Yeah, it should be referencing id-sha3-256 and friends from here:\r\nhttps://datatracker.ietf.org/doc/html/draft-ietf-lamps-cms-sha3-hash-04#name-message-digest-algorithms\r\n\r\nThat should be made clearer in the composite-KEM draft and actually reference them by OID.\r\nSpecifically, this is in the \"## Underlying Components\" section where the OIDs are needed for CMS.",
       "createdAt": "2024-07-23T23:10:05Z",
-      "updatedAt": "2024-07-23T23:10:05Z",
+      "updatedAt": "2024-08-03T23:35:06Z",
       "closedAt": null,
       "comments": []
     },
@@ -672,10 +683,12 @@
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "pull request"
+      ],
       "body": "From Falko:\r\n\r\n> Actually it seems the counter can be omitted if there is only one hash function invocation in the KDF: see Quynh's comment here: [https://github.com/openpgp-pqc/draft-ehlen-openpgp-nist-bp-comp/issues/10#issuecomment-2220090284](https://urldefense.com/v3/__https:/github.com/openpgp-pqc/draft-ehlen-openpgp-nist-bp-comp/issues/10*issuecomment-2220090284__;Iw!!FJ-Y8qCqXTj2!eom3NkR-W2xoJGcKEtuusgLkqyA-uDOgHpv07v2OjzKuONz1STgLKCE-u6KLON2NO08W7OUuyGCGEM-Tbn2hnr-0fygp6Q$)",
       "createdAt": "2024-07-25T20:14:32Z",
-      "updatedAt": "2024-07-26T21:37:36Z",
+      "updatedAt": "2024-08-03T23:48:16Z",
       "closedAt": null,
       "comments": [
         {
@@ -720,10 +733,12 @@
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "pull request"
+      ],
       "body": "https://mailarchive.ietf.org/arch/msg/spasm/khasPf3y0_-Lq_0NtJe92unUw6o/\r\n\r\nSophie suggests removing ML-KEM512 and possibly the ML-KEM1024 combinations.\r\n\r\nPiotr proposes a full updated table with a reduced list.",
       "createdAt": "2024-07-25T20:55:51Z",
-      "updatedAt": "2024-07-29T14:37:13Z",
+      "updatedAt": "2024-08-03T23:17:37Z",
       "closedAt": null,
       "comments": [
         {
@@ -739,6 +754,13 @@
           "body": "More comment from Sophie:\r\n\r\n> For compliance, the most important considerations are on the classic side of the hybrid, with the only PQC compliance requirements going beyond the security analysis above being CNSA's wish for ML-KEM1024. But CNSA2 also prefers non-hybrid solutions, so I'm not sure whether we should hybridize with ML-KEM1024 at all. For ML-KEM512, there currently seems to be no compliance forcing its adoption over ML-KEM768, with only some performance considerations having slight preferences, but in my opinion the security considerations weigh heavier here, and we should find other ways to alleviate the performance issues.",
           "createdAt": "2024-07-29T14:37:12Z",
           "updatedAt": "2024-07-29T14:37:12Z"
+        },
+        {
+          "author": "danvangeest",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "You can remove any ML-KEM512/brainpool combinations: https://mailarchive.ietf.org/arch/msg/spasm/hgqa5pfwrg6-I5BTA4mjw3vMs1Y/\r\n\r\nANSSI/BSI are the brainpool proponents, however they only allow ML-KEM768/1024.",
+          "createdAt": "2024-08-02T08:20:54Z",
+          "updatedAt": "2024-08-02T08:20:54Z"
         }
       ]
     },
@@ -799,10 +821,12 @@
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "pull request"
+      ],
       "body": "The authors suggest, rather than 2x'ing the whole list, we do the following:\r\n\r\nAll RSA combinations use HKDF-SHA2.\r\nEach of the P256 and brainpoolP256 combinations are offered with both SHA3 (to align with X-Wing), and HKDF-SHA2. The new list would then be:\r\n\r\n```\r\n| Composite KEM                     | KDF       |\r\n|---------                          | --------  |\r\n| id-MLKEM512-ECDH-P256             | SHA3-256  |\r\n| id-MLKEM512-ECDH-P256             | HKDF-SHA2 |\r\n| id-MLKEM512-ECDH-brainpoolP256r1  | SHA3-256  |\r\n| id-MLKEM512-ECDH-brainpoolP256r1  | HKDF-SHA2 |\r\n| id-MLKEM512-X25519                | SHA3-256  |\r\n| id-MLKEM512-RSA2048               | HKDF-SHA2 |\r\n| id-MLKEM512-RSA3072               | HKDF-SHA2 |\r\n| id-MLKEM512-RSA4096\u2003\u2003\u2003\u2003        | HKDF-SHA2 |\r\n| id-MLKEM768-ECDH-P256             | SHA3-384  |\r\n| id-MLKEM768-ECDH-P256             | HKDF-SHA2 |\r\n| id-MLKEM768-ECDH-brainpoolP256r1  | SHA3-384  |\r\n| id-MLKEM768-ECDH-brainpoolP256r1  | HKDF-SHA2 |\r\n| id-MLKEM768-X25519                | SHA3-384  |\r\n| id-MLKEM1024-ECDH-P384            | SHA3-512  |\r\n| id-MLKEM1024-ECDH-brainpoolP384r1 | SHA3-512  |\r\n| id-MLKEM1024-X448                 | SHA3-512  |\r\n{: #tab-kem-algs title=\"Composite KEM key types\"}\r\n```",
       "createdAt": "2024-07-31T16:09:54Z",
-      "updatedAt": "2024-07-31T16:09:54Z",
+      "updatedAt": "2024-08-03T23:17:59Z",
       "closedAt": null,
       "comments": []
     },
@@ -821,6 +845,22 @@
       "updatedAt": "2024-07-31T23:10:12Z",
       "closedAt": null,
       "comments": []
+    },
+    {
+      "number": 54,
+      "id": "I_kwDOKRPFO86RpPjG",
+      "title": "Should we have a security proof for the ML-KEM+RSA-OAEP composite KEM?",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/54",
+      "state": "OPEN",
+      "author": "johngray-dev",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "For a security proof of the ML-KEM + ECDH combos, we can point to the X-Wing paper. We should have a similar proof for the RSA-OAEP combos. Not sure how to go about attracting someone to help with this, or if we should attempt proof-writing ourselves.",
+      "createdAt": "2024-08-01T21:31:58Z",
+      "updatedAt": "2024-08-01T21:31:58Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
@@ -836,7 +876,7 @@
       "labels": [],
       "body": "",
       "createdAt": "2023-10-02T15:59:27Z",
-      "updatedAt": "2023-10-02T22:53:29Z",
+      "updatedAt": "2024-08-03T23:21:22Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "8ecdef1572329af10c78e3ebb26ed087116dd22e",
@@ -948,7 +988,7 @@
       "labels": [],
       "body": "This relates to the LAMPS mailist discussion:\r\n\r\nhttps://mailarchive.ietf.org/arch/msg/spasm/xSKIRjtMSJ8M7N7Fx3X09ASUHC8/\r\n\r\nThe main branch is option 3.1.\r\nThis PR is option 3.2.\r\n\r\nWe should wait to merge this PR pending the results of that discussion thread.",
       "createdAt": "2023-10-04T16:09:56Z",
-      "updatedAt": "2023-10-24T17:56:28Z",
+      "updatedAt": "2024-08-03T23:21:06Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "6f3d6ee7dfb5df2492b5d6a8bcd2495884ae6e27",
@@ -1003,7 +1043,7 @@
       "labels": [],
       "body": "",
       "createdAt": "2023-10-05T02:31:29Z",
-      "updatedAt": "2023-10-24T17:53:45Z",
+      "updatedAt": "2024-08-03T23:20:54Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "6f3d6ee7dfb5df2492b5d6a8bcd2495884ae6e27",
@@ -1600,7 +1640,7 @@
       "labels": [],
       "body": "",
       "createdAt": "2024-02-13T19:04:51Z",
-      "updatedAt": "2024-02-14T15:38:46Z",
+      "updatedAt": "2024-08-03T23:20:53Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "d715b285547da9e1e5cdcc6402f9ee12467293b0",
@@ -1760,7 +1800,7 @@
     {
       "number": 53,
       "id": "PR_kwDOKRPFO853DCLJ",
-      "title": "List trim",
+      "title": "Alg List Adjustments",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/53",
       "state": "OPEN",
       "author": "ounsworth",
@@ -1769,13 +1809,13 @@
       "labels": [],
       "body": "",
       "createdAt": "2024-07-31T22:56:40Z",
-      "updatedAt": "2024-07-31T23:15:54Z",
+      "updatedAt": "2024-08-03T23:30:19Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "2d6b93f6d35fa31c16c42d8da5795e11ee68f550",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_list_trim",
-      "headRefOid": "a7ff511fc4deae6bec608004e27c1c9f794bb8e9",
+      "headRefOid": "8a8c430895751ca442766da3c21da3f9a6c13522",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
@@ -1787,8 +1827,41 @@
           "body": "Closes #47 ",
           "createdAt": "2024-07-31T23:02:17Z",
           "updatedAt": "2024-07-31T23:02:17Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Closes #39",
+          "createdAt": "2024-08-03T23:12:37Z",
+          "updatedAt": "2024-08-03T23:12:37Z"
         }
       ],
+      "reviews": []
+    },
+    {
+      "number": 55,
+      "id": "PR_kwDOKRPFO853WKpM",
+      "title": "Combiner tweaks",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/55",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-08-03T23:47:53Z",
+      "updatedAt": "2024-08-04T00:00:07Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "2d6b93f6d35fa31c16c42d8da5795e11ee68f550",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_combiner_tweaks",
+      "headRefOid": "833e2fbb379c0f0c41ff130d775ddf7e26a0159c",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
       "reviews": []
     }
   ]
