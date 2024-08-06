@@ -224,9 +224,11 @@ This document introduces a set of Key Encapsulation Mechanism (KEM) schemes that
 Interop-affecting changes:
 
 * Fixed a bug in the definition of the Encaps() functions: KEMs, according to both RFC9180 and FIPS 203 should always return (ss, ct), but we had (ct, ss).
+* Interoperable composite private key format requires component public keys (because public keys are required for decapsulation)
 
 Editorial changes:
 
+* Added an Implementation Consideration section explaining why private keys need to contain the public keys.
 
 Still to do in a future version:
 
