@@ -221,7 +221,11 @@ This document introduces a set of Key Encapsulation Mechanism (KEM) schemes that
 
 # Changes in version -05
 
+Interop-affecting changes:
+
 * Fixed a bug in the definition of the Encaps() functions: KEMs, according to both RFC9180 and FIPS 203 should always return (ss, ct), but we had (ct, ss).
+
+Editorial changes:
 
 
 Still to do in a future version:
@@ -500,7 +504,7 @@ The parameters field MUST be absent.
 
 The order of the component keys is the same as the order defined in {{sec-composite-pub-keys}} for the components of CompositeKEMPublicKey.
 
-When a `CompositePrivateKey` is conveyed inside a OneAsymmetricKey structure (version 1 of which is also known as PrivateKeyInfo) [RFC5958], the privateKeyAlgorithm field SHALL be set to the corresponding composite algorithm identifier defined according to {{sec-alg-ids}}, the privateKey field SHALL contain the CompositeKEMPrivateKey, and the publicKey field MUST NOT be present. Associated public key material MAY be present in the CompositeKEMPrivateKey.
+When a `CompositePrivateKey` is conveyed inside a OneAsymmetricKey structure (version 1 of which is also known as PrivateKeyInfo) [RFC5958], then a situation arises where multiple `OneAsymmetricKey`s are nested inside an outer `OneAsymmetricKey`, which  the privateKeyAlgorithm field SHALL be set to the corresponding composite algorithm identifier defined according to {{sec-alg-ids}}, the privateKey field SHALL contain the CompositeKEMPrivateKey, and the publicKey field MUST NOT be present. Associated public key material MUST be present in the CompositeKEMPrivateKey. The reason for requiring component public keys to be carried with the private keys is discussed in {{impl-cons-decaps-pubkey}}
 
 In some use-cases the private keys that comprise a composite key may not be represented in a single structure or even be contained in a single cryptographic module; for example if one component is within the FIPS boundary of a cryptographic module and the other is not; see {{sec-fips}} for more discussion. The establishment of correspondence between public keys in a CompositeKEMPublicKey and private keys not represented in a single composite structure is beyond the scope of this document.
 
@@ -930,20 +934,9 @@ The term "ease of migration" is used here to mean that existing systems can be g
 
 These migration and interoperability concerns need to be thought about in the context of various types of protocols that make use of X.509 and PKIX with relation to key establishment and content encryption, from online negotiated protocols such as TLS 1.3 [RFC8446] and IKEv2 [RFC7296], to non-negotiated asynchronous protocols such as S/MIME signed email [RFC8551], as well as myriad other standardized and proprietary protocols and applications that leverage CMS [RFC5652] encrypted structures.
 
+## Decapsulation Requires the Public Key {#impl-cons-decaps-pubkey}
 
-### Parallel PKIs
-
-EDNOTE: remove this section?
-
-We present the term "Parallel PKI" to refer to the setup where a PKI end entity possesses two or more distinct public keys or certificates for the same identity (name), but containing keys for different cryptographic algorithms. One could imagine a set of parallel PKIs where an existing PKI using legacy algorithms (RSA, ECC) is left operational during the post-quantum migration but is shadowed by one or more parallel PKIs using pure post quantum algorithms or composite algorithms (legacy and post-quantum).
-
-Equipped with a set of parallel public keys in this way, a client would have the flexibility to choose which public key(s) or certificate(s) to use in a given signature operation.
-
-For negotiated protocols, the client could choose which public key(s) or certificate(s) to use based on the negotiated algorithms.
-
-For non-negotiated protocols, the details for obtaining backwards compatibility will vary by protocol, but for example in CMS [RFC5652].
-
-EDNOTE: I copied and pruned this text from I-D.ounsworth-pq-composite-sigs. It probably needs to be fleshed out more as we better understand the implementation concerns around composite encryption.
+ML-KEM always requires the public key in order to perform various steps of the Fujisaki-Okamoto decapsulation [FIPS203-ipd]. Additionally, in order to achaive the public-key binding property the KEM combiner used to form the composite KEM requires the public key as input to the KDF that derives the output shared secret. One way to carry the public key would be to include each component's public key within the respective OneAsymmetricKey as is required by the private key encoding given in {{sec-priv-key}}. Implementers who choose a different private key encoding MUST consider how to private the component public keys to the decapsulate routine. While some implementations might contain routines to computationally derive the public key from the private key, it is not guaranteed that all implementations will support this; for this reason the interoparable composite private key format given in this document in {{sec-priv-key}} requires the component public keys to be included.
 
 <!-- End of Implementation Considerations section -->
 
