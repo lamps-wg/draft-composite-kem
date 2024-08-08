@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-08-06T01:33:21.037601+00:00",
+  "timestamp": "2024-08-08T01:34:00.206164+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -805,10 +805,12 @@
       "author": "johngray-dev",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "pull request"
+      ],
       "body": "If we require binding of the public key for RSA/EC then we need to update the private key section to indicate the public key is needed (or a copy of it needs to be kept somewhere).\r\n",
       "createdAt": "2024-07-31T14:45:10Z",
-      "updatedAt": "2024-07-31T14:45:36Z",
+      "updatedAt": "2024-08-06T01:48:23Z",
       "closedAt": null,
       "comments": []
     },
@@ -1876,13 +1878,13 @@
       "labels": [],
       "body": "",
       "createdAt": "2024-08-06T00:35:56Z",
-      "updatedAt": "2024-08-06T00:35:56Z",
+      "updatedAt": "2024-08-06T13:25:36Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "2d6b93f6d35fa31c16c42d8da5795e11ee68f550",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_editorial",
-      "headRefOid": "a31873d9360453cf6044315e48ed05a2a629cce5",
+      "headRefOid": "1907c2ded1bc4e0ffd294169f64aa494b683fd7f",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
