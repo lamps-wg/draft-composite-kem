@@ -76,11 +76,11 @@ author:
 normative:
   RFC2119:
   RFC3394:
-  RFC3560:
   RFC4055:
   RFC5280:
   RFC5652:
   RFC5958:
+  RFC8017:
   RFC8174:
   RFC8410:
   RFC8411:
@@ -151,7 +151,6 @@ informative:
   RFC7292:
   RFC7296:
   RFC7748:
-  RFC8017:
   RFC8446:
   RFC8551:
   RFC9180:
@@ -222,6 +221,8 @@ This document introduces a set of Key Encapsulation Mechanism (KEM) schemes that
 # Changes in version -05
 
 * Fixed a bug in the definition of the Encaps() functions: KEMs, according to both RFC9180 and FIPS 203 should always return (ss, ct), but we had (ct, ss).
+* Adjusted RSA-OAEP section to follow RFC8017 instead of RFC3560.
+  * OPEN QUESTION: RSAES-OAEP in RFC8017 can take a label. Should we use it? Perhaps to pass in the same domain separator as used for the overall composite?
 
 
 Still to do in a future version:
@@ -330,26 +331,29 @@ CompositeKEM.KeyGen():
 
 ### Promotion of RSA-OAEP into a KEM
 
-The RSA Optimal Asymmetric Encryption Padding (OAEP), more specifically the RSAES-OAEP key transport algorithm as specified in [RFC3560] is a public key encryption algorithm used to transport key material from a sender to a receiver. It is promoted into a KEM by having the sender generate a random 256 bit secret and encrypt it.
+The RSA Optimal Asymmetric Encryption Padding (OAEP), as defined in section 7.1 of [RFC8017] is a public key encryption algorithm used to transport key material from a sender to a receiver. It is promoted into a KEM by having the sender generate a random 256 bit secret and encrypt it.
 
 ~~~
 RSAOAEPKEM.Encaps(pkR):
   shared_secret = SecureRandom(ss_len)
-  enc = RSA-OAEP.Encrypt(pkR, shared_secret)
+  enc = RSAES-OAEP-ENCRYPT(pkR, shared_secret, domSep)
 
   return shared_secret, enc
 ~~~
+
+Note that the OAEP label `L` is populated with the domain separator `domSep` defined in {{sec-domain}} so that this invocation of RSAES-OAEP is bound to the composite.
+
+The value of `ss_len` as well as the RSA-OAEP parameters used within this specification can be found in {{sect-rsaoaep-params}}.
 
  `Decaps(sk, ct) -> ss` is accomplished in the analogous way.
 
 ~~~
 RSAKEM.Decap(skR, enc):
-  shared_secret = RSA-OAEP.Decrypt(skR, enc)
+  shared_secret = RSAES-OAEP-DECRYPT(skR, enc, domSep)
 
   return shared_secret
 ~~~
 
-The value of `ss_len` as well as the RSA-OAEP parameters used within this specification can be found in {{sect-rsaoaep-params}}.
 
 ### Promotion of ECDH into a KEM
 
@@ -364,6 +368,8 @@ DHKEM.Encaps(pkR):
 
   return shared_secret, enc
 ~~~
+
+EDNOTE: 
 
  `Decaps(sk, ct) -> ss` is accomplished in the analogous way.
 
@@ -654,6 +660,8 @@ The KEM combiner defined in section {{sec-kem-combiner}} requires a domain separ
 
 EDNOTE: Should the domain separator values be the SHA-256 hash of the DER encoding of the corresponding composite algorithm OID? That way they would be fixed-length even if the OIDs are different lengths. See https://github.com/lamps-wg/draft-composite-sigs/issues/19
 
+EDNOTE: Or should the domain separators be synced up with the corresponding OpenPGP draft?
+
 | Composite KEM AlgorithmID | Domain Separator (in Hex encoding)|
 | ----------- | ----------- |
 | id-MLKEM512-ECDH-P256     | 060B6086480186FA6B50050201|
@@ -673,7 +681,7 @@ EDNOTE: these domain separators are based on the prototyping OIDs assigned on th
 
 ## RSA-OAEP Parameters {#sect-rsaoaep-params}
 
-Use of RSA-OAEP [RFC3560] within `id-MLKEM512-RSA2048` and `id-MLKEM512-RSA3072` requires additional specification.
+Use of RSA-OAEP [RFC8017] within `id-MLKEM512-RSA2048` and `id-MLKEM512-RSA3072` requires additional specification.
 
 First, a quick note on the choice of RSA-OAEP as the supported RSA encryption primitive. RSA-KEM [RFC5990] is more straightforward to work with, but it has fairly limited adoption and therefore is of limited backwards compatibility value. Also, while RSA-PKCS#1v1.5 [RFC8017] is still everywhere, but hard to make secure and no longer FIPS-approved as of the end of 2023 [SP800-131Ar2], so it is of limited forwards value. This leaves RSA-OAEP [RFC3560] as the remaining choice.
 
@@ -681,19 +689,22 @@ The RSA component keys MUST be generated at the 2048-bit and 3072-bit security l
 
 As with the other composite KEM algorithms, when `id-MLKEM512-RSA2048` or `id-MLKEM512-RSA3072` is used in an AlgorithmIdentifier, the parameters MUST be absent. The RSA-OAEP SHALL be instantiated with the following hard-coded parameters which are the same for both the 2048 and 3072 bit security levels.
 
-| RSA-OAEP Parameter      | Value                            |
-| ---------------------- | ---------------                  |
-| hashFunc                  | id-sha2-256                   |
-| maskGenFunc               | mgf1SHA256Identifier          |
-| pSourceFunc           | DEFAULT pSpecifiedEmptyIdentifier |
-| ss_len                    | 256 bits                      |
+| RSAES-OAEP-params           | Value                       |
+| ----------------------      | ---------------             |
+| hashAlgorithm               | id-sha2-256                 |
+| maskGenAlgorithm            | mgf1SHA256Identifier        |
+| pSourceAlgorithm            | id-pSpecified               |
+| PSourceALgorithm.parameters | domSep                      |
+| ss_len                      | 256 bits                    |
 {: #rsa-oaep-params title="RSA-OAEP Parameters"}
 
 where:
 
 * `id-sha256` is defined in [RFC8017].
 * `mgf1SHA256Identifier` is defined in [RFC4055].
-* `pSpecifiedEmptyIdentifier` is defined in [RFC3560]
+* `id-pSpecified` is defined in [RFC8017]. The value of the label SHALL be the corresponding domain seperator as defined in {{sec-domain}}.
+
+EDNOTE: we could determine the mask length for each parameter set given in this document. According to 8017, it will be the length of `k - hLen - 1`, where `k` is the size of the RSA modulus. I'm not sure that we strictly need to calculate and list these.
 
 
 # Use in CMS
