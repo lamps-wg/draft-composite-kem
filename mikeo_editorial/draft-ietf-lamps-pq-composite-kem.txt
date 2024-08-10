@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 7 February 2025                                         M. Pala
+Expires: 11 February 2025                                        M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                           6 August 2024
+                                                          10 August 2024
 
 
 Composite ML-KEM for Use in the Internet X.509 Public Key Infrastructure
@@ -66,7 +66,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 7 February 2025.
+   This Internet-Draft will expire on 11 February 2025.
 
 Copyright Notice
 
@@ -775,6 +775,12 @@ Table of Contents
 
    *  _X25519 / X448_: [RFC8410]
 
+   *  SHA3 is defined in SHA3: [FIPS 202].
+
+   Note that OIDs are not required for the KDF and hash functions do not
+   need OIDs since they are used inline and are not referenced by any
+   AlgorithIDs.
+
    EDNOTE: I believe that [SP.800-56Ar3] and [BSI-ECC] give equivalent
    and inter-operable algorithms, so maybe this is extraneous detail to
    include?
@@ -902,34 +908,39 @@ Table of Contents
    algorithms to preserve security and performance characteristics of
    each composite algorithm.
 
-   +===================================+==========+====================+
-   | Composite KEM OID                 | KDF      | Key Encryption     |
-   |                                   |          | Alg                |
-   +===================================+==========+====================+
-   | id-MLKEM512-ECDH-P256             | SHA3-256 | id-aes128-Wrap     |
-   +-----------------------------------+----------+--------------------+
-   | id-MLKEM512-ECDH-brainpoolP256r1  | SHA3-256 | id-aes128-Wrap     |
-   +-----------------------------------+----------+--------------------+
-   | id-MLKEM512-X25519                | SHA3-256 | id-aes128-Wrap     |
-   +-----------------------------------+----------+--------------------+
-   | id-MLKEM512-RSA2048               | SHA3-256 | id-aes128-Wrap     |
-   +-----------------------------------+----------+--------------------+
-   | id-MLKEM512-RSA3072               | SHA3-256 | id-aes128-Wrap     |
-   +-----------------------------------+----------+--------------------+
-   | id-MLKEM768-ECDH-P256             | SHA3-384 | id-aes256-Wrap     |
-   +-----------------------------------+----------+--------------------+
-   | id-MLKEM768-ECDH-brainpoolP256r1  | SHA3-384 | id-aes256-Wrap     |
-   +-----------------------------------+----------+--------------------+
-   | id-MLKEM768-X25519                | SHA3-384 | id-aes256-Wrap     |
-   +-----------------------------------+----------+--------------------+
-   | id-MLKEM1024-ECDH-P384            | SHA3-512 | id-aes256-Wrap     |
-   +-----------------------------------+----------+--------------------+
-   | id-MLKEM1024-ECDH-brainpoolP384r1 | SHA3-512 | id-aes256-Wrap     |
-   +-----------------------------------+----------+--------------------+
-   | id-MLKEM1024-X448                 | SHA3-512 | id-aes256-Wrap     |
-   +-----------------------------------+----------+--------------------+
+   +===================================+=============+================+
+   | Composite KEM OID                 | KDF         | Key Encryption |
+   |                                   |             | Alg            |
+   +===================================+=============+================+
+   | id-MLKEM512-ECDH-P256             | id-sha3-256 | id-aes128-Wrap |
+   +-----------------------------------+-------------+----------------+
+   | id-MLKEM512-ECDH-brainpoolP256r1  | id-sha3-256 | id-aes128-Wrap |
+   +-----------------------------------+-------------+----------------+
+   | id-MLKEM512-X25519                | id-sha3-256 | id-aes128-Wrap |
+   +-----------------------------------+-------------+----------------+
+   | id-MLKEM512-RSA2048               | id-sha3-256 | id-aes128-Wrap |
+   +-----------------------------------+-------------+----------------+
+   | id-MLKEM512-RSA3072               | id-sha3-256 | id-aes128-Wrap |
+   +-----------------------------------+-------------+----------------+
+   | id-MLKEM768-ECDH-P256             | id-sha3-384 | id-aes256-Wrap |
+   +-----------------------------------+-------------+----------------+
+   | id-MLKEM768-ECDH-brainpoolP256r1  | id-sha3-384 | id-aes256-Wrap |
+   +-----------------------------------+-------------+----------------+
+   | id-MLKEM768-X25519                | id-sha3-384 | id-aes256-Wrap |
+   +-----------------------------------+-------------+----------------+
+   | id-MLKEM1024-ECDH-P384            | id-sha3-512 | id-aes256-Wrap |
+   +-----------------------------------+-------------+----------------+
+   | id-MLKEM1024-ECDH-brainpoolP384r1 | id-sha3-512 | id-aes256-Wrap |
+   +-----------------------------------+-------------+----------------+
+   | id-MLKEM1024-X448                 | id-sha3-512 | id-aes256-Wrap |
+   +-----------------------------------+-------------+----------------+
 
-              Table 4: REQUIRED pairings for CMS KDF and WRAP
+             Table 4: REQUIRED pairings for CMS KDF and WRAP
+
+   In all cases above, the hash function used as a KDF produces a longer
+   output than needed by the encryption algorithm, so the output should
+   simply be truncated to the correct length -- ie use the leftmost
+   significant bits.
 
    Note: id-aes256-Wrap is stronger than necessary for the MLKEM768
    combinations at the NIST level 3 192 bit security level, however id-
@@ -938,7 +949,7 @@ Table of Contents
 
    where:
 
-   *  SHA3-* KDF instantiations are defined in
+   *  id-sha3-* KDF instantiations are defined in
       [I-D.ietf-lamps-cms-sha3-hash].
 
    *  id-aes*-Wrap are defined in [RFC3394].
