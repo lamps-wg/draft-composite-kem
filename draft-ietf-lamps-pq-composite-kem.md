@@ -651,6 +651,9 @@ Full specifications for the referenced algorithms can be found as follows:
 * _ML-KEM_: {{I-D.ietf-lamps-kyber-certificates}} and [FIPS.203-ipd]
 * _RSA-OAEP_: [RFC3560]
 * _X25519 / X448_: [RFC8410]
+* SHA3 is defined in SHA3: [FIPS 202].
+
+Note that OIDs are not required for the KDF and hash functions do not need OIDs since they are used inline and are not referenced by any AlgorithIDs.
 
 EDNOTE: I believe that [SP.800-56Ar3] and [BSI-ECC] give equivalent and inter-operable algorithms, so maybe this is extraneous detail to include?
 
@@ -721,24 +724,26 @@ The following table lists the REQUIRED KDF and key-encryption algorithms to pres
 
 | Composite KEM OID                 | KDF         | Key Encryption Alg |
 |---------                          | ---         | ---                |
-| id-MLKEM512-ECDH-P256             | SHA3-256 | id-aes128-Wrap     |
-| id-MLKEM512-ECDH-brainpoolP256r1  | SHA3-256 | id-aes128-Wrap     |
-| id-MLKEM512-X25519                | SHA3-256 | id-aes128-Wrap     |
-| id-MLKEM512-RSA2048               | SHA3-256 | id-aes128-Wrap     |
-| id-MLKEM512-RSA3072               | SHA3-256 | id-aes128-Wrap     |
-| id-MLKEM768-ECDH-P256             | SHA3-384 | id-aes256-Wrap     |
-| id-MLKEM768-ECDH-brainpoolP256r1  | SHA3-384 | id-aes256-Wrap     |
-| id-MLKEM768-X25519                | SHA3-384 | id-aes256-Wrap     |
-| id-MLKEM1024-ECDH-P384            | SHA3-512 | id-aes256-Wrap     |
-| id-MLKEM1024-ECDH-brainpoolP384r1 | SHA3-512 | id-aes256-Wrap     |
-| id-MLKEM1024-X448                 | SHA3-512 | id-aes256-Wrap     |
+| id-MLKEM512-ECDH-P256             | id-sha3-256 | id-aes128-Wrap     |
+| id-MLKEM512-ECDH-brainpoolP256r1  | id-sha3-256 | id-aes128-Wrap     |
+| id-MLKEM512-X25519                | id-sha3-256 | id-aes128-Wrap     |
+| id-MLKEM512-RSA2048               | id-sha3-256 | id-aes128-Wrap     |
+| id-MLKEM512-RSA3072               | id-sha3-256 | id-aes128-Wrap     |
+| id-MLKEM768-ECDH-P256             | id-sha3-384 | id-aes256-Wrap     |
+| id-MLKEM768-ECDH-brainpoolP256r1  | id-sha3-384 | id-aes256-Wrap     |
+| id-MLKEM768-X25519                | id-sha3-384 | id-aes256-Wrap     |
+| id-MLKEM1024-ECDH-P384            | id-sha3-512 | id-aes256-Wrap     |
+| id-MLKEM1024-ECDH-brainpoolP384r1 | id-sha3-512 | id-aes256-Wrap     |
+| id-MLKEM1024-X448                 | id-sha3-512 | id-aes256-Wrap     |
 {: #tab-cms-kdf-wrap title="REQUIRED pairings for CMS KDF and WRAP"}
+
+In all cases above, the hash function used as a KDF produces a longer output than needed by the encryption algorithm, so the output should simply be truncated to the correct length -- ie use the leftmost significant bits.
 
 Note: `id-aes256-Wrap` is stronger than necessary for the MLKEM768 combinations at the NIST level 3 192 bit security level, however `id-aes256-Wrap` was chosen because it has better general adoption than `id-aes192-Wrap`.
 
 where:
 
-* SHA3-* KDF instantiations are defined in {{I-D.ietf-lamps-cms-sha3-hash}}.
+* `id-sha3-*` KDF instantiations are defined in {{I-D.ietf-lamps-cms-sha3-hash}}.
 * `id-aes*-Wrap` are defined in [RFC3394].
 
 
