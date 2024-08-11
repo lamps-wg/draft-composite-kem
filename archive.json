@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-08-08T01:34:00.206164+00:00",
+  "timestamp": "2024-08-11T01:40:24.528257+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -509,10 +509,12 @@
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "pull request"
+      ],
       "body": "https://mailarchive.ietf.org/arch/msg/spasm/e7OlkcpDMtOWbGLPQB1hEPyyjXQ/\r\n\r\n---\r\nMike:\r\n\r\nI think you should reference Section 7.1 of RFC 8017 for the RSA-OAEP specification.\r\n\r\nThen, the description should use RSAES-OAEP-ENCRYPT and RSAES-OAEP-DECRYPT as specified there.\r\n\r\nI assume that you are thinking about the L parameter being an empty string.\r\n\r\nThe Mask Generation Function needs to be specified.  I assume you want to use MGF1 from Appendix B.2.1 of RFC 8017.  I think you can state the maskLen for the two cases that you are supporting.\r\n\r\nRuss\r\n\r\n\r\n",
       "createdAt": "2024-07-09T14:02:42Z",
-      "updatedAt": "2024-07-09T14:02:42Z",
+      "updatedAt": "2024-08-10T22:12:43Z",
       "closedAt": null,
       "comments": []
     },
@@ -643,10 +645,12 @@
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "pull request"
+      ],
       "body": "Mike Ounsworth: Yeah, it should be referencing id-sha3-256 and friends from here:\r\nhttps://datatracker.ietf.org/doc/html/draft-ietf-lamps-cms-sha3-hash-04#name-message-digest-algorithms\r\n\r\nThat should be made clearer in the composite-KEM draft and actually reference them by OID.\r\nSpecifically, this is in the \"## Underlying Components\" section where the OIDs are needed for CMS.",
       "createdAt": "2024-07-23T23:10:05Z",
-      "updatedAt": "2024-08-03T23:35:06Z",
+      "updatedAt": "2024-08-10T15:36:25Z",
       "closedAt": null,
       "comments": []
     },
@@ -659,10 +663,12 @@
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "pull request"
+      ],
       "body": "Add\r\n\r\n> The authors thank the following people for providing review of the cryptographic constructs\r\n\r\nPeter C, Sophie Schmieg, Deirdre Connolly, Douglas Stebila, Falko",
       "createdAt": "2024-07-25T19:55:01Z",
-      "updatedAt": "2024-07-25T19:55:44Z",
+      "updatedAt": "2024-08-10T15:43:12Z",
       "closedAt": null,
       "comments": [
         {
@@ -1878,13 +1884,39 @@
       "labels": [],
       "body": "",
       "createdAt": "2024-08-06T00:35:56Z",
-      "updatedAt": "2024-08-06T13:25:36Z",
+      "updatedAt": "2024-08-10T15:43:04Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "2d6b93f6d35fa31c16c42d8da5795e11ee68f550",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_editorial",
-      "headRefOid": "1907c2ded1bc4e0ffd294169f64aa494b683fd7f",
+      "headRefOid": "d9c7b8654e593473d9060587a281e7c697d15359",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 57,
+      "id": "PR_kwDOKRPFO854BS5m",
+      "title": "RSA-OAEP tweaks.",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/57",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Closes #35",
+      "createdAt": "2024-08-10T22:11:44Z",
+      "updatedAt": "2024-08-10T22:11:44Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "2d6b93f6d35fa31c16c42d8da5795e11ee68f550",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_rsa-oaep-fix",
+      "headRefOid": "9177af9fa95873ca60424ad731ea033e7cd05b5a",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
