@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 21 January 2025                                         M. Pala
+Expires: 15 February 2025                                        M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                            20 July 2024
+                                                          14 August 2024
 
 
 Composite ML-KEM for Use in the Internet X.509 Public Key Infrastructure
@@ -66,7 +66,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 21 January 2025.
+   This Internet-Draft will expire on 15 February 2025.
 
 Copyright Notice
 
@@ -358,6 +358,12 @@ Table of Contents
    The value of ss_len as well as the RSA-OAEP parameters used within
    this specification can be found in Section 5.2.
 
+   Note that, at least at the time of writing, the algorithm RSAOAEPKEM
+   is not defined as a standalone algorithm within PKIX standards and it
+   does not have an assigned algorithm OID, so it connot be used
+   directly with CMS KEMRecipientInfo [RFC9629]; it is merely a building
+   block for the composite algorithm.
+
 2.3.3.  Promotion of ECDH into a KEM
 
    An elliptic curve Diffie-Hellman key agreement is promoted into a KEM
@@ -388,6 +394,12 @@ Table of Contents
    construct the kem_context object, and since a domain separator is
    included explicitly in the composite KEM combiner there is no need to
    perform the labelled steps of ExtractAndExpand().
+
+   Note that, at least at the time of writing, the algorithm DHKEM is
+   not defined as a standalone algorithm within PKIX standards and it
+   does not have an assigned algorithm OID, so it connot be used
+   directly with CMS KEMRecipientInfo [RFC9629]; it is merely a building
+   block for the composite algorithm.
 
 2.3.4.  Composite Encaps
 
@@ -864,9 +876,9 @@ Table of Contents
    in the CMS enveloped-data content type [RFC5652], the CMS
    authenticated-data content type [RFC5652], or the CMS authenticated-
    enveloped-data content type [RFC5083].  In each case, the
-   KEMRecipientInfo [I-D.ietf-lamps-cms-kemri] is used with the chosen
-   composite KEM Algorithm to securely transfer the content-encryption
-   key from the originator to the recipient.
+   KEMRecipientInfo [RFC9629] is used with the chosen composite KEM
+   Algorithm to securely transfer the content-encryption key from the
+   originator to the recipient.
 
 6.1.  Underlying Components
 
@@ -929,9 +941,8 @@ Table of Contents
 
    When a composite KEM Algorithm is employed for a recipient, the
    RecipientInfo alternative for that recipient MUST be
-   OtherRecipientInfo using the KEMRecipientInfo structure
-   [I-D.ietf-lamps-cms-kemri].  The fields of the KEMRecipientInfo MUST
-   have the following values:
+   OtherRecipientInfo using the KEMRecipientInfo structure [RFC9629].
+   The fields of the KEMRecipientInfo MUST have the following values:
 
    version is the syntax version number; it MUST be 0.
 
@@ -1508,14 +1519,6 @@ Table of Contents
               <https://nvlpubs.nist.gov/nistpubs/FIPS/
               NIST.FIPS.203.ipd.pdf>.
 
-   [I-D.ietf-lamps-cms-kemri]
-              Housley, R., Gray, J., and T. Okubo, "Using Key
-              Encapsulation Mechanism (KEM) Algorithms in the
-              Cryptographic Message Syntax (CMS)", Work in Progress,
-              Internet-Draft, draft-ietf-lamps-cms-kemri-08, 6 February
-              2024, <https://datatracker.ietf.org/doc/html/draft-ietf-
-              lamps-cms-kemri-08>.
-
    [I-D.ietf-lamps-cms-sha3-hash]
               Housley, R., "Use of the SHA3 One-way Hash Functions in
               the Cryptographic Message Syntax (CMS)", Work in Progress,
@@ -1572,6 +1575,12 @@ Table of Contents
               Cryptographic Algorithm Object Identifier Range",
               RFC 8411, DOI 10.17487/RFC8411, August 2018,
               <https://www.rfc-editor.org/info/rfc8411>.
+
+   [RFC9629]  Housley, R., Gray, J., and T. Okubo, "Using Key
+              Encapsulation Mechanism (KEM) Algorithms in the
+              Cryptographic Message Syntax (CMS)", RFC 9629,
+              DOI 10.17487/RFC9629, August 2024,
+              <https://www.rfc-editor.org/info/rfc9629>.
 
    [SP.800-56Ar3]
               National Institute of Standards and Technology (NIST),
