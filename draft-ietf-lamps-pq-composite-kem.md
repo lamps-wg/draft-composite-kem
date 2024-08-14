@@ -84,7 +84,7 @@ normative:
   RFC8174:
   RFC8410:
   RFC8411:
-  I-D.draft-ietf-lamps-cms-kemri-08:
+  RFC9629:
   I-D.draft-ietf-lamps-cms-sha3-hash-04:
   # ANS-X9.44:
   #   title: "Public Key
@@ -351,6 +351,8 @@ RSAKEM.Decap(skR, enc):
 
 The value of `ss_len` as well as the RSA-OAEP parameters used within this specification can be found in {{sect-rsaoaep-params}}.
 
+Note that, at least at the time of writing, the algorithm `RSAOAEPKEM` is not defined as a standalone algorithm within PKIX standards and it does not have an assigned algorithm OID, so it connot be used directly with CMS KEMRecipientInfo [RFC9629]; it is merely a building block for the composite algorithm.
+
 ### Promotion of ECDH into a KEM
 
 An elliptic curve Diffie-Hellman key agreement is promoted into a KEM `Encaps(pk) -> (ss, ct)` using a simplified version of the DHKEM definition from [RFC9180].
@@ -378,6 +380,8 @@ DHKEM.Decap(skR, enc):
 This construction applies for all variants of elliptic curve Diffie-Hellman used in this specification: ECDH, X25519, and X448.
 
 The simplifications from the DHKEM definition in [RFC9180] is that since the ciphertext and receiver's public key are included explicitly in the composite KEM combiner, there is no need to construct the `kem_context` object, and since a domain separator is included explicitly in the composite KEM combiner there is no need to perform the labelled steps of `ExtractAndExpand()`.
+
+Note that, at least at the time of writing, the algorithm `DHKEM` is not defined as a standalone algorithm within PKIX standards and it does not have an assigned algorithm OID, so it connot be used directly with CMS KEMRecipientInfo [RFC9629]; it is merely a building block for the composite algorithm.
 
 ### Composite Encaps
 
@@ -700,7 +704,7 @@ where:
 
 \[EDNOTE: The convention in LAMPS is to specify algorithms and their CMS conventions in separate documents. Here we have presented them in the same document, but this section has been written so that it can easily be moved to a standalone document.\]
 
-Composite KEM algorithms MAY be employed for one or more recipients in the CMS enveloped-data content type [RFC5652], the CMS authenticated-data content type [RFC5652], or the CMS authenticated-enveloped-data content type [RFC5083]. In each case, the KEMRecipientInfo {{I-D.ietf-lamps-cms-kemri}} is used with the chosen composite KEM Algorithm to securely transfer the content-encryption key from the originator to the recipient.
+Composite KEM algorithms MAY be employed for one or more recipients in the CMS enveloped-data content type [RFC5652], the CMS authenticated-data content type [RFC5652], or the CMS authenticated-enveloped-data content type [RFC5083]. In each case, the KEMRecipientInfo [RFC9629] is used with the chosen composite KEM Algorithm to securely transfer the content-encryption key from the originator to the recipient.
 
 ## Underlying Components
 
@@ -738,7 +742,7 @@ where:
 
 ## RecipientInfo Conventions
 
-When a composite KEM Algorithm is employed for a recipient, the RecipientInfo alternative for that recipient MUST be OtherRecipientInfo using the KEMRecipientInfo structure {{I-D.ietf-lamps-cms-kemri}}. The fields of the KEMRecipientInfo MUST have the following values:
+When a composite KEM Algorithm is employed for a recipient, the RecipientInfo alternative for that recipient MUST be OtherRecipientInfo using the KEMRecipientInfo structure [RFC9629]. The fields of the KEMRecipientInfo MUST have the following values:
 
 `version` is the syntax version number; it MUST be 0.
 
