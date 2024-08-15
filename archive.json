@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-08-13T01:36:06.575943+00:00",
+  "timestamp": "2024-08-15T01:23:14.947480+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -867,6 +867,70 @@
       "body": "For a security proof of the ML-KEM + ECDH combos, we can point to the X-Wing paper. We should have a similar proof for the RSA-OAEP combos. Not sure how to go about attracting someone to help with this, or if we should attempt proof-writing ourselves.",
       "createdAt": "2024-08-01T21:31:58Z",
       "updatedAt": "2024-08-01T21:31:58Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 58,
+      "id": "I_kwDOKRPFO86S31jH",
+      "title": "Update draft to support official ML-KEM Standard",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/58",
+      "state": "OPEN",
+      "author": "johngray-dev",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "The final standard was released today.  We need to update the draft to reference the official ML-KEM standard\r\nhttps://csrc.nist.gov/pubs/fips/203/ipd\r\n",
+      "createdAt": "2024-08-13T19:54:12Z",
+      "updatedAt": "2024-08-13T19:54:12Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 59,
+      "id": "I_kwDOKRPFO86S_CbX",
+      "title": "Public key and private key compression",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/59",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "See: https://github.com/lamps-wg/draft-composite-sigs/issues/6\r\n\r\nThe work here is just to copy over the fix from Sigs.",
+      "createdAt": "2024-08-14T14:22:21Z",
+      "updatedAt": "2024-08-14T14:22:21Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 60,
+      "id": "I_kwDOKRPFO86S_LVT",
+      "title": "List security strength of each composite",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/60",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "See:\r\nhttps://github.com/lamps-wg/draft-composite-sigs/issues/29",
+      "createdAt": "2024-08-14T14:35:22Z",
+      "updatedAt": "2024-08-14T14:35:22Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 61,
+      "id": "I_kwDOKRPFO86TA-ma",
+      "title": "List overall strength estimates for each composite",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/61",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "See: https://mailarchive.ietf.org/arch/msg/spasm/s0wPyhHpaxKsSKMwLBypagm4iL0/",
+      "createdAt": "2024-08-14T18:10:08Z",
+      "updatedAt": "2024-08-14T18:10:08Z",
       "closedAt": null,
       "comments": []
     }
@@ -1817,7 +1881,7 @@
       "labels": [],
       "body": "",
       "createdAt": "2024-07-31T22:56:40Z",
-      "updatedAt": "2024-08-03T23:30:19Z",
+      "updatedAt": "2024-08-14T14:52:32Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "2d6b93f6d35fa31c16c42d8da5795e11ee68f550",
@@ -1842,6 +1906,13 @@
           "body": "Closes #39",
           "createdAt": "2024-08-03T23:12:37Z",
           "updatedAt": "2024-08-03T23:12:37Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "The MLKEM-1024 combos should be offered with both HKDF-SHA2 and SHA3.",
+          "createdAt": "2024-08-14T14:52:32Z",
+          "updatedAt": "2024-08-14T14:52:32Z"
         }
       ],
       "reviews": []
