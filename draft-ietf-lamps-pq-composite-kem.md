@@ -873,6 +873,8 @@ EDNOTE to IANA: OIDs will need to be replaced in both the ASN.1 module and in {{
 
 ## Component Algorithm Selection Criteria {#sec-selection-criteria}
 
+TODO: Update this once the on-list discussion settles.
+
 The composite algorithm combinations defined in this document were chosen according to the following guidelines:
 
 1. RSA combinations are provided at key sizes of 2048 and 3072 bits. Since RSA 2048 and 3072 are considered to have 112 and 128 bits of classical security respectively, they are both matched with NIST PQC Level 1 algorithms and 128-bit symmetric algorithms.
