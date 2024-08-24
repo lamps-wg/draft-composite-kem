@@ -491,6 +491,8 @@ Some applications may need to reconstruct the `SubjectPublicKeyInfo` objects cor
 
 When the CompositeKEMPublicKey must be provided in octet string or bit string format, the data structure is encoded as specified in {{sec-encoding-rules}}.
 
+In order to maintain security properties of the composite, applications that use composite keys MUST always perform fresh key generations of both component keys and MUST NOT reuse existing key material. See {{sec-cons-key-reuse}} for a discussion.
+
 
 ## CompositeKEMPrivateKey {#sec-priv-key}
 
@@ -871,6 +873,26 @@ EDNOTE to IANA: OIDs will need to be replaced in both the ASN.1 module and in {{
 
 # Security Considerations
 
+
+## KEM Combiner Security Analysis {#sec-cons-kem-combiner}
+
+TODO
+
+EDNOTE: the exact text to put here depends on the outcome of the CFRG KEM Combiners and X-Wing discussion. If CFRG doesn't move fast enough for us, then we may need to leverage this security consideration directly on top of the X-Wing paper [X-Wing].
+
+
+### Ciphertext collision resistance {#sec-cons-ct-collision}
+
+The notion of a ciphertext collision resistant KEM is defined in [X-Wing] being the property that it is computationally difficult to find two different ciphertexts that will decapsulate to the same shared secret under the same public key. In [X-Wing] it is proven that ML-KEM has this property and therefore the ML-KEM ciphertext can safely be omitted from the KEM combiner. Ciphertext collision resistance is not guaranteed for either RSA-OAEP or ECDH, therefore these ciphertexts are bound to the key derivation.
+
+### Key Reuse {#sec-cons-key-reuse}
+
+TODO: does this section actually apply to composite KEMs, or only to composite signatures?
+
+When using single-algorithm cryptography, the best practice is to always generate fresh key material for each purpose, for example when renewing a certificate, or obtaining both a TLS and S/MIME certificate for the same device, however in practice key reuse in such scenarios is often not catestrophic to security and therefore often tolerated. With composite keys we have a much stricter security requirement. However this reasoning does not hold in the composite setting. Consider an RSA key which already appears within a certificate and which is already being used to sign documents. If a composite key is created which combines this existing RSA key with an ML-DSA key then an attacker is free to remove the ML-DSA component of any message signed with this key and instead present the document as if it had only been signed by the RSA key. The scope of such "stripping attacks" is greatly reduced if composite keys never share key material with non-composite keys. While this logic is less straight-forward for encryption operations involving KEM keys, it does apply to authentication modes involving KEMs. A similar argument applies for two composite keys which share one component but not the other; as an example it becomes difficult for CAs and other relying parties to detect if a composite key contains a key which has been revoked due to key compromise since needing to keep lists of individual component keys is more complex than being able to search such lists for the composite key as a whole.
+
+For these reasons, applications using composite keys MUST perform fresh key generations for both components. Failure to do so negates any non-separability properties {{TODO-cite-draft-hale-connolly-signature-spectrums}} of the composite and effectively reduces it to a 
+
 ## Component Algorithm Selection Criteria {#sec-selection-criteria}
 
 TODO: Update this once the on-list discussion settles.
@@ -895,17 +917,6 @@ Since composite algorithms are registered independently of their component algor
 
 The composite KEM design specified in this document, and especially that of the KEM combiner specified in {{sec-kem-combiner}} means that the overall composite KEM algorithm should be considered to have the security strength of the strongest of its component algorithms; ie as long as one component algorithm remains strong, then the overall composite algorithm remains strong.
 
-
-## KEM Combiner Security Analysis {#sec-cons-kem-combiner}
-
-TODO
-
-EDNOTE: the exact text to put here depends on the outcome of the CFRG KEM Combiners and X-Wing discussion. If CFRG doesn't move fast enough for us, then we may need to leverage this security consideration directly on top of the X-Wing paper [X-Wing].
-
-
-### Ciphertext collision resistance {#sec-cons-ct-collision}
-
-The notion of a ciphertext collision resistant KEM is defined in [X-Wing] being the property that it is computationally difficult to find two different ciphertexts that will decapsulate to the same shared secret under the same public key. In [X-Wing] it is proven that ML-KEM has this property and therefore the ML-KEM ciphertext can safely be omitted from the KEM combiner. Ciphertext collision resistance is not guaranteed for either RSA-OAEP or ECDH, therefore these ciphertexts are bound to the key derivation.
 
 
 <!-- End of Security Considerations section -->
