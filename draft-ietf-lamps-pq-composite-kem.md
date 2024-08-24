@@ -230,6 +230,10 @@ Interop-affecting changes:
 Editorial changes:
 
 * Added an Implementation Consideration section explaining why private keys need to contain the public keys.
+* Added a security consideration about key reuse.
+
+
+
 
 Still to do in a future version:
 
