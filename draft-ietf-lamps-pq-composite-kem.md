@@ -231,6 +231,7 @@ Editorial changes:
 
 * Added an Implementation Consideration section explaining why private keys need to contain the public keys.
 * Added a security consideration about key reuse.
+* Added security considerations about SHA3-vs-HKDF-SHA2 and a warning against generifying this construction to other combinations of ciphers.
 
 
 
@@ -887,7 +888,19 @@ EDNOTE: the exact text to put here depends on the outcome of the CFRG KEM Combin
 
 ### Ciphertext collision resistance {#sec-cons-ct-collision}
 
-The notion of a ciphertext collision resistant KEM is defined in [X-Wing] being the property that it is computationally difficult to find two different ciphertexts that will decapsulate to the same shared secret under the same public key. In [X-Wing] it is proven that ML-KEM has this property and therefore the ML-KEM ciphertext can safely be omitted from the KEM combiner. Ciphertext collision resistance is not guaranteed for either RSA-OAEP or ECDH, therefore these ciphertexts are bound to the key derivation.
+The notion of a ciphertext collision resistant KEM is defined in [X-Wing] being the property that it is computationally difficult to find two different ciphertexts that will decapsulate to the same shared secret under the same public key. In [X-Wing] it is proven that ML-KEM has this property and therefore the ML-KEM ciphertext can safely be omitted from the KEM combiner. Note that this makes a fundamental assumption on ML-KEM remaining ciphertext second pre-image resistant, and thefore this formulation of KEM combiner does not fully protect against implementation errors in the ML-KEM component -- particularly around the ciphertext check step of the Fujisaki-Okamoto transform -- which could trivially lead to second ciphertext pre-image attacks that break the IND-CCA2 security of the composite KEM. This could be more fully mitigated by binding the ML-KEM ciphertext in the combiner, but a design decision was made to settle for protection against algorithmic attacks and not implementation attacks against ML-KEM in order to increase performance.
+
+However, since ciphertext collision resistance is not guaranteed at all, even in a correct implementation, for either RSA-OAEP or ECDH, these ciphertexts are bound to the key derivation.
+
+### SHA3 vs HKDF-SHA2
+
+The primary security property of the KEM combiner is that it preserves IND-CCA2 of the overall composite KEM so long as at least one component is IND-CCA2. In order to achieve this, KDF used in the KEM combiner needs to possess collision, pre-image, and second pre-image resistance with regard to each of its inputs independently, property sometimes called "dual-PRF". Collision and second-pre-image resistance protects against compromise of one component algorithm from resulting in the ability to construct multiple different ciphertexts which result in the same shared secret. Pre-image resistance protects against compromise of one component algorithm being used to attack and learn the value of the other shared secret.
+
+SHA3 is known to have all of the necessary dual-PRF properties CITATION NEEDED, but SHA2 does not CITATION NEEDED and therefore all SHA2-based constructions MUST use SHA2 within a Hash-based Key Derivation Function (HKDF-SHA2).
+
+### Generifying this construction
+
+It should be cleart that the security analsis of the presented KEM combiner construction relies heavily on the specific choices of component algorithms and combiner KDF, and this combiner construction SHOULD NOT by applied to any other combination of ciphers without performing the appropriate security analysis.
 
 ### Key Reuse {#sec-cons-key-reuse}
 
