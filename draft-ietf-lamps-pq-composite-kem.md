@@ -224,7 +224,8 @@ This document introduces a set of Key Encapsulation Mechanism (KEM) schemes that
 Interop-affecting changes:
 
 * Fixed a bug in the definition of the Encaps() functions: KEMs, according to both RFC9180 and FIPS 203 should always return (ss, ct), but we had (ct, ss).
-* Interoperable composite private key format requires component public keys (because public keys are required for decapsulation)
+* Interoperable composite private key format requires component public keys (because public keys are required for decapsulation).
+* Specified that the tradCT and tradPK inputs to the KEM combiner must be the raw values without the OCTET STRING wrapper.
 
 Editorial changes:
 
@@ -588,8 +589,8 @@ where:
 * `counter` SHALL be the fixed 32-bit value `0x00000001` which is placed here solely for the purposes of compliance with [SP.800-56Cr2].
 * `tradSS` is the shared secret from the traditional component (elliptic curve or RSA).
 * `mlkemSS` is the shared secret from the ML-KEM componont.
-* `tradCT` is the ciphertext from the traditional component (elliptic curve or RSA).
-* `tradPK` is the public key of the traditional component (elliptic curve or RSA).
+* `tradCT` is the ciphertext from the traditional component (elliptic curve or RSA). This MUST be the raw value of the ciphertext without the DER OCTET STRING wrapping. The intention is to maximize implementation reuse with other protocols that are not ASN.1-based.
+* `tradPK` is the public key of the traditional component (elliptic curve or RSA). This MUST be the raw value of the SubjectPublicKeyInfo.publicKey without the DER OCTET STRING wrapping. The intention is to maximize implementation reuse with other protocols that are not ASN.1-based.
 * `domSep` SHALL be the DER encoded value of the object identifier of the composite KEM algorithm as listed in {{sec-domain}}.
 * `||` represents concatenation.
 
