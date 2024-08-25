@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-08-22T01:35:52.829893+00:00",
+  "timestamp": "2024-08-25T01:41:16.243231+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -608,9 +608,17 @@
       "labels": [],
       "body": "Looking at this fresh today, I have a new question.\r\n\r\nSections 2.3.4 and 2.3.5 have this:\r\n\r\nss = Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep)\r\n\r\nSection 4.3 has this:\r\n\r\nKEK <- Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep) =\r\n  KDF(counter || tradSS || mlkemSS || tradCT || tradPK ||\r\n       domSep, outputBits)\r\n\r\nI don't understand the <- followed by =. Is it fair to say that 2.3.4 and 2.3.5 could be written this way:\r\n\r\ncompositeSS = Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep)\r\n\r\nAnd 4.3 written this way:\r\n\r\nKEK = KDF(counter || compositeSS, outputBits)\r\n\r\n\r\n\r\n\r\n\r\n\r\nLooking at this fresh today, I have a new question.\r\n\r\n\r\nSections 2.3.4 and 2.3.5 have this:\r\n\r\n\r\nss = Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep)\r\n\r\n\r\nSection 4.3 has this:\r\n\r\n\r\nKEK <- Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep) =\r\nKDF(counter || tradSS || mlkemSS || tradCT || tradPK ||\r\ndomSep, outputBits)\r\n\r\n\r\nI don't understand the <- followed by =. Is it fair to say that 2.3.4 and 2.3.5 could be written this way:\r\n\r\n\r\ncompositeSS = Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep)\r\n\r\n\r\nAnd 4.3 written this way:\r\n\r\n\r\nKEK = KDF(counter || compositeSS, outputBits)",
       "createdAt": "2024-07-23T16:08:39Z",
-      "updatedAt": "2024-07-23T16:08:40Z",
+      "updatedAt": "2024-08-24T18:29:38Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Revisit this after PR #55 is merged (it should resolve Carl's comment, but should double-check).",
+          "createdAt": "2024-08-24T18:29:37Z",
+          "updatedAt": "2024-08-24T18:29:37Z"
+        }
+      ]
     },
     {
       "number": 42,
@@ -624,7 +632,7 @@
       "labels": [],
       "body": "https://mailarchive.ietf.org/arch/msg/spasm/Kxol5ZgDR777Y58XsLPHwvl6uY8/\r\n\r\n\r\nFrom Peter C:\r\n\r\n> Secondly, X-Wing fundamentally relies on ML-KEM remaining ciphertext second pre-image resistant.  This means that it cannot mitigate ML-KEM implementation vulnerabilities.  If decapsulation fails to perform the ciphertext check properly, for example, then it's trivial to find ML-KEM second pre-images and break the IND-CCA2 security of X-Wing.  This isn't an issue if your goal is only to mitigate algorithmic vulnerabilities, but you need to be explicit about that.  At the very least, you need to reconsider \"we also cannot immediately place complete trust in post-quantum replacements until they have undergone extensive scrutiny and real-world testing to uncover and rectify potential implementation flaws\" in the introduction.\r\n\r\n\r\nWe either need to add Security Consideration text to this effect, or strengthen the combiner. I believe that binding the ML-KEM CT and PK would solve this?",
       "createdAt": "2024-07-23T16:31:37Z",
-      "updatedAt": "2024-07-26T22:21:06Z",
+      "updatedAt": "2024-08-24T18:30:38Z",
       "closedAt": null,
       "comments": [
         {
@@ -633,6 +641,13 @@
           "body": "Comment from Britta Hale:\r\n\r\n> SHA3 does offer more properties...\r\n>Then, if all of the above holds, I would just suggest adding a remark that the draft is based on analyzed component choices, and should not be extrapolated to SHA2 or other constructions without analysis. (Basically, something to preempt someone making a draft in 5 yrs and saying \"but they did it, it must work generically!\").\r\n",
           "createdAt": "2024-07-26T22:21:04Z",
           "updatedAt": "2024-07-26T22:21:04Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "TODO: find a citation for SHA3 being equivalent to HKDF-SHA2 -- probably the X-Wing paper will do.\r\n\r\nAlso, ping Brita, Peter C, and Falko to specifically review the added Sec-Cons text tagged against this issue.",
+          "createdAt": "2024-08-24T18:30:37Z",
+          "updatedAt": "2024-08-24T18:30:37Z"
         }
       ]
     },
@@ -947,6 +962,22 @@
       "body": "\r\nhttps://mailarchive.ietf.org/arch/msg/spasm/ReWx7kichMke-HuTHjCih3iZpD0/\r\n\r\nDigiCert's CA engineering team has some comments on the open issues related\r\nto the composite-sigs draft. We're going to put them in one email just\r\nbecause we have comments on quite a few of them.\r\n\r\nISSUE #1\r\n(Github issue:  https://github.com/lamps-wg/draft-composite-sigs/issues/9)\r\n\r\nASN.1 wrapping confuses people. This came up in the hash-based signatures\r\nupdates last call. Nobody knows what ASN.1 is, or what the consequences\r\nof omiting it are (to be clear, there are really none).\r\n\r\nWe agree that this is largely a question of people being unfamiliar with\r\nASN.1, and that explanatory text is sufficient. All that is needed is a\r\nclear explanation of example what the BIT STRING is, and explaining that\r\nit's simply the bits of the key itself seems pretty straightforward.\r\n\r\nOne can then say something similar to: \r\n\r\n\"In some situations and protocols, the key might be wrapped in ASN.1 or \r\nmay have some other additional decoration or encoding. If so, such wrapping \r\nMUST be removed prior to encoding the key itself as a BIT STRING.\"\r\n\r\nHopefully that makes things crystal clear.\r\n\r\nISSUE #2\r\n(Github Issue: https://github.com/lamps-wg/draft-composite-sigs/issues/19)\r\n\r\nWe don't think it's worth the extra complexity and expense of an additional\r\nhash operation just to achieve a fixed size output. The variation in size\r\nis already pretty small.\r\n\r\nISSUE #3\r\n(Github issue: https://github.com/lamps-wg/draft-composite-sigs/issues/6)\r\n\r\nAgain, we don't believe the additional complexity is worth it for a pretty\r\ntrivial improvement in the private key size. But it's not a strong opinion,\r\nwe could go either way.\r\n\r\nOpen Issues affect both Composite Signatures and Composite KEM:\r\nISSUE #4\r\n\r\nChair hat off, I and the CA team are concerned about the slow progress of \r\nthe composite signature work. In particular, tying it to the Composite KEM\r\ndraft and waiting for the CFRG work on KEM Combiners seems like an\r\nabsolutely horrible idea to us. We would like to see Composite Signatures\r\nprogress ASAP.\r\n\r\nISSUE #5\r\n(Github issues:\r\nhttps://github.com/lamps-wg/draft-composite-kem/issues/37\r\nhttps://github.com/lamps-wg/draft-composite-sigs/issues/24\r\nhttps://github.com/lamps-wg/draft-composite-sigs/issues/23)\r\n\r\nThis is a fun one, and we've spent quite a bit of time discussing it\r\ninternally.\r\n\r\nIn particular, we're still debating the question about exactly how many\r\nbackwards compatibility options are really necessary. For example, given\r\nthat you already need to add lattice, is it really necessary to allow\r\nPKCS15 to continue to exist? For RSA, there's the reasonable argument that\r\nthat might be all you have in your validated hardware/software, but if you\r\nhave RSA as a primitive, can't you do PSS instead of PKCS15? Remember, you\r\nalready have to make changes on both the signing and verify side anyway.\r\n\r\nWe're trending in the direction of thinking that the primary decision is\r\nthe security level and post-quantum algorithm, and the classical side is\r\njust determined by what \"makes sense\" for that security level and algorithm.\r\n\r\nSo what you really want is something like \"id-SL1-MLKEM-RSA\" where the\r\ndocument specifies exactly what \"RSA\" means in the context of a SL1 MLKEM512\r\ncomposite, e.g. RSA4096-PSS-SHA512. This basically means striving for\r\nat most one combination for each triple of (security level, PQC flavor, classical \r\nflavor) and eliminating unnecessary complexity and diversity of options in what \r\nis essentially a redundancy/backup mechanism.\r\n\r\nThe basic idea is to more aggressively standardize the backwards \r\ncompatibility options to only what's actually necessary, instead of\r\ntrying to be backwards compatible with the universe of current behavior,\r\nwhich both unnecessarily complicates things, and preserves some practices\r\n(e.g. PKCS15) longer than is perhaps prudent.\r\n\r\n-Tim\r\n",
       "createdAt": "2024-08-16T17:29:56Z",
       "updatedAt": "2024-08-16T17:29:56Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 63,
+      "id": "I_kwDOKRPFO86UGsob",
+      "title": "Update the Sec Con about alg choice criteria once the on-list discussion settles",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/63",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-08-24T18:29:20Z",
+      "updatedAt": "2024-08-24T18:29:20Z",
       "closedAt": null,
       "comments": []
     }
@@ -1971,13 +2002,13 @@
       "labels": [],
       "body": "",
       "createdAt": "2024-08-06T00:35:56Z",
-      "updatedAt": "2024-08-10T15:43:04Z",
+      "updatedAt": "2024-08-24T18:31:35Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "2d6b93f6d35fa31c16c42d8da5795e11ee68f550",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_editorial",
-      "headRefOid": "d9c7b8654e593473d9060587a281e7c697d15359",
+      "headRefOid": "24c009c164222ad1ba6ff6555c26396b9816d6c3",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
