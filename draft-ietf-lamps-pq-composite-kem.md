@@ -156,7 +156,8 @@ informative:
   RFC8551:
   RFC9180:
   I-D.draft-ietf-tls-hybrid-design-04:
-  I-D.draft-driscoll-pqt-hybrid-terminology-01:
+  I-D.draft-ietf-pquip-pqt-hybrid-terminology-03:
+  I-D.draft-ietf-pquip-hybrid-signature-spectrums-00:
   I-D.draft-ietf-lamps-kyber-certificates-01:
   I-D.draft-housley-lamps-cms-kemri-02:
   X-Wing:
@@ -208,6 +209,14 @@ informative:
       - ins: A. Roginksy
         name: Allan Reginsky
     org: National Institute of Standards and Technology (NIST)
+  GHP18:
+    title: KEM Combiners
+    author:
+      name: Federico Giacon
+      name: Felix Heuer
+      name: Bertram Poettering
+      date: 2018
+      target: https://eprint.iacr.org/2018/024
 
 
 --- abstract
@@ -248,7 +257,7 @@ The advent of quantum computing poses a significant threat to current cryptograp
 
 Unlike previous migrations between cryptographic algorithms, the decision of when to migrate and which algorithms to adopt is far from straightforward. Even after the migration period, it may be advantageous for an entity's cryptographic identity to incorporate multiple public-key algorithms to enhance security.
 
-Cautious implementers may opt to combine cryptographic algorithms in such a way that an attacker would need to break all of them simultaneously to compromise the protected data. These mechanisms are referred to as Post-Quantum/Traditional (PQ/T) Hybrids {{I-D.driscoll-pqt-hybrid-terminology}}.
+Cautious implementers may opt to combine cryptographic algorithms in such a way that an attacker would need to break all of them simultaneously to compromise the protected data. These mechanisms are referred to as Post-Quantum/Traditional (PQ/T) Hybrids {{I-D.ietf-pquip-pqt-hybrid-terminology}}.
 
 Certain jurisdictions are already recommending or mandating that PQC lattice schemes be used exclusively within a PQ/T hybrid framework. The use of Composite scheme provides a straightforward implementation of hybrid solutions compatible with (and advocated by) some governments and cybersecurity agencies [BSI2021].
 
@@ -275,7 +284,7 @@ This document is intended for general applicability anywhere that key establishm
 ## Terminology {#sec-terminology}
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 {{RFC2119}}  {{RFC8174}} when, and only when, they appear in all capitals, as shown here.
 
-This document is consistent with all terminology from {{I-D.driscoll-pqt-hybrid-terminology}}.
+This document is consistent with all terminology from {{I-D.ietf-pquip-pqt-hybrid-terminology}}.
 In addition, the following terms are used in this document:
 
 **COMBINER:**
@@ -299,7 +308,7 @@ In addition, the following terms are used in this document:
 
 ## Composite Design Philosophy
 
-{{I-D.driscoll-pqt-hybrid-terminology}} defines composites as:
+{{I-D.ietf-pquip-pqt-hybrid-terminology}} defines composites as:
 
 >   *Composite Cryptographic Element*:  A cryptographic element that
 >      incorporates multiple component cryptographic elements of the same
@@ -883,21 +892,21 @@ EDNOTE to IANA: OIDs will need to be replaced in both the ASN.1 module and in {{
 
 EDNOTE: the exact text to put here depends on the outcome of the CFRG KEM Combiners and X-Wing discussion. If CFRG doesn't move fast enough for us, then we may need to leverage this security consideration directly on top of the X-Wing paper [X-Wing].
 
-The primary security property of the KEM combiner is that it preserves IND-CCA2 of the overall composite KEM so long as at least one component is IND-CCA2. Additionally, we also need to consider the case where one of the component algorithms is completely broken; that the private key is known to an attacker, or worse that the public key, private key, and ciphertext are maniputaled by the attacker. In this case, we rely on the construction of the KEM combiner to ensure that the value of the other shared secret cannot be leaked or the combined shared secret predicted via manipulation of the broken algorithm. The following sections continue this discussion.
+The primary security property of the KEM combiner is that it preserves IND-CCA2 of the overall composite KEM so long as at least one component is IND-CCA2 [X-Wing] [GHP18]. Additionally, we also need to consider the case where one of the component algorithms is completely broken; that the private key is known to an attacker, or worse that the public key, private key, and ciphertext are maniputaled by the attacker. In this case, we rely on the construction of the KEM combiner to ensure that the value of the other shared secret cannot be leaked or the combined shared secret predicted via manipulation of the broken algorithm. The following sections continue this discussion.
 
-### Second pre-image resistance {#sec-cons-ct-collision}
+### Second pre-image resistance of componet KEMs {#sec-cons-ct-collision}
 
 The notion of a second pre-image resistant KEM is defined in [X-Wing] being the property that it is computationally difficult to find two different ciphertexts `c != c'` that will decapsulate to the same shared secret under the same public key. For the purposes of a hybrid KEM combiner, this property means that given two composite ciphertexts `(c1, c2)` and `(c1', c2')`, we must obtain a unique overall shared secret so long as either `c1 != c1'` or `c2 != c2'` -- i.e. the overall composite KEM is second pre-image resistant, and therefore IND-CCA2 secure so, long as one of the component KEMs is.
 
-In [X-Wing] it is proven that ML-KEM is a ciphertext  property and therefore the ML-KEM ciphertext can safely be omitted from the KEM combiner. Note that this makes a fundamental assumption on ML-KEM remaining ciphertext second pre-image resistant, and thefore this formulation of KEM combiner does not fully protect against implementation errors in the ML-KEM component -- particularly around the ciphertext check step of the Fujisaki-Okamoto transform -- which could trivially lead to second ciphertext pre-image attacks that break the IND-CCA2 security of the ML-KEM component and of the overall composite KEM. This could be more fully mitigated by binding the ML-KEM ciphertext in the combiner, but a design decision was made to settle for protection against algorithmic attacks and not implementation attacks against ML-KEM in order to increase performance.
+In [X-Wing] it is proven that ML-KEM is a second pre-image resistant KEM and therefore the ML-KEM ciphertext can safely be omitted from the KEM combiner. Note that this makes a fundamental assumption on ML-KEM remaining ciphertext second pre-image resistant, and thefore this formulation of KEM combiner does not fully protect against implementation errors in the ML-KEM component -- particularly around the ciphertext check step of the Fujisaki-Okamoto transform -- which could trivially lead to second ciphertext pre-image attacks that break the IND-CCA2 security of the ML-KEM component and of the overall composite KEM. This could be more fully mitigated by binding the ML-KEM ciphertext in the combiner, but a design decision was made to settle for protection against algorithmic attacks and not implementation attacks against ML-KEM in order to increase performance.
 
 However, since neither RSA-OAEP or ECDH do not guarantee second pre-image resistance at all, even in a correct implementation, these ciphertexts are bound to the key derivation in order to guarantee that `c != c'` will yield a unique ciphertext, and thus restoring second pre-image resistance to the overall composite KEM.
 
 ### SHA3 vs HKDF-SHA2
 
-In order to achieve this, KDF used in the KEM combiner needs to possess collision, pre-image, and second pre-image resistance with regard to each of its inputs independently, property sometimes called "dual-PRF". Collision and second-pre-image resistance protects against compromise of one component algorithm from resulting in the ability to construct multiple different ciphertexts which result in the same shared secret. Pre-image resistance protects against compromise of one component algorithm being used to attack and learn the value of the other shared secret.
+In order to achieve the desired secutiy property that the composite KEM is IND-CCA2 whenever at least one of the component KEMs is, the KDF used in the KEM combiner needs to possess collision and second pre-image resistance with respect to each of its inputs independently; a property sometimes called "dual-PRF". Collision and second-pre-image resistance protects against compromise of one component algorithm from resulting in the ability to construct multiple different ciphertexts which result in the same shared secret. Pre-image resistance protects against compromise of one component algorithm being used to attack and learn the value of the other shared secret.
 
-SHA3 is known to have all of the necessary dual-PRF properties CITATION NEEDED, but SHA2 does not CITATION NEEDED and therefore all SHA2-based constructions MUST use SHA2 within a Hash-based Key Derivation Function (HKDF-SHA2).
+SHA3 is known to have all of the necessary dual-PRF properties [X-Wing], but SHA2 does not and therefore all SHA2-based constructions MUST use SHA2 within an HMAC construction such as HKDF-SHA2 [GHP18].
 
 ### Generifying this construction
 
@@ -909,7 +918,7 @@ TODO: does this section actually apply to composite KEMs, or only to composite s
 
 When using single-algorithm cryptography, the best practice is to always generate fresh key material for each purpose, for example when renewing a certificate, or obtaining both a TLS and S/MIME certificate for the same device, however in practice key reuse in such scenarios is often not catestrophic to security and therefore often tolerated. With composite keys we have a much stricter security requirement. However this reasoning does not hold in the composite setting. Consider an RSA key which already appears within a certificate and which is already being used to sign documents. If a composite key is created which combines this existing RSA key with an ML-DSA key then an attacker is free to remove the ML-DSA component of any message signed with this key and instead present the document as if it had only been signed by the RSA key. The scope of such "stripping attacks" is greatly reduced if composite keys never share key material with non-composite keys. While this logic is less straight-forward for encryption operations involving KEM keys, it does apply to authentication modes involving KEMs. A similar argument applies for two composite keys which share one component but not the other; as an example it becomes difficult for CAs and other relying parties to detect if a composite key contains a key which has been revoked due to key compromise since needing to keep lists of individual component keys is more complex than being able to search such lists for the composite key as a whole.
 
-For these reasons, applications using composite keys MUST perform fresh key generations for both components. Failure to do so negates any non-separability properties {{TODO-cite-draft-hale-connolly-signature-spectrums}} of the composite and effectively reduces it to a 
+For these reasons, applications using composite keys MUST perform fresh key generations for both components. Failure to do so negates any non-separability properties {{I-D.ietf-pquip-hybrid-signature-spectrums}} of the composite and effectively reduces it to a
 
 ## Component Algorithm Selection Criteria {#sec-selection-criteria}
 
