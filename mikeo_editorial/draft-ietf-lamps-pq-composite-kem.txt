@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 11 February 2025                                        M. Pala
+Expires: 27 February 2025                                        M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                          10 August 2024
+                                                          26 August 2024
 
 
 Composite ML-KEM for Use in the Internet X.509 Public Key Infrastructure
@@ -66,7 +66,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 11 February 2025.
+   This Internet-Draft will expire on 27 February 2025.
 
 Copyright Notice
 
@@ -121,10 +121,13 @@ Table of Contents
        8.1.2.  Object Identifier Registrations - SMI Security for PKIX
                Algorithms
    9.  Security Considerations
-     9.1.  Component Algorithm Selection Criteria
-     9.2.  Policy for Deprecated and Acceptable Algorithms
-     9.3.  KEM Combiner Security Analysis
-       9.3.1.  Ciphertext collision resistance
+     9.1.  KEM Combiner Security Analysis
+       9.1.1.  Second pre-image resistance of componet KEMs
+       9.1.2.  SHA3 vs HKDF-SHA2
+       9.1.3.  Generifying this construction
+       9.1.4.  Key Reuse
+     9.2.  Component Algorithm Selection Criteria
+     9.3.  Policy for Deprecated and Acceptable Algorithms
    10. References
      10.1.  Normative References
      10.2.  Informative References
@@ -147,12 +150,21 @@ Table of Contents
       ct), but we had (ct, ss).
 
    *  Interoperable composite private key format requires component
-      public keys (because public keys are required for decapsulation)
+      public keys (because public keys are required for decapsulation).
+
+   *  Specified that the tradCT and tradPK inputs to the KEM combiner
+      must be the raw values without the OCTET STRING wrapper.
 
    Editorial changes:
 
    *  Added an Implementation Consideration section explaining why
       private keys need to contain the public keys.
+
+   *  Added a security consideration about key reuse.
+
+   *  Added security considerations about SHA3-vs-HKDF-SHA2 and a
+      warning against generifying this construction to other
+      combinations of ciphers.
 
    Still to do in a future version:
 
@@ -191,7 +203,7 @@ Table of Contents
    such a way that an attacker would need to break all of them
    simultaneously to compromise the protected data.  These mechanisms
    are referred to as Post-Quantum/Traditional (PQ/T) Hybrids
-   [I-D.driscoll-pqt-hybrid-terminology].
+   [I-D.ietf-pquip-pqt-hybrid-terminology].
 
    Certain jurisdictions are already recommending or mandating that PQC
    lattice schemes be used exclusively within a PQ/T hybrid framework.
@@ -256,7 +268,7 @@ Table of Contents
    capitals, as shown here.
 
    This document is consistent with all terminology from
-   [I-D.driscoll-pqt-hybrid-terminology].  In addition, the following
+   [I-D.ietf-pquip-pqt-hybrid-terminology].  In addition, the following
    terms are used in this document:
 
    *COMBINER:* A combiner specifies how multiple shared secrets are
@@ -276,7 +288,7 @@ Table of Contents
 
 2.2.  Composite Design Philosophy
 
-   [I-D.driscoll-pqt-hybrid-terminology] defines composites as:
+   [I-D.ietf-pquip-pqt-hybrid-terminology] defines composites as:
 
       _Composite Cryptographic Element_: A cryptographic element that
       incorporates multiple component cryptographic elements of the same
@@ -509,6 +521,11 @@ Table of Contents
    bit string format, the data structure is encoded as specified in
    Section 3.4.
 
+   In order to maintain security properties of the composite,
+   applications that use composite keys MUST always perform fresh key
+   generations of both component keys and MUST NOT reuse existing key
+   material.  See Section 9.1.4 for a discussion.
+
 3.3.  CompositeKEMPrivateKey
 
    Use cases that require an inter-operable encoding for composite
@@ -637,10 +654,16 @@ Table of Contents
    *  mlkemSS is the shared secret from the ML-KEM componont.
 
    *  tradCT is the ciphertext from the traditional component (elliptic
-      curve or RSA).
+      curve or RSA).  This MUST be the raw value of the ciphertext
+      without the DER OCTET STRING wrapping.  The intention is to
+      maximize implementation reuse with other protocols that are not
+      ASN.1-based.
 
    *  tradPK is the public key of the traditional component (elliptic
-      curve or RSA).
+      curve or RSA).  This MUST be the raw value of the
+      SubjectPublicKeyInfo.publicKey without the DER OCTET STRING
+      wrapping.  The intention is to maximize implementation reuse with
+      other protocols that are not ASN.1-based.
 
    *  domSep SHALL be the DER encoded value of the object identifier of
       the composite KEM algorithm as listed in Section 5.1.
@@ -655,7 +678,7 @@ Table of Contents
    together as a FixedInfo block are made for the purposes of compliance
    with [SP.800-56Cr2]; see Section 4.4 for more discussion.
 
-   See Section 9.3 for further discussion of the security considerations
+   See Section 9.1 for further discussion of the security considerations
    of this KEM combiner.
 
 4.4.  FIPS Compliance
@@ -1443,7 +1466,123 @@ Table of Contents
 
 9.  Security Considerations
 
-9.1.  Component Algorithm Selection Criteria
+9.1.  KEM Combiner Security Analysis
+
+   EDNOTE: the exact text to put here depends on the outcome of the CFRG
+   KEM Combiners and X-Wing discussion.  If CFRG doesn't move fast
+   enough for us, then we may need to leverage this security
+   consideration directly on top of the X-Wing paper [X-Wing].
+
+   The primary security property of the KEM combiner is that it
+   preserves IND-CCA2 of the overall composite KEM so long as at least
+   one component is IND-CCA2 X-Wing [GHP18].  Additionally, we also need
+   to consider the case where one of the component algorithms is
+   completely broken; that the private key is known to an attacker, or
+   worse that the public key, private key, and ciphertext are
+   maniputaled by the attacker.  In this case, we rely on the
+   construction of the KEM combiner to ensure that the value of the
+   other shared secret cannot be leaked or the combined shared secret
+   predicted via manipulation of the broken algorithm.  The following
+   sections continue this discussion.
+
+9.1.1.  Second pre-image resistance of componet KEMs
+
+   The notion of a second pre-image resistant KEM is defined in [X-Wing]
+   being the property that it is computationally difficult to find two
+   different ciphertexts c != c' that will decapsulate to the same
+   shared secret under the same public key.  For the purposes of a
+   hybrid KEM combiner, this property means that given two composite
+   ciphertexts (c1, c2) and (c1', c2'), we must obtain a unique overall
+   shared secret so long as either c1 != c1' or c2 != c2' -- i.e. the
+   overall composite KEM is second pre-image resistant, and therefore
+   IND-CCA2 secure so, long as one of the component KEMs is.
+
+   In [X-Wing] it is proven that ML-KEM is a second pre-image resistant
+   KEM and therefore the ML-KEM ciphertext can safely be omitted from
+   the KEM combiner.  Note that this makes a fundamental assumption on
+   ML-KEM remaining ciphertext second pre-image resistant, and thefore
+   this formulation of KEM combiner does not fully protect against
+   implementation errors in the ML-KEM component -- particularly around
+   the ciphertext check step of the Fujisaki-Okamoto transform -- which
+   could trivially lead to second ciphertext pre-image attacks that
+   break the IND-CCA2 security of the ML-KEM component and of the
+   overall composite KEM.  This could be more fully mitigated by binding
+   the ML-KEM ciphertext in the combiner, but a design decision was made
+   to settle for protection against algorithmic attacks and not
+   implementation attacks against ML-KEM in order to increase
+   performance.
+
+   However, since neither RSA-OAEP or ECDH do not guarantee second pre-
+   image resistance at all, even in a correct implementation, these
+   ciphertexts are bound to the key derivation in order to guarantee
+   that c != c' will yield a unique ciphertext, and thus restoring
+   second pre-image resistance to the overall composite KEM.
+
+9.1.2.  SHA3 vs HKDF-SHA2
+
+   In order to achieve the desired secutiy property that the composite
+   KEM is IND-CCA2 whenever at least one of the component KEMs is, the
+   KDF used in the KEM combiner needs to possess collision and second
+   pre-image resistance with respect to each of its inputs
+   independently; a property sometimes called "dual-PRF".  Collision and
+   second-pre-image resistance protects against compromise of one
+   component algorithm from resulting in the ability to construct
+   multiple different ciphertexts which result in the same shared
+   secret.  Pre-image resistance protects against compromise of one
+   component algorithm being used to attack and learn the value of the
+   other shared secret.
+
+   SHA3 is known to have all of the necessary dual-PRF properties
+   [X-Wing], but SHA2 does not and therefore all SHA2-based
+   constructions MUST use SHA2 within an HMAC construction such as HKDF-
+   SHA2 [GHP18].
+
+9.1.3.  Generifying this construction
+
+   It should be cleart that the security analsis of the presented KEM
+   combiner construction relies heavily on the specific choices of
+   component algorithms and combiner KDF, and this combiner construction
+   SHOULD NOT by applied to any other combination of ciphers without
+   performing the appropriate security analysis.
+
+9.1.4.  Key Reuse
+
+   TODO: does this section actually apply to composite KEMs, or only to
+   composite signatures?
+
+   When using single-algorithm cryptography, the best practice is to
+   always generate fresh key material for each purpose, for example when
+   renewing a certificate, or obtaining both a TLS and S/MIME
+   certificate for the same device, however in practice key reuse in
+   such scenarios is often not catestrophic to security and therefore
+   often tolerated.  With composite keys we have a much stricter
+   security requirement.  However this reasoning does not hold in the
+   composite setting.  Consider an RSA key which already appears within
+   a certificate and which is already being used to sign documents.  If
+   a composite key is created which combines this existing RSA key with
+   an ML-DSA key then an attacker is free to remove the ML-DSA component
+   of any message signed with this key and instead present the document
+   as if it had only been signed by the RSA key.  The scope of such
+   "stripping attacks" is greatly reduced if composite keys never share
+   key material with non-composite keys.  While this logic is less
+   straight-forward for encryption operations involving KEM keys, it
+   does apply to authentication modes involving KEMs.  A similar
+   argument applies for two composite keys which share one component but
+   not the other; as an example it becomes difficult for CAs and other
+   relying parties to detect if a composite key contains a key which has
+   been revoked due to key compromise since needing to keep lists of
+   individual component keys is more complex than being able to search
+   such lists for the composite key as a whole.
+
+   For these reasons, applications using composite keys MUST perform
+   fresh key generations for both components.  Failure to do so negates
+   any non-separability properties
+   [I-D.ietf-pquip-hybrid-signature-spectrums] of the composite and
+   effectively reduces it to a
+
+9.2.  Component Algorithm Selection Criteria
+
+   TODO: Update this once the on-list discussion settles.
 
    The composite algorithm combinations defined in this document were
    chosen according to the following guidelines:
@@ -1475,7 +1614,7 @@ Table of Contents
    specification from extending these structures to define combinations
    with three or more components.
 
-9.2.  Policy for Deprecated and Acceptable Algorithms
+9.3.  Policy for Deprecated and Acceptable Algorithms
 
    Traditionally, a public key or certificate contains a single
    cryptographic algorithm.  If and when an algorithm becomes deprecated
@@ -1501,26 +1640,6 @@ Table of Contents
    security strength of the strongest of its component algorithms; ie as
    long as one component algorithm remains strong, then the overall
    composite algorithm remains strong.
-
-9.3.  KEM Combiner Security Analysis
-
-   TODO
-
-   EDNOTE: the exact text to put here depends on the outcome of the CFRG
-   KEM Combiners and X-Wing discussion.  If CFRG doesn't move fast
-   enough for us, then we may need to leverage this security
-   consideration directly on top of the X-Wing paper [X-Wing].
-
-9.3.1.  Ciphertext collision resistance
-
-   The notion of a ciphertext collision resistant KEM is defined in
-   [X-Wing] being the property that it is computationally difficult to
-   find two different ciphertexts that will decapsulate to the same
-   shared secret under the same public key.  In [X-Wing] it is proven
-   that ML-KEM has this property and therefore the ML-KEM ciphertext can
-   safely be omitted from the KEM combiner.  Ciphertext collision
-   resistance is not guaranteed for either RSA-OAEP or ECDH, therefore
-   these ciphertexts are bound to the key derivation.
 
 10.  References
 
@@ -1638,12 +1757,7 @@ Table of Contents
               <https://www.bsi.bund.de/SharedDocs/Downloads/EN/BSI/
               Publications/Brochure/quantum-safe-cryptography.pdf>.
 
-   [I-D.driscoll-pqt-hybrid-terminology]
-              D, F., "Terminology for Post-Quantum Traditional Hybrid
-              Schemes", Work in Progress, Internet-Draft, draft-
-              driscoll-pqt-hybrid-terminology-01, 20 October 2022,
-              <https://datatracker.ietf.org/doc/html/draft-driscoll-pqt-
-              hybrid-terminology-01>.
+   [GHP18]    Poettering, B., "KEM Combiners", n.d..
 
    [I-D.housley-lamps-cms-kemri]
               Housley, R., Gray, J., and T. Okubo, "Using Key
@@ -1660,6 +1774,20 @@ Table of Contents
               Internet-Draft, draft-ietf-lamps-kyber-certificates-01, 28
               March 2023, <https://datatracker.ietf.org/doc/html/draft-
               ietf-lamps-kyber-certificates-01>.
+
+   [I-D.ietf-pquip-hybrid-signature-spectrums]
+              Bindel, N., Hale, B., Connolly, D., and F. D, "Hybrid
+              signature spectrums", Work in Progress, Internet-Draft,
+              draft-ietf-pquip-hybrid-signature-spectrums-00, 24 May
+              2024, <https://datatracker.ietf.org/doc/html/draft-ietf-
+              pquip-hybrid-signature-spectrums-00>.
+
+   [I-D.ietf-pquip-pqt-hybrid-terminology]
+              D, F. and M. P, "Terminology for Post-Quantum Traditional
+              Hybrid Schemes", Work in Progress, Internet-Draft, draft-
+              ietf-pquip-pqt-hybrid-terminology-03, 9 May 2024,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-pquip-
+              pqt-hybrid-terminology-03>.
 
    [I-D.ietf-tls-hybrid-design]
               Stebila, D., Fluhrer, S., and S. Gueron, "Hybrid key
