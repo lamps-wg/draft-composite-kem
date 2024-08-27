@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-08-25T01:41:16.243231+00:00",
+  "timestamp": "2024-08-27T01:36:26.119772+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -938,16 +938,24 @@
       "id": "I_kwDOKRPFO86TA-ma",
       "title": "List overall strength estimates for each composite",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/61",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "See: https://mailarchive.ietf.org/arch/msg/spasm/s0wPyhHpaxKsSKMwLBypagm4iL0/",
       "createdAt": "2024-08-14T18:10:08Z",
-      "updatedAt": "2024-08-14T18:10:08Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2024-08-26T19:56:53Z",
+      "closedAt": "2024-08-26T19:56:52Z",
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Duplicate of #60 ",
+          "createdAt": "2024-08-26T19:56:52Z",
+          "updatedAt": "2024-08-26T19:56:52Z"
+        }
+      ]
     },
     {
       "number": 62,
@@ -2002,13 +2010,13 @@
       "labels": [],
       "body": "",
       "createdAt": "2024-08-06T00:35:56Z",
-      "updatedAt": "2024-08-24T18:31:35Z",
+      "updatedAt": "2024-08-26T19:55:25Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "2d6b93f6d35fa31c16c42d8da5795e11ee68f550",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_editorial",
-      "headRefOid": "24c009c164222ad1ba6ff6555c26396b9816d6c3",
+      "headRefOid": "d3214ba9f68221027dd79a6bbbe96d614a6b8128",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
