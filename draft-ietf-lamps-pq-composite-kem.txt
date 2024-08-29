@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 1 March 2025                                            M. Pala
+Expires: 2 March 2025                                            M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                          28 August 2024
+                                                          29 August 2024
 
 
 Composite ML-KEM for Use in the Internet X.509 Public Key Infrastructure
@@ -66,7 +66,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 1 March 2025.
+   This Internet-Draft will expire on 2 March 2025.
 
 Copyright Notice
 
@@ -324,12 +324,12 @@ Table of Contents
    component algorithm types since both key transport and key agreement
    mechanisms can be promoted into KEMs.  This specification uses the
    Post-Quantum KEM ML-KEM as specified in
-   [I-D.ietf-lamps-kyber-certificates] and [FIPS.203-ipd].  For
-   Traditional KEMs, this document uses the RSA-OAEP algorithm defined
-   in [RFC3560], the Elliptic Curve Diffie-Hellman key agreement schemes
-   ECDH defined in section 5.7.1.2 of [SP.800-56Ar3], and X25519 / X448
-   which are defined in [RFC8410].  A combiner function is used to
-   combine the two component shared secrets into a single shared secret.
+   [I-D.ietf-lamps-kyber-certificates] and [FIPS.203].  For Traditional
+   KEMs, this document uses the RSA-OAEP algorithm defined in [RFC3560],
+   the Elliptic Curve Diffie-Hellman key agreement schemes ECDH defined
+   in section 5.7.1.2 of [SP.800-56Ar3], and X25519 / X448 which are
+   defined in [RFC8410].  A combiner function is used to combine the two
+   component shared secrets into a single shared secret.
 
 2.3.1.  Composite KeyGen
 
@@ -728,7 +728,7 @@ Table of Contents
       -  _ECDH BSI / brainpool_: SHALL be Elliptic Curve Key Agreement
          algorithm (ECKA) as defined in section 4.3.1 of [BSI-ECC]
 
-   *  _ML-KEM_: [I-D.ietf-lamps-kyber-certificates] and [FIPS.203-ipd]
+   *  _ML-KEM_: [I-D.ietf-lamps-kyber-certificates] and [FIPS.203]
 
    *  _RSA-OAEP_: [RFC3560]
 
@@ -1477,12 +1477,11 @@ Table of Contents
               Guideline BSI TR-03111: Elliptic Curve Cryptography.
               Version 2.10", 1 June 2018.
 
-   [FIPS.203-ipd]
-              National Institute of Standards and Technology (NIST),
+   [FIPS.203] National Institute of Standards and Technology (NIST),
               "Module-Lattice-based Key-Encapsulation Mechanism
-              Standard", August 2023,
+              Standard", August 2024,
               <https://nvlpubs.nist.gov/nistpubs/FIPS/
-              NIST.FIPS.203.ipd.pdf>.
+              NIST.FIPS.203.pdf>.
 
    [I-D.ietf-lamps-cms-sha3-hash]
               Housley, R., "Use of the SHA3 One-way Hash Functions in
