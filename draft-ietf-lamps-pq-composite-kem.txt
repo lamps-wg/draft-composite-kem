@@ -105,8 +105,9 @@ Table of Contents
      4.2.  CompositeCiphertextValue
      4.3.  KEM Combiner
    5.  Algorithm Identifiers
-     5.1.  Domain Separators
-     5.2.  RSA-OAEP Parameters
+     5.1.  Rationale for choices
+     5.2.  Domain Separators
+     5.3.  RSA-OAEP Parameters
    6.  Use in CMS
      6.1.  Underlying Components
      6.2.  RecipientInfo Conventions
@@ -120,10 +121,9 @@ Table of Contents
        8.1.2.  Object Identifier Registrations - SMI Security for PKIX
                Algorithms
    9.  Security Considerations
-     9.1.  Component Algorithm Selection Criteria
-     9.2.  Policy for Deprecated and Acceptable Algorithms
-     9.3.  KEM Combiner Security Analysis
-       9.3.1.  Ciphertext collision resistance
+     9.1.  Policy for Deprecated and Acceptable Algorithms
+     9.2.  KEM Combiner Security Analysis
+       9.2.1.  Ciphertext collision resistance
    10. References
      10.1.  Normative References
      10.2.  Informative References
@@ -143,6 +143,22 @@ Table of Contents
    *  Fixed a bug in the definition of the Encaps() functions: KEMs,
       according to both RFC9180 and FIPS 203 should always return (ss,
       ct), but we had (ct, ss).
+
+   *  Aligning algorithm list with LAMPS WG on-list discussions and
+      draft-openpgp-pqc
+
+      -  ML-KEM-768 aligned with P-384 as per Quynh's OpenPGP
+         presentation:
+         https://datatracker.ietf.org/meeting/120/materials/slides-120-
+         openpgp-pqc-with-nist-and-brainpool-curves
+
+      -  Removing ML-KEM-512 combinations as per Sophie's
+         recommendation: https://mailarchive.ietf.org/arch/msg/spasm/
+         khasPf3y0_-Lq_0NtJe92unUw6o/
+
+   *  Specified some options to use HKDF-SHA2, and some to use SHA3 to
+      facilitate implementations that do not have easy access to SHA3
+      outside the ML-KEM module.
 
    *  Tweaks to combiner function, thanks to Quynh and authors of draft-
       ietf-openpgp-PQC:
@@ -366,7 +382,7 @@ Table of Contents
      return shared_secret
 
    The value of ss_len as well as the RSA-OAEP parameters used within
-   this specification can be found in Section 5.2.
+   this specification can be found in Section 5.3.
 
    Note that, at least at the time of writing, the algorithm RSAOAEPKEM
    is not defined as a standalone algorithm within PKIX standards and it
@@ -643,7 +659,7 @@ Table of Contents
       curve or RSA).
 
    *  domSep SHALL be the DER encoded value of the object identifier of
-      the composite KEM algorithm as listed in Section 5.1.
+      the composite KEM algorithm as listed in Section 5.2.
 
    *  || represents concatenation.
 
@@ -655,7 +671,7 @@ Table of Contents
    together as a FixedInfo block are made for the purposes of compliance
    with [SP.800-56Cr2]; see Appendix C.1 for more discussion.
 
-   See Section 9.3 for further discussion of the security considerations
+   See Section 9.2 for further discussion of the security considerations
    of this KEM combiner.
 
 5.  Algorithm Identifiers
@@ -672,46 +688,37 @@ Table of Contents
 
    Therefore <CompKEM>.1 is equal to 2.16.840.1.114027.80.5.2.1
 
-   +===================+============+=========+===============+========+
-   | Composite KEM     |OID         |First    |Second         |KDF     |
-   |                   |            |Algorithm|Algorithm      |        |
-   +===================+============+=========+===============+========+
-   | id-MLKEM512-      |<CompKEM>.1 |MLKEM512 |ECDH-P256      |SHA3-256|
-   | ECDH-P256         |            |         |               |        |
-   +-------------------+------------+---------+---------------+--------+
-   | id-MLKEM512-      |<CompKEM>.2 |MLKEM512 |ECDH-          |SHA3-256|
-   | ECDH-             |            |         |brainpoolp256r1|        |
-   | brainpoolP256r1   |            |         |               |        |
-   +-------------------+------------+---------+---------------+--------+
-   | id-               |<CompKEM>.3 |MLKEM512 |X25519         |SHA3-256|
-   | MLKEM512-X25519   |            |         |               |        |
-   +-------------------+------------+---------+---------------+--------+
-   | id-               |<CompKEM>.13|MLKEM512 |RSA-OAEP 2048  |SHA3-256|
-   | MLKEM512-RSA2048  |            |         |               |        |
-   +-------------------+------------+---------+---------------+--------+
-   | id-               |<CompKEM>.4 |MLKEM512 |RSA-OAEP 3072  |SHA3-256|
-   | MLKEM512-RSA3072  |            |         |               |        |
-   +-------------------+------------+---------+---------------+--------+
-   | id-MLKEM768-      |<CompKEM>.5 |MLKEM768 |ECDH-P256      |SHA3-384|
-   | ECDH-P256         |            |         |               |        |
-   +-------------------+------------+---------+---------------+--------+
-   | id-MLKEM768-      |<CompKEM>.6 |MLKEM768 |ECDH-          |SHA3-384|
-   | ECDH-             |            |         |brainpoolp256r1|        |
-   | brainpoolP256r1   |            |         |               |        |
-   +-------------------+------------+---------+---------------+--------+
-   | id-               |<CompKEM>.7 |MLKEM768 |X25519         |SHA3-384|
-   | MLKEM768-X25519   |            |         |               |        |
-   +-------------------+------------+---------+---------------+--------+
-   | id-MLKEM1024-     |<CompKEM>.8 |MLKEM1024|ECDH-P384      |SHA3-512|
-   | ECDH-P384         |            |         |               |        |
-   +-------------------+------------+---------+---------------+--------+
-   | id-MLKEM1024-     |<CompKEM>.9 |MLKEM1024|ECDH-          |SHA3-512|
-   | ECDH-             |            |         |brainpoolP384r1|        |
-   | brainpoolP384r1   |            |         |               |        |
-   +-------------------+------------+---------+---------------+--------+
-   | id-               |<CompKEM>.10|MLKEM1024|X448           |SHA3-512|
-   | MLKEM1024-X448    |            |         |               |        |
-   +-------------------+------------+---------+---------------+--------+
+   +==================+=============+=========+===============+========+
+   |Composite KEM     |OID          |First    |Second         |KDF     |
+   |                  |             |Algorithm|Algorithm      |        |
+   +==================+=============+=========+===============+========+
+   |id-               |<CompKEM>.13 |MLKEM768 |RSA-OAEP 2048  |HKDF-   |
+   |MLKEM768-RSA2048  |             |         |               |SHA256  |
+   +------------------+-------------+---------+---------------+--------+
+   |id-               |<CompKEM>.4  |MLKEM768 |RSA-OAEP 3072  |HKDF-   |
+   |MLKEM768-RSA3072  |             |         |               |SHA256  |
+   +------------------+-------------+---------+---------------+--------+
+   |id-               |<CompKEM>.TBD|MLKEM768 |RSA-OAEP 4096  |HKDF-   |
+   |MLKEM768-RSA4096  |             |         |               |SHA256  |
+   +------------------+-------------+---------+---------------+--------+
+   |id-               |<CompKEM>.7  |MLKEM768 |X25519         |SHA3-256|
+   |MLKEM768-X25519   |             |         |               |        |
+   +------------------+-------------+---------+---------------+--------+
+   |id-MLKEM768-ECDH- |<CompKEM>.5  |MLKEM768 |ECDH-P384      |HKDF-   |
+   |P384              |             |         |               |SHA384  |
+   +------------------+-------------+---------+---------------+--------+
+   |id-MLKEM768-ECDH- |<CompKEM>.6  |MLKEM768 |ECDH-          |HKDF-   |
+   |brainpoolP256r1   |             |         |brainpoolp256r1|SHA384  |
+   +------------------+-------------+---------+---------------+--------+
+   |id-MLKEM1024-     |<CompKEM>.8  |MLKEM1024|ECDH-P384      |SHA3-512|
+   |ECDH-P384         |             |         |               |        |
+   +------------------+-------------+---------+---------------+--------+
+   |id-MLKEM1024-     |<CompKEM>.9  |MLKEM1024|ECDH-          |SHA3-512|
+   |ECDH-             |             |         |brainpoolP384r1|        |
+   |brainpoolP384r1   |             |         |               |        |
+   +------------------+-------------+---------+---------------+--------+
+   |id-MLKEM1024-X448 |<CompKEM>.10 |MLKEM1024|X448           |SHA3-512|
+   +------------------+-------------+---------+---------------+--------+
 
                       Table 1: Composite KEM key types
 
@@ -734,11 +741,34 @@ Table of Contents
 
    *  _X25519 / X448_: [RFC8410]
 
-   EDNOTE: I believe that [SP.800-56Ar3] and [BSI-ECC] give equivalent
-   and inter-operable algorithms, so maybe this is extraneous detail to
-   include?
+   *  _HKDF_: [RFC5869].  Salt is not provided; ie the default salt (all
+      zeroes of length HashLen) will be used.
 
-5.1.  Domain Separators
+   *  _SHA2_: [FIPS.180-4]
+
+   *  _SHA3_: [FIPS.202]
+
+5.1.  Rationale for choices
+
+   *  Pair equivalent levels.
+
+   *  NIST-P-384 is CNSA approved [CNSA2.0] for all classification
+      levels.
+
+   *  521 bit curve not widely used.
+
+   A single invocation of SHA3 is known to behave as a dual-PRF, and
+   thus is sufficient for use as a KDF, see Section 9.2, however SHA2 is
+   not us must be wrapped in the HKDF construction.
+
+   The lower security levels are provided with HKDF-SHA2 as the KDF in
+   order to facilitate implementations that do not have easy access to
+   SHA3 outside of the ML-KEM function.  Higher security levels are
+   paired with SHA3 for computational efficiency, and the Edwards Curve
+   (X25519 and X448) combinations are paired with SHA3 for compatibility
+   with other similar spicifications.
+
+5.2.  Domain Separators
 
    The KEM combiner defined in section Section 4.3 requires a domain
    separator domSep input.  The following table shows the HEX-encoded
@@ -755,17 +785,11 @@ Table of Contents
     | Composite KEM AlgorithmID         | Domain Separator (in Hex   |
     |                                   | encoding)                  |
     +===================================+============================+
-    | id-MLKEM512-ECDH-P256             | 060B6086480186FA6B50050201 |
+    | id-MLKEM768-RSA2048               | 060B6086480186FA6B5005020D |
     +-----------------------------------+----------------------------+
-    | id-MLKEM512-ECDH-brainpoolP256r1  | 060B6086480186FA6B50050202 |
+    | id-MLKEM768-RSA3072               | 060B6086480186FA6B50050204 |
     +-----------------------------------+----------------------------+
-    | id-MLKEM512-X25519                | 060B6086480186FA6B50050203 |
-    +-----------------------------------+----------------------------+
-    | id-MLKEM512-RSA2048               | 060B6086480186FA6B5005020D |
-    +-----------------------------------+----------------------------+
-    | id-MLKEM512-RSA3072               | 060B6086480186FA6B50050204 |
-    +-----------------------------------+----------------------------+
-    | id-MLKEM768-ECDH-P256             | 060B6086480186FA6B50050205 |
+    | id-MLKEM768-ECDH-P384             | 060B6086480186FA6B50050205 |
     +-----------------------------------+----------------------------+
     | id-MLKEM768-ECDH-brainpoolP256r1  | 060B6086480186FA6B50050206 |
     +-----------------------------------+----------------------------+
@@ -785,10 +809,11 @@ Table of Contents
    allocation of these OIDs so that we can re-compute the domain
    separators over the final OIDs.
 
-5.2.  RSA-OAEP Parameters
+5.3.  RSA-OAEP Parameters
 
-   Use of RSA-OAEP [RFC3560] within id-MLKEM512-RSA2048 and id-
-   MLKEM512-RSA3072 requires additional specification.
+   Use of RSA-OAEP [RFC3560] within id-MLKEM768-RSA2048, id-
+   MLKEM768-RSA3072, and id-MLKEM768-RSA4096 requires additional
+   specification.
 
    First, a quick note on the choice of RSA-OAEP as the supported RSA
    encryption primitive.  RSA-KEM [RFC5990] is more straightforward to
@@ -865,17 +890,11 @@ Table of Contents
    | Composite KEM OID                 | KDF      | Key Encryption     |
    |                                   |          | Alg                |
    +===================================+==========+====================+
-   | id-MLKEM512-ECDH-P256             | SHA3-256 | id-aes128-Wrap     |
+   | id-MLKEM768-RSA2048               | SHA3-256 | id-aes128-Wrap     |
    +-----------------------------------+----------+--------------------+
-   | id-MLKEM512-ECDH-brainpoolP256r1  | SHA3-256 | id-aes128-Wrap     |
+   | id-MLKEM768-RSA3072               | SHA3-256 | id-aes128-Wrap     |
    +-----------------------------------+----------+--------------------+
-   | id-MLKEM512-X25519                | SHA3-256 | id-aes128-Wrap     |
-   +-----------------------------------+----------+--------------------+
-   | id-MLKEM512-RSA2048               | SHA3-256 | id-aes128-Wrap     |
-   +-----------------------------------+----------+--------------------+
-   | id-MLKEM512-RSA3072               | SHA3-256 | id-aes128-Wrap     |
-   +-----------------------------------+----------+--------------------+
-   | id-MLKEM768-ECDH-P256             | SHA3-384 | id-aes256-Wrap     |
+   | id-MLKEM768-ECDH-P384             | SHA3-384 | id-aes256-Wrap     |
    +-----------------------------------+----------+--------------------+
    | id-MLKEM768-ECDH-brainpoolP256r1  | SHA3-384 | id-aes256-Wrap     |
    +-----------------------------------+----------+--------------------+
@@ -1089,66 +1108,16 @@ Table of Contents
 
 
    -- TODO: OID to be replaced by IANA
-   id-MLKEM512-ECDH-P256 OBJECT IDENTIFIER ::= {
-     joint-iso-itu-t(2) country(16) us(840) organization(1)
-     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 1 }
-
-   pk-MLKEM512-ECDH-P256 PUBLIC-KEY ::=
-     pk-CompositeKEM {
-       id-MLKEM512-ECDH-P256,
-       OCTET STRING, ECPoint }
-
-   kema-MLKEM512-ECDH-P256 KEM-ALGORITHM ::=
-       kema-CompositeKEM{
-         id-MLKEM512-ECDH-P256,
-         pk-MLKEM512-ECDH-P256 }
-
-
-   -- TODO: OID to be replaced by IANA
-   id-MLKEM512-ECDH-brainpoolP256r1 OBJECT IDENTIFIER ::= {
-     joint-iso-itu-t(2) country(16) us(840) organization(1)
-     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 2 }
-
-   pk-MLKEM512-ECDH-brainpoolP256r1 PUBLIC-KEY ::=
-     pk-CompositeKEM {
-       id-MLKEM512-ECDH-brainpoolP256r1,
-       OCTET STRING, ECPoint }
-
-   kema-MLKEM512-ECDH-brainpoolP256r1 KEM-ALGORITHM ::=
-       kema-CompositeKEM{
-         id-MLKEM512-ECDH-brainpoolP256r1,
-         pk-MLKEM512-ECDH-brainpoolP256r1 }
-
-
-
-   -- TODO: OID to be replaced by IANA
-   id-MLKEM512-X25519 OBJECT IDENTIFIER ::= {
-     joint-iso-itu-t(2) country(16) us(840) organization(1)
-     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 3 }
-
-   pk-MLKEM512-X25519 PUBLIC-KEY ::=
-     pk-CompositeKEM {
-       id-MLKEM512-X25519,
-       OCTET STRING, OCTET STRING }
-
-   kema-MLKEM512-X25519 KEM-ALGORITHM ::=
-       kema-CompositeKEM{
-         id-MLKEM512-X25519,
-         pk-MLKEM512-X25519 }
-
-
-
-   -- TODO: OID to be replaced by IANA
-   id-MLKEM512-RSA2048 OBJECT IDENTIFIER ::= {
+   id-MLKEM768-RSA2048 OBJECT IDENTIFIER ::= {
      joint-iso-itu-t(2) country(16) us(840) organization(1)
      entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 13 }
 
-   pk-MLKEM512-RSA2048 PUBLIC-KEY ::=
+   pk-MLKEM768-RSA2048 PUBLIC-KEY ::=
      pk-CompositeKEM {
        id-MLKEM512-RSA2048,
        OCTET STRING, RSAPublicKey }
 
-   kema-MLKEM512-RSA2048 KEM-ALGORITHM ::=
+   kema-MLKEM768-RSA2048 KEM-ALGORITHM ::=
        kema-CompositeKEM{
          id-MLKEM512-RSA2048,
          pk-MLKEM512-RSA2048 }
@@ -1156,35 +1125,52 @@ Table of Contents
 
 
    -- TODO: OID to be replaced by IANA
-   id-MLKEM512-RSA3072 OBJECT IDENTIFIER ::= {
+   id-MLKEM768-RSA3072 OBJECT IDENTIFIER ::= {
      joint-iso-itu-t(2) country(16) us(840) organization(1)
      entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 4 }
 
-   pk-MLKEM512-RSA3072 PUBLIC-KEY ::=
+   pk-MLKEM768-RSA3072 PUBLIC-KEY ::=
      pk-CompositeKEM {
        id-MLKEM512-RSA3072,
        OCTET STRING, RSAPublicKey }
 
-   kema-MLKEM512-RSA3072 KEM-ALGORITHM ::=
+   kema-MLKEM768-RSA3072 KEM-ALGORITHM ::=
        kema-CompositeKEM{
          id-MLKEM512-RSA3072,
          pk-MLKEM512-RSA3072 }
 
 
+
    -- TODO: OID to be replaced by IANA
-   id-MLKEM768-ECDH-P256 OBJECT IDENTIFIER ::= {
+   id-MLKEM768-RSA4096 OBJECT IDENTIFIER ::= {
+     joint-iso-itu-t(2) country(16) us(840) organization(1)
+     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) TBD }
+
+   pk-MLKEM768-RSA4096 PUBLIC-KEY ::=
+     pk-CompositeKEM {
+       id-MLKEM512-RSA4096,
+       OCTET STRING, RSAPublicKey }
+
+   kema-MLKEM768-RSA4096 KEM-ALGORITHM ::=
+       kema-CompositeKEM{
+         id-MLKEM512-RSA4096,
+         pk-MLKEM512-RSA4096 }
+
+
+   -- TODO: OID to be replaced by IANA
+   id-MLKEM768-ECDH-P384 OBJECT IDENTIFIER ::= {
      joint-iso-itu-t(2) country(16) us(840) organization(1)
      entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 5 }
 
-   pk-MLKEM768-ECDH-P256 PUBLIC-KEY ::=
+   pk-MLKEM768-ECDH-P384 PUBLIC-KEY ::=
      pk-CompositeKEM {
-       id-MLKEM768-ECDH-P256,
+       id-MLKEM768-ECDH-P384,
        OCTET STRING, ECPoint }
 
-   kema-MLKEM768-ECDH-P256 KEM-ALGORITHM ::=
+   kema-MLKEM768-ECDH-P384 KEM-ALGORITHM ::=
        kema-CompositeKEM{
-         id-MLKEM768-ECDH-P256,
-         pk-MLKEM768-ECDH-P256 }
+         id-MLKEM768-ECDH-P384,
+         pk-MLKEM768-ECDH-P384 }
 
 
    -- TODO: OID to be replaced by IANA
@@ -1308,27 +1294,11 @@ Table of Contents
 8.1.2.  Object Identifier Registrations - SMI Security for PKIX
         Algorithms
 
-   *  id-MLKEM512-ECDH-P256
+   *  id-MLKEM768-RSA2048
 
       -  Decimal: IANA Assigned
 
-      -  Description: id-MLKEM512-ECDH-P256
-
-      -  References: This Document
-
-   *  id-MLKEM512-ECDH-brainpoolP256r1
-
-      -  Decimal: IANA Assigned
-
-      -  Description: id-MLKEM512-ECDH-brainpoolP256r1
-
-      -  References: This Document
-
-   *  id-MLKEM512-X25519
-
-      -  Decimal: IANA Assigned
-
-      -  Description: id-MLKEM512-X25519
+      -  Description: id-MLKEM768-RSA2048
 
       -  References: This Document
 
@@ -1336,15 +1306,23 @@ Table of Contents
 
       -  Decimal: IANA Assigned
 
-      -  Description: id-MLKEM768-3072
+      -  Description: id-MLKEM768-RSA3072
 
       -  References: This Document
 
-   *  id-MLKEM768-ECDH-P256
+   *  id-MLKEM768-RSA4096
 
       -  Decimal: IANA Assigned
 
-      -  Description: id-MLKEM768-ECDH-P256
+      -  Description: id-MLKEM768-RSA4096
+
+      -  References: This Document
+
+   *  id-MLKEM768-ECDH-P384
+
+      -  Decimal: IANA Assigned
+
+      -  Description: id-MLKEM768-ECDH-P384
 
       -  References: This Document
 
@@ -1390,39 +1368,7 @@ Table of Contents
 
 9.  Security Considerations
 
-9.1.  Component Algorithm Selection Criteria
-
-   The composite algorithm combinations defined in this document were
-   chosen according to the following guidelines:
-
-   1.  RSA combinations are provided at key sizes of 2048 and 3072 bits.
-       Since RSA 2048 and 3072 are considered to have 112 and 128 bits
-       of classical security respectively, they are both matched with
-       NIST PQC Level 1 algorithms and 128-bit symmetric algorithms.
-
-   2.  Elliptic curve algorithms are provided with combinations on each
-       of the NIST [RFC6090], Brainpool [RFC5639], and Edwards [RFC7748]
-       curves.  NIST PQC Levels 1 - 3 algorithms are matched with
-       256-bit curves, while NIST levels 4 - 5 are matched with 384-bit
-       elliptic curves.  This provides a balance between matching
-       classical security levels of post-quantum and traditional
-       algorithms, and also selecting elliptic curves which already have
-       wide adoption.
-
-   3.  NIST level 1 candidates are provided, matched with 256-bit
-       elliptic curves, intended for constrained use cases.
-
-   If other combinations are needed, a separate specification should be
-   submitted to the IETF LAMPS working group.  To ease implementation,
-   these specifications are encouraged to follow the construction
-   pattern of the algorithms specified in this document.
-
-   The composite structures defined in this specification allow only for
-   pairs of algorithms.  This also does not preclude future
-   specification from extending these structures to define combinations
-   with three or more components.
-
-9.2.  Policy for Deprecated and Acceptable Algorithms
+9.1.  Policy for Deprecated and Acceptable Algorithms
 
    Traditionally, a public key or certificate contains a single
    cryptographic algorithm.  If and when an algorithm becomes deprecated
@@ -1449,16 +1395,18 @@ Table of Contents
    long as one component algorithm remains strong, then the overall
    composite algorithm remains strong.
 
-9.3.  KEM Combiner Security Analysis
+9.2.  KEM Combiner Security Analysis
 
    TODO
+
+   TODO: SHA3 is a dual PRF cite: x-wing
 
    EDNOTE: the exact text to put here depends on the outcome of the CFRG
    KEM Combiners and X-Wing discussion.  If CFRG doesn't move fast
    enough for us, then we may need to leverage this security
    consideration directly on top of the X-Wing paper [X-Wing].
 
-9.3.1.  Ciphertext collision resistance
+9.2.1.  Ciphertext collision resistance
 
    The notion of a ciphertext collision resistant KEM is defined in
    [X-Wing] being the property that it is computationally difficult to
@@ -1476,6 +1424,18 @@ Table of Contents
    [BSI-ECC]  Federal Office for Information Security (BSI), "Technical
               Guideline BSI TR-03111: Elliptic Curve Cryptography.
               Version 2.10", 1 June 2018.
+
+   [FIPS.180-4]
+              National Institute of Standards and Technology (NIST),
+              "FIPS Publication 180-4: Secure Hash Standard", August
+              2015, <https://nvlpubs.nist.gov/nistpubs/FIPS/
+              NIST.FIPS.180-4.pdf>.
+
+   [FIPS.202] National Institute of Standards and Technology (NIST),
+              "SHA-3 Standard: Permutation-Based Hash and Extendable-
+              Output Functions", August 2015,
+              <https://nvlpubs.nist.gov/nistpubs/FIPS/
+              NIST.FIPS.202.pdf>.
 
    [FIPS.203] National Institute of Standards and Technology (NIST),
               "Module-Lattice-based Key-Encapsulation Mechanism
@@ -1520,6 +1480,11 @@ Table of Contents
    [RFC5652]  Housley, R., "Cryptographic Message Syntax (CMS)", STD 70,
               RFC 5652, DOI 10.17487/RFC5652, September 2009,
               <https://www.rfc-editor.org/info/rfc5652>.
+
+   [RFC5869]  Krawczyk, H. and P. Eronen, "HMAC-based Extract-and-Expand
+              Key Derivation Function (HKDF)", RFC 5869,
+              DOI 10.17487/RFC5869, May 2010,
+              <https://www.rfc-editor.org/info/rfc5869>.
 
    [RFC5958]  Turner, S., "Asymmetric Key Packages", RFC 5958,
               DOI 10.17487/RFC5958, August 2010,
@@ -1581,6 +1546,10 @@ Table of Contents
               recommendations", October 2021,
               <https://www.bsi.bund.de/SharedDocs/Downloads/EN/BSI/
               Publications/Brochure/quantum-safe-cryptography.pdf>.
+
+   [CNSA2.0]  "Commercial National Security Algorithm Suite 2.0", n.d.,
+              <https://media.defense.gov/2022/Sep/07/2003071834/-1/-1/0/
+              CSA_CNSA_2.0_ALGORITHMS_.PDF>.
 
    [FIPS-140-3-IG]
               National Institute of Standards and Technology (NIST),
