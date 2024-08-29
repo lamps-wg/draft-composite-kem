@@ -130,12 +130,12 @@ normative:
     author:
       org: "National Institute of Standards and Technology (NIST)"
     target: https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-56Cr2.pdf
-  FIPS.203-ipd:
+  FIPS.203:
     title: "Module-Lattice-based Key-Encapsulation Mechanism Standard"
-    date: August 2023
+    date: August 13, 2024
     author:
       org: "National Institute of Standards and Technology (NIST)"
-    target: https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.203.ipd.pdf
+    target: https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.203.pdf
 
 
 informative:
@@ -313,7 +313,7 @@ We borrow here the definition of a key encapsulation mechanism (KEM) from {{I-D.
 
 The KEM interface defined above differs from both traditional key transport mechanism (for example for use with KeyTransRecipientInfo defined in {{RFC5652}}), and key agreement (for example for use with KeyAgreeRecipientInfo defined in {{RFC5652}}).
 
-The KEM interface was chosen as the interface for a composite key establishment because it allows for arbitrary combinations of component algorithm types since both key transport and key agreement mechanisms can be promoted into KEMs. This specification uses the Post-Quantum KEM ML-KEM as specified in {{I-D.ietf-lamps-kyber-certificates}} and [FIPS.203-ipd]. For Traditional KEMs, this document uses the RSA-OAEP algorithm defined in [RFC3560], the Elliptic Curve Diffie-Hellman key agreement schemes ECDH defined in section 5.7.1.2 of [SP.800-56Ar3], and X25519 / X448 which are defined in [RFC8410]. A combiner function is used to combine the two component shared secrets into a single shared secret.
+The KEM interface was chosen as the interface for a composite key establishment because it allows for arbitrary combinations of component algorithm types since both key transport and key agreement mechanisms can be promoted into KEMs. This specification uses the Post-Quantum KEM ML-KEM as specified in {{I-D.ietf-lamps-kyber-certificates}} and [FIPS.203]. For Traditional KEMs, this document uses the RSA-OAEP algorithm defined in [RFC3560], the Elliptic Curve Diffie-Hellman key agreement schemes ECDH defined in section 5.7.1.2 of [SP.800-56Ar3], and X25519 / X448 which are defined in [RFC8410]. A combiner function is used to combine the two component shared secrets into a single shared secret.
 
 
 ### Composite KeyGen
@@ -646,7 +646,7 @@ Full specifications for the referenced algorithms can be found as follows:
 * _ECDH_: There does not appear to be a single IETF definition of ECDH, so we refer to the following:
   * _ECDH NIST_: SHALL be Elliptic Curve Cryptography Cofactor Diffie-Hellman (ECC CDH) as defined in section 5.7.1.2 of [SP.800-56Ar3].
   * _ECDH BSI / brainpool_: SHALL be Elliptic Curve Key Agreement algorithm (ECKA) as defined in section 4.3.1 of [BSI-ECC]
-* _ML-KEM_: {{I-D.ietf-lamps-kyber-certificates}} and [FIPS.203-ipd]
+* _ML-KEM_: {{I-D.ietf-lamps-kyber-certificates}} and [FIPS.203]
 * _RSA-OAEP_: [RFC3560]
 * _X25519 / X448_: [RFC8410]
 
