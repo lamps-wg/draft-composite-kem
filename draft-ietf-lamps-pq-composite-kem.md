@@ -664,7 +664,7 @@ Full specifications for the referenced algorithms can be found as follows:
 * _ML-KEM_: {{I-D.ietf-lamps-kyber-certificates}} and [FIPS.203-ipd]
 * _RSA-OAEP_: [RFC3560]
 * _X25519 / X448_: [RFC8410]
-* _HKDF_: [RFC5869]. Salt is not provided; ie the salt will be all zeros.
+* _HKDF_: [RFC5869]. Salt is not provided; ie the default salt (all zeroes of length HashLen) will be used.
 * _SHA2_: [FIPS.180-4]
 * _SHA3_: [FIPS 202]
 
