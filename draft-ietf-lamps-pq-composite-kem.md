@@ -80,6 +80,7 @@ normative:
   RFC4055:
   RFC5280:
   RFC5652:
+  RFC5869:
   RFC5958:
   RFC8174:
   RFC8410:
@@ -94,12 +95,6 @@ normative:
   #     org: "American National Standards Institute"
   #   date: 2007
   #   seriesinfo: American National Standard X9.44
-  # SHA3:
-  #   title: "SHA-3 Standard: Permutation-Based Hash and Extendable-Output Functions, FIPS PUB 202, DOI 10.6028/NIST.FIPS.202"
-  #   author:
-  #     org: "National Institute of Standards and Technology (NIST)"
-  #   date: August 2015
-  #   target: https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.202.pdf
   # SP800-185:
   #   title: "SHA-3 Derived Functions: cSHAKE, KMAC, TupleHash and ParallelHash"
   #   author:
@@ -130,6 +125,18 @@ normative:
     author:
       org: "National Institute of Standards and Technology (NIST)"
     target: https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-56Cr2.pdf
+  FIPS.180-4:
+    title: "FIPS Publication 180-4: Secure Hash Standard"
+    date: August 2015
+    author:
+      org: National Institute of Standards and Technology (NIST)
+    target: https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf
+  FIPS.202:
+    title: "SHA-3 Standard: Permutation-Based Hash and Extendable-Output Functions"
+    date: August 2015
+    author:
+      org: National Institute of Standards and Technology (NIST)
+    target: https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.202.pdf
   FIPS.203:
     title: "Module-Lattice-based Key-Encapsulation Mechanism Standard"
     date: August 13, 2024
@@ -208,6 +215,10 @@ informative:
       - ins: A. Roginksy
         name: Allan Reginsky
     org: National Institute of Standards and Technology (NIST)
+  CNSA2.0:
+    title: "Commercial National Security Algorithm Suite 2.0"
+    org: National Security Agency
+    target: https://media.defense.gov/2022/Sep/07/2003071834/-1/-1/0/CSA_CNSA_2.0_ALGORITHMS_.PDF
   FIPS-140-3-IG:
     title: Implementation Guidance for FIPS 140-3 and the Cryptographic Module Validation Program
     target: https://csrc.nist.gov/csrc/media/Projects/cryptographic-module-validation-program/documents/fips%20140-3/FIPS%20140-3%20IG.pdf
@@ -228,6 +239,10 @@ This document introduces a set of Key Encapsulation Mechanism (KEM) schemes that
 # Changes in version -05
 
 * Fixed a bug in the definition of the Encaps() functions: KEMs, according to both RFC9180 and FIPS 203 should always return (ss, ct), but we had (ct, ss).
+* Aligning algorithm list with LAMPS WG on-list discussions and draft-openpgp-pqc
+  * ML-KEM-768 aligned with P-384 as per Quynh's OpenPGP presentation: https://datatracker.ietf.org/meeting/120/materials/slides-120-openpgp-pqc-with-nist-and-brainpool-curves
+  * Removing ML-KEM-512 combinations as per Sophie's recommendation: https://mailarchive.ietf.org/arch/msg/spasm/khasPf3y0_-Lq_0NtJe92unUw6o/
+* Specified some options to use HKDF-SHA2, and some to use SHA3 to facilitate implementations that do not have easy access to SHA3 outside the ML-KEM module.
 * Tweaks to combiner function, thanks to Quynh and authors of draft-ietf-openpgp-PQC:
   * Removed the `counter`.
   * Un-twisted `tradSS || mlkemSS` to `mlkemSS || tradSS` as you would expect (thanks Quynh for pointing that this is allowed.)
@@ -617,19 +632,17 @@ TODO: OIDs to be replaced by IANA.
 
 Therefore &lt;CompKEM&gt;.1 is equal to 2.16.840.1.114027.80.5.2.1
 
-| Composite KEM                      | OID                | First Algorithm | Second Algorithm     | KDF      |
-|---------                          | -----------------  | ----------      | ----------           | -------- |
-| id-MLKEM512-ECDH-P256             | &lt;CompKEM&gt;.1  | MLKEM512        | ECDH-P256            | SHA3-256 |
-| id-MLKEM512-ECDH-brainpoolP256r1  | &lt;CompKEM&gt;.2  | MLKEM512        | ECDH-brainpoolp256r1 | SHA3-256 |
-| id-MLKEM512-X25519                | &lt;CompKEM&gt;.3  | MLKEM512        | X25519               | SHA3-256 |
-| id-MLKEM512-RSA2048               | &lt;CompKEM&gt;.13 | MLKEM512        | RSA-OAEP 2048         | SHA3-256 |
-| id-MLKEM512-RSA3072               | &lt;CompKEM&gt;.4  | MLKEM512        | RSA-OAEP 3072         | SHA3-256 |
-| id-MLKEM768-ECDH-P256             | &lt;CompKEM&gt;.5  | MLKEM768        | ECDH-P256            | SHA3-384 |
-| id-MLKEM768-ECDH-brainpoolP256r1  | &lt;CompKEM&gt;.6  | MLKEM768        | ECDH-brainpoolp256r1 | SHA3-384 |
-| id-MLKEM768-X25519                | &lt;CompKEM&gt;.7  | MLKEM768        | X25519               | SHA3-384 |
-| id-MLKEM1024-ECDH-P384            | &lt;CompKEM&gt;.8  | MLKEM1024       | ECDH-P384            | SHA3-512 |
-| id-MLKEM1024-ECDH-brainpoolP384r1 | &lt;CompKEM&gt;.9  | MLKEM1024       | ECDH-brainpoolP384r1 | SHA3-512 |
-| id-MLKEM1024-X448                 | &lt;CompKEM&gt;.10 | MLKEM1024       | X448                 | SHA3-512 |
+| Composite KEM                      | OID                  | First Algorithm | Second Algorithm     | KDF      |
+|---------                           | -----------------    | ----------      | ----------           | -------- |
+| id-MLKEM768-RSA2048                | &lt;CompKEM&gt;.13   | MLKEM768        | RSA-OAEP 2048        | HKDF-SHA256 |
+| id-MLKEM768-RSA3072                | &lt;CompKEM&gt;.4    | MLKEM768        | RSA-OAEP 3072        | HKDF-SHA256 |
+| id-MLKEM768-RSA4096                | &lt;CompKEM&gt;.TBD  | MLKEM768        | RSA-OAEP 4096        | HKDF-SHA256 |
+| id-MLKEM768-X25519                 | &lt;CompKEM&gt;.7    | MLKEM768        | X25519               | SHA3-256 |
+| id-MLKEM768-ECDH-P384              | &lt;CompKEM&gt;.5    | MLKEM768        | ECDH-P384            | HKDF-SHA384 |
+| id-MLKEM768-ECDH-brainpoolP256r1   | &lt;CompKEM&gt;.6    | MLKEM768        | ECDH-brainpoolp256r1 | HKDF-SHA384 |
+| id-MLKEM1024-ECDH-P384             | &lt;CompKEM&gt;.8    | MLKEM1024       | ECDH-P384            | SHA3-512 |
+| id-MLKEM1024-ECDH-brainpoolP384r1  | &lt;CompKEM&gt;.9    | MLKEM1024       | ECDH-brainpoolP384r1 | SHA3-512 |
+| id-MLKEM1024-X448                  | &lt;CompKEM&gt;.10   | MLKEM1024       | X448                 | SHA3-512 |
 {: #tab-kem-algs title="Composite KEM key types"}
 
 Full specifications for the referenced algorithms can be found as follows:
@@ -640,8 +653,20 @@ Full specifications for the referenced algorithms can be found as follows:
 * _ML-KEM_: {{I-D.ietf-lamps-kyber-certificates}} and [FIPS.203]
 * _RSA-OAEP_: [RFC3560]
 * _X25519 / X448_: [RFC8410]
+* _HKDF_: [RFC5869]. Salt is not provided; ie the default salt (all zeroes of length HashLen) will be used.
+* _SHA2_: [FIPS.180-4]
+* _SHA3_: [FIPS.202]
 
-EDNOTE: I believe that [SP.800-56Ar3] and [BSI-ECC] give equivalent and inter-operable algorithms, so maybe this is extraneous detail to include?
+
+## Rationale for choices
+
+* Pair equivalent levels.
+* NIST-P-384 is CNSA approved [CNSA2.0] for all classification levels.
+* 521 bit curve not widely used.
+
+A single invocation of SHA3 is known to behave as a dual-PRF, and thus is sufficient for use as a KDF, see {{sec-cons-kem-combiner}}, however SHA2 is not us must be wrapped in the HKDF construction.
+
+The lower security levels are provided with HKDF-SHA2 as the KDF in order to facilitate implementations that do not have easy access to SHA3 outside of the ML-KEM function. Higher security levels are paired with SHA3 for computational efficiency, and the Edwards Curve (X25519 and X448) combinations are paired with SHA3 for compatibility with other similar spicifications.
 
 ## Domain Separators {#sec-domain}
 
@@ -651,12 +676,9 @@ EDNOTE: Should the domain separator values be the SHA-256 hash of the DER encodi
 
 | Composite KEM AlgorithmID | Domain Separator (in Hex encoding)|
 | ----------- | ----------- |
-| id-MLKEM512-ECDH-P256     | 060B6086480186FA6B50050201|
-| id-MLKEM512-ECDH-brainpoolP256r1 | 060B6086480186FA6B50050202|
-| id-MLKEM512-X25519        | 060B6086480186FA6B50050203|
-| id-MLKEM512-RSA2048       | 060B6086480186FA6B5005020D|
-| id-MLKEM512-RSA3072       | 060B6086480186FA6B50050204|
-| id-MLKEM768-ECDH-P256     | 060B6086480186FA6B50050205|
+| id-MLKEM768-RSA2048       | 060B6086480186FA6B5005020D|
+| id-MLKEM768-RSA3072       | 060B6086480186FA6B50050204|
+| id-MLKEM768-ECDH-P384     | 060B6086480186FA6B50050205|
 | id-MLKEM768-ECDH-brainpoolP256r1 |060B6086480186FA6B50050206|
 | id-MLKEM768-X25519        | 060B6086480186FA6B50050207|
 | id-MLKEM1024-ECDH-P384    | 060B6086480186FA6B50050208|
@@ -668,7 +690,7 @@ EDNOTE: these domain separators are based on the prototyping OIDs assigned on th
 
 ## RSA-OAEP Parameters {#sect-rsaoaep-params}
 
-Use of RSA-OAEP [RFC3560] within `id-MLKEM512-RSA2048` and `id-MLKEM512-RSA3072` requires additional specification.
+Use of RSA-OAEP [RFC3560] within `id-MLKEM768-RSA2048`, `id-MLKEM768-RSA3072`, and `id-MLKEM768-RSA4096` requires additional specification.
 
 First, a quick note on the choice of RSA-OAEP as the supported RSA encryption primitive. RSA-KEM [RFC5990] is more straightforward to work with, but it has fairly limited adoption and therefore is of limited backwards compatibility value. Also, while RSA-PKCS#1v1.5 [RFC8017] is still everywhere, but hard to make secure and no longer FIPS-approved as of the end of 2023 [SP800-131Ar2], so it is of limited forwards value. This leaves RSA-OAEP [RFC3560] as the remaining choice.
 
@@ -710,12 +732,9 @@ The following table lists the REQUIRED KDF and key-encryption algorithms to pres
 
 | Composite KEM OID                 | KDF         | Key Encryption Alg |
 |---------                          | ---         | ---                |
-| id-MLKEM512-ECDH-P256             | SHA3-256 | id-aes128-Wrap     |
-| id-MLKEM512-ECDH-brainpoolP256r1  | SHA3-256 | id-aes128-Wrap     |
-| id-MLKEM512-X25519                | SHA3-256 | id-aes128-Wrap     |
-| id-MLKEM512-RSA2048               | SHA3-256 | id-aes128-Wrap     |
-| id-MLKEM512-RSA3072               | SHA3-256 | id-aes128-Wrap     |
-| id-MLKEM768-ECDH-P256             | SHA3-384 | id-aes256-Wrap     |
+| id-MLKEM768-RSA2048               | SHA3-256 | id-aes128-Wrap     |
+| id-MLKEM768-RSA3072               | SHA3-256 | id-aes128-Wrap     |
+| id-MLKEM768-ECDH-P384             | SHA3-384 | id-aes256-Wrap     |
 | id-MLKEM768-ECDH-brainpoolP256r1  | SHA3-384 | id-aes256-Wrap     |
 | id-MLKEM768-X25519                | SHA3-384 | id-aes256-Wrap     |
 | id-MLKEM1024-ECDH-P384            | SHA3-512 | id-aes256-Wrap     |
@@ -799,29 +818,25 @@ EDNOTE to IANA: OIDs will need to be replaced in both the ASN.1 module and in {{
 
 ###  Object Identifier Registrations - SMI Security for PKIX Algorithms
 
-- id-MLKEM512-ECDH-P256
+- id-MLKEM768-RSA2048
   - Decimal: IANA Assigned
-  - Description: id-MLKEM512-ECDH-P256
-  - References: This Document
-
-- id-MLKEM512-ECDH-brainpoolP256r1
-  - Decimal: IANA Assigned
-  - Description: id-MLKEM512-ECDH-brainpoolP256r1
-  - References: This Document
-
-- id-MLKEM512-X25519
-  - Decimal: IANA Assigned
-  - Description: id-MLKEM512-X25519
+  - Description: id-MLKEM768-RSA2048
   - References: This Document
 
 - id-MLKEM768-RSA3072
   - Decimal: IANA Assigned
-  - Description: id-MLKEM768-3072
+  - Description: id-MLKEM768-RSA3072
   - References: This Document
 
-- id-MLKEM768-ECDH-P256
+- id-MLKEM768-RSA4096
   - Decimal: IANA Assigned
-  - Description: id-MLKEM768-ECDH-P256
+  - Description: id-MLKEM768-RSA4096
+  - References: This Document
+
+
+- id-MLKEM768-ECDH-P384
+  - Decimal: IANA Assigned
+  - Description: id-MLKEM768-ECDH-P384
   - References: This Document
 
 - id-MLKEM768-ECDH-brainpoolP256r1
@@ -854,18 +869,6 @@ EDNOTE to IANA: OIDs will need to be replaced in both the ASN.1 module and in {{
 
 # Security Considerations
 
-## Component Algorithm Selection Criteria {#sec-selection-criteria}
-
-The composite algorithm combinations defined in this document were chosen according to the following guidelines:
-
-1. RSA combinations are provided at key sizes of 2048 and 3072 bits. Since RSA 2048 and 3072 are considered to have 112 and 128 bits of classical security respectively, they are both matched with NIST PQC Level 1 algorithms and 128-bit symmetric algorithms.
-1. Elliptic curve algorithms are provided with combinations on each of the NIST [RFC6090], Brainpool [RFC5639], and Edwards [RFC7748] curves. NIST PQC Levels 1 - 3 algorithms are matched with 256-bit curves, while NIST levels 4 - 5 are matched with 384-bit elliptic curves. This provides a balance between matching classical security levels of post-quantum and traditional algorithms, and also selecting elliptic curves which already have wide adoption.
-1. NIST level 1 candidates are provided, matched with 256-bit elliptic curves, intended for constrained use cases.
-
-If other combinations are needed, a separate specification should be submitted to the IETF LAMPS working group.  To ease implementation, these specifications are encouraged to follow the construction pattern of the algorithms specified in this document.
-
-The composite structures defined in this specification allow only for pairs of algorithms. This also does not preclude future specification from extending these structures to define combinations with three or more components.
-
 ## Policy for Deprecated and Acceptable Algorithms
 
 Traditionally, a public key or certificate contains a single cryptographic algorithm. If and when an algorithm becomes deprecated (for example, RSA-512, or SHA1), it is obvious that the public keys or certificates using that algorithm are to be considered revoked.
@@ -880,6 +883,8 @@ The composite KEM design specified in this document, and especially that of the 
 ## KEM Combiner Security Analysis {#sec-cons-kem-combiner}
 
 TODO
+
+TODO: SHA3 is a dual PRF cite: x-wing
 
 EDNOTE: the exact text to put here depends on the outcome of the CFRG KEM Combiners and X-Wing discussion. If CFRG doesn't move fast enough for us, then we may need to leverage this security consideration directly on top of the X-Wing paper [X-Wing].
 
