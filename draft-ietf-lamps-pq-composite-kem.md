@@ -95,12 +95,6 @@ normative:
   #     org: "American National Standards Institute"
   #   date: 2007
   #   seriesinfo: American National Standard X9.44
-  # SHA3:
-  #   title: "SHA-3 Standard: Permutation-Based Hash and Extendable-Output Functions, FIPS PUB 202, DOI 10.6028/NIST.FIPS.202"
-  #   author:
-  #     org: "National Institute of Standards and Technology (NIST)"
-  #   date: August 2015
-  #   target: https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.202.pdf
   # SP800-185:
   #   title: "SHA-3 Derived Functions: cSHAKE, KMAC, TupleHash and ParallelHash"
   #   author:
@@ -132,13 +126,13 @@ normative:
       org: "National Institute of Standards and Technology (NIST)"
     target: https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-56Cr2.pdf
   FIPS.180-4:
-    title: FIPS Publication 180-4: Secure Hash Standard
+    title: "FIPS Publication 180-4: Secure Hash Standard"
     date: August 2015
     author:
       org: National Institute of Standards and Technology (NIST)
     target: https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf
   FIPS.202:
-    title: SHA-3 Standard: Permutation-Based Hash and Extendable-Output Functions
+    title: "SHA-3 Standard: Permutation-Based Hash and Extendable-Output Functions"
     date: August 2015
     author:
       org: National Institute of Standards and Technology (NIST)
@@ -666,7 +660,7 @@ Full specifications for the referenced algorithms can be found as follows:
 * _X25519 / X448_: [RFC8410]
 * _HKDF_: [RFC5869]. Salt is not provided; ie the default salt (all zeroes of length HashLen) will be used.
 * _SHA2_: [FIPS.180-4]
-* _SHA3_: [FIPS 202]
+* _SHA3_: [FIPS.202]
 
 
 ## Rationale for choices
