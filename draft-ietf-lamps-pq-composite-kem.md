@@ -208,6 +208,12 @@ informative:
       - ins: A. Roginksy
         name: Allan Reginsky
     org: National Institute of Standards and Technology (NIST)
+  FIPS-140-3-IG:
+    title: Implementation Guidance for FIPS 140-3 and the Cryptographic Module Validation Program
+    target: https://csrc.nist.gov/csrc/media/Projects/cryptographic-module-validation-program/documents/fips%20140-3/FIPS%20140-3%20IG.pdf
+    author:
+      org: National Institute of Standards and Technology (NIST)
+    date: July 26, 2024
 
 
 --- abstract
@@ -222,6 +228,10 @@ This document introduces a set of Key Encapsulation Mechanism (KEM) schemes that
 # Changes in version -05
 
 * Fixed a bug in the definition of the Encaps() functions: KEMs, according to both RFC9180 and FIPS 203 should always return (ss, ct), but we had (ct, ss).
+* Tweaks to combiner function, thanks to Quynh and authors of draft-ietf-openpgp-PQC:
+  * Removed the `counter`.
+  * Un-twisted `tradSS || mlkemSS` to `mlkemSS || tradSS` as you would expect (thanks Quynh for pointing that this is allowed.)
+* Enhanced the section about how to get this FIPS-certified.
 
 
 Still to do in a future version:
@@ -401,7 +411,7 @@ CompositeKEM.Encaps(pk):
   # note that the order of the traditional and ML-KEM components
   # is flipped here in order to satisfy NIST SP800-56Cr2.
   ct = CompositeCiphertextValue(mlkemCT, tradCT)
-  ss = Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep)
+  ss = Combiner(mlkemSS, tradSS, tradCT, tradPK, domSep)
 
   return (ss, ct)
 ~~~
@@ -425,7 +435,7 @@ CompositeKEM.Decaps(ct, mlkemSK, tradSK):
   # Combine
   # note that the order of the traditional and ML-KEM components
   # is flipped here in order to satisfy NIST SP800-56Cr2.
-  ss = Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep)
+  ss = Combiner(mlkemSS, tradSS, tradCT, tradPK, domSep)
 
   return ss
 ~~~
@@ -574,18 +584,16 @@ TODO: as per https://www.enisa.europa.eu/publications/post-quantum-cryptography-
 The KEM combiner construction is as follows:
 
 ~~~
-KEK <- Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep) =
-  KDF(counter || tradSS || mlkemSS || tradCT || tradPK ||
-       domSep, outputBits)
+KEK = KDF(mlkemSS || tradSS || tradCT || tradPK ||
+            domSep, outputBits)
 ~~~
 {: #code-generic-kem-combiner title="Generic KEM combiner construction"}
 
 where:
 
 * `KDF(message, outputBits)` represents a hash function suitable to the chosen KEMs according to {tab-kem-combiners}.
-* `counter` SHALL be the fixed 32-bit value `0x00000001` which is placed here solely for the purposes of compliance with [SP.800-56Cr2].
-* `tradSS` is the shared secret from the traditional component (elliptic curve or RSA).
 * `mlkemSS` is the shared secret from the ML-KEM componont.
+* `tradSS` is the shared secret from the traditional component (elliptic curve or RSA).
 * `tradCT` is the ciphertext from the traditional component (elliptic curve or RSA).
 * `tradPK` is the public key of the traditional component (elliptic curve or RSA).
 * `domSep` SHALL be the DER encoded value of the object identifier of the composite KEM algorithm as listed in {{sec-domain}}.
@@ -593,27 +601,10 @@ where:
 
 Each registered composite KEM algorithm must specify the choice of `KDF`, `demSep`, and `outputBits` to be used.
 
-Some of the design choices for the combiner, specifically to place `tradSS` first, and to allow `tradCT || tradPK || domSep` to be treated together as a FixedInfo block are made for the purposes of compliance with [SP.800-56Cr2]; see {{sec-fips-compliance}} for more discussion.
+Some of the design choices for the combiner, specifically to place `tradSS` first, and to allow `tradCT || tradPK || domSep` to be treated together as a FixedInfo block are made for the purposes of compliance with [SP.800-56Cr2]; see {{sec-fips}} for more discussion.
 
 See {{sec-cons-kem-combiner}} for further discussion of the security considerations of this KEM combiner.
 
-## FIPS Compliance {#sec-fips-compliance}
-
-This specification is compliant with [SP.800-56Cr2] which allows for multiple sources of shared secret material to be combined into a single shared secret and the combined shared secret to be considered FIPS compliant so long as the first input shared secret is the result of a FIPS compliant algorithm. In order to ease FIPS compliance issues during the transition period, this specification uses the traditional algorithm as the first input to the combiner so that the combiner is FIPS compliant so long as the traditional component is FIPS compliant.
-
-This construction is specifically designed to conform with Section 4.1 Option 1 (when KDF is SHA3) or Option 3 (when KDF is KMAC) in the following way:
-
-In both cases we match exactly the construction using the allowed "hybrid" shared secret of the form `Z' = Z || T` to yield the construction
-
-`counter || Z || T || FixedInfo`
-
-where:
-
-* `Z = tradSS` is the algorithm assumed to always be FIPS-approved from a FIPS-certified implementation which is expected to be true during the period where organizations are migrating their existing deployments to add ML-KEM implementations which may not yet have received FIPS certification,
-* `T = mlkemSS`, and
-* `FixedInfo = tradCT || tradPK || domSep`.
-
-In the case that KDF is KMAC, the message to be hashed MUST be post-pended with `H_outputBits` and the byte string `01001011 || 01000100 || 01000110`, which represents the sequence of characters “K”, “D,” and “F” in 8-bit ASCII, as required by [SP.800-56Cr2] section 4.1 Option 3. `salt` is left empty since KMAC is only required to behave as a hash function and not as a keyed MAC.
 
 
 # Algorithm Identifiers {#sec-alg-ids}
@@ -918,13 +909,22 @@ TODO: see https://github.com/lamps-wg/draft-composite-kem/issues/20
 
 # Implementation Considerations {#sec-in-pract}
 
-## FIPS certification {#sec-fips}
+## FIPS Certification {#sec-fips}
 
-One of the primary design goals of this specification is for the overall composite algorithm to be able to be considered FIPS-approved even when one of the component algorithms is not. The combiner presented in {{sec-kem-combiner}} was chosen to align with [SP.800-56Cr2] for this reason.
-
-Implementers seeking FIPS certification of a composite KEM algorithm where only one of the component algorithms has been FIPS-validated or FIPS-approved should credit the FIPS-validated component algorithm with full security strength, the non-FIPS-validated component algorithm with zero security, and the overall composite should be considered full strength and thus FIPS-approved.
+One of the primary design goals of this specification is for the overall composite algorithm to be able to be considered FIPS-approved even when one of the component algorithms is not. Implementers seeking FIPS certification of a composite KEM algorithm where only one of the component algorithms has been FIPS-validated or FIPS-approved should credit the FIPS-validated component algorithm with full security strength, the non-FIPS-validated component algorithm with zero security, and the overall composite should be considered full strength and thus FIPS-approved.
 
 The authors wish to note that this gives composite algorithms great future utility both for future cryptographic migrations as well as bridging across jurisdictions; for example defining composite algorithms which combine FIPS cryptography with cryptography from a different national standards body.
+
+### FIPS certification of Combiner Function
+
+One of the primary NIST documents which is relevant for certification of a composite algorithm is NIST SP.800-56Cr2 [SP.800-56Cr2] by using the allowed "hybrid" shared secret of the form `Z' = Z || T`. Compliance is acheived in the following way:
+
+SP.800-56Cr2 section 4 "One-Step Key Derivation" requires a `counter` which begins at the 4-byte value 0x00000001. However, the counter is allowed to be omitted when the hash function is executed only once, as specified on page 159 of the FIPS 140-3 Implementation Guidance [FIPS-140-3-IG].
+
+The HKDF-SHA2 options can be certified under SP.800-56Cr2 One-Step Key Derivation Option 1: `H(x) = hash(x)`.
+
+The SHA3 options can be certified under SP.800-56Cr2 One-Step Key Derivation Option 2: `H(x) = HMAC-hash(salt, x)` with the salt omitted.
+
 
 ## Backwards Compatibility {#sec-backwards-compat}
 
