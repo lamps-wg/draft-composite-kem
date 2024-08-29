@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-08-27T01:36:26.119772+00:00",
+  "timestamp": "2024-08-29T01:38:00.640557+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -575,7 +575,7 @@
       "id": "I_kwDOKRPFO86QcgDZ",
       "title": "Both ss1||ss2 or ss2||ss1 are allowed in SP.800-56Cr2",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/40",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -584,8 +584,8 @@
       ],
       "body": "Wow. Ok. I completely mis-read Quynh's email to LAMPS:\r\nhttps://mailarchive.ietf.org/arch/msg/spasm/Yh5AelwiAOXhhdjEPzWPmWekYLA/\r\n\r\n> Similarly, the order of ss1 and ss2 may be in reverse and run the \"Process\" on page14 in SP 800-56r2 here: https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-56Cr2.pdf .\r\n\r\nThat means we can un-twist the order in which the ss inputs are fed into the KDF; because in fact we do not need to put the traditional alg first -- keep everything consistent with the order (mlkem, trad).",
       "createdAt": "2024-07-22T17:28:56Z",
-      "updatedAt": "2024-08-04T00:00:17Z",
-      "closedAt": null,
+      "updatedAt": "2024-08-28T14:34:29Z",
+      "closedAt": "2024-08-28T14:34:29Z",
       "comments": [
         {
           "author": "ounsworth",
@@ -700,7 +700,7 @@
       "id": "I_kwDOKRPFO86Q5LX1",
       "title": "Can we remove the stupid counter?",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/45",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -709,8 +709,8 @@
       ],
       "body": "From Falko:\r\n\r\n> Actually it seems the counter can be omitted if there is only one hash function invocation in the KDF: see Quynh's comment here: [https://github.com/openpgp-pqc/draft-ehlen-openpgp-nist-bp-comp/issues/10#issuecomment-2220090284](https://urldefense.com/v3/__https:/github.com/openpgp-pqc/draft-ehlen-openpgp-nist-bp-comp/issues/10*issuecomment-2220090284__;Iw!!FJ-Y8qCqXTj2!eom3NkR-W2xoJGcKEtuusgLkqyA-uDOgHpv07v2OjzKuONz1STgLKCE-u6KLON2NO08W7OUuyGCGEM-Tbn2hnr-0fygp6Q$)",
       "createdAt": "2024-07-25T20:14:32Z",
-      "updatedAt": "2024-08-03T23:48:16Z",
-      "closedAt": null,
+      "updatedAt": "2024-08-28T14:34:29Z",
+      "closedAt": "2024-08-28T14:34:29Z",
       "comments": [
         {
           "author": "ounsworth",
@@ -986,6 +986,22 @@
       "body": "",
       "createdAt": "2024-08-24T18:29:20Z",
       "updatedAt": "2024-08-24T18:29:20Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 64,
+      "id": "I_kwDOKRPFO86UjRPn",
+      "title": "Align with SP 800-227",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/64",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-08-28T14:34:52Z",
+      "updatedAt": "2024-08-28T14:34:52Z",
       "closedAt": null,
       "comments": []
     }
@@ -1936,7 +1952,7 @@
       "labels": [],
       "body": "",
       "createdAt": "2024-07-31T22:56:40Z",
-      "updatedAt": "2024-08-14T14:52:32Z",
+      "updatedAt": "2024-08-28T14:36:31Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "2d6b93f6d35fa31c16c42d8da5795e11ee68f550",
@@ -1970,31 +1986,54 @@
           "updatedAt": "2024-08-14T14:52:32Z"
         }
       ],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO86HF863",
+          "commit": {
+            "abbreviatedOid": "8a8c430"
+          },
+          "author": "sergemister",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-08-28T14:36:31Z",
+          "updatedAt": "2024-08-28T14:36:31Z",
+          "comments": [
+            {
+              "originalPosition": 84,
+              "body": "Would it be clearer to say \"i.e. the default salt is used\"?  Or say \"HashLen zeros\" instead of \"all zeros\".  The salt in RFC 5869 can vary in length, and we don't want an implementation to specify a string of zeros of some other length.",
+              "createdAt": "2024-08-28T14:36:31Z",
+              "updatedAt": "2024-08-28T14:36:32Z"
+            }
+          ]
+        }
+      ]
     },
     {
       "number": 55,
       "id": "PR_kwDOKRPFO853WKpM",
       "title": "Combiner tweaks",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/55",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2024-08-03T23:47:53Z",
-      "updatedAt": "2024-08-04T00:00:07Z",
+      "updatedAt": "2024-08-28T14:34:32Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "2d6b93f6d35fa31c16c42d8da5795e11ee68f550",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_combiner_tweaks",
       "headRefOid": "833e2fbb379c0f0c41ff130d775ddf7e26a0159c",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2024-08-28T14:34:28Z",
+      "mergedAt": "2024-08-28T14:34:28Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "f4a123a27c77d596366a3cf7a45d2a4b7ffb8d8f"
+      },
       "comments": [],
       "reviews": []
     },
@@ -2010,7 +2049,7 @@
       "labels": [],
       "body": "",
       "createdAt": "2024-08-06T00:35:56Z",
-      "updatedAt": "2024-08-26T19:55:25Z",
+      "updatedAt": "2024-08-28T14:59:01Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "2d6b93f6d35fa31c16c42d8da5795e11ee68f550",
