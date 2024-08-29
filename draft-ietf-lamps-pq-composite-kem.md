@@ -85,7 +85,7 @@ normative:
   RFC8174:
   RFC8410:
   RFC8411:
-  I-D.draft-ietf-lamps-cms-kemri-08:
+  RFC9629:
   I-D.draft-ietf-lamps-cms-sha3-hash-04:
   # ANS-X9.44:
   #   title: "Public Key
@@ -137,12 +137,12 @@ normative:
     author:
       org: National Institute of Standards and Technology (NIST)
     target: https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.202.pdf
-  FIPS.203-ipd:
+  FIPS.203:
     title: "Module-Lattice-based Key-Encapsulation Mechanism Standard"
-    date: August 2023
+    date: August 13, 2024
     author:
       org: "National Institute of Standards and Technology (NIST)"
-    target: https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.203.ipd.pdf
+    target: https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.203.pdf
 
 
 informative:
@@ -219,6 +219,12 @@ informative:
     title: "Commercial National Security Algorithm Suite 2.0"
     org: National Security Agency
     target: https://media.defense.gov/2022/Sep/07/2003071834/-1/-1/0/CSA_CNSA_2.0_ALGORITHMS_.PDF
+  FIPS-140-3-IG:
+    title: Implementation Guidance for FIPS 140-3 and the Cryptographic Module Validation Program
+    target: https://csrc.nist.gov/csrc/media/Projects/cryptographic-module-validation-program/documents/fips%20140-3/FIPS%20140-3%20IG.pdf
+    author:
+      org: National Institute of Standards and Technology (NIST)
+    date: July 26, 2024
 
 
 --- abstract
@@ -237,6 +243,10 @@ This document introduces a set of Key Encapsulation Mechanism (KEM) schemes that
   * ML-KEM-768 aligned with P-384 as per Quynh's OpenPGP presentation: https://datatracker.ietf.org/meeting/120/materials/slides-120-openpgp-pqc-with-nist-and-brainpool-curves
   * Removing ML-KEM-512 combinations as per Sophie's recommendation: https://mailarchive.ietf.org/arch/msg/spasm/khasPf3y0_-Lq_0NtJe92unUw6o/
 * Specified some options to use HKDF-SHA2, and some to use SHA3 to facilitate implementations that do not have easy access to SHA3 outside the ML-KEM module.
+* Tweaks to combiner function, thanks to Quynh and authors of draft-ietf-openpgp-PQC:
+  * Removed the `counter`.
+  * Un-twisted `tradSS || mlkemSS` to `mlkemSS || tradSS` as you would expect (thanks Quynh for pointing that this is allowed.)
+* Enhanced the section about how to get this FIPS-certified.
 
 
 Still to do in a future version:
@@ -328,7 +338,7 @@ We borrow here the definition of a key encapsulation mechanism (KEM) from {{I-D.
 
 The KEM interface defined above differs from both traditional key transport mechanism (for example for use with KeyTransRecipientInfo defined in {{RFC5652}}), and key agreement (for example for use with KeyAgreeRecipientInfo defined in {{RFC5652}}).
 
-The KEM interface was chosen as the interface for a composite key establishment because it allows for arbitrary combinations of component algorithm types since both key transport and key agreement mechanisms can be promoted into KEMs. This specification uses the Post-Quantum KEM ML-KEM as specified in {{I-D.ietf-lamps-kyber-certificates}} and [FIPS.203-ipd]. For Traditional KEMs, this document uses the RSA-OAEP algorithm defined in [RFC3560], the Elliptic Curve Diffie-Hellman key agreement schemes ECDH defined in section 5.7.1.2 of [SP.800-56Ar3], and X25519 / X448 which are defined in [RFC8410]. A combiner function is used to combine the two component shared secrets into a single shared secret.
+The KEM interface was chosen as the interface for a composite key establishment because it allows for arbitrary combinations of component algorithm types since both key transport and key agreement mechanisms can be promoted into KEMs. This specification uses the Post-Quantum KEM ML-KEM as specified in {{I-D.ietf-lamps-kyber-certificates}} and [FIPS.203]. For Traditional KEMs, this document uses the RSA-OAEP algorithm defined in [RFC3560], the Elliptic Curve Diffie-Hellman key agreement schemes ECDH defined in section 5.7.1.2 of [SP.800-56Ar3], and X25519 / X448 which are defined in [RFC8410]. A combiner function is used to combine the two component shared secrets into a single shared secret.
 
 
 ### Composite KeyGen
@@ -366,6 +376,8 @@ RSAKEM.Decap(skR, enc):
 
 The value of `ss_len` as well as the RSA-OAEP parameters used within this specification can be found in {{sect-rsaoaep-params}}.
 
+Note that, at least at the time of writing, the algorithm `RSAOAEPKEM` is not defined as a standalone algorithm within PKIX standards and it does not have an assigned algorithm OID, so it connot be used directly with CMS KEMRecipientInfo [RFC9629]; it is merely a building block for the composite algorithm.
+
 ### Promotion of ECDH into a KEM
 
 An elliptic curve Diffie-Hellman key agreement is promoted into a KEM `Encaps(pk) -> (ss, ct)` using a simplified version of the DHKEM definition from [RFC9180].
@@ -394,6 +406,8 @@ This construction applies for all variants of elliptic curve Diffie-Hellman used
 
 The simplifications from the DHKEM definition in [RFC9180] is that since the ciphertext and receiver's public key are included explicitly in the composite KEM combiner, there is no need to construct the `kem_context` object, and since a domain separator is included explicitly in the composite KEM combiner there is no need to perform the labelled steps of `ExtractAndExpand()`.
 
+Note that, at least at the time of writing, the algorithm `DHKEM` is not defined as a standalone algorithm within PKIX standards and it does not have an assigned algorithm OID, so it connot be used directly with CMS KEMRecipientInfo [RFC9629]; it is merely a building block for the composite algorithm.
+
 ### Composite Encaps
 
 The `Encaps(pk) -> (ss, ct)` of a composite KEM algorithm is defined as:
@@ -412,7 +426,7 @@ CompositeKEM.Encaps(pk):
   # note that the order of the traditional and ML-KEM components
   # is flipped here in order to satisfy NIST SP800-56Cr2.
   ct = CompositeCiphertextValue(mlkemCT, tradCT)
-  ss = Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep)
+  ss = Combiner(mlkemSS, tradSS, tradCT, tradPK, domSep)
 
   return (ss, ct)
 ~~~
@@ -436,7 +450,7 @@ CompositeKEM.Decaps(ct, mlkemSK, tradSK):
   # Combine
   # note that the order of the traditional and ML-KEM components
   # is flipped here in order to satisfy NIST SP800-56Cr2.
-  ss = Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep)
+  ss = Combiner(mlkemSS, tradSS, tradCT, tradPK, domSep)
 
   return ss
 ~~~
@@ -585,18 +599,16 @@ TODO: as per https://www.enisa.europa.eu/publications/post-quantum-cryptography-
 The KEM combiner construction is as follows:
 
 ~~~
-KEK <- Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep) =
-  KDF(counter || tradSS || mlkemSS || tradCT || tradPK ||
-       domSep, outputBits)
+KEK = KDF(mlkemSS || tradSS || tradCT || tradPK ||
+            domSep, outputBits)
 ~~~
 {: #code-generic-kem-combiner title="Generic KEM combiner construction"}
 
 where:
 
 * `KDF(message, outputBits)` represents a hash function suitable to the chosen KEMs according to {tab-kem-combiners}.
-* `counter` SHALL be the fixed 32-bit value `0x00000001` which is placed here solely for the purposes of compliance with [SP.800-56Cr2].
-* `tradSS` is the shared secret from the traditional component (elliptic curve or RSA).
 * `mlkemSS` is the shared secret from the ML-KEM componont.
+* `tradSS` is the shared secret from the traditional component (elliptic curve or RSA).
 * `tradCT` is the ciphertext from the traditional component (elliptic curve or RSA).
 * `tradPK` is the public key of the traditional component (elliptic curve or RSA).
 * `domSep` SHALL be the DER encoded value of the object identifier of the composite KEM algorithm as listed in {{sec-domain}}.
@@ -604,27 +616,10 @@ where:
 
 Each registered composite KEM algorithm must specify the choice of `KDF`, `demSep`, and `outputBits` to be used.
 
-Some of the design choices for the combiner, specifically to place `tradSS` first, and to allow `tradCT || tradPK || domSep` to be treated together as a FixedInfo block are made for the purposes of compliance with [SP.800-56Cr2]; see {{sec-fips-compliance}} for more discussion.
+Some of the design choices for the combiner, specifically to place `tradSS` first, and to allow `tradCT || tradPK || domSep` to be treated together as a FixedInfo block are made for the purposes of compliance with [SP.800-56Cr2]; see {{sec-fips}} for more discussion.
 
 See {{sec-cons-kem-combiner}} for further discussion of the security considerations of this KEM combiner.
 
-## FIPS Compliance {#sec-fips-compliance}
-
-This specification is compliant with [SP.800-56Cr2] which allows for multiple sources of shared secret material to be combined into a single shared secret and the combined shared secret to be considered FIPS compliant so long as the first input shared secret is the result of a FIPS compliant algorithm. In order to ease FIPS compliance issues during the transition period, this specification uses the traditional algorithm as the first input to the combiner so that the combiner is FIPS compliant so long as the traditional component is FIPS compliant.
-
-This construction is specifically designed to conform with Section 4.1 Option 1 (when KDF is SHA3) or Option 3 (when KDF is KMAC) in the following way:
-
-In both cases we match exactly the construction using the allowed "hybrid" shared secret of the form `Z' = Z || T` to yield the construction
-
-`counter || Z || T || FixedInfo`
-
-where:
-
-* `Z = tradSS` is the algorithm assumed to always be FIPS-approved from a FIPS-certified implementation which is expected to be true during the period where organizations are migrating their existing deployments to add ML-KEM implementations which may not yet have received FIPS certification,
-* `T = mlkemSS`, and
-* `FixedInfo = tradCT || tradPK || domSep`.
-
-In the case that KDF is KMAC, the message to be hashed MUST be post-pended with `H_outputBits` and the byte string `01001011 || 01000100 || 01000110`, which represents the sequence of characters “K”, “D,” and “F” in 8-bit ASCII, as required by [SP.800-56Cr2] section 4.1 Option 3. `salt` is left empty since KMAC is only required to behave as a hash function and not as a keyed MAC.
 
 
 # Algorithm Identifiers {#sec-alg-ids}
@@ -655,7 +650,7 @@ Full specifications for the referenced algorithms can be found as follows:
 * _ECDH_: There does not appear to be a single IETF definition of ECDH, so we refer to the following:
   * _ECDH NIST_: SHALL be Elliptic Curve Cryptography Cofactor Diffie-Hellman (ECC CDH) as defined in section 5.7.1.2 of [SP.800-56Ar3].
   * _ECDH BSI / brainpool_: SHALL be Elliptic Curve Key Agreement algorithm (ECKA) as defined in section 4.3.1 of [BSI-ECC]
-* _ML-KEM_: {{I-D.ietf-lamps-kyber-certificates}} and [FIPS.203-ipd]
+* _ML-KEM_: {{I-D.ietf-lamps-kyber-certificates}} and [FIPS.203]
 * _RSA-OAEP_: [RFC3560]
 * _X25519 / X448_: [RFC8410]
 * _HKDF_: [RFC5869]. Salt is not provided; ie the default salt (all zeroes of length HashLen) will be used.
@@ -722,7 +717,7 @@ where:
 
 \[EDNOTE: The convention in LAMPS is to specify algorithms and their CMS conventions in separate documents. Here we have presented them in the same document, but this section has been written so that it can easily be moved to a standalone document.\]
 
-Composite KEM algorithms MAY be employed for one or more recipients in the CMS enveloped-data content type [RFC5652], the CMS authenticated-data content type [RFC5652], or the CMS authenticated-enveloped-data content type [RFC5083]. In each case, the KEMRecipientInfo {{I-D.ietf-lamps-cms-kemri}} is used with the chosen composite KEM Algorithm to securely transfer the content-encryption key from the originator to the recipient.
+Composite KEM algorithms MAY be employed for one or more recipients in the CMS enveloped-data content type [RFC5652], the CMS authenticated-data content type [RFC5652], or the CMS authenticated-enveloped-data content type [RFC5083]. In each case, the KEMRecipientInfo [RFC9629] is used with the chosen composite KEM Algorithm to securely transfer the content-encryption key from the originator to the recipient.
 
 ## Underlying Components
 
@@ -757,7 +752,7 @@ where:
 
 ## RecipientInfo Conventions
 
-When a composite KEM Algorithm is employed for a recipient, the RecipientInfo alternative for that recipient MUST be OtherRecipientInfo using the KEMRecipientInfo structure {{I-D.ietf-lamps-cms-kemri}}. The fields of the KEMRecipientInfo MUST have the following values:
+When a composite KEM Algorithm is employed for a recipient, the RecipientInfo alternative for that recipient MUST be OtherRecipientInfo using the KEMRecipientInfo structure [RFC9629]. The fields of the KEMRecipientInfo MUST have the following values:
 
 `version` is the syntax version number; it MUST be 0.
 
@@ -919,13 +914,22 @@ TODO: see https://github.com/lamps-wg/draft-composite-kem/issues/20
 
 # Implementation Considerations {#sec-in-pract}
 
-## FIPS certification {#sec-fips}
+## FIPS Certification {#sec-fips}
 
-One of the primary design goals of this specification is for the overall composite algorithm to be able to be considered FIPS-approved even when one of the component algorithms is not. The combiner presented in {{sec-kem-combiner}} was chosen to align with [SP.800-56Cr2] for this reason.
-
-Implementers seeking FIPS certification of a composite KEM algorithm where only one of the component algorithms has been FIPS-validated or FIPS-approved should credit the FIPS-validated component algorithm with full security strength, the non-FIPS-validated component algorithm with zero security, and the overall composite should be considered full strength and thus FIPS-approved.
+One of the primary design goals of this specification is for the overall composite algorithm to be able to be considered FIPS-approved even when one of the component algorithms is not. Implementers seeking FIPS certification of a composite KEM algorithm where only one of the component algorithms has been FIPS-validated or FIPS-approved should credit the FIPS-validated component algorithm with full security strength, the non-FIPS-validated component algorithm with zero security, and the overall composite should be considered full strength and thus FIPS-approved.
 
 The authors wish to note that this gives composite algorithms great future utility both for future cryptographic migrations as well as bridging across jurisdictions; for example defining composite algorithms which combine FIPS cryptography with cryptography from a different national standards body.
+
+### FIPS certification of Combiner Function
+
+One of the primary NIST documents which is relevant for certification of a composite algorithm is NIST SP.800-56Cr2 [SP.800-56Cr2] by using the allowed "hybrid" shared secret of the form `Z' = Z || T`. Compliance is acheived in the following way:
+
+SP.800-56Cr2 section 4 "One-Step Key Derivation" requires a `counter` which begins at the 4-byte value 0x00000001. However, the counter is allowed to be omitted when the hash function is executed only once, as specified on page 159 of the FIPS 140-3 Implementation Guidance [FIPS-140-3-IG].
+
+The HKDF-SHA2 options can be certified under SP.800-56Cr2 One-Step Key Derivation Option 1: `H(x) = hash(x)`.
+
+The SHA3 options can be certified under SP.800-56Cr2 One-Step Key Derivation Option 2: `H(x) = HMAC-hash(salt, x)` with the salt omitted.
+
 
 ## Backwards Compatibility {#sec-backwards-compat}
 
