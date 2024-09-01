@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-08-29T01:38:00.640557+00:00",
+  "timestamp": "2024-09-01T01:51:54.292873+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -523,7 +523,7 @@
       "id": "I_kwDOKRPFO86PbIhZ",
       "title": "Create RSA-4096 combos",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/37",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -532,8 +532,8 @@
       ],
       "body": "We have been asked to add RSA-4096 combos for existing infrastructures where deployed software or policy requires 4096 bit keys.\r\n\r\nSuggestion is that since RSA 4096 is not much above 128 bit security (certainly not as much as AES-192 or SHA-384), we should pair it with the same cipher suites as the RSA-3072 combo. Or maybe even replace the 4096 combo?",
       "createdAt": "2024-07-12T20:01:06Z",
-      "updatedAt": "2024-08-03T23:18:13Z",
-      "closedAt": null,
+      "updatedAt": "2024-08-29T20:39:44Z",
+      "closedAt": "2024-08-29T20:39:44Z",
       "comments": []
     },
     {
@@ -840,7 +840,7 @@
       "id": "I_kwDOKRPFO86Rdc9A",
       "title": "SHA2 and SHA3 combinations",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/51",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -849,8 +849,8 @@
       ],
       "body": "The authors suggest, rather than 2x'ing the whole list, we do the following:\r\n\r\nAll RSA combinations use HKDF-SHA2.\r\nEach of the P256 and brainpoolP256 combinations are offered with both SHA3 (to align with X-Wing), and HKDF-SHA2. The new list would then be:\r\n\r\n```\r\n| Composite KEM                     | KDF       |\r\n|---------                          | --------  |\r\n| id-MLKEM512-ECDH-P256             | SHA3-256  |\r\n| id-MLKEM512-ECDH-P256             | HKDF-SHA2 |\r\n| id-MLKEM512-ECDH-brainpoolP256r1  | SHA3-256  |\r\n| id-MLKEM512-ECDH-brainpoolP256r1  | HKDF-SHA2 |\r\n| id-MLKEM512-X25519                | SHA3-256  |\r\n| id-MLKEM512-RSA2048               | HKDF-SHA2 |\r\n| id-MLKEM512-RSA3072               | HKDF-SHA2 |\r\n| id-MLKEM512-RSA4096\u2003\u2003\u2003\u2003        | HKDF-SHA2 |\r\n| id-MLKEM768-ECDH-P256             | SHA3-384  |\r\n| id-MLKEM768-ECDH-P256             | HKDF-SHA2 |\r\n| id-MLKEM768-ECDH-brainpoolP256r1  | SHA3-384  |\r\n| id-MLKEM768-ECDH-brainpoolP256r1  | HKDF-SHA2 |\r\n| id-MLKEM768-X25519                | SHA3-384  |\r\n| id-MLKEM1024-ECDH-P384            | SHA3-512  |\r\n| id-MLKEM1024-ECDH-brainpoolP384r1 | SHA3-512  |\r\n| id-MLKEM1024-X448                 | SHA3-512  |\r\n{: #tab-kem-algs title=\"Composite KEM key types\"}\r\n```",
       "createdAt": "2024-07-31T16:09:54Z",
-      "updatedAt": "2024-08-03T23:17:59Z",
-      "closedAt": null,
+      "updatedAt": "2024-08-29T20:39:44Z",
+      "closedAt": "2024-08-29T20:39:44Z",
       "comments": []
     },
     {
@@ -865,9 +865,17 @@
       "labels": [],
       "body": "",
       "createdAt": "2024-07-31T22:54:23Z",
-      "updatedAt": "2024-07-31T23:10:12Z",
+      "updatedAt": "2024-08-29T20:51:59Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I assigned the OID internally for prototype testing:\r\n\r\n2.16.840.1.114027.80.5.2.21   entrust-Algorithm-ExplicitComposite-KEM.id-MLKEM768-RSA2048 060B6086480186FA6B50050215\r\n2.16.840.1.114027.80.5.2.22   entrust-Algorithm-ExplicitComposite-KEM.id-MLKEM768-RSA3072 060B6086480186FA6B50050216\r\n2.16.840.1.114027.80.5.2.23   entrust-Algorithm-ExplicitComposite-KEM.id-MLKEM768-RSA4096 060B6086480186FA6B50050217\r\n2.16.840.1.114027.80.5.2.24   entrust-Algorithm-ExplicitComposite-KEM.id-MLKEM768-X25519  060B6086480186FA6B50050218\r\n2.16.840.1.114027.80.5.2.25   entrust-Algorithm-ExplicitComposite-KEM.id-MLKEM768-ECDH-P384             060B6086480186FA6B50050219\r\n2.16.840.1.114027.80.5.2.26   entrust-Algorithm-ExplicitComposite-KEM.id-MLKEM768-ECDH-brainpoolP256r1  060B6086480186FA6B5005021A\r\n2.16.840.1.114027.80.5.2.27   entrust-Algorithm-ExplicitComposite-KEM.id-MLKEM1024-ECDH-P384            060B6086480186FA6B5005021B\r\n2.16.840.1.114027.80.5.2.28   entrust-Algorithm-ExplicitComposite-KEM.id-MLKEM1024-ECDH-brainpoolP384r1 060B6086480186FA6B5005021C\r\n2.16.840.1.114027.80.5.2.29   entrust-Algorithm-ExplicitComposite-KEM.id-MLKEM1024-X448                 060B6086480186FA6B5005021D",
+          "createdAt": "2024-08-29T20:51:58Z",
+          "updatedAt": "2024-08-29T20:51:58Z"
+        }
+      ]
     },
     {
       "number": 54,
@@ -890,15 +898,15 @@
       "id": "I_kwDOKRPFO86S31jH",
       "title": "Update draft to support official ML-KEM Standard",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/58",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "johngray-dev",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "The final standard was released today.  We need to update the draft to reference the official ML-KEM standard\r\nhttps://csrc.nist.gov/pubs/fips/203/ipd\r\n",
       "createdAt": "2024-08-13T19:54:12Z",
-      "updatedAt": "2024-08-13T19:54:12Z",
-      "closedAt": null,
+      "updatedAt": "2024-08-29T19:39:10Z",
+      "closedAt": "2024-08-29T19:39:10Z",
       "comments": []
     },
     {
@@ -1945,24 +1953,26 @@
       "id": "PR_kwDOKRPFO853DCLJ",
       "title": "Alg List Adjustments",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/53",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2024-07-31T22:56:40Z",
-      "updatedAt": "2024-08-28T14:36:31Z",
+      "updatedAt": "2024-08-29T20:39:46Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
-      "baseRefOid": "2d6b93f6d35fa31c16c42d8da5795e11ee68f550",
+      "baseRefOid": "f1e57323a77e9edea06e507cdd863ef6a208e1ed",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_list_trim",
-      "headRefOid": "8a8c430895751ca442766da3c21da3f9a6c13522",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "7f066cda04c4d941ac7d28971f186621f4d31776",
+      "closedAt": "2024-08-29T20:39:43Z",
+      "mergedAt": "2024-08-29T20:39:43Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "cebe4bf67f85968eabb79f6aecc328b57323bfd8"
+      },
       "comments": [
         {
           "author": "ounsworth",
@@ -2004,6 +2014,32 @@
               "body": "Would it be clearer to say \"i.e. the default salt is used\"?  Or say \"HashLen zeros\" instead of \"all zeros\".  The salt in RFC 5869 can vary in length, and we don't want an implementation to specify a string of zeros of some other length.",
               "createdAt": "2024-08-28T14:36:31Z",
               "updatedAt": "2024-08-28T14:36:32Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO86HF1lU",
+          "commit": {
+            "abbreviatedOid": "ae0f651"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-08-28T14:26:15Z",
+          "updatedAt": "2024-08-29T19:53:23Z",
+          "comments": [
+            {
+              "originalPosition": 68,
+              "body": "Fix the \"First Algorithm\" column.",
+              "createdAt": "2024-08-28T14:26:15Z",
+              "updatedAt": "2024-08-29T19:53:23Z"
+            },
+            {
+              "originalPosition": 68,
+              "body": "Fix this, then good to merge.",
+              "createdAt": "2024-08-28T14:32:14Z",
+              "updatedAt": "2024-08-29T19:53:23Z"
             }
           ]
         }
