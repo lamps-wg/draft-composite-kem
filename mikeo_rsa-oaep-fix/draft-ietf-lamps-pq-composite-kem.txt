@@ -860,7 +860,8 @@ Table of Contents
 
    *  id-sha256 is defined in [RFC8017].
 
-   *  mgf1SHA256Identifier is defined in [RFC4055].
+   *  mgf1SHA256Identifier is defined in [RFC4055], which refers to the
+      MFG1 function defined in [RFC8017] appendix B.2.1.
 
    *  pSpecifiedEmpty is defined in [RFC8017] to indicate that the empty
       string is used for the label.
