@@ -369,9 +369,7 @@ DHKEM.Encaps(pkR):
   return shared_secret, enc
 ~~~
 
-EDNOTE:
-
- `Decaps(sk, ct) -> ss` is accomplished in the analogous way.
+`Decaps(sk, ct) -> ss` is accomplished in the analogous way.
 
 ~~~
 DHKEM.Decap(skR, enc):
@@ -659,8 +657,6 @@ EDNOTE: I believe that [SP.800-56Ar3] and [BSI-ECC] give equivalent and inter-op
 The KEM combiner defined in section {{sec-kem-combiner}} requires a domain separator `domSep` input.  The following table shows the HEX-encoded domain separator for each Composite KEM AlgorithmID; to use it, the value should be HEX-decoded and used in binary form. The domain separator is simply the DER encoding of the composite algorithm OID.
 
 EDNOTE: Should the domain separator values be the SHA-256 hash of the DER encoding of the corresponding composite algorithm OID? That way they would be fixed-length even if the OIDs are different lengths. See https://github.com/lamps-wg/draft-composite-sigs/issues/19
-
-EDNOTE: Or should the domain separators be synced up with the corresponding OpenPGP draft?
 
 | Composite KEM AlgorithmID | Domain Separator (in Hex encoding)|
 | ----------- | ----------- |
