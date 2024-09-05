@@ -221,8 +221,7 @@ This document introduces a set of Key Encapsulation Mechanism (KEM) schemes that
 # Changes in version -05
 
 * Fixed a bug in the definition of the Encaps() functions: KEMs, according to both RFC9180 and FIPS 203 should always return (ss, ct), but we had (ct, ss).
-* Adjusted RSA-OAEP section to follow RFC8017 instead of RFC3560.
-  * OPEN QUESTION: RSAES-OAEP in RFC8017 can take a label. Should we use it? Perhaps to pass in the same domain separator as used for the overall composite?
+* Adjusted RSA-OAEP section to follow RFC8017 instead of RFC3560. Does not use the RSA-OAEP label.
 
 
 Still to do in a future version:
