@@ -23,7 +23,7 @@ venue:
   github: lamps-wg/draft-composite-kem
   latest: https://lamps-wg.github.io/draft-composite-kem/draft-ietf-lamps-pq-composite-kem.html#name-asn1-module
 
-coding: us-ascii
+coding: utf-8
 pi:    # can use array (if all yes) or hash here
   toc: yes
   sortrefs:   # defaults to yes
@@ -336,20 +336,20 @@ The RSA Optimal Asymmetric Encryption Padding (OAEP), as defined in section 7.1 
 ~~~
 RSAOAEPKEM.Encaps(pkR):
   shared_secret = SecureRandom(ss_len)
-  enc = RSAES-OAEP-ENCRYPT(pkR, shared_secret, domSep)
+  enc = RSAES-OAEP-ENCRYPT(pkR, shared_secret)
 
   return shared_secret, enc
 ~~~
 
-Note that the OAEP label `L` is populated with the domain separator `domSep` defined in {{sec-domain}} so that this invocation of RSAES-OAEP is bound to the composite.
+Note that the OAEP label `L` is left to its default value, which is the empty string as per [RFC8017]. The shared secret output by the overall composite KEM already binds a composite domain separator, so there is no need to also utilize the component domain separators.
 
 The value of `ss_len` as well as the RSA-OAEP parameters used within this specification can be found in {{sect-rsaoaep-params}}.
 
  `Decaps(sk, ct) -> ss` is accomplished in the analogous way.
 
 ~~~
-RSAKEM.Decap(skR, enc):
-  shared_secret = RSAES-OAEP-DECRYPT(skR, enc, domSep)
+RSAOAEPKEM.Decap(skR, enc):
+  shared_secret = RSAES-OAEP-DECRYPT(skR, enc)
 
   return shared_secret
 ~~~
@@ -369,7 +369,7 @@ DHKEM.Encaps(pkR):
   return shared_secret, enc
 ~~~
 
-EDNOTE: 
+EDNOTE:
 
  `Decaps(sk, ct) -> ss` is accomplished in the analogous way.
 
@@ -693,8 +693,7 @@ As with the other composite KEM algorithms, when `id-MLKEM512-RSA2048` or `id-ML
 | ----------------------      | ---------------             |
 | hashAlgorithm               | id-sha2-256                 |
 | maskGenAlgorithm            | mgf1SHA256Identifier        |
-| pSourceAlgorithm            | id-pSpecified               |
-| PSourceALgorithm.parameters | domSep                      |
+| pSourceAlgorithm            | pSpecifiedEmpty             |
 | ss_len                      | 256 bits                    |
 {: #rsa-oaep-params title="RSA-OAEP Parameters"}
 
@@ -702,7 +701,7 @@ where:
 
 * `id-sha256` is defined in [RFC8017].
 * `mgf1SHA256Identifier` is defined in [RFC4055].
-* `id-pSpecified` is defined in [RFC8017]. The value of the label SHALL be the corresponding domain seperator as defined in {{sec-domain}}.
+* `pSpecifiedEmpty` is defined in [RFC8017] to indicate that the empty string is used for the label.
 
 EDNOTE: we could determine the mask length for each parameter set given in this document. According to 8017, it will be the length of `k - hLen - 1`, where `k` is the size of the RSA modulus. I'm not sure that we strictly need to calculate and list these.
 
