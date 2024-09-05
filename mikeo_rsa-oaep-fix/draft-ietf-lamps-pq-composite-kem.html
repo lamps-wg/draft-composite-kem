@@ -1519,19 +1519,18 @@ DHKEM.Encaps(pkR):
   return shared_secret, enc
 </pre><a href="#section-2.3.3-2" class="pilcrow">¶</a>
 </div>
-<p id="section-2.3.3-3">EDNOTE:<a href="#section-2.3.3-3" class="pilcrow">¶</a></p>
-<p id="section-2.3.3-4"><code>Decaps(sk, ct) -&gt; ss</code> is accomplished in the analogous way.<a href="#section-2.3.3-4" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-2.3.3-5">
+<p id="section-2.3.3-3"><code>Decaps(sk, ct) -&gt; ss</code> is accomplished in the analogous way.<a href="#section-2.3.3-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-2.3.3-4">
 <pre>
 DHKEM.Decap(skR, enc):
   pkE = DeserializePublicKey(enc)
   shared_secret = DH(skR, pkE)
 
   return shared_secret
-</pre><a href="#section-2.3.3-5" class="pilcrow">¶</a>
+</pre><a href="#section-2.3.3-4" class="pilcrow">¶</a>
 </div>
-<p id="section-2.3.3-6">This construction applies for all variants of elliptic curve Diffie-Hellman used in this specification: ECDH, X25519, and X448.<a href="#section-2.3.3-6" class="pilcrow">¶</a></p>
-<p id="section-2.3.3-7">The simplifications from the DHKEM definition in <span>[<a href="#RFC9180" class="cite xref">RFC9180</a>]</span> is that since the ciphertext and receiver's public key are included explicitly in the composite KEM combiner, there is no need to construct the <code>kem_context</code> object, and since a domain separator is included explicitly in the composite KEM combiner there is no need to perform the labelled steps of <code>ExtractAndExpand()</code>.<a href="#section-2.3.3-7" class="pilcrow">¶</a></p>
+<p id="section-2.3.3-5">This construction applies for all variants of elliptic curve Diffie-Hellman used in this specification: ECDH, X25519, and X448.<a href="#section-2.3.3-5" class="pilcrow">¶</a></p>
+<p id="section-2.3.3-6">The simplifications from the DHKEM definition in <span>[<a href="#RFC9180" class="cite xref">RFC9180</a>]</span> is that since the ciphertext and receiver's public key are included explicitly in the composite KEM combiner, there is no need to construct the <code>kem_context</code> object, and since a domain separator is included explicitly in the composite KEM combiner there is no need to perform the labelled steps of <code>ExtractAndExpand()</code>.<a href="#section-2.3.3-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="composite-encaps">
@@ -1958,7 +1957,6 @@ KEK &lt;- Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep) =
         </h3>
 <p id="section-5.1-1">The KEM combiner defined in section <a href="#sec-kem-combiner" class="auto internal xref">Section 4.3</a> requires a domain separator <code>domSep</code> input.  The following table shows the HEX-encoded domain separator for each Composite KEM AlgorithmID; to use it, the value should be HEX-decoded and used in binary form. The domain separator is simply the DER encoding of the composite algorithm OID.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
 <p id="section-5.1-2">EDNOTE: Should the domain separator values be the SHA-256 hash of the DER encoding of the corresponding composite algorithm OID? That way they would be fixed-length even if the OIDs are different lengths. See https://github.com/lamps-wg/draft-composite-sigs/issues/19<a href="#section-5.1-2" class="pilcrow">¶</a></p>
-<p id="section-5.1-3">EDNOTE: Or should the domain separators be synced up with the corresponding OpenPGP draft?<a href="#section-5.1-3" class="pilcrow">¶</a></p>
 <span id="name-composite-kem-fixedinfo-dom"></span><div id="tab-kem-domains">
 <table class="center" id="table-2">
           <caption>
@@ -2019,7 +2017,7 @@ KEK &lt;- Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep) =
           </tbody>
         </table>
 </div>
-<p id="section-5.1-5">EDNOTE: these domain separators are based on the prototyping OIDs assigned on the Entrust arc. We will need to ask for IANA early allocation of these OIDs so that we can re-compute the domain separators over the final OIDs.<a href="#section-5.1-5" class="pilcrow">¶</a></p>
+<p id="section-5.1-4">EDNOTE: these domain separators are based on the prototyping OIDs assigned on the Entrust arc. We will need to ask for IANA early allocation of these OIDs so that we can re-compute the domain separators over the final OIDs.<a href="#section-5.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sect-rsaoaep-params">

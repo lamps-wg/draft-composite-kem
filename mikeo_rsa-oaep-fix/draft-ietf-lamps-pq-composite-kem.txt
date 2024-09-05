@@ -382,8 +382,6 @@ Table of Contents
 
      return shared_secret, enc
 
-   EDNOTE:
-
    Decaps(sk, ct) -> ss is accomplished in the analogous way.
 
    DHKEM.Decap(skR, enc):
@@ -786,9 +784,6 @@ Table of Contents
    DER encoding of the corresponding composite algorithm OID?  That way
    they would be fixed-length even if the OIDs are different lengths.
    See https://github.com/lamps-wg/draft-composite-sigs/issues/19
-
-   EDNOTE: Or should the domain separators be synced up with the
-   corresponding OpenPGP draft?
 
     +===================================+============================+
     | Composite KEM AlgorithmID         | Domain Separator (in Hex   |
