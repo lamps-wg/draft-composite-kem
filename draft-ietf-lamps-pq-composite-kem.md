@@ -696,7 +696,7 @@ As with the other composite KEM algorithms, when `id-MLKEM512-RSA2048` or `id-ML
 where:
 
 * `id-sha256` is defined in [RFC8017].
-* `mgf1SHA256Identifier` is defined in [RFC4055].
+* `mgf1SHA256Identifier` is defined in [RFC4055], which refers to the MFG1 function defined in [RFC8017] appendix B.2.1.
 * `pSpecifiedEmpty` is defined in [RFC8017] to indicate that the empty string is used for the label.
 
 EDNOTE: we could determine the mask length for each parameter set given in this document. According to 8017, it will be the length of `k - hLen - 1`, where `k` is the size of the RSA modulus. I'm not sure that we strictly need to calculate and list these.
