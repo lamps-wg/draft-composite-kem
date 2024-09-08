@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-09-05T01:39:00.516475+00:00",
+  "timestamp": "2024-09-08T01:45:21.451182+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -858,15 +858,15 @@
       "id": "I_kwDOKRPFO86Rf-xg",
       "title": "Re-assign all OIDs and update domain separators",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/52",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2024-07-31T22:54:23Z",
-      "updatedAt": "2024-08-29T20:51:59Z",
-      "closedAt": null,
+      "updatedAt": "2024-09-06T21:02:12Z",
+      "closedAt": "2024-09-06T21:02:12Z",
       "comments": [
         {
           "author": "johngray-dev",
@@ -1010,6 +1010,22 @@
       "body": "",
       "createdAt": "2024-08-28T14:34:52Z",
       "updatedAt": "2024-08-28T14:34:52Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 65,
+      "id": "I_kwDOKRPFO86Vrjy6",
+      "title": "Align CMS KDF choice to Dan vG's cms-kyber draft",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/65",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "The current CMS KEMRI Conventions:\r\n\r\n| Composite KEM OID                 | KDF         | Key Encryption Alg |\r\n|---------                          | ---         | ---                |\r\n| id-MLKEM768-RSA2048               | SHA3-256 | id-aes128-Wrap     |\r\n| id-MLKEM768-RSA3072               | SHA3-256 | id-aes128-Wrap     |\r\n| id-MLKEM768-ECDH-P384             | SHA3-384 | id-aes256-Wrap     |\r\n| id-MLKEM768-ECDH-brainpoolP256r1  | SHA3-384 | id-aes256-Wrap     |\r\n| id-MLKEM768-X25519                | SHA3-384 | id-aes256-Wrap     |\r\n| id-MLKEM1024-ECDH-P384            | SHA3-512 | id-aes256-Wrap     |\r\n| id-MLKEM1024-ECDH-brainpoolP384r1 | SHA3-512 | id-aes256-Wrap     |\r\n| id-MLKEM1024-X448                 | SHA3-512 | id-aes256-Wrap     |\r\n{: #tab-cms-kdf-wrap title=\"REQUIRED pairings for CMS KDF and WRAP\"}\r\n\r\n\r\nWhich does not currently align with the KDFs used internally within the Composite KEM Combiner, and in fact here it needs to be a proper variable-length KDF since KEMRI has an `L' parameter, so this needs to be fixed. I guess it makes sense for me to align to whatever Dan picks in draft-cms-kyber.\r\n",
+      "createdAt": "2024-09-06T21:35:29Z",
+      "updatedAt": "2024-09-06T21:35:29Z",
       "closedAt": null,
       "comments": []
     }
@@ -2111,19 +2127,52 @@
       "labels": [],
       "body": "Closes #35",
       "createdAt": "2024-08-10T22:11:44Z",
-      "updatedAt": "2024-08-10T22:11:44Z",
+      "updatedAt": "2024-09-05T19:42:46Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "2d6b93f6d35fa31c16c42d8da5795e11ee68f550",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_rsa-oaep-fix",
-      "headRefOid": "9177af9fa95873ca60424ad731ea033e7cd05b5a",
+      "headRefOid": "17591e8b7b4a029a0594af8f339872053e4351cd",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO86HGDcg",
+          "commit": {
+            "abbreviatedOid": "cc4086d"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-08-28T14:45:31Z",
+          "updatedAt": "2024-09-05T18:44:57Z",
+          "comments": [
+            {
+              "originalPosition": 41,
+              "body": "We do not believe that passing domSep down into RSA-OAEP does not give any security advantage, so it would simplify implementations if we leave OAEP's `L` empty because empty is the standard way to implement PKCS#1 OAEP.\r\n\r\nChange to empty string.",
+              "createdAt": "2024-08-28T14:45:31Z",
+              "updatedAt": "2024-09-05T18:44:57Z"
+            },
+            {
+              "originalPosition": 106,
+              "body": "Change to empty string, ie fixed value as per 8017.",
+              "createdAt": "2024-08-28T14:46:18Z",
+              "updatedAt": "2024-09-05T18:44:57Z"
+            },
+            {
+              "originalPosition": 106,
+              "body": "Also change id-pSpecified to id-empty or whatever.",
+              "createdAt": "2024-08-28T14:46:48Z",
+              "updatedAt": "2024-09-05T18:44:57Z"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
