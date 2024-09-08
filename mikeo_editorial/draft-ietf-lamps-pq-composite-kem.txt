@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 27 February 2025                                        M. Pala
+Expires: 12 March 2025                                           M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                          26 August 2024
+                                                        8 September 2024
 
 
 Composite ML-KEM for Use in the Internet X.509 Public Key Infrastructure
@@ -31,7 +31,10 @@ Abstract
    OAEP, ECDH, X25519, and X448.  For use within CMS, this document is
    intended to be coupled with the CMS KEMRecipientInfo mechanism in
    [I-D.housley-lamps-cms-kemri].  These combinations are tailored to
-   meet security best practices and regulatory requirements.
+   meet security best practices and regulatory requirements.  Composite
+   ML-KEM is applicable in any application that would otherwise use ML-
+   KEM, but wants the protection against breaks or catastrophic bugs in
+   ML-KEM.
 
 About This Document
 
@@ -66,7 +69,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 27 February 2025.
+   This Internet-Draft will expire on 12 March 2025.
 
 Copyright Notice
 
@@ -255,9 +258,9 @@ Table of Contents
    directly covered in this document, but is the subject of
    Appendix C.2.
 
-   This document is intended for general applicability anywhere that key
-   establishment or enveloped content encryption is used within PKIX or
-   CMS structures.
+   Composite ML-KEM is intended for general applicability anywhere that
+   key establishment or enveloped content encryption is used within PKIX
+   or CMS structures.
 
 2.1.  Terminology
 
