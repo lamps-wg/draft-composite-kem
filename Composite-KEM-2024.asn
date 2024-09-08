@@ -1,4 +1,4 @@
-Composite-KEM-2023
+Composite-KEM-2024
       {iso(1) identified-organization(3) dod(6) internet(1) 
         security(5) mechanisms(5) pkix(7) id-mod(0) 
         id-mod-composite-kems(TBDMOD) }
@@ -9,13 +9,13 @@ EXPORTS ALL;
 
 IMPORTS
 
-PUBLIC-KEY, AlgorithmIdentifier{}
+PUBLIC-KEY, AlgorithmIdentifier{}, SMIME-CAPS
   FROM AlgorithmInformation-2009  -- RFC 5912 [X509ASN1]
       { iso(1) identified-organization(3) dod(6) internet(1)
         security(5) mechanisms(5) pkix(7) id-mod(0)
         id-mod-algorithmInformation-02(58) }
 
-KEM-ALGORITHM, KEMAlgSet
+KEM-ALGORITHM
   FROM KEMAlgorithmInformation-2023
       { iso(1) identified-organization(3) dod(6) internet(1)
         security(5) mechanisms(5) pkix(7) id-mod(0)
@@ -33,11 +33,11 @@ OneAsymmetricKey
         pkcs-9(9) smime(16) modules(0)
         id-mod-asymmetricKeyPkgV1(50) }
 
-  RSAPublicKey, ECPoint
-    FROM PKIXAlgs-2009 
-      { iso(1) identified-organization(3) dod(6)
-        internet(1) security(5) mechanisms(5) pkix(7) id-mod(0)
-        id-mod-pkix1-algorithms2008-02(56) }
+RSAPublicKey, ECPoint
+  FROM PKIXAlgs-2009 
+    { iso(1) identified-organization(3) dod(6)
+      internet(1) security(5) mechanisms(5) pkix(7) id-mod(0)
+      id-mod-pkix1-algorithms2008-02(56) }
 
 ;
 
@@ -79,8 +79,8 @@ pk-CompositeKEM {
   {
     IDENTIFIER id
     KEY SEQUENCE {
-     BIT STRING (CONTAINING FirstPublicKeyType)
-     BIT STRING (CONTAINING SecondPublicKeyType) 
+    first BIT STRING (CONTAINING FirstPublicKeyType),
+    second BIT STRING (CONTAINING SecondPublicKeyType)
     }
     PARAMS ARE absent
     CERT-KEY-USAGE { keyEncipherment }
