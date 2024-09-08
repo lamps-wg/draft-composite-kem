@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 2 March 2025                                            M. Pala
+Expires: 12 March 2025                                           M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                          29 August 2024
+                                                        8 September 2024
 
 
 Composite ML-KEM for Use in the Internet X.509 Public Key Infrastructure
@@ -66,7 +66,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 2 March 2025.
+   This Internet-Draft will expire on 12 March 2025.
 
 Copyright Notice
 
@@ -169,6 +169,10 @@ Table of Contents
          expect (thanks Quynh for pointing that this is allowed.)
 
    *  Enhanced the section about how to get this FIPS-certified.
+
+   *  Updated OIDs and domain separators.
+
+   *  ASN.1 module fixes (thanks Russ).
 
    Still to do in a future version:
 
@@ -680,45 +684,45 @@ Table of Contents
    the OID, two component algorithms, and the combiner function.
 
    EDNOTE: The OID referenced are TBD and MUST be used only for
-   prototyping and replaced with the final IANA-assigned OIDs.  The
-   following prefix is used for each: replace <CompKEM> with the String
-   "2.16.840.1.114027.80.5.2".
+   prototyping and replaced with the final IANA-assigned OIDs.
 
    TODO: OIDs to be replaced by IANA.
 
-   Therefore <CompKEM>.1 is equal to 2.16.840.1.114027.80.5.2.1
+   <CompKEM>.1 is equal to 2.16.840.1.114027.80.5.2.1
 
-   +==================+=============+=========+===============+========+
-   |Composite KEM     |OID          |First    |Second         |KDF     |
-   |                  |             |Algorithm|Algorithm      |        |
-   +==================+=============+=========+===============+========+
-   |id-               |<CompKEM>.13 |MLKEM768 |RSA-OAEP 2048  |HKDF-   |
-   |MLKEM768-RSA2048  |             |         |               |SHA256  |
-   +------------------+-------------+---------+---------------+--------+
-   |id-               |<CompKEM>.4  |MLKEM768 |RSA-OAEP 3072  |HKDF-   |
-   |MLKEM768-RSA3072  |             |         |               |SHA256  |
-   +------------------+-------------+---------+---------------+--------+
-   |id-               |<CompKEM>.TBD|MLKEM768 |RSA-OAEP 4096  |HKDF-   |
-   |MLKEM768-RSA4096  |             |         |               |SHA256  |
-   +------------------+-------------+---------+---------------+--------+
-   |id-               |<CompKEM>.7  |MLKEM768 |X25519         |SHA3-256|
-   |MLKEM768-X25519   |             |         |               |        |
-   +------------------+-------------+---------+---------------+--------+
-   |id-MLKEM768-ECDH- |<CompKEM>.5  |MLKEM768 |ECDH-P384      |HKDF-   |
-   |P384              |             |         |               |SHA384  |
-   +------------------+-------------+---------+---------------+--------+
-   |id-MLKEM768-ECDH- |<CompKEM>.6  |MLKEM768 |ECDH-          |HKDF-   |
-   |brainpoolP256r1   |             |         |brainpoolp256r1|SHA384  |
-   +------------------+-------------+---------+---------------+--------+
-   |id-MLKEM1024-     |<CompKEM>.8  |MLKEM1024|ECDH-P384      |SHA3-512|
-   |ECDH-P384         |             |         |               |        |
-   +------------------+-------------+---------+---------------+--------+
-   |id-MLKEM1024-     |<CompKEM>.9  |MLKEM1024|ECDH-          |SHA3-512|
-   |ECDH-             |             |         |brainpoolP384r1|        |
-   |brainpoolP384r1   |             |         |               |        |
-   +------------------+-------------+---------+---------------+--------+
-   |id-MLKEM1024-X448 |<CompKEM>.10 |MLKEM1024|X448           |SHA3-512|
-   +------------------+-------------+---------+---------------+--------+
+   +===================+============+=========+===============+========+
+   | Composite KEM     |OID         |First    |Second         |KDF     |
+   |                   |            |Algorithm|Algorithm      |        |
+   +===================+============+=========+===============+========+
+   | id-               |<CompKEM>.21|MLKEM768 |RSA-OAEP 2048  |HKDF-   |
+   | MLKEM768-RSA2048  |            |         |               |SHA256  |
+   +-------------------+------------+---------+---------------+--------+
+   | id-               |<CompKEM>.22|MLKEM768 |RSA-OAEP 3072  |HKDF-   |
+   | MLKEM768-RSA3072  |            |         |               |SHA256  |
+   +-------------------+------------+---------+---------------+--------+
+   | id-               |<CompKEM>.23|MLKEM768 |RSA-OAEP 4096  |HKDF-   |
+   | MLKEM768-RSA4096  |            |         |               |SHA256  |
+   +-------------------+------------+---------+---------------+--------+
+   | id-               |<CompKEM>.24|MLKEM768 |X25519         |SHA3-256|
+   | MLKEM768-X25519   |            |         |               |        |
+   +-------------------+------------+---------+---------------+--------+
+   | id-MLKEM768-      |<CompKEM>.25|MLKEM768 |ECDH-P384      |HKDF-   |
+   | ECDH-P384         |            |         |               |SHA384  |
+   +-------------------+------------+---------+---------------+--------+
+   | id-MLKEM768-      |<CompKEM>.26|MLKEM768 |ECDH-          |HKDF-   |
+   | ECDH-             |            |         |brainpoolp256r1|SHA384  |
+   | brainpoolP256r1   |            |         |               |        |
+   +-------------------+------------+---------+---------------+--------+
+   | id-MLKEM1024-     |<CompKEM>.27|MLKEM1024|ECDH-P384      |SHA3-512|
+   | ECDH-P384         |            |         |               |        |
+   +-------------------+------------+---------+---------------+--------+
+   | id-MLKEM1024-     |<CompKEM>.28|MLKEM1024|ECDH-          |SHA3-512|
+   | ECDH-             |            |         |brainpoolP384r1|        |
+   | brainpoolP384r1   |            |         |               |        |
+   +-------------------+------------+---------+---------------+--------+
+   | id-               |<CompKEM>.29|MLKEM1024|X448           |SHA3-512|
+   | MLKEM1024-X448    |            |         |               |        |
+   +-------------------+------------+---------+---------------+--------+
 
                       Table 1: Composite KEM key types
 
@@ -785,21 +789,23 @@ Table of Contents
     | Composite KEM AlgorithmID         | Domain Separator (in Hex   |
     |                                   | encoding)                  |
     +===================================+============================+
-    | id-MLKEM768-RSA2048               | 060B6086480186FA6B5005020D |
+    | id-MLKEM768-RSA2048               | 060B6086480186FA6B50050215 |
     +-----------------------------------+----------------------------+
-    | id-MLKEM768-RSA3072               | 060B6086480186FA6B50050204 |
+    | id-MLKEM768-RSA3072               | 060B6086480186FA6B50050216 |
     +-----------------------------------+----------------------------+
-    | id-MLKEM768-ECDH-P384             | 060B6086480186FA6B50050205 |
+    | id-MLKEM768-RSA4096               | 060B6086480186FA6B50050217 |
     +-----------------------------------+----------------------------+
-    | id-MLKEM768-ECDH-brainpoolP256r1  | 060B6086480186FA6B50050206 |
+    | id-MLKEM768-ECDH-P384             | 060B6086480186FA6B50050218 |
     +-----------------------------------+----------------------------+
-    | id-MLKEM768-X25519                | 060B6086480186FA6B50050207 |
+    | id-MLKEM768-ECDH-brainpoolP256r1  | 060B6086480186FA6B50050219 |
     +-----------------------------------+----------------------------+
-    | id-MLKEM1024-ECDH-P384            | 060B6086480186FA6B50050208 |
+    | id-MLKEM768-X25519                | 060B6086480186FA6B5005021A |
     +-----------------------------------+----------------------------+
-    | id-MLKEM1024-ECDH-brainpoolP384r1 | 060B6086480186FA6B50050209 |
+    | id-MLKEM1024-ECDH-P384            | 060B6086480186FA6B5005021B |
     +-----------------------------------+----------------------------+
-    | id-MLKEM1024-X448                 | 060B6086480186FA6B5005020A |
+    | id-MLKEM1024-ECDH-brainpoolP384r1 | 060B6086480186FA6B5005021C |
+    +-----------------------------------+----------------------------+
+    | id-MLKEM1024-X448                 | 060B6086480186FA6B5005021D |
     +-----------------------------------+----------------------------+
 
             Table 2: Composite KEM fixedInfo Domain Separators
@@ -1001,7 +1007,7 @@ Table of Contents
 
    <CODE STARTS>
 
-   Composite-KEM-2023
+   Composite-KEM-2024
          {iso(1) identified-organization(3) dod(6) internet(1)
            security(5) mechanisms(5) pkix(7) id-mod(0)
            id-mod-composite-kems(TBDMOD) }
@@ -1012,13 +1018,13 @@ Table of Contents
 
    IMPORTS
 
-   PUBLIC-KEY, AlgorithmIdentifier{}
+   PUBLIC-KEY, AlgorithmIdentifier{}, SMIME-CAPS
      FROM AlgorithmInformation-2009  -- RFC 5912 [X509ASN1]
          { iso(1) identified-organization(3) dod(6) internet(1)
            security(5) mechanisms(5) pkix(7) id-mod(0)
            id-mod-algorithmInformation-02(58) }
 
-   KEM-ALGORITHM, KEMAlgSet
+   KEM-ALGORITHM
      FROM KEMAlgorithmInformation-2023
          { iso(1) identified-organization(3) dod(6) internet(1)
            security(5) mechanisms(5) pkix(7) id-mod(0)
@@ -1036,11 +1042,11 @@ Table of Contents
            pkcs-9(9) smime(16) modules(0)
            id-mod-asymmetricKeyPkgV1(50) }
 
-     RSAPublicKey, ECPoint
-       FROM PKIXAlgs-2009
-         { iso(1) identified-organization(3) dod(6)
-           internet(1) security(5) mechanisms(5) pkix(7) id-mod(0)
-           id-mod-pkix1-algorithms2008-02(56) }
+   RSAPublicKey, ECPoint
+     FROM PKIXAlgs-2009
+       { iso(1) identified-organization(3) dod(6)
+         internet(1) security(5) mechanisms(5) pkix(7) id-mod(0)
+         id-mod-pkix1-algorithms2008-02(56) }
 
    ;
 
@@ -1082,8 +1088,8 @@ Table of Contents
      {
        IDENTIFIER id
        KEY SEQUENCE {
-        BIT STRING (CONTAINING FirstPublicKeyType)
-        BIT STRING (CONTAINING SecondPublicKeyType)
+       first BIT STRING (CONTAINING FirstPublicKeyType),
+       second BIT STRING (CONTAINING SecondPublicKeyType)
        }
        PARAMS ARE absent
        CERT-KEY-USAGE { keyEncipherment }
