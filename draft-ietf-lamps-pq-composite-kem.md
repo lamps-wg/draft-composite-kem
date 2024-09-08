@@ -248,6 +248,7 @@ This document introduces a set of Key Encapsulation Mechanism (KEM) schemes that
   * Un-twisted `tradSS || mlkemSS` to `mlkemSS || tradSS` as you would expect (thanks Quynh for pointing that this is allowed.)
 * Enhanced the section about how to get this FIPS-certified.
 * Updated OIDs and domain separators.
+* ASN.1 module fixes (thanks Russ).
 
 
 Still to do in a future version:
@@ -676,7 +677,7 @@ The KEM combiner defined in section {{sec-kem-combiner}} requires a domain separ
 EDNOTE: Should the domain separator values be the SHA-256 hash of the DER encoding of the corresponding composite algorithm OID? That way they would be fixed-length even if the OIDs are different lengths. See https://github.com/lamps-wg/draft-composite-sigs/issues/19
 
 | Composite KEM AlgorithmID | Domain Separator (in Hex encoding)|
-| -----------               | ----------- | 
+| -----------               | ----------- |
 | id-MLKEM768-RSA2048       | 060B6086480186FA6B50050215 |
 | id-MLKEM768-RSA3072       | 060B6086480186FA6B50050216 |
 | id-MLKEM768-RSA4096       | 060B6086480186FA6B50050217 |
@@ -799,7 +800,7 @@ The SMIMECapability SEQUENCE representing a composite KEM Algorithm MUST include
 
 <CODE STARTS>
 
-{::include Composite-KEM-2023.asn}
+{::include Composite-KEM-2024.asn}
 
 <CODE ENDS>
 
