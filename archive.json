@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-09-08T01:45:21.451182+00:00",
+  "timestamp": "2024-09-10T01:40:25.895600+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -489,15 +489,15 @@
       "id": "I_kwDOKRPFO86O8OhA",
       "title": "Issues with the ASN.1 module",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/34",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "https://mailarchive.ietf.org/arch/msg/spasm/LDfrRz-vV8JAZyIk3Xmp7ijtnHE/",
       "createdAt": "2024-07-09T12:58:46Z",
-      "updatedAt": "2024-07-09T12:58:47Z",
-      "closedAt": null,
+      "updatedAt": "2024-09-08T14:32:30Z",
+      "closedAt": "2024-09-08T14:32:30Z",
       "comments": []
     },
     {
@@ -545,10 +545,12 @@
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "pull request"
+      ],
       "body": "For the security proofs, it is imperative that the RSA / ECC keys be generated fresh for the composite and not re-used from existing deployments. I swear we had text to this effect. Certainly this deserves its own Security Consideration section.\r\n\r\nOnce we have this text ready, ping Sophie Schmieg to review it.",
       "createdAt": "2024-07-16T20:58:05Z",
-      "updatedAt": "2024-07-23T16:11:36Z",
+      "updatedAt": "2024-09-08T13:44:33Z",
       "closedAt": null,
       "comments": []
     },
@@ -629,10 +631,12 @@
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "pull request"
+      ],
       "body": "https://mailarchive.ietf.org/arch/msg/spasm/Kxol5ZgDR777Y58XsLPHwvl6uY8/\r\n\r\n\r\nFrom Peter C:\r\n\r\n> Secondly, X-Wing fundamentally relies on ML-KEM remaining ciphertext second pre-image resistant.  This means that it cannot mitigate ML-KEM implementation vulnerabilities.  If decapsulation fails to perform the ciphertext check properly, for example, then it's trivial to find ML-KEM second pre-images and break the IND-CCA2 security of X-Wing.  This isn't an issue if your goal is only to mitigate algorithmic vulnerabilities, but you need to be explicit about that.  At the very least, you need to reconsider \"we also cannot immediately place complete trust in post-quantum replacements until they have undergone extensive scrutiny and real-world testing to uncover and rectify potential implementation flaws\" in the introduction.\r\n\r\n\r\nWe either need to add Security Consideration text to this effect, or strengthen the combiner. I believe that binding the ML-KEM CT and PK would solve this?",
       "createdAt": "2024-07-23T16:31:37Z",
-      "updatedAt": "2024-08-24T18:30:38Z",
+      "updatedAt": "2024-09-08T15:25:24Z",
       "closedAt": null,
       "comments": [
         {
@@ -645,9 +649,9 @@
         {
           "author": "ounsworth",
           "authorAssociation": "CONTRIBUTOR",
-          "body": "TODO: find a citation for SHA3 being equivalent to HKDF-SHA2 -- probably the X-Wing paper will do.\r\n\r\nAlso, ping Brita, Peter C, and Falko to specifically review the added Sec-Cons text tagged against this issue.",
+          "body": "- [ ] TODO: find a citation for SHA3 being equivalent to HKDF-SHA2 -- probably the X-Wing paper will do.\r\n\r\n- [ ] ping Brita, Peter C, and Falko to specifically review the added Sec-Cons text tagged against this issue.",
           "createdAt": "2024-08-24T18:30:37Z",
-          "updatedAt": "2024-08-24T18:30:37Z"
+          "updatedAt": "2024-09-08T15:25:24Z"
         }
       ]
     },
@@ -810,10 +814,12 @@
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "pull request"
+      ],
       "body": "I assume it should be the raw bits from the SPKI, and not hash in any ASN.1 wrapping. This will make it the most binary-compatible with OpenPGP and others.",
       "createdAt": "2024-07-26T21:41:14Z",
-      "updatedAt": "2024-07-26T21:41:14Z",
+      "updatedAt": "2024-09-08T14:33:19Z",
       "closedAt": null,
       "comments": []
     },
@@ -2101,13 +2107,13 @@
       "labels": [],
       "body": "",
       "createdAt": "2024-08-06T00:35:56Z",
-      "updatedAt": "2024-08-28T14:59:01Z",
+      "updatedAt": "2024-09-08T19:34:02Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "2d6b93f6d35fa31c16c42d8da5795e11ee68f550",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_editorial",
-      "headRefOid": "d3214ba9f68221027dd79a6bbbe96d614a6b8128",
+      "headRefOid": "fadc34152277fc82054d2b6ee7e4d51d26863355",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
@@ -2173,6 +2179,34 @@
           ]
         }
       ]
+    },
+    {
+      "number": 66,
+      "id": "PR_kwDOKRPFO856xUDp",
+      "title": "ASN.1 tweaks. Closes #34",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/66",
+      "state": "MERGED",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Closes #34 ",
+      "createdAt": "2024-09-08T14:27:21Z",
+      "updatedAt": "2024-09-08T14:32:32Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "bbb08d15cde69aff6bcd6f751561c98668084de8",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_asn1_fix_34",
+      "headRefOid": "08a2d909be83b3f6d7c27ac414b18cba0dfd51da",
+      "closedAt": "2024-09-08T14:32:29Z",
+      "mergedAt": "2024-09-08T14:32:29Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "03278690c4c51cb487c0a3cf6394dfcb0bf01483"
+      },
+      "comments": [],
+      "reviews": []
     }
   ]
 }
