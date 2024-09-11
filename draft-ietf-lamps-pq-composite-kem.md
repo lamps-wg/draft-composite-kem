@@ -220,7 +220,7 @@ This document introduces a set of Key Encapsulation Mechanism (KEM) schemes that
 
 # Changes in version -05
 
-* Fixed a bug in the definition of the Encaps() functions: KEMs, according to both RFC9180 and FIPS 203 should always return (ss, ct), but we had (ct, ss).
+* Fixed a bug in the definition of the Encap() functions: KEMs, according to both RFC9180 and FIPS 203 should always return (ss, ct), but we had (ct, ss).
 * Adjusted RSA-OAEP section to follow RFC8017 instead of RFC3560. Does not use the RSA-OAEP label.
 
 
@@ -303,13 +303,16 @@ We borrow here the definition of a key encapsulation mechanism (KEM) from {{I-D.
    *  `KeyGen() -> (pk, sk)`: A probabilistic key generation algorithm,
       which generates a public key `pk` and a secret key `sk`.
 
-   *  `Encaps(pk) -> (ss, ct)`: A probabilistic encapsulation algorithm,
+   *  `Encap(pk) -> (ss, ct)`: A probabilistic encapsulation algorithm,
       which takes as input a public key `pk` and outputs a ciphertext `ct`
-      and shared secret ss.
+      and shared secret ss. Note: this document uses `Encap()` to conform to [RFC9180],
+      but [FIPS.204] uses `Encaps()`.
 
-   *  `Decaps(sk, ct) -> ss`: A decapsulation algorithm, which takes as
+   *  `Decap(sk, ct) -> ss`: A decapsulation algorithm, which takes as
       input a secret key `sk` and ciphertext `ct` and outputs a shared
       secret `ss`, or in some cases a distinguished error value.
+      Note: this document uses `Decap()` to conform to [RFC9180],
+      but [FIPS.204] uses `Decaps()`.
 
 The KEM interface defined above differs from both traditional key transport mechanism (for example for use with KeyTransRecipientInfo defined in {{RFC5652}}), and key agreement (for example for use with KeyAgreeRecipientInfo defined in {{RFC5652}}).
 
@@ -333,7 +336,7 @@ CompositeKEM.KeyGen():
 The RSA Optimal Asymmetric Encryption Padding (OAEP), as defined in section 7.1 of [RFC8017] is a public key encryption algorithm used to transport key material from a sender to a receiver. It is promoted into a KEM by having the sender generate a random 256 bit secret and encrypt it.
 
 ~~~
-RSAOAEPKEM.Encaps(pkR):
+RSAOAEPKEM.Encap(pkR):
   shared_secret = SecureRandom(ss_len)
   enc = RSAES-OAEP-ENCRYPT(pkR, shared_secret)
 
@@ -344,7 +347,7 @@ Note that the OAEP label `L` is left to its default value, which is the empty st
 
 The value of `ss_len` as well as the RSA-OAEP parameters used within this specification can be found in {{sect-rsaoaep-params}}.
 
- `Decaps(sk, ct) -> ss` is accomplished in the analogous way.
+ `Decap(sk, ct) -> ss` is accomplished in the analogous way.
 
 ~~~
 RSAOAEPKEM.Decap(skR, enc):
@@ -356,11 +359,11 @@ RSAOAEPKEM.Decap(skR, enc):
 
 ### Promotion of ECDH into a KEM
 
-An elliptic curve Diffie-Hellman key agreement is promoted into a KEM `Encaps(pk) -> (ss, ct)` using a simplified version of the DHKEM definition from [RFC9180].
+An elliptic curve Diffie-Hellman key agreement is promoted into a KEM `Encap(pk) -> (ss, ct)` using a simplified version of the DHKEM definition from [RFC9180].
 
 
 ~~~
-DHKEM.Encaps(pkR):
+DHKEM.Encap(pkR):
   skE, pkE = GenerateKeyPair()
   shared_secret = DH(skE, pkR)
   enc = SerializePublicKey(pkE)
@@ -368,7 +371,7 @@ DHKEM.Encaps(pkR):
   return shared_secret, enc
 ~~~
 
-`Decaps(sk, ct) -> ss` is accomplished in the analogous way.
+`Decap(sk, ct) -> ss` is accomplished in the analogous way.
 
 ~~~
 DHKEM.Decap(skR, enc):
@@ -382,19 +385,19 @@ This construction applies for all variants of elliptic curve Diffie-Hellman used
 
 The simplifications from the DHKEM definition in [RFC9180] is that since the ciphertext and receiver's public key are included explicitly in the composite KEM combiner, there is no need to construct the `kem_context` object, and since a domain separator is included explicitly in the composite KEM combiner there is no need to perform the labelled steps of `ExtractAndExpand()`.
 
-### Composite Encaps
+### Composite Encap
 
-The `Encaps(pk) -> (ss, ct)` of a composite KEM algorithm is defined as:
+The `Encap(pk) -> (ss, ct)` of a composite KEM algorithm is defined as:
 
 ~~~
-CompositeKEM.Encaps(pk):
+CompositeKEM.Encap(pk):
   # Split the component public keys
   mlkemPK = pk[0]
   tradPK  = pk[1]
 
-  # Perform the respective component Encaps operations
+  # Perform the respective component Encap operations
   (mlkemCT, mlkemSS) = MLKEM.Encaps(mlkemPK)
-  (tradCT, tradSS) = TradKEM.Encaps(tradPK)
+  (tradCT, tradSS) = TradKEM.Encap(tradPK)
 
   # Combine
   # note that the order of the traditional and ML-KEM components
@@ -407,19 +410,19 @@ CompositeKEM.Encaps(pk):
 
 where `Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep)` is defined in general in {{sec-kem-combiner}} with specific values for `domSep` per composite KEM algorithm in {{sec-alg-ids}} and `CompositeCiphertextValue` is defined in {{sec-CompositeCiphertextValue}}.
 
-### Composite Decaps
+### Composite Decap
 
-The `Decaps(sk, ct) -> ss` of a composite KEM algorithm is defined as:
+The `Decap(sk, ct) -> ss` of a composite KEM algorithm is defined as:
 
 ~~~
-CompositeKEM.Decaps(ct, mlkemSK, tradSK):
+CompositeKEM.Decap(ct, mlkemSK, tradSK):
   # split the component ciphertexts
   mlkemCT = ct[0]
   tradCT  = ct[1]
 
-  # Perform the respective component Decaps operations
+  # Perform the respective component Decap operations
   mlkemSS = MLKEM.Decaps(mlkemSK, mlkemCT)
-  tradSS  = TradKEM.Decaps(tradSK, tradCT)
+  tradSS  = TradKEM.Decap(tradSK, tradCT)
 
   # Combine
   # note that the order of the traditional and ML-KEM components
@@ -655,8 +658,6 @@ EDNOTE: I believe that [SP.800-56Ar3] and [BSI-ECC] give equivalent and inter-op
 
 The KEM combiner defined in section {{sec-kem-combiner}} requires a domain separator `domSep` input.  The following table shows the HEX-encoded domain separator for each Composite KEM AlgorithmID; to use it, the value should be HEX-decoded and used in binary form. The domain separator is simply the DER encoding of the composite algorithm OID.
 
-EDNOTE: Should the domain separator values be the SHA-256 hash of the DER encoding of the corresponding composite algorithm OID? That way they would be fixed-length even if the OIDs are different lengths. See https://github.com/lamps-wg/draft-composite-sigs/issues/19
-
 | Composite KEM AlgorithmID | Domain Separator (in Hex encoding)|
 | ----------- | ----------- |
 | id-MLKEM512-ECDH-P256     | 060B6086480186FA6B50050201|
@@ -698,7 +699,7 @@ where:
 * `mgf1SHA256Identifier` is defined in [RFC4055], which refers to the MFG1 function defined in [RFC8017] appendix B.2.1.
 * `pSpecifiedEmpty` is defined in [RFC8017] to indicate that the empty string is used for the label.
 
-EDNOTE: we could determine the mask length for each parameter set given in this document. According to 8017, it will be the length of `k - hLen - 1`, where `k` is the size of the RSA modulus. I'm not sure that we strictly need to calculate and list these.
+Note: The mask length, according to [RFC8017], is `k - hLen - 1`, where `k` is the size of the RSA modulus. Since the choice of hash function and the RSA key size is fixed for each composite algorithm, implementations could choose to pre-compute and hard-code the mask length.
 
 
 # Use in CMS
@@ -751,7 +752,7 @@ When a composite KEM Algorithm is employed for a recipient, the RecipientInfo al
 
 `kem` identifies the KEM algorithm; it MUST contain one of the OIDs listed in {{tab-kem-algs}}.
 
-`kemct` is the ciphertext produced for this recipient; it contains the `ct` output from `Encaps(pk)` of the KEM algorithm identified in the `kem` parameter.
+`kemct` is the ciphertext produced for this recipient; it contains the `ct` output from `Encap(pk)` of the KEM algorithm identified in the `kem` parameter.
 
 `kdf` identifies the key-derivation function (KDF). Note that the KDF used for CMS RecipientInfo process MAY be different than the KDF used within the composite KEM Algorithm, which MAY be different than the KDFs (if any) used within the component KEMs of the composite KEM Algorithm.
 
