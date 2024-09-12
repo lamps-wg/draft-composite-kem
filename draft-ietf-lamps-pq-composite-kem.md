@@ -341,7 +341,7 @@ The KEM interface was chosen as the interface for a composite key establishment 
 
 ### Composite KeyGen
 
-The `KeyGen() -> (pk, sk)` of a composite KEM algorithm will perform the `KeyGen()` of the respective component KEM algorithms and it produces a composite public key `pk` as per {{sec-composite-pub-keys}} and a composite secret key `sk` is per {{sec-priv-key}}.
+The `KeyGen() -> (pk, sk)` of a composite KEM algorithm will perform the `KeyGen()` of the respective component KEM algorithms and it produces a composite public key `pk` as per {{sec-composite-pub-keys}} and a composite secret key `sk` as per {{sec-priv-key}}.
 
 ~~~
 CompositeKEM.KeyGen():
@@ -366,7 +366,7 @@ RSAOAEPKEM.Encaps(pkR):
  `Decaps(sk, ct) -> ss` is accomplished in the analogous way.
 
 ~~~
-RSAKEM.Decap(skR, enc):
+RSAOAEPKEM.Decap(skR, enc):
   shared_secret = RSA-OAEP.Decrypt(skR, enc)
 
   return shared_secret
@@ -501,7 +501,7 @@ CompositeKEMPublicKey ::= SEQUENCE SIZE (2) OF BIT STRING
 {: artwork-name="CompositeKEMPublicKey-asn.1-structures"}
 
 
-A composite key MUST contain two component public keys. The order of the component keys is determined by the definition of the corresponding algorithm identifier as defined in section {{sec-alg-ids}}.
+A composite key MUST contain two component public keys as SEQUENCE of two bit strings. The order of the component keys is determined by the definition of the corresponding algorithm identifier as defined in section {{sec-alg-ids}}.
 
 Some applications may need to reconstruct the `SubjectPublicKeyInfo` objects corresponding to each component public key. {{tab-kem-algs}} in {{sec-alg-ids}} provides the necessary mapping between composite and their component algorithms for doing this reconstruction. This also motivates the design choice of `SEQUENCE OF BIT STRING` instead of `SEQUENCE OF OCTET STRING`; using `BIT STRING` allows for easier transcription between CompositeKEMPublicKey and SubjectPublicKeyInfo.
 
@@ -578,7 +578,7 @@ kema-CompositeKEM {
 
 ## CompositeCiphertextValue {#sec-CompositeCiphertextValue}
 
-The compositeCipherTextValue is a concatenation of the ciphertexts of the
+The compositeCipherTextValue is a SEQUENCE of the ciphertexts of the
 underlying component algorithms.  It is represented in ASN.1 as follows:
 
 ~~~
@@ -633,8 +633,6 @@ where:
 * `Z = tradSS` is the algorithm assumed to always be FIPS-approved from a FIPS-certified implementation which is expected to be true during the period where organizations are migrating their existing deployments to add ML-KEM implementations which may not yet have received FIPS certification,
 * `T = mlkemSS`, and
 * `FixedInfo = tradCT || tradPK || domSep`.
-
-In the case that KDF is KMAC, the message to be hashed MUST be post-pended with `H_outputBits` and the byte string `01001011 || 01000100 || 01000110`, which represents the sequence of characters “K”, “D,” and “F” in 8-bit ASCII, as required by [SP.800-56Cr2] section 4.1 Option 3. `salt` is left empty since KMAC is only required to behave as a hash function and not as a keyed MAC.
 
 
 # Algorithm Identifiers {#sec-alg-ids}
@@ -732,13 +730,7 @@ Composite KEM algorithms MAY be employed for one or more recipients in the CMS e
 
 ## Underlying Components
 
-A CMS implementation that supports a composite KEM algorithm MUST support at least the following underlying components:
-
-When a particular Composite KEM OID is supported, an implementation MUST support the corresponding KDF algorithm identifier in {{tab-cms-kdf-wrap}}.
-
-When a particular Composite KEM OID is supported, an implementation MUST support the corresponding key-encryption algorithm identifier in {{tab-cms-kdf-wrap}}.
-
-The following table lists the REQUIRED KDF and key-encryption algorithms to preserve security and performance characteristics of each composite algorithm.
+When a particular Composite KEM OID is supported, a CMS implementation MUST support the corresponding KDF and key-encryption algorithms listed in {{tab-cms-kdf-wrap}}, which have been chosen to preserve security and performance characteristics of each composite algorithm.
 
 
 | Composite KEM OID                 | KDF         | Key Encryption Alg |
