@@ -424,14 +424,13 @@ The KEM combiner construction is as follows:
 ~~~
 Combiner(mlkemSS, tradSS, tradCT, tradPK, domSep) :
 
-  return KDF(mlkemSS || tradSS || tradCT || tradPK ||
-               domSep, outputBits)
+  return KDF(mlkemSS || tradSS || tradCT || tradPK || domSep)
 ~~~
 {: #code-generic-kem-combiner title="Generic KEM combiner construction"}
 
 where:
 
-* `KDF(message, outputBits)` represents a key derivation function suitable to the chosen KEMs according to {tab-kem-combiners}.
+* `KDF(message)` represents a key derivation function suitable to the chosen KEMs according to {tab-kem-combiners}. All KDFs are specified with a fixed output length.
 * `mlkemSS` is the shared secret from the ML-KEM componont.
 * `tradSS` is the shared secret from the traditional component (elliptic curve or RSA).
 * `tradCT` is the ciphertext from the traditional component (elliptic curve or RSA).
@@ -439,7 +438,7 @@ where:
 * `domSep` SHALL be the DER encoded value of the object identifier of the composite KEM algorithm as listed in {{sec-domain}}.
 * `||` represents concatenation.
 
-Each registered composite KEM algorithm must specify the choice of `KDF`, `demSep`, and `outputBits` to be used.
+Each registered composite KEM algorithm must specify the choice of `KDF`, `demSep` to be used.
 
 
 ### Composite Encap
@@ -645,12 +644,12 @@ TODO: OIDs to be replaced by IANA.
 
 | Composite KEM                      | OID                  | First Algorithm | Second Algorithm     | KDF      |
 |---------                           | -----------------    | ----------      | ----------           | -------- |
-| id-MLKEM768-RSA2048                | &lt;CompKEM&gt;.21   | MLKEM768        | RSA-OAEP 2048        | HKDF-SHA256 |
-| id-MLKEM768-RSA3072                | &lt;CompKEM&gt;.22   | MLKEM768        | RSA-OAEP 3072        | HKDF-SHA256 |
-| id-MLKEM768-RSA4096                | &lt;CompKEM&gt;.23   | MLKEM768        | RSA-OAEP 4096        | HKDF-SHA256 |
+| id-MLKEM768-RSA2048                | &lt;CompKEM&gt;.21   | MLKEM768        | RSA-OAEP 2048        | HKDF-SHA256/256 |
+| id-MLKEM768-RSA3072                | &lt;CompKEM&gt;.22   | MLKEM768        | RSA-OAEP 3072        | HKDF-SHA256/256 |
+| id-MLKEM768-RSA4096                | &lt;CompKEM&gt;.23   | MLKEM768        | RSA-OAEP 4096        | HKDF-SHA256/256 |
 | id-MLKEM768-X25519                 | &lt;CompKEM&gt;.24   | MLKEM768        | X25519               | SHA3-256 |
-| id-MLKEM768-ECDH-P384              | &lt;CompKEM&gt;.25   | MLKEM768        | ECDH-P384            | HKDF-SHA384 |
-| id-MLKEM768-ECDH-brainpoolP256r1   | &lt;CompKEM&gt;.26   | MLKEM768        | ECDH-brainpoolp256r1 | HKDF-SHA384 |
+| id-MLKEM768-ECDH-P384              | &lt;CompKEM&gt;.25   | MLKEM768        | ECDH-P384            | HKDF-SHA384/384 |
+| id-MLKEM768-ECDH-brainpoolP256r1   | &lt;CompKEM&gt;.26   | MLKEM768        | ECDH-brainpoolp256r1 | HKDF-SHA384/384 |
 | id-MLKEM1024-ECDH-P384             | &lt;CompKEM&gt;.27   | MLKEM1024       | ECDH-P384            | SHA3-512 |
 | id-MLKEM1024-ECDH-brainpoolP384r1  | &lt;CompKEM&gt;.28   | MLKEM1024       | ECDH-brainpoolP384r1 | SHA3-512 |
 | id-MLKEM1024-X448                  | &lt;CompKEM&gt;.29   | MLKEM1024       | X448                 | SHA3-512 |
@@ -664,7 +663,7 @@ Full specifications for the referenced algorithms can be found as follows:
 * _ML-KEM_: {{I-D.ietf-lamps-kyber-certificates}} and [FIPS.203]
 * _RSA-OAEP_: [RFC3560]
 * _X25519 / X448_: [RFC8410]
-* _HKDF_: [RFC5869]. Salt is not provided; ie the default salt (all zeroes of length HashLen) will be used.
+* _HKDF_: [RFC5869]. Salt is not provided; ie the default salt (all zeroes of length HashLen) will be used. In all cases, the output length of HKDF is the same as the block size of the underlying hash function, for example `HKDF-SHA256/256` means HKDF-SHA256 with an output length `L` of 256 bits (32 octets).
 * _SHA2_: [FIPS.180-4]
 * _SHA3_: [FIPS.202]
 
