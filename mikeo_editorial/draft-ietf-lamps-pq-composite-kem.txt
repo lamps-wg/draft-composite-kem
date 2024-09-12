@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 12 March 2025                                           M. Pala
+Expires: 16 March 2025                                           M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                        8 September 2024
+                                                       12 September 2024
 
 
 Composite ML-KEM for Use in the Internet X.509 Public Key Infrastructure
@@ -69,7 +69,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 12 March 2025.
+   This Internet-Draft will expire on 16 March 2025.
 
 Copyright Notice
 
@@ -351,7 +351,7 @@ Table of Contents
    The KeyGen() -> (pk, sk) of a composite KEM algorithm will perform
    the KeyGen() of the respective component KEM algorithms and it
    produces a composite public key pk as per Section 3.2 and a composite
-   secret key sk is per Section 3.3.
+   secret key sk as per Section 3.3.
 
    CompositeKEM.KeyGen():
      (compositePK[0], compositeSK[0]) = MLKEM.KeyGen()
@@ -375,7 +375,7 @@ Table of Contents
 
    Decaps(sk, ct) -> ss is accomplished in the analogous way.
 
-   RSAKEM.Decap(skR, enc):
+   RSAOAEPKEM.Decap(skR, enc):
      shared_secret = RSA-OAEP.Decrypt(skR, enc)
 
      return shared_secret
@@ -508,9 +508,10 @@ Table of Contents
 
    CompositeKEMPublicKey ::= SEQUENCE SIZE (2) OF BIT STRING
 
-   A composite key MUST contain two component public keys.  The order of
-   the component keys is determined by the definition of the
-   corresponding algorithm identifier as defined in section Section 5.
+   A composite key MUST contain two component public keys as SEQUENCE of
+   two bit strings.  The order of the component keys is determined by
+   the definition of the corresponding algorithm identifier as defined
+   in section Section 5.
 
    Some applications may need to reconstruct the SubjectPublicKeyInfo
    objects corresponding to each component public key.  Table 1 in
@@ -620,8 +621,8 @@ Table of Contents
 
 4.2.  CompositeCiphertextValue
 
-   The compositeCipherTextValue is a concatenation of the ciphertexts of
-   the underlying component algorithms.  It is represented in ASN.1 as
+   The compositeCipherTextValue is a SEQUENCE of the ciphertexts of the
+   underlying component algorithms.  It is represented in ASN.1 as
    follows:
 
    CompositeCiphertextValue ::= SEQUENCE SIZE (2) OF OCTET STRING
@@ -717,13 +718,6 @@ Table of Contents
    *  T = mlkemSS, and
 
    *  FixedInfo = tradCT || tradPK || domSep.
-
-   In the case that KDF is KMAC, the message to be hashed MUST be post-
-   pended with H_outputBits and the byte string 01001011 || 01000100 ||
-   01000110, which represents the sequence of characters "K", "D," and
-   "F" in 8-bit ASCII, as required by [SP.800-56Cr2] section 4.1 Option
-   3. salt is left empty since KMAC is only required to behave as a hash
-   function and not as a keyed MAC.
 
 5.  Algorithm Identifiers
 
@@ -920,19 +914,10 @@ Table of Contents
 
 6.1.  Underlying Components
 
-   A CMS implementation that supports a composite KEM algorithm MUST
-   support at least the following underlying components:
-
-   When a particular Composite KEM OID is supported, an implementation
-   MUST support the corresponding KDF algorithm identifier in Table 4.
-
-   When a particular Composite KEM OID is supported, an implementation
-   MUST support the corresponding key-encryption algorithm identifier in
-   Table 4.
-
-   The following table lists the REQUIRED KDF and key-encryption
-   algorithms to preserve security and performance characteristics of
-   each composite algorithm.
+   When a particular Composite KEM OID is supported, a CMS
+   implementation MUST support the corresponding KDF and key-encryption
+   algorithms listed in Table 4, which have been chosen to preserve
+   security and performance characteristics of each composite algorithm.
 
    +===================================+=============+================+
    | Composite KEM OID                 | KDF         | Key Encryption |
