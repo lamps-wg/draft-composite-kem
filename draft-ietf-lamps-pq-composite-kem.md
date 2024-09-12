@@ -414,6 +414,34 @@ This construction applies for all variants of elliptic curve Diffie-Hellman used
 
 The simplifications from the DHKEM definition in [RFC9180] is that since the ciphertext and receiver's public key are included explicitly in the composite KEM combiner, there is no need to construct the `kem_context` object, and since a domain separator is included explicitly in the composite KEM combiner there is no need to perform the labelled steps of `ExtractAndExpand()`.
 
+
+### KEM Combiner {#sec-kem-combiner}
+
+TODO: as per https://www.enisa.europa.eu/publications/post-quantum-cryptography-integration-study section 4.2, might need to specify behaviour in light of KEMs with a non-zero failure probability.
+
+The KEM combiner construction is as follows:
+
+~~~
+Combiner(mlkemSS, tradSS, tradCT, tradPK, domSep) :
+
+  return KDF(mlkemSS || tradSS || tradCT || tradPK ||
+               domSep, outputBits)
+~~~
+{: #code-generic-kem-combiner title="Generic KEM combiner construction"}
+
+where:
+
+* `KDF(message, outputBits)` represents a key derivation function suitable to the chosen KEMs according to {tab-kem-combiners}.
+* `mlkemSS` is the shared secret from the ML-KEM componont.
+* `tradSS` is the shared secret from the traditional component (elliptic curve or RSA).
+* `tradCT` is the ciphertext from the traditional component (elliptic curve or RSA).
+* `tradPK` is the public key of the traditional component (elliptic curve or RSA).
+* `domSep` SHALL be the DER encoded value of the object identifier of the composite KEM algorithm as listed in {{sec-domain}}.
+* `||` represents concatenation.
+
+Each registered composite KEM algorithm must specify the choice of `KDF`, `demSep`, and `outputBits` to be used.
+
+
 ### Composite Encap
 Note that, at least at the time of writing, the algorithm `DHKEM` is not defined as a standalone algorithm within PKIX standards and it does not have an assigned algorithm OID, so it connot be used directly with CMS KEMRecipientInfo [RFC9629]; it is merely a building block for the composite algorithm.
 
@@ -598,30 +626,6 @@ CompositeCiphertextValue ::= SEQUENCE SIZE (2) OF OCTET STRING
 
 The order of the component ciphertexts is the same as the order defined in {{sec-composite-pub-keys}}.
 
-
-## KEM Combiner {#sec-kem-combiner}
-
-TODO: as per https://www.enisa.europa.eu/publications/post-quantum-cryptography-integration-study section 4.2, might need to specify behaviour in light of KEMs with a non-zero failure probability.
-
-The KEM combiner construction is as follows:
-
-~~~
-KEK = KDF(mlkemSS || tradSS || tradCT || tradPK ||
-            domSep, outputBits)
-~~~
-{: #code-generic-kem-combiner title="Generic KEM combiner construction"}
-
-where:
-
-* `KDF(message, outputBits)` represents a hash function suitable to the chosen KEMs according to {tab-kem-combiners}.
-* `mlkemSS` is the shared secret from the ML-KEM componont.
-* `tradSS` is the shared secret from the traditional component (elliptic curve or RSA).
-* `tradCT` is the ciphertext from the traditional component (elliptic curve or RSA).
-* `tradPK` is the public key of the traditional component (elliptic curve or RSA).
-* `domSep` SHALL be the DER encoded value of the object identifier of the composite KEM algorithm as listed in {{sec-domain}}.
-* `||` represents concatenation.
-
-Each registered composite KEM algorithm must specify the choice of `KDF`, `demSep`, and `outputBits` to be used.
 
 Some of the design choices for the combiner, specifically to place `tradSS` first, and to allow `tradCT || tradPK || domSep` to be treated together as a FixedInfo block are made for the purposes of compliance with [SP.800-56Cr2]; see {{sec-fips}} for more discussion.
 
