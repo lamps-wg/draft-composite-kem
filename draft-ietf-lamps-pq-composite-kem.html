@@ -1581,8 +1581,7 @@ DHKEM.Decap(skR, enc):
 <pre>
 Combiner(mlkemSS, tradSS, tradCT, tradPK, domSep) :
 
-  return KDF(mlkemSS || tradSS || tradCT || tradPK ||
-               domSep, outputBits)
+  return KDF(mlkemSS || tradSS || tradCT || tradPK || domSep)
 </pre>
 </div>
 <figcaption><a href="#figure-1" class="selfRef">Figure 1</a>:
@@ -1592,7 +1591,7 @@ Combiner(mlkemSS, tradSS, tradCT, tradPK, domSep) :
 <p id="section-2.3.4-4">where:<a href="#section-2.3.4-4" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-2.3.4-5.1">
-              <p id="section-2.3.4-5.1.1"><code>KDF(message, outputBits)</code> represents a key derivation function suitable to the chosen KEMs according to {tab-kem-combiners}.<a href="#section-2.3.4-5.1.1" class="pilcrow">¶</a></p>
+              <p id="section-2.3.4-5.1.1"><code>KDF(message)</code> represents a key derivation function suitable to the chosen KEMs according to {tab-kem-combiners}. All KDFs are specified with a fixed output length.<a href="#section-2.3.4-5.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-2.3.4-5.2">
               <p id="section-2.3.4-5.2.1"><code>mlkemSS</code> is the shared secret from the ML-KEM componont.<a href="#section-2.3.4-5.2.1" class="pilcrow">¶</a></p>
@@ -1613,7 +1612,7 @@ Combiner(mlkemSS, tradSS, tradCT, tradPK, domSep) :
               <p id="section-2.3.4-5.7.1"><code>||</code> represents concatenation.<a href="#section-2.3.4-5.7.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-2.3.4-6">Each registered composite KEM algorithm must specify the choice of <code>KDF</code>, <code>demSep</code>, and <code>outputBits</code> to be used.<a href="#section-2.3.4-6" class="pilcrow">¶</a></p>
+<p id="section-2.3.4-6">Each registered composite KEM algorithm must specify the choice of <code>KDF</code>, <code>demSep</code> to be used.<a href="#section-2.3.4-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="composite-encap">
@@ -1861,21 +1860,21 @@ CompositeCiphertextValue ::= SEQUENCE SIZE (2) OF OCTET STRING
             <td class="text-left" rowspan="1" colspan="1">&lt;CompKEM&gt;.21</td>
             <td class="text-left" rowspan="1" colspan="1">MLKEM768</td>
             <td class="text-left" rowspan="1" colspan="1">RSA-OAEP 2048</td>
-            <td class="text-left" rowspan="1" colspan="1">HKDF-SHA256</td>
+            <td class="text-left" rowspan="1" colspan="1">HKDF-SHA256/256</td>
           </tr>
           <tr>
             <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-RSA3072</td>
             <td class="text-left" rowspan="1" colspan="1">&lt;CompKEM&gt;.22</td>
             <td class="text-left" rowspan="1" colspan="1">MLKEM768</td>
             <td class="text-left" rowspan="1" colspan="1">RSA-OAEP 3072</td>
-            <td class="text-left" rowspan="1" colspan="1">HKDF-SHA256</td>
+            <td class="text-left" rowspan="1" colspan="1">HKDF-SHA256/256</td>
           </tr>
           <tr>
             <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-RSA4096</td>
             <td class="text-left" rowspan="1" colspan="1">&lt;CompKEM&gt;.23</td>
             <td class="text-left" rowspan="1" colspan="1">MLKEM768</td>
             <td class="text-left" rowspan="1" colspan="1">RSA-OAEP 4096</td>
-            <td class="text-left" rowspan="1" colspan="1">HKDF-SHA256</td>
+            <td class="text-left" rowspan="1" colspan="1">HKDF-SHA256/256</td>
           </tr>
           <tr>
             <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-X25519</td>
@@ -1889,14 +1888,14 @@ CompositeCiphertextValue ::= SEQUENCE SIZE (2) OF OCTET STRING
             <td class="text-left" rowspan="1" colspan="1">&lt;CompKEM&gt;.25</td>
             <td class="text-left" rowspan="1" colspan="1">MLKEM768</td>
             <td class="text-left" rowspan="1" colspan="1">ECDH-P384</td>
-            <td class="text-left" rowspan="1" colspan="1">HKDF-SHA384</td>
+            <td class="text-left" rowspan="1" colspan="1">HKDF-SHA384/384</td>
           </tr>
           <tr>
             <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-ECDH-brainpoolP256r1</td>
             <td class="text-left" rowspan="1" colspan="1">&lt;CompKEM&gt;.26</td>
             <td class="text-left" rowspan="1" colspan="1">MLKEM768</td>
             <td class="text-left" rowspan="1" colspan="1">ECDH-brainpoolp256r1</td>
-            <td class="text-left" rowspan="1" colspan="1">HKDF-SHA384</td>
+            <td class="text-left" rowspan="1" colspan="1">HKDF-SHA384/384</td>
           </tr>
           <tr>
             <td class="text-left" rowspan="1" colspan="1">id-MLKEM1024-ECDH-P384</td>
@@ -1945,7 +1944,7 @@ CompositeCiphertextValue ::= SEQUENCE SIZE (2) OF OCTET STRING
           <p id="section-5-7.4.1"><em>X25519 / X448</em>: <span>[<a href="#RFC8410" class="cite xref">RFC8410</a>]</span><a href="#section-5-7.4.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-5-7.5">
-          <p id="section-5-7.5.1"><em>HKDF</em>: <span>[<a href="#RFC5869" class="cite xref">RFC5869</a>]</span>. Salt is not provided; ie the default salt (all zeroes of length HashLen) will be used.<a href="#section-5-7.5.1" class="pilcrow">¶</a></p>
+          <p id="section-5-7.5.1"><em>HKDF</em>: <span>[<a href="#RFC5869" class="cite xref">RFC5869</a>]</span>. Salt is not provided; ie the default salt (all zeroes of length HashLen) will be used. In all cases, the output length of HKDF is the same as the block size of the underlying hash function, for example <code>HKDF-SHA256/256</code> means HKDF-SHA256 with an output length <code>L</code> of 256 bits (32 octets).<a href="#section-5-7.5.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-5-7.6">
           <p id="section-5-7.6.1"><em>SHA2</em>: <span>[<a href="#FIPS.180-4" class="cite xref">FIPS.180-4</a>]</span><a href="#section-5-7.6.1" class="pilcrow">¶</a></p>

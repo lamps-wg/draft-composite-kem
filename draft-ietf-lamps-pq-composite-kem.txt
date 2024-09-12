@@ -446,15 +446,15 @@ Table of Contents
 
    Combiner(mlkemSS, tradSS, tradCT, tradPK, domSep) :
 
-     return KDF(mlkemSS || tradSS || tradCT || tradPK ||
-                  domSep, outputBits)
+     return KDF(mlkemSS || tradSS || tradCT || tradPK || domSep)
 
                 Figure 1: Generic KEM combiner construction
 
    where:
 
-   *  KDF(message, outputBits) represents a key derivation function
-      suitable to the chosen KEMs according to {tab-kem-combiners}.
+   *  KDF(message) represents a key derivation function suitable to the
+      chosen KEMs according to {tab-kem-combiners}. All KDFs are
+      specified with a fixed output length.
 
    *  mlkemSS is the shared secret from the ML-KEM componont.
 
@@ -473,7 +473,7 @@ Table of Contents
    *  || represents concatenation.
 
    Each registered composite KEM algorithm must specify the choice of
-   KDF, demSep, and outputBits to be used.
+   KDF, demSep to be used.
 
 2.3.5.  Composite Encap
 
@@ -702,39 +702,39 @@ Table of Contents
 
    <CompKEM>.1 is equal to 2.16.840.1.114027.80.5.2.1
 
-   +===================+============+=========+===============+========+
-   | Composite KEM     |OID         |First    |Second         |KDF     |
-   |                   |            |Algorithm|Algorithm      |        |
-   +===================+============+=========+===============+========+
-   | id-               |<CompKEM>.21|MLKEM768 |RSA-OAEP 2048  |HKDF-   |
-   | MLKEM768-RSA2048  |            |         |               |SHA256  |
-   +-------------------+------------+---------+---------------+--------+
-   | id-               |<CompKEM>.22|MLKEM768 |RSA-OAEP 3072  |HKDF-   |
-   | MLKEM768-RSA3072  |            |         |               |SHA256  |
-   +-------------------+------------+---------+---------------+--------+
-   | id-               |<CompKEM>.23|MLKEM768 |RSA-OAEP 4096  |HKDF-   |
-   | MLKEM768-RSA4096  |            |         |               |SHA256  |
-   +-------------------+------------+---------+---------------+--------+
-   | id-               |<CompKEM>.24|MLKEM768 |X25519         |SHA3-256|
-   | MLKEM768-X25519   |            |         |               |        |
-   +-------------------+------------+---------+---------------+--------+
-   | id-MLKEM768-      |<CompKEM>.25|MLKEM768 |ECDH-P384      |HKDF-   |
-   | ECDH-P384         |            |         |               |SHA384  |
-   +-------------------+------------+---------+---------------+--------+
-   | id-MLKEM768-      |<CompKEM>.26|MLKEM768 |ECDH-          |HKDF-   |
-   | ECDH-             |            |         |brainpoolp256r1|SHA384  |
-   | brainpoolP256r1   |            |         |               |        |
-   +-------------------+------------+---------+---------------+--------+
-   | id-MLKEM1024-     |<CompKEM>.27|MLKEM1024|ECDH-P384      |SHA3-512|
-   | ECDH-P384         |            |         |               |        |
-   +-------------------+------------+---------+---------------+--------+
-   | id-MLKEM1024-     |<CompKEM>.28|MLKEM1024|ECDH-          |SHA3-512|
-   | ECDH-             |            |         |brainpoolP384r1|        |
-   | brainpoolP384r1   |            |         |               |        |
-   +-------------------+------------+---------+---------------+--------+
-   | id-               |<CompKEM>.29|MLKEM1024|X448           |SHA3-512|
-   | MLKEM1024-X448    |            |         |               |        |
-   +-------------------+------------+---------+---------------+--------+
+   +=================+============+=========+===============+==========+
+   |Composite KEM    |OID         |First    |Second         |KDF       |
+   |                 |            |Algorithm|Algorithm      |          |
+   +=================+============+=========+===============+==========+
+   |id-              |<CompKEM>.21|MLKEM768 |RSA-OAEP 2048  |HKDF-     |
+   |MLKEM768-RSA2048 |            |         |               |SHA256/256|
+   +-----------------+------------+---------+---------------+----------+
+   |id-              |<CompKEM>.22|MLKEM768 |RSA-OAEP 3072  |HKDF-     |
+   |MLKEM768-RSA3072 |            |         |               |SHA256/256|
+   +-----------------+------------+---------+---------------+----------+
+   |id-              |<CompKEM>.23|MLKEM768 |RSA-OAEP 4096  |HKDF-     |
+   |MLKEM768-RSA4096 |            |         |               |SHA256/256|
+   +-----------------+------------+---------+---------------+----------+
+   |id-              |<CompKEM>.24|MLKEM768 |X25519         |SHA3-256  |
+   |MLKEM768-X25519  |            |         |               |          |
+   +-----------------+------------+---------+---------------+----------+
+   |id-MLKEM768-     |<CompKEM>.25|MLKEM768 |ECDH-P384      |HKDF-     |
+   |ECDH-P384        |            |         |               |SHA384/384|
+   +-----------------+------------+---------+---------------+----------+
+   |id-MLKEM768-     |<CompKEM>.26|MLKEM768 |ECDH-          |HKDF-     |
+   |ECDH-            |            |         |brainpoolp256r1|SHA384/384|
+   |brainpoolP256r1  |            |         |               |          |
+   +-----------------+------------+---------+---------------+----------+
+   |id-MLKEM1024-    |<CompKEM>.27|MLKEM1024|ECDH-P384      |SHA3-512  |
+   |ECDH-P384        |            |         |               |          |
+   +-----------------+------------+---------+---------------+----------+
+   |id-MLKEM1024-    |<CompKEM>.28|MLKEM1024|ECDH-          |SHA3-512  |
+   |ECDH-            |            |         |brainpoolP384r1|          |
+   |brainpoolP384r1  |            |         |               |          |
+   +-----------------+------------+---------+---------------+----------+
+   |id-              |<CompKEM>.29|MLKEM1024|X448           |SHA3-512  |
+   |MLKEM1024-X448   |            |         |               |          |
+   +-----------------+------------+---------+---------------+----------+
 
                       Table 1: Composite KEM key types
 
@@ -758,7 +758,10 @@ Table of Contents
    *  _X25519 / X448_: [RFC8410]
 
    *  _HKDF_: [RFC5869].  Salt is not provided; ie the default salt (all
-      zeroes of length HashLen) will be used.
+      zeroes of length HashLen) will be used.  In all cases, the output
+      length of HKDF is the same as the block size of the underlying
+      hash function, for example HKDF-SHA256/256 means HKDF-SHA256 with
+      an output length L of 256 bits (32 octets).
 
    *  _SHA2_: [FIPS.180-4]
 
