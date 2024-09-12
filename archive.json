@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-09-10T01:40:25.895600+00:00",
+  "timestamp": "2024-09-12T01:39:20.037876+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -2133,18 +2133,26 @@
       "labels": [],
       "body": "Closes #35",
       "createdAt": "2024-08-10T22:11:44Z",
-      "updatedAt": "2024-09-05T19:42:46Z",
+      "updatedAt": "2024-09-11T21:43:58Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
-      "baseRefOid": "2d6b93f6d35fa31c16c42d8da5795e11ee68f550",
+      "baseRefOid": "bbb08d15cde69aff6bcd6f751561c98668084de8",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_rsa-oaep-fix",
-      "headRefOid": "17591e8b7b4a029a0594af8f339872053e4351cd",
+      "headRefOid": "7eae90b8aacec762dbc10eaa5d1614b43a50500f",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "After I make the two changes noted above, I am ok to go ahead and merge this.",
+          "createdAt": "2024-09-11T14:53:30Z",
+          "updatedAt": "2024-09-11T14:53:30Z"
+        }
+      ],
       "reviews": [
         {
           "id": "PRR_kwDOKRPFO86HGDcg",
@@ -2175,6 +2183,32 @@
               "body": "Also change id-pSpecified to id-empty or whatever.",
               "createdAt": "2024-08-28T14:46:48Z",
               "updatedAt": "2024-09-05T18:44:57Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO86I7xeb",
+          "commit": {
+            "abbreviatedOid": "17591e8"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-09-11T14:40:56Z",
+          "updatedAt": "2024-09-11T14:52:51Z",
+          "comments": [
+            {
+              "originalPosition": 46,
+              "body": "To match 9180, this should be \"Encap()\" and \"Decap()\".\r\nTODO: change throughout the document.",
+              "createdAt": "2024-09-11T14:40:56Z",
+              "updatedAt": "2024-09-11T14:52:51Z"
+            },
+            {
+              "originalPosition": 117,
+              "body": "Turn this into a real note.\r\n\"... since the mask length will be constant for each composite algorithm, implementations could pre-compute and hard-code the mask length value.\"",
+              "createdAt": "2024-09-11T14:52:42Z",
+              "updatedAt": "2024-09-11T14:52:51Z"
             }
           ]
         }
