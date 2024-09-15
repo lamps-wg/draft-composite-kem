@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-09-12T01:39:20.037876+00:00",
+  "timestamp": "2024-09-15T01:49:05.478750+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -505,7 +505,7 @@
       "id": "I_kwDOKRPFO86O83wq",
       "title": "Russ feedback on RSA-OAEP",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/35",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -514,8 +514,8 @@
       ],
       "body": "https://mailarchive.ietf.org/arch/msg/spasm/e7OlkcpDMtOWbGLPQB1hEPyyjXQ/\r\n\r\n---\r\nMike:\r\n\r\nI think you should reference Section 7.1 of RFC 8017 for the RSA-OAEP specification.\r\n\r\nThen, the description should use RSAES-OAEP-ENCRYPT and RSAES-OAEP-DECRYPT as specified there.\r\n\r\nI assume that you are thinking about the L parameter being an empty string.\r\n\r\nThe Mask Generation Function needs to be specified.  I assume you want to use MGF1 from Appendix B.2.1 of RFC 8017.  I think you can state the maskLen for the two cases that you are supporting.\r\n\r\nRuss\r\n\r\n\r\n",
       "createdAt": "2024-07-09T14:02:42Z",
-      "updatedAt": "2024-08-10T22:12:43Z",
-      "closedAt": null,
+      "updatedAt": "2024-09-12T20:56:14Z",
+      "closedAt": "2024-09-12T20:56:14Z",
       "comments": []
     },
     {
@@ -603,15 +603,15 @@
       "id": "I_kwDOKRPFO86Qk3iK",
       "title": "More comments from Carl",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/41",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
-      "body": "Looking at this fresh today, I have a new question.\r\n\r\nSections 2.3.4 and 2.3.5 have this:\r\n\r\nss = Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep)\r\n\r\nSection 4.3 has this:\r\n\r\nKEK <- Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep) =\r\n  KDF(counter || tradSS || mlkemSS || tradCT || tradPK ||\r\n       domSep, outputBits)\r\n\r\nI don't understand the <- followed by =. Is it fair to say that 2.3.4 and 2.3.5 could be written this way:\r\n\r\ncompositeSS = Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep)\r\n\r\nAnd 4.3 written this way:\r\n\r\nKEK = KDF(counter || compositeSS, outputBits)\r\n\r\n\r\n\r\n\r\n\r\n\r\nLooking at this fresh today, I have a new question.\r\n\r\n\r\nSections 2.3.4 and 2.3.5 have this:\r\n\r\n\r\nss = Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep)\r\n\r\n\r\nSection 4.3 has this:\r\n\r\n\r\nKEK <- Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep) =\r\nKDF(counter || tradSS || mlkemSS || tradCT || tradPK ||\r\ndomSep, outputBits)\r\n\r\n\r\nI don't understand the <- followed by =. Is it fair to say that 2.3.4 and 2.3.5 could be written this way:\r\n\r\n\r\ncompositeSS = Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep)\r\n\r\n\r\nAnd 4.3 written this way:\r\n\r\n\r\nKEK = KDF(counter || compositeSS, outputBits)",
+      "body": "Looking at this fresh today, I have a new question.\r\n\r\nSections 2.3.4 and 2.3.5 have this:\r\n\r\nss = Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep)\r\n\r\nSection 4.3 has this:\r\n\r\nKEK <- Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep) =\r\n  KDF(counter || tradSS || mlkemSS || tradCT || tradPK ||\r\n       domSep, outputBits)\r\n\r\nI don't understand the <- followed by =. Is it fair to say that 2.3.4 and 2.3.5 could be written this way:\r\n\r\ncompositeSS = Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep)\r\n\r\nAnd 4.3 written this way:\r\n\r\nKEK = KDF(counter || compositeSS, outputBits)",
       "createdAt": "2024-07-23T16:08:39Z",
-      "updatedAt": "2024-08-24T18:29:38Z",
-      "closedAt": null,
+      "updatedAt": "2024-09-12T21:21:15Z",
+      "closedAt": "2024-09-12T21:21:14Z",
       "comments": [
         {
           "author": "ounsworth",
@@ -737,7 +737,7 @@
       "labels": [],
       "body": "https://mailarchive.ietf.org/arch/msg/spasm/khasPf3y0_-Lq_0NtJe92unUw6o/\r\n\r\n2. Notes on the document \"Composite KEM\" version 4 (order of appearance)\r\na) Section 2.3.1\r\n> (\u2026) it produces a composite public key pk as per Section 3.2 and a composite\r\n>   secret key sk is per Section 3.3.\r\nit produces a composite public key pk as per Section 3.2 and a composite\r\nsecret key sk as per Section 3.3.\r\n\r\nb) Section 2.3.2\r\n> DHKEM.Encaps(pkR):\r\nRSA-OAEP.Encaps(pkR):\r\n\r\n> DHKEM.Decap(skR, enc):\r\nRSA-OAEP.Decap(skR, enc):\r\n\r\nc) Section 3.1\r\n> pk-MLKEM512-ECDH-P256 PUBLIC-KEY ::=\r\n>     pk-CompositeKEM {\r\n>       id-MLKEM512-ECDH-P256,\r\n>        OCTET STRING, ECPoint }\r\npk-MLKEM512-ECDH-P256 PUBLIC-KEY ::=\r\n     pk-CompositeKEM {\r\n       id-MLKEM512-ECDH-P256,\r\n       BIT STRING, ECPoint }\r\n\r\nd) Section 3.2\r\n> A composite key MUST contain two component public keys.  The order \r\n> of the component keys is determined by the definition of the corresponding\r\n> algorithm identifier as defined in section Section 5.\r\nA composite key MUST contain two component public keys as SEQUENCE of\r\ntwo bit strings.  The order of the component keys is determined by the\r\ndefinition of the corresponding algorithm identifier as defined in \r\nSection 5.\r\n\r\ne) Section 3.3\r\n> CompositeKEMPrivateKey ::= SEQUENCE SIZE (2) OF OneAsymmetricKey\r\n>\r\n>   Each element is a OneAsymmetricKey` [RFC5958] object for a component\r\n>   private key.\r\n>\r\n>   The parameters field MUST be absent.\r\n>\r\n>   The order of the component keys is the same as the order defined in\r\n>  Section 3.2 for the components of CompositeKEMPublicKey.\r\n>\r\n>   When a CompositePrivateKey is conveyed inside a OneAsymmetricKey\r\n>   structure (version 1 of which is also known as PrivateKeyInfo)\r\n>  [RFC5958], the privateKeyAlgorithm field SHALL be set to the\r\n>  corresponding composite algorithm identifier defined according to\r\n>   Section 5, the privateKey field\r\n>   SHALL contain the CompositeKEMPrivateKey, and the publicKey field MUST\r\n>   NOT be present. Associated public key material MAY be present in the\r\n>   CompositeKEMPrivateKey.\r\n\r\nCompositeKEMPrivateKey ::= SEQUENCE SIZE (2) OF OCTET STRING\r\n\r\n   Each element is a OneAsymmetricKey` [RFC5958] object for a component\r\n   private key (privateKey field).\r\n\r\n   The order of the component keys is the same as the order defined in\r\n   Section 3.2 for the components of CompositeKEMPublicKey.\r\n\r\n   When a CompositeKEMPrivateKey is conveyed inside a OneAsymmetricKey\r\n   structure (version 1 of which is also known as PrivateKeyInfo)\r\n   [RFC5958], the privateKeyAlgorithm field SHALL be set to the\r\n   corresponding composite algorithm identifier defined according to\r\n   Section 5 (the parameters field MUST be absent), the privateKey field\r\n   SHALL contain the CompositeKEMPrivateKey, and the publicKey field MUST\r\n   NOT be present. Associated public key material MAY be present in the\r\n   OneAsymmetricKey structure containing CompositeKEMPrivateKey and in\r\n   that case version is 2.\r\n\r\nf) Section 4.2\r\n> 4.2.  CompositeCiphertextValue\r\n>\r\n>   The compositeCipherTextValue is a concatenation of the\r\n>   ciphertexts of the underlying component algorithms.  It is represented\r\n>   in ASN.1 as follows:\r\n\r\n4.2.  CompositeCipherTextValue\r\n\r\n   The compositeCipherTextValue is a sequence of the\r\n   ciphertexts of the underlying component algorithms.  It is represented\r\n   in ASN.1 as follows:\r\n\r\ng) Section 4.3\r\n> KEK <- Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep) =\r\n>      KDF(counter || tradSS || mlkemSS || tradCT || tradPK ||\r\n>          domSep, outputBits)\r\n>\r\n>                Figure 1: Generic KEM combiner construction\r\n>\r\n>   where:\r\n>\r\n>   *  KDF(message, outputBits) represents a hash function suitable to\r\n>      the chosen KEMs according to {tab-kem-combiners}.\r\n>\r\n>   *  counter SHALL be the fixed 32-bit value 0x00000001 which is placed\r\n>      here solely for the purposes of compliance with [SP.800-56Cr2].\r\n>\r\n>   *  tradSS is the shared secret from the traditional component\r\n>      (elliptic curve or RSA).\r\n>\r\n>   *  mlkemSS is the shared secret from the ML-KEM componont.\r\n>\r\n>   *  tradCT is the ciphertext from the traditional component (elliptic\r\n>      curve or RSA).\r\n>\r\n>   *  tradPK is the public key of the traditional component (elliptic\r\n>      curve or RSA).\r\n>   *  domSep SHALL be the DER encoded value of the object identifier of\r\n>      the composite KEM algorithm as listed in Section 5.1.\r\n>\r\n>   *  || represents concatenation.\r\n> \r\n> Each registered composite KEM algorithm must specify the choice of\r\n>   KDF, demSep, and outputBits to be used.\r\nKEK <- Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep) =\r\n\r\n   SHA3(counter || tradSS || mlkemSS || tradCT || tradPK || domSep)\r\n         ([SP.800-56Cr2] Section 4.1 Option 1 (when KDF is SHA3))\r\n\r\n                Figure 1: Generic KEM combiner construction\r\n\r\n   where:\r\n\r\n   *  counter SHALL be the fixed 32-bit value 0x00000001 which is placed\r\n      here solely for the purposes of compliance with [SP.800-56Cr2].\r\n\r\n   *  tradSS is the shared secret from the traditional component (ECDH or RSA).\r\n\r\n   *  mlkemSS is the shared secret from the ML-KEM component.\r\n\r\n   *  tradCT is the ciphertext from the traditional component (ECDH or RSA).\r\n      Note: In the case of ECDH, this is the sender's ephemeral public key.\r\n\r\n   *  tradPK is the recipient's public key of the traditional component (ECDH or RSA).\r\n\r\n   *  domSep SHALL be the DER encoded value of the object identifier of\r\n      the composite KEM algorithm as listed in Section 5.1.\r\n\r\n   *  || represents concatenation.\r\n\r\n   Each registered composite KEM algorithm (see {tab-kem-combiners}) must\r\n   specify the choice of KDF (ie. type of SHA3 function) and domSep\r\n   to be used.\r\nComment:\r\n1. The use of the counter parameter is probably redundant - see Falko Strenzke email from 2024/07/24\r\n2. Removing outputBits is related to replacing KMAC with SHA3.\r\n\r\nh) Section 4.4\r\n> This construction is specifically designed to conform with\r\n>   Section 4.1 Option 1 (when KDF is SHA3) or Option 3 (when KDF is\r\n>   KMAC) in the following way:\r\n>\r\n>   In both cases we match exactly the construction using the allowed\r\n>   \"hybrid\" shared secret of the form Z' = Z || T to yield the\r\n>   construction\r\nThis construction is specifically designed to conform with [SP.800-\r\n56Cr2] Section 4.1 Option 1 (when KDF is SHA3). In any cases we match exactly the\r\nconstruction using the allowed \"hybrid\" shared secret of the form\r\n   Z' = Z || T (see Section 2 of the [SP.800-56Cr2]) to yield the construction:\r\n\r\n(\u2026)\r\nThe last sentence starting with: \u201cIn the case that KDF is KMAC,\u2026\u201d\r\nshould be removed.\r\n\r\n------\r\nPiotr Popis\r\n",
       "createdAt": "2024-07-25T20:54:30Z",
-      "updatedAt": "2024-07-31T23:07:56Z",
+      "updatedAt": "2024-09-13T09:59:40Z",
       "closedAt": null,
       "comments": [
         {
@@ -746,6 +746,20 @@
           "body": "More editorial feedback here:\r\n\r\nhttps://mailarchive.ietf.org/arch/msg/spasm/khasPf3y0_-Lq_0NtJe92unUw6o/",
           "createdAt": "2024-07-31T23:07:55Z",
           "updatedAt": "2024-07-31T23:07:55Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Hi Piotr,\r\n\r\nThank you so much for this detailed review. I have incorporated most of your feedback in <commit>.\r\n\r\nThe one that I didn't understand is your comment \"e) Section 3.3\". You are suggesting changing \r\n\r\nOLD\r\n\"\"\"\r\nCompositeKEMPrivateKey ::= SEQUENCE SIZE (2) OF OneAsymmetricKey\r\n\r\nEach element is a OneAsymmetricKey` [RFC5958] object for a component\r\nprivate key.\r\n\"\"\"\r\n\r\nNEW\r\n\"\"\"\r\nCompositeKEMPrivateKey ::= SEQUENCE SIZE (2) OF OCTET STRING\r\n\r\nEach element is a OneAsymmetricKey` [RFC5958] object for a component\r\nprivate key (privateKey field).\r\n\"\"\"\r\n\r\nI suppose that basically means SEQUENCE OF OCTET STRING{ DER{ OneAsymmetricKey } }\r\n\r\nCan you explain the advantage of this vs just encoding the OneAsymetricKey directly? Or have I misunderstood your suggestion?\r\n\r\n\r\n\r\nYou made a suggestion that the \"Use in CMS\" section should specify a mandatory-to-implement subset of the larger table of composite algorithms:\r\n\r\n\"\"\"\r\n6.1.  Underlying Components\r\n\r\nA CMS implementation that supports a composite KEM algorithm MUST\r\n\r\nsupport at least the following underlying components:\r\n\r\nid-MLKEM512-ECDH-P256\r\n\r\nid-MLKEM512-RSA (RSA 2048 and RSA 3072)\r\n\r\nid-MLKEM1024-ECDH-P521\r\n\"\"\"\r\n\r\nUnless the WG feels strongly, I am going to leave out any concept of \"mandatory-to-implement\" from this draft. X.509 and CMS are used in such broad and diverse applications and jurisdictions that I don't think we are in a position to make policy recommendations.\r\n",
+          "createdAt": "2024-09-12T22:22:12Z",
+          "updatedAt": "2024-09-12T22:22:12Z"
+        },
+        {
+          "author": "PiotrPopis",
+          "authorAssociation": "NONE",
+          "body": "Section 3.3\r\nIn your proposal there is:\r\nCompositeKEMPrivateKey ::= SEQUENCE SIZE (2) OF OneAsymmetricKey\r\n\r\nAccording to RFC 5958:\r\nOneAsymmetricKey ::= SEQUENCE {\r\nversion                      Version,\r\nprivateKeyAlgorithm PrivateKeyAlgorithmIdentifier,\r\nprivateKey                PrivateKey,\r\nattributes [0]  Attributes OPTIONAL,\r\n...,\r\n[[2: publicKey [1] PublicKey OPTIONAL ]],\r\n...\r\n}\r\nPrivateKey ::= OCTET STRING\r\n\r\nI believe that to specify a pair of composite private keys, a single sequence of OneAsymmetricKey is sufficient, in which the privateKey field will be a sequence of two OCTET STRING, each of which contains the private key of the appropriate algorithm (order by OID). Ie.:\r\nCompositeKEMPrivateKey ::= SEQUENCE SIZE (2) OF OCTET STRING\r\nPrivateKey ::= CompositeKEMPrivateKey  \r\n\r\nOne OneAsymmetricKey sequence (instead of two) allows the use of a composite OID pointer to the algorithm identifier (it is not clear to me whether in your proposal of two OneAsymmetricKey sequences there would be a repeated composite OID as stated the text into Section 3,3?; or rather separate OIDs pointing to individual algorithms?).\r\n\r\nFurthermore, there is an incomprehensible note in your proposal:\r\nWhen a Composite(KEM?)PrivateKey is conveyed inside a OneAsymmetricKey structure (...)\r\nthe privateKey field SHALL contain the CompositeKEMPrivateKey...\r\nConsidering that \r\nCompositeKEMPrivateKey ::= SEQUENCE SIZE (2) OF OneAsymmetricKey\r\nthis means that \r\nPrivateKey ::= SEQUENCE SIZE (2) OF OneAsymmetricKey,\r\nand yet the privateKey field is inside the OneAsymmetricKey sequence.\r\n\r\nAfter my corrections the relevant text is rather understandable:\r\nWhen a CompositeKEMPrivateKey is conveyed inside a OneAsymmetricKey\r\n   structure (version 1 of which is also known as PrivateKeyInfo)\r\n   [RFC5958], the privateKeyAlgorithm field SHALL be set to the\r\n   corresponding composite algorithm identifier defined according to\r\n   Section 5 (the parameters field MUST be absent), the privateKey field\r\n   SHALL contain the CompositeKEMPrivateKey, and the publicKey field MUST\r\n   NOT be present. Associated public key material MAY be present in the\r\n   OneAsymmetricKey structure containing CompositeKEMPrivateKey and in\r\n   that case version is 2.\r\n\r\n\r\n",
+          "createdAt": "2024-09-13T09:59:38Z",
+          "updatedAt": "2024-09-13T09:59:38Z"
         }
       ]
     },
@@ -1013,9 +1027,9 @@
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
-      "body": "",
+      "body": "- [ ] Align the combiner.\r\n- [ ] Fix \"## FIPS Compliance {#sec-fips-compliance}\" to match.",
       "createdAt": "2024-08-28T14:34:52Z",
-      "updatedAt": "2024-08-28T14:34:52Z",
+      "updatedAt": "2024-09-12T22:06:27Z",
       "closedAt": null,
       "comments": []
     },
@@ -1032,6 +1046,38 @@
       "body": "The current CMS KEMRI Conventions:\r\n\r\n| Composite KEM OID                 | KDF         | Key Encryption Alg |\r\n|---------                          | ---         | ---                |\r\n| id-MLKEM768-RSA2048               | SHA3-256 | id-aes128-Wrap     |\r\n| id-MLKEM768-RSA3072               | SHA3-256 | id-aes128-Wrap     |\r\n| id-MLKEM768-ECDH-P384             | SHA3-384 | id-aes256-Wrap     |\r\n| id-MLKEM768-ECDH-brainpoolP256r1  | SHA3-384 | id-aes256-Wrap     |\r\n| id-MLKEM768-X25519                | SHA3-384 | id-aes256-Wrap     |\r\n| id-MLKEM1024-ECDH-P384            | SHA3-512 | id-aes256-Wrap     |\r\n| id-MLKEM1024-ECDH-brainpoolP384r1 | SHA3-512 | id-aes256-Wrap     |\r\n| id-MLKEM1024-X448                 | SHA3-512 | id-aes256-Wrap     |\r\n{: #tab-cms-kdf-wrap title=\"REQUIRED pairings for CMS KDF and WRAP\"}\r\n\r\n\r\nWhich does not currently align with the KDFs used internally within the Composite KEM Combiner, and in fact here it needs to be a proper variable-length KDF since KEMRI has an `L' parameter, so this needs to be fixed. I guess it makes sense for me to align to whatever Dan picks in draft-cms-kyber.\r\n",
       "createdAt": "2024-09-06T21:35:29Z",
       "updatedAt": "2024-09-06T21:35:29Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 67,
+      "id": "I_kwDOKRPFO86WZ6M2",
+      "title": "specify behaviour in light of KEMs with a non-zero failure probability?",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/67",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "> TODO: as per https://www.enisa.europa.eu/publications/post-quantum-cryptography-integration-study section 4.2, might need to specify behaviour in light of KEMs with a non-zero failure probability.",
+      "createdAt": "2024-09-12T21:17:54Z",
+      "updatedAt": "2024-09-12T21:17:54Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 68,
+      "id": "I_kwDOKRPFO86WfqqZ",
+      "title": "Max suggests dropping SEQUENCE OF wrapper",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/68",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Hi Max,\r\n\r\nIf I understand your proposal, you are suggesting that\r\n\r\nCompositeSignaturePublicKey ::= SEQUENCE SIZE (2) OF BIT STRING\r\nCompositeSignatureValue ::= SEQUENCE SIZE (2) OF BIT STRING\r\n\r\n\r\nBecomes\r\n\r\nCompositeSignaturePublicKey ::= BIT STRING\r\nCompositeSignatureValue ::= BIT STRING\r\n\r\nAn then you need to specify that for id-MLDSA44-RSA2048-PSS-SHA256 the first X bits are the ML-DSA-44 public key / signature, and the remaining Y bits are the RSA-2048.\r\n\r\n\r\nThe original reason for an ASN.1 wrapper was to gracefully handle algorithms with variable-length publickeys, signatures, or ciphertexts, which I believe there were some of in NIST Round 1. This is no longer a concern with FIPS 203 / 204, so we could now remove it. However, I think it will be a fair amount of editorial work (we will need to accurately list out the bit position to split at for each composite alg), and it is asking all existing composite implementations to change, then will require a lot of interop testing. Is this change really worth it?\r\n\r\nIf you feel strongly about this, then perhaps you could prepare the change to the document on a side-branch, and we could bring it to the LAMPS mailing list?\r\n",
+      "createdAt": "2024-09-13T13:40:43Z",
+      "updatedAt": "2024-09-13T13:40:43Z",
       "closedAt": null,
       "comments": []
     }
@@ -2107,13 +2153,13 @@
       "labels": [],
       "body": "",
       "createdAt": "2024-08-06T00:35:56Z",
-      "updatedAt": "2024-09-08T19:34:02Z",
+      "updatedAt": "2024-09-12T22:22:29Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "2d6b93f6d35fa31c16c42d8da5795e11ee68f550",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_editorial",
-      "headRefOid": "fadc34152277fc82054d2b6ee7e4d51d26863355",
+      "headRefOid": "e1202d80a4e9e5ed41dcf51a5e3fddfb298b1772",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
@@ -2126,24 +2172,26 @@
       "id": "PR_kwDOKRPFO854BS5m",
       "title": "RSA-OAEP tweaks.",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/57",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Closes #35",
       "createdAt": "2024-08-10T22:11:44Z",
-      "updatedAt": "2024-09-11T21:43:58Z",
+      "updatedAt": "2024-09-12T21:07:28Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "bbb08d15cde69aff6bcd6f751561c98668084de8",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_rsa-oaep-fix",
       "headRefOid": "7eae90b8aacec762dbc10eaa5d1614b43a50500f",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2024-09-12T20:56:13Z",
+      "mergedAt": "2024-09-12T20:56:13Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "be23fd95e0964c49151786b172cc94b5e289db28"
+      },
       "comments": [
         {
           "author": "ounsworth",
