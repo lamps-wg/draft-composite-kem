@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-09-17T01:18:00.646648+00:00",
+  "timestamp": "2024-09-19T01:41:39.691057+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -1077,9 +1077,17 @@
       "labels": [],
       "body": "Hi Max,\r\n\r\nIf I understand your proposal, you are suggesting that\r\n\r\nCompositeSignaturePublicKey ::= SEQUENCE SIZE (2) OF BIT STRING\r\nCompositeSignatureValue ::= SEQUENCE SIZE (2) OF BIT STRING\r\n\r\n\r\nBecomes\r\n\r\nCompositeSignaturePublicKey ::= BIT STRING\r\nCompositeSignatureValue ::= BIT STRING\r\n\r\nAn then you need to specify that for id-MLDSA44-RSA2048-PSS-SHA256 the first X bits are the ML-DSA-44 public key / signature, and the remaining Y bits are the RSA-2048.\r\n\r\n\r\nThe original reason for an ASN.1 wrapper was to gracefully handle algorithms with variable-length publickeys, signatures, or ciphertexts, which I believe there were some of in NIST Round 1. This is no longer a concern with FIPS 203 / 204, so we could now remove it. However, I think it will be a fair amount of editorial work (we will need to accurately list out the bit position to split at for each composite alg), and it is asking all existing composite implementations to change, then will require a lot of interop testing. Is this change really worth it?\r\n\r\nIf you feel strongly about this, then perhaps you could prepare the change to the document on a side-branch, and we could bring it to the LAMPS mailing list?\r\n",
       "createdAt": "2024-09-13T13:40:43Z",
-      "updatedAt": "2024-09-13T13:40:43Z",
+      "updatedAt": "2024-09-18T10:04:35Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "PiotrPopis",
+          "authorAssociation": "NONE",
+          "body": "Since the current specifications indicate specific key lengths, concatenation instead of 2 sequences is an acceptable solution. However, I agree with Mike that the potential \"gain\" is not proportionate to the cost of changing the specifications, as well as the changes in the implementations currently being developed. My company has been implementing the structures in the \"composite-sign\" and \"comosite-KEM\" drafts for several months; we allow changes, but we do not support this one.\r\nPiotr Popis",
+          "createdAt": "2024-09-18T10:04:33Z",
+          "updatedAt": "2024-09-18T10:04:33Z"
+        }
+      ]
     }
   ],
   "pulls": [
