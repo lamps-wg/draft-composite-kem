@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-09-19T01:41:39.691057+00:00",
+  "timestamp": "2024-09-22T01:49:32.666230+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -1086,6 +1086,30 @@
           "body": "Since the current specifications indicate specific key lengths, concatenation instead of 2 sequences is an acceptable solution. However, I agree with Mike that the potential \"gain\" is not proportionate to the cost of changing the specifications, as well as the changes in the implementations currently being developed. My company has been implementing the structures in the \"composite-sign\" and \"comosite-KEM\" drafts for several months; we allow changes, but we do not support this one.\r\nPiotr Popis",
           "createdAt": "2024-09-18T10:04:33Z",
           "updatedAt": "2024-09-18T10:04:33Z"
+        }
+      ]
+    },
+    {
+      "number": 69,
+      "id": "I_kwDOKRPFO86XXSQf",
+      "title": "Clarifications on ASN.1 representations",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/69",
+      "state": "OPEN",
+      "author": "codespree",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "- [\u2753] What is the ASN.1 format of composite **public keys** from `CompositeKEM.KeyGen()`?\r\n    The draft specifies:\r\n\r\n    The KeyGen() -> (pk, sk) of a composite KEM algorithm will perform the KeyGen() of the respective component KEM algorithms and it produces a composite public key pk as per Section 3.2\r\n\r\n    ```\r\n    CompositeKEM.KeyGen():\r\n        (compositePK[0], compositeSK[0]) = MLKEM.KeyGen()\r\n        (compositePK[1], compositeSK[1]) = TradKEM.KeyGen()\r\n\r\n        return (compositePK, compositeSK)\r\n    ```\r\n\r\n    Section 3.2 specifies:\r\n    ```\r\n    CompositeKEMPublicKey ::= SEQUENCE SIZE (2) OF BIT STRING\r\n    ```\r\n    Are the two component public keys raw public keys without any OIDs? Are they the sequence of bit strings based on the component KEM KeyGen() functions?\r\n\r\n- [\u2753] What is the ASN.1 format of composite **secret keys** from `CompositeKEM.KeyGen()`?\r\n    The draft specifies:\r\n\r\n    The KeyGen() -> (pk, sk) of a composite KEM algorithm will perform the KeyGen() of the respective component KEM algorithms and it produces a composite private key pk as per Section 3.3\r\n    ```\r\n    CompositeKEM.KeyGen():\r\n        (compositePK[0], compositeSK[0]) = MLKEM.KeyGen()\r\n        (compositePK[1], compositeSK[1]) = TradKEM.KeyGen()\r\n\r\n        return (compositePK, compositeSK)\r\n    ```\r\n\r\n    Section 3.3 specifies:\r\n    ```\r\n    CompositeKEMPrivateKey ::= SEQUENCE SIZE (2) OF OneAsymmetricKey\r\n    ```\r\n\r\n    `OneAsymmetricKey` is defined in [RFC5912](https://tools.ietf.org/html/rfc5912) as:\r\n    ```\r\n    OneAsymmetricKey ::= SEQUENCE {\r\n        version Version,\r\n        privateKeyAlgorithm PrivateKeyAlgorithmIdentifier,\r\n        privateKey PrivateKey,\r\n        attributes [0] Attributes OPTIONAL,\r\n        ...,\r\n        [[2: publicKey [1] PublicKey OPTIONAL ]],\r\n        ...\r\n    }\r\n    ```\r\n\r\nSo, the composite private key is a sequence of two `OneAsymmetricKey` structures. What are the OID values for the `privateKeyAlgorithm` fields of the two `OneAsymmetricKey` structures? Are we to assume the OID values are the same as the OID values of the component KEM algorithms - i.e:\r\n\r\n    For elliptic curve component KEM:\r\n    ```\r\n    KemType::P256 => \"1.2.840.10045.3.1.7\".to_string(),\r\n    KemType::P384 => \"1.3.132.0.34\".to_string(),\r\n    // RFC 8410\r\n    KemType::X25519 => \"1.3.101.110\".to_string(),\r\n    KemType::X448 => \"1.3.101.110\".to_string(),\r\n    // RFC 5639\r\n    KemType::BrainpoolP256r1 => \"1.3.36.3.3.2.8.1.7\".to_string(),\r\n    KemType::BrainpoolP384r1 => \"1.3.36.3.3.2.8.1.11\".to_string(),\r\n    ```\r\n\r\n    For RSA component KEM:\r\n    ```\r\n    KemType::RsaOAEP2048 => \"1.2.840.113549.1.1.7\".to_string(),\r\n    KemType::RsaOAEP3072 => \"1.2.840.113549.1.1.7\".to_string(),\r\n    KemType::RsaOAEP4096 => \"1.2.840.113549.1.1.7\".to_string(),\r\n    ```\r\n\r\n    For ML-KEM component KEM:\r\n    ```\r\n    KemType::MlKem512 => \"2.16.840.1.101.3.4.4.1\".to_string(),\r\n    KemType::MlKem768 => \"2.16.840.1.101.3.4.4.2\".to_string(),\r\n    KemType::MlKem1024 => \"2.16.840.1.101.3.4.4.3\".to_string(),\r\n    ```\r\n\r\n- [\u2753] Why do we need `CompositeKEM.Decap(ct, mlkemSK, tradSK)` as a function signature of the Decap function, why not just use the `CompositeKEMPrivateKey` DER and implement `CompositeKEM.Decap(ct, compositeSK)`? The `CompositeKEM.KeyGen()` function in any case returns `CompositeKEMPrivateKey` as DER according to my understanding. This way the composite KEMs also follow the same interface as the non-composite counterparts.\r\n\r\n- [\u2753] What is the ASN.1 format of RSA keys? Is it `pkcs1_der`?\r\n\r\n-  [\u2705] Composite Decap doesn't accept tradPK as an argument:\r\n    Adressed [here](https://github.com/lamps-wg/draft-composite-kem/pull/56/commits/1907c2ded1bc4e0ffd294169f64aa494b683fd7f) ",
+      "createdAt": "2024-09-20T18:54:29Z",
+      "updatedAt": "2024-09-21T09:16:08Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "codespree",
+          "authorAssociation": "NONE",
+          "body": "@ounsworth @dconnolly @danvangeest  @opencrypto  I am new to the community. I have implemented the Editor's draft version in Rust:\r\nhttps://github.com/codespree/quantcrypt\r\n\r\nWould appreciate a review. If you think there could be more people who can get involved in contributing to the repo or testing, I would welcome it.\r\n\r\nAll the KEM algorithms mentioned in the draft are implemented. \r\n\r\nTest bytes of expected input would be good so that we can track if the implementations are correct.",
+          "createdAt": "2024-09-21T09:16:07Z",
+          "updatedAt": "2024-09-21T09:16:07Z"
         }
       ]
     }
