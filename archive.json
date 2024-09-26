@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-09-24T01:44:21.350902+00:00",
+  "timestamp": "2024-09-26T01:43:20.933711+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -1094,15 +1094,15 @@
       "id": "I_kwDOKRPFO86XXSQf",
       "title": "Clarifications on ASN.1 representations",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/69",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "codespree",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "- [\u2753] What is the ASN.1 format of composite **public keys** from `CompositeKEM.KeyGen()`?\r\n    The draft specifies:\r\n\r\n    The KeyGen() -> (pk, sk) of a composite KEM algorithm will perform the KeyGen() of the respective component KEM algorithms and it produces a composite public key pk as per Section 3.2\r\n\r\n    ```\r\n    CompositeKEM.KeyGen():\r\n        (compositePK[0], compositeSK[0]) = MLKEM.KeyGen()\r\n        (compositePK[1], compositeSK[1]) = TradKEM.KeyGen()\r\n\r\n        return (compositePK, compositeSK)\r\n    ```\r\n\r\n    Section 3.2 specifies:\r\n    ```\r\n    CompositeKEMPublicKey ::= SEQUENCE SIZE (2) OF BIT STRING\r\n    ```\r\n    Are the two component public keys raw public keys without any OIDs? Are they the sequence of bit strings based on the component KEM KeyGen() functions?\r\n\r\n- [\u2753] What is the ASN.1 format of composite **secret keys** from `CompositeKEM.KeyGen()`?\r\n    The draft specifies:\r\n\r\n    The KeyGen() -> (pk, sk) of a composite KEM algorithm will perform the KeyGen() of the respective component KEM algorithms and it produces a composite private key pk as per Section 3.3\r\n    ```\r\n    CompositeKEM.KeyGen():\r\n        (compositePK[0], compositeSK[0]) = MLKEM.KeyGen()\r\n        (compositePK[1], compositeSK[1]) = TradKEM.KeyGen()\r\n\r\n        return (compositePK, compositeSK)\r\n    ```\r\n\r\n    Section 3.3 specifies:\r\n    ```\r\n    CompositeKEMPrivateKey ::= SEQUENCE SIZE (2) OF OneAsymmetricKey\r\n    ```\r\n\r\n    `OneAsymmetricKey` is defined in [RFC5912](https://tools.ietf.org/html/rfc5912) as:\r\n    ```\r\n    OneAsymmetricKey ::= SEQUENCE {\r\n        version Version,\r\n        privateKeyAlgorithm PrivateKeyAlgorithmIdentifier,\r\n        privateKey PrivateKey,\r\n        attributes [0] Attributes OPTIONAL,\r\n        ...,\r\n        [[2: publicKey [1] PublicKey OPTIONAL ]],\r\n        ...\r\n    }\r\n    ```\r\n\r\nSo, the composite private key is a sequence of two `OneAsymmetricKey` structures. What are the OID values for the `privateKeyAlgorithm` fields of the two `OneAsymmetricKey` structures? Are we to assume the OID values are the same as the OID values of the component KEM algorithms - i.e:\r\n\r\n    For elliptic curve component KEM:\r\n    ```\r\n    KemType::P256 => \"1.2.840.10045.3.1.7\".to_string(),\r\n    KemType::P384 => \"1.3.132.0.34\".to_string(),\r\n    // RFC 8410\r\n    KemType::X25519 => \"1.3.101.110\".to_string(),\r\n    KemType::X448 => \"1.3.101.110\".to_string(),\r\n    // RFC 5639\r\n    KemType::BrainpoolP256r1 => \"1.3.36.3.3.2.8.1.7\".to_string(),\r\n    KemType::BrainpoolP384r1 => \"1.3.36.3.3.2.8.1.11\".to_string(),\r\n    ```\r\n\r\n    For RSA component KEM:\r\n    ```\r\n    KemType::RsaOAEP2048 => \"1.2.840.113549.1.1.7\".to_string(),\r\n    KemType::RsaOAEP3072 => \"1.2.840.113549.1.1.7\".to_string(),\r\n    KemType::RsaOAEP4096 => \"1.2.840.113549.1.1.7\".to_string(),\r\n    ```\r\n\r\n    For ML-KEM component KEM:\r\n    ```\r\n    KemType::MlKem512 => \"2.16.840.1.101.3.4.4.1\".to_string(),\r\n    KemType::MlKem768 => \"2.16.840.1.101.3.4.4.2\".to_string(),\r\n    KemType::MlKem1024 => \"2.16.840.1.101.3.4.4.3\".to_string(),\r\n    ```\r\n\r\n- [\u2753] Why do we need `CompositeKEM.Decap(ct, mlkemSK, tradSK)` as a function signature of the Decap function, why not just use the `CompositeKEMPrivateKey` DER and implement `CompositeKEM.Decap(ct, compositeSK)`? The `CompositeKEM.KeyGen()` function in any case returns `CompositeKEMPrivateKey` as DER according to my understanding. This way the composite KEMs also follow the same interface as the non-composite counterparts.\r\n\r\n- [\u2753] What is the ASN.1 format of RSA keys? Is it `pkcs1_der`?\r\n\r\n-  [\u2705] Composite Decap doesn't accept tradPK as an argument:\r\n    Adressed [here](https://github.com/lamps-wg/draft-composite-kem/pull/56/commits/1907c2ded1bc4e0ffd294169f64aa494b683fd7f) ",
       "createdAt": "2024-09-20T18:54:29Z",
-      "updatedAt": "2024-09-23T09:14:03Z",
-      "closedAt": null,
+      "updatedAt": "2024-09-25T10:23:01Z",
+      "closedAt": "2024-09-24T16:36:02Z",
       "comments": [
         {
           "author": "codespree",
@@ -1117,6 +1117,48 @@
           "body": "Section 3.3 [composite-kem] should be as follows:\r\nUse cases that require an inter-operable encoding for composite\r\n   private keys, such as when private keys are carried in PKCS #12\r\n   [RFC7292], CMP [RFC4210] or CRMF [RFC4211] MUST use the following\r\n   structure.\r\n\r\n   CompositeKEMPrivateKey ::= SEQUENCE SIZE (2) OF OCTET STRING\r\n\r\n  Each element of this sequence is a private key, and this sequence is contained in the privateKey field of the OneAsymmetricKey structure [RFC5958].\r\n\r\n   The order of the component keys is the same as the order defined in\r\n   Section 3.2 for the components of CompositeKEMPublicKey.\r\n\r\n   When a CompositeKEMPrivateKey is conveyed inside a OneAsymmetricKey\r\n   structure (version 1 of which is also known as PrivateKeyInfo)\r\n   [RFC5958], the privateKeyAlgorithm field SHALL be set to the\r\n   corresponding composite algorithm identifier defined according to\r\n   Section 5 (the parameters field MUST be absent), the privateKey field\r\n   SHALL contain the CompositeKEMPrivateKey, and the publicKey field MUST\r\n   NOT be present. Associated public key material MAY be present in the\r\n   OneAsymmetricKey structure containing CompositeKEMPrivateKey and in\r\n   that case version is 2.\r\n\r\n   In some use-cases the private keys that comprise a composite key may\r\n   not be represented in a single structure or even be contained in a\r\n   single cryptographic module; for example if one component is within\r\n   the FIPS boundary of a cryptographic module and the other is not; see\r\n   Appendix C.1 for more discussion.  The establishment of\r\n   correspondence between public keys in a CompositeKEMPublicKey and\r\n   private keys not represented in a single composite structure is\r\n   beyond the scope of this document.\r\n\r\nI especially draw your attention to the sentence that does not change:\r\n **The order of the component keys is the same as the order defined in\r\n   Section 3.2 for the components of CompositeKEMPublicKey.**\r\nThis sentence indicates that we could have one OID for the composite algorithm, hence one OneAsymmetricKey sequence with two private keys (two sequences in the privateKey field) is enough.\r\n",
           "createdAt": "2024-09-23T09:14:01Z",
           "updatedAt": "2024-09-23T09:14:01Z"
+        },
+        {
+          "author": "danvangeest",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Hi @codespree,\r\n\r\nThere is an IETF hackathon repo with test artifacts: https://github.com/IETF-Hackathon/pqc-certificates. Composite KEMs aren't included yet, but I wouldn't be surprised if they are added.\r\n\r\nIn addition to the hackathon at every IETF meeting, every 4 months, which is free to attend in person or online, we also have a monthly online meeting.  We can invite you to the next one, just give an email address to send the invitation to.\r\n\r\n> @ounsworth @dconnolly @danvangeest @opencrypto I am new to the community. I have implemented the Editor's draft version in Rust: https://github.com/codespree/quantcrypt\r\n> \r\n> Would appreciate a review. If you think there could be more people who can get involved in contributing to the repo or testing, I would welcome it.\r\n> \r\n> All the KEM algorithms mentioned in the draft are implemented.\r\n> \r\n> Test bytes of expected input would be good so that we can track if the implementations are correct.\r\n\r\n",
+          "createdAt": "2024-09-24T11:53:37Z",
+          "updatedAt": "2024-09-24T11:53:37Z"
+        },
+        {
+          "author": "PiotrPopis",
+          "authorAssociation": "NONE",
+          "body": "Hi\r\n\r\nThank you for the invitation. My email address: ***@***.***\r\n\r\nI only have concerns about the time zone differences for online meetings.\ud83d\ude0a\r\n\r\nRegards \u2013 Piotr Popis\r\n\r\n \r\n\r\nFrom: Daniel Van Geest ***@***.***> \r\nSent: Tuesday, September 24, 2024 1:54 PM\r\nTo: lamps-wg/draft-composite-kem ***@***.***>\r\nCc: PiotrPopis ***@***.***>; Comment ***@***.***>\r\nSubject: Re: [lamps-wg/draft-composite-kem] Clarifications on ASN.1 representations (Issue #69)\r\n\r\n \r\n\r\nHi  <https://github.com/codespree> @codespree,\r\n\r\nThere is an IETF hackathon repo with test artifacts:  <https://github.com/IETF-Hackathon/pqc-certificates> https://github.com/IETF-Hackathon/pqc-certificates. Composite KEMs aren't included yet, but I wouldn't be surprised if they are added.\r\n\r\nIn addition to the hackathon at every IETF meeting, every 4 months, which is free to attend in person or online, we also have a monthly online meeting. We can invite you to the next one, just give an email address to send the invitation to.\r\n\r\n <https://github.com/ounsworth> @ounsworth  <https://github.com/dconnolly> @dconnolly  <https://github.com/danvangeest> @danvangeest  <https://github.com/opencrypto> @opencrypto I am new to the community. I have implemented the Editor's draft version in Rust:  <https://github.com/codespree/quantcrypt> https://github.com/codespree/quantcrypt\r\n\r\nWould appreciate a review. If you think there could be more people who can get involved in contributing to the repo or testing, I would welcome it.\r\n\r\nAll the KEM algorithms mentioned in the draft are implemented.\r\n\r\nTest bytes of expected input would be good so that we can track if the implementations are correct.\r\n\r\n\u2014\r\nReply to this email directly,  <https://github.com/lamps-wg/draft-composite-kem/issues/69#issuecomment-2371049605> view it on GitHub, or  <https://github.com/notifications/unsubscribe-auth/BLIOPUVAJ6V77MURZKIAGVLZYFHFRAVCNFSM6AAAAABOSVU73OVHI2DSMVQWIX3LMV43OSLTON2WKQ3PNVWWK3TUHMZDGNZRGA2DSNRQGU> unsubscribe.\r\nYou are receiving this because you commented.Message ID: ***@***.***>\r\n\r\n",
+          "createdAt": "2024-09-24T12:10:57Z",
+          "updatedAt": "2024-09-24T12:10:57Z"
+        },
+        {
+          "author": "danvangeest",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Hi Piotr,\r\n\r\nYou email address is blanked out in github, but I have found it from the LAMPS emails.\r\n\r\nAnd for @codespree if you'd like an invite, you can find my email address in https://datatracker.ietf.org/doc/draft-ietf-lamps-x509-slhdsa/, just send me a note and we'll get you invited.",
+          "createdAt": "2024-09-24T12:29:38Z",
+          "updatedAt": "2024-09-24T12:29:38Z"
+        },
+        {
+          "author": "codespree",
+          "authorAssociation": "NONE",
+          "body": "- [\u2705] What is the ASN.1 format of composite **public keys** from `CompositeKEM.KeyGen()`?\r\n    The draft specifies:\r\n\r\n    The KeyGen() -> (pk, sk) of a composite KEM algorithm will perform the KeyGen() of the respective component KEM algorithms and it produces a composite public key pk as per Section 3.2\r\n\r\n    ```\r\n    CompositeKEM.KeyGen():\r\n        (compositePK[0], compositeSK[0]) = MLKEM.KeyGen()\r\n        (compositePK[1], compositeSK[1]) = TradKEM.KeyGen()\r\n\r\n        return (compositePK, compositeSK)\r\n    ```\r\n\r\n    Section 3.2 specifies:\r\n    ```\r\n    CompositeKEMPublicKey ::= SEQUENCE SIZE (2) OF BIT STRING\r\n    ```\r\n    Are the two component public keys raw public keys without any OIDs? Are they the sequence of bit strings based on the component KEM KeyGen() functions?\r\n\r\n# \ud83d\udc4d\ud83c\udffc Using the examples from [here](https://datatracker.ietf.org/doc/draft-ietf-lamps-pq-composite-sigs/) makes it very clear. As long as this draft is following the specs in version 2 of that draft. \r\n\r\nI have implemented it in this here:\r\n\r\n- [Composite Public Key](https://github.com/codespree/quantcrypt/blob/main/src/asn1/composite_public_key.rs)\r\n- [Composite Private Keys](https://github.com/codespree/quantcrypt/blob/main/src/asn1/composite_private_key.rs)\r\n\r\nReferring to the DSA draft from the KEM draft would be helpful.\r\n\r\n<hr>\r\n\r\n- [\u2705] What is the ASN.1 format of composite **secret keys** from `CompositeKEM.KeyGen()`?\r\n    The draft specifies:\r\n\r\n    The KeyGen() -> (pk, sk) of a composite KEM algorithm will perform the KeyGen() of the respective component KEM algorithms and it produces a composite private key pk as per Section 3.3\r\n    ```\r\n    CompositeKEM.KeyGen():\r\n        (compositePK[0], compositeSK[0]) = MLKEM.KeyGen()\r\n        (compositePK[1], compositeSK[1]) = TradKEM.KeyGen()\r\n\r\n        return (compositePK, compositeSK)\r\n    ```\r\n\r\n    Section 3.3 specifies:\r\n    ```\r\n    CompositeKEMPrivateKey ::= SEQUENCE SIZE (2) OF OneAsymmetricKey\r\n    ```\r\n\r\n    `OneAsymmetricKey` is defined in [RFC5912](https://tools.ietf.org/html/rfc5912) as:\r\n    ```\r\n    OneAsymmetricKey ::= SEQUENCE {\r\n        version Version,\r\n        privateKeyAlgorithm PrivateKeyAlgorithmIdentifier,\r\n        privateKey PrivateKey,\r\n        attributes [0] Attributes OPTIONAL,\r\n        ...,\r\n        [[2: publicKey [1] PublicKey OPTIONAL ]],\r\n        ...\r\n    }\r\n    ```\r\n\r\nSo, the composite private key is a sequence of two `OneAsymmetricKey` structures. What are the OID values for the `privateKeyAlgorithm` fields of the two `OneAsymmetricKey` structures? Are we to assume the OID values are the same as the OID values of the component KEM algorithms - i.e:\r\n\r\n    For elliptic curve component KEM:\r\n    ```\r\n    KemType::P256 => \"1.2.840.10045.3.1.7\".to_string(),\r\n    KemType::P384 => \"1.3.132.0.34\".to_string(),\r\n    // RFC 8410\r\n    KemType::X25519 => \"1.3.101.110\".to_string(),\r\n    KemType::X448 => \"1.3.101.110\".to_string(),\r\n    // RFC 5639\r\n    KemType::BrainpoolP256r1 => \"1.3.36.3.3.2.8.1.7\".to_string(),\r\n    KemType::BrainpoolP384r1 => \"1.3.36.3.3.2.8.1.11\".to_string(),\r\n    ```\r\n\r\n    For RSA component KEM:\r\n    ```\r\n    KemType::RsaOAEP2048 => \"1.2.840.113549.1.1.7\".to_string(),\r\n    KemType::RsaOAEP3072 => \"1.2.840.113549.1.1.7\".to_string(),\r\n    KemType::RsaOAEP4096 => \"1.2.840.113549.1.1.7\".to_string(),\r\n    ```\r\n\r\n    For ML-KEM component KEM:\r\n    ```\r\n    KemType::MlKem512 => \"2.16.840.1.101.3.4.4.1\".to_string(),\r\n    KemType::MlKem768 => \"2.16.840.1.101.3.4.4.2\".to_string(),\r\n    KemType::MlKem1024 => \"2.16.840.1.101.3.4.4.3\".to_string(),\r\n    ```\r\n\r\n# \ud83d\udc4d\ud83c\udffc Same as above\r\n\r\n<hr>\r\n\r\n- [\u2705] Why do we need `CompositeKEM.Decap(ct, mlkemSK, tradSK)` as a function signature of the Decap function, why not just use the `CompositeKEMPrivateKey` DER and implement `CompositeKEM.Decap(ct, compositeSK)`? The `CompositeKEM.KeyGen()` function in any case returns `CompositeKEMPrivateKey` as DER according to my understanding. This way the composite KEMs also follow the same interface as the non-composite counterparts.\r\n\r\n# \ud83d\udc4d\ud83c\udffc I understand this is pseudocode\r\n\r\n<hr>\r\n\r\n- [\ud83e\udd14] What is the ASN.1 format of RSA keys? Is it `pkcs1_der`?\r\n\r\n# Sample keys using RSA would be helpful\r\n\r\n<hr>\r\n\r\n-  [\u2705] Composite Decap doesn't accept tradPK as an argument:\r\n    Adressed [here](https://github.com/lamps-wg/draft-composite-kem/pull/56/commits/1907c2ded1bc4e0ffd294169f64aa494b683fd7f) ",
+          "createdAt": "2024-09-24T16:27:01Z",
+          "updatedAt": "2024-09-24T16:27:01Z"
+        },
+        {
+          "author": "codespree",
+          "authorAssociation": "NONE",
+          "body": "Thanks @danvangeest . I am closing this issue. Samples on RSA keys (with and without PSS) would be very helpful in wither of the two drafts.",
+          "createdAt": "2024-09-24T16:36:02Z",
+          "updatedAt": "2024-09-24T16:36:02Z"
+        },
+        {
+          "author": "carl-wallace",
+          "authorAssociation": "NONE",
+          "body": "> Hi @codespree,\r\n> \r\n> There is an IETF hackathon repo with test artifacts: https://github.com/IETF-Hackathon/pqc-certificates. Composite KEMs aren't included yet, but I wouldn't be surprised if they are added.\r\n> \r\n> In addition to the hackathon at every IETF meeting, every 4 months, which is free to attend in person or online, we also have a monthly online meeting. We can invite you to the next one, just give an email address to send the invitation to.\r\n> \r\n> > @ounsworth @dconnolly @danvangeest @opencrypto I am new to the community. I have implemented the Editor's draft version in Rust: https://github.com/codespree/quantcrypt\r\n> > Would appreciate a review. If you think there could be more people who can get involved in contributing to the repo or testing, I would welcome it.\r\n> > All the KEM algorithms mentioned in the draft are implemented.\r\n> > Test bytes of expected input would be good so that we can track if the implementations are correct.\r\n\r\nI implemented composite KEM support a few months back but have not tested against any other implementation. The work is here: https://github.com/carl-wallace/kemri_toy/commits/composite.",
+          "createdAt": "2024-09-25T10:23:00Z",
+          "updatedAt": "2024-09-25T10:23:00Z"
         }
       ]
     }
@@ -2192,7 +2234,7 @@
       "labels": [],
       "body": "",
       "createdAt": "2024-08-06T00:35:56Z",
-      "updatedAt": "2024-09-12T22:22:29Z",
+      "updatedAt": "2024-09-25T15:04:11Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "2d6b93f6d35fa31c16c42d8da5795e11ee68f550",
@@ -2203,7 +2245,15 @@
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "The security considerations need more work, especially the one about key reuse.\r\n\r\nAnother argument against key reuse is documented in https://github.com/lamps-wg/draft-composite-sigs/issues/49",
+          "createdAt": "2024-09-25T15:04:09Z",
+          "updatedAt": "2024-09-25T15:04:09Z"
+        }
+      ],
       "reviews": []
     },
     {
@@ -2326,6 +2376,32 @@
       "mergeCommit": {
         "oid": "03278690c4c51cb487c0a3cf6394dfcb0bf01483"
       },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 70,
+      "id": "PR_kwDOKRPFO858sLI9",
+      "title": "Updated ASN.1 module for Carl's feedback.",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/70",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Closes #29 \r\n\r\n(I think I incorrectly tagged this against #26 in the git commit)",
+      "createdAt": "2024-09-25T17:37:10Z",
+      "updatedAt": "2024-09-25T17:39:35Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "621cd6172f85737deb63552ed656b0e5ce989e30",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_asn1_29",
+      "headRefOid": "2eb343caadc6a3990d8018c1dd797a203ca51011",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
       "comments": [],
       "reviews": []
     }
