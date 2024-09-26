@@ -156,7 +156,7 @@ informative:
   RFC8551:
   RFC9180:
   I-D.draft-ietf-tls-hybrid-design-04:
-  I-D.draft-ietf-pquip-pqt-hybrid-terminology-03:
+  I-D.draft-ietf-pquip-pqt-hybrid-terminology-04:
   I-D.draft-ietf-pquip-hybrid-signature-spectrums-00:
   I-D.draft-ietf-lamps-kyber-certificates-01:
   I-D.draft-housley-lamps-cms-kemri-02:
@@ -748,7 +748,7 @@ When a particular Composite KEM OID is supported, a CMS implementation MUST supp
 | id-MLKEM1024-X448                 | id-sha3-512 | id-aes256-Wrap     |
 {: #tab-cms-kdf-wrap title="REQUIRED pairings for CMS KDF and WRAP"}
 
-In all cases above, the hash function used as a KDF produces a longer output than needed by the encryption algorithm, so the output should simply be truncated to the correct length -- ie use the leftmost significant bits.
+In all cases above, the hash function used as a KDF produces a longer output than needed by the encryption algorithm, so the output SHALL be truncated to the correct length -- ie the leftmost significant bits are used.
 
 Note: `id-aes256-Wrap` is stronger than necessary for the MLKEM768 combinations at the NIST level 3 192 bit security level, however `id-aes256-Wrap` was chosen because it has better general adoption than `id-aes192-Wrap`.
 
@@ -981,7 +981,7 @@ These migration and interoperability concerns need to be thought about in the co
 ML-KEM always requires the public key in order to perform various steps of the Fujisaki-Okamoto decapsulation [FIPS203-ipd], and for this reason the private key encoding specified in FIPS 203 includes the public key. Therefore it is not required to carry it in the `OneAsymmetricKey.publicKey` field, which remains optional, but is strictly speaking redundant since an ML-KEM public key can be parsed from an ML-KEM private key, and thus populating the `OneAsymmetricKey.publicKey` field would mean that two copies of the public key data are transmitted.
 
 
-With regard to the traditional algorithms, RSA or Elliptic CUrve, in order to achieve the public-key binding property the KEM combiner used to form the composite KEM, the combiner requires the traditional public key as input to the KDF that derives the output shared secret. Therefore it is required to carry the public key within the respective `OneAsymmetricKey.publicKey` as per the private key encoding given in {{sec-priv-key}}. Implementers who choose to use a different private key encoding than the one specified in this document MUST consider how to provide the component public keys to the decapsulate routine. While some implementations might contain routines to computationally derive the public key from the private key, it is not guaranteed that all implementations will support this; for this reason the interoparable composite private key format given in this document in {{sec-priv-key}} requires the public key of the traditional component to be included.
+With regard to the traditional algorithms, RSA or Elliptic Curve, in order to achieve the public-key binding property the KEM combiner used to form the composite KEM, the combiner requires the traditional public key as input to the KDF that derives the output shared secret. Therefore it is required to carry the public key within the respective `OneAsymmetricKey.publicKey` as per the private key encoding given in {{sec-priv-key}}. Implementers who choose to use a different private key encoding than the one specified in this document MUST consider how to provide the component public keys to the decapsulate routine. While some implementations might contain routines to computationally derive the public key from the private key, it is not guaranteed that all implementations will support this; for this reason the interoparable composite private key format given in this document in {{sec-priv-key}} requires the public key of the traditional component to be included.
 
 <!-- End of Implementation Considerations section -->
 
