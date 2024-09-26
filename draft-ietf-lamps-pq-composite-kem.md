@@ -808,7 +808,7 @@ The SMIMECapability SEQUENCE representing a composite KEM Algorithm MUST include
 
 <CODE STARTS>
 
-{::include Composite-KEM-2024.asn}
+{::include Composite-MLKEM-2024.asn}
 
 <CODE ENDS>
 
@@ -828,6 +828,11 @@ EDNOTE to IANA: OIDs will need to be replaced in both the ASN.1 module and in {{
 -  References: This Document
 
 ###  Object Identifier Registrations - SMI Security for PKIX Algorithms
+
+-  id-raw-key
+  - Decimal: IANA Assigned
+  - Description: Designates a public key BIT STRING with no ASN.1 structure.
+  - References: This Document
 
 - id-MLKEM768-RSA2048
   - Decimal: IANA Assigned
