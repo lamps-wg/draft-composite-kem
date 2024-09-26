@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 16 March 2025                                           M. Pala
+Expires: 30 March 2025                                           M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                       12 September 2024
+                                                       26 September 2024
 
 
 Composite ML-KEM for Use in the Internet X.509 Public Key Infrastructure
@@ -66,7 +66,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 16 March 2025.
+   This Internet-Draft will expire on 30 March 2025.
 
 Copyright Notice
 
@@ -1025,10 +1025,10 @@ Table of Contents
 
    <CODE STARTS>
 
-   Composite-KEM-2024
-         {iso(1) identified-organization(3) dod(6) internet(1)
+   Composite-MLKEM-2024
+         { iso(1) identified-organization(3) dod(6) internet(1)
            security(5) mechanisms(5) pkix(7) id-mod(0)
-           id-mod-composite-kems(TBDMOD) }
+           id-mod-composite-mlkem-2024(TBDMOD) }
 
    DEFINITIONS IMPLICIT TAGS ::= BEGIN
 
@@ -1078,6 +1078,10 @@ Table of Contents
      {joint-iso-itu-t asn1(1) ber-derived(2) distinguished-encoding(1)}
 
 
+   -- Just for testing, to be assigned by IANA
+   id-raw-key OBJECT IDENTIFIER ::= {
+      joint-iso-itu-t(2) country(16) us(840) organization(1)
+      entrust(114027) algorithm(80) composite(8) raw(999) 1 }
 
    --
    -- Composite KEM basic structures
@@ -1095,26 +1099,34 @@ Table of Contents
 
    CompositeCiphertextValue ::= SEQUENCE SIZE (2) OF OCTET STRING
 
+   RsaCompositeKemPublicKey ::= SEQUENCE {
+           firstPublicKey BIT STRING (ENCODED BY id-raw-key),
+           secondPublicKey BIT STRING (CONTAINING RSAPublicKey)
+         }
+
+   EcCompositeKemPublicKey ::= SEQUENCE {
+           firstPublicKey BIT STRING (ENCODED BY id-raw-key),
+           secondPublicKey BIT STRING (CONTAINING ECPoint)
+         }
+
+   EdCompositeKemPublicKey ::= SEQUENCE {
+           firstPublicKey BIT STRING (ENCODED BY id-raw-key),
+           secondPublicKey BIT STRING (ENCODED BY id-raw-key)
+         }
 
    --
    -- Information Object Classes
    --
 
-   pk-CompositeKEM {
-     OBJECT IDENTIFIER:id, FirstPublicKeyType,
-     SecondPublicKeyType} PUBLIC-KEY ::=
-     {
+   pk-CompositeKEM {OBJECT IDENTIFIER:id, PublicKeyType}
+     PUBLIC-KEY ::= {
        IDENTIFIER id
-       KEY SEQUENCE {
-       first BIT STRING (CONTAINING FirstPublicKeyType),
-       second BIT STRING (CONTAINING SecondPublicKeyType)
-       }
+       KEY PublicKeyType
        PARAMS ARE absent
        CERT-KEY-USAGE { keyEncipherment }
      }
 
-   kema-CompositeKEM {
-     OBJECT IDENTIFIER:id,
+   kema-CompositeKEM {OBJECT IDENTIFIER:id,
        PUBLIC-KEY:publicKeyType }
        KEM-ALGORITHM ::= {
             IDENTIFIER id
@@ -1122,7 +1134,7 @@ Table of Contents
             PARAMS ARE absent
             PUBLIC-KEYS { publicKeyType }
             SMIME-CAPS { IDENTIFIED BY id }
-           }
+         }
 
 
 
@@ -1134,12 +1146,12 @@ Table of Contents
    -- TODO: OID to be replaced by IANA
    id-MLKEM768-RSA2048 OBJECT IDENTIFIER ::= {
      joint-iso-itu-t(2) country(16) us(840) organization(1)
-     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 13 }
+     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 21 }
 
    pk-MLKEM768-RSA2048 PUBLIC-KEY ::=
      pk-CompositeKEM {
        id-MLKEM512-RSA2048,
-       OCTET STRING, RSAPublicKey }
+       RsaCompositeKemPublicKey }
 
    kema-MLKEM768-RSA2048 KEM-ALGORITHM ::=
        kema-CompositeKEM{
@@ -1151,12 +1163,12 @@ Table of Contents
    -- TODO: OID to be replaced by IANA
    id-MLKEM768-RSA3072 OBJECT IDENTIFIER ::= {
      joint-iso-itu-t(2) country(16) us(840) organization(1)
-     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 4 }
+     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 22 }
 
    pk-MLKEM768-RSA3072 PUBLIC-KEY ::=
      pk-CompositeKEM {
        id-MLKEM512-RSA3072,
-       OCTET STRING, RSAPublicKey }
+       RsaCompositeKemPublicKey }
 
    kema-MLKEM768-RSA3072 KEM-ALGORITHM ::=
        kema-CompositeKEM{
@@ -1168,28 +1180,28 @@ Table of Contents
    -- TODO: OID to be replaced by IANA
    id-MLKEM768-RSA4096 OBJECT IDENTIFIER ::= {
      joint-iso-itu-t(2) country(16) us(840) organization(1)
-     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) TBD }
+     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 23 }
 
    pk-MLKEM768-RSA4096 PUBLIC-KEY ::=
      pk-CompositeKEM {
-       id-MLKEM512-RSA4096,
-       OCTET STRING, RSAPublicKey }
+       id-MLKEM768-RSA4096,
+       RsaCompositeKemPublicKey }
 
    kema-MLKEM768-RSA4096 KEM-ALGORITHM ::=
        kema-CompositeKEM{
-         id-MLKEM512-RSA4096,
-         pk-MLKEM512-RSA4096 }
+         id-MLKEM768-RSA4096,
+         pk-MLKEM768-RSA4096 }
 
 
    -- TODO: OID to be replaced by IANA
    id-MLKEM768-ECDH-P384 OBJECT IDENTIFIER ::= {
      joint-iso-itu-t(2) country(16) us(840) organization(1)
-     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 5 }
+     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 25 }
 
    pk-MLKEM768-ECDH-P384 PUBLIC-KEY ::=
      pk-CompositeKEM {
        id-MLKEM768-ECDH-P384,
-       OCTET STRING, ECPoint }
+       EcCompositeKemPublicKey }
 
    kema-MLKEM768-ECDH-P384 KEM-ALGORITHM ::=
        kema-CompositeKEM{
@@ -1200,12 +1212,12 @@ Table of Contents
    -- TODO: OID to be replaced by IANA
    id-MLKEM768-ECDH-brainpoolP256r1 OBJECT IDENTIFIER ::= {
      joint-iso-itu-t(2) country(16) us(840) organization(1)
-     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 6 }
+     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 26 }
 
    pk-MLKEM768-ECDH-brainpoolP256r1 PUBLIC-KEY ::=
      pk-CompositeKEM {
        id-MLKEM768-ECDH-brainpoolP256r1,
-       OCTET STRING, ECPoint }
+       EcCompositeKemPublicKey }
 
    kema-MLKEM768-ECDH-brainpoolP256r1 KEM-ALGORITHM ::=
        kema-CompositeKEM{
@@ -1216,12 +1228,12 @@ Table of Contents
    -- TODO: OID to be replaced by IANA
    id-MLKEM768-X25519 OBJECT IDENTIFIER ::= {
      joint-iso-itu-t(2) country(16) us(840) organization(1)
-     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 7 }
+     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 24 }
 
    pk-MLKEM768-X25519 PUBLIC-KEY ::=
      pk-CompositeKEM {
        id-MLKEM768-X25519,
-       OCTET STRING, OCTET STRING }
+       EdCompositeKemPublicKey }
 
    kema-MLKEM768-X25519 KEM-ALGORITHM ::=
        kema-CompositeKEM{
@@ -1233,12 +1245,12 @@ Table of Contents
    -- TODO: OID to be replaced by IANA
    id-MLKEM1024-ECDH-P384 OBJECT IDENTIFIER ::= {
      joint-iso-itu-t(2) country(16) us(840) organization(1)
-     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 8 }
+     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 27 }
 
    pk-MLKEM1024-ECDH-P384 PUBLIC-KEY ::=
      pk-CompositeKEM {
        id-MLKEM1024-ECDH-P384,
-       OCTET STRING, ECPoint }
+       EcCompositeKemPublicKey }
 
    kema-MLKEM1024-ECDH-P384 KEM-ALGORITHM ::=
        kema-CompositeKEM{
@@ -1249,12 +1261,12 @@ Table of Contents
    -- TODO: OID to be replaced by IANA
    id-MLKEM1024-ECDH-brainpoolP384r1 OBJECT IDENTIFIER ::= {
      joint-iso-itu-t(2) country(16) us(840) organization(1)
-     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 9 }
+     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 28 }
 
    pk-MLKEM1024-ECDH-brainpoolP384r1 PUBLIC-KEY ::=
      pk-CompositeKEM{
        id-MLKEM1024-ECDH-brainpoolP384r1,
-       OCTET STRING, ECPoint }
+       EcCompositeKemPublicKey }
 
    kema-MLKEM1024-ECDH-brainpoolP384r1 KEM-ALGORITHM ::=
        kema-CompositeKEM{
@@ -1265,12 +1277,12 @@ Table of Contents
    -- TODO: OID to be replaced by IANA
    id-MLKEM1024-X448 OBJECT IDENTIFIER ::= {
      joint-iso-itu-t(2) country(16) us(840) organization(1)
-     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 10 }
+     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 29 }
 
    pk-MLKEM1024-X448 PUBLIC-KEY ::=
      pk-CompositeKEM {
        id-MLKEM1024-X448,
-       OCTET STRING, OCTET STRING }
+       EdCompositeKemPublicKey }
 
    kema-MLKEM1024-X448 KEM-ALGORITHM ::=
        kema-CompositeKEM{
@@ -1317,6 +1329,15 @@ Table of Contents
 
 8.1.2.  Object Identifier Registrations - SMI Security for PKIX
         Algorithms
+
+   *  id-raw-key
+
+   *  Decimal: IANA Assigned
+
+   *  Description: Designates a public key BIT STRING with no ASN.1
+      structure.
+
+   *  References: This Document
 
    *  id-MLKEM768-RSA2048
 
