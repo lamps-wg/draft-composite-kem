@@ -519,7 +519,7 @@ CompositeKEMPrivateKey ::= SEQUENCE SIZE (2) OF OneAsymmetricKey
 ~~~
 {: artwork-name="CompositeKEMPrivateKey-asn.1-structures"}
 
-Each element is a `OneAsymmetricKey`` [RFC5958] object for a component private key.
+Each element is a `OneAsymmetricKey` [RFC5958] object for a component private key.
 
 The parameters field MUST be absent.
 
