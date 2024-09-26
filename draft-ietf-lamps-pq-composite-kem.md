@@ -880,6 +880,14 @@ EDNOTE to IANA: OIDs will need to be replaced in both the ASN.1 module and in {{
 
 # Security Considerations
 
+### Key Reuse {#sec-cons-key-reuse}
+
+When using single-algorithm cryptography, the best practice is to always generate fresh key material for each purpose, for example when renewing a certificate, or obtaining both a TLS and S/MIME certificate for the same device, however in practice key reuse in such scenarios is often not catestrophic to security and therefore often tolerated. With composite keys we have a much stricter security requirement. However this reasoning does not hold in the PQ / Tradational hybrid setting.
+
+Within the broader context of PQ / Traditional hybrids, we need to consider new attack surfaces that arise due to the hybrid constructions and did not exist in sigle-algorithm contexts. One of these is key reuse where the component keys within a hybrid are also used by themselves within a single-algorithm context. For example, it might be tempting for an operator to take already-deployed RSA keys and add an ML-KEM key to them to form a hybrid. Within a hybrid signature context this leads to a class of attacks referred to as "stripping attacks" where one component signature can be extracted and presented as a single-algorithm signature. Thisd leads to a class of security properties called "non-separability" {{I-D.ietf-pquip-hybrid-signature-spectrums}}. Hybrid KEMs using a contacenation-style KEM combiner, as is done in this document, do not have the analagous attack surface because even if an attacker is able to extract and decrypt one of the component ciphertexts, this will yield a different shared secret than the overall shared secret derived from the composite, so any subsequent symmetric cryptographic operations will fail. However there is still a risk of key reuse which relates to certificate revocation.
+
+Upon receiving a new certificate enrollment request, many certification authorities will check if the requested public key has been previously revoked due to key compromise. Often a CA will perform this check by using the public key hash. Therefore, even if both components of a composite have been previously revoked, the CA may only check the hash of the combined composite key and not find the revocations. Therefore, even though the risk of key reuse is lower for composite KEMs compared with composite signatures, it is still RECOMMENDED to avoid key reuse and always generate fresh component keys for a new composite. It is also RECOMMENDED that CAs performang revocation checks on a composite key should also check both component keys indpedently.
+
 ## Policy for Deprecated and Acceptable Algorithms
 
 Traditionally, a public key or certificate contains a single cryptographic algorithm. If and when an algorithm becomes deprecated (for example, RSA-512, or SHA1), it is obvious that the public keys or certificates using that algorithm are to be considered revoked.
@@ -890,14 +898,12 @@ Since composite algorithms are registered independently of their component algor
 
 The composite KEM design specified in this document, and especially that of the KEM combiner specified in {{sec-kem-combiner}} means that the overall composite KEM algorithm should be considered to have the security strength of the strongest of its component algorithms; ie as long as one component algorithm remains strong, then the overall composite algorithm remains strong.
 
-
 ## KEM Combiner Security Analysis {#sec-cons-kem-combiner}
-
-TODO
 
 TODO: SHA3 is a dual PRF cite: x-wing
 
 EDNOTE: the exact text to put here depends on the outcome of the CFRG KEM Combiners and X-Wing discussion. If CFRG doesn't move fast enough for us, then we may need to leverage this security consideration directly on top of the X-Wing paper [X-Wing].
+In the composite model this is less obvious since implementers may decide that certain cryptographic algorithms have complementary security properties and are acceptable in combination even though one or both algorithms are deprecated for individual use. As such, a single composite public key or certificate may safely contain a mixture of deprecated and non-deprecated algorithms.
 
 
 ### Ciphertext collision resistance {#sec-cons-ct-collision}
