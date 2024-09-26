@@ -903,7 +903,6 @@ The composite KEM design specified in this document, and especially that of the 
 TODO: SHA3 is a dual PRF cite: x-wing
 
 EDNOTE: the exact text to put here depends on the outcome of the CFRG KEM Combiners and X-Wing discussion. If CFRG doesn't move fast enough for us, then we may need to leverage this security consideration directly on top of the X-Wing paper [X-Wing].
-In the composite model this is less obvious since implementers may decide that certain cryptographic algorithms have complementary security properties and are acceptable in combination even though one or both algorithms are deprecated for individual use. As such, a single composite public key or certificate may safely contain a mixture of deprecated and non-deprecated algorithms.
 
 
 ### Ciphertext collision resistance {#sec-cons-ct-collision}
