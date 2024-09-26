@@ -914,19 +914,6 @@ When using single-algorithm cryptography, the best practice is to always generat
 
 For these reasons, applications using composite keys MUST perform fresh key generations for both components. Failure to do so negates any non-separability properties {{I-D.ietf-pquip-hybrid-signature-spectrums}} of the composite and effectively reduces it to a
 
-## Component Algorithm Selection Criteria {#sec-selection-criteria}
-
-TODO: Update this once the on-list discussion settles.
-
-The composite algorithm combinations defined in this document were chosen according to the following guidelines:
-
-1. RSA combinations are provided at key sizes of 2048 and 3072 bits. Since RSA 2048 and 3072 are considered to have 112 and 128 bits of classical security respectively, they are both matched with NIST PQC Level 1 algorithms and 128-bit symmetric algorithms.
-1. Elliptic curve algorithms are provided with combinations on each of the NIST [RFC6090], Brainpool [RFC5639], and Edwards [RFC7748] curves. NIST PQC Levels 1 - 3 algorithms are matched with 256-bit curves, while NIST levels 4 - 5 are matched with 384-bit elliptic curves. This provides a balance between matching classical security levels of post-quantum and traditional algorithms, and also selecting elliptic curves which already have wide adoption.
-1. NIST level 1 candidates are provided, matched with 256-bit elliptic curves, intended for constrained use cases.
-
-If other combinations are needed, a separate specification should be submitted to the IETF LAMPS working group.  To ease implementation, these specifications are encouraged to follow the construction pattern of the algorithms specified in this document.
-
-The composite structures defined in this specification allow only for pairs of algorithms. This also does not preclude future specification from extending these structures to define combinations with three or more components.
 
 ## Policy for Deprecated and Acceptable Algorithms
 
