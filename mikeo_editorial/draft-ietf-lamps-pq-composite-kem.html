@@ -1291,10 +1291,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
                 </ul>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.2">
-                <p id="section-toc.1-1.9.2.2.1"><a href="#section-9.2" class="auto internal xref">9.2</a>.  <a href="#name-component-algorithm-selecti" class="internal xref">Component Algorithm Selection Criteria</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.3">
-                <p id="section-toc.1-1.9.2.3.1"><a href="#section-9.3" class="auto internal xref">9.3</a>.  <a href="#name-policy-for-deprecated-and-a" class="internal xref">Policy for Deprecated and Acceptable Algorithms</a></p>
+                <p id="section-toc.1-1.9.2.2.1"><a href="#section-9.2" class="auto internal xref">9.2</a>.  <a href="#name-policy-for-deprecated-and-a" class="internal xref">Policy for Deprecated and Acceptable Algorithms</a></p>
 </li>
             </ul>
 </li>
@@ -2790,37 +2787,15 @@ END
 </div>
 </section>
 </div>
-<div id="sec-selection-criteria">
-<section id="section-9.2">
-        <h3 id="name-component-algorithm-selecti">
-<a href="#section-9.2" class="section-number selfRef">9.2. </a><a href="#name-component-algorithm-selecti" class="section-name selfRef">Component Algorithm Selection Criteria</a>
-        </h3>
-<p id="section-9.2-1">TODO: Update this once the on-list discussion settles.<a href="#section-9.2-1" class="pilcrow">¶</a></p>
-<p id="section-9.2-2">The composite algorithm combinations defined in this document were chosen according to the following guidelines:<a href="#section-9.2-2" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="normal type-1" id="section-9.2-3">
-<li id="section-9.2-3.1">
-            <p id="section-9.2-3.1.1">RSA combinations are provided at key sizes of 2048 and 3072 bits. Since RSA 2048 and 3072 are considered to have 112 and 128 bits of classical security respectively, they are both matched with NIST PQC Level 1 algorithms and 128-bit symmetric algorithms.<a href="#section-9.2-3.1.1" class="pilcrow">¶</a></p>
-</li>
-          <li id="section-9.2-3.2">
-            <p id="section-9.2-3.2.1">Elliptic curve algorithms are provided with combinations on each of the NIST <span>[<a href="#RFC6090" class="cite xref">RFC6090</a>]</span>, Brainpool <span>[<a href="#RFC5639" class="cite xref">RFC5639</a>]</span>, and Edwards <span>[<a href="#RFC7748" class="cite xref">RFC7748</a>]</span> curves. NIST PQC Levels 1 - 3 algorithms are matched with 256-bit curves, while NIST levels 4 - 5 are matched with 384-bit elliptic curves. This provides a balance between matching classical security levels of post-quantum and traditional algorithms, and also selecting elliptic curves which already have wide adoption.<a href="#section-9.2-3.2.1" class="pilcrow">¶</a></p>
-</li>
-          <li id="section-9.2-3.3">
-            <p id="section-9.2-3.3.1">NIST level 1 candidates are provided, matched with 256-bit elliptic curves, intended for constrained use cases.<a href="#section-9.2-3.3.1" class="pilcrow">¶</a></p>
-</li>
-        </ol>
-<p id="section-9.2-4">If other combinations are needed, a separate specification should be submitted to the IETF LAMPS working group.  To ease implementation, these specifications are encouraged to follow the construction pattern of the algorithms specified in this document.<a href="#section-9.2-4" class="pilcrow">¶</a></p>
-<p id="section-9.2-5">The composite structures defined in this specification allow only for pairs of algorithms. This also does not preclude future specification from extending these structures to define combinations with three or more components.<a href="#section-9.2-5" class="pilcrow">¶</a></p>
-</section>
-</div>
 <div id="policy-for-deprecated-and-acceptable-algorithms">
-<section id="section-9.3">
+<section id="section-9.2">
         <h3 id="name-policy-for-deprecated-and-a">
-<a href="#section-9.3" class="section-number selfRef">9.3. </a><a href="#name-policy-for-deprecated-and-a" class="section-name selfRef">Policy for Deprecated and Acceptable Algorithms</a>
+<a href="#section-9.2" class="section-number selfRef">9.2. </a><a href="#name-policy-for-deprecated-and-a" class="section-name selfRef">Policy for Deprecated and Acceptable Algorithms</a>
         </h3>
-<p id="section-9.3-1">Traditionally, a public key or certificate contains a single cryptographic algorithm. If and when an algorithm becomes deprecated (for example, RSA-512, or SHA1), it is obvious that the public keys or certificates using that algorithm are to be considered revoked.<a href="#section-9.3-1" class="pilcrow">¶</a></p>
-<p id="section-9.3-2">In the composite model this is less obvious since implementers may decide that certain cryptographic algorithms have complementary security properties and are acceptable in combination even though one or both algorithms are deprecated for individual use. As such, a single composite public key or certificate may contain a mixture of deprecated and non-deprecated algorithms.<a href="#section-9.3-2" class="pilcrow">¶</a></p>
-<p id="section-9.3-3">Since composite algorithms are registered independently of their component algorithms, their deprecation can be handled independently from that of their component algorithms. For example a cryptographic policy might continue to allow <code>id-MLKEM512-ECDH-P256</code> even after ECDH-P256 is deprecated.<a href="#section-9.3-3" class="pilcrow">¶</a></p>
-<p id="section-9.3-4">The composite KEM design specified in this document, and especially that of the KEM combiner specified in <a href="#sec-kem-combiner" class="auto internal xref">Section 4.3</a> means that the overall composite KEM algorithm should be considered to have the security strength of the strongest of its component algorithms; ie as long as one component algorithm remains strong, then the overall composite algorithm remains strong.<a href="#section-9.3-4" class="pilcrow">¶</a></p>
+<p id="section-9.2-1">Traditionally, a public key or certificate contains a single cryptographic algorithm. If and when an algorithm becomes deprecated (for example, RSA-512, or SHA1), it is obvious that the public keys or certificates using that algorithm are to be considered revoked.<a href="#section-9.2-1" class="pilcrow">¶</a></p>
+<p id="section-9.2-2">In the composite model this is less obvious since implementers may decide that certain cryptographic algorithms have complementary security properties and are acceptable in combination even though one or both algorithms are deprecated for individual use. As such, a single composite public key or certificate may contain a mixture of deprecated and non-deprecated algorithms.<a href="#section-9.2-2" class="pilcrow">¶</a></p>
+<p id="section-9.2-3">Since composite algorithms are registered independently of their component algorithms, their deprecation can be handled independently from that of their component algorithms. For example a cryptographic policy might continue to allow <code>id-MLKEM512-ECDH-P256</code> even after ECDH-P256 is deprecated.<a href="#section-9.2-3" class="pilcrow">¶</a></p>
+<p id="section-9.2-4">The composite KEM design specified in this document, and especially that of the KEM combiner specified in <a href="#sec-kem-combiner" class="auto internal xref">Section 4.3</a> means that the overall composite KEM algorithm should be considered to have the security strength of the strongest of its component algorithms; ie as long as one component algorithm remains strong, then the overall composite algorithm remains strong.<a href="#section-9.2-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
