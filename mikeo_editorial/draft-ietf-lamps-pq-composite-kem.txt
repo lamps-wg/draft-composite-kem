@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 16 March 2025                                           M. Pala
+Expires: 30 March 2025                                           M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                       12 September 2024
+                                                       26 September 2024
 
 
 Composite ML-KEM for Use in the Internet X.509 Public Key Infrastructure
@@ -69,7 +69,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 16 March 2025.
+   This Internet-Draft will expire on 30 March 2025.
 
 Copyright Notice
 
@@ -949,9 +949,9 @@ Table of Contents
              Table 4: REQUIRED pairings for CMS KDF and WRAP
 
    In all cases above, the hash function used as a KDF produces a longer
-   output than needed by the encryption algorithm, so the output should
-   simply be truncated to the correct length -- ie use the leftmost
-   significant bits.
+   output than needed by the encryption algorithm, so the output SHALL
+   be truncated to the correct length -- ie the leftmost significant
+   bits are used.
 
    Note: id-aes256-Wrap is stronger than necessary for the MLKEM768
    combinations at the NIST level 3 192 bit security level, however id-
@@ -1771,11 +1771,11 @@ Table of Contents
               pquip-hybrid-signature-spectrums-00>.
 
    [I-D.ietf-pquip-pqt-hybrid-terminology]
-              D, F. and M. P, "Terminology for Post-Quantum Traditional
-              Hybrid Schemes", Work in Progress, Internet-Draft, draft-
-              ietf-pquip-pqt-hybrid-terminology-03, 9 May 2024,
-              <https://datatracker.ietf.org/doc/html/draft-ietf-pquip-
-              pqt-hybrid-terminology-03>.
+              D, F., P, M., and B. Hale, "Terminology for Post-Quantum
+              Traditional Hybrid Schemes", Work in Progress, Internet-
+              Draft, draft-ietf-pquip-pqt-hybrid-terminology-04, 10
+              September 2024, <https://datatracker.ietf.org/doc/html/
+              draft-ietf-pquip-pqt-hybrid-terminology-04>.
 
    [I-D.ietf-tls-hybrid-design]
               Stebila, D., Fluhrer, S., and S. Gueron, "Hybrid key
@@ -1958,7 +1958,7 @@ C.3.  Decapsulation Requires the Public Key
    OneAsymmetricKey.publicKey field would mean that two copies of the
    public key data are transmitted.
 
-   With regard to the traditional algorithms, RSA or Elliptic CUrve, in
+   With regard to the traditional algorithms, RSA or Elliptic Curve, in
    order to achieve the public-key binding property the KEM combiner
    used to form the composite KEM, the combiner requires the traditional
    public key as input to the KDF that derives the output shared secret.
