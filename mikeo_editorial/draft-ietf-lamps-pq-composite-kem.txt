@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 31 March 2025                                           M. Pala
+Expires: 1 April 2025                                            M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                       27 September 2024
+                                                       28 September 2024
 
 
 Composite ML-KEM for Use in the Internet X.509 Public Key Infrastructure
@@ -69,7 +69,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 31 March 2025.
+   This Internet-Draft will expire on 1 April 2025.
 
 Copyright Notice
 
@@ -562,12 +562,13 @@ Table of Contents
    input to the KEM Combiner function, and is not typically carried
    within an RSA or Elliptic Curve private key.  Therefore the publicKey
    field of the second OneAsymmetricKey MUST contain the corresponding
-   public key.  See Appendix C.3 for more discussion.  The AlgorithmIDs
-   to place into the component OneAsymmetricKeys is ambiguous; since
+   public key.  See Appendix C.3 for more discussion.  Which
+   AlgorithmIDs to place into the component OneAsymmetricKeys is
+   ambiguous; since
    OneAsymmetricKey.PrivateKeyAlgorithmIdentifier.AlgorithmID is not
-   optional, parsers MUST place something here and producers MAY either
-   duplicate the composite AlgorithmID into beth components, or MAY
-   place the AlgoritmID of the component algorithm, parsers SHOULD
+   optional, producers MUST place something here and MAY either
+   duplicate the composite AlgorithmID into both components, or MAY
+   place the AlgorithmID of the component algorithm.  Parsers SHOULD
    ignore the component private key AlgorithmIDs and assume that the
    private keys are in the same order as specified in Table 1.
 
@@ -1507,8 +1508,8 @@ Table of Contents
    implementation attacks against ML-KEM in order to increase
    performance.
 
-   However, since neither RSA-OAEP or ECDH do not guarantee second pre-
-   image resistance at all, even in a correct implementation, these
+   However, since neither RSA-OAEP nor ECDH guarantee second pre-image
+   resistance at all, even in a correct implementation, these
    ciphertexts are bound to the key derivation in order to guarantee
    that c != c' will yield a unique ciphertext, and thus restoring
    second pre-image resistance to the overall composite KEM.

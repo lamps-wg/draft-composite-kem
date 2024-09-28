@@ -1039,7 +1039,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Ounsworth, et al.</td>
-<td class="center">Expires 31 March 2025</td>
+<td class="center">Expires 1 April 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1052,12 +1052,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-lamps-pq-composite-kem-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2024-09-27" class="published">27 September 2024</time>
+<time datetime="2024-09-28" class="published">28 September 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-03-31">31 March 2025</time></dd>
+<dd class="expires"><time datetime="2025-04-01">1 April 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1123,7 +1123,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 31 March 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 1 April 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1679,7 +1679,7 @@ CompositeKEMPrivateKey ::= SEQUENCE SIZE (2) OF OneAsymmetricKey
 <p id="section-3.3-3">Each element is a <code>OneAsymmetricKey</code> <span>[<a href="#RFC5958" class="cite xref">RFC5958</a>]</span> object for a component private key.<a href="#section-3.3-3" class="pilcrow">¶</a></p>
 <p id="section-3.3-4">The parameters field MUST be absent.<a href="#section-3.3-4" class="pilcrow">¶</a></p>
 <p id="section-3.3-5">The order of the component keys is the same as the order defined in <a href="#sec-composite-pub-keys" class="auto internal xref">Section 3.2</a> for the components of CompositeKEMPublicKey.<a href="#section-3.3-5" class="pilcrow">¶</a></p>
-<p id="section-3.3-6">Often, a <code>CompositePrivateKey</code> will be carried within a carrier format such as PKCS#8 which is itself a <code>OneAsymmetricKey</code> structure (version 1 of which is also known as PrivateKeyInfo) <span>[<a href="#RFC5958" class="cite xref">RFC5958</a>]</span>, then a situation arises where we have <code>CompositeKEMPrivateKey ::= SEQUENCE SIZE (2) OF OneAsymmetricKey</code> inside another <code>OneAsymmetricKey</code>. On the outer <code>OneAsymmetricKey</code>, the <code>privateKeyAlgorithm</code> field SHALL be set to the corresponding composite algorithm identifier defined according to <a href="#sec-alg-ids" class="auto internal xref">Section 5</a>, the privateKey field SHALL contain the CompositeKEMPrivateKey, and the publicKey field MUST NOT be present. As discussed in <a href="#impl-cons-decaps-pubkey" class="auto internal xref">Appendix C.3</a>, the ML-KEM private key encoding already includes a copy of the public key, so the <code>publicKey</code> field of the first <code>OneAsymmetricKey</code> remains OPTIONAL. However, the public key of the traditional component, RSA or Elliptic Curve, is required as input to the KEM Combiner function, and is not typically carried within an RSA or Elliptic Curve private key. Therefore the <code>publicKey</code> field of the second <code>OneAsymmetricKey</code> MUST contain the corresponding public key. See <a href="#impl-cons-decaps-pubkey" class="auto internal xref">Appendix C.3</a> for more discussion. The <code>AlgorithmID</code>s to place into the component <code>OneAsymmetricKey</code>s is ambiguous; since <code>OneAsymmetricKey.PrivateKeyAlgorithmIdentifier.AlgorithmID</code> is not optional, parsers MUST place something here and producers MAY either duplicate the composite AlgorithmID into beth components, or MAY place the AlgoritmID of the component algorithm, parsers SHOULD ignore the component private key <code>AlgorithmID</code>s and assume that the private keys are in the same order as specified in <a href="#tab-kem-algs" class="auto internal xref">Table 1</a>.<a href="#section-3.3-6" class="pilcrow">¶</a></p>
+<p id="section-3.3-6">Often, a <code>CompositePrivateKey</code> will be carried within a carrier format such as PKCS#8 which is itself a <code>OneAsymmetricKey</code> structure (version 1 of which is also known as PrivateKeyInfo) <span>[<a href="#RFC5958" class="cite xref">RFC5958</a>]</span>, then a situation arises where we have <code>CompositeKEMPrivateKey ::= SEQUENCE SIZE (2) OF OneAsymmetricKey</code> inside another <code>OneAsymmetricKey</code>. On the outer <code>OneAsymmetricKey</code>, the <code>privateKeyAlgorithm</code> field SHALL be set to the corresponding composite algorithm identifier defined according to <a href="#sec-alg-ids" class="auto internal xref">Section 5</a>, the <code>privateKey</code> field SHALL contain the <code>CompositeKEMPrivateKey</code>, and the <code>publicKey</code> field MUST NOT be present. As discussed in <a href="#impl-cons-decaps-pubkey" class="auto internal xref">Appendix C.3</a>, the ML-KEM private key encoding already includes a copy of the public key, so the <code>publicKey</code> field of the first <code>OneAsymmetricKey</code> remains OPTIONAL. However, the public key of the traditional component, RSA or Elliptic Curve, is required as input to the KEM Combiner function, and is not typically carried within an RSA or Elliptic Curve private key. Therefore the <code>publicKey</code> field of the second <code>OneAsymmetricKey</code> MUST contain the corresponding public key. See <a href="#impl-cons-decaps-pubkey" class="auto internal xref">Appendix C.3</a> for more discussion. Which <code>AlgorithmID</code>s to place into the component <code>OneAsymmetricKey</code>s is ambiguous; since <code>OneAsymmetricKey.PrivateKeyAlgorithmIdentifier.AlgorithmID</code> is not optional, producers MUST place something here and MAY either duplicate the composite AlgorithmID into both components, or MAY place the AlgorithmID of the component algorithm. Parsers SHOULD ignore the component private key <code>AlgorithmID</code>s and assume that the private keys are in the same order as specified in <a href="#tab-kem-algs" class="auto internal xref">Table 1</a>.<a href="#section-3.3-6" class="pilcrow">¶</a></p>
 <p id="section-3.3-7">In some use-cases the private keys that comprise a composite key may not be represented in a single structure or even be contained in a single cryptographic module; for example if one component is within the FIPS boundary of a cryptographic module and the other is not; see <a href="#sec-fips" class="auto internal xref">Appendix C.1</a> for more discussion. The establishment of correspondence between public keys in a CompositeKEMPublicKey and private keys not represented in a single composite structure is beyond the scope of this document.<a href="#section-3.3-7" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -2755,7 +2755,7 @@ END
           </h4>
 <p id="section-9.1.1-1">The notion of a second pre-image resistant KEM is defined in <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span> being the property that it is computationally difficult to find two different ciphertexts <code>c != c'</code> that will decapsulate to the same shared secret under the same public key. For the purposes of a hybrid KEM combiner, this property means that given two composite ciphertexts <code>(c1, c2)</code> and <code>(c1', c2')</code>, we must obtain a unique overall shared secret so long as either <code>c1 != c1'</code> or <code>c2 != c2'</code> -- i.e. the overall composite KEM is second pre-image resistant, and therefore IND-CCA2 secure so, long as one of the component KEMs is.<a href="#section-9.1.1-1" class="pilcrow">¶</a></p>
 <p id="section-9.1.1-2">In <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span> it is proven that ML-KEM is a second pre-image resistant KEM and therefore the ML-KEM ciphertext can safely be omitted from the KEM combiner. Note that this makes a fundamental assumption on ML-KEM remaining ciphertext second pre-image resistant, and thefore this formulation of KEM combiner does not fully protect against implementation errors in the ML-KEM component -- particularly around the ciphertext check step of the Fujisaki-Okamoto transform -- which could trivially lead to second ciphertext pre-image attacks that break the IND-CCA2 security of the ML-KEM component and of the overall composite KEM. This could be more fully mitigated by binding the ML-KEM ciphertext in the combiner, but a design decision was made to settle for protection against algorithmic attacks and not implementation attacks against ML-KEM in order to increase performance.<a href="#section-9.1.1-2" class="pilcrow">¶</a></p>
-<p id="section-9.1.1-3">However, since neither RSA-OAEP or ECDH do not guarantee second pre-image resistance at all, even in a correct implementation, these ciphertexts are bound to the key derivation in order to guarantee that <code>c != c'</code> will yield a unique ciphertext, and thus restoring second pre-image resistance to the overall composite KEM.<a href="#section-9.1.1-3" class="pilcrow">¶</a></p>
+<p id="section-9.1.1-3">However, since neither RSA-OAEP nor ECDH guarantee second pre-image resistance at all, even in a correct implementation, these ciphertexts are bound to the key derivation in order to guarantee that <code>c != c'</code> will yield a unique ciphertext, and thus restoring second pre-image resistance to the overall composite KEM.<a href="#section-9.1.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sha3-vs-hkdf-sha2">
