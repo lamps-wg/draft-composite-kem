@@ -162,7 +162,8 @@ informative:
   RFC8551:
   RFC9180:
   I-D.draft-ietf-tls-hybrid-design-04:
-  I-D.draft-driscoll-pqt-hybrid-terminology-01:
+  I-D.draft-ietf-pquip-pqt-hybrid-terminology-04:
+  I-D.draft-ietf-pquip-hybrid-signature-spectrums-00:
   I-D.draft-ietf-lamps-kyber-certificates-01:
   I-D.draft-housley-lamps-cms-kemri-02:
   X-Wing:
@@ -214,6 +215,24 @@ informative:
       - ins: A. Roginksy
         name: Allan Reginsky
     org: National Institute of Standards and Technology (NIST)
+  GHP18:
+    title: KEM Combiners
+    author:
+      name: Federico Giacon
+      name: Felix Heuer
+      name: Bertram Poettering
+    date: 2018
+    target: https://eprint.iacr.org/2018/024
+  Aviram22:
+    title: "Practical (Post-Quantum) Key Combiners from One-Wayness and Applications to TLS"
+    author:
+      name: Nimrod Aviram
+      name: Benjamin Dowling
+      name: Ilan Komargodski
+      name: Kenneth G. Paterson
+      name: Eyal Ronen
+      name: Eylon Yogev
+    target: https://eprint.iacr.org/2022/065
   CNSA2.0:
     title: "Commercial National Security Algorithm Suite 2.0"
     org: National Security Agency
@@ -228,7 +247,7 @@ informative:
 
 --- abstract
 
-This document introduces a set of Key Encapsulation Mechanism (KEM) schemes that use pairs of cryptographic elements such as public keys and cipher texts to combine their security properties. These schemes effectively mitigate risks associated with the adoption of post-quantum cryptography and are fully compatible with existing X.509, PKIX, and CMS data structures and protocols. This document defines eleven specific pairwise combinations, namely ML-KEM Composite Schemes, that blend ML-KEM with traditional algorithms such as RSA-OAEP, ECDH, X25519, and X448. For use within CMS, this document is intended to be coupled with the CMS KEMRecipientInfo mechanism in {{I-D.housley-lamps-cms-kemri}}. These combinations are tailored to meet security best practices and regulatory requirements.
+This document introduces a set of Key Encapsulation Mechanism (KEM) schemes that use pairs of cryptographic elements such as public keys and cipher texts to combine their security properties. These schemes effectively mitigate risks associated with the adoption of post-quantum cryptography and are fully compatible with existing X.509, PKIX, and CMS data structures and protocols. This document defines eleven specific pairwise combinations, namely ML-KEM Composite Schemes, that blend ML-KEM with traditional algorithms such as RSA-OAEP, ECDH, X25519, and X448. For use within CMS, this document is intended to be coupled with the CMS KEMRecipientInfo mechanism in {{I-D.housley-lamps-cms-kemri}}. These combinations are tailored to meet security best practices and regulatory requirements. Composite ML-KEM is applicable in any application that would otherwise use ML-KEM, but wants the protection against breaks or catastrophic bugs in ML-KEM.
 
 <!-- End of Abstract -->
 
@@ -236,6 +255,19 @@ This document introduces a set of Key Encapsulation Mechanism (KEM) schemes that
 --- middle
 
 # Changes in version -05
+
+Interop-affecting changes:
+
+* Fixed a bug in the definition of the Encaps() functions: KEMs, according to both RFC9180 and FIPS 203 should always return (ss, ct), but we had (ct, ss).
+* Interoperable composite private key format requires component public keys (because public keys are required for decapsulation).
+* Specified that the tradCT and tradPK inputs to the KEM combiner must be the raw values without the OCTET STRING wrapper.
+
+Editorial changes:
+
+* Added an Implementation Consideration section explaining why private keys need to contain the public keys.
+* Added a security consideration about key reuse.
+* Added security considerations about SHA3-vs-HKDF-SHA2 and a warning against generifying this construction to other combinations of ciphers.
+
 
 * Fixed a bug in the definition of the Encap() functions: KEMs, according to both RFC9180 and FIPS 203 should always return (ss, ct), but we had (ct, ss).
 * Adjusted RSA-OAEP section to follow RFC8017 instead of RFC3560. Does not use the RSA-OAEP label.
@@ -263,7 +295,7 @@ The advent of quantum computing poses a significant threat to current cryptograp
 
 Unlike previous migrations between cryptographic algorithms, the decision of when to migrate and which algorithms to adopt is far from straightforward. Even after the migration period, it may be advantageous for an entity's cryptographic identity to incorporate multiple public-key algorithms to enhance security.
 
-Cautious implementers may opt to combine cryptographic algorithms in such a way that an attacker would need to break all of them simultaneously to compromise the protected data. These mechanisms are referred to as Post-Quantum/Traditional (PQ/T) Hybrids {{I-D.driscoll-pqt-hybrid-terminology}}.
+Cautious implementers may opt to combine cryptographic algorithms in such a way that an attacker would need to break all of them simultaneously to compromise the protected data. These mechanisms are referred to as Post-Quantum/Traditional (PQ/T) Hybrids {{I-D.ietf-pquip-pqt-hybrid-terminology}}.
 
 Certain jurisdictions are already recommending or mandating that PQC lattice schemes be used exclusively within a PQ/T hybrid framework. The use of Composite scheme provides a straightforward implementation of hybrid solutions compatible with (and advocated by) some governments and cybersecurity agencies [BSI2021].
 
@@ -284,13 +316,15 @@ PQ/T Hybrid cryptography can, in general, provide solutions to two migration pro
 
 This document defines a specific instantiation of the PQ/T Hybrid paradigm called "composite" where multiple cryptographic algorithms are combined to form a single key encapsulation mechanism (KEM) key and ciphertext such that they can be treated as a single atomic algorithm at the protocol level. Composite algorithms address algorithm strength uncertainty because the composite algorithm remains strong so long as one of its components remains strong. Concrete instantiations of composite KEM algorithms are provided based on ML-KEM, RSA-OAEP and ECDH. Backwards compatibility is not directly covered in this document, but is the subject of {{sec-backwards-compat}}.
 
-This document is intended for general applicability anywhere that key establishment or enveloped content encryption is used within PKIX or CMS structures.
+Composite ML-KEM is intended for general applicability anywhere that key establishment or enveloped content encryption is used within PKIX or CMS structures.
+
+
 
 
 ## Terminology {#sec-terminology}
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 {{RFC2119}}  {{RFC8174}} when, and only when, they appear in all capitals, as shown here.
 
-This document is consistent with all terminology from {{I-D.driscoll-pqt-hybrid-terminology}}.
+This document is consistent with all terminology from {{I-D.ietf-pquip-pqt-hybrid-terminology}}.
 In addition, the following terms are used in this document:
 
 **COMBINER:**
@@ -314,7 +348,7 @@ In addition, the following terms are used in this document:
 
 ## Composite Design Philosophy
 
-{{I-D.driscoll-pqt-hybrid-terminology}} defines composites as:
+{{I-D.ietf-pquip-pqt-hybrid-terminology}} defines composites as:
 
 >   *Composite Cryptographic Element*:  A cryptographic element that
 >      incorporates multiple component cryptographic elements of the same
@@ -348,7 +382,7 @@ The KEM interface was chosen as the interface for a composite key establishment 
 
 ### Composite KeyGen
 
-The `KeyGen() -> (pk, sk)` of a composite KEM algorithm will perform the `KeyGen()` of the respective component KEM algorithms and it produces a composite public key `pk` as per {{sec-composite-pub-keys}} and a composite secret key `sk` is per {{sec-priv-key}}.
+The `KeyGen() -> (pk, sk)` of a composite KEM algorithm will perform the `KeyGen()` of the respective component KEM algorithms and it produces a composite public key `pk` as per {{sec-composite-pub-keys}} and a composite secret key `sk` as per {{sec-priv-key}}.
 
 ~~~
 CompositeKEM.KeyGen():
@@ -541,11 +575,13 @@ CompositeKEMPublicKey ::= SEQUENCE SIZE (2) OF BIT STRING
 {: artwork-name="CompositeKEMPublicKey-asn.1-structures"}
 
 
-A composite key MUST contain two component public keys. The order of the component keys is determined by the definition of the corresponding algorithm identifier as defined in section {{sec-alg-ids}}.
+A composite key MUST contain two component public keys as SEQUENCE of two bit strings. The order of the component keys is determined by the definition of the corresponding algorithm identifier as defined in section {{sec-alg-ids}}.
 
 Some applications may need to reconstruct the `SubjectPublicKeyInfo` objects corresponding to each component public key. {{tab-kem-algs}} in {{sec-alg-ids}} provides the necessary mapping between composite and their component algorithms for doing this reconstruction. This also motivates the design choice of `SEQUENCE OF BIT STRING` instead of `SEQUENCE OF OCTET STRING`; using `BIT STRING` allows for easier transcription between CompositeKEMPublicKey and SubjectPublicKeyInfo.
 
 When the CompositeKEMPublicKey must be provided in octet string or bit string format, the data structure is encoded as specified in {{sec-encoding-rules}}.
+
+In order to maintain security properties of the composite, applications that use composite keys MUST always perform fresh key generations of both component keys and MUST NOT reuse existing key material. See {{sec-cons-key-reuse}} for a discussion.
 
 
 ## CompositeKEMPrivateKey {#sec-priv-key}
@@ -557,13 +593,13 @@ CompositeKEMPrivateKey ::= SEQUENCE SIZE (2) OF OneAsymmetricKey
 ~~~
 {: artwork-name="CompositeKEMPrivateKey-asn.1-structures"}
 
-Each element is a `OneAsymmetricKey`` [RFC5958] object for a component private key.
+Each element is a `OneAsymmetricKey` [RFC5958] object for a component private key.
 
 The parameters field MUST be absent.
 
 The order of the component keys is the same as the order defined in {{sec-composite-pub-keys}} for the components of CompositeKEMPublicKey.
 
-When a `CompositePrivateKey` is conveyed inside a OneAsymmetricKey structure (version 1 of which is also known as PrivateKeyInfo) [RFC5958], the privateKeyAlgorithm field SHALL be set to the corresponding composite algorithm identifier defined according to {{sec-alg-ids}}, the privateKey field SHALL contain the CompositeKEMPrivateKey, and the publicKey field MUST NOT be present. Associated public key material MAY be present in the CompositeKEMPrivateKey.
+Often, a `CompositePrivateKey` will be carried within a carrier format such as PKCS#8 which is itself a `OneAsymmetricKey` structure (version 1 of which is also known as PrivateKeyInfo) [RFC5958], then a situation arises where we have `CompositeKEMPrivateKey ::= SEQUENCE SIZE (2) OF OneAsymmetricKey` inside another `OneAsymmetricKey`. On the outer `OneAsymmetricKey`, the `privateKeyAlgorithm` field SHALL be set to the corresponding composite algorithm identifier defined according to {{sec-alg-ids}}, the `privateKey` field SHALL contain the `CompositeKEMPrivateKey`, and the `publicKey` field MUST NOT be present. As discussed in {{impl-cons-decaps-pubkey}}, the ML-KEM private key encoding already includes a copy of the public key, so the `publicKey` field of the first `OneAsymmetricKey` remains OPTIONAL. However, the public key of the traditional component, RSA or Elliptic Curve, is required as input to the KEM Combiner function, and is not typically carried within an RSA or Elliptic Curve private key. Therefore the `publicKey` field of the second `OneAsymmetricKey` MUST contain the corresponding public key. See {{impl-cons-decaps-pubkey}} for more discussion. Which `AlgorithmID`s to place into the component `OneAsymmetricKey`s is ambiguous; since `OneAsymmetricKey.PrivateKeyAlgorithmIdentifier.AlgorithmID` is not optional, producers MUST place something here and MAY either duplicate the composite AlgorithmID into both components, or MAY place the AlgorithmID of the component algorithm. Parsers SHOULD ignore the component private key `AlgorithmID`s and assume that the private keys are in the same order as specified in {{tab-kem-algs}}.
 
 In some use-cases the private keys that comprise a composite key may not be represented in a single structure or even be contained in a single cryptographic module; for example if one component is within the FIPS boundary of a cryptographic module and the other is not; see {{sec-fips}} for more discussion. The establishment of correspondence between public keys in a CompositeKEMPublicKey and private keys not represented in a single composite structure is beyond the scope of this document.
 
@@ -616,7 +652,7 @@ kema-CompositeKEM {
 
 ## CompositeCiphertextValue {#sec-CompositeCiphertextValue}
 
-The compositeCipherTextValue is a concatenation of the ciphertexts of the
+The compositeCipherTextValue is a SEQUENCE of the ciphertexts of the
 underlying component algorithms.  It is represented in ASN.1 as follows:
 
 ~~~
@@ -732,13 +768,7 @@ Composite KEM algorithms MAY be employed for one or more recipients in the CMS e
 
 ## Underlying Components
 
-A CMS implementation that supports a composite KEM algorithm MUST support at least the following underlying components:
-
-When a particular Composite KEM OID is supported, an implementation MUST support the corresponding KDF algorithm identifier in {{tab-cms-kdf-wrap}}.
-
-When a particular Composite KEM OID is supported, an implementation MUST support the corresponding key-encryption algorithm identifier in {{tab-cms-kdf-wrap}}.
-
-The following table lists the REQUIRED KDF and key-encryption algorithms to preserve security and performance characteristics of each composite algorithm.
+When a particular Composite KEM OID is supported, a CMS implementation MUST support the corresponding KDF and key-encryption algorithms listed in {{tab-cms-kdf-wrap}}, which have been chosen to preserve security and performance characteristics of each composite algorithm.
 
 
 | Composite KEM OID                 | KDF         | Key Encryption Alg |
@@ -753,11 +783,13 @@ The following table lists the REQUIRED KDF and key-encryption algorithms to pres
 | id-MLKEM1024-X448                 | SHA3-512 | id-aes256-Wrap     |
 {: #tab-cms-kdf-wrap title="REQUIRED pairings for CMS KDF and WRAP"}
 
+In all cases above, the hash function used as a KDF produces a longer output than needed by the encryption algorithm, so the output SHALL be truncated to the correct length -- ie the leftmost significant bits are used.
+
 Note: `id-aes256-Wrap` is stronger than necessary for the MLKEM768 combinations at the NIST level 3 192 bit security level, however `id-aes256-Wrap` was chosen because it has better general adoption than `id-aes192-Wrap`.
 
 where:
 
-* SHA3-* KDF instantiations are defined in {{I-D.ietf-lamps-cms-sha3-hash}}.
+* `id-sha3-*` KDF instantiations are defined in {{I-D.ietf-lamps-cms-sha3-hash}}.
 * `id-aes*-Wrap` are defined in [RFC3394].
 
 
@@ -885,6 +917,40 @@ EDNOTE to IANA: OIDs will need to be replaced in both the ASN.1 module and in {{
 
 # Security Considerations
 
+
+## KEM Combiner Security Analysis {#sec-cons-kem-combiner}
+
+EDNOTE: the exact text to put here depends on the outcome of the CFRG KEM Combiners and X-Wing discussion. If CFRG doesn't move fast enough for us, then we may need to leverage this security consideration directly on top of the X-Wing paper [X-Wing].
+
+The primary security property of the KEM combiner is that it preserves IND-CCA2 of the overall composite KEM so long as at least one component is IND-CCA2 [X-Wing] [GHP18]. Additionally, we also need to consider the case where one of the component algorithms is completely broken; that the private key is known to an attacker, or worse that the public key, private key, and ciphertext are maniputaled by the attacker. In this case, we rely on the construction of the KEM combiner to ensure that the value of the other shared secret cannot be leaked or the combined shared secret predicted via manipulation of the broken algorithm. The following sections continue this discussion.
+
+### Second pre-image resistance of componet KEMs {#sec-cons-ct-collision}
+
+The notion of a second pre-image resistant KEM is defined in [X-Wing] being the property that it is computationally difficult to find two different ciphertexts `c != c'` that will decapsulate to the same shared secret under the same public key. For the purposes of a hybrid KEM combiner, this property means that given two composite ciphertexts `(c1, c2)` and `(c1', c2')`, we must obtain a unique overall shared secret so long as either `c1 != c1'` or `c2 != c2'` -- i.e. the overall composite KEM is second pre-image resistant, and therefore IND-CCA2 secure so, long as one of the component KEMs is.
+
+In [X-Wing] it is proven that ML-KEM is a second pre-image resistant KEM and therefore the ML-KEM ciphertext can safely be omitted from the KEM combiner. Note that this makes a fundamental assumption on ML-KEM remaining ciphertext second pre-image resistant, and thefore this formulation of KEM combiner does not fully protect against implementation errors in the ML-KEM component -- particularly around the ciphertext check step of the Fujisaki-Okamoto transform -- which could trivially lead to second ciphertext pre-image attacks that break the IND-CCA2 security of the ML-KEM component and of the overall composite KEM. This could be more fully mitigated by binding the ML-KEM ciphertext in the combiner, but a design decision was made to settle for protection against algorithmic attacks and not implementation attacks against ML-KEM in order to increase performance.
+
+However, since neither RSA-OAEP nor ECDH guarantee second pre-image resistance at all, even in a correct implementation, these ciphertexts are bound to the key derivation in order to guarantee that `c != c'` will yield a unique ciphertext, and thus restoring second pre-image resistance to the overall composite KEM.
+
+### SHA3 vs HKDF-SHA2
+
+In order to achieve the desired secutiy property that the composite KEM is IND-CCA2 whenever at least one of the component KEMs is, the KDF used in the KEM combiner needs to possess collision and second pre-image resistance with respect to each of its inputs independently; a property sometimes called "dual-PRF" [Aviram22]. Collision and second-pre-image resistance protects against compromise of one component algorithm from resulting in the ability to construct multiple different ciphertexts which result in the same shared secret. Pre-image resistance protects against compromise of one component algorithm being used to attack and learn the value of the other shared secret.
+
+SHA3 is known to have all of the necessary dual-PRF properties [X-Wing], but SHA2 does not and therefore all SHA2-based constructions MUST use SHA2 within an HMAC construction such as HKDF-SHA2 [GHP18].
+
+### Generifying this construction
+
+It should be cleart that the security analsis of the presented KEM combiner construction relies heavily on the specific choices of component algorithms and combiner KDF, and this combiner construction SHOULD NOT by applied to any other combination of ciphers without performing the appropriate security analysis.
+
+### Key Reuse {#sec-cons-key-reuse}
+
+TODO: does this section actually apply to composite KEMs, or only to composite signatures?
+
+When using single-algorithm cryptography, the best practice is to always generate fresh key material for each purpose, for example when renewing a certificate, or obtaining both a TLS and S/MIME certificate for the same device, however in practice key reuse in such scenarios is often not catestrophic to security and therefore often tolerated. With composite keys we have a much stricter security requirement. However this reasoning does not hold in the composite setting. Consider an RSA key which already appears within a certificate and which is already being used to sign documents. If a composite key is created which combines this existing RSA key with an ML-DSA key then an attacker is free to remove the ML-DSA component of any message signed with this key and instead present the document as if it had only been signed by the RSA key. The scope of such "stripping attacks" is greatly reduced if composite keys never share key material with non-composite keys. While this logic is less straight-forward for encryption operations involving KEM keys, it does apply to authentication modes involving KEMs. A similar argument applies for two composite keys which share one component but not the other; as an example it becomes difficult for CAs and other relying parties to detect if a composite key contains a key which has been revoked due to key compromise since needing to keep lists of individual component keys is more complex than being able to search such lists for the composite key as a whole.
+
+For these reasons, applications using composite keys MUST perform fresh key generations for both components. Failure to do so negates any non-separability properties {{I-D.ietf-pquip-hybrid-signature-spectrums}} of the composite and effectively reduces it to a
+
+
 ## Policy for Deprecated and Acceptable Algorithms
 
 Traditionally, a public key or certificate contains a single cryptographic algorithm. If and when an algorithm becomes deprecated (for example, RSA-512, or SHA1), it is obvious that the public keys or certificates using that algorithm are to be considered revoked.
@@ -894,20 +960,6 @@ In the composite model this is less obvious since implementers may decide that c
 Since composite algorithms are registered independently of their component algorithms, their deprecation can be handled independently from that of their component algorithms. For example a cryptographic policy might continue to allow `id-MLKEM512-ECDH-P256` even after ECDH-P256 is deprecated.
 
 The composite KEM design specified in this document, and especially that of the KEM combiner specified in {{sec-kem-combiner}} means that the overall composite KEM algorithm should be considered to have the security strength of the strongest of its component algorithms; ie as long as one component algorithm remains strong, then the overall composite algorithm remains strong.
-
-
-## KEM Combiner Security Analysis {#sec-cons-kem-combiner}
-
-TODO
-
-TODO: SHA3 is a dual PRF cite: x-wing
-
-EDNOTE: the exact text to put here depends on the outcome of the CFRG KEM Combiners and X-Wing discussion. If CFRG doesn't move fast enough for us, then we may need to leverage this security consideration directly on top of the X-Wing paper [X-Wing].
-
-
-### Ciphertext collision resistance {#sec-cons-ct-collision}
-
-The notion of a ciphertext collision resistant KEM is defined in [X-Wing] being the property that it is computationally difficult to find two different ciphertexts that will decapsulate to the same shared secret under the same public key. In [X-Wing] it is proven that ML-KEM has this property and therefore the ML-KEM ciphertext can safely be omitted from the KEM combiner. Ciphertext collision resistance is not guaranteed for either RSA-OAEP or ECDH, therefore these ciphertexts are bound to the key derivation.
 
 
 <!-- End of Security Considerations section -->
@@ -938,6 +990,8 @@ The authors wish to note that this gives composite algorithms great future utili
 
 ### FIPS certification of Combiner Function
 
+TODO: update this to NIST SP 800-227, once it is published.
+
 One of the primary NIST documents which is relevant for certification of a composite algorithm is NIST SP.800-56Cr2 [SP.800-56Cr2] by using the allowed "hybrid" shared secret of the form `Z' = Z || T`. Compliance is acheived in the following way:
 
 SP.800-56Cr2 section 4 "One-Step Key Derivation" requires a `counter` which begins at the 4-byte value 0x00000001. However, the counter is allowed to be omitted when the hash function is executed only once, as specified on page 159 of the FIPS 140-3 Implementation Guidance [FIPS-140-3-IG].
@@ -955,20 +1009,12 @@ The term "ease of migration" is used here to mean that existing systems can be g
 
 These migration and interoperability concerns need to be thought about in the context of various types of protocols that make use of X.509 and PKIX with relation to key establishment and content encryption, from online negotiated protocols such as TLS 1.3 [RFC8446] and IKEv2 [RFC7296], to non-negotiated asynchronous protocols such as S/MIME signed email [RFC8551], as well as myriad other standardized and proprietary protocols and applications that leverage CMS [RFC5652] encrypted structures.
 
+## Decapsulation Requires the Public Key {#impl-cons-decaps-pubkey}
 
-### Parallel PKIs
+ML-KEM always requires the public key in order to perform various steps of the Fujisaki-Okamoto decapsulation [FIPS203-ipd], and for this reason the private key encoding specified in FIPS 203 includes the public key. Therefore it is not required to carry it in the `OneAsymmetricKey.publicKey` field, which remains optional, but is strictly speaking redundant since an ML-KEM public key can be parsed from an ML-KEM private key, and thus populating the `OneAsymmetricKey.publicKey` field would mean that two copies of the public key data are transmitted.
 
-EDNOTE: remove this section?
 
-We present the term "Parallel PKI" to refer to the setup where a PKI end entity possesses two or more distinct public keys or certificates for the same identity (name), but containing keys for different cryptographic algorithms. One could imagine a set of parallel PKIs where an existing PKI using legacy algorithms (RSA, ECC) is left operational during the post-quantum migration but is shadowed by one or more parallel PKIs using pure post quantum algorithms or composite algorithms (legacy and post-quantum).
-
-Equipped with a set of parallel public keys in this way, a client would have the flexibility to choose which public key(s) or certificate(s) to use in a given signature operation.
-
-For negotiated protocols, the client could choose which public key(s) or certificate(s) to use based on the negotiated algorithms.
-
-For non-negotiated protocols, the details for obtaining backwards compatibility will vary by protocol, but for example in CMS [RFC5652].
-
-EDNOTE: I copied and pruned this text from I-D.ounsworth-pq-composite-sigs. It probably needs to be fleshed out more as we better understand the implementation concerns around composite encryption.
+With regard to the traditional algorithms, RSA or Elliptic Curve, in order to achieve the public-key binding property the KEM combiner used to form the composite KEM, the combiner requires the traditional public key as input to the KDF that derives the output shared secret. Therefore it is required to carry the public key within the respective `OneAsymmetricKey.publicKey` as per the private key encoding given in {{sec-priv-key}}. Implementers who choose to use a different private key encoding than the one specified in this document MUST consider how to provide the component public keys to the decapsulate routine. While some implementations might contain routines to computationally derive the public key from the private key, it is not guaranteed that all implementations will support this; for this reason the interoparable composite private key format given in this document in {{sec-priv-key}} requires the public key of the traditional component to be included.
 
 <!-- End of Implementation Considerations section -->
 
@@ -987,7 +1033,7 @@ EDNOTE TODO: Check with Max Pala whether this IPR actually applies to this draft
 
 This document incorporates contributions and comments from a large group of experts. The Editors would especially like to acknowledge the expertise and tireless dedication of the following people, who attended many long meetings and generated millions of bytes of electronic mail and VOIP traffic over the past year in pursuit of this document:
 
-Serge Mister (Entrust), Ali Noman (Entrust), and
+Serge Mister (Entrust), Ali Noman (Entrust), Peter C. (UK NCSC), Sophie Schmieg (Google), Deirdre Connolly (SandboxAQ), Falko Strenzke (MTG AG), Dan van Geest (Crypto Next), Piotr Popis (Enigma), and
 Douglas Stebila (University of Waterloo).
 
 We are grateful to all, including any contributors who may have
