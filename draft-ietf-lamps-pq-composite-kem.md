@@ -215,8 +215,18 @@ informative:
       name: Federico Giacon
       name: Felix Heuer
       name: Bertram Poettering
-      date: 2018
-      target: https://eprint.iacr.org/2018/024
+    date: 2018
+    target: https://eprint.iacr.org/2018/024
+  Aviram22:
+    title: "Practical (Post-Quantum) Key Combiners from One-Wayness and Applications to TLS"
+    author:
+      name: Nimrod Aviram
+      name: Benjamin Dowling
+      name: Ilan Komargodski
+      name: Kenneth G. Paterson
+      name: Eyal Ronen
+      name: Eylon Yogev
+    target: https://eprint.iacr.org/2022/065
 
 
 --- abstract
@@ -898,7 +908,7 @@ However, since neither RSA-OAEP nor ECDH guarantee second pre-image resistance a
 
 ### SHA3 vs HKDF-SHA2
 
-In order to achieve the desired secutiy property that the composite KEM is IND-CCA2 whenever at least one of the component KEMs is, the KDF used in the KEM combiner needs to possess collision and second pre-image resistance with respect to each of its inputs independently; a property sometimes called "dual-PRF". Collision and second-pre-image resistance protects against compromise of one component algorithm from resulting in the ability to construct multiple different ciphertexts which result in the same shared secret. Pre-image resistance protects against compromise of one component algorithm being used to attack and learn the value of the other shared secret.
+In order to achieve the desired secutiy property that the composite KEM is IND-CCA2 whenever at least one of the component KEMs is, the KDF used in the KEM combiner needs to possess collision and second pre-image resistance with respect to each of its inputs independently; a property sometimes called "dual-PRF" [Aviram22]. Collision and second-pre-image resistance protects against compromise of one component algorithm from resulting in the ability to construct multiple different ciphertexts which result in the same shared secret. Pre-image resistance protects against compromise of one component algorithm being used to attack and learn the value of the other shared secret.
 
 SHA3 is known to have all of the necessary dual-PRF properties [X-Wing], but SHA2 does not and therefore all SHA2-based constructions MUST use SHA2 within an HMAC construction such as HKDF-SHA2 [GHP18].
 
