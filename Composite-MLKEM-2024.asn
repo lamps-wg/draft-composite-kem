@@ -1,7 +1,7 @@
-Composite-KEM-2023
-      {iso(1) identified-organization(3) dod(6) internet(1) 
+Composite-MLKEM-2024
+      { iso(1) identified-organization(3) dod(6) internet(1) 
         security(5) mechanisms(5) pkix(7) id-mod(0) 
-        id-mod-composite-kems(TBDMOD) }
+        id-mod-composite-mlkem-2024(TBDMOD) }
 
 DEFINITIONS IMPLICIT TAGS ::= BEGIN
 
@@ -9,13 +9,13 @@ EXPORTS ALL;
 
 IMPORTS
 
-PUBLIC-KEY, AlgorithmIdentifier{}
+PUBLIC-KEY, AlgorithmIdentifier{}, SMIME-CAPS
   FROM AlgorithmInformation-2009  -- RFC 5912 [X509ASN1]
       { iso(1) identified-organization(3) dod(6) internet(1)
         security(5) mechanisms(5) pkix(7) id-mod(0)
         id-mod-algorithmInformation-02(58) }
 
-KEM-ALGORITHM, KEMAlgSet
+KEM-ALGORITHM
   FROM KEMAlgorithmInformation-2023
       { iso(1) identified-organization(3) dod(6) internet(1)
         security(5) mechanisms(5) pkix(7) id-mod(0)
@@ -33,11 +33,11 @@ OneAsymmetricKey
         pkcs-9(9) smime(16) modules(0)
         id-mod-asymmetricKeyPkgV1(50) }
 
-  RSAPublicKey, ECPoint
-    FROM PKIXAlgs-2009 
-      { iso(1) identified-organization(3) dod(6)
-        internet(1) security(5) mechanisms(5) pkix(7) id-mod(0)
-        id-mod-pkix1-algorithms2008-02(56) }
+RSAPublicKey, ECPoint
+  FROM PKIXAlgs-2009 
+    { iso(1) identified-organization(3) dod(6)
+      internet(1) security(5) mechanisms(5) pkix(7) id-mod(0)
+      id-mod-pkix1-algorithms2008-02(56) }
 
 ;
 
@@ -51,6 +51,10 @@ der OBJECT IDENTIFIER ::=
   {joint-iso-itu-t asn1(1) ber-derived(2) distinguished-encoding(1)}
 
 
+-- Just for testing, to be assigned by IANA
+id-raw-key OBJECT IDENTIFIER ::= {
+   joint-iso-itu-t(2) country(16) us(840) organization(1)
+   entrust(114027) algorithm(80) composite(8) raw(999) 1 }
 
 --
 -- Composite KEM basic structures
@@ -68,34 +72,42 @@ CompositeKEMPrivateKey ::= SEQUENCE SIZE (2) OF OneAsymmetricKey
 
 CompositeCiphertextValue ::= SEQUENCE SIZE (2) OF OCTET STRING
 
+RsaCompositeKemPublicKey ::= SEQUENCE {
+        firstPublicKey BIT STRING (ENCODED BY id-raw-key),
+        secondPublicKey BIT STRING (CONTAINING RSAPublicKey)
+      }	  
+
+EcCompositeKemPublicKey ::= SEQUENCE {
+        firstPublicKey BIT STRING (ENCODED BY id-raw-key),
+        secondPublicKey BIT STRING (CONTAINING ECPoint)
+      }
+
+EdCompositeKemPublicKey ::= SEQUENCE {
+        firstPublicKey BIT STRING (ENCODED BY id-raw-key),
+        secondPublicKey BIT STRING (ENCODED BY id-raw-key)
+      }
 
 --
 -- Information Object Classes
 --
 
-pk-CompositeKEM {
-  OBJECT IDENTIFIER:id, FirstPublicKeyType,
-  SecondPublicKeyType} PUBLIC-KEY ::=
-  {
+pk-CompositeKEM {OBJECT IDENTIFIER:id, PublicKeyType}
+  PUBLIC-KEY ::= {
     IDENTIFIER id
-    KEY SEQUENCE {
-     BIT STRING (CONTAINING FirstPublicKeyType)
-     BIT STRING (CONTAINING SecondPublicKeyType) 
-    }
+    KEY PublicKeyType
     PARAMS ARE absent
     CERT-KEY-USAGE { keyEncipherment }
   }
 
-kema-CompositeKEM {
-  OBJECT IDENTIFIER:id, 
+kema-CompositeKEM {OBJECT IDENTIFIER:id, 
     PUBLIC-KEY:publicKeyType } 
     KEM-ALGORITHM ::= {
          IDENTIFIER id
          VALUE CompositeCiphertextValue
          PARAMS ARE absent
-         PUBLIC-KEYS { publicKeyType } 
+         PUBLIC-KEYS { publicKeyType }
          SMIME-CAPS { IDENTIFIED BY id }
-        }
+      }
 
 
 
@@ -105,66 +117,16 @@ kema-CompositeKEM {
 
 
 -- TODO: OID to be replaced by IANA
-id-MLKEM512-ECDH-P256 OBJECT IDENTIFIER ::= {
+id-MLKEM768-RSA2048 OBJECT IDENTIFIER ::= {
   joint-iso-itu-t(2) country(16) us(840) organization(1) 
-  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 1 }
+  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 21 }
 
-pk-MLKEM512-ECDH-P256 PUBLIC-KEY ::= 
-  pk-CompositeKEM { 
-    id-MLKEM512-ECDH-P256, 
-    OCTET STRING, ECPoint }
-
-kema-MLKEM512-ECDH-P256 KEM-ALGORITHM ::= 
-    kema-CompositeKEM{
-      id-MLKEM512-ECDH-P256, 
-      pk-MLKEM512-ECDH-P256 }
-
-
--- TODO: OID to be replaced by IANA
-id-MLKEM512-ECDH-brainpoolP256r1 OBJECT IDENTIFIER ::= {
-  joint-iso-itu-t(2) country(16) us(840) organization(1) 
-  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 2 }
-
-pk-MLKEM512-ECDH-brainpoolP256r1 PUBLIC-KEY ::= 
-  pk-CompositeKEM {
-    id-MLKEM512-ECDH-brainpoolP256r1, 
-    OCTET STRING, ECPoint }
-
-kema-MLKEM512-ECDH-brainpoolP256r1 KEM-ALGORITHM ::= 
-    kema-CompositeKEM{
-      id-MLKEM512-ECDH-brainpoolP256r1, 
-      pk-MLKEM512-ECDH-brainpoolP256r1 }
-
-
-
--- TODO: OID to be replaced by IANA
-id-MLKEM512-X25519 OBJECT IDENTIFIER ::= {
-  joint-iso-itu-t(2) country(16) us(840) organization(1) 
-  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 3 }
-
-pk-MLKEM512-X25519 PUBLIC-KEY ::= 
-  pk-CompositeKEM {
-    id-MLKEM512-X25519, 
-    OCTET STRING, OCTET STRING }
-
-kema-MLKEM512-X25519 KEM-ALGORITHM ::= 
-    kema-CompositeKEM{
-      id-MLKEM512-X25519, 
-      pk-MLKEM512-X25519 }
-
-
-
--- TODO: OID to be replaced by IANA
-id-MLKEM512-RSA2048 OBJECT IDENTIFIER ::= {
-  joint-iso-itu-t(2) country(16) us(840) organization(1) 
-  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 13 }
-
-pk-MLKEM512-RSA2048 PUBLIC-KEY ::= 
+pk-MLKEM768-RSA2048 PUBLIC-KEY ::= 
   pk-CompositeKEM { 
     id-MLKEM512-RSA2048, 
-    OCTET STRING, RSAPublicKey }
+    RsaCompositeKemPublicKey }
 
-kema-MLKEM512-RSA2048 KEM-ALGORITHM ::= 
+kema-MLKEM768-RSA2048 KEM-ALGORITHM ::= 
     kema-CompositeKEM{
       id-MLKEM512-RSA2048, 
       pk-MLKEM512-RSA2048 }
@@ -172,46 +134,63 @@ kema-MLKEM512-RSA2048 KEM-ALGORITHM ::=
 
 
 -- TODO: OID to be replaced by IANA
-id-MLKEM512-RSA3072 OBJECT IDENTIFIER ::= {
+id-MLKEM768-RSA3072 OBJECT IDENTIFIER ::= {
   joint-iso-itu-t(2) country(16) us(840) organization(1) 
-  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 4 }
+  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 22 }
 
-pk-MLKEM512-RSA3072 PUBLIC-KEY ::= 
+pk-MLKEM768-RSA3072 PUBLIC-KEY ::= 
   pk-CompositeKEM {
     id-MLKEM512-RSA3072, 
-    OCTET STRING, RSAPublicKey }
+    RsaCompositeKemPublicKey }
 
-kema-MLKEM512-RSA3072 KEM-ALGORITHM ::=
+kema-MLKEM768-RSA3072 KEM-ALGORITHM ::=
     kema-CompositeKEM{
       id-MLKEM512-RSA3072, 
       pk-MLKEM512-RSA3072 }
 
 
+
 -- TODO: OID to be replaced by IANA
-id-MLKEM768-ECDH-P256 OBJECT IDENTIFIER ::= {
+id-MLKEM768-RSA4096 OBJECT IDENTIFIER ::= {
   joint-iso-itu-t(2) country(16) us(840) organization(1) 
-  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 5 }
+  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 23 }
 
-pk-MLKEM768-ECDH-P256 PUBLIC-KEY ::= 
+pk-MLKEM768-RSA4096 PUBLIC-KEY ::= 
   pk-CompositeKEM {
-    id-MLKEM768-ECDH-P256, 
-    OCTET STRING, ECPoint }
+    id-MLKEM768-RSA4096, 
+    RsaCompositeKemPublicKey }
 
-kema-MLKEM768-ECDH-P256 KEM-ALGORITHM ::= 
+kema-MLKEM768-RSA4096 KEM-ALGORITHM ::=
     kema-CompositeKEM{
-      id-MLKEM768-ECDH-P256, 
-      pk-MLKEM768-ECDH-P256 }
+      id-MLKEM768-RSA4096, 
+      pk-MLKEM768-RSA4096 }
+
+
+-- TODO: OID to be replaced by IANA
+id-MLKEM768-ECDH-P384 OBJECT IDENTIFIER ::= {
+  joint-iso-itu-t(2) country(16) us(840) organization(1) 
+  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 25 }
+
+pk-MLKEM768-ECDH-P384 PUBLIC-KEY ::= 
+  pk-CompositeKEM {
+    id-MLKEM768-ECDH-P384, 
+    EcCompositeKemPublicKey }
+
+kema-MLKEM768-ECDH-P384 KEM-ALGORITHM ::= 
+    kema-CompositeKEM{
+      id-MLKEM768-ECDH-P384, 
+      pk-MLKEM768-ECDH-P384 }
 
 
 -- TODO: OID to be replaced by IANA
 id-MLKEM768-ECDH-brainpoolP256r1 OBJECT IDENTIFIER ::= {
   joint-iso-itu-t(2) country(16) us(840) organization(1) 
-  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 6 }
+  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 26 }
 
 pk-MLKEM768-ECDH-brainpoolP256r1 PUBLIC-KEY ::= 
   pk-CompositeKEM {
     id-MLKEM768-ECDH-brainpoolP256r1, 
-    OCTET STRING, ECPoint }
+    EcCompositeKemPublicKey }
 
 kema-MLKEM768-ECDH-brainpoolP256r1 KEM-ALGORITHM ::= 
     kema-CompositeKEM{
@@ -222,12 +201,12 @@ kema-MLKEM768-ECDH-brainpoolP256r1 KEM-ALGORITHM ::=
 -- TODO: OID to be replaced by IANA
 id-MLKEM768-X25519 OBJECT IDENTIFIER ::= {
   joint-iso-itu-t(2) country(16) us(840) organization(1)
-  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 7 }
+  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 24 }
 
 pk-MLKEM768-X25519 PUBLIC-KEY ::= 
   pk-CompositeKEM {
     id-MLKEM768-X25519, 
-    OCTET STRING, OCTET STRING }
+    EdCompositeKemPublicKey }
 
 kema-MLKEM768-X25519 KEM-ALGORITHM ::= 
     kema-CompositeKEM{
@@ -239,12 +218,12 @@ kema-MLKEM768-X25519 KEM-ALGORITHM ::=
 -- TODO: OID to be replaced by IANA
 id-MLKEM1024-ECDH-P384 OBJECT IDENTIFIER ::= {
   joint-iso-itu-t(2) country(16) us(840) organization(1)
-  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 8 }
+  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 27 }
 
 pk-MLKEM1024-ECDH-P384 PUBLIC-KEY ::= 
   pk-CompositeKEM {
     id-MLKEM1024-ECDH-P384, 
-    OCTET STRING, ECPoint }
+    EcCompositeKemPublicKey }
 
 kema-MLKEM1024-ECDH-P384 KEM-ALGORITHM ::= 
     kema-CompositeKEM{
@@ -255,12 +234,12 @@ kema-MLKEM1024-ECDH-P384 KEM-ALGORITHM ::=
 -- TODO: OID to be replaced by IANA
 id-MLKEM1024-ECDH-brainpoolP384r1 OBJECT IDENTIFIER ::= {
   joint-iso-itu-t(2) country(16) us(840) organization(1) 
-  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 9 }
+  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 28 }
 
 pk-MLKEM1024-ECDH-brainpoolP384r1 PUBLIC-KEY ::= 
   pk-CompositeKEM{
     id-MLKEM1024-ECDH-brainpoolP384r1, 
-    OCTET STRING, ECPoint }
+    EcCompositeKemPublicKey }
 
 kema-MLKEM1024-ECDH-brainpoolP384r1 KEM-ALGORITHM ::= 
     kema-CompositeKEM{
@@ -271,12 +250,12 @@ kema-MLKEM1024-ECDH-brainpoolP384r1 KEM-ALGORITHM ::=
 -- TODO: OID to be replaced by IANA
 id-MLKEM1024-X448 OBJECT IDENTIFIER ::= {
   joint-iso-itu-t(2) country(16) us(840) organization(1) 
-  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 10 }
+  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 29 }
 
 pk-MLKEM1024-X448 PUBLIC-KEY ::= 
   pk-CompositeKEM {
     id-MLKEM1024-X448, 
-    OCTET STRING, OCTET STRING }
+    EdCompositeKemPublicKey }
 
 kema-MLKEM1024-X448 KEM-ALGORITHM ::= 
     kema-CompositeKEM{
