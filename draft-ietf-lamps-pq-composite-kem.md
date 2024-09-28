@@ -962,20 +962,6 @@ Since composite algorithms are registered independently of their component algor
 The composite KEM design specified in this document, and especially that of the KEM combiner specified in {{sec-kem-combiner}} means that the overall composite KEM algorithm should be considered to have the security strength of the strongest of its component algorithms; ie as long as one component algorithm remains strong, then the overall composite algorithm remains strong.
 
 
-## KEM Combiner Security Analysis {#sec-cons-kem-combiner}
-
-TODO
-
-TODO: SHA3 is a dual PRF cite: x-wing
-
-EDNOTE: the exact text to put here depends on the outcome of the CFRG KEM Combiners and X-Wing discussion. If CFRG doesn't move fast enough for us, then we may need to leverage this security consideration directly on top of the X-Wing paper [X-Wing].
-
-
-### Ciphertext collision resistance {#sec-cons-ct-collision}
-
-The notion of a ciphertext collision resistant KEM is defined in [X-Wing] being the property that it is computationally difficult to find two different ciphertexts that will decapsulate to the same shared secret under the same public key. In [X-Wing] it is proven that ML-KEM has this property and therefore the ML-KEM ciphertext can safely be omitted from the KEM combiner. Ciphertext collision resistance is not guaranteed for either RSA-OAEP or ECDH, therefore these ciphertexts are bound to the key derivation.
-
-
 <!-- End of Security Considerations section -->
 
 --- back
