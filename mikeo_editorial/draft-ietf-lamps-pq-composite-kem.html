@@ -2763,7 +2763,7 @@ END
           <h4 id="name-sha3-vs-hkdf-sha2">
 <a href="#section-9.1.2" class="section-number selfRef">9.1.2. </a><a href="#name-sha3-vs-hkdf-sha2" class="section-name selfRef">SHA3 vs HKDF-SHA2</a>
           </h4>
-<p id="section-9.1.2-1">In order to achieve the desired secutiy property that the composite KEM is IND-CCA2 whenever at least one of the component KEMs is, the KDF used in the KEM combiner needs to possess collision and second pre-image resistance with respect to each of its inputs independently; a property sometimes called "dual-PRF". Collision and second-pre-image resistance protects against compromise of one component algorithm from resulting in the ability to construct multiple different ciphertexts which result in the same shared secret. Pre-image resistance protects against compromise of one component algorithm being used to attack and learn the value of the other shared secret.<a href="#section-9.1.2-1" class="pilcrow">¶</a></p>
+<p id="section-9.1.2-1">In order to achieve the desired secutiy property that the composite KEM is IND-CCA2 whenever at least one of the component KEMs is, the KDF used in the KEM combiner needs to possess collision and second pre-image resistance with respect to each of its inputs independently; a property sometimes called "dual-PRF" <span>[<a href="#Aviram22" class="cite xref">Aviram22</a>]</span>. Collision and second-pre-image resistance protects against compromise of one component algorithm from resulting in the ability to construct multiple different ciphertexts which result in the same shared secret. Pre-image resistance protects against compromise of one component algorithm being used to attack and learn the value of the other shared secret.<a href="#section-9.1.2-1" class="pilcrow">¶</a></p>
 <p id="section-9.1.2-2">SHA3 is known to have all of the necessary dual-PRF properties <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span>, but SHA2 does not and therefore all SHA2-based constructions MUST use SHA2 within an HMAC construction such as HKDF-SHA2 <span>[<a href="#GHP18" class="cite xref">GHP18</a>]</span>.<a href="#section-9.1.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -2892,13 +2892,17 @@ END
         <dd>
 <span class="refAuthor">French Cybersecurity Agency (ANSSI)</span>, <span class="refAuthor">Federal Office for Information Security (BSI)</span>, <span class="refAuthor">Netherlands National Communications Security Agency (NLNCSA)</span>, and <span class="refAuthor">Swedish National Communications Security Authority, Swedish Armed Forces</span>, <span class="refTitle">"Position Paper on Quantum Key Distribution"</span>, <span>n.d.</span>, <span>&lt;<a href="https://cyber.gouv.fr/sites/default/files/document/Quantum_Key_Distribution_Position_Paper.pdf">https://cyber.gouv.fr/sites/default/files/document/Quantum_Key_Distribution_Position_Paper.pdf</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="Aviram22">[Aviram22]</dt>
+        <dd>
+<span class="refAuthor">Yogev, E.</span>, <span class="refTitle">"Practical (Post-Quantum) Key Combiners from One-Wayness and Applications to TLS"</span>, <span>n.d.</span>, <span>&lt;<a href="https://eprint.iacr.org/2022/065">https://eprint.iacr.org/2022/065</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="BSI2021">[BSI2021]</dt>
         <dd>
 <span class="refAuthor">Federal Office for Information Security (BSI)</span>, <span class="refTitle">"Quantum-safe cryptography - fundamentals, current developments and recommendations"</span>, <time datetime="2021-10" class="refDate">October 2021</time>, <span>&lt;<a href="https://www.bsi.bund.de/SharedDocs/Downloads/EN/BSI/Publications/Brochure/quantum-safe-cryptography.pdf">https://www.bsi.bund.de/SharedDocs/Downloads/EN/BSI/Publications/Brochure/quantum-safe-cryptography.pdf</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="GHP18">[GHP18]</dt>
         <dd>
-<span class="refAuthor">Poettering, B.</span>, <span class="refTitle">"KEM Combiners"</span>, <span>n.d.</span>. </dd>
+<span class="refAuthor">Poettering, B.</span>, <span class="refTitle">"KEM Combiners"</span>, <time datetime="2018" class="refDate">2018</time>, <span>&lt;<a href="https://eprint.iacr.org/2018/024">https://eprint.iacr.org/2018/024</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.housley-lamps-cms-kemri">[I-D.housley-lamps-cms-kemri]</dt>
         <dd>

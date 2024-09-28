@@ -1520,9 +1520,9 @@ Table of Contents
    KEM is IND-CCA2 whenever at least one of the component KEMs is, the
    KDF used in the KEM combiner needs to possess collision and second
    pre-image resistance with respect to each of its inputs
-   independently; a property sometimes called "dual-PRF".  Collision and
-   second-pre-image resistance protects against compromise of one
-   component algorithm from resulting in the ability to construct
+   independently; a property sometimes called "dual-PRF" [Aviram22].
+   Collision and second-pre-image resistance protects against compromise
+   of one component algorithm from resulting in the ability to construct
    multiple different ciphertexts which result in the same shared
    secret.  Pre-image resistance protects against compromise of one
    component algorithm being used to attack and learn the value of the
@@ -1713,13 +1713,18 @@ Table of Contents
               n.d., <https://cyber.gouv.fr/sites/default/files/document/
               Quantum_Key_Distribution_Position_Paper.pdf>.
 
+   [Aviram22] Yogev, E., "Practical (Post-Quantum) Key Combiners from
+              One-Wayness and Applications to TLS", n.d.,
+              <https://eprint.iacr.org/2022/065>.
+
    [BSI2021]  Federal Office for Information Security (BSI), "Quantum-
               safe cryptography - fundamentals, current developments and
               recommendations", October 2021,
               <https://www.bsi.bund.de/SharedDocs/Downloads/EN/BSI/
               Publications/Brochure/quantum-safe-cryptography.pdf>.
 
-   [GHP18]    Poettering, B., "KEM Combiners", n.d..
+   [GHP18]    Poettering, B., "KEM Combiners", 2018,
+              <https://eprint.iacr.org/2018/024>.
 
    [I-D.housley-lamps-cms-kemri]
               Housley, R., Gray, J., and T. Okubo, "Using Key
