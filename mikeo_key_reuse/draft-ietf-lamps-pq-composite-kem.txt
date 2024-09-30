@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 30 March 2025                                           M. Pala
+Expires: 3 April 2025                                            M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                       26 September 2024
+                                                       30 September 2024
 
 
 Composite ML-KEM for Use in the Internet X.509 Public Key Infrastructure
@@ -66,7 +66,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 30 March 2025.
+   This Internet-Draft will expire on 3 April 2025.
 
 Copyright Notice
 
@@ -1399,14 +1399,14 @@ Table of Contents
    always generate fresh key material for each purpose, for example when
    renewing a certificate, or obtaining both a TLS and S/MIME
    certificate for the same device, however in practice key reuse in
-   such scenarios is often not catestrophic to security and therefore
+   such scenarios is often not catastrophic to security and therefore
    often tolerated.  With composite keys we have a much stricter
    security requirement.  However this reasoning does not hold in the PQ
    / Tradational hybrid setting.
 
    Within the broader context of PQ / Traditional hybrids, we need to
    consider new attack surfaces that arise due to the hybrid
-   constructions and did not exist in sigle-algorithm contexts.  One of
+   constructions and did not exist in single-algorithm contexts.  One of
    these is key reuse where the component keys within a hybrid are also
    used by themselves within a single-algorithm context.  For example,
    it might be tempting for an operator to take already-deployed RSA
@@ -1428,12 +1428,10 @@ Table of Contents
    perform this check by using the public key hash.  Therefore, even if
    both components of a composite have been previously revoked, the CA
    may only check the hash of the combined composite key and not find
-   the revocations.  Therefore, even though the risk of key reuse is
-   lower for composite KEMs compared with composite signatures, it is
-   still RECOMMENDED to avoid key reuse and always generate fresh
-   component keys for a new composite.  It is also RECOMMENDED that CAs
-   performang revocation checks on a composite key should also check
-   both component keys indpedently.
+   the revocations.  Therefore, it is RECOMMENDED to avoid key reuse and
+   always generate fresh component keys for a new composite.  It is also
+   RECOMMENDED that CAs performing revocation checks on a composite key
+   should also check both component keys independently.
 
 9.2.  Policy for Deprecated and Acceptable Algorithms
 
