@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-10-01T01:53:19.155712+00:00",
+  "timestamp": "2024-10-03T01:44:25.507444+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -1217,6 +1217,22 @@
       "createdAt": "2024-09-26T21:05:02Z",
       "updatedAt": "2024-09-28T17:00:32Z",
       "closedAt": "2024-09-28T17:00:32Z",
+      "comments": []
+    },
+    {
+      "number": 73,
+      "id": "I_kwDOKRPFO86YoByu",
+      "title": "Algorithm identifier table KDF columns contain hash algorithms",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/73",
+      "state": "OPEN",
+      "author": "bluegate010",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "It is a bit confusing on first read to see hash algorithms in the section 5 & 6.1 tables' KDF columns (SHA3-256, SHA3-384, SHA3-512).\r\n\r\nFrom reading footnotes under the table in section 6.1, it appears those shortnames refer to [this](https://datatracker.ietf.org/doc/html/draft-ietf-lamps-cms-sha3-hash-01#name-hkdf-with-sha3) draft RFC. It might be clearer to prepend the shortnames in the section 6.1 table with HKDF-* (HKDF-SHA3-256 etc).\r\n\r\nIt is not clear what the hash algorithms in table 5's KDF column refer to.",
+      "createdAt": "2024-10-02T04:03:17Z",
+      "updatedAt": "2024-10-02T04:55:01Z",
+      "closedAt": null,
       "comments": []
     }
   ],
@@ -2563,7 +2579,7 @@
       "labels": [],
       "body": "",
       "createdAt": "2024-09-26T19:23:41Z",
-      "updatedAt": "2024-09-30T20:33:48Z",
+      "updatedAt": "2024-10-01T02:57:47Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "43d8fd88aa950b480ba2d8ba6c1fd5a95a897fa7",
@@ -2575,7 +2591,48 @@
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO86LajL7",
+          "commit": {
+            "abbreviatedOid": "d014c63"
+          },
+          "author": "br-hale",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-10-01T02:17:06Z",
+          "updatedAt": "2024-10-01T02:17:06Z",
+          "comments": [
+            {
+              "originalPosition": 6,
+              "body": "Suggested edit:\r\n\r\nWhen using single-algorithm cryptography, the best practice is to always generate fresh keying material for each purpose, for example when renewing a certificate, or obtaining both a TLS and S/MIME certificate for the same device, however in practice key reuse in such scenarios is not always catastrophic to security and therefore often tolerated. ",
+              "createdAt": "2024-10-01T02:17:06Z",
+              "updatedAt": "2024-10-01T02:17:06Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO86LaqKx",
+          "commit": {
+            "abbreviatedOid": "d014c63"
+          },
+          "author": "br-hale",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-10-01T02:57:46Z",
+          "updatedAt": "2024-10-01T02:57:47Z",
+          "comments": [
+            {
+              "originalPosition": 8,
+              "body": "Suggested edit:\r\n\r\n\"However there is still a risk of key reuse which relates to certificate revocation, as well as general key reuse security issues.\"",
+              "createdAt": "2024-10-01T02:57:46Z",
+              "updatedAt": "2024-10-01T02:57:47Z"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
