@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 3 April 2025                                            M. Pala
+Expires: 16 April 2025                                           M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                       30 September 2024
+                                                         13 October 2024
 
 
 Composite ML-KEM for Use in the Internet X.509 Public Key Infrastructure
@@ -66,7 +66,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 3 April 2025.
+   This Internet-Draft will expire on 16 April 2025.
 
 Copyright Notice
 
@@ -1396,10 +1396,10 @@ Table of Contents
 9.1.  Key Reuse
 
    When using single-algorithm cryptography, the best practice is to
-   always generate fresh key material for each purpose, for example when
-   renewing a certificate, or obtaining both a TLS and S/MIME
+   always generate fresh keying material for each purpose, for example
+   when renewing a certificate, or obtaining both a TLS and S/MIME
    certificate for the same device, however in practice key reuse in
-   such scenarios is often not catastrophic to security and therefore
+   such scenarios is not always catastrophic to security and therefore
    often tolerated.  With composite keys we have a much stricter
    security requirement.  However this reasoning does not hold in the PQ
    / Tradational hybrid setting.
@@ -1420,7 +1420,8 @@ Table of Contents
    yield a different shared secret than the overall shared secret
    derived from the composite, so any subsequent symmetric cryptographic
    operations will fail.  However there is still a risk of key reuse
-   which relates to certificate revocation.
+   which relates to certificate revocation, as well as general key reuse
+   security issues.
 
    Upon receiving a new certificate enrollment request, many
    certification authorities will check if the requested public key has
