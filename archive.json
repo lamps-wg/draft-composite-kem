@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-10-10T01:43:57.635572+00:00",
+  "timestamp": "2024-10-13T01:50:10.660912+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -1093,9 +1093,17 @@
       "labels": [],
       "body": "> TODO: as per https://www.enisa.europa.eu/publications/post-quantum-cryptography-integration-study section 4.2, might need to specify behaviour in light of KEMs with a non-zero failure probability.",
       "createdAt": "2024-09-12T21:17:54Z",
-      "updatedAt": "2024-09-12T21:17:54Z",
+      "updatedAt": "2024-10-11T08:20:21Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "We probably need to at least mention that decapsulation failure is a possible result of calling CompositeML-KEM.decaps(). Borrow language from, or reference, `draft-ietf-lamps-cms-kyber` ?",
+          "createdAt": "2024-10-11T08:20:20Z",
+          "updatedAt": "2024-10-11T08:20:20Z"
+        }
+      ]
     },
     {
       "number": 68,
@@ -1232,6 +1240,22 @@
       "body": "It is a bit confusing on first read to see hash algorithms in the section 5 & 6.1 tables' KDF columns (SHA3-256, SHA3-384, SHA3-512).\r\n\r\nFrom reading footnotes under the table in section 6.1, it appears those shortnames refer to [this](https://datatracker.ietf.org/doc/html/draft-ietf-lamps-cms-sha3-hash-01#name-hkdf-with-sha3) draft RFC. It might be clearer to prepend the shortnames in the section 6.1 table with HKDF-* (HKDF-SHA3-256 etc).\r\n\r\nIt is not clear what the hash algorithms in table 5's KDF column refer to.",
       "createdAt": "2024-10-02T04:03:17Z",
       "updatedAt": "2024-10-02T04:55:01Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 74,
+      "id": "I_kwDOKRPFO86Z09PE",
+      "title": "Make sure it's sufficiently clear that all inputs to the KEM combiner are fixed-length",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/74",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "... at least fixed length for a given composite alg.\r\n\r\nThis came from a private discussion with Russ.",
+      "createdAt": "2024-10-11T08:39:01Z",
+      "updatedAt": "2024-10-11T08:39:01Z",
       "closedAt": null,
       "comments": []
     }
@@ -2633,6 +2657,32 @@
           ]
         }
       ]
+    },
+    {
+      "number": 75,
+      "id": "PR_kwDOKRPFO85-VfAx",
+      "title": "Added text about fixed-length inputs and ML-KEM decaps failures",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/75",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Closes #74 \r\nCloses #67 ",
+      "createdAt": "2024-10-11T12:04:02Z",
+      "updatedAt": "2024-10-11T12:04:02Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "b9c8f48b9eb803bc47afc448b2808bb49723df64",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_lengths",
+      "headRefOid": "bd062a48ca58f485874f7d822c3afbac04989171",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
