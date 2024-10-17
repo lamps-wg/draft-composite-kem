@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 16 April 2025                                           M. Pala
+Expires: 20 April 2025                                           M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                         13 October 2024
+                                                         17 October 2024
 
 
 Composite ML-KEM for Use in the Internet X.509 Public Key Infrastructure
@@ -20,21 +20,15 @@ Composite ML-KEM for Use in the Internet X.509 Public Key Infrastructure
 
 Abstract
 
-   This document introduces a set of Key Encapsulation Mechanism (KEM)
-   schemes that use pairs of cryptographic elements such as public keys
-   and cipher texts to combine their security properties.  These schemes
-   effectively mitigate risks associated with the adoption of post-
-   quantum cryptography and are fully compatible with existing X.509,
-   PKIX, and CMS data structures and protocols.  This document defines
-   eleven specific pairwise combinations, namely ML-KEM Composite
-   Schemes, that blend ML-KEM with traditional algorithms such as RSA-
-   OAEP, ECDH, X25519, and X448.  For use within CMS, this document is
-   intended to be coupled with the CMS KEMRecipientInfo mechanism in
-   [I-D.housley-lamps-cms-kemri].  These combinations are tailored to
-   meet security best practices and regulatory requirements.  Composite
-   ML-KEM is applicable in any application that would otherwise use ML-
-   KEM, but wants the protection against breaks or catastrophic bugs in
-   ML-KEM.
+   This document defines combinations of ML-KEM [FIPS.203] in hybrid
+   with traditional algorithms RSA-OAEP, ECDH, X25519, and X448.  For
+   use within CMS, this document is intended to be coupled with the CMS
+   KEMRecipientInfo mechanism in [RFC9629].  These combinations are
+   tailored to meet security best practices and regulatory requirements.
+   Composite ML-KEM is applicable in any application that uses X.509,
+   PKIX, and CMS data structures and protocols that would otherwise use
+   ML-KEM, but wants the protection against breaks or catastrophic bugs
+   in ML-KEM.
 
 About This Document
 
@@ -69,7 +63,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 16 April 2025.
+   This Internet-Draft will expire on 20 April 2025.
 
 Copyright Notice
 
@@ -1756,14 +1750,6 @@ Table of Contents
 
    [GHP18]    Poettering, B., "KEM Combiners", 2018,
               <https://eprint.iacr.org/2018/024>.
-
-   [I-D.housley-lamps-cms-kemri]
-              Housley, R., Gray, J., and T. Okubo, "Using Key
-              Encapsulation Mechanism (KEM) Algorithms in the
-              Cryptographic Message Syntax (CMS)", Work in Progress,
-              Internet-Draft, draft-housley-lamps-cms-kemri-02, 20
-              February 2023, <https://datatracker.ietf.org/doc/html/
-              draft-housley-lamps-cms-kemri-02>.
 
    [I-D.ietf-lamps-kyber-certificates]
               Turner, S., Kampanakis, P., Massimo, J., and B.
