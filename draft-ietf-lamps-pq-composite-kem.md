@@ -761,7 +761,7 @@ As with the other composite KEM algorithms, when `id-MLKEM512-RSA2048` or `id-ML
 
 | RSAES-OAEP-params           | Value                       |
 | ----------------------      | ---------------             |
-| hashAlgorithm               | id-sha2-256                 |
+| hashAlgorithm               | id-sha256                 |
 | maskGenAlgorithm            | mgf1SHA256Identifier        |
 | pSourceAlgorithm            | pSpecifiedEmpty             |
 | ss_len                      | 256 bits                    |
@@ -986,13 +986,182 @@ TBD
 
 # Fixed Component Algorithm Identifiers
 
-The following table lists explicitly the DER encoded `AlgorithmID` that MUST be used when reconstructing `SubjectPublicKeyInfo` objects for each component public key, which may be required for example if cryptographic library requires the public key in this form in order to process each component algorithm. The public key `BIT STRING` should be taken directly from the respective component of the CompositeKEMPublicKey.
+The following sections list explicitly the DER encoded `AlgorithmIdentifier` that MUST be used when reconstructing `SubjectPublicKeyInfo` objects for each component public key, which may be required for example if cryptographic library requires the public key in this form in order to process each component algorithm. The public key `BIT STRING` should be taken directly from the respective component of the CompositeKEMPublicKey.
 
-| Composite KEM     | First AlgorithmID | Second AlgorithmID |
-| --------------    | ----------------- | ------------------ |
-| TODO              | TODO              | TODO               |
+## ML-KEM-512
 
-TODO: see https://github.com/lamps-wg/draft-composite-kem/issues/20
+ASN.1:
+
+~~~ ASN.1
+  algorithm AlgorithmIdentifier ::= {
+    algorithm id-alg-ml-kem-512                    -- (2.16.840.1.101.4.1)
+    }
+~~~
+
+DER:
+
+~~~
+  30 0B 06 07 60 86 48 01 65 04 01
+~~~
+
+## ML-KEM-768
+
+ASN.1:
+
+~~~ ASN.1
+  algorithm AlgorithmIdentifier ::= {
+    algorithm id-alg-ml-kem-768                    -- (2.16.840.1.101.4.2)
+    }
+~~~
+
+DER:
+
+~~~
+  30 0B 06 07 60 86 48 01 65 04 02
+~~~
+
+## ML-KEM-1024
+
+ASN.1:
+
+~~~ ASN.1
+  algorithm AlgorithmIdentifier ::= {
+    algorithm id-alg-ml-kem-1024                    -- (2.16.840.1.101.4.3)
+    }
+~~~
+
+DER:
+
+~~~
+  30 0B 06 07 60 86 48 01 65 04 03
+~~~
+
+## RSA - all sizes
+
+ASN.1:
+
+~~~ ASN.1
+  algorithm AlgorithmIdentifier ::= {
+    algorithm id-RSAES-OAEP,   -- (1.2.840.113549.1.1.7)
+    parameters RSAES-OAEP-params {
+         hashFunc      [0] id-sha256,  -- (2.16.840.1.101.3.4.2.1)
+         maskGenFunc   [1] mgf1SHA256Identifier,
+         pSourceFunc   [2] pSpecifiedEmpty  }
+    }
+    
+    
+where
+      mgf1SHA256Identifier  AlgorithmIdentifier  ::=  {
+                              algorithm id-mgf1,  -- (1.2.840.113549.1.1.8)
+                              parameters sha256Identifier }
+			      
+			      
+	sha256Identifier  AlgorithmIdentifier  ::=  { id-sha256, NULL }
+~~~
+
+DER:
+
+~~~
+ TODO
+~~~
+
+## ECDH NIST-P-384
+
+ASN.1:
+
+~~~ ASN.1
+  algorithm AlgorithmIdentifier ::= {
+    algorithm id-ecPublicKey                          -- (1.2.840.10045.2.1)
+    parameters ANY ::= {
+      AlgorithmIdentifier ::= {
+        algorithm secp384r1                           -- (1.3.132.0.34)
+        }
+      }
+    }
+~~~
+
+DER:
+
+~~~
+  30 10 06 07 2A 86 48 CE 3D 02 01 06 05 2B 81 04 00 22
+~~~
+
+## ECDH BP-256
+
+ASN.1:
+
+~~~ ASN.1
+  algorithm AlgorithmIdentifier ::= {
+    algorithm id-ecPublicKey                          -- (1.2.840.10045.2.1)
+    parameters ANY ::= {
+      AlgorithmIdentifier ::= {
+        algorithm brainpoolP256r1                     -- (1.3.36.3.3.2.8.1.1.7)
+        }
+      }
+    }
+~~~
+
+DER:
+
+~~~
+  30 14 06 07 2A 86 48 CE 3D 02 01 06 09 2B 24 03 03 02 08 01 01 07
+~~~
+
+## ECDH BP-384
+
+ASN.1:
+
+~~~ ASN.1
+  algorithm AlgorithmIdentifier ::= {
+    algorithm id-ecPublicKey                          -- (1.2.840.10045.2.1)
+    parameters ANY ::= {
+      AlgorithmIdentifier ::= {
+        algorithm brainpoolP384r1                     -- (1.3.36.3.3.2.8.1.1.11)
+        }
+      }
+    }
+~~~
+
+DER:
+
+~~~
+  30 14 06 07 2A 86 48 CE 3D 02 01 06 09 2B 24 03 03 02 08 01 01 0B
+~~~
+
+## X25519
+
+ASN.1:
+
+~~~ ASN.1
+  algorithm AlgorithmIdentifier ::= {
+    algorithm id-X25519                               -- (1.3.101.110)
+    }
+~~~
+
+DER:
+
+~~~
+  30 05 06 03 2B 65 6E
+~~~
+
+## X448
+
+ASN.1:
+
+~~~ ASN.1
+  algorithm AlgorithmIdentifier ::= {
+    algorithm id-X448                                -- (1.3.101.111)
+    }
+~~~
+
+DER:
+
+~~~
+  30 05 06 03 2B 65 6F
+~~~
+
+
+
 
 # Implementation Considerations {#sec-in-pract}
 
