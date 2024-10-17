@@ -472,7 +472,9 @@ where:
 * `domSep` SHALL be the DER encoded value of the object identifier of the composite KEM algorithm as listed in {{sec-domain}}.
 * `||` represents concatenation.
 
-Each registered composite KEM algorithm must specify the choice of `KDF`, `demSep` to be used.
+Each registered composite KEM algorithm specifies the choice of `KDF`, `demSep` to be used in {{sec-alg-ids}} and {{sec-domain}} below. Given that each composite KEM algorithm fully specifies the component algorithms, including for example the size of the RSA modulus, all inputs to the KEM combiner are fixed-size and thus do not require length-prefixing. The `CompositeKEM.Decap()` specified in {{sect-composite-decaps}} adds further error handling to protect the KEM combiner from malicious inputs.
+
+
 
 
 ### Composite Encap
@@ -501,7 +503,7 @@ CompositeKEM.Encap(pk):
 
 where `Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep)` is defined in general in {{sec-kem-combiner}} with specific values for `domSep` per composite KEM algorithm in {{sec-alg-ids}} and `CompositeCiphertextValue` is defined in {{sec-CompositeCiphertextValue}}.
 
-### Composite Decap
+### Composite Decap {#sect-composite-decaps}
 
 The `Decap(sk, ct) -> ss` of a composite KEM algorithm is defined as:
 
@@ -527,6 +529,21 @@ where `Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep)` is defined in general 
 
 Here the secret key values `mlkemSK` and `tradSK` may be interpreted as either literal secret key values, or as a handle to a cryptographic module which holds the secret key and is capable of performing the secret key operation.
 
+In order to properly achieve its security properties, the KEM combiner requires that all inputs are fixed-length. Since each composite KEM algorithm fully specifies its component algorithms, including key sizes, all inputs are generally fixed-length, however some implementations may need to perform additional checking to handle certain error conditions. In particular, the KEM combiner step should not be performed if either of the component decapsulations returned an error condition indicating malformed inputs -- for timing-invariance reasons, it is recommended to perform both decapsulation operations and check for errors afterwards to make it less easy for an attacker to tell which component failed. Also, RSA-based composites MUST ensure that the modulus size (ie the size of tradCT and tradPK) matches that specified for the given composite KEM algorithm in {{tab-kem-algs}}; depending on the cryptographic library used, this check may be done by the library or may require an explicit check as part of the `CompositeKEM.Decap()` routine.
+
+### Decapsulation failure
+
+Provided all inputs are well-formed, the key establishment procedure of ML-KEM will never explicitly fail. Specifically, the ML-KEM.Encaps and ML-KEM.Decaps algorithms from [FIPS.203] will always output a value with the same data type as a shared secret key, and will never output an error or failure symbol. However, it is possible (though extremely unlikely) that the process will fail in the sense that ML-KEM.Encaps and ML-KEM.Decaps will produce different outputs, even though both of them are behaving honestly and no adversarial interference is present. In this case, the sender and recipient clearly did not succeed in producing a shared secret key. This event is called a decapsulation failure. Estimates for the decapsulation failure probability (or rate) for each of the ML-KEM parameter sets are provided in Table 1  of [FIPS.203] and reproduced here in {{tab-mlkem-failure-rate}}.
+
+
+| Parameter set     | Decapsulation failure rate  |
+|---------          | -----------------           |
+| ML-KEM-512        | 2^(-139)                    |
+| ML-KEM-768	      | 2^(-164)                    |
+| ML-KEM-1024	      | 2^(-174)                    |
+{: #tab-mlkem-failure-rate title="ML-KEM decapsulation failure rates"}
+
+In the case of ML-KEM decapsulation failure, CompositeML-KEM MUST preserve the same behaviour and return a well-formed output.
 
 <!-- End of Introduction section -->
 
@@ -1011,7 +1028,7 @@ These migration and interoperability concerns need to be thought about in the co
 
 ## Decapsulation Requires the Public Key {#impl-cons-decaps-pubkey}
 
-ML-KEM always requires the public key in order to perform various steps of the Fujisaki-Okamoto decapsulation [FIPS203-ipd], and for this reason the private key encoding specified in FIPS 203 includes the public key. Therefore it is not required to carry it in the `OneAsymmetricKey.publicKey` field, which remains optional, but is strictly speaking redundant since an ML-KEM public key can be parsed from an ML-KEM private key, and thus populating the `OneAsymmetricKey.publicKey` field would mean that two copies of the public key data are transmitted.
+ML-KEM always requires the public key in order to perform various steps of the Fujisaki-Okamoto decapsulation [FIPS.203], and for this reason the private key encoding specified in FIPS 203 includes the public key. Therefore it is not required to carry it in the `OneAsymmetricKey.publicKey` field, which remains optional, but is strictly speaking redundant since an ML-KEM public key can be parsed from an ML-KEM private key, and thus populating the `OneAsymmetricKey.publicKey` field would mean that two copies of the public key data are transmitted.
 
 
 With regard to the traditional algorithms, RSA or Elliptic Curve, in order to achieve the public-key binding property the KEM combiner used to form the composite KEM, the combiner requires the traditional public key as input to the KDF that derives the output shared secret. Therefore it is required to carry the public key within the respective `OneAsymmetricKey.publicKey` as per the private key encoding given in {{sec-priv-key}}. Implementers who choose to use a different private key encoding than the one specified in this document MUST consider how to provide the component public keys to the decapsulate routine. While some implementations might contain routines to computationally derive the public key from the private key, it is not guaranteed that all implementations will support this; for this reason the interoparable composite private key format given in this document in {{sec-priv-key}} requires the public key of the traditional component to be included.
