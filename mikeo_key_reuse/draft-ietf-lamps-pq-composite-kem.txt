@@ -1484,7 +1484,7 @@ Table of Contents
    ciphertexts (c1, c2) and (c1', c2'), we must obtain a unique overall
    shared secret so long as either c1 != c1' or c2 != c2' -- i.e. the
    overall composite KEM is second pre-image resistant, and therefore
-   IND-CCA2 secure so, long as one of the component KEMs is.
+   secure so, long as one of the component KEMs is.
 
    In [X-Wing] it is proven that ML-KEM is a second pre-image resistant
    KEM and therefore the ML-KEM ciphertext can safely be omitted from
@@ -1579,8 +1579,9 @@ Table of Contents
 
    Traditionally, a public key or certificate contains a single
    cryptographic algorithm.  If and when an algorithm becomes deprecated
-   (for example, RSA-512, or SHA1), it is obvious that the public keys
-   or certificates using that algorithm are to be considered revoked.
+   (for example, RSA-512, or SHA1), the path to deprecating it and
+   removing it from operational environments is, at least is principle,
+   straightforward.
 
    In the composite model this is less obvious since implementers may
    decide that certain cryptographic algorithms have complementary
