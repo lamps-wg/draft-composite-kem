@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-10-15T01:45:40.971739+00:00",
+  "timestamp": "2024-10-17T01:44:32.596936+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -2603,7 +2603,7 @@
       "labels": [],
       "body": "",
       "createdAt": "2024-09-26T19:23:41Z",
-      "updatedAt": "2024-10-13T21:24:04Z",
+      "updatedAt": "2024-10-15T19:02:36Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "43d8fd88aa950b480ba2d8ba6c1fd5a95a897fa7",
@@ -2655,6 +2655,38 @@
               "updatedAt": "2024-10-01T02:57:47Z"
             }
           ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO86NRgVW",
+          "commit": {
+            "abbreviatedOid": "4cfcd21"
+          },
+          "author": "janklaussner",
+          "authorAssociation": "COLLABORATOR",
+          "state": "CHANGES_REQUESTED",
+          "body": "",
+          "createdAt": "2024-10-15T17:58:06Z",
+          "updatedAt": "2024-10-15T19:02:36Z",
+          "comments": [
+            {
+              "originalPosition": 40,
+              "body": "...eleven specific pairwise combinations...\r\ncount is currently nine, right?",
+              "createdAt": "2024-10-15T17:58:06Z",
+              "updatedAt": "2024-10-15T19:02:36Z"
+            },
+            {
+              "originalPosition": 197,
+              "body": "[...]and therefore IND-CCA2 secure so, long as [...]\r\n-> [...] secure, so long as [...]",
+              "createdAt": "2024-10-15T18:35:29Z",
+              "updatedAt": "2024-10-15T19:02:36Z"
+            },
+            {
+              "originalPosition": 227,
+              "body": "is this statement true? Afaik its more complicated in the real world. Is there an RFC describing this?",
+              "createdAt": "2024-10-15T18:59:06Z",
+              "updatedAt": "2024-10-15T19:02:36Z"
+            }
+          ]
         }
       ]
     },
@@ -2670,7 +2702,7 @@
       "labels": [],
       "body": "Closes #74 \r\nCloses #67 ",
       "createdAt": "2024-10-11T12:04:02Z",
-      "updatedAt": "2024-10-11T12:04:02Z",
+      "updatedAt": "2024-10-15T17:55:08Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "b9c8f48b9eb803bc47afc448b2808bb49723df64",
@@ -2682,7 +2714,21 @@
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO86NRePO",
+          "commit": {
+            "abbreviatedOid": "bd062a4"
+          },
+          "author": "janklaussner",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-10-15T17:55:08Z",
+          "updatedAt": "2024-10-15T17:55:08Z",
+          "comments": []
+        }
+      ]
     },
     {
       "number": 76,
@@ -2696,7 +2742,7 @@
       "labels": [],
       "body": "",
       "createdAt": "2024-10-14T19:49:10Z",
-      "updatedAt": "2024-10-14T19:49:38Z",
+      "updatedAt": "2024-10-15T17:45:49Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "b9c8f48b9eb803bc47afc448b2808bb49723df64",
@@ -2707,7 +2753,15 @@
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "janklaussner",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Question to group: for RSA key AlgIds it is possible to be very specific on its usage. Do we want/need this?",
+          "createdAt": "2024-10-15T17:45:48Z",
+          "updatedAt": "2024-10-15T17:45:48Z"
+        }
+      ],
       "reviews": []
     }
   ]
