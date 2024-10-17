@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 1 April 2025                                            M. Pala
+Expires: 20 April 2025                                           M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                       28 September 2024
+                                                         17 October 2024
 
 
 Composite ML-KEM for Use in the Internet X.509 Public Key Infrastructure
@@ -69,7 +69,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 1 April 2025.
+   This Internet-Draft will expire on 20 April 2025.
 
 Copyright Notice
 
@@ -98,6 +98,7 @@ Table of Contents
        2.3.4.  KEM Combiner
        2.3.5.  Composite Encap
        2.3.6.  Composite Decap
+       2.3.7.  Decapsulation failure
    3.  Composite Key Structures
      3.1.  pk-CompositeKEM
      3.2.  CompositeKEMPublicKey
@@ -501,8 +502,14 @@ Table of Contents
 
    *  || represents concatenation.
 
-   Each registered composite KEM algorithm must specify the choice of
-   KDF, demSep to be used.
+   Each registered composite KEM algorithm specifies the choice of KDF,
+   demSep to be used in Section 5 and Section 5.2 below.  Given that
+   each composite KEM algorithm fully specifies the component
+   algorithms, including for example the size of the RSA modulus, all
+   inputs to the KEM combiner are fixed-size and thus do not require
+   length-prefixing.  The CompositeKEM.Decap() specified in
+   Section 2.3.6 adds further error handling to protect the KEM combiner
+   from malicious inputs.
 
 2.3.5.  Composite Encap
 
@@ -566,6 +573,55 @@ Table of Contents
    module which holds the secret key and is capable of performing the
    secret key operation.
 
+   In order to properly achieve its security properties, the KEM
+   combiner requires that all inputs are fixed-length.  Since each
+   composite KEM algorithm fully specifies its component algorithms,
+   including key sizes, all inputs are generally fixed-length, however
+   some implementations may need to perform additional checking to
+   handle certain error conditions.  In particular, the KEM combiner
+   step should not be performed if either of the component
+   decapsulations returned an error condition indicating malformed
+   inputs -- for timing-invariance reasons, it is recommended to perform
+   both decapsulation operations and check for errors afterwards to make
+   it less easy for an attacker to tell which component failed.  Also,
+   RSA-based composites MUST ensure that the modulus size (ie the size
+   of tradCT and tradPK) matches that specified for the given composite
+   KEM algorithm in Table 2; depending on the cryptographic library
+   used, this check may be done by the library or may require an
+   explicit check as part of the CompositeKEM.Decap() routine.
+
+2.3.7.  Decapsulation failure
+
+   Provided all inputs are well-formed, the key establishment procedure
+   of ML-KEM will never explicitly fail.  Specifically, the ML-
+   KEM.Encaps and ML-KEM.Decaps algorithms from [FIPS.203] will always
+   output a value with the same data type as a shared secret key, and
+   will never output an error or failure symbol.  However, it is
+   possible (though extremely unlikely) that the process will fail in
+   the sense that ML-KEM.Encaps and ML-KEM.Decaps will produce different
+   outputs, even though both of them are behaving honestly and no
+   adversarial interference is present.  In this case, the sender and
+   recipient clearly did not succeed in producing a shared secret key.
+   This event is called a decapsulation failure.  Estimates for the
+   decapsulation failure probability (or rate) for each of the ML-KEM
+   parameter sets are provided in Table 1 of [FIPS.203] and reproduced
+   here in Table 1.
+
+              +===============+============================+
+              | Parameter set | Decapsulation failure rate |
+              +===============+============================+
+              | ML-KEM-512    | 2^(-139)                   |
+              +---------------+----------------------------+
+              | ML-KEM-768    | 2^(-164)                   |
+              +---------------+----------------------------+
+              | ML-KEM-1024   | 2^(-174)                   |
+              +---------------+----------------------------+
+
+               Table 1: ML-KEM decapsulation failure rates
+
+   In the case of ML-KEM decapsulation failure, CompositeML-KEM MUST
+   preserve the same behaviour and return a well-formed output.
+
 3.  Composite Key Structures
 
 3.1.  pk-CompositeKEM
@@ -609,7 +665,7 @@ Table of Contents
    in section Section 5.
 
    Some applications may need to reconstruct the SubjectPublicKeyInfo
-   objects corresponding to each component public key.  Table 1 in
+   objects corresponding to each component public key.  Table 2 in
    Section 5 provides the necessary mapping between composite and their
    component algorithms for doing this reconstruction.  This also
    motivates the design choice of SEQUENCE OF BIT STRING instead of
@@ -666,7 +722,7 @@ Table of Contents
    duplicate the composite AlgorithmID into both components, or MAY
    place the AlgorithmID of the component algorithm.  Parsers SHOULD
    ignore the component private key AlgorithmIDs and assume that the
-   private keys are in the same order as specified in Table 1.
+   private keys are in the same order as specified in Table 2.
 
    In some use-cases the private keys that comprise a composite key may
    not be represented in a single structure or even be contained in a
@@ -788,7 +844,7 @@ Table of Contents
    |MLKEM1024-X448   |            |         |               |          |
    +-----------------+------------+---------+---------------+----------+
 
-                      Table 1: Composite KEM key types
+                      Table 2: Composite KEM key types
 
    Full specifications for the referenced algorithms can be found as
    follows:
@@ -870,7 +926,7 @@ Table of Contents
     | id-MLKEM1024-X448                 | 060B6086480186FA6B5005021D |
     +-----------------------------------+----------------------------+
 
-            Table 2: Composite KEM fixedInfo Domain Separators
+            Table 3: Composite KEM fixedInfo Domain Separators
 
    EDNOTE: these domain separators are based on the prototyping OIDs
    assigned on the Entrust arc.  We will need to ask for IANA early
@@ -913,7 +969,7 @@ Table of Contents
                | ss_len            | 256 bits             |
                +-------------------+----------------------+
 
-                       Table 3: RSA-OAEP Parameters
+                       Table 4: RSA-OAEP Parameters
 
    where:
 
@@ -950,7 +1006,7 @@ Table of Contents
 
    When a particular Composite KEM OID is supported, a CMS
    implementation MUST support the corresponding KDF and key-encryption
-   algorithms listed in Table 4, which have been chosen to preserve
+   algorithms listed in Table 5, which have been chosen to preserve
    security and performance characteristics of each composite algorithm.
 
    +===================================+==========+====================+
@@ -974,7 +1030,7 @@ Table of Contents
    | id-MLKEM1024-X448                 | SHA3-512 | id-aes256-Wrap     |
    +-----------------------------------+----------+--------------------+
 
-              Table 4: REQUIRED pairings for CMS KDF and WRAP
+              Table 5: REQUIRED pairings for CMS KDF and WRAP
 
    In all cases above, the hash function used as a KDF produces a longer
    output than needed by the encryption algorithm, so the output SHALL
@@ -1005,7 +1061,7 @@ Table of Contents
    rid identifies the recipient's certificate or public key.
 
    kem identifies the KEM algorithm; it MUST contain one of the OIDs
-   listed in Table 1.
+   listed in Table 2.
 
    kemct is the ciphertext produced for this recipient; it contains the
    ct output from Encap(pk) of the KEM algorithm identified in the kem
@@ -1066,7 +1122,7 @@ Table of Contents
    Algorithm.
 
    The SMIMECapability SEQUENCE representing a composite KEM Algorithm
-   MUST include the appropriate object identifier as per Table 1 in the
+   MUST include the appropriate object identifier as per Table 2 in the
    capabilityID field.
 
 7.  ASN.1 Module
@@ -1365,7 +1421,7 @@ Table of Contents
 8.1.  Object Identifier Allocations
 
    EDNOTE to IANA: OIDs will need to be replaced in both the ASN.1
-   module and in Table 1.
+   module and in Table 2.
 
 8.1.1.  Module Registration - SMI Security for PKIX Module Identifier
 
@@ -1892,7 +1948,7 @@ Appendix B.  Fixed Component Algorithm Identifiers
         | TODO          | TODO              | TODO               |
         +---------------+-------------------+--------------------+
 
-                                 Table 5
+                                 Table 6
 
    TODO: see https://github.com/lamps-wg/draft-composite-kem/issues/20
 
@@ -1966,9 +2022,9 @@ C.2.  Backwards Compatibility
 C.3.  Decapsulation Requires the Public Key
 
    ML-KEM always requires the public key in order to perform various
-   steps of the Fujisaki-Okamoto decapsulation [FIPS203-ipd], and for
-   this reason the private key encoding specified in FIPS 203 includes
-   the public key.  Therefore it is not required to carry it in the
+   steps of the Fujisaki-Okamoto decapsulation [FIPS.203], and for this
+   reason the private key encoding specified in FIPS 203 includes the
+   public key.  Therefore it is not required to carry it in the
    OneAsymmetricKey.publicKey field, which remains optional, but is
    strictly speaking redundant since an ML-KEM public key can be parsed
    from an ML-KEM private key, and thus populating the
