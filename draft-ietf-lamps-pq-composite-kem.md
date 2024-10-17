@@ -745,7 +745,7 @@ As with the other composite KEM algorithms, when `id-MLKEM512-RSA2048` or `id-ML
 
 | RSAES-OAEP-params           | Value                       |
 | ----------------------      | ---------------             |
-| hashAlgorithm               | id-sha2-256                 |
+| hashAlgorithm               | id-sha256                 |
 | maskGenAlgorithm            | mgf1SHA256Identifier        |
 | pSourceAlgorithm            | pSpecifiedEmpty             |
 | ss_len                      | 256 bits                    |
@@ -1028,16 +1028,27 @@ ASN.1:
 
 ~~~ ASN.1
   algorithm AlgorithmIdentifier ::= {
-    algorithm id-RSAES-OAEP                       -- (1.2.840.113549.1.1.7)
+    algorithm id-RSAES-OAEP,   -- (1.2.840.113549.1.1.7)
+    parameters RSAES-OAEP-params {
+         hashFunc      [0] id-sha256,  -- (2.16.840.1.101.3.4.2.1)
+         maskGenFunc   [1] mgf1SHA256Identifier,
+         pSourceFunc   [2] pSpecifiedEmpty  }
     }
+    
+    
+where
+      mgf1SHA256Identifier  AlgorithmIdentifier  ::=  {
+                              algorithm id-mgf1,  -- (1.2.840.113549.1.1.8)
+                              parameters sha256Identifier }
+			      
+			      
+	sha256Identifier  AlgorithmIdentifier  ::=  { id-sha256, NULL }
 ~~~
-
-EDNOTE: RSA allows to include also more parameters in the public key (hashFunc, maskGenFunc, pSourceFunc). Shall we add it also to be more specific about the supported algorithm?
 
 DER:
 
 ~~~
-  30 0B 06 09 2A 86 48 86 F7 0D 01 01 07
+ TODO
 ~~~
 
 ## ECDH NIST-P-384
