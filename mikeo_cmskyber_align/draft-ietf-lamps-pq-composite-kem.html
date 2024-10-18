@@ -2281,7 +2281,7 @@ HKDF(salt, IKM, info, L)
           <h4 id="name-components-for-composite-ml">
 <a href="#section-6.2.2" class="section-number selfRef">6.2.2. </a><a href="#name-components-for-composite-ml" class="section-name selfRef">Components for Composite ML-KEM in CMS</a>
           </h4>
-<p id="section-6.2.2-1">A compliant implementation MUST support the following algorithms for the KEMRecipientInfo KDF and Wrap when the corresponding Composite ML-KEM algorithm is listed in KEMRecipientInfo KEM. The KDFs listed below align with the KDF used intenally for the KEM combiner. An implementation MAY also support other key-derivation functions and other key-encryption algorithms within CMS KEMRecipientInfo.<a href="#section-6.2.2-1" class="pilcrow">¶</a></p>
+<p id="section-6.2.2-1">A compliant implementation MUST support the following algorithm combinations for the KEMRecipientInfo <code>kdf</code> and <code>wrap</code> fields when the corresponding Composite ML-KEM algorithm is listed in the KEMRecipientInfo <code>kem</code> field. The KDFs listed below align with the KDF used internally within the KEM combiner. An implementation MAY also support other key-derivation functions and other key-encryption algorithms within CMS KEMRecipientInfo.<a href="#section-6.2.2-1" class="pilcrow">¶</a></p>
 <span id="name-mandatory-to-implement-pair"></span><div id="tab-cms-kdf-wrap">
 <table class="center" id="table-5">
             <caption>
@@ -2299,47 +2299,47 @@ HKDF(salt, IKM, info, L)
               <tr>
                 <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-RSA2048</td>
                 <td class="text-left" rowspan="1" colspan="1">id-alg-hkdf-with-sha256</td>
-                <td class="text-left" rowspan="1" colspan="1">id-aes128-Wrap</td>
+                <td class="text-left" rowspan="1" colspan="1">id-aes128-wrap</td>
               </tr>
               <tr>
                 <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-RSA3072</td>
                 <td class="text-left" rowspan="1" colspan="1">id-alg-hkdf-with-sha256</td>
-                <td class="text-left" rowspan="1" colspan="1">id-aes128-Wrap</td>
+                <td class="text-left" rowspan="1" colspan="1">id-aes128-wrap</td>
               </tr>
               <tr>
                 <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-RSA4096</td>
                 <td class="text-left" rowspan="1" colspan="1">id-alg-hkdf-with-sha256</td>
-                <td class="text-left" rowspan="1" colspan="1">id-aes128-Wrap</td>
+                <td class="text-left" rowspan="1" colspan="1">id-aes128-wrap</td>
               </tr>
               <tr>
                 <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-X25519</td>
                 <td class="text-left" rowspan="1" colspan="1">id-sha3-256</td>
-                <td class="text-left" rowspan="1" colspan="1">id-aes128-Wrap</td>
+                <td class="text-left" rowspan="1" colspan="1">id-aes128-wrap</td>
               </tr>
               <tr>
                 <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-ECDH-P384</td>
                 <td class="text-left" rowspan="1" colspan="1">id-alg-hkdf-with-sha384</td>
-                <td class="text-left" rowspan="1" colspan="1">id-aes256-Wrap</td>
+                <td class="text-left" rowspan="1" colspan="1">id-aes256-wrap</td>
               </tr>
               <tr>
                 <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-ECDH-brainpoolP256r1</td>
                 <td class="text-left" rowspan="1" colspan="1">id-alg-hkdf-with-sha384</td>
-                <td class="text-left" rowspan="1" colspan="1">id-aes256-Wrap</td>
+                <td class="text-left" rowspan="1" colspan="1">id-aes256-wrap</td>
               </tr>
               <tr>
                 <td class="text-left" rowspan="1" colspan="1">id-MLKEM1024-ECDH-P384</td>
                 <td class="text-left" rowspan="1" colspan="1">id-sha3-512</td>
-                <td class="text-left" rowspan="1" colspan="1">id-aes256-Wrap</td>
+                <td class="text-left" rowspan="1" colspan="1">id-aes256-wrap</td>
               </tr>
               <tr>
                 <td class="text-left" rowspan="1" colspan="1">id-MLKEM1024-ECDH-brainpoolP384r1</td>
                 <td class="text-left" rowspan="1" colspan="1">id-sha3-512</td>
-                <td class="text-left" rowspan="1" colspan="1">id-aes256-Wrap</td>
+                <td class="text-left" rowspan="1" colspan="1">id-aes256-wrap</td>
               </tr>
               <tr>
                 <td class="text-left" rowspan="1" colspan="1">id-MLKEM1024-X448</td>
                 <td class="text-left" rowspan="1" colspan="1">id-sha3-512</td>
-                <td class="text-left" rowspan="1" colspan="1">id-aes256-Wrap</td>
+                <td class="text-left" rowspan="1" colspan="1">id-aes256-wrap</td>
               </tr>
             </tbody>
           </table>
@@ -2353,7 +2353,7 @@ HKDF(salt, IKM, info, L)
               <p id="section-6.2.2-4.2.1"><code>id-sha3-*</code> KDF instantiations are defined in <span>[<a href="#I-D.ietf-lamps-cms-sha3-hash" class="cite xref">I-D.ietf-lamps-cms-sha3-hash</a>]</span>.<a href="#section-6.2.2-4.2.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-6.2.2-4.3">
-              <p id="section-6.2.2-4.3.1"><code>id-aes*-Wrap</code> are defined in <span>[<a href="#RFC3394" class="cite xref">RFC3394</a>]</span>.<a href="#section-6.2.2-4.3.1" class="pilcrow">¶</a></p>
+              <p id="section-6.2.2-4.3.1"><code>id-aes*-wrap</code> are defined in <span>[<a href="#RFC3394" class="cite xref">RFC3394</a>]</span>.<a href="#section-6.2.2-4.3.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 </section>
