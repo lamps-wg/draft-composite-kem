@@ -554,28 +554,49 @@ In the case of ML-KEM decapsulation failure, CompositeML-KEM MUST preserve the s
 The following ASN.1 Information Object Class is a template to be used in defining all composite KEM public key types.
 
 ~~~ ASN.1
-pk-CompositeKEM {
-  OBJECT IDENTIFIER:id, FirstPublicKeyType,
-  SecondPublicKeyType} PUBLIC-KEY ::=
-  {
-    IDENTIFIER id
-    KEY SEQUENCE {
-     BIT STRING (CONTAINING FirstPublicKeyType)
-     BIT STRING (CONTAINING SecondPublicKeyType)
+RsaCompositeKEMPublicKey ::= SEQUENCE {
+        firstPublicKey BIT STRING (ENCODED BY id-raw-key),
+        secondPublicKey BIT STRING (CONTAINING RSAPublicKey)
+      }
+
+EcCompositeKEMPublicKey ::= SEQUENCE {
+        firstPublicKey BIT STRING (ENCODED BY id-raw-key),
+        secondPublicKey BIT STRING (CONTAINING ECPoint)
+      }
+
+EdCompositeKEMPublicKey ::= SEQUENCE {
+        firstPublicKey BIT STRING (ENCODED BY id-raw-key),
+        secondPublicKey BIT STRING (CONTAINING id-raw-key)
+      }
+
+~~~
+
+`id-raw-key` is defined by this document. It signifies that the public key has no ASN.1 wrapping and the raw bits are placed here according to the encoding of the underlying algorithm specification. In some situations and protocols, the key might be wrapped in ASN.1 or
+may have some other additional decoration or encoding. If so, such wrapping MUST be removed prior to encoding the key itself as a BIT STRING.
+
+This structure is intentionally generic in the first public key slot since ML-KEM, as defined in {{I-D.draft-ietf-lamps-kyber-certificates}}, does not define any ASN.1 public key structures. For use with this document, the `firstPublicKey` MUST be the BIT STRING representation of an ML-KEM key as specified in {{I-D.draft-ietf-lamps-kyber-certificates}}. Note that here we used BIT STRING rather than OCTET STRING so that these keys can be trivially transcoded into a SubjectPublicKeyInfo as necessary, for example when a crypto library requires this for invoking the component algorithm. The public key for Edwards curve DH component is also encoded as a raw key.
+
+The following ASN.1 Information Object Class is defined to then allow for compact definitions of each composite algorithm.
+
+~~~ ASN.1
+  pk-CompositeKEM {OBJECT IDENTIFIER:id, PublicKeyType}
+    PUBLIC-KEY ::= {
+      IDENTIFIER id
+      KEY PublicKeyType
+      PARAMS ARE absent
+      CERT-KEY-USAGE { keyEncipherment }
     }
-    PARAMS ARE absent
-    CERT-KEY-USAGE { keyEncipherment }
-  }
 ~~~
 {: artwork-name="CompositeKeyObject-asn.1-structures"}
+
 
 As an example, the public key type `pk-MLKEM512-ECDH-P256` is defined as:
 
 ~~~
 pk-MLKEM512-ECDH-P256 PUBLIC-KEY ::=
-  pk-CompositeKEM {
+  pk-CompositeKEM{
     id-MLKEM512-ECDH-P256,
-    OCTET STRING, ECPoint }
+    EcCompositeKEMPublicKey}
 ~~~
 
 The full set of key types defined by this specification can be found in the ASN.1 Module in {{sec-asn1-module}}.
@@ -602,23 +623,44 @@ In order to maintain security properties of the composite, applications that use
 
 ## CompositeKEMPrivateKey {#sec-priv-key}
 
-Use cases that require an inter-operable encoding for composite private keys, such as when private keys are carried in PKCS #12 [RFC7292], CMP [RFC4210] or CRMF [RFC4211] MUST use the following structure.
+Use cases that require an inter-operable encoding for composite private keys, such as when private keys are carried in PKCS #12 [RFC7292], CMP [RFC4210] or CRMF [RFC4211] MUST use the OneAsymmetricKey [RFC5958] structure into which the privateKey field contains the CompositeSignaturePrivateKey:
 
 ~~~ ASN.1
-CompositeKEMPrivateKey ::= SEQUENCE SIZE (2) OF OneAsymmetricKey
+ OneAsymmetricKey ::= SEQUENCE {
+       version                   Version,
+       privateKeyAlgorithm       PrivateKeyAlgorithmIdentifier,
+       privateKey                PrivateKey,
+       attributes            [0] Attributes OPTIONAL,
+       ...,
+       [[2: publicKey        [1] PublicKey OPTIONAL ]],
+       ...
+     }
+
+  ...
+  PrivateKey ::= OCTET STRING
+                        -- Content varies based on type of key.  The
+                        -- algorithm identifier dictates the format of
+                        -- the key.
+~~~
+{: artwork-name="RFC5958-OneAsymmetricKey-asn.1-structure"}
+
+~~~ ASN.1
+CompositeKEMPrivateKey ::= SEQUENCE SIZE (2) OF OCTET STRING
 ~~~
 {: artwork-name="CompositeKEMPrivateKey-asn.1-structures"}
 
-Each element is a `OneAsymmetricKey` [RFC5958] object for a component private key.
+Each element of the CompositeKEMPrivateKey Sequence is an `OCTET STRING` representing the PrivateKey for each component algorithm in the same order defined in {{sec-composite-pub-keys}} for the components of CompositeKEMPublicKey.
 
-The parameters field MUST be absent.
+When a `CompositeKEMPrivateKey` is conveyed inside a OneAsymmetricKey structure (version 1 of which is also known as PrivateKeyInfo) [RFC5958], the privateKeyAlgorithm field SHALL be set to the corresponding composite algorithm identifier defined according to {{sec-alg-ids}} and its parameters field MUST be absent.  The privateKey field SHALL contain the CompositeKEMPrivateKey, and the publicKey field MAY be present.
 
-The order of the component keys is the same as the order defined in {{sec-composite-pub-keys}} for the components of CompositeKEMPublicKey.
+In some usecases the private keys that comprise a composite key may not be represented in a single structure or even be contained in a single cryptographic module; for example if one component is within the FIPS boundary of a cryptographic module and the other is not; see {sec-fips} for more discussion. The establishment of correspondence between public keys in a CompositeKEMPublicKey and private keys not represented in a single composite structure is beyond the scope of this document.
 
+Some applications may need to reconstruct the `OneAsymmetricKey` objects corresponding to each component private key. {{sec-alg-ids}} provides the necessary mapping between composite and their component algorithms for doing this reconstruction.
+
+Component keys of a CompositeKEMPrivateKey MUST NOT be used in any other type of key or as a standalone key.
+
+TODO - Delete This part
 Often, a `CompositePrivateKey` will be carried within a carrier format such as PKCS#8 which is itself a `OneAsymmetricKey` structure (version 1 of which is also known as PrivateKeyInfo) [RFC5958], then a situation arises where we have `CompositeKEMPrivateKey ::= SEQUENCE SIZE (2) OF OneAsymmetricKey` inside another `OneAsymmetricKey`. On the outer `OneAsymmetricKey`, the `privateKeyAlgorithm` field SHALL be set to the corresponding composite algorithm identifier defined according to {{sec-alg-ids}}, the `privateKey` field SHALL contain the `CompositeKEMPrivateKey`, and the `publicKey` field MUST NOT be present. As discussed in {{impl-cons-decaps-pubkey}}, the ML-KEM private key encoding already includes a copy of the public key, so the `publicKey` field of the first `OneAsymmetricKey` remains OPTIONAL. However, the public key of the traditional component, RSA or Elliptic Curve, is required as input to the KEM Combiner function, and is not typically carried within an RSA or Elliptic Curve private key. Therefore the `publicKey` field of the second `OneAsymmetricKey` MUST contain the corresponding public key. See {{impl-cons-decaps-pubkey}} for more discussion. Which `AlgorithmID`s to place into the component `OneAsymmetricKey`s is ambiguous; since `OneAsymmetricKey.PrivateKeyAlgorithmIdentifier.AlgorithmID` is not optional, producers MUST place something here and MAY either duplicate the composite AlgorithmID into both components, or MAY place the AlgorithmID of the component algorithm. Parsers SHOULD ignore the component private key `AlgorithmID`s and assume that the private keys are in the same order as specified in {{tab-kem-algs}}.
-
-In some use-cases the private keys that comprise a composite key may not be represented in a single structure or even be contained in a single cryptographic module; for example if one component is within the FIPS boundary of a cryptographic module and the other is not; see {{sec-fips}} for more discussion. The establishment of correspondence between public keys in a CompositeKEMPublicKey and private keys not represented in a single composite structure is beyond the scope of this document.
-
 
 ## Encoding Rules {#sec-encoding-rules}
 <!-- EDNOTE 7: Examples of how other specifications specify how a data structure is converted to a bit string can be found in RFC 2313, section 10.1.4, 3279 section 2.3.5, and RFC 4055, section 3.2. -->
