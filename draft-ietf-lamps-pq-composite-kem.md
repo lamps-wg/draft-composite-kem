@@ -1035,14 +1035,14 @@ ASN.1:
          maskGenFunc   [1] mgf1SHA256Identifier,
          pSourceFunc   [2] pSpecifiedEmpty  }
     }
-    
-    
+
+
 where
       mgf1SHA256Identifier  AlgorithmIdentifier  ::=  {
                               algorithm id-mgf1,  -- (1.2.840.113549.1.1.8)
                               parameters sha256Identifier }
-			      
-			      
+			
+			
 	sha256Identifier  AlgorithmIdentifier  ::=  { id-sha256, NULL }
 ~~~
 
