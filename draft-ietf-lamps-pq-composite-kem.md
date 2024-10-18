@@ -831,19 +831,19 @@ HKDF may be used with different hash functions, including SHA-256 {{FIPS.180-4}}
 
 ### Components for Composite ML-KEM in CMS
 
-A compliant implementation MUST support the following algorithms for the KEMRecipientInfo KDF and Wrap when the corresponding Composite ML-KEM algorithm is listed in KEMRecipientInfo KEM. The KDFs listed below align with the KDF used intenally for the KEM combiner. An implementation MAY also support other key-derivation functions and other key-encryption algorithms within CMS KEMRecipientInfo.
+A compliant implementation MUST support the following algorithm combinations for the KEMRecipientInfo `kdf` and `wrap` fields when the corresponding Composite ML-KEM algorithm is listed in the KEMRecipientInfo `kem` field. The KDFs listed below align with the KDF used internally within the KEM combiner. An implementation MAY also support other key-derivation functions and other key-encryption algorithms within CMS KEMRecipientInfo.
 
 | Composite ML-KEM Algorithm        | KDF                     | Wrap |
 |---------                          | ---                     | ---                |
-| id-MLKEM768-RSA2048               | id-alg-hkdf-with-sha256 | id-aes128-Wrap     |
-| id-MLKEM768-RSA3072               | id-alg-hkdf-with-sha256 | id-aes128-Wrap     |
-| id-MLKEM768-RSA4096               | id-alg-hkdf-with-sha256 | id-aes128-Wrap     |
-| id-MLKEM768-X25519                | id-sha3-256             | id-aes128-Wrap     |
-| id-MLKEM768-ECDH-P384             | id-alg-hkdf-with-sha384 | id-aes256-Wrap     |
-| id-MLKEM768-ECDH-brainpoolP256r1  | id-alg-hkdf-with-sha384 | id-aes256-Wrap     |
-| id-MLKEM1024-ECDH-P384            | id-sha3-512             | id-aes256-Wrap     |
-| id-MLKEM1024-ECDH-brainpoolP384r1 | id-sha3-512             | id-aes256-Wrap     |
-| id-MLKEM1024-X448                 | id-sha3-512             | id-aes256-Wrap     |
+| id-MLKEM768-RSA2048               | id-alg-hkdf-with-sha256 | id-aes128-wrap     |
+| id-MLKEM768-RSA3072               | id-alg-hkdf-with-sha256 | id-aes128-wrap     |
+| id-MLKEM768-RSA4096               | id-alg-hkdf-with-sha256 | id-aes128-wrap     |
+| id-MLKEM768-X25519                | id-sha3-256             | id-aes128-wrap     |
+| id-MLKEM768-ECDH-P384             | id-alg-hkdf-with-sha384 | id-aes256-wrap     |
+| id-MLKEM768-ECDH-brainpoolP256r1  | id-alg-hkdf-with-sha384 | id-aes256-wrap     |
+| id-MLKEM1024-ECDH-P384            | id-sha3-512             | id-aes256-wrap     |
+| id-MLKEM1024-ECDH-brainpoolP384r1 | id-sha3-512             | id-aes256-wrap     |
+| id-MLKEM1024-X448                 | id-sha3-512             | id-aes256-wrap     |
 {: #tab-cms-kdf-wrap title="Mandatory-to-implement pairings for CMS KDF and WRAP"}
 
 
@@ -851,7 +851,7 @@ where:
 
 * `id-alg-hkdf-with-sha*` are defined in [[RFC8619]].
 * `id-sha3-*` KDF instantiations are defined in {{I-D.ietf-lamps-cms-sha3-hash}}.
-* `id-aes*-Wrap` are defined in [RFC3394].
+* `id-aes*-wrap` are defined in [RFC3394].
 
 
 ## RecipientInfo Conventions
