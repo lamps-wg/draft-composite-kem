@@ -743,8 +743,6 @@ The RSA component keys MUST be generated at the 2048-bit and 3072-bit security l
 
 As with the other composite KEM algorithms, when `id-MLKEM512-RSA2048`, `id-MLKEM512-RSA3072` or `id-MLKEM512-RSA4096` is used in an AlgorithmIdentifier, the parameters MUST be absent. The RSA-OAEP SHALL be instantiated with the following hard-coded parameters which are the same for the 2048, 3072 and 4096 bit security levels.
 
-EDNOTE: statement "the parameters MUST be absent" now contradicts section "Fixed Algorithm Identifiers"
-
 | RSAES-OAEP-params           | Value                       |
 | ----------------------      | ---------------             |
 | hashAlgorithm               | id-sha256                 |
