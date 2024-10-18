@@ -530,7 +530,7 @@ Provided all inputs are well-formed, the key establishment procedure of ML-KEM w
 | ML-KEM-1024	      | 2^(-174)                    |
 {: #tab-mlkem-failure-rate title="ML-KEM decapsulation failure rates"}
 
-In the case of ML-KEM decapsulation failure, CompositeML-KEM MUST preserve the same behaviour and return a well-formed output.
+In the case of ML-KEM decapsulation failure, Composite ML-KEM MUST preserve the same behaviour and return a well-formed output.
 
 <!-- End of Introduction section -->
 
@@ -770,7 +770,7 @@ Note: The mask length, according to [RFC8017], is `k - hLen - 1`, where `k` is t
 
 Composite ML-KEM algorithms MAY be employed for one or more recipients in the CMS enveloped-data content type [RFC5652], the CMS authenticated-data content type [RFC5652], or the CMS authenticated-enveloped-data content type [RFC5083]. In each case, the KEMRecipientInfo [RFC9629] is used with the chosen Composite ML-KEM Algorithm to securely transfer the content-encryption key from the originator to the recipient.
 
-All recommendations for using CompositeML-KEM in CMS are fully aligned with the use of ML-KEM in CMS {{I-D.ietf-lamps-cms-kyber}}.
+All recommendations for using Composite ML-KEM in CMS are fully aligned with the use of ML-KEM in CMS {{I-D.ietf-lamps-cms-kyber}}.
 
 ## RecipientInfo Conventions {#sec-using-recipientInfo}
 
@@ -782,7 +782,7 @@ The fields of the KEMRecipientInfo MUST have the following values:
 
 > rid identifies the recipient's certificate or public key.
 
-> kem identifies the KEM algorithm; it MUST contain one of the CompositeML-KEM identifiers listed in {{sec-alg-ids}}.
+> kem identifies the KEM algorithm; it MUST contain one of the Composite ML-KEM identifiers listed in {{sec-alg-ids}}.
 
 > kemct is the ciphertext produced for this recipient.
 
@@ -829,9 +829,9 @@ L:
 HKDF may be used with different hash functions, including SHA-256 {{FIPS.180-4}}. The object identifier id-alg-hkdf-with-sha256 is defined in {{RFC8619}}, and specifies the use of HKDF with SHA-256. The parameter field MUST be absent when this algorithm identifier is used to specify the KDF for ML-KEM in KemRecipientInfo.
 
 
-### Components for CompositeML-KEM in CMS
+### Components for Composite ML-KEM in CMS
 
-A compliant implementation MUST support the following algorithms for the KEMRecipientInfo KDF and Wrap when the corresponding CompositeML-KEM algorithm is listed in KEMRecipientInfo KEM. The KDFs listed below align with the KDF used intenally for the KEM combiner. An implementation MAY also support other key-derivation functions and other key-encryption algorithms within CMS KEMRecipientInfo.
+A compliant implementation MUST support the following algorithms for the KEMRecipientInfo KDF and Wrap when the corresponding Composite ML-KEM algorithm is listed in KEMRecipientInfo KEM. The KDFs listed below align with the KDF used intenally for the KEM combiner. An implementation MAY also support other key-derivation functions and other key-encryption algorithms within CMS KEMRecipientInfo.
 
 | Composite ML-KEM Algorithm        | KDF                     | Wrap |
 |---------                          | ---                     | ---                |
