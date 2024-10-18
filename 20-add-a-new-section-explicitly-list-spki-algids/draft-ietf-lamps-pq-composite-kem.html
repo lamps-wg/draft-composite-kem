@@ -1039,7 +1039,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Ounsworth, et al.</td>
-<td class="center">Expires 17 April 2025</td>
+<td class="center">Expires 21 April 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1052,12 +1052,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-lamps-pq-composite-kem-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2024-10-14" class="published">14 October 2024</time>
+<time datetime="2024-10-18" class="published">18 October 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-04-17">17 April 2025</time></dd>
+<dd class="expires"><time datetime="2025-04-21">21 April 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1123,7 +1123,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 17 April 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 21 April 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -2101,7 +2101,7 @@ CompositeCiphertextValue ::= SEQUENCE SIZE (2) OF OCTET STRING
 <p id="section-5.3-1">Use of RSA-OAEP <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span> within <code>id-MLKEM768-RSA2048</code>, <code>id-MLKEM768-RSA3072</code>, and <code>id-MLKEM768-RSA4096</code> requires additional specification.<a href="#section-5.3-1" class="pilcrow">¶</a></p>
 <p id="section-5.3-2">First, a quick note on the choice of RSA-OAEP as the supported RSA encryption primitive. RSA-KEM <span>[<a href="#RFC5990" class="cite xref">RFC5990</a>]</span> is more straightforward to work with, but it has fairly limited adoption and therefore is of limited backwards compatibility value. Also, while RSA-PKCS#1v1.5 <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span> is still everywhere, but hard to make secure and no longer FIPS-approved as of the end of 2023 <span>[<a href="#SP800-131Ar2" class="cite xref">SP800-131Ar2</a>]</span>, so it is of limited forwards value. This leaves RSA-OAEP [RFC3560] as the remaining choice.<a href="#section-5.3-2" class="pilcrow">¶</a></p>
 <p id="section-5.3-3">The RSA component keys MUST be generated at the 2048-bit and 3072-bit security levels respectively.<a href="#section-5.3-3" class="pilcrow">¶</a></p>
-<p id="section-5.3-4">As with the other composite KEM algorithms, when <code>id-MLKEM512-RSA2048</code> or <code>id-MLKEM512-RSA3072</code> is used in an AlgorithmIdentifier, the parameters MUST be absent. The RSA-OAEP SHALL be instantiated with the following hard-coded parameters which are the same for both the 2048 and 3072 bit security levels.<a href="#section-5.3-4" class="pilcrow">¶</a></p>
+<p id="section-5.3-4">As with the other composite KEM algorithms, when <code>id-MLKEM512-RSA2048</code>, <code>id-MLKEM512-RSA3072</code> or <code>id-MLKEM512-RSA4096</code> is used in an AlgorithmIdentifier, the parameters MUST be absent. The RSA-OAEP SHALL be instantiated with the following hard-coded parameters which are the same for the 2048, 3072 and 4096 bit security levels.<a href="#section-5.3-4" class="pilcrow">¶</a></p>
 <span id="name-rsa-oaep-parameters-2"></span><div id="rsa-oaep-params">
 <table class="center" id="table-3">
           <caption>
@@ -2117,7 +2117,7 @@ CompositeCiphertextValue ::= SEQUENCE SIZE (2) OF OCTET STRING
           <tbody>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">hashAlgorithm</td>
-              <td class="text-left" rowspan="1" colspan="1">id-sha2-256</td>
+              <td class="text-left" rowspan="1" colspan="1">id-sha256</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">maskGenAlgorithm</td>
@@ -2185,6 +2185,11 @@ CompositeCiphertextValue ::= SEQUENCE SIZE (2) OF OCTET STRING
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-RSA3072</td>
+              <td class="text-left" rowspan="1" colspan="1">SHA3-256</td>
+              <td class="text-left" rowspan="1" colspan="1">id-aes128-Wrap</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-RSA4048</td>
               <td class="text-left" rowspan="1" colspan="1">SHA3-256</td>
               <td class="text-left" rowspan="1" colspan="1">id-aes128-Wrap</td>
             </tr>
@@ -3121,16 +3126,28 @@ END
 <div class="lang-ASN.1 sourcecode" id="appendix-B.4-2">
 <pre>
   algorithm AlgorithmIdentifier ::= {
-    algorithm id-RSAES-OAEP                       -- (1.2.840.113549.1.1.7)
+    algorithm id-RSAES-OAEP,   -- (1.2.840.113549.1.1.7)
+    parameters RSAES-OAEP-params {
+         hashFunc      [0] id-sha256,  -- (2.16.840.1.101.3.4.2.1)
+         maskGenFunc   [1] mgf1SHA256Identifier,
+         pSourceFunc   [2] pSpecifiedEmpty  }
     }
+
+
+where
+      mgf1SHA256Identifier  AlgorithmIdentifier  ::=  {
+                              algorithm id-mgf1,  -- (1.2.840.113549.1.1.8)
+                              parameters sha256Identifier }
+
+
+        sha256Identifier  AlgorithmIdentifier  ::=  { id-sha256, NULL }
 </pre><a href="#appendix-B.4-2" class="pilcrow">¶</a>
 </div>
-<p id="appendix-B.4-3">EDNOTE: RSA allows to include also more parameters in the public key (hashFunc, maskGenFunc, pSourceFunc). Shall we add it also to be more specific about the supported algorithm?<a href="#appendix-B.4-3" class="pilcrow">¶</a></p>
-<p id="appendix-B.4-4">DER:<a href="#appendix-B.4-4" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="appendix-B.4-5">
+<p id="appendix-B.4-3">DER:<a href="#appendix-B.4-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-B.4-4">
 <pre>
-  30 0B 06 09 2A 86 48 86 F7 0D 01 01 07
-</pre><a href="#appendix-B.4-5" class="pilcrow">¶</a>
+ 30 51 06 09 2A 86 48 86 F7 0D 01 01 07 30 44 A0 0F 30 0D 06 09 60 86 48 01 65 03 04 02 01 05 00 A1 1C 30 1A 06 09 2A 86 48 86 F7 0D 01 01 08 30 0D 06 09 60 86 48 01 65 03 04 02 01 05 00 A2 13 30 0f 06 09 2A 86 48 86 F7 0D 01 01 09 30 02 04 00 05 00
+</pre><a href="#appendix-B.4-4" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
