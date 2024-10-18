@@ -85,22 +85,10 @@ normative:
   RFC8174:
   RFC8410:
   RFC8411:
+  RFC8619:
   RFC9629:
   I-D.draft-ietf-lamps-cms-sha3-hash-04:
-  # ANS-X9.44:
-  #   title: "Public Key
-  #             Cryptography for the Financial Services Industry -- Key
-  #             Establishment Using Integer Factorization Cryptography"
-  #   author:
-  #     org: "American National Standards Institute"
-  #   date: 2007
-  #   seriesinfo: American National Standard X9.44
-  # SP800-185:
-  #   title: "SHA-3 Derived Functions: cSHAKE, KMAC, TupleHash and ParallelHash"
-  #   author:
-  #     org: "National Institute of Standards and Technology (NIST)"
-  #   date: December 2016
-  #   target: https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-185.pdf
+  I-D.draft-ietf-lamps-kyber-certificates-01:
   X.690:
       title: "Information technology - ASN.1 encoding Rules: Specification of Basic Encoding Rules (BER), Canonical Encoding Rules (CER) and Distinguished Encoding Rules (DER)"
       date: November 2015
@@ -164,7 +152,7 @@ informative:
   I-D.draft-ietf-tls-hybrid-design-04:
   I-D.draft-ietf-pquip-pqt-hybrid-terminology-04:
   I-D.draft-ietf-pquip-hybrid-signature-spectrums-00:
-  I-D.draft-ietf-lamps-kyber-certificates-01:
+  I-D.draft-ietf-lamps-cms-kyber-05:
   X-Wing:
     title: "X-Wing The Hybrid KEM You’ve Been Looking For"
     date: 2024-01-09
@@ -739,9 +727,9 @@ The KEM combiner defined in section {{sec-kem-combiner}} requires a domain separ
 | id-MLKEM768-RSA2048       | 060B6086480186FA6B50050215 |
 | id-MLKEM768-RSA3072       | 060B6086480186FA6B50050216 |
 | id-MLKEM768-RSA4096       | 060B6086480186FA6B50050217 |
+| id-MLKEM768-X25519        | 060B6086480186FA6B5005021A |
 | id-MLKEM768-ECDH-P384     | 060B6086480186FA6B50050218 |
 | id-MLKEM768-ECDH-brainpoolP256r1 | 060B6086480186FA6B50050219 |
-| id-MLKEM768-X25519        | 060B6086480186FA6B5005021A |
 | id-MLKEM1024-ECDH-P384    | 060B6086480186FA6B5005021B |
 | id-MLKEM1024-ECDH-brainpoolP384r1 | 060B6086480186FA6B5005021C |
 | id-MLKEM1024-X448         | 060B6086480186FA6B5005021D |
@@ -782,29 +770,86 @@ Note: The mask length, according to [RFC8017], is `k - hLen - 1`, where `k` is t
 
 Composite KEM algorithms MAY be employed for one or more recipients in the CMS enveloped-data content type [RFC5652], the CMS authenticated-data content type [RFC5652], or the CMS authenticated-enveloped-data content type [RFC5083]. In each case, the KEMRecipientInfo [RFC9629] is used with the chosen composite KEM Algorithm to securely transfer the content-encryption key from the originator to the recipient.
 
+All recommendations for using CompositeML-KEM in CMS are fully aligned with the use of ML-KEM in CMS {{I-D.ietf-lamps-cms-kyber}}.
+
+## RecipientInfo Conventions {#sec-using-recipientInfo}
+
+When the ML-KEM algorithm is employed for a recipient, the RecipientInfo alternative for that recipient MUST be OtherRecipientInfo using the KEMRecipientInfo structure as defined in {{RFC9629}}.
+
+The fields of the KEMRecipientInfo MUST have the following values:
+
+> version is the syntax version number; it MUST be 0.
+
+> rid identifies the recipient's certificate or public key.
+
+> kem identifies the KEM algorithm; it MUST contain one of the CompositeML-KEM identifiers listed in {{sec-alg-ids}}.
+
+> kemct is the ciphertext produced for this recipient.
+
+> kdf identifies the key-derivation algorithm. Note that the Key Derivation Function (KDF) used for CMS RecipientInfo process MAY be different than the KDF used within the ML-KEM algorithm.
+
+> kekLength is the size of the key-encryption key in octets.
+
+> ukm is an optional random input to the key-derivation function. ML-KEM doesn't place any requirements on the ukm contents.
+
+> wrap identifies a key-encryption algorithm used to encrypt the content-encryption key.
+
+<!-- End of recipientinfo conventions section -->
+
 ## Underlying Components
 
 When a particular Composite KEM OID is supported, a CMS implementation MUST support the corresponding KDF and key-encryption algorithms listed in {{tab-cms-kdf-wrap}}, which have been chosen to preserve security and performance characteristics of each composite algorithm.
 
 
-| Composite KEM OID                 | KDF         | Key Encryption Alg |
-|---------                          | ---         | ---                |
-| id-MLKEM768-RSA2048               | SHA3-256 | id-aes128-Wrap     |
-| id-MLKEM768-RSA3072               | SHA3-256 | id-aes128-Wrap     |
-| id-MLKEM768-ECDH-P384             | SHA3-384 | id-aes256-Wrap     |
-| id-MLKEM768-ECDH-brainpoolP256r1  | SHA3-384 | id-aes256-Wrap     |
-| id-MLKEM768-X25519                | SHA3-384 | id-aes256-Wrap     |
-| id-MLKEM1024-ECDH-P384            | SHA3-512 | id-aes256-Wrap     |
-| id-MLKEM1024-ECDH-brainpoolP384r1 | SHA3-512 | id-aes256-Wrap     |
-| id-MLKEM1024-X448                 | SHA3-512 | id-aes256-Wrap     |
-{: #tab-cms-kdf-wrap title="REQUIRED pairings for CMS KDF and WRAP"}
+### Use of the HKDF-based Key Derivation Function
 
-In all cases above, the hash function used as a KDF produces a longer output than needed by the encryption algorithm, so the output SHALL be truncated to the correct length -- ie the leftmost significant bits are used.
+The HMAC-based Extract-and-Expand Key Derivation Function (HKDF) is defined in {{!RFC5869}}.
 
-Note: `id-aes256-Wrap` is stronger than necessary for the MLKEM768 combinations at the NIST level 3 192 bit security level, however `id-aes256-Wrap` was chosen because it has better general adoption than `id-aes192-Wrap`.
+The HKDF function is a composition of the HKDF-Extract and HKDF-Expand functions.
+
+~~~
+HKDF(salt, IKM, info, L)
+  = HKDF-Expand(HKDF-Extract(salt, IKM), info, L)
+~~~
+
+HKDF(salt, IKM, info, L) takes the following parameters:
+
+salt:
+: optional salt value (a non-secret random value). In this document this parameter is unused, that is it is the zero-length string "".
+
+IKM:
+: input keying material. In this document this is the shared secret outputted from the Encapsulate() or Decapsulate() functions.  This corresponds to the IKM KDF input from {{Section 5 of RFC9629}}.
+
+info:
+: optional context and application specific information. In this document this corresponds to the info KDF input from {{Section 5 of RFC9629}}. This is the ASN.1 DER encoding of CMSORIforKEMOtherInfo.
+
+L:
+: length of output keying material in octets. This corresponds to the L KDF input from {{Section 5 of RFC9629}}, which is identified in the kekLength value from KEMRecipientInfo. Implementations MUST confirm that this value is consistent with the key size of the key-encryption algorithm.
+
+HKDF may be used with different hash functions, including SHA-256 {{FIPS.180-4}}. The object identifier id-alg-hkdf-with-sha256 is defined in {{RFC8619}}, and specifies the use of HKDF with SHA-256. The parameter field MUST be absent when this algorithm identifier is used to specify the KDF for ML-KEM in KemRecipientInfo.
+
+
+### Components for CompositeML-KEM in CMS
+
+A compliant implementation MUST support the following algorithms for the KEMRecipientInfo KDF and Wrap when the corresponding CompositeML-KEM algorithm is listed in KEMRecipientInfo KEM. The KDFs listed below align with the KDF used intenally for the KEM combiner. An implementation MAY also support other key-derivation functions and other key-encryption algorithms within CMS KEMRecipientInfo.
+
+| Composite KEM OID                 | KDF                     | Wrap |
+|---------                          | ---                     | ---                |
+| id-MLKEM768-RSA2048               | id-alg-hkdf-with-sha256 | id-aes128-Wrap     |
+| id-MLKEM768-RSA3072               | id-alg-hkdf-with-sha256 | id-aes128-Wrap     |
+| id-MLKEM768-RSA4096               | id-alg-hkdf-with-sha256 | id-aes128-Wrap     |
+| id-MLKEM768-X25519                | id-sha3-256             | id-aes128-Wrap     |
+| id-MLKEM768-ECDH-P384             | id-alg-hkdf-with-sha384 | id-aes256-Wrap     |
+| id-MLKEM768-ECDH-brainpoolP256r1  | id-alg-hkdf-with-sha384 | id-aes256-Wrap     |
+| id-MLKEM1024-ECDH-P384            | id-sha3-512             | id-aes256-Wrap     |
+| id-MLKEM1024-ECDH-brainpoolP384r1 | id-sha3-512             | id-aes256-Wrap     |
+| id-MLKEM1024-X448                 | id-sha3-512             | id-aes256-Wrap     |
+{: #tab-cms-kdf-wrap title="Mandatory-to-implement pairings for CMS KDF and WRAP"}
+
 
 where:
 
+* `id-alg-hkdf-with-sha*` are defined in [[RFC8619]].
 * `id-sha3-*` KDF instantiations are defined in {{I-D.ietf-lamps-cms-sha3-hash}}.
 * `id-aes*-Wrap` are defined in [RFC3394].
 
