@@ -741,7 +741,9 @@ First, a quick note on the choice of RSA-OAEP as the supported RSA encryption pr
 
 The RSA component keys MUST be generated at the 2048-bit and 3072-bit security levels respectively.
 
-As with the other composite KEM algorithms, when `id-MLKEM512-RSA2048` or `id-MLKEM512-RSA3072` is used in an AlgorithmIdentifier, the parameters MUST be absent. The RSA-OAEP SHALL be instantiated with the following hard-coded parameters which are the same for both the 2048 and 3072 bit security levels.
+As with the other composite KEM algorithms, when `id-MLKEM512-RSA2048`, `id-MLKEM512-RSA3072` or `id-MLKEM512-RSA4096` is used in an AlgorithmIdentifier, the parameters MUST be absent. The RSA-OAEP SHALL be instantiated with the following hard-coded parameters which are the same for the 2048, 3072 and 4096 bit security levels.
+
+EDNOTE: statement "the parameters MUST be absent" now contradicts section "Fixed Algorithm Identifiers"
 
 | RSAES-OAEP-params           | Value                       |
 | ----------------------      | ---------------             |
@@ -775,6 +777,7 @@ When a particular Composite KEM OID is supported, a CMS implementation MUST supp
 |---------                          | ---         | ---                |
 | id-MLKEM768-RSA2048               | SHA3-256 | id-aes128-Wrap     |
 | id-MLKEM768-RSA3072               | SHA3-256 | id-aes128-Wrap     |
+| id-MLKEM768-RSA4048               | SHA3-256 | id-aes128-Wrap     |
 | id-MLKEM768-ECDH-P384             | SHA3-384 | id-aes256-Wrap     |
 | id-MLKEM768-ECDH-brainpoolP256r1  | SHA3-384 | id-aes256-Wrap     |
 | id-MLKEM768-X25519                | SHA3-384 | id-aes256-Wrap     |
@@ -1048,7 +1051,7 @@ where
 DER:
 
 ~~~
- TODO
+ 30 51 06 09 2A 86 48 86 F7 0D 01 01 07 30 44 A0 0F 30 0D 06 09 60 86 48 01 65 03 04 02 01 05 00 A1 1C 30 1A 06 09 2A 86 48 86 F7 0D 01 01 08 30 0D 06 09 60 86 48 01 65 03 04 02 01 05 00 A2 13 30 0f 06 09 2A 86 48 86 F7 0D 01 01 09 30 02 04 00 05 00
 ~~~
 
 ## ECDH NIST-P-384
