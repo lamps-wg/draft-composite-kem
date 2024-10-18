@@ -1006,10 +1006,9 @@ Table of Contents
 
 6.1.  RecipientInfo Conventions
 
-   When the ML-KEM algorithm is employed for a recipient, the
-   RecipientInfo alternative for that recipient MUST be
-   OtherRecipientInfo using the KEMRecipientInfo structure as defined in
-   [RFC9629].
+   When Composite ML-KEM is employed for a recipient, the RecipientInfo
+   alternative for that recipient MUST be OtherRecipientInfo using the
+   KEMRecipientInfo structure as defined in [RFC9629].
 
    The fields of the KEMRecipientInfo MUST have the following values:
 
