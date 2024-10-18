@@ -1250,7 +1250,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
                     <p id="section-toc.1-1.6.2.2.2.1.1"><a href="#section-6.2.1" class="auto internal xref">6.2.1</a>.  <a href="#name-use-of-the-hkdf-based-key-d" class="internal xref">Use of the HKDF-based Key Derivation Function</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.2.2.2">
-                    <p id="section-toc.1-1.6.2.2.2.2.1"><a href="#section-6.2.2" class="auto internal xref">6.2.2</a>.  <a href="#name-components-for-compositeml-" class="internal xref">Components for CompositeML-KEM in CMS</a></p>
+                    <p id="section-toc.1-1.6.2.2.2.2.1"><a href="#section-6.2.2" class="auto internal xref">6.2.2</a>.  <a href="#name-components-for-composite-ml" class="internal xref">Components for Composite ML-KEM in CMS</a></p>
 </li>
                 </ul>
 </li>
@@ -1752,7 +1752,7 @@ CompositeKEM.Decap(ct, mlkemSK, tradSK):
             </tbody>
           </table>
 </div>
-<p id="section-2.3.7-3">In the case of ML-KEM decapsulation failure, CompositeML-KEM MUST preserve the same behaviour and return a well-formed output.<a href="#section-2.3.7-3" class="pilcrow">¶</a></p>
+<p id="section-2.3.7-3">In the case of ML-KEM decapsulation failure, Composite ML-KEM MUST preserve the same behaviour and return a well-formed output.<a href="#section-2.3.7-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2181,7 +2181,7 @@ CompositeCiphertextValue ::= SEQUENCE SIZE (2) OF OCTET STRING
       </h2>
 <p id="section-6-1">[EDNOTE: The convention in LAMPS is to specify algorithms and their CMS conventions in separate documents. Here we have presented them in the same document, but this section has been written so that it can easily be moved to a standalone document.]<a href="#section-6-1" class="pilcrow">¶</a></p>
 <p id="section-6-2">Composite ML-KEM algorithms MAY be employed for one or more recipients in the CMS enveloped-data content type <span>[<a href="#RFC5652" class="cite xref">RFC5652</a>]</span>, the CMS authenticated-data content type <span>[<a href="#RFC5652" class="cite xref">RFC5652</a>]</span>, or the CMS authenticated-enveloped-data content type <span>[<a href="#RFC5083" class="cite xref">RFC5083</a>]</span>. In each case, the KEMRecipientInfo <span>[<a href="#RFC9629" class="cite xref">RFC9629</a>]</span> is used with the chosen Composite ML-KEM Algorithm to securely transfer the content-encryption key from the originator to the recipient.<a href="#section-6-2" class="pilcrow">¶</a></p>
-<p id="section-6-3">All recommendations for using CompositeML-KEM in CMS are fully aligned with the use of ML-KEM in CMS <span>[<a href="#I-D.ietf-lamps-cms-kyber" class="cite xref">I-D.ietf-lamps-cms-kyber</a>]</span>.<a href="#section-6-3" class="pilcrow">¶</a></p>
+<p id="section-6-3">All recommendations for using Composite ML-KEM in CMS are fully aligned with the use of ML-KEM in CMS <span>[<a href="#I-D.ietf-lamps-cms-kyber" class="cite xref">I-D.ietf-lamps-cms-kyber</a>]</span>.<a href="#section-6-3" class="pilcrow">¶</a></p>
 <div id="sec-using-recipientInfo">
 <section id="section-6.1">
         <h3 id="name-recipientinfo-conventions">
@@ -2201,7 +2201,7 @@ CompositeCiphertextValue ::= SEQUENCE SIZE (2) OF OCTET STRING
         </ul>
 <ul class="normal ulEmpty">
 <li class="normal ulEmpty" id="section-6.1-5.1">
-            <p id="section-6.1-5.1.1">kem identifies the KEM algorithm; it MUST contain one of the CompositeML-KEM identifiers listed in <a href="#sec-alg-ids" class="auto internal xref">Section 5</a>.<a href="#section-6.1-5.1.1" class="pilcrow">¶</a></p>
+            <p id="section-6.1-5.1.1">kem identifies the KEM algorithm; it MUST contain one of the Composite ML-KEM identifiers listed in <a href="#sec-alg-ids" class="auto internal xref">Section 5</a>.<a href="#section-6.1-5.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <ul class="normal ulEmpty">
@@ -2276,12 +2276,12 @@ HKDF(salt, IKM, info, L)
 <p id="section-6.2.1-6">HKDF may be used with different hash functions, including SHA-256 <span>[<a href="#FIPS.180-4" class="cite xref">FIPS.180-4</a>]</span>. The object identifier id-alg-hkdf-with-sha256 is defined in <span>[<a href="#RFC8619" class="cite xref">RFC8619</a>]</span>, and specifies the use of HKDF with SHA-256. The parameter field MUST be absent when this algorithm identifier is used to specify the KDF for ML-KEM in KemRecipientInfo.<a href="#section-6.2.1-6" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="components-for-compositeml-kem-in-cms">
+<div id="components-for-composite-ml-kem-in-cms">
 <section id="section-6.2.2">
-          <h4 id="name-components-for-compositeml-">
-<a href="#section-6.2.2" class="section-number selfRef">6.2.2. </a><a href="#name-components-for-compositeml-" class="section-name selfRef">Components for CompositeML-KEM in CMS</a>
+          <h4 id="name-components-for-composite-ml">
+<a href="#section-6.2.2" class="section-number selfRef">6.2.2. </a><a href="#name-components-for-composite-ml" class="section-name selfRef">Components for Composite ML-KEM in CMS</a>
           </h4>
-<p id="section-6.2.2-1">A compliant implementation MUST support the following algorithms for the KEMRecipientInfo KDF and Wrap when the corresponding CompositeML-KEM algorithm is listed in KEMRecipientInfo KEM. The KDFs listed below align with the KDF used intenally for the KEM combiner. An implementation MAY also support other key-derivation functions and other key-encryption algorithms within CMS KEMRecipientInfo.<a href="#section-6.2.2-1" class="pilcrow">¶</a></p>
+<p id="section-6.2.2-1">A compliant implementation MUST support the following algorithms for the KEMRecipientInfo KDF and Wrap when the corresponding Composite ML-KEM algorithm is listed in KEMRecipientInfo KEM. The KDFs listed below align with the KDF used intenally for the KEM combiner. An implementation MAY also support other key-derivation functions and other key-encryption algorithms within CMS KEMRecipientInfo.<a href="#section-6.2.2-1" class="pilcrow">¶</a></p>
 <span id="name-mandatory-to-implement-pair"></span><div id="tab-cms-kdf-wrap">
 <table class="center" id="table-5">
             <caption>

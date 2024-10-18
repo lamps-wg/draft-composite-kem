@@ -110,7 +110,7 @@ Table of Contents
      6.1.  RecipientInfo Conventions
      6.2.  Underlying Components
        6.2.1.  Use of the HKDF-based Key Derivation Function
-       6.2.2.  Components for CompositeML-KEM in CMS
+       6.2.2.  Components for Composite ML-KEM in CMS
      6.3.  RecipientInfo Conventions
      6.4.  Certificate Conventions
      6.5.  SMIMECapabilities Attribute Conventions
@@ -618,7 +618,7 @@ Table of Contents
 
                Table 1: ML-KEM decapsulation failure rates
 
-   In the case of ML-KEM decapsulation failure, CompositeML-KEM MUST
+   In the case of ML-KEM decapsulation failure, Composite ML-KEM MUST
    preserve the same behaviour and return a well-formed output.
 
 3.  Composite Key Structures
@@ -1001,7 +1001,7 @@ Table of Contents
    Algorithm to securely transfer the content-encryption key from the
    originator to the recipient.
 
-   All recommendations for using CompositeML-KEM in CMS are fully
+   All recommendations for using Composite ML-KEM in CMS are fully
    aligned with the use of ML-KEM in CMS [I-D.ietf-lamps-cms-kyber].
 
 6.1.  RecipientInfo Conventions
@@ -1018,7 +1018,7 @@ Table of Contents
       rid identifies the recipient's certificate or public key.
 
       kem identifies the KEM algorithm; it MUST contain one of the
-      CompositeML-KEM identifiers listed in Section 5.
+      Composite ML-KEM identifiers listed in Section 5.
 
       kemct is the ciphertext produced for this recipient.
 
@@ -1080,11 +1080,11 @@ Table of Contents
    The parameter field MUST be absent when this algorithm identifier is
    used to specify the KDF for ML-KEM in KemRecipientInfo.
 
-6.2.2.  Components for CompositeML-KEM in CMS
+6.2.2.  Components for Composite ML-KEM in CMS
 
    A compliant implementation MUST support the following algorithms for
-   the KEMRecipientInfo KDF and Wrap when the corresponding CompositeML-
-   KEM algorithm is listed in KEMRecipientInfo KEM.  The KDFs listed
+   the KEMRecipientInfo KDF and Wrap when the corresponding Composite
+   ML-KEM algorithm is listed in KEMRecipientInfo KEM.  The KDFs listed
    below align with the KDF used intenally for the KEM combiner.  An
    implementation MAY also support other key-derivation functions and
    other key-encryption algorithms within CMS KEMRecipientInfo.
