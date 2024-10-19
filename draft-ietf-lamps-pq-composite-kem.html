@@ -1593,27 +1593,28 @@ CompositeKEM.KeyGen():
 <a href="#section-2.3.2" class="section-number selfRef">2.3.2. </a><a href="#name-promotion-of-rsa-oaep-into-" class="section-name selfRef">Promotion of RSA-OAEP into a KEM</a>
           </h4>
 <p id="section-2.3.2-1">The RSA Optimal Asymmetric Encryption Padding (OAEP), as defined in section 7.1 of <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span> is a public key encryption algorithm used to transport key material from a sender to a receiver. It is promoted into a KEM by having the sender generate a random 256 bit secret and encrypt it.<a href="#section-2.3.2-1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-2.3.2-2">
+<p id="section-2.3.2-2">Note that, at least at the time of writing, the algorithm <code>RSAOAEPKEM</code> is not defined as a standalone algorithm within PKIX standards and it does not have an assigned algorithm OID, so it connot be used directly with CMS KEMRecipientInfo <span>[<a href="#RFC9629" class="cite xref">RFC9629</a>]</span>; it is merely a building block for the composite algorithm.<a href="#section-2.3.2-2" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-2.3.2-3">
 <pre>
 RSAOAEPKEM.Encap(pkR):
   shared_secret = SecureRandom(ss_len)
   enc = RSAES-OAEP-ENCRYPT(pkR, shared_secret)
 
   return shared_secret, enc
-</pre><a href="#section-2.3.2-2" class="pilcrow">¶</a>
+</pre><a href="#section-2.3.2-3" class="pilcrow">¶</a>
 </div>
-<p id="section-2.3.2-3">Note that the OAEP label <code>L</code> is left to its default value, which is the empty string as per <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span>. The shared secret output by the overall Composite ML-KEM already binds a composite domain separator, so there is no need to also utilize the component domain separators.<a href="#section-2.3.2-3" class="pilcrow">¶</a></p>
-<p id="section-2.3.2-4">The value of <code>ss_len</code> as well as the RSA-OAEP parameters used within this specification can be found in <a href="#sect-rsaoaep-params" class="auto internal xref">Section 5.3</a>.<a href="#section-2.3.2-4" class="pilcrow">¶</a></p>
-<p id="section-2.3.2-5"><code>Decap(sk, ct) -&gt; ss</code> is accomplished in the analogous way.<a href="#section-2.3.2-5" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-2.3.2-6">
+<p id="section-2.3.2-4">Note that the OAEP label <code>L</code> is left to its default value, which is the empty string as per <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span>. The shared secret output by the overall Composite ML-KEM already binds a composite domain separator, so there is no need to also utilize the component domain separators.<a href="#section-2.3.2-4" class="pilcrow">¶</a></p>
+<p id="section-2.3.2-5">The value of <code>ss_len</code> as well as the RSA-OAEP parameters used within this specification can be found in <a href="#sect-rsaoaep-params" class="auto internal xref">Section 5.3</a>.<a href="#section-2.3.2-5" class="pilcrow">¶</a></p>
+<p id="section-2.3.2-6"><code>Decap(sk, ct) -&gt; ss</code> is accomplished in the analogous way.<a href="#section-2.3.2-6" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-2.3.2-7">
 <pre>
 RSAOAEPKEM.Decap(skR, enc):
   shared_secret = RSAES-OAEP-DECRYPT(skR, enc)
 
   return shared_secret
-</pre><a href="#section-2.3.2-6" class="pilcrow">¶</a>
+</pre><a href="#section-2.3.2-7" class="pilcrow">¶</a>
 </div>
-<p id="section-2.3.2-7">Note that, at least at the time of writing, the algorithm <code>RSAOAEPKEM</code> is not defined as a standalone algorithm within PKIX standards and it does not have an assigned algorithm OID, so it connot be used directly with CMS KEMRecipientInfo <span>[<a href="#RFC9629" class="cite xref">RFC9629</a>]</span>; it is merely a building block for the composite algorithm.<a href="#section-2.3.2-7" class="pilcrow">¶</a></p>
+<p id="section-2.3.2-8">Note that, at least at the time of writing, the algorithm <code>RSAOAEPKEM</code> is not defined as a standalone algorithm within PKIX standards and it does not have an assigned algorithm OID, so it connot be used directly with CMS KEMRecipientInfo <span>[<a href="#RFC9629" class="cite xref">RFC9629</a>]</span>; it is merely a building block for the composite algorithm.<a href="#section-2.3.2-8" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="promotion-of-ecdh-into-a-kem">
@@ -1622,7 +1623,8 @@ RSAOAEPKEM.Decap(skR, enc):
 <a href="#section-2.3.3" class="section-number selfRef">2.3.3. </a><a href="#name-promotion-of-ecdh-into-a-ke" class="section-name selfRef">Promotion of ECDH into a KEM</a>
           </h4>
 <p id="section-2.3.3-1">An elliptic curve Diffie-Hellman key agreement is promoted into a KEM <code>Encap(pk) -&gt; (ss, ct)</code> using a simplified version of the DHKEM definition from <span>[<a href="#RFC9180" class="cite xref">RFC9180</a>]</span>.<a href="#section-2.3.3-1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-2.3.3-2">
+<p id="section-2.3.3-2">Note that, at least at the time of writing, the algorithm <code>DHKEM</code> is not defined as a standalone algorithm within PKIX standards and it does not have an assigned algorithm OID, so it connot be used directly with CMS KEMRecipientInfo <span>[<a href="#RFC9629" class="cite xref">RFC9629</a>]</span>; it is merely a building block for the composite algorithm.<a href="#section-2.3.3-2" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-2.3.3-3">
 <pre>
 DHKEM.Encap(pkR):
   skE, pkE = GenerateKeyPair()
@@ -1630,20 +1632,20 @@ DHKEM.Encap(pkR):
   enc = SerializePublicKey(pkE)
 
   return shared_secret, enc
-</pre><a href="#section-2.3.3-2" class="pilcrow">¶</a>
+</pre><a href="#section-2.3.3-3" class="pilcrow">¶</a>
 </div>
-<p id="section-2.3.3-3"><code>Decap(sk, ct) -&gt; ss</code> is accomplished in the analogous way.<a href="#section-2.3.3-3" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-2.3.3-4">
+<p id="section-2.3.3-4"><code>Decap(sk, ct) -&gt; ss</code> is accomplished in the analogous way.<a href="#section-2.3.3-4" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-2.3.3-5">
 <pre>
 DHKEM.Decap(skR, enc):
   pkE = DeserializePublicKey(enc)
   shared_secret = DH(skR, pkE)
 
   return shared_secret
-</pre><a href="#section-2.3.3-4" class="pilcrow">¶</a>
+</pre><a href="#section-2.3.3-5" class="pilcrow">¶</a>
 </div>
-<p id="section-2.3.3-5">This construction applies for all variants of elliptic curve Diffie-Hellman used in this specification: ECDH, X25519, and X448.<a href="#section-2.3.3-5" class="pilcrow">¶</a></p>
-<p id="section-2.3.3-6">The simplifications from the DHKEM definition in <span>[<a href="#RFC9180" class="cite xref">RFC9180</a>]</span> is that since the ciphertext and receiver's public key are included explicitly in the Composite ML-KEM combiner, there is no need to construct the <code>kem_context</code> object, and since a domain separator is included explicitly in the Composite ML-KEM combiner there is no need to perform the labelled steps of <code>ExtractAndExpand()</code>.<a href="#section-2.3.3-6" class="pilcrow">¶</a></p>
+<p id="section-2.3.3-6">This construction applies for all variants of elliptic curve Diffie-Hellman used in this specification: ECDH, X25519, and X448.<a href="#section-2.3.3-6" class="pilcrow">¶</a></p>
+<p id="section-2.3.3-7">The simplifications from the DHKEM definition in <span>[<a href="#RFC9180" class="cite xref">RFC9180</a>]</span> is that since the ciphertext and receiver's public key are included explicitly in the Composite ML-KEM combiner, there is no need to construct the <code>kem_context</code> object, and since a domain separator is included explicitly in the Composite ML-KEM combiner there is no need to perform the labelled steps of <code>ExtractAndExpand()</code>.<a href="#section-2.3.3-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-kem-combiner">
@@ -1698,7 +1700,7 @@ Combiner(mlkemSS, tradSS, tradCT, tradPK, domSep) :
           <h4 id="name-composite-encap">
 <a href="#section-2.3.5" class="section-number selfRef">2.3.5. </a><a href="#name-composite-encap" class="section-name selfRef">Composite Encap</a>
           </h4>
-<p id="section-2.3.5-1">Note that, at least at the time of writing, the algorithm <code>DHKEM</code> is not defined as a standalone algorithm within PKIX standards and it does not have an assigned algorithm OID, so it connot be used directly with CMS KEMRecipientInfo <span>[<a href="#RFC9629" class="cite xref">RFC9629</a>]</span>; it is merely a building block for the composite algorithm.<a href="#section-2.3.5-1" class="pilcrow">¶</a></p>
+<p id="section-2.3.5-1">The <code>Encap(pk)</code> of a Composite ML-KEM algorithm is designed to behave exactly the same as the <code>Encaps(pk)</code> of the equivalent-strength ML-KEM algorithm as per <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span>; specifically, Composite ML-KEM <code>Encaps(pk)</code> produces a 256-bit shared secret key that can be used directly with any symmetric-key cryptographic algorithm. In this way, Composite ML-KEM can be used as a direct drop-in replacement anywhere that ML-KEM is used.<a href="#section-2.3.5-1" class="pilcrow">¶</a></p>
 <p id="section-2.3.5-2">The <code>Encap(pk) -&gt; (ss, ct)</code> of a Composite ML-KEM algorithm is defined as:<a href="#section-2.3.5-2" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-2.3.5-3">
 <pre>

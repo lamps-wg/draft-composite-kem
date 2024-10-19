@@ -419,6 +419,12 @@ Table of Contents
    into a KEM by having the sender generate a random 256 bit secret and
    encrypt it.
 
+   Note that, at least at the time of writing, the algorithm RSAOAEPKEM
+   is not defined as a standalone algorithm within PKIX standards and it
+   does not have an assigned algorithm OID, so it connot be used
+   directly with CMS KEMRecipientInfo [RFC9629]; it is merely a building
+   block for the composite algorithm.
+
    RSAOAEPKEM.Encap(pkR):
      shared_secret = SecureRandom(ss_len)
      enc = RSAES-OAEP-ENCRYPT(pkR, shared_secret)
@@ -451,6 +457,12 @@ Table of Contents
    An elliptic curve Diffie-Hellman key agreement is promoted into a KEM
    Encap(pk) -> (ss, ct) using a simplified version of the DHKEM
    definition from [RFC9180].
+
+   Note that, at least at the time of writing, the algorithm DHKEM is
+   not defined as a standalone algorithm within PKIX standards and it
+   does not have an assigned algorithm OID, so it connot be used
+   directly with CMS KEMRecipientInfo [RFC9629]; it is merely a building
+   block for the composite algorithm.
 
    DHKEM.Encap(pkR):
      skE, pkE = GenerateKeyPair()
@@ -524,11 +536,13 @@ Table of Contents
 
 2.3.5.  Composite Encap
 
-   Note that, at least at the time of writing, the algorithm DHKEM is
-   not defined as a standalone algorithm within PKIX standards and it
-   does not have an assigned algorithm OID, so it connot be used
-   directly with CMS KEMRecipientInfo [RFC9629]; it is merely a building
-   block for the composite algorithm.
+   The Encap(pk) of a Composite ML-KEM algorithm is designed to behave
+   exactly the same as the Encaps(pk) of the equivalent-strength ML-KEM
+   algorithm as per [FIPS.203]; specifically, Composite ML-KEM
+   Encaps(pk) produces a 256-bit shared secret key that can be used
+   directly with any symmetric-key cryptographic algorithm.  In this
+   way, Composite ML-KEM can be used as a direct drop-in replacement
+   anywhere that ML-KEM is used.
 
    The Encap(pk) -> (ss, ct) of a Composite ML-KEM algorithm is defined
    as:
