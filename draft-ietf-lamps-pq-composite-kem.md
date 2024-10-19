@@ -810,22 +810,7 @@ The fields of the KEMRecipientInfo MUST have the following values:
 When a particular Composite ML-KEM OID is supported, a CMS implementation MUST support the corresponding KDF and key-encryption algorithms listed in {{tab-cms-kdf-wrap}}, which have been chosen to preserve security and performance characteristics of each composite algorithm.
 
 
-<<<<<<< HEAD
 ### Use of the HKDF-based Key Derivation Function
-=======
-| Composite KEM OID                 | KDF         | Key Encryption Alg |
-|---------                          | ---         | ---                |
-| id-MLKEM768-RSA2048               | SHA3-256 | id-aes128-Wrap     |
-| id-MLKEM768-RSA3072               | SHA3-256 | id-aes128-Wrap     |
-| id-MLKEM768-RSA4048               | SHA3-256 | id-aes128-Wrap     |
-| id-MLKEM768-ECDH-P384             | SHA3-384 | id-aes256-Wrap     |
-| id-MLKEM768-ECDH-brainpoolP256r1  | SHA3-384 | id-aes256-Wrap     |
-| id-MLKEM768-X25519                | SHA3-384 | id-aes256-Wrap     |
-| id-MLKEM1024-ECDH-P384            | SHA3-512 | id-aes256-Wrap     |
-| id-MLKEM1024-ECDH-brainpoolP384r1 | SHA3-512 | id-aes256-Wrap     |
-| id-MLKEM1024-X448                 | SHA3-512 | id-aes256-Wrap     |
-{: #tab-cms-kdf-wrap title="REQUIRED pairings for CMS KDF and WRAP"}
->>>>>>> main
 
 The HMAC-based Extract-and-Expand Key Derivation Function (HKDF) is defined in {{!RFC5869}}.
 
