@@ -710,7 +710,7 @@ Full specifications for the referenced algorithms can be found as follows:
 * _ML-KEM_: {{I-D.ietf-lamps-kyber-certificates}} and [FIPS.203]
 * _RSA-OAEP_: [RFC8017]
 * _X25519 / X448_: [RFC8410]
-* _HKDF_: [RFC5869]. Salt is not provided; ie the default salt (all zeroes of length HashLen) will be used. In all cases, the output length of HKDF is the same as the block size of the underlying hash function, for example `HKDF-SHA256/256` means HKDF-SHA256 with an output length `L` of 256 bits (32 octets).
+* _HKDF_: [RFC5869]. Salt is not provided; ie the default salt (all zeroes of length HashLen) will be used. The output length of HKDF is the same as the block size of the underlying hash function; in particular, `HKDF-SHA256/256` means HKDF-SHA256 with an output length `L` of 256 bits (32 octets).
 * _SHA2_: [FIPS.180-4]
 * _SHA3_: [FIPS.202]
 
@@ -723,7 +723,7 @@ Full specifications for the referenced algorithms can be found as follows:
 
 A single invocation of SHA3 is known to behave as a dual-PRF, and thus is sufficient for use as a KDF, see {{sec-cons-kem-combiner}}, however SHA2 is not us must be wrapped in the HKDF construction.
 
-The lower security levels are provided with HKDF-SHA2 as the KDF in order to facilitate implementations that do not have easy access to SHA3 outside of the ML-KEM function. Higher security levels are paired with SHA3 for computational efficiency, and the Edwards Curve (X25519 and X448) combinations are paired with SHA3 for compatibility with other similar spicifications.
+The lower security levels (ie ML-KEM768) are provided with HKDF-SHA2 as the KDF in order to facilitate implementations that do not have easy access to SHA3 outside of the ML-KEM function. Higher security levels (ie ML-KEM1024) are paired with SHA3 for computational efficiency, and the Edwards Curve (X25519 and X448) combinations are paired with SHA3 for compatibility with other similar spicifications.
 
 While it may seem odd to use 256-bit hash functions at all security levels, this aligns with ML-KEM which produces a 256-bit shared secret key at all security levels. SHA-256, SHA3-256, KMAC128 all have >= 256 bits of (2nd) preimage resistance, which is the required property for a KDF to provide 128 bits of security, as allowed in Table 3 of {{SP.800-57pt1r5}}.
 
