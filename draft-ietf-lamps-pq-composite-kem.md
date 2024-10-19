@@ -271,7 +271,7 @@ Editorial changes:
 * Tweaks to combiner function, thanks to Quynh and authors of draft-ietf-openpgp-PQC:
   * Removed the `counter`.
   * Un-twisted `tradSS || mlkemSS` to `mlkemSS || tradSS` as you would expect (thanks Quynh for pointing that this is allowed).
-  * Simplified to use 256-bit hashes at all security levels (HKDF-SHA256, SHA3-256, KMAC128), which matches ML-KEM's 256 bit shared secret key at all levels.
+  * Simplified to use 256-bit hashes at all security levels (HKDF-SHA256, SHA3-256, KMAC256), which matches ML-KEM's 256 bit shared secret key at all levels.
 * Enhanced the section about how to get this FIPS-certified.
 * Updated OIDs and domain separators.
 * ASN.1 module fixes (thanks Russ).
@@ -725,7 +725,7 @@ A single invocation of SHA3 is known to behave as a dual-PRF, and thus is suffic
 
 The lower security levels (ie ML-KEM768) are provided with HKDF-SHA2 as the KDF in order to facilitate implementations that do not have easy access to SHA3 outside of the ML-KEM function. Higher security levels (ie ML-KEM1024) are paired with SHA3 for computational efficiency, and the Edwards Curve (X25519 and X448) combinations are paired with SHA3 for compatibility with other similar spicifications.
 
-While it may seem odd to use 256-bit hash functions at all security levels, this aligns with ML-KEM which produces a 256-bit shared secret key at all security levels. SHA-256, SHA3-256, KMAC128 all have >= 256 bits of (2nd) preimage resistance, which is the required property for a KDF to provide 128 bits of security, as allowed in Table 3 of {{SP.800-57pt1r5}}.
+While it may seem odd to use 256-bit hash functions at all security levels, this aligns with ML-KEM which produces a 256-bit shared secret key at all security levels. SHA-256 and SHA3-256 both have >= 256 bits of (2nd) preimage resistance, which is the required property for a KDF to provide 128 bits of security, as allowed in Table 3 of {{SP.800-57pt1r5}}.
 
 ## Domain Separators {#sec-domain}
 
@@ -839,7 +839,7 @@ HKDF may be used with different hash functions, including SHA-256 {{FIPS.180-4}}
 
 ### Use of the KMAC-based Key Derivation Function
 
-KMAC128-KDF is a KMAC-based KDF specified for use in CMS in {{I-D.ietf-lamps-cms-sha3-hash}}. The definition of KMAC is copied here for convenience.  Here, KMAC# indicates the use of either KMAC128-KDF or KMAC256-KDF, although only KMAC128 is used in this specification.
+KMAC256-KDF is a KMAC-based KDF specified for use in CMS in {{I-D.ietf-lamps-cms-sha3-hash}}. The definition of KMAC is copied here for convenience.  Here, KMAC# indicates the use of either KMAC128-KDF or KMAC256-KDF, although only KMAC256 is used in this specification.
 
 KMAC#(K, X, L, S) takes the following parameters:
 
@@ -851,9 +851,9 @@ KMAC#(K, X, L, S) takes the following parameters:
 
 > S: the optional customization label.  In this document this parameter is unused, that is it is the zero-length string "".
 
-The object identifier for KMAC128-KDF is id-kmac128, as defined in {{I-D.ietf-lamps-cms-sha3-hash}}.
+The object identifier for KMAC256-KDF is id-kmac256, as defined in {{I-D.ietf-lamps-cms-sha3-hash}}.
 
-Since the customization label to KMAC# is not used, the parameter field MUST be absent when id-kmac128 is used as part of an algorithm identifier specifying the KDF to use for Composite ML-KEM in KemRecipientInfo.
+Since the customization label to KMAC# is not used, the parameter field MUST be absent when id-kmac256 is used as part of an algorithm identifier specifying the KDF to use for Composite ML-KEM in KemRecipientInfo.
 
 
 
@@ -866,22 +866,22 @@ A compliant implementation MUST support the following algorithm combinations for
 | id-MLKEM768-RSA2048               | id-alg-hkdf-with-sha256 | id-aes128-wrap     |
 | id-MLKEM768-RSA3072               | id-alg-hkdf-with-sha256 | id-aes128-wrap     |
 | id-MLKEM768-RSA4096               | id-alg-hkdf-with-sha256 | id-aes128-wrap     |
-| id-MLKEM768-X25519                | id-kmac128              | id-aes128-wrap     |
+| id-MLKEM768-X25519                | id-kmac256              | id-aes128-wrap     |
 | id-MLKEM768-ECDH-P384             | id-alg-hkdf-with-sha256 | id-aes256-wrap     |
 | id-MLKEM768-ECDH-brainpoolP256r1  | id-alg-hkdf-with-sha256 | id-aes256-wrap     |
-| id-MLKEM1024-ECDH-P384            | id-kmac128              | id-aes256-wrap     |
-| id-MLKEM1024-ECDH-brainpoolP384r1 | id-kmac128              | id-aes256-wrap     |
-| id-MLKEM1024-X448                 | id-kmac128              | id-aes256-wrap     |
+| id-MLKEM1024-ECDH-P384            | id-kmac256              | id-aes256-wrap     |
+| id-MLKEM1024-ECDH-brainpoolP384r1 | id-kmac256              | id-aes256-wrap     |
+| id-MLKEM1024-X448                 | id-kmac256              | id-aes256-wrap     |
 {: #tab-cms-kdf-wrap title="Mandatory-to-implement pairings for CMS KDF and WRAP"}
 
 
 where:
 
 * `id-alg-hkdf-with-sha256` is defined in [RFC8619].
-* `id-kmac128` is defined in {{I-D.ietf-lamps-cms-sha3-hash}}.
+* `id-kmac256` is defined in {{I-D.ietf-lamps-cms-sha3-hash}}.
 * `id-aes*-wrap` are defined in [RFC3394].
 
-Note that here we differ slightly from the internal KDF used within the KEM combiner in {{sec-alg-ids}} because [RFC9629] requires that the KDF listed in the KEMRecipientInfo `kdf` field must have an interface which accepts `KDF(IKM, L, info)`, so here we need to use KMAC and cannot directly use SHA3.
+Note that here we differ slightly from the internal KDF used within the KEM combiner in {{sec-alg-ids}} because [RFC9629] requires that the KDF listed in the KEMRecipientInfo `kdf` field must have an interface which accepts `KDF(IKM, L, info)`, so here we need to use KMAC and cannot directly use SHA3. Since we require 256-bits of (2nd) pre-image resistance, we use KMAC256 for the Composite ML-KEM algoritms with internally use SHA3-256, as aligned with Table 3 of {{SP.800-57pt1r5}}.
 
 ## RecipientInfo Conventions
 
