@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 21 April 2025                                           M. Pala
+Expires: 22 April 2025                                           M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                         18 October 2024
+                                                         19 October 2024
 
 
 Composite ML-KEM for Use in the Internet X.509 Public Key Infrastructure
@@ -63,7 +63,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 21 April 2025.
+   This Internet-Draft will expire on 22 April 2025.
 
 Copyright Notice
 
@@ -110,7 +110,8 @@ Table of Contents
      6.1.  RecipientInfo Conventions
      6.2.  Underlying Components
        6.2.1.  Use of the HKDF-based Key Derivation Function
-       6.2.2.  Components for Composite ML-KEM in CMS
+       6.2.2.  Use of the KMAC-based Key Derivation Function
+       6.2.3.  Components for Composite ML-KEM in CMS
      6.3.  RecipientInfo Conventions
      6.4.  Certificate Conventions
      6.5.  SMIMECapabilities Attribute Conventions
@@ -196,7 +197,11 @@ Table of Contents
       -  Removed the counter.
 
       -  Un-twisted tradSS || mlkemSS to mlkemSS || tradSS as you would
-         expect (thanks Quynh for pointing that this is allowed.)
+         expect (thanks Quynh for pointing that this is allowed).
+
+      -  Simplified to use 256-bit hashes at all security levels (HKDF-
+         SHA256, SHA3-256, KMAC128), which matches ML-KEM's 256 bit
+         shared secret key at all levels.
 
    *  Enhanced the section about how to get this FIPS-certified.
 
@@ -359,12 +364,12 @@ Table of Contents
    *  Encap(pk) -> (ss, ct): A probabilistic encapsulation algorithm,
       which takes as input a public key pk and outputs a ciphertext ct
       and shared secret ss.  Note: this document uses Encap() to conform
-      to [RFC9180], but [FIPS.204] uses Encaps().
+      to [RFC9180], but [FIPS.203] uses Encaps().
 
    *  Decap(sk, ct) -> ss: A decapsulation algorithm, which takes as
       input a secret key sk and ciphertext ct and outputs a shared
       secret ss, or in some cases a distinguished error value.  Note:
-      this document uses Decap() to conform to [RFC9180], but [FIPS.204]
+      this document uses Decap() to conform to [RFC9180], but [FIPS.203]
       uses Decaps().
 
    The KEM interface defined above differs from both traditional key
@@ -378,7 +383,7 @@ Table of Contents
    mechanisms can be promoted into KEMs.  This specification uses the
    Post-Quantum KEM ML-KEM as specified in
    [I-D.ietf-lamps-kyber-certificates] and [FIPS.203].  For Traditional
-   KEMs, this document uses the RSA-OAEP algorithm defined in [RFC3560],
+   KEMs, this document uses the RSA-OAEP algorithm defined in [RFC8017],
    the Elliptic Curve Diffie-Hellman key agreement schemes ECDH defined
    in section 5.7.1.2 of [SP.800-56Ar3], and X25519 / X448 which are
    defined in [RFC8410].  A combiner function is used to combine the two
@@ -826,20 +831,20 @@ Table of Contents
    |MLKEM768-X25519  |            |         |               |          |
    +-----------------+------------+---------+---------------+----------+
    |id-MLKEM768-     |<CompKEM>.25|MLKEM768 |ECDH-P384      |HKDF-     |
-   |ECDH-P384        |            |         |               |SHA384/384|
+   |ECDH-P384        |            |         |               |SHA256/256|
    +-----------------+------------+---------+---------------+----------+
    |id-MLKEM768-     |<CompKEM>.26|MLKEM768 |ECDH-          |HKDF-     |
-   |ECDH-            |            |         |brainpoolp256r1|SHA384/384|
+   |ECDH-            |            |         |brainpoolp256r1|SHA256/256|
    |brainpoolP256r1  |            |         |               |          |
    +-----------------+------------+---------+---------------+----------+
-   |id-MLKEM1024-    |<CompKEM>.27|MLKEM1024|ECDH-P384      |SHA3-512  |
+   |id-MLKEM1024-    |<CompKEM>.27|MLKEM1024|ECDH-P384      |SHA3-256  |
    |ECDH-P384        |            |         |               |          |
    +-----------------+------------+---------+---------------+----------+
-   |id-MLKEM1024-    |<CompKEM>.28|MLKEM1024|ECDH-          |SHA3-512  |
+   |id-MLKEM1024-    |<CompKEM>.28|MLKEM1024|ECDH-          |SHA3-256  |
    |ECDH-            |            |         |brainpoolP384r1|          |
    |brainpoolP384r1  |            |         |               |          |
    +-----------------+------------+---------+---------------+----------+
-   |id-              |<CompKEM>.29|MLKEM1024|X448           |SHA3-512  |
+   |id-              |<CompKEM>.29|MLKEM1024|X448           |SHA3-256  |
    |MLKEM1024-X448   |            |         |               |          |
    +-----------------+------------+---------+---------------+----------+
 
@@ -860,7 +865,7 @@ Table of Contents
 
    *  _ML-KEM_: [I-D.ietf-lamps-kyber-certificates] and [FIPS.203]
 
-   *  _RSA-OAEP_: [RFC3560]
+   *  _RSA-OAEP_: [RFC8017]
 
    *  _X25519 / X448_: [RFC8410]
 
@@ -893,6 +898,13 @@ Table of Contents
    paired with SHA3 for computational efficiency, and the Edwards Curve
    (X25519 and X448) combinations are paired with SHA3 for compatibility
    with other similar spicifications.
+
+   While it may seem odd to use 256-bit hash functions at all security
+   levels, this aligns with ML-KEM which produces a 256-bit shared
+   secret key at all security levels.  SHA-256, SHA3-256, KMAC128 all
+   have >= 256 bits of (2nd) preimage resistance, which is the required
+   property for a KDF to provide 128 bits of security, as allowed in
+   Table 3 of [SP.800-57pt1r5].
 
 5.2.  Domain Separators
 
@@ -944,7 +956,7 @@ Table of Contents
    limited backwards compatibility value.  Also, while RSA-PKCS#1v1.5
    [RFC8017] is still everywhere, but hard to make secure and no longer
    FIPS-approved as of the end of 2023 [SP800-131Ar2], so it is of
-   limited forwards value.  This leaves RSA-OAEP [RFC3560] as the
+   limited forwards value.  This leaves RSA-OAEP [RFC8017] as the
    remaining choice.
 
    The RSA component keys MUST be generated at the 2048-bit and 3072-bit
@@ -1080,7 +1092,43 @@ Table of Contents
    The parameter field MUST be absent when this algorithm identifier is
    used to specify the KDF for ML-KEM in KemRecipientInfo.
 
-6.2.2.  Components for Composite ML-KEM in CMS
+6.2.2.  Use of the KMAC-based Key Derivation Function
+
+   KMAC128-KDF is a KMAC-based KDF specified for use in CMS in
+   [I-D.ietf-lamps-cms-sha3-hash].  The definition of KMAC is copied
+   here for convenience.  Here, KMAC# indicates the use of either
+   KMAC128-KDF or KMAC256-KDF, although only KMAC128 is used in this
+   specification.
+
+   KMAC#(K, X, L, S) takes the following parameters:
+
+      K: the input key-derivation key.  In this document this is the
+      shared secret outputted from the Encapsulate() or Decapsulate()
+      functions.  This corresponds to the IKM KDF input from Section 5
+      of [RFC9629].
+
+      X: the context, corresponding to the info KDF input from Section 5
+      of [RFC9629].  This is the ASN.1 DER encoding of
+      CMSORIforKEMOtherInfo.
+
+      L: the output length, in bits.  This corresponds to the L KDF
+      input from Section 5 of [RFC9629], which is identified in the
+      kekLength value from KEMRecipientInfo.  The L KDF input and
+      kekLength values are specified in octets while this L parameter is
+      specified in bits.
+
+      S: the optional customization label.  In this document this
+      parameter is unused, that is it is the zero-length string "".
+
+   The object identifier for KMAC128-KDF is id-kmac128, as defined in
+   [I-D.ietf-lamps-cms-sha3-hash].
+
+   Since the customization label to KMAC# is not used, the parameter
+   field MUST be absent when id-kmac128 is used as part of an algorithm
+   identifier specifying the KDF to use for Composite ML-KEM in
+   KemRecipientInfo.
+
+6.2.3.  Components for Composite ML-KEM in CMS
 
    A compliant implementation MUST support the following algorithm
    combinations for the KEMRecipientInfo kdf and wrap fields when the
@@ -1102,22 +1150,22 @@ Table of Contents
         | id-MLKEM768-RSA4096        | id-alg-hkdf- | id-         |
         |                            | with-sha256  | aes128-wrap |
         +----------------------------+--------------+-------------+
-        | id-MLKEM768-X25519         | id-sha3-256  | id-         |
+        | id-MLKEM768-X25519         | id-kmac128   | id-         |
         |                            |              | aes128-wrap |
         +----------------------------+--------------+-------------+
         | id-MLKEM768-ECDH-P384      | id-alg-hkdf- | id-         |
-        |                            | with-sha384  | aes256-wrap |
+        |                            | with-sha256  | aes256-wrap |
         +----------------------------+--------------+-------------+
         | id-MLKEM768-ECDH-          | id-alg-hkdf- | id-         |
-        | brainpoolP256r1            | with-sha384  | aes256-wrap |
+        | brainpoolP256r1            | with-sha256  | aes256-wrap |
         +----------------------------+--------------+-------------+
-        | id-MLKEM1024-ECDH-P384     | id-sha3-512  | id-         |
+        | id-MLKEM1024-ECDH-P384     | id-kmac128   | id-         |
         |                            |              | aes256-wrap |
         +----------------------------+--------------+-------------+
-        | id-MLKEM1024-ECDH-         | id-sha3-512  | id-         |
+        | id-MLKEM1024-ECDH-         | id-kmac128   | id-         |
         | brainpoolP384r1            |              | aes256-wrap |
         +----------------------------+--------------+-------------+
-        | id-MLKEM1024-X448          | id-sha3-512  | id-         |
+        | id-MLKEM1024-X448          | id-kmac128   | id-         |
         |                            |              | aes256-wrap |
         +----------------------------+--------------+-------------+
 
@@ -1126,12 +1174,17 @@ Table of Contents
 
    where:
 
-   *  id-alg-hkdf-with-sha* are defined in [[RFC8619]].
+   *  id-alg-hkdf-with-sha256 is defined in [RFC8619].
 
-   *  id-sha3-* KDF instantiations are defined in
-      [I-D.ietf-lamps-cms-sha3-hash].
+   *  id-kmac128 is defined in [I-D.ietf-lamps-cms-sha3-hash].
 
    *  id-aes*-wrap are defined in [RFC3394].
+
+   Note that here we differ slightly from the internal KDF used within
+   the KEM combiner in Section 5 because [RFC9629] requires that the KDF
+   listed in the KEMRecipientInfo kdf field must have an interface which
+   accepts KDF(IKM, L, info), so here we need to use KMAC and cannot
+   directly use SHA3.
 
 6.3.  RecipientInfo Conventions
 
@@ -1869,6 +1922,13 @@ Table of Contents
               Establishment Schemes", August 2020,
               <https://nvlpubs.nist.gov/nistpubs/SpecialPublications/
               NIST.SP.800-56Cr2.pdf>.
+
+   [SP.800-57pt1r5]
+              National Institute of Standards and Technology (NIST),
+              "Recommendation for Key Management: Part 1 – General", May
+              2020,
+              <https://nvlpubs.nist.gov/nistpubs/SpecialPublications/
+              NIST.SP.800-57pt1r5.pdf>.
 
    [X.690]    ITU-T, "Information technology - ASN.1 encoding Rules:
               Specification of Basic Encoding Rules (BER), Canonical
