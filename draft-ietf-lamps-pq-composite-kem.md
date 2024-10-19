@@ -113,6 +113,12 @@ normative:
     author:
       org: "National Institute of Standards and Technology (NIST)"
     target: https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-56Cr2.pdf
+  SP.800-57pt1r5:
+    title: "Recommendation for Key Management: Part 1 – General"
+    date: May 2020
+    author:
+      org: "National Institute of Standards and Technology (NIST)"
+    target: https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-57pt1r5.pdf
   FIPS.180-4:
     title: "FIPS Publication 180-4: Secure Hash Standard"
     date: August 2015
@@ -264,7 +270,8 @@ Editorial changes:
 * Specified some options to use HKDF-SHA2, and some to use SHA3 to facilitate implementations that do not have easy access to SHA3 outside the ML-KEM module.
 * Tweaks to combiner function, thanks to Quynh and authors of draft-ietf-openpgp-PQC:
   * Removed the `counter`.
-  * Un-twisted `tradSS || mlkemSS` to `mlkemSS || tradSS` as you would expect (thanks Quynh for pointing that this is allowed.)
+  * Un-twisted `tradSS || mlkemSS` to `mlkemSS || tradSS` as you would expect (thanks Quynh for pointing that this is allowed).
+  * Simplified to use 256-bit hashes at all security levels (HKDF-SHA256, SHA3-256, KMAC128), which matches ML-KEM's 256 bit shared secret key at all levels.
 * Enhanced the section about how to get this FIPS-certified.
 * Updated OIDs and domain separators.
 * ASN.1 module fixes (thanks Russ).
@@ -354,17 +361,17 @@ We borrow here the definition of a key encapsulation mechanism (KEM) from {{I-D.
    *  `Encap(pk) -> (ss, ct)`: A probabilistic encapsulation algorithm,
       which takes as input a public key `pk` and outputs a ciphertext `ct`
       and shared secret ss. Note: this document uses `Encap()` to conform to [RFC9180],
-      but [FIPS.204] uses `Encaps()`.
+      but [FIPS.203] uses `Encaps()`.
 
    *  `Decap(sk, ct) -> ss`: A decapsulation algorithm, which takes as
       input a secret key `sk` and ciphertext `ct` and outputs a shared
       secret `ss`, or in some cases a distinguished error value.
       Note: this document uses `Decap()` to conform to [RFC9180],
-      but [FIPS.204] uses `Decaps()`.
+      but [FIPS.203] uses `Decaps()`.
 
 The KEM interface defined above differs from both traditional key transport mechanism (for example for use with KeyTransRecipientInfo defined in {{RFC5652}}), and key agreement (for example for use with KeyAgreeRecipientInfo defined in {{RFC5652}}).
 
-The KEM interface was chosen as the interface for a composite key establishment because it allows for arbitrary combinations of component algorithm types since both key transport and key agreement mechanisms can be promoted into KEMs. This specification uses the Post-Quantum KEM ML-KEM as specified in {{I-D.ietf-lamps-kyber-certificates}} and [FIPS.203]. For Traditional KEMs, this document uses the RSA-OAEP algorithm defined in [RFC3560], the Elliptic Curve Diffie-Hellman key agreement schemes ECDH defined in section 5.7.1.2 of [SP.800-56Ar3], and X25519 / X448 which are defined in [RFC8410]. A combiner function is used to combine the two component shared secrets into a single shared secret.
+The KEM interface was chosen as the interface for a composite key establishment because it allows for arbitrary combinations of component algorithm types since both key transport and key agreement mechanisms can be promoted into KEMs. This specification uses the Post-Quantum KEM ML-KEM as specified in {{I-D.ietf-lamps-kyber-certificates}} and [FIPS.203]. For Traditional KEMs, this document uses the RSA-OAEP algorithm defined in [RFC8017], the Elliptic Curve Diffie-Hellman key agreement schemes ECDH defined in section 5.7.1.2 of [SP.800-56Ar3], and X25519 / X448 which are defined in [RFC8410]. A combiner function is used to combine the two component shared secrets into a single shared secret.
 
 
 ### Composite KeyGen
@@ -688,11 +695,11 @@ TODO: OIDs to be replaced by IANA.
 | id-MLKEM768-RSA3072                | &lt;CompKEM&gt;.22   | MLKEM768        | RSA-OAEP 3072        | HKDF-SHA256/256 |
 | id-MLKEM768-RSA4096                | &lt;CompKEM&gt;.23   | MLKEM768        | RSA-OAEP 4096        | HKDF-SHA256/256 |
 | id-MLKEM768-X25519                 | &lt;CompKEM&gt;.24   | MLKEM768        | X25519               | SHA3-256 |
-| id-MLKEM768-ECDH-P384              | &lt;CompKEM&gt;.25   | MLKEM768        | ECDH-P384            | HKDF-SHA384/384 |
-| id-MLKEM768-ECDH-brainpoolP256r1   | &lt;CompKEM&gt;.26   | MLKEM768        | ECDH-brainpoolp256r1 | HKDF-SHA384/384 |
-| id-MLKEM1024-ECDH-P384             | &lt;CompKEM&gt;.27   | MLKEM1024       | ECDH-P384            | SHA3-512 |
-| id-MLKEM1024-ECDH-brainpoolP384r1  | &lt;CompKEM&gt;.28   | MLKEM1024       | ECDH-brainpoolP384r1 | SHA3-512 |
-| id-MLKEM1024-X448                  | &lt;CompKEM&gt;.29   | MLKEM1024       | X448                 | SHA3-512 |
+| id-MLKEM768-ECDH-P384              | &lt;CompKEM&gt;.25   | MLKEM768        | ECDH-P384            | HKDF-SHA256/256 |
+| id-MLKEM768-ECDH-brainpoolP256r1   | &lt;CompKEM&gt;.26   | MLKEM768        | ECDH-brainpoolp256r1 | HKDF-SHA256/256 |
+| id-MLKEM1024-ECDH-P384             | &lt;CompKEM&gt;.27   | MLKEM1024       | ECDH-P384            | SHA3-256 |
+| id-MLKEM1024-ECDH-brainpoolP384r1  | &lt;CompKEM&gt;.28   | MLKEM1024       | ECDH-brainpoolP384r1 | SHA3-256 |
+| id-MLKEM1024-X448                  | &lt;CompKEM&gt;.29   | MLKEM1024       | X448                 | SHA3-256 |
 {: #tab-kem-algs title="Composite ML-KEM key types"}
 
 Full specifications for the referenced algorithms can be found as follows:
@@ -701,7 +708,7 @@ Full specifications for the referenced algorithms can be found as follows:
   * _ECDH NIST_: SHALL be Elliptic Curve Cryptography Cofactor Diffie-Hellman (ECC CDH) as defined in section 5.7.1.2 of [SP.800-56Ar3].
   * _ECDH BSI / brainpool_: SHALL be Elliptic Curve Key Agreement algorithm (ECKA) as defined in section 4.3.1 of [BSI-ECC]
 * _ML-KEM_: {{I-D.ietf-lamps-kyber-certificates}} and [FIPS.203]
-* _RSA-OAEP_: [RFC3560]
+* _RSA-OAEP_: [RFC8017]
 * _X25519 / X448_: [RFC8410]
 * _HKDF_: [RFC5869]. Salt is not provided; ie the default salt (all zeroes of length HashLen) will be used. In all cases, the output length of HKDF is the same as the block size of the underlying hash function, for example `HKDF-SHA256/256` means HKDF-SHA256 with an output length `L` of 256 bits (32 octets).
 * _SHA2_: [FIPS.180-4]
@@ -717,6 +724,8 @@ Full specifications for the referenced algorithms can be found as follows:
 A single invocation of SHA3 is known to behave as a dual-PRF, and thus is sufficient for use as a KDF, see {{sec-cons-kem-combiner}}, however SHA2 is not us must be wrapped in the HKDF construction.
 
 The lower security levels are provided with HKDF-SHA2 as the KDF in order to facilitate implementations that do not have easy access to SHA3 outside of the ML-KEM function. Higher security levels are paired with SHA3 for computational efficiency, and the Edwards Curve (X25519 and X448) combinations are paired with SHA3 for compatibility with other similar spicifications.
+
+While it may seem odd to use 256-bit hash functions at all security levels, this aligns with ML-KEM which produces a 256-bit shared secret key at all security levels. SHA-256, SHA3-256, KMAC128 all have >= 256 bits of (2nd) preimage resistance, which is the required property for a KDF to provide 128 bits of security, as allowed in Table 3 of {{SP.800-57pt1r5}}.
 
 ## Domain Separators {#sec-domain}
 
@@ -741,7 +750,7 @@ EDNOTE: these domain separators are based on the prototyping OIDs assigned on th
 
 Use of RSA-OAEP [RFC8017] within `id-MLKEM768-RSA2048`, `id-MLKEM768-RSA3072`, and `id-MLKEM768-RSA4096` requires additional specification.
 
-First, a quick note on the choice of RSA-OAEP as the supported RSA encryption primitive. RSA-KEM [RFC5990] is more straightforward to work with, but it has fairly limited adoption and therefore is of limited backwards compatibility value. Also, while RSA-PKCS#1v1.5 [RFC8017] is still everywhere, but hard to make secure and no longer FIPS-approved as of the end of 2023 [SP800-131Ar2], so it is of limited forwards value. This leaves RSA-OAEP [RFC3560] as the remaining choice.
+First, a quick note on the choice of RSA-OAEP as the supported RSA encryption primitive. RSA-KEM [RFC5990] is more straightforward to work with, but it has fairly limited adoption and therefore is of limited backwards compatibility value. Also, while RSA-PKCS#1v1.5 [RFC8017] is still everywhere, but hard to make secure and no longer FIPS-approved as of the end of 2023 [SP800-131Ar2], so it is of limited forwards value. This leaves RSA-OAEP [RFC8017] as the remaining choice.
 
 The RSA component keys MUST be generated at the 2048-bit and 3072-bit security levels respectively.
 
@@ -826,7 +835,26 @@ info:
 L:
 : length of output keying material in octets. This corresponds to the L KDF input from {{Section 5 of RFC9629}}, which is identified in the kekLength value from KEMRecipientInfo. Implementations MUST confirm that this value is consistent with the key size of the key-encryption algorithm.
 
-HKDF may be used with different hash functions, including SHA-256 {{FIPS.180-4}}. The object identifier id-alg-hkdf-with-sha256 is defined in {{RFC8619}}, and specifies the use of HKDF with SHA-256. The parameter field MUST be absent when this algorithm identifier is used to specify the KDF for ML-KEM in KemRecipientInfo.
+HKDF may be used with different hash functions, including SHA-256 {{FIPS.180-4}}. The object identifier id-alg-hkdf-with-sha256 is defined in [RFC8619], and specifies the use of HKDF with SHA-256. The parameter field MUST be absent when this algorithm identifier is used to specify the KDF for ML-KEM in KemRecipientInfo.
+
+### Use of the KMAC-based Key Derivation Function
+
+KMAC128-KDF is a KMAC-based KDF specified for use in CMS in {{I-D.ietf-lamps-cms-sha3-hash}}. The definition of KMAC is copied here for convenience.  Here, KMAC# indicates the use of either KMAC128-KDF or KMAC256-KDF, although only KMAC128 is used in this specification.
+
+KMAC#(K, X, L, S) takes the following parameters:
+
+> K: the input key-derivation key.  In this document this is the shared secret outputted from the Encapsulate() or Decapsulate() functions.  This corresponds to the IKM KDF input from Section 5 of [RFC9629].
+
+> X: the context, corresponding to the info KDF input from Section 5 of [RFC9629]. This is the ASN.1 DER encoding of CMSORIforKEMOtherInfo.
+
+> L: the output length, in bits.  This corresponds to the L KDF input from Section 5 of [RFC9629], which is identified in the kekLength value from KEMRecipientInfo.  The L KDF input and kekLength values are specified in octets while this L parameter is specified in bits.
+
+> S: the optional customization label.  In this document this parameter is unused, that is it is the zero-length string "".
+
+The object identifier for KMAC128-KDF is id-kmac128, as defined in {{I-D.ietf-lamps-cms-sha3-hash}}.
+
+Since the customization label to KMAC# is not used, the parameter field MUST be absent when id-kmac128 is used as part of an algorithm identifier specifying the KDF to use for Composite ML-KEM in KemRecipientInfo.
+
 
 
 ### Components for Composite ML-KEM in CMS
@@ -838,21 +866,22 @@ A compliant implementation MUST support the following algorithm combinations for
 | id-MLKEM768-RSA2048               | id-alg-hkdf-with-sha256 | id-aes128-wrap     |
 | id-MLKEM768-RSA3072               | id-alg-hkdf-with-sha256 | id-aes128-wrap     |
 | id-MLKEM768-RSA4096               | id-alg-hkdf-with-sha256 | id-aes128-wrap     |
-| id-MLKEM768-X25519                | id-sha3-256             | id-aes128-wrap     |
-| id-MLKEM768-ECDH-P384             | id-alg-hkdf-with-sha384 | id-aes256-wrap     |
-| id-MLKEM768-ECDH-brainpoolP256r1  | id-alg-hkdf-with-sha384 | id-aes256-wrap     |
-| id-MLKEM1024-ECDH-P384            | id-sha3-512             | id-aes256-wrap     |
-| id-MLKEM1024-ECDH-brainpoolP384r1 | id-sha3-512             | id-aes256-wrap     |
-| id-MLKEM1024-X448                 | id-sha3-512             | id-aes256-wrap     |
+| id-MLKEM768-X25519                | id-kmac128              | id-aes128-wrap     |
+| id-MLKEM768-ECDH-P384             | id-alg-hkdf-with-sha256 | id-aes256-wrap     |
+| id-MLKEM768-ECDH-brainpoolP256r1  | id-alg-hkdf-with-sha256 | id-aes256-wrap     |
+| id-MLKEM1024-ECDH-P384            | id-kmac128              | id-aes256-wrap     |
+| id-MLKEM1024-ECDH-brainpoolP384r1 | id-kmac128              | id-aes256-wrap     |
+| id-MLKEM1024-X448                 | id-kmac128              | id-aes256-wrap     |
 {: #tab-cms-kdf-wrap title="Mandatory-to-implement pairings for CMS KDF and WRAP"}
 
 
 where:
 
-* `id-alg-hkdf-with-sha*` are defined in [[RFC8619]].
-* `id-sha3-*` KDF instantiations are defined in {{I-D.ietf-lamps-cms-sha3-hash}}.
+* `id-alg-hkdf-with-sha256` is defined in [RFC8619].
+* `id-kmac128` is defined in {{I-D.ietf-lamps-cms-sha3-hash}}.
 * `id-aes*-wrap` are defined in [RFC3394].
 
+Note that here we differ slightly from the internal KDF used within the KEM combiner in {{sec-alg-ids}} because [RFC9629] requires that the KDF listed in the KEMRecipientInfo `kdf` field must have an interface which accepts `KDF(IKM, L, info)`, so here we need to use KMAC and cannot directly use SHA3.
 
 ## RecipientInfo Conventions
 
