@@ -390,6 +390,8 @@ CompositeKEM.KeyGen():
 
 The RSA Optimal Asymmetric Encryption Padding (OAEP), as defined in section 7.1 of [RFC8017] is a public key encryption algorithm used to transport key material from a sender to a receiver. It is promoted into a KEM by having the sender generate a random 256 bit secret and encrypt it.
 
+Note that, at least at the time of writing, the algorithm `RSAOAEPKEM` is not defined as a standalone algorithm within PKIX standards and it does not have an assigned algorithm OID, so it connot be used directly with CMS KEMRecipientInfo [RFC9629]; it is merely a building block for the composite algorithm.
+
 ~~~
 RSAOAEPKEM.Encap(pkR):
   shared_secret = SecureRandom(ss_len)
@@ -417,6 +419,8 @@ Note that, at least at the time of writing, the algorithm `RSAOAEPKEM` is not de
 ### Promotion of ECDH into a KEM
 
 An elliptic curve Diffie-Hellman key agreement is promoted into a KEM `Encap(pk) -> (ss, ct)` using a simplified version of the DHKEM definition from [RFC9180].
+
+Note that, at least at the time of writing, the algorithm `DHKEM` is not defined as a standalone algorithm within PKIX standards and it does not have an assigned algorithm OID, so it connot be used directly with CMS KEMRecipientInfo [RFC9629]; it is merely a building block for the composite algorithm.
 
 
 ~~~
@@ -472,7 +476,8 @@ Each registered Composite ML-KEM algorithm specifies the choice of `KDF`, `demSe
 
 
 ### Composite Encap
-Note that, at least at the time of writing, the algorithm `DHKEM` is not defined as a standalone algorithm within PKIX standards and it does not have an assigned algorithm OID, so it connot be used directly with CMS KEMRecipientInfo [RFC9629]; it is merely a building block for the composite algorithm.
+
+The `Encap(pk)` of a Composite ML-KEM algorithm is designed to behave exactly the same as the `Encaps(pk)` of the equivalent-strength ML-KEM algorithm as per [FIPS.203]; specifically, Composite ML-KEM `Encaps(pk)` produces a 256-bit shared secret key that can be used directly with any symmetric-key cryptographic algorithm. In this way, Composite ML-KEM can be used as a direct drop-in replacement anywhere that ML-KEM is used.
 
 The `Encap(pk) -> (ss, ct)` of a Composite ML-KEM algorithm is defined as:
 
@@ -1128,8 +1133,8 @@ where
       mgf1SHA256Identifier  AlgorithmIdentifier  ::=  {
                               algorithm id-mgf1,  -- (1.2.840.113549.1.1.8)
                               parameters sha256Identifier }
-			
-			
+
+
 	sha256Identifier  AlgorithmIdentifier  ::=  { id-sha256, NULL }
 ~~~
 
