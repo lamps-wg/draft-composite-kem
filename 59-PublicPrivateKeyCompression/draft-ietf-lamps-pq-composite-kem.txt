@@ -746,7 +746,7 @@ Table of Contents
    private keys, such as when private keys are carried in PKCS #12
    [RFC7292], CMP [RFC4210] or CRMF [RFC4211] MUST use the
    OneAsymmetricKey [RFC5958] structure into which the privateKey field
-   contains the CompositeSignaturePrivateKey:
+   contains the CompositeKEMPrivateKey:
 
     OneAsymmetricKey ::= SEQUENCE {
           version                   Version,
@@ -1438,6 +1438,7 @@ Table of Contents
             VALUE CompositeCiphertextValue
             PARAMS ARE absent
             PUBLIC-KEYS { publicKeyType }
+            SMIME-CAPS { IDENTIFIED BY id }
            }
 
 
@@ -1454,13 +1455,13 @@ Table of Contents
 
    pk-MLKEM768-RSA2048 PUBLIC-KEY ::=
      pk-CompositeKEM {
-       id-MLKEM512-RSA2048,
+       id-MLKEM768-RSA2048,
        RsaCompositeKemPublicKey }
 
    kema-MLKEM768-RSA2048 KEM-ALGORITHM ::=
        kema-CompositeKEM{
-         id-MLKEM512-RSA2048,
-         pk-MLKEM512-RSA2048 }
+         id-MLKEM768-RSA2048,
+         pk-MLKEM768-RSA2048 }
 
 
 
@@ -1471,13 +1472,13 @@ Table of Contents
 
    pk-MLKEM768-RSA3072 PUBLIC-KEY ::=
      pk-CompositeKEM {
-       id-MLKEM512-RSA3072,
+       id-MLKEM768-RSA3072,
        RsaCompositeKemPublicKey }
 
    kema-MLKEM768-RSA3072 KEM-ALGORITHM ::=
        kema-CompositeKEM{
-         id-MLKEM512-RSA3072,
-         pk-MLKEM512-RSA3072 }
+         id-MLKEM768-RSA3072,
+         pk-MLKEM768-RSA3072 }
 
 
 
@@ -1599,17 +1600,15 @@ Table of Contents
    --
 
    SMimeCaps SMIME-CAPS ::=
-       { kema-MLKEM512-ECDH-P256-KMAC128.&smimeCaps |
-         kema-MLKEM512-ECDH-brainpoolP256r1-KMAC128.&smimeCaps |
-         kema-MLKEM512-X25519-KMAC128.&smimeCaps |
-         kema-MLKEM512-RSA2048-KMAC128.&smimeCaps |
-         kema-MLKEM512-RSA3072-KMAC128.&smimeCaps |
-         kema-MLKEM768-ECDH-P256-KMAC256.&smimeCaps |
-         kema-MLKEM768-ECDH-brainpoolP256r1-KMAC256.&smimeCaps |
-         kema-MLKEM768-X25519-KMAC256.&smimeCaps |
-         kema-MLKEM1024-ECDH-P384-KMAC256.&smimeCaps |
-         kema-MLKEM1024-ECDH-brainpoolP384r1-KMAC256.&smimeCaps |
-         kema-MLKEM1024-X448-KMAC256.&smimeCaps,
+       { kema-MLKEM768-RSA2048.&smimeCaps |
+         kema-MLKEM768-RSA3072.&smimeCaps |
+         kema-MLKEM768-RSA4096.&smimeCaps |
+         kema-MLKEM768-ECDH-P384.&smimeCaps |
+         kema-MLKEM768-ECDH-brainpoolP256r1.&smimeCaps |
+         kema-MLKEM768-X25519.&smimeCaps |
+         kema-MLKEM1024-ECDH-P384.&smimeCaps |
+         kema-MLKEM1024-ECDH-brainpoolP384r1.&smimeCaps |
+         kema-MLKEM1024-X448.&smimeCaps,
          ... }
 
    END

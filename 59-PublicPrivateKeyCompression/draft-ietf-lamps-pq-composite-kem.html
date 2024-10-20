@@ -1875,7 +1875,7 @@ CompositeKEMPublicKey ::= SEQUENCE SIZE (2) OF BIT STRING
         <h3 id="name-compositekemprivatekey">
 <a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-compositekemprivatekey" class="section-name selfRef">CompositeKEMPrivateKey</a>
         </h3>
-<p id="section-3.3-1">Use cases that require an inter-operable encoding for composite private keys, such as when private keys are carried in PKCS #12 <span>[<a href="#RFC7292" class="cite xref">RFC7292</a>]</span>, CMP <span>[<a href="#RFC4210" class="cite xref">RFC4210</a>]</span> or CRMF <span>[<a href="#RFC4211" class="cite xref">RFC4211</a>]</span> MUST use the OneAsymmetricKey <span>[<a href="#RFC5958" class="cite xref">RFC5958</a>]</span> structure into which the privateKey field contains the CompositeSignaturePrivateKey:<a href="#section-3.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.3-1">Use cases that require an inter-operable encoding for composite private keys, such as when private keys are carried in PKCS #12 <span>[<a href="#RFC7292" class="cite xref">RFC7292</a>]</span>, CMP <span>[<a href="#RFC4210" class="cite xref">RFC4210</a>]</span> or CRMF <span>[<a href="#RFC4211" class="cite xref">RFC4211</a>]</span> MUST use the OneAsymmetricKey <span>[<a href="#RFC5958" class="cite xref">RFC5958</a>]</span> structure into which the privateKey field contains the CompositeKEMPrivateKey:<a href="#section-3.3-1" class="pilcrow">¶</a></p>
 <div class="lang-ASN.1 sourcecode" id="section-3.3-2">
 <pre>
  OneAsymmetricKey ::= SEQUENCE {
@@ -2627,6 +2627,7 @@ kema-CompositeKEM {
          VALUE CompositeCiphertextValue
          PARAMS ARE absent
          PUBLIC-KEYS { publicKeyType }
+         SMIME-CAPS { IDENTIFIED BY id }
         }
 
 
@@ -2643,13 +2644,13 @@ id-MLKEM768-RSA2048 OBJECT IDENTIFIER ::= {
 
 pk-MLKEM768-RSA2048 PUBLIC-KEY ::=
   pk-CompositeKEM {
-    id-MLKEM512-RSA2048,
+    id-MLKEM768-RSA2048,
     RsaCompositeKemPublicKey }
 
 kema-MLKEM768-RSA2048 KEM-ALGORITHM ::=
     kema-CompositeKEM{
-      id-MLKEM512-RSA2048,
-      pk-MLKEM512-RSA2048 }
+      id-MLKEM768-RSA2048,
+      pk-MLKEM768-RSA2048 }
 
 
 
@@ -2660,13 +2661,13 @@ id-MLKEM768-RSA3072 OBJECT IDENTIFIER ::= {
 
 pk-MLKEM768-RSA3072 PUBLIC-KEY ::=
   pk-CompositeKEM {
-    id-MLKEM512-RSA3072,
+    id-MLKEM768-RSA3072,
     RsaCompositeKemPublicKey }
 
 kema-MLKEM768-RSA3072 KEM-ALGORITHM ::=
     kema-CompositeKEM{
-      id-MLKEM512-RSA3072,
-      pk-MLKEM512-RSA3072 }
+      id-MLKEM768-RSA3072,
+      pk-MLKEM768-RSA3072 }
 
 
 
@@ -2788,17 +2789,15 @@ kema-MLKEM1024-X448 KEM-ALGORITHM ::=
 --
 
 SMimeCaps SMIME-CAPS ::=
-    { kema-MLKEM512-ECDH-P256-KMAC128.&amp;smimeCaps |
-      kema-MLKEM512-ECDH-brainpoolP256r1-KMAC128.&amp;smimeCaps |
-      kema-MLKEM512-X25519-KMAC128.&amp;smimeCaps |
-      kema-MLKEM512-RSA2048-KMAC128.&amp;smimeCaps |
-      kema-MLKEM512-RSA3072-KMAC128.&amp;smimeCaps |
-      kema-MLKEM768-ECDH-P256-KMAC256.&amp;smimeCaps |
-      kema-MLKEM768-ECDH-brainpoolP256r1-KMAC256.&amp;smimeCaps |
-      kema-MLKEM768-X25519-KMAC256.&amp;smimeCaps |
-      kema-MLKEM1024-ECDH-P384-KMAC256.&amp;smimeCaps |
-      kema-MLKEM1024-ECDH-brainpoolP384r1-KMAC256.&amp;smimeCaps |
-      kema-MLKEM1024-X448-KMAC256.&amp;smimeCaps,
+    { kema-MLKEM768-RSA2048.&amp;smimeCaps |
+      kema-MLKEM768-RSA3072.&amp;smimeCaps |
+      kema-MLKEM768-RSA4096.&amp;smimeCaps |
+      kema-MLKEM768-ECDH-P384.&amp;smimeCaps |
+      kema-MLKEM768-ECDH-brainpoolP256r1.&amp;smimeCaps |
+      kema-MLKEM768-X25519.&amp;smimeCaps |
+      kema-MLKEM1024-ECDH-P384.&amp;smimeCaps |
+      kema-MLKEM1024-ECDH-brainpoolP384r1.&amp;smimeCaps |
+      kema-MLKEM1024-X448.&amp;smimeCaps,
       ... }
 
 END
