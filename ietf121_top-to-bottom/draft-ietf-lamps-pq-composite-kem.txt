@@ -86,12 +86,12 @@ Table of Contents
    3.  Overview of the Composite ML-KEM Scheme
      3.1.  Promotion of RSA-OAEP into a KEM
      3.2.  Promotion of ECDH into a KEM
+     3.3.  Decapsulation failure
    4.  Composite ML-KEM Functions
      4.1.  Key Generation
        4.1.1.  KEM Combiner
-       4.1.2.  Composite Encap
-       4.1.3.  Composite Decap
-       4.1.4.  Decapsulation failure
+       4.1.2.  Composite-ML-KEM.Encap
+       4.1.3.  Composite-ML-KEM Decap
    5.  Composite Key Structures
      5.1.  pk-CompositeKEM
      5.2.  CompositeKEMPublicKey
@@ -501,6 +501,38 @@ Table of Contents
    included explicitly in the Composite ML-KEM combiner there is no need
    to perform the labelled steps of ExtractAndExpand().
 
+3.3.  Decapsulation failure
+
+   Provided all inputs are well-formed, the key establishment procedure
+   of ML-KEM will never explicitly fail.  Specifically, the ML-
+   KEM.Encaps and ML-KEM.Decaps algorithms from [FIPS.203] will always
+   output a value with the same data type as a shared secret key, and
+   will never output an error or failure symbol.  However, it is
+   possible (though extremely unlikely) that the process will fail in
+   the sense that ML-KEM.Encaps and ML-KEM.Decaps will produce different
+   outputs, even though both of them are behaving honestly and no
+   adversarial interference is present.  In this case, the sender and
+   recipient clearly did not succeed in producing a shared secret key.
+   This event is called a decapsulation failure.  Estimates for the
+   decapsulation failure probability (or rate) for each of the ML-KEM
+   parameter sets are provided in Table 1 of [FIPS.203] and reproduced
+   here in Table 1.
+
+              +===============+============================+
+              | Parameter set | Decapsulation failure rate |
+              +===============+============================+
+              | ML-KEM-512    | 2^(-139)                   |
+              +---------------+----------------------------+
+              | ML-KEM-768    | 2^(-164)                   |
+              +---------------+----------------------------+
+              | ML-KEM-1024   | 2^(-174)                   |
+              +---------------+----------------------------+
+
+               Table 1: ML-KEM decapsulation failure rates
+
+   In the case of ML-KEM decapsulation failure, Composite ML-KEM MUST
+   preserve the same behaviour and return a well-formed output.
+
 4.  Composite ML-KEM Functions
 
 4.1.  Key Generation
@@ -600,7 +632,7 @@ Table of Contents
    Section 4.1.3 adds further error handling to protect the KEM combiner
    from malicious inputs.
 
-4.1.2.  Composite Encap
+4.1.2.  Composite-ML-KEM.Encap
 
    The Encap(pk) of a Composite ML-KEM algorithm is designed to behave
    exactly the same as the Encaps(pk) of the equivalent-strength ML-KEM
@@ -613,7 +645,7 @@ Table of Contents
    The Encap(pk) -> (ss, ct) of a Composite ML-KEM algorithm is defined
    as:
 
-   CompositeKEM.Encap(pk):
+   CompositeMLKEM.Encap(pk):
      # Split the component public keys
      mlkemPK = pk[0]
      tradPK  = pk[1]
@@ -635,12 +667,12 @@ Table of Contents
    Composite ML-KEM algorithm in Section 7 and CompositeCiphertextValue
    is defined in Section 6.2.
 
-4.1.3.  Composite Decap
+4.1.3.  Composite-ML-KEM Decap
 
    The Decap(sk, ct) -> ss of a Composite ML-KEM algorithm is defined
    as:
 
-   CompositeKEM.Decap(ct, mlkemSK, tradSK):
+   CompositeMLKEM.Decap(ct, mlkemSK, tradSK):
      # split the component ciphertexts
      mlkemCT = ct[0]
      tradCT  = ct[1]
@@ -682,38 +714,6 @@ Table of Contents
    ML-KEM algorithm in Table 2; depending on the cryptographic library
    used, this check may be done by the library or may require an
    explicit check as part of the CompositeKEM.Decap() routine.
-
-4.1.4.  Decapsulation failure
-
-   Provided all inputs are well-formed, the key establishment procedure
-   of ML-KEM will never explicitly fail.  Specifically, the ML-
-   KEM.Encaps and ML-KEM.Decaps algorithms from [FIPS.203] will always
-   output a value with the same data type as a shared secret key, and
-   will never output an error or failure symbol.  However, it is
-   possible (though extremely unlikely) that the process will fail in
-   the sense that ML-KEM.Encaps and ML-KEM.Decaps will produce different
-   outputs, even though both of them are behaving honestly and no
-   adversarial interference is present.  In this case, the sender and
-   recipient clearly did not succeed in producing a shared secret key.
-   This event is called a decapsulation failure.  Estimates for the
-   decapsulation failure probability (or rate) for each of the ML-KEM
-   parameter sets are provided in Table 1 of [FIPS.203] and reproduced
-   here in Table 1.
-
-              +===============+============================+
-              | Parameter set | Decapsulation failure rate |
-              +===============+============================+
-              | ML-KEM-512    | 2^(-139)                   |
-              +---------------+----------------------------+
-              | ML-KEM-768    | 2^(-164)                   |
-              +---------------+----------------------------+
-              | ML-KEM-1024   | 2^(-174)                   |
-              +---------------+----------------------------+
-
-               Table 1: ML-KEM decapsulation failure rates
-
-   In the case of ML-KEM decapsulation failure, Composite ML-KEM MUST
-   preserve the same behaviour and return a well-formed output.
 
 5.  Composite Key Structures
 

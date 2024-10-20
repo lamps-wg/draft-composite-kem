@@ -1175,6 +1175,9 @@ svg :is([fill="white"], [fill^="#fff"]) {
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2">
                 <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="auto internal xref">3.2</a>.  <a href="#name-promotion-of-ecdh-into-a-ke" class="internal xref">Promotion of ECDH into a KEM</a></p>
 </li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.3">
+                <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="auto internal xref">3.3</a>.  <a href="#name-decapsulation-failure" class="internal xref">Decapsulation failure</a></p>
+</li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
@@ -1187,13 +1190,10 @@ svg :is([fill="white"], [fill^="#fff"]) {
                     <p id="section-toc.1-1.4.2.1.2.1.1"><a href="#section-4.1.1" class="auto internal xref">4.1.1</a>.  <a href="#name-kem-combiner" class="internal xref">KEM Combiner</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1.2.2">
-                    <p id="section-toc.1-1.4.2.1.2.2.1"><a href="#section-4.1.2" class="auto internal xref">4.1.2</a>.  <a href="#name-composite-encap" class="internal xref">Composite Encap</a></p>
+                    <p id="section-toc.1-1.4.2.1.2.2.1"><a href="#section-4.1.2" class="auto internal xref">4.1.2</a>.  <a href="#name-composite-ml-kemencap" class="internal xref">Composite-ML-KEM.Encap</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1.2.3">
-                    <p id="section-toc.1-1.4.2.1.2.3.1"><a href="#section-4.1.3" class="auto internal xref">4.1.3</a>.  <a href="#name-composite-decap" class="internal xref">Composite Decap</a></p>
-</li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1.2.4">
-                    <p id="section-toc.1-1.4.2.1.2.4.1"><a href="#section-4.1.4" class="auto internal xref">4.1.4</a>.  <a href="#name-decapsulation-failure" class="internal xref">Decapsulation failure</a></p>
+                    <p id="section-toc.1-1.4.2.1.2.3.1"><a href="#section-4.1.3" class="auto internal xref">4.1.3</a>.  <a href="#name-composite-ml-kem-decap" class="internal xref">Composite-ML-KEM Decap</a></p>
 </li>
                 </ul>
 </li>
@@ -1674,6 +1674,43 @@ DHKEM.Decap(skR, enc):
 <p id="section-3.2-7">The simplifications from the DHKEM definition in <span>[<a href="#RFC9180" class="cite xref">RFC9180</a>]</span> is that since the ciphertext and receiver's public key are included explicitly in the Composite ML-KEM combiner, there is no need to construct the <code>kem_context</code> object, and since a domain separator is included explicitly in the Composite ML-KEM combiner there is no need to perform the labelled steps of <code>ExtractAndExpand()</code>.<a href="#section-3.2-7" class="pilcrow">¶</a></p>
 </section>
 </div>
+<div id="decapsulation-failure">
+<section id="section-3.3">
+        <h3 id="name-decapsulation-failure">
+<a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-decapsulation-failure" class="section-name selfRef">Decapsulation failure</a>
+        </h3>
+<p id="section-3.3-1">Provided all inputs are well-formed, the key establishment procedure of ML-KEM will never explicitly fail. Specifically, the ML-KEM.Encaps and ML-KEM.Decaps algorithms from <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span> will always output a value with the same data type as a shared secret key, and will never output an error or failure symbol. However, it is possible (though extremely unlikely) that the process will fail in the sense that ML-KEM.Encaps and ML-KEM.Decaps will produce different outputs, even though both of them are behaving honestly and no adversarial interference is present. In this case, the sender and recipient clearly did not succeed in producing a shared secret key. This event is called a decapsulation failure. Estimates for the decapsulation failure probability (or rate) for each of the ML-KEM parameter sets are provided in Table 1  of <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span> and reproduced here in <a href="#tab-mlkem-failure-rate" class="auto internal xref">Table 1</a>.<a href="#section-3.3-1" class="pilcrow">¶</a></p>
+<span id="name-ml-kem-decapsulation-failur"></span><div id="tab-mlkem-failure-rate">
+<table class="center" id="table-1">
+          <caption>
+<a href="#table-1" class="selfRef">Table 1</a>:
+<a href="#name-ml-kem-decapsulation-failur" class="selfRef">ML-KEM decapsulation failure rates</a>
+          </caption>
+<thead>
+            <tr>
+              <th class="text-left" rowspan="1" colspan="1">Parameter set</th>
+              <th class="text-left" rowspan="1" colspan="1">Decapsulation failure rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">ML-KEM-512</td>
+              <td class="text-left" rowspan="1" colspan="1">2^(-139)</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">ML-KEM-768</td>
+              <td class="text-left" rowspan="1" colspan="1">2^(-164)</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">ML-KEM-1024</td>
+              <td class="text-left" rowspan="1" colspan="1">2^(-174)</td>
+            </tr>
+          </tbody>
+        </table>
+</div>
+<p id="section-3.3-3">In the case of ML-KEM decapsulation failure, Composite ML-KEM MUST preserve the same behaviour and return a well-formed output.<a href="#section-3.3-3" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="composite-ml-kem-functions">
@@ -1777,16 +1814,16 @@ Combiner(mlkemSS, tradSS, tradCT, tradPK, domSep) :
 <p id="section-4.1.1-6">Each registered Composite ML-KEM algorithm specifies the choice of <code>KDF</code>, <code>demSep</code> to be used in <a href="#sec-alg-ids" class="auto internal xref">Section 7</a> and <a href="#sec-domain" class="auto internal xref">Section 7.2</a> below. Given that each Composite ML-KEM algorithm fully specifies the component algorithms, including for example the size of the RSA modulus, all inputs to the KEM combiner are fixed-size and thus do not require length-prefixing. The <code>CompositeKEM.Decap()</code> specified in <a href="#sect-composite-decaps" class="auto internal xref">Section 4.1.3</a> adds further error handling to protect the KEM combiner from malicious inputs.<a href="#section-4.1.1-6" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="composite-encap">
+<div id="composite-ml-kemencap">
 <section id="section-4.1.2">
-          <h4 id="name-composite-encap">
-<a href="#section-4.1.2" class="section-number selfRef">4.1.2. </a><a href="#name-composite-encap" class="section-name selfRef">Composite Encap</a>
+          <h4 id="name-composite-ml-kemencap">
+<a href="#section-4.1.2" class="section-number selfRef">4.1.2. </a><a href="#name-composite-ml-kemencap" class="section-name selfRef">Composite-ML-KEM.Encap</a>
           </h4>
 <p id="section-4.1.2-1">The <code>Encap(pk)</code> of a Composite ML-KEM algorithm is designed to behave exactly the same as the <code>Encaps(pk)</code> of the equivalent-strength ML-KEM algorithm as per <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span>; specifically, Composite ML-KEM <code>Encaps(pk)</code> produces a 256-bit shared secret key that can be used directly with any symmetric-key cryptographic algorithm. In this way, Composite ML-KEM can be used as a direct drop-in replacement anywhere that ML-KEM is used.<a href="#section-4.1.2-1" class="pilcrow">¶</a></p>
 <p id="section-4.1.2-2">The <code>Encap(pk) -&gt; (ss, ct)</code> of a Composite ML-KEM algorithm is defined as:<a href="#section-4.1.2-2" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-4.1.2-3">
 <pre>
-CompositeKEM.Encap(pk):
+CompositeMLKEM.Encap(pk):
   # Split the component public keys
   mlkemPK = pk[0]
   tradPK  = pk[1]
@@ -1809,13 +1846,13 @@ CompositeKEM.Encap(pk):
 </div>
 <div id="sect-composite-decaps">
 <section id="section-4.1.3">
-          <h4 id="name-composite-decap">
-<a href="#section-4.1.3" class="section-number selfRef">4.1.3. </a><a href="#name-composite-decap" class="section-name selfRef">Composite Decap</a>
+          <h4 id="name-composite-ml-kem-decap">
+<a href="#section-4.1.3" class="section-number selfRef">4.1.3. </a><a href="#name-composite-ml-kem-decap" class="section-name selfRef">Composite-ML-KEM Decap</a>
           </h4>
 <p id="section-4.1.3-1">The <code>Decap(sk, ct) -&gt; ss</code> of a Composite ML-KEM algorithm is defined as:<a href="#section-4.1.3-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-4.1.3-2">
 <pre>
-CompositeKEM.Decap(ct, mlkemSK, tradSK):
+CompositeMLKEM.Decap(ct, mlkemSK, tradSK):
   # split the component ciphertexts
   mlkemCT = ct[0]
   tradCT  = ct[1]
@@ -1835,43 +1872,6 @@ CompositeKEM.Decap(ct, mlkemSK, tradSK):
 <p id="section-4.1.3-3">where <code>Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep)</code> is defined in general in <a href="#sec-kem-combiner" class="auto internal xref">Section 4.1.1</a> with specific values for <code>domSep</code> per Composite ML-KEM algorithm in <a href="#sec-alg-ids" class="auto internal xref">Section 7</a>. <code>CompositeCiphertextValue</code> is defined in <a href="#sec-CompositeCiphertextValue" class="auto internal xref">Section 6.2</a>.<a href="#section-4.1.3-3" class="pilcrow">¶</a></p>
 <p id="section-4.1.3-4">Here the secret key values <code>mlkemSK</code> and <code>tradSK</code> may be interpreted as either literal secret key values, or as a handle to a cryptographic module which holds the secret key and is capable of performing the secret key operation.<a href="#section-4.1.3-4" class="pilcrow">¶</a></p>
 <p id="section-4.1.3-5">In order to properly achieve its security properties, the KEM combiner requires that all inputs are fixed-length. Since each Composite ML-KEM algorithm fully specifies its component algorithms, including key sizes, all inputs are generally fixed-length, however some implementations may need to perform additional checking to handle certain error conditions. In particular, the KEM combiner step should not be performed if either of the component decapsulations returned an error condition indicating malformed inputs -- for timing-invariance reasons, it is recommended to perform both decapsulation operations and check for errors afterwards to make it less easy for an attacker to tell which component failed. Also, RSA-based composites MUST ensure that the modulus size (ie the size of tradCT and tradPK) matches that specified for the given Composite ML-KEM algorithm in <a href="#tab-kem-algs" class="auto internal xref">Table 2</a>; depending on the cryptographic library used, this check may be done by the library or may require an explicit check as part of the <code>CompositeKEM.Decap()</code> routine.<a href="#section-4.1.3-5" class="pilcrow">¶</a></p>
-</section>
-</div>
-<div id="decapsulation-failure">
-<section id="section-4.1.4">
-          <h4 id="name-decapsulation-failure">
-<a href="#section-4.1.4" class="section-number selfRef">4.1.4. </a><a href="#name-decapsulation-failure" class="section-name selfRef">Decapsulation failure</a>
-          </h4>
-<p id="section-4.1.4-1">Provided all inputs are well-formed, the key establishment procedure of ML-KEM will never explicitly fail. Specifically, the ML-KEM.Encaps and ML-KEM.Decaps algorithms from <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span> will always output a value with the same data type as a shared secret key, and will never output an error or failure symbol. However, it is possible (though extremely unlikely) that the process will fail in the sense that ML-KEM.Encaps and ML-KEM.Decaps will produce different outputs, even though both of them are behaving honestly and no adversarial interference is present. In this case, the sender and recipient clearly did not succeed in producing a shared secret key. This event is called a decapsulation failure. Estimates for the decapsulation failure probability (or rate) for each of the ML-KEM parameter sets are provided in Table 1  of <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span> and reproduced here in <a href="#tab-mlkem-failure-rate" class="auto internal xref">Table 1</a>.<a href="#section-4.1.4-1" class="pilcrow">¶</a></p>
-<span id="name-ml-kem-decapsulation-failur"></span><div id="tab-mlkem-failure-rate">
-<table class="center" id="table-1">
-            <caption>
-<a href="#table-1" class="selfRef">Table 1</a>:
-<a href="#name-ml-kem-decapsulation-failur" class="selfRef">ML-KEM decapsulation failure rates</a>
-            </caption>
-<thead>
-              <tr>
-                <th class="text-left" rowspan="1" colspan="1">Parameter set</th>
-                <th class="text-left" rowspan="1" colspan="1">Decapsulation failure rate</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="text-left" rowspan="1" colspan="1">ML-KEM-512</td>
-                <td class="text-left" rowspan="1" colspan="1">2^(-139)</td>
-              </tr>
-              <tr>
-                <td class="text-left" rowspan="1" colspan="1">ML-KEM-768</td>
-                <td class="text-left" rowspan="1" colspan="1">2^(-164)</td>
-              </tr>
-              <tr>
-                <td class="text-left" rowspan="1" colspan="1">ML-KEM-1024</td>
-                <td class="text-left" rowspan="1" colspan="1">2^(-174)</td>
-              </tr>
-            </tbody>
-          </table>
-</div>
-<p id="section-4.1.4-3">In the case of ML-KEM decapsulation failure, Composite ML-KEM MUST preserve the same behaviour and return a well-formed output.<a href="#section-4.1.4-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
