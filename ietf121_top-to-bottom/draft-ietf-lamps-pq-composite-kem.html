@@ -1159,7 +1159,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
             <p id="section-toc.1-1.2.1"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-introduction" class="internal xref">Introduction</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.1">
-                <p id="section-toc.1-1.2.2.1.1" class="keepWithNext"><a href="#section-2.1" class="auto internal xref">2.1</a>.  <a href="#name-terminology" class="internal xref">Terminology</a></p>
+                <p id="section-toc.1-1.2.2.1.1" class="keepWithNext"><a href="#section-2.1" class="auto internal xref">2.1</a>.  <a href="#name-conventions-and-terminology" class="internal xref">Conventions and Terminology</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.2">
                 <p id="section-toc.1-1.2.2.2.1" class="keepWithNext"><a href="#section-2.2" class="auto internal xref">2.2</a>.  <a href="#name-composite-design-philosophy" class="internal xref">Composite Design Philosophy</a></p>
@@ -1519,26 +1519,40 @@ Swedish National Communications Security Authority, Swedish Armed Forces which m
 <p id="section-2-12">Composite ML-KEM is intended for general applicability anywhere that key establishment or enveloped content encryption is used within PKIX or CMS structures.<a href="#section-2-12" class="pilcrow">¶</a></p>
 <div id="sec-terminology">
 <section id="section-2.1">
-        <h3 id="name-terminology">
-<a href="#section-2.1" class="section-number selfRef">2.1. </a><a href="#name-terminology" class="section-name selfRef">Terminology</a>
+        <h3 id="name-conventions-and-terminology">
+<a href="#section-2.1" class="section-number selfRef">2.1. </a><a href="#name-conventions-and-terminology" class="section-name selfRef">Conventions and Terminology</a>
         </h3>
 <p id="section-2.1-1">The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span>  <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they appear in all capitals, as shown here.<a href="#section-2.1-1" class="pilcrow">¶</a></p>
 <p id="section-2.1-2">This document is consistent with all terminology from <span>[<a href="#I-D.ietf-pquip-pqt-hybrid-terminology" class="cite xref">I-D.ietf-pquip-pqt-hybrid-terminology</a>]</span>.
 In addition, the following terms are used in this document:<a href="#section-2.1-2" class="pilcrow">¶</a></p>
-<p id="section-2.1-3"><strong>COMBINER:</strong>
+<p id="section-2.1-3"><strong>ALGORITHM</strong>:
+          The usage of the term "algorithm" within this
+          document generally refers to any function which
+          has a registered Object Identifier (OID) for
+          use within an ASN.1 AlgorithmIdentifier. This
+          loosely, but not precisely, aligns with the
+          definitions of "cryptographic algorithm" and
+          "cryptographic scheme" given in <span>[<a href="#I-D.ietf-pquip-pqt-hybrid-terminology" class="cite xref">I-D.ietf-pquip-pqt-hybrid-terminology</a>]</span>.<a href="#section-2.1-3" class="pilcrow">¶</a></p>
+<p id="section-2.1-4"><strong>CLIENT</strong>:
+          TODO: Remove me, I donet think the term "Client" is actually used in this document.
+          Any software that is making use of a cryptographic key.
+          This includes a signer, verifier, encrypter, decrypter.
+          This is not meant to imply any sort of client-server
+          relationship between the communicating parties.
+<strong>COMBINER:</strong>
   A combiner specifies how multiple shared secrets are combined into
-  a single shared secret.<a href="#section-2.1-3" class="pilcrow">¶</a></p>
-<p id="section-2.1-4"><strong>DER:</strong>
-  Distinguished Encoding Rules as defined in <span>[<a href="#X.690" class="cite xref">X.690</a>]</span>.<a href="#section-2.1-4" class="pilcrow">¶</a></p>
-<p id="section-2.1-5"><strong>KEM:</strong>
-   A key encapsulation mechanism as defined in <a href="#sec-kems" class="auto internal xref">Section 2.3</a>.<a href="#section-2.1-5" class="pilcrow">¶</a></p>
-<p id="section-2.1-6"><strong>PKI:</strong>
-  Public Key Infrastructure, as defined in <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>.<a href="#section-2.1-6" class="pilcrow">¶</a></p>
-<p id="section-2.1-7"><strong>SHARED SECRET:</strong>
+  a single shared secret.<a href="#section-2.1-4" class="pilcrow">¶</a></p>
+<p id="section-2.1-5"><strong>DER:</strong>
+  Distinguished Encoding Rules as defined in <span>[<a href="#X.690" class="cite xref">X.690</a>]</span>.<a href="#section-2.1-5" class="pilcrow">¶</a></p>
+<p id="section-2.1-6"><strong>KEM:</strong>
+   A key encapsulation mechanism as defined in <a href="#sec-kems" class="auto internal xref">Section 2.3</a>.<a href="#section-2.1-6" class="pilcrow">¶</a></p>
+<p id="section-2.1-7"><strong>PKI:</strong>
+  Public Key Infrastructure, as defined in <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>.<a href="#section-2.1-7" class="pilcrow">¶</a></p>
+<p id="section-2.1-8"><strong>SHARED SECRET KEY:</strong>
   A value established between two communicating parties for use as
-  cryptographic key material, but which cannot be learned by an active
-  or passive adversary. This document is concerned with shared
-  secrets established via public key cryptographic operations.<a href="#section-2.1-7" class="pilcrow">¶</a></p>
+  cryptographic key material suitable for direct use by symmetric
+  cryptigraphic algorithms. This document is concerned with shared
+  secrets established via public key cryptographic operations.<a href="#section-2.1-8" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="composite-design-philosophy">
