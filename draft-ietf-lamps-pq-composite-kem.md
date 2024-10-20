@@ -395,6 +395,67 @@ The KEM interface was chosen as the interface for a composite key establishment 
 
 This specification uses the Post-Quantum KEM ML-KEM as specified in [FIPS.203] and {{I-D.ietf-lamps-kyber-certificates}}. For Traditional KEMs, this document uses the RSA-OAEP algorithm defined in [RFC8017], the Elliptic Curve Diffie-Hellman key agreement schemes ECDH defined in section 5.7.1.2 of [SP.800-56Ar3], and X25519 / X448 which are defined in [RFC8410]. A combiner function is used to combine the two component shared secrets into a single shared secret.
 
+
+## Promotion of RSA-OAEP into a KEM {#sec-RSAOAEPKEM}
+
+The RSA Optimal Asymmetric Encryption Padding (OAEP), as defined in section 7.1 of [RFC8017] is a public key encryption algorithm used to transport key material from a sender to a receiver. It is promoted into a KEM by having the sender generate a random 256 bit secret and encrypt it.
+
+Note that, at least at the time of writing, the algorithm `RSAOAEPKEM` is not defined as a standalone algorithm within PKIX standards and it does not have an assigned algorithm OID, so it connot be used directly with CMS KEMRecipientInfo [RFC9629]; it is merely a building block for the composite algorithm.
+
+~~~
+RSAOAEPKEM.Encap(pkR):
+  shared_secret = SecureRandom(ss_len)
+  enc = RSAES-OAEP-ENCRYPT(pkR, shared_secret)
+
+  return shared_secret, enc
+~~~
+
+Note that the OAEP label `L` is left to its default value, which is the empty string as per [RFC8017]. The shared secret output by the overall Composite ML-KEM already binds a composite domain separator, so there is no need to also utilize the component domain separators.
+
+The value of `ss_len` as well as the RSA-OAEP parameters used within this specification can be found in {{sect-rsaoaep-params}}.
+
+ `Decap(sk, ct) -> ss` is accomplished in the analogous way.
+
+~~~
+RSAOAEPKEM.Decap(skR, enc):
+  shared_secret = RSAES-OAEP-DECRYPT(skR, enc)
+
+  return shared_secret
+~~~
+
+
+## Promotion of ECDH into a KEM {#sec-DHKEM}
+
+An elliptic curve Diffie-Hellman key agreement is promoted into a KEM `Encap(pk) -> (ss, ct)` using a simplified version of the DHKEM definition from [RFC9180]; simplified to remove the context-binding labels since the shared secret output by the overall Composite ML-KEM already binds a composite domain separator, so there is no need to also utilize labels within DHKEM.
+
+Note that, at least at the time of writing, the algorithm `DHKEM` is not defined as a standalone algorithm within PKIX standards and it does not have an assigned algorithm OID, so it connot be used directly with CMS KEMRecipientInfo [RFC9629]; it is merely a building block for the composite algorithm.
+
+
+~~~
+DHKEM.Encap(pkR):
+  skE, pkE = GenerateKeyPair()
+  shared_secret = DH(skE, pkR)
+  enc = SerializePublicKey(pkE)
+
+  return shared_secret, enc
+~~~
+
+`Decap(sk, ct) -> ss` is accomplished in the analogous way.
+
+~~~
+DHKEM.Decap(skR, enc):
+  pkE = DeserializePublicKey(enc)
+  shared_secret = DH(skR, pkE)
+
+  return shared_secret
+~~~
+
+This construction applies for all variants of elliptic curve Diffie-Hellman used in this specification: ECDH, X25519, and X448.
+
+The simplifications from the DHKEM definition in [RFC9180] is that since the ciphertext and receiver's public key are included explicitly in the Composite ML-KEM combiner, there is no need to construct the `kem_context` object, and since a domain separator is included explicitly in the Composite ML-KEM combiner there is no need to perform the labelled steps of `ExtractAndExpand()`.
+
+
+
 # Composite ML-KEM Functions
 
 ## Key Generation
@@ -440,66 +501,6 @@ Function KeyGen():
 The structures CompositeSignaturePublicKey and CompositeSignaturePrivateKey are described in {{sec-composite-pub-keys}} and {{sec-priv-key}} respectively.
 
 In order to ensure fresh keys, the key generation functions MUST be executed for both component algorithms. Compliant parties MUST NOT use or import component keys that are used in other contexts, combinations, or by themselves as keys for standalone algorithm use.
-
-### Promotion of RSA-OAEP into a KEM {#sec-RSAOAEPKEM}
-
-The RSA Optimal Asymmetric Encryption Padding (OAEP), as defined in section 7.1 of [RFC8017] is a public key encryption algorithm used to transport key material from a sender to a receiver. It is promoted into a KEM by having the sender generate a random 256 bit secret and encrypt it.
-
-Note that, at least at the time of writing, the algorithm `RSAOAEPKEM` is not defined as a standalone algorithm within PKIX standards and it does not have an assigned algorithm OID, so it connot be used directly with CMS KEMRecipientInfo [RFC9629]; it is merely a building block for the composite algorithm.
-
-~~~
-RSAOAEPKEM.Encap(pkR):
-  shared_secret = SecureRandom(ss_len)
-  enc = RSAES-OAEP-ENCRYPT(pkR, shared_secret)
-
-  return shared_secret, enc
-~~~
-
-Note that the OAEP label `L` is left to its default value, which is the empty string as per [RFC8017]. The shared secret output by the overall Composite ML-KEM already binds a composite domain separator, so there is no need to also utilize the component domain separators.
-
-The value of `ss_len` as well as the RSA-OAEP parameters used within this specification can be found in {{sect-rsaoaep-params}}.
-
- `Decap(sk, ct) -> ss` is accomplished in the analogous way.
-
-~~~
-RSAOAEPKEM.Decap(skR, enc):
-  shared_secret = RSAES-OAEP-DECRYPT(skR, enc)
-
-  return shared_secret
-~~~
-
-
-Note that, at least at the time of writing, the algorithm `RSAOAEPKEM` is not defined as a standalone algorithm within PKIX standards and it does not have an assigned algorithm OID, so it connot be used directly with CMS KEMRecipientInfo [RFC9629]; it is merely a building block for the composite algorithm.
-
-### Promotion of ECDH into a KEM {#sec-DHKEM}
-
-An elliptic curve Diffie-Hellman key agreement is promoted into a KEM `Encap(pk) -> (ss, ct)` using a simplified version of the DHKEM definition from [RFC9180].
-
-Note that, at least at the time of writing, the algorithm `DHKEM` is not defined as a standalone algorithm within PKIX standards and it does not have an assigned algorithm OID, so it connot be used directly with CMS KEMRecipientInfo [RFC9629]; it is merely a building block for the composite algorithm.
-
-
-~~~
-DHKEM.Encap(pkR):
-  skE, pkE = GenerateKeyPair()
-  shared_secret = DH(skE, pkR)
-  enc = SerializePublicKey(pkE)
-
-  return shared_secret, enc
-~~~
-
-`Decap(sk, ct) -> ss` is accomplished in the analogous way.
-
-~~~
-DHKEM.Decap(skR, enc):
-  pkE = DeserializePublicKey(enc)
-  shared_secret = DH(skR, pkE)
-
-  return shared_secret
-~~~
-
-This construction applies for all variants of elliptic curve Diffie-Hellman used in this specification: ECDH, X25519, and X448.
-
-The simplifications from the DHKEM definition in [RFC9180] is that since the ciphertext and receiver's public key are included explicitly in the Composite ML-KEM combiner, there is no need to construct the `kem_context` object, and since a domain separator is included explicitly in the Composite ML-KEM combiner there is no need to perform the labelled steps of `ExtractAndExpand()`.
 
 
 ### KEM Combiner {#sec-kem-combiner}
