@@ -318,12 +318,27 @@ Composite ML-KEM is intended for general applicability anywhere that key establi
 
 
 
-## Terminology {#sec-terminology}
+## Conventions and Terminology {#sec-terminology}
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 {{RFC2119}}  {{RFC8174}} when, and only when, they appear in all capitals, as shown here.
 
 This document is consistent with all terminology from {{I-D.ietf-pquip-pqt-hybrid-terminology}}.
 In addition, the following terms are used in this document:
 
+**ALGORITHM**:
+          The usage of the term "algorithm" within this
+          document generally refers to any function which
+          has a registered Object Identifier (OID) for
+          use within an ASN.1 AlgorithmIdentifier. This
+          loosely, but not precisely, aligns with the
+          definitions of "cryptographic algorithm" and
+          "cryptographic scheme" given in {{I-D.ietf-pquip-pqt-hybrid-terminology}}.
+
+**CLIENT**:
+          TODO: Remove me, I donet think the term "Client" is actually used in this document.
+          Any software that is making use of a cryptographic key.
+          This includes a signer, verifier, encrypter, decrypter.
+          This is not meant to imply any sort of client-server
+          relationship between the communicating parties.
 **COMBINER:**
   A combiner specifies how multiple shared secrets are combined into
   a single shared secret.
@@ -337,10 +352,10 @@ In addition, the following terms are used in this document:
 **PKI:**
   Public Key Infrastructure, as defined in [RFC5280].
 
-**SHARED SECRET:**
+**SHARED SECRET KEY:**
   A value established between two communicating parties for use as
-  cryptographic key material, but which cannot be learned by an active
-  or passive adversary. This document is concerned with shared
+  cryptographic key material suitable for direct use by symmetric
+  cryptigraphic algorithms. This document is concerned with shared
   secrets established via public key cryptographic operations.
 
 ## Composite Design Philosophy
