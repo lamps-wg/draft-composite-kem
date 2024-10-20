@@ -371,7 +371,7 @@ Composite keys, as defined here, follow this definition and should be regarded a
 
 
 
-# Composite Key Encapsulation Mechanisms (KEMs) {#sec-kems}
+# Overview of the Composite ML-KEM Scheme {#sec-kems}
 
 We borrow here the definition of a key encapsulation mechanism (KEM) from {{I-D.ietf-tls-hybrid-design}}, in which a KEM is a cryptographic primitive that consists of three algorithms:
 
@@ -391,8 +391,11 @@ We borrow here the definition of a key encapsulation mechanism (KEM) from {{I-D.
 
 The KEM interface defined above differs from both traditional key transport mechanism (for example for use with KeyTransRecipientInfo defined in {{RFC5652}}), and key agreement (for example for use with KeyAgreeRecipientInfo defined in {{RFC5652}}).
 
-The KEM interface was chosen as the interface for a composite key establishment because it allows for arbitrary combinations of component algorithm types since both key transport and key agreement mechanisms can be promoted into KEMs. This specification uses the Post-Quantum KEM ML-KEM as specified in {{I-D.ietf-lamps-kyber-certificates}} and [FIPS.203]. For Traditional KEMs, this document uses the RSA-OAEP algorithm defined in [RFC8017], the Elliptic Curve Diffie-Hellman key agreement schemes ECDH defined in section 5.7.1.2 of [SP.800-56Ar3], and X25519 / X448 which are defined in [RFC8410]. A combiner function is used to combine the two component shared secrets into a single shared secret.
+The KEM interface was chosen as the interface for a composite key establishment because it allows for arbitrary combinations of component algorithm types since both key transport and key agreement mechanisms can be promoted into KEMs as described in {{sec-RSAOAEPKEM}} and {{sec-DHKEM}} below.
 
+This specification uses the Post-Quantum KEM ML-KEM as specified in [FIPS.203] and {{I-D.ietf-lamps-kyber-certificates}}. For Traditional KEMs, this document uses the RSA-OAEP algorithm defined in [RFC8017], the Elliptic Curve Diffie-Hellman key agreement schemes ECDH defined in section 5.7.1.2 of [SP.800-56Ar3], and X25519 / X448 which are defined in [RFC8410]. A combiner function is used to combine the two component shared secrets into a single shared secret.
+
+# Composite ML-KEM Functions
 
 ### Composite KeyGen
 
@@ -406,7 +409,7 @@ CompositeKEM.KeyGen():
   return (compositePK, compositeSK)
 ~~~
 
-### Promotion of RSA-OAEP into a KEM
+### Promotion of RSA-OAEP into a KEM {#sec-RSAOAEPKEM}
 
 The RSA Optimal Asymmetric Encryption Padding (OAEP), as defined in section 7.1 of [RFC8017] is a public key encryption algorithm used to transport key material from a sender to a receiver. It is promoted into a KEM by having the sender generate a random 256 bit secret and encrypt it.
 
@@ -436,7 +439,7 @@ RSAOAEPKEM.Decap(skR, enc):
 
 Note that, at least at the time of writing, the algorithm `RSAOAEPKEM` is not defined as a standalone algorithm within PKIX standards and it does not have an assigned algorithm OID, so it connot be used directly with CMS KEMRecipientInfo [RFC9629]; it is merely a building block for the composite algorithm.
 
-### Promotion of ECDH into a KEM
+### Promotion of ECDH into a KEM {#sec-DHKEM}
 
 An elliptic curve Diffie-Hellman key agreement is promoted into a KEM `Encap(pk) -> (ss, ct)` using a simplified version of the DHKEM definition from [RFC9180].
 
