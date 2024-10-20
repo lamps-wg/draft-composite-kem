@@ -99,15 +99,15 @@ pk-CompositeKEM {OBJECT IDENTIFIER:id, PublicKeyType}
     CERT-KEY-USAGE { keyEncipherment }
   }
 
-kema-CompositeKEM {OBJECT IDENTIFIER:id, 
-    PUBLIC-KEY:publicKeyType } 
+kema-CompositeKEM {
+  OBJECT IDENTIFIER:id,
+    PUBLIC-KEY:publicKeyType }
     KEM-ALGORITHM ::= {
          IDENTIFIER id
          VALUE CompositeCiphertextValue
          PARAMS ARE absent
          PUBLIC-KEYS { publicKeyType }
-         SMIME-CAPS { IDENTIFIED BY id }
-      }
+        }
 
 
 

@@ -590,13 +590,13 @@ The following ASN.1 Information Object Class is defined to then allow for compac
 {: artwork-name="CompositeKeyObject-asn.1-structures"}
 
 
-As an example, the public key type `pk-MLKEM512-ECDH-P256` is defined as:
+As an example, the public key type `pk-MLKEM768-ECDH-P384` is defined as:
 
 ~~~
-pk-MLKEM512-ECDH-P256 PUBLIC-KEY ::=
-  pk-CompositeKEM{
-    id-MLKEM512-ECDH-P256,
-    EcCompositeKEMPublicKey}
+pk-MLKEM768-ECDH-P384 PUBLIC-KEY ::=
+  pk-CompositeKEM {
+    id-MLKEM768-ECDH-P384,
+    EcCompositeKemPublicKey }
 ~~~
 
 The full set of key types defined by this specification can be found in the ASN.1 Module in {{sec-asn1-module}}.
@@ -668,13 +668,15 @@ Many protocol specifications will require that the composite public key and comp
 When an octet string is required, the DER encoding of the composite data structure SHALL be used directly.
 
 ~~~ ASN.1
-CompositeKEMPublicKeyOs ::= OCTET STRING (CONTAINING CompositeKEMPublicKey ENCODED BY der)
+CompositeKEMPublicKeyOs ::= OCTET STRING
+                  (CONTAINING CompositeKEMPublicKey ENCODED BY der)
 ~~~
 
 When a bit string is required, the octets of the DER encoded composite data structure SHALL be used as the bits of the bit string, with the most significant bit of the first octet becoming the first bit, and so on, ending with the least significant bit of the last octet becoming the last bit of the bit string.
 
 ~~~ ASN.1
-CompositeKEMPublicKeyBs ::= BIT STRING (CONTAINING CompositeKEMPublicKey ENCODED BY der)
+CompositeKEMPublicKeyBs ::= BIT STRING
+                (CONTAINING CompositeKEMPublicKey ENCODED BY der)
 ~~~
 
 
