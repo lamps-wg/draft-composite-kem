@@ -1,5 +1,5 @@
 ---
-title: Composite ML-KEM for Use in the Internet X.509 Public Key Infrastructure and CMS
+title: Composite ML-KEM for use in X.509 Public Key Infrastructure and CMS
 abbrev: Composite ML-KEM
 docname: draft-ietf-lamps-pq-composite-kem-latest
 
@@ -21,7 +21,7 @@ venue:
   mail: spams@ietf.org
   arch: https://datatracker.ietf.org/wg/lamps/about/
   github: lamps-wg/draft-composite-kem
-  latest: https://lamps-wg.github.io/draft-composite-kem/draft-ietf-lamps-pq-composite-kem.html#name-asn1-module
+  latest: https://lamps-wg.github.io/draft-composite-kem/draft-ietf-lamps-pq-composite-kem.html
 
 coding: utf-8
 pi:    # can use array (if all yes) or hash here
@@ -240,7 +240,7 @@ informative:
 
 --- abstract
 
-This document defines combinations of ML-KEM [FIPS.203] in hybrid with traditional algorithms RSA-OAEP, ECDH, X25519, and X448. For use within CMS, this document is intended to be coupled with the CMS KEMRecipientInfo mechanism in {{RFC9629}}. These combinations are tailored to meet security best practices and regulatory requirements. Composite ML-KEM is applicable in any application that uses X.509, PKIX, and CMS data structures and protocols that would otherwise use ML-KEM, but wants the protection against breaks or catastrophic bugs in ML-KEM.
+This document defines combinations of ML-KEM [FIPS.203] in hybrid with traditional algorithms RSA-OAEP, ECDH, X25519, and X448. These combinations are tailored to meet security best practices and regulatory requirements. Composite ML-KEM is applicable in any application that uses X.509, PKIX, and CMS data structures and protocols that accept ML-KEM, but where the operator wants extra protection against breaks or catastrophic bugs in ML-KEM. For use within CMS, this document is intended to be coupled with the CMS KEMRecipientInfo mechanism in {{RFC9629}}.
 
 <!-- End of Abstract -->
 
