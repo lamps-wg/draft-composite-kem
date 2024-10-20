@@ -68,7 +68,7 @@ CompositeKEMPublicKeyOs ::= OCTET STRING (CONTAINING
 CompositeKEMPublicKeyBs ::= BIT STRING (CONTAINING 
                                 CompositeKEMPublicKey ENCODED BY der)
 
-CompositeKEMPrivateKey ::= SEQUENCE SIZE (2) OF OneAsymmetricKey
+CompositeKEMPrivateKey ::= SEQUENCE SIZE (2) OF OCTET STRING
 
 CompositeCiphertextValue ::= SEQUENCE SIZE (2) OF OCTET STRING
 
