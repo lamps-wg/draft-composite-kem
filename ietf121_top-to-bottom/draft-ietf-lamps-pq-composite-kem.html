@@ -1168,6 +1168,14 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
             <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-overview-of-the-composite-m" class="internal xref">Overview of the Composite ML-KEM Scheme</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1">
+                <p id="section-toc.1-1.3.2.1.1"><a href="#section-3.1" class="auto internal xref">3.1</a>.  <a href="#name-promotion-of-rsa-oaep-into-" class="internal xref">Promotion of RSA-OAEP into a KEM</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2">
+                <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="auto internal xref">3.2</a>.  <a href="#name-promotion-of-ecdh-into-a-ke" class="internal xref">Promotion of ECDH into a KEM</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
             <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-composite-ml-kem-functions" class="internal xref">Composite ML-KEM Functions</a></p>
@@ -1176,22 +1184,16 @@ svg :is([fill="white"], [fill^="#fff"]) {
                 <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="auto internal xref">4.1</a>.  <a href="#name-key-generation" class="internal xref">Key Generation</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1.2.1">
-                    <p id="section-toc.1-1.4.2.1.2.1.1"><a href="#section-4.1.1" class="auto internal xref">4.1.1</a>.  <a href="#name-promotion-of-rsa-oaep-into-" class="internal xref">Promotion of RSA-OAEP into a KEM</a></p>
+                    <p id="section-toc.1-1.4.2.1.2.1.1"><a href="#section-4.1.1" class="auto internal xref">4.1.1</a>.  <a href="#name-kem-combiner" class="internal xref">KEM Combiner</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1.2.2">
-                    <p id="section-toc.1-1.4.2.1.2.2.1"><a href="#section-4.1.2" class="auto internal xref">4.1.2</a>.  <a href="#name-promotion-of-ecdh-into-a-ke" class="internal xref">Promotion of ECDH into a KEM</a></p>
+                    <p id="section-toc.1-1.4.2.1.2.2.1"><a href="#section-4.1.2" class="auto internal xref">4.1.2</a>.  <a href="#name-composite-encap" class="internal xref">Composite Encap</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1.2.3">
-                    <p id="section-toc.1-1.4.2.1.2.3.1"><a href="#section-4.1.3" class="auto internal xref">4.1.3</a>.  <a href="#name-kem-combiner" class="internal xref">KEM Combiner</a></p>
+                    <p id="section-toc.1-1.4.2.1.2.3.1"><a href="#section-4.1.3" class="auto internal xref">4.1.3</a>.  <a href="#name-composite-decap" class="internal xref">Composite Decap</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1.2.4">
-                    <p id="section-toc.1-1.4.2.1.2.4.1"><a href="#section-4.1.4" class="auto internal xref">4.1.4</a>.  <a href="#name-composite-encap" class="internal xref">Composite Encap</a></p>
-</li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1.2.5">
-                    <p id="section-toc.1-1.4.2.1.2.5.1"><a href="#section-4.1.5" class="auto internal xref">4.1.5</a>.  <a href="#name-composite-decap" class="internal xref">Composite Decap</a></p>
-</li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1.2.6">
-                    <p id="section-toc.1-1.4.2.1.2.6.1"><a href="#section-4.1.6" class="auto internal xref">4.1.6</a>.  <a href="#name-decapsulation-failure" class="internal xref">Decapsulation failure</a></p>
+                    <p id="section-toc.1-1.4.2.1.2.4.1"><a href="#section-4.1.4" class="auto internal xref">4.1.4</a>.  <a href="#name-decapsulation-failure" class="internal xref">Decapsulation failure</a></p>
 </li>
                 </ul>
 </li>
@@ -1610,8 +1612,68 @@ but <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span> uses <code
 </li>
       </ul>
 <p id="section-3-3">The KEM interface defined above differs from both traditional key transport mechanism (for example for use with KeyTransRecipientInfo defined in <span>[<a href="#RFC5652" class="cite xref">RFC5652</a>]</span>), and key agreement (for example for use with KeyAgreeRecipientInfo defined in <span>[<a href="#RFC5652" class="cite xref">RFC5652</a>]</span>).<a href="#section-3-3" class="pilcrow">¶</a></p>
-<p id="section-3-4">The KEM interface was chosen as the interface for a composite key establishment because it allows for arbitrary combinations of component algorithm types since both key transport and key agreement mechanisms can be promoted into KEMs as described in <a href="#sec-RSAOAEPKEM" class="auto internal xref">Section 4.1.1</a> and <a href="#sec-DHKEM" class="auto internal xref">Section 4.1.2</a> below.<a href="#section-3-4" class="pilcrow">¶</a></p>
+<p id="section-3-4">The KEM interface was chosen as the interface for a composite key establishment because it allows for arbitrary combinations of component algorithm types since both key transport and key agreement mechanisms can be promoted into KEMs as described in <a href="#sec-RSAOAEPKEM" class="auto internal xref">Section 3.1</a> and <a href="#sec-DHKEM" class="auto internal xref">Section 3.2</a> below.<a href="#section-3-4" class="pilcrow">¶</a></p>
 <p id="section-3-5">This specification uses the Post-Quantum KEM ML-KEM as specified in <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span> and <span>[<a href="#I-D.ietf-lamps-kyber-certificates" class="cite xref">I-D.ietf-lamps-kyber-certificates</a>]</span>. For Traditional KEMs, this document uses the RSA-OAEP algorithm defined in <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span>, the Elliptic Curve Diffie-Hellman key agreement schemes ECDH defined in section 5.7.1.2 of <span>[<a href="#SP.800-56Ar3" class="cite xref">SP.800-56Ar3</a>]</span>, and X25519 / X448 which are defined in <span>[<a href="#RFC8410" class="cite xref">RFC8410</a>]</span>. A combiner function is used to combine the two component shared secrets into a single shared secret.<a href="#section-3-5" class="pilcrow">¶</a></p>
+<div id="sec-RSAOAEPKEM">
+<section id="section-3.1">
+        <h3 id="name-promotion-of-rsa-oaep-into-">
+<a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-promotion-of-rsa-oaep-into-" class="section-name selfRef">Promotion of RSA-OAEP into a KEM</a>
+        </h3>
+<p id="section-3.1-1">The RSA Optimal Asymmetric Encryption Padding (OAEP), as defined in section 7.1 of <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span> is a public key encryption algorithm used to transport key material from a sender to a receiver. It is promoted into a KEM by having the sender generate a random 256 bit secret and encrypt it.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.1-2">Note that, at least at the time of writing, the algorithm <code>RSAOAEPKEM</code> is not defined as a standalone algorithm within PKIX standards and it does not have an assigned algorithm OID, so it connot be used directly with CMS KEMRecipientInfo <span>[<a href="#RFC9629" class="cite xref">RFC9629</a>]</span>; it is merely a building block for the composite algorithm.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.1-3">
+<pre>
+RSAOAEPKEM.Encap(pkR):
+  shared_secret = SecureRandom(ss_len)
+  enc = RSAES-OAEP-ENCRYPT(pkR, shared_secret)
+
+  return shared_secret, enc
+</pre><a href="#section-3.1-3" class="pilcrow">¶</a>
+</div>
+<p id="section-3.1-4">Note that the OAEP label <code>L</code> is left to its default value, which is the empty string as per <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span>. The shared secret output by the overall Composite ML-KEM already binds a composite domain separator, so there is no need to also utilize the component domain separators.<a href="#section-3.1-4" class="pilcrow">¶</a></p>
+<p id="section-3.1-5">The value of <code>ss_len</code> as well as the RSA-OAEP parameters used within this specification can be found in <a href="#sect-rsaoaep-params" class="auto internal xref">Section 7.3</a>.<a href="#section-3.1-5" class="pilcrow">¶</a></p>
+<p id="section-3.1-6"><code>Decap(sk, ct) -&gt; ss</code> is accomplished in the analogous way.<a href="#section-3.1-6" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.1-7">
+<pre>
+RSAOAEPKEM.Decap(skR, enc):
+  shared_secret = RSAES-OAEP-DECRYPT(skR, enc)
+
+  return shared_secret
+</pre><a href="#section-3.1-7" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="sec-DHKEM">
+<section id="section-3.2">
+        <h3 id="name-promotion-of-ecdh-into-a-ke">
+<a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-promotion-of-ecdh-into-a-ke" class="section-name selfRef">Promotion of ECDH into a KEM</a>
+        </h3>
+<p id="section-3.2-1">An elliptic curve Diffie-Hellman key agreement is promoted into a KEM <code>Encap(pk) -&gt; (ss, ct)</code> using a simplified version of the DHKEM definition from <span>[<a href="#RFC9180" class="cite xref">RFC9180</a>]</span>; simplified to remove the context-binding labels since the shared secret output by the overall Composite ML-KEM already binds a composite domain separator, so there is no need to also utilize labels within DHKEM.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.2-2">Note that, at least at the time of writing, the algorithm <code>DHKEM</code> is not defined as a standalone algorithm within PKIX standards and it does not have an assigned algorithm OID, so it connot be used directly with CMS KEMRecipientInfo <span>[<a href="#RFC9629" class="cite xref">RFC9629</a>]</span>; it is merely a building block for the composite algorithm.<a href="#section-3.2-2" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.2-3">
+<pre>
+DHKEM.Encap(pkR):
+  skE, pkE = GenerateKeyPair()
+  shared_secret = DH(skE, pkR)
+  enc = SerializePublicKey(pkE)
+
+  return shared_secret, enc
+</pre><a href="#section-3.2-3" class="pilcrow">¶</a>
+</div>
+<p id="section-3.2-4"><code>Decap(sk, ct) -&gt; ss</code> is accomplished in the analogous way.<a href="#section-3.2-4" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.2-5">
+<pre>
+DHKEM.Decap(skR, enc):
+  pkE = DeserializePublicKey(enc)
+  shared_secret = DH(skR, pkE)
+
+  return shared_secret
+</pre><a href="#section-3.2-5" class="pilcrow">¶</a>
+</div>
+<p id="section-3.2-6">This construction applies for all variants of elliptic curve Diffie-Hellman used in this specification: ECDH, X25519, and X448.<a href="#section-3.2-6" class="pilcrow">¶</a></p>
+<p id="section-3.2-7">The simplifications from the DHKEM definition in <span>[<a href="#RFC9180" class="cite xref">RFC9180</a>]</span> is that since the ciphertext and receiver's public key are included explicitly in the Composite ML-KEM combiner, there is no need to construct the <code>kem_context</code> object, and since a domain separator is included explicitly in the Composite ML-KEM combiner there is no need to perform the labelled steps of <code>ExtractAndExpand()</code>.<a href="#section-3.2-7" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="composite-ml-kem-functions">
@@ -1668,77 +1730,16 @@ Function KeyGen():
 </div>
 <p id="section-4.1-4">The structures CompositeSignaturePublicKey and CompositeSignaturePrivateKey are described in <a href="#sec-composite-pub-keys" class="auto internal xref">Section 5.2</a> and <a href="#sec-priv-key" class="auto internal xref">Section 5.3</a> respectively.<a href="#section-4.1-4" class="pilcrow">¶</a></p>
 <p id="section-4.1-5">In order to ensure fresh keys, the key generation functions MUST be executed for both component algorithms. Compliant parties MUST NOT use or import component keys that are used in other contexts, combinations, or by themselves as keys for standalone algorithm use.<a href="#section-4.1-5" class="pilcrow">¶</a></p>
-<div id="sec-RSAOAEPKEM">
-<section id="section-4.1.1">
-          <h4 id="name-promotion-of-rsa-oaep-into-">
-<a href="#section-4.1.1" class="section-number selfRef">4.1.1. </a><a href="#name-promotion-of-rsa-oaep-into-" class="section-name selfRef">Promotion of RSA-OAEP into a KEM</a>
-          </h4>
-<p id="section-4.1.1-1">The RSA Optimal Asymmetric Encryption Padding (OAEP), as defined in section 7.1 of <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span> is a public key encryption algorithm used to transport key material from a sender to a receiver. It is promoted into a KEM by having the sender generate a random 256 bit secret and encrypt it.<a href="#section-4.1.1-1" class="pilcrow">¶</a></p>
-<p id="section-4.1.1-2">Note that, at least at the time of writing, the algorithm <code>RSAOAEPKEM</code> is not defined as a standalone algorithm within PKIX standards and it does not have an assigned algorithm OID, so it connot be used directly with CMS KEMRecipientInfo <span>[<a href="#RFC9629" class="cite xref">RFC9629</a>]</span>; it is merely a building block for the composite algorithm.<a href="#section-4.1.1-2" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-4.1.1-3">
-<pre>
-RSAOAEPKEM.Encap(pkR):
-  shared_secret = SecureRandom(ss_len)
-  enc = RSAES-OAEP-ENCRYPT(pkR, shared_secret)
-
-  return shared_secret, enc
-</pre><a href="#section-4.1.1-3" class="pilcrow">¶</a>
-</div>
-<p id="section-4.1.1-4">Note that the OAEP label <code>L</code> is left to its default value, which is the empty string as per <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span>. The shared secret output by the overall Composite ML-KEM already binds a composite domain separator, so there is no need to also utilize the component domain separators.<a href="#section-4.1.1-4" class="pilcrow">¶</a></p>
-<p id="section-4.1.1-5">The value of <code>ss_len</code> as well as the RSA-OAEP parameters used within this specification can be found in <a href="#sect-rsaoaep-params" class="auto internal xref">Section 7.3</a>.<a href="#section-4.1.1-5" class="pilcrow">¶</a></p>
-<p id="section-4.1.1-6"><code>Decap(sk, ct) -&gt; ss</code> is accomplished in the analogous way.<a href="#section-4.1.1-6" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-4.1.1-7">
-<pre>
-RSAOAEPKEM.Decap(skR, enc):
-  shared_secret = RSAES-OAEP-DECRYPT(skR, enc)
-
-  return shared_secret
-</pre><a href="#section-4.1.1-7" class="pilcrow">¶</a>
-</div>
-<p id="section-4.1.1-8">Note that, at least at the time of writing, the algorithm <code>RSAOAEPKEM</code> is not defined as a standalone algorithm within PKIX standards and it does not have an assigned algorithm OID, so it connot be used directly with CMS KEMRecipientInfo <span>[<a href="#RFC9629" class="cite xref">RFC9629</a>]</span>; it is merely a building block for the composite algorithm.<a href="#section-4.1.1-8" class="pilcrow">¶</a></p>
-</section>
-</div>
-<div id="sec-DHKEM">
-<section id="section-4.1.2">
-          <h4 id="name-promotion-of-ecdh-into-a-ke">
-<a href="#section-4.1.2" class="section-number selfRef">4.1.2. </a><a href="#name-promotion-of-ecdh-into-a-ke" class="section-name selfRef">Promotion of ECDH into a KEM</a>
-          </h4>
-<p id="section-4.1.2-1">An elliptic curve Diffie-Hellman key agreement is promoted into a KEM <code>Encap(pk) -&gt; (ss, ct)</code> using a simplified version of the DHKEM definition from <span>[<a href="#RFC9180" class="cite xref">RFC9180</a>]</span>.<a href="#section-4.1.2-1" class="pilcrow">¶</a></p>
-<p id="section-4.1.2-2">Note that, at least at the time of writing, the algorithm <code>DHKEM</code> is not defined as a standalone algorithm within PKIX standards and it does not have an assigned algorithm OID, so it connot be used directly with CMS KEMRecipientInfo <span>[<a href="#RFC9629" class="cite xref">RFC9629</a>]</span>; it is merely a building block for the composite algorithm.<a href="#section-4.1.2-2" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-4.1.2-3">
-<pre>
-DHKEM.Encap(pkR):
-  skE, pkE = GenerateKeyPair()
-  shared_secret = DH(skE, pkR)
-  enc = SerializePublicKey(pkE)
-
-  return shared_secret, enc
-</pre><a href="#section-4.1.2-3" class="pilcrow">¶</a>
-</div>
-<p id="section-4.1.2-4"><code>Decap(sk, ct) -&gt; ss</code> is accomplished in the analogous way.<a href="#section-4.1.2-4" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-4.1.2-5">
-<pre>
-DHKEM.Decap(skR, enc):
-  pkE = DeserializePublicKey(enc)
-  shared_secret = DH(skR, pkE)
-
-  return shared_secret
-</pre><a href="#section-4.1.2-5" class="pilcrow">¶</a>
-</div>
-<p id="section-4.1.2-6">This construction applies for all variants of elliptic curve Diffie-Hellman used in this specification: ECDH, X25519, and X448.<a href="#section-4.1.2-6" class="pilcrow">¶</a></p>
-<p id="section-4.1.2-7">The simplifications from the DHKEM definition in <span>[<a href="#RFC9180" class="cite xref">RFC9180</a>]</span> is that since the ciphertext and receiver's public key are included explicitly in the Composite ML-KEM combiner, there is no need to construct the <code>kem_context</code> object, and since a domain separator is included explicitly in the Composite ML-KEM combiner there is no need to perform the labelled steps of <code>ExtractAndExpand()</code>.<a href="#section-4.1.2-7" class="pilcrow">¶</a></p>
-</section>
-</div>
 <div id="sec-kem-combiner">
-<section id="section-4.1.3">
+<section id="section-4.1.1">
           <h4 id="name-kem-combiner">
-<a href="#section-4.1.3" class="section-number selfRef">4.1.3. </a><a href="#name-kem-combiner" class="section-name selfRef">KEM Combiner</a>
+<a href="#section-4.1.1" class="section-number selfRef">4.1.1. </a><a href="#name-kem-combiner" class="section-name selfRef">KEM Combiner</a>
           </h4>
-<p id="section-4.1.3-1">TODO: as per https://www.enisa.europa.eu/publications/post-quantum-cryptography-integration-study section 4.2, might need to specify behaviour in light of KEMs with a non-zero failure probability.<a href="#section-4.1.3-1" class="pilcrow">¶</a></p>
-<p id="section-4.1.3-2">The KEM combiner construction is as follows:<a href="#section-4.1.3-2" class="pilcrow">¶</a></p>
+<p id="section-4.1.1-1">TODO: as per https://www.enisa.europa.eu/publications/post-quantum-cryptography-integration-study section 4.2, might need to specify behaviour in light of KEMs with a non-zero failure probability.<a href="#section-4.1.1-1" class="pilcrow">¶</a></p>
+<p id="section-4.1.1-2">The KEM combiner construction is as follows:<a href="#section-4.1.1-2" class="pilcrow">¶</a></p>
 <span id="name-generic-kem-combiner-constr"></span><div id="code-generic-kem-combiner">
 <figure id="figure-2">
-            <div class="alignLeft art-text artwork" id="section-4.1.3-3.1">
+            <div class="alignLeft art-text artwork" id="section-4.1.1-3.1">
 <pre>
 Combiner(mlkemSS, tradSS, tradCT, tradPK, domSep) :
 
@@ -1749,41 +1750,41 @@ Combiner(mlkemSS, tradSS, tradCT, tradPK, domSep) :
 <a href="#name-generic-kem-combiner-constr" class="selfRef">Generic KEM combiner construction</a>
             </figcaption></figure>
 </div>
-<p id="section-4.1.3-4">where:<a href="#section-4.1.3-4" class="pilcrow">¶</a></p>
+<p id="section-4.1.1-4">where:<a href="#section-4.1.1-4" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-4.1.3-5.1">
-              <p id="section-4.1.3-5.1.1"><code>KDF(message)</code> represents a key derivation function suitable to the chosen KEMs according to {tab-kem-combiners}. All KDFs are specified with a fixed output length.<a href="#section-4.1.3-5.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-4.1.1-5.1">
+              <p id="section-4.1.1-5.1.1"><code>KDF(message)</code> represents a key derivation function suitable to the chosen KEMs according to {tab-kem-combiners}. All KDFs are specified with a fixed output length.<a href="#section-4.1.1-5.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-4.1.3-5.2">
-              <p id="section-4.1.3-5.2.1"><code>mlkemSS</code> is the shared secret from the ML-KEM componont.<a href="#section-4.1.3-5.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-4.1.1-5.2">
+              <p id="section-4.1.1-5.2.1"><code>mlkemSS</code> is the shared secret from the ML-KEM componont.<a href="#section-4.1.1-5.2.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-4.1.3-5.3">
-              <p id="section-4.1.3-5.3.1"><code>tradSS</code> is the shared secret from the traditional component (elliptic curve or RSA).<a href="#section-4.1.3-5.3.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-4.1.1-5.3">
+              <p id="section-4.1.1-5.3.1"><code>tradSS</code> is the shared secret from the traditional component (elliptic curve or RSA).<a href="#section-4.1.1-5.3.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-4.1.3-5.4">
-              <p id="section-4.1.3-5.4.1"><code>tradCT</code> is the ciphertext from the traditional component (elliptic curve or RSA).<a href="#section-4.1.3-5.4.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-4.1.1-5.4">
+              <p id="section-4.1.1-5.4.1"><code>tradCT</code> is the ciphertext from the traditional component (elliptic curve or RSA).<a href="#section-4.1.1-5.4.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-4.1.3-5.5">
-              <p id="section-4.1.3-5.5.1"><code>tradPK</code> is the public key of the traditional component (elliptic curve or RSA).<a href="#section-4.1.3-5.5.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-4.1.1-5.5">
+              <p id="section-4.1.1-5.5.1"><code>tradPK</code> is the public key of the traditional component (elliptic curve or RSA).<a href="#section-4.1.1-5.5.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-4.1.3-5.6">
-              <p id="section-4.1.3-5.6.1"><code>domSep</code> SHALL be the DER encoded value of the object identifier of the Composite ML-KEM algorithm as listed in <a href="#sec-domain" class="auto internal xref">Section 7.2</a>.<a href="#section-4.1.3-5.6.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-4.1.1-5.6">
+              <p id="section-4.1.1-5.6.1"><code>domSep</code> SHALL be the DER encoded value of the object identifier of the Composite ML-KEM algorithm as listed in <a href="#sec-domain" class="auto internal xref">Section 7.2</a>.<a href="#section-4.1.1-5.6.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-4.1.3-5.7">
-              <p id="section-4.1.3-5.7.1"><code>||</code> represents concatenation.<a href="#section-4.1.3-5.7.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-4.1.1-5.7">
+              <p id="section-4.1.1-5.7.1"><code>||</code> represents concatenation.<a href="#section-4.1.1-5.7.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-4.1.3-6">Each registered Composite ML-KEM algorithm specifies the choice of <code>KDF</code>, <code>demSep</code> to be used in <a href="#sec-alg-ids" class="auto internal xref">Section 7</a> and <a href="#sec-domain" class="auto internal xref">Section 7.2</a> below. Given that each Composite ML-KEM algorithm fully specifies the component algorithms, including for example the size of the RSA modulus, all inputs to the KEM combiner are fixed-size and thus do not require length-prefixing. The <code>CompositeKEM.Decap()</code> specified in <a href="#sect-composite-decaps" class="auto internal xref">Section 4.1.5</a> adds further error handling to protect the KEM combiner from malicious inputs.<a href="#section-4.1.3-6" class="pilcrow">¶</a></p>
+<p id="section-4.1.1-6">Each registered Composite ML-KEM algorithm specifies the choice of <code>KDF</code>, <code>demSep</code> to be used in <a href="#sec-alg-ids" class="auto internal xref">Section 7</a> and <a href="#sec-domain" class="auto internal xref">Section 7.2</a> below. Given that each Composite ML-KEM algorithm fully specifies the component algorithms, including for example the size of the RSA modulus, all inputs to the KEM combiner are fixed-size and thus do not require length-prefixing. The <code>CompositeKEM.Decap()</code> specified in <a href="#sect-composite-decaps" class="auto internal xref">Section 4.1.3</a> adds further error handling to protect the KEM combiner from malicious inputs.<a href="#section-4.1.1-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="composite-encap">
-<section id="section-4.1.4">
+<section id="section-4.1.2">
           <h4 id="name-composite-encap">
-<a href="#section-4.1.4" class="section-number selfRef">4.1.4. </a><a href="#name-composite-encap" class="section-name selfRef">Composite Encap</a>
+<a href="#section-4.1.2" class="section-number selfRef">4.1.2. </a><a href="#name-composite-encap" class="section-name selfRef">Composite Encap</a>
           </h4>
-<p id="section-4.1.4-1">The <code>Encap(pk)</code> of a Composite ML-KEM algorithm is designed to behave exactly the same as the <code>Encaps(pk)</code> of the equivalent-strength ML-KEM algorithm as per <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span>; specifically, Composite ML-KEM <code>Encaps(pk)</code> produces a 256-bit shared secret key that can be used directly with any symmetric-key cryptographic algorithm. In this way, Composite ML-KEM can be used as a direct drop-in replacement anywhere that ML-KEM is used.<a href="#section-4.1.4-1" class="pilcrow">¶</a></p>
-<p id="section-4.1.4-2">The <code>Encap(pk) -&gt; (ss, ct)</code> of a Composite ML-KEM algorithm is defined as:<a href="#section-4.1.4-2" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-4.1.4-3">
+<p id="section-4.1.2-1">The <code>Encap(pk)</code> of a Composite ML-KEM algorithm is designed to behave exactly the same as the <code>Encaps(pk)</code> of the equivalent-strength ML-KEM algorithm as per <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span>; specifically, Composite ML-KEM <code>Encaps(pk)</code> produces a 256-bit shared secret key that can be used directly with any symmetric-key cryptographic algorithm. In this way, Composite ML-KEM can be used as a direct drop-in replacement anywhere that ML-KEM is used.<a href="#section-4.1.2-1" class="pilcrow">¶</a></p>
+<p id="section-4.1.2-2">The <code>Encap(pk) -&gt; (ss, ct)</code> of a Composite ML-KEM algorithm is defined as:<a href="#section-4.1.2-2" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.1.2-3">
 <pre>
 CompositeKEM.Encap(pk):
   # Split the component public keys
@@ -1801,18 +1802,18 @@ CompositeKEM.Encap(pk):
   ss = Combiner(mlkemSS, tradSS, tradCT, tradPK, domSep)
 
   return (ss, ct)
-</pre><a href="#section-4.1.4-3" class="pilcrow">¶</a>
+</pre><a href="#section-4.1.2-3" class="pilcrow">¶</a>
 </div>
-<p id="section-4.1.4-4">where <code>Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep)</code> is defined in general in <a href="#sec-kem-combiner" class="auto internal xref">Section 4.1.3</a> with specific values for <code>domSep</code> per Composite ML-KEM algorithm in <a href="#sec-alg-ids" class="auto internal xref">Section 7</a> and <code>CompositeCiphertextValue</code> is defined in <a href="#sec-CompositeCiphertextValue" class="auto internal xref">Section 6.2</a>.<a href="#section-4.1.4-4" class="pilcrow">¶</a></p>
+<p id="section-4.1.2-4">where <code>Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep)</code> is defined in general in <a href="#sec-kem-combiner" class="auto internal xref">Section 4.1.1</a> with specific values for <code>domSep</code> per Composite ML-KEM algorithm in <a href="#sec-alg-ids" class="auto internal xref">Section 7</a> and <code>CompositeCiphertextValue</code> is defined in <a href="#sec-CompositeCiphertextValue" class="auto internal xref">Section 6.2</a>.<a href="#section-4.1.2-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sect-composite-decaps">
-<section id="section-4.1.5">
+<section id="section-4.1.3">
           <h4 id="name-composite-decap">
-<a href="#section-4.1.5" class="section-number selfRef">4.1.5. </a><a href="#name-composite-decap" class="section-name selfRef">Composite Decap</a>
+<a href="#section-4.1.3" class="section-number selfRef">4.1.3. </a><a href="#name-composite-decap" class="section-name selfRef">Composite Decap</a>
           </h4>
-<p id="section-4.1.5-1">The <code>Decap(sk, ct) -&gt; ss</code> of a Composite ML-KEM algorithm is defined as:<a href="#section-4.1.5-1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-4.1.5-2">
+<p id="section-4.1.3-1">The <code>Decap(sk, ct) -&gt; ss</code> of a Composite ML-KEM algorithm is defined as:<a href="#section-4.1.3-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.1.3-2">
 <pre>
 CompositeKEM.Decap(ct, mlkemSK, tradSK):
   # split the component ciphertexts
@@ -1829,19 +1830,19 @@ CompositeKEM.Decap(ct, mlkemSK, tradSK):
   ss = Combiner(mlkemSS, tradSS, tradCT, tradPK, domSep)
 
   return ss
-</pre><a href="#section-4.1.5-2" class="pilcrow">¶</a>
+</pre><a href="#section-4.1.3-2" class="pilcrow">¶</a>
 </div>
-<p id="section-4.1.5-3">where <code>Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep)</code> is defined in general in <a href="#sec-kem-combiner" class="auto internal xref">Section 4.1.3</a> with specific values for <code>domSep</code> per Composite ML-KEM algorithm in <a href="#sec-alg-ids" class="auto internal xref">Section 7</a>. <code>CompositeCiphertextValue</code> is defined in <a href="#sec-CompositeCiphertextValue" class="auto internal xref">Section 6.2</a>.<a href="#section-4.1.5-3" class="pilcrow">¶</a></p>
-<p id="section-4.1.5-4">Here the secret key values <code>mlkemSK</code> and <code>tradSK</code> may be interpreted as either literal secret key values, or as a handle to a cryptographic module which holds the secret key and is capable of performing the secret key operation.<a href="#section-4.1.5-4" class="pilcrow">¶</a></p>
-<p id="section-4.1.5-5">In order to properly achieve its security properties, the KEM combiner requires that all inputs are fixed-length. Since each Composite ML-KEM algorithm fully specifies its component algorithms, including key sizes, all inputs are generally fixed-length, however some implementations may need to perform additional checking to handle certain error conditions. In particular, the KEM combiner step should not be performed if either of the component decapsulations returned an error condition indicating malformed inputs -- for timing-invariance reasons, it is recommended to perform both decapsulation operations and check for errors afterwards to make it less easy for an attacker to tell which component failed. Also, RSA-based composites MUST ensure that the modulus size (ie the size of tradCT and tradPK) matches that specified for the given Composite ML-KEM algorithm in <a href="#tab-kem-algs" class="auto internal xref">Table 2</a>; depending on the cryptographic library used, this check may be done by the library or may require an explicit check as part of the <code>CompositeKEM.Decap()</code> routine.<a href="#section-4.1.5-5" class="pilcrow">¶</a></p>
+<p id="section-4.1.3-3">where <code>Combiner(tradSS, mlkemSS, tradCT, tradPK, domSep)</code> is defined in general in <a href="#sec-kem-combiner" class="auto internal xref">Section 4.1.1</a> with specific values for <code>domSep</code> per Composite ML-KEM algorithm in <a href="#sec-alg-ids" class="auto internal xref">Section 7</a>. <code>CompositeCiphertextValue</code> is defined in <a href="#sec-CompositeCiphertextValue" class="auto internal xref">Section 6.2</a>.<a href="#section-4.1.3-3" class="pilcrow">¶</a></p>
+<p id="section-4.1.3-4">Here the secret key values <code>mlkemSK</code> and <code>tradSK</code> may be interpreted as either literal secret key values, or as a handle to a cryptographic module which holds the secret key and is capable of performing the secret key operation.<a href="#section-4.1.3-4" class="pilcrow">¶</a></p>
+<p id="section-4.1.3-5">In order to properly achieve its security properties, the KEM combiner requires that all inputs are fixed-length. Since each Composite ML-KEM algorithm fully specifies its component algorithms, including key sizes, all inputs are generally fixed-length, however some implementations may need to perform additional checking to handle certain error conditions. In particular, the KEM combiner step should not be performed if either of the component decapsulations returned an error condition indicating malformed inputs -- for timing-invariance reasons, it is recommended to perform both decapsulation operations and check for errors afterwards to make it less easy for an attacker to tell which component failed. Also, RSA-based composites MUST ensure that the modulus size (ie the size of tradCT and tradPK) matches that specified for the given Composite ML-KEM algorithm in <a href="#tab-kem-algs" class="auto internal xref">Table 2</a>; depending on the cryptographic library used, this check may be done by the library or may require an explicit check as part of the <code>CompositeKEM.Decap()</code> routine.<a href="#section-4.1.3-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="decapsulation-failure">
-<section id="section-4.1.6">
+<section id="section-4.1.4">
           <h4 id="name-decapsulation-failure">
-<a href="#section-4.1.6" class="section-number selfRef">4.1.6. </a><a href="#name-decapsulation-failure" class="section-name selfRef">Decapsulation failure</a>
+<a href="#section-4.1.4" class="section-number selfRef">4.1.4. </a><a href="#name-decapsulation-failure" class="section-name selfRef">Decapsulation failure</a>
           </h4>
-<p id="section-4.1.6-1">Provided all inputs are well-formed, the key establishment procedure of ML-KEM will never explicitly fail. Specifically, the ML-KEM.Encaps and ML-KEM.Decaps algorithms from <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span> will always output a value with the same data type as a shared secret key, and will never output an error or failure symbol. However, it is possible (though extremely unlikely) that the process will fail in the sense that ML-KEM.Encaps and ML-KEM.Decaps will produce different outputs, even though both of them are behaving honestly and no adversarial interference is present. In this case, the sender and recipient clearly did not succeed in producing a shared secret key. This event is called a decapsulation failure. Estimates for the decapsulation failure probability (or rate) for each of the ML-KEM parameter sets are provided in Table 1  of <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span> and reproduced here in <a href="#tab-mlkem-failure-rate" class="auto internal xref">Table 1</a>.<a href="#section-4.1.6-1" class="pilcrow">¶</a></p>
+<p id="section-4.1.4-1">Provided all inputs are well-formed, the key establishment procedure of ML-KEM will never explicitly fail. Specifically, the ML-KEM.Encaps and ML-KEM.Decaps algorithms from <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span> will always output a value with the same data type as a shared secret key, and will never output an error or failure symbol. However, it is possible (though extremely unlikely) that the process will fail in the sense that ML-KEM.Encaps and ML-KEM.Decaps will produce different outputs, even though both of them are behaving honestly and no adversarial interference is present. In this case, the sender and recipient clearly did not succeed in producing a shared secret key. This event is called a decapsulation failure. Estimates for the decapsulation failure probability (or rate) for each of the ML-KEM parameter sets are provided in Table 1  of <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span> and reproduced here in <a href="#tab-mlkem-failure-rate" class="auto internal xref">Table 1</a>.<a href="#section-4.1.4-1" class="pilcrow">¶</a></p>
 <span id="name-ml-kem-decapsulation-failur"></span><div id="tab-mlkem-failure-rate">
 <table class="center" id="table-1">
             <caption>
@@ -1870,7 +1871,7 @@ CompositeKEM.Decap(ct, mlkemSK, tradSK):
             </tbody>
           </table>
 </div>
-<p id="section-4.1.6-3">In the case of ML-KEM decapsulation failure, Composite ML-KEM MUST preserve the same behaviour and return a well-formed output.<a href="#section-4.1.6-3" class="pilcrow">¶</a></p>
+<p id="section-4.1.4-3">In the case of ML-KEM decapsulation failure, Composite ML-KEM MUST preserve the same behaviour and return a well-formed output.<a href="#section-4.1.4-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2218,7 +2219,7 @@ CompositeCiphertextValue ::= SEQUENCE SIZE (2) OF OCTET STRING
         <h3 id="name-domain-separators">
 <a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-domain-separators" class="section-name selfRef">Domain Separators</a>
         </h3>
-<p id="section-7.2-1">The KEM combiner defined in section <a href="#sec-kem-combiner" class="auto internal xref">Section 4.1.3</a> requires a domain separator <code>domSep</code> input.  The following table shows the HEX-encoded domain separator for each Composite ML-KEM AlgorithmID; to use it, the value should be HEX-decoded and used in binary form. The domain separator is simply the DER encoding of the composite algorithm OID.<a href="#section-7.2-1" class="pilcrow">¶</a></p>
+<p id="section-7.2-1">The KEM combiner defined in section <a href="#sec-kem-combiner" class="auto internal xref">Section 4.1.1</a> requires a domain separator <code>domSep</code> input.  The following table shows the HEX-encoded domain separator for each Composite ML-KEM AlgorithmID; to use it, the value should be HEX-decoded and used in binary form. The domain separator is simply the DER encoding of the composite algorithm OID.<a href="#section-7.2-1" class="pilcrow">¶</a></p>
 <span id="name-composite-ml-kem-fixedinfo-"></span><div id="tab-kem-domains">
 <table class="center" id="table-3">
           <caption>
@@ -3128,7 +3129,7 @@ END
 <p id="section-11.2-1">Traditionally, a public key or certificate contains a single cryptographic algorithm. If and when an algorithm becomes deprecated (for example, RSA-512, or SHA1), the path to deprecating it and removing it from operational environments is, at least is principle, straightforward.<a href="#section-11.2-1" class="pilcrow">¶</a></p>
 <p id="section-11.2-2">In the composite model this is less obvious since implementers may decide that certain cryptographic algorithms have complementary security properties and are acceptable in combination even though one or both algorithms are deprecated for individual use. As such, a single composite public key or certificate may contain a mixture of deprecated and non-deprecated algorithms.<a href="#section-11.2-2" class="pilcrow">¶</a></p>
 <p id="section-11.2-3">Since composite algorithms are registered independently of their component algorithms, their deprecation can be handled independently from that of their component algorithms. For example a cryptographic policy might continue to allow <code>id-MLKEM512-ECDH-P256</code> even after ECDH-P256 is deprecated.<a href="#section-11.2-3" class="pilcrow">¶</a></p>
-<p id="section-11.2-4">The Composite ML-KEM design specified in this document, and especially that of the KEM combiner specified in <a href="#sec-kem-combiner" class="auto internal xref">Section 4.1.3</a> means that the overall Composite ML-KEM algorithm should be considered to have the security strength of the strongest of its component algorithms; ie as long as one component algorithm remains strong, then the overall composite algorithm remains strong.<a href="#section-11.2-4" class="pilcrow">¶</a></p>
+<p id="section-11.2-4">The Composite ML-KEM design specified in this document, and especially that of the KEM combiner specified in <a href="#sec-kem-combiner" class="auto internal xref">Section 4.1.1</a> means that the overall Composite ML-KEM algorithm should be considered to have the security strength of the strongest of its component algorithms; ie as long as one component algorithm remains strong, then the overall composite algorithm remains strong.<a href="#section-11.2-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
