@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-10-17T01:44:32.596936+00:00",
+  "timestamp": "2024-10-20T01:52:13.913777+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -228,7 +228,7 @@
       "id": "I_kwDOKRPFO85_fTKA",
       "title": "Add a new section: explicitly list SPKI AlgIds",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/20",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -237,8 +237,8 @@
       "labels": [],
       "body": "We should add a section listing explicitly the DER-encoded AlgorithmIdentifiers for the components of each composite public key and signature algorithm. This is important to resolve ambiguity on, for example, whether the RSA should have a NULL param, and the ECC curve params.\r\n\r\nExample, for id-MLDSA44-ECDSA-P256-SHA256 the ML-DSA SPKI would have an AlgorithmIdentifier of:\r\n\r\n   AlgorithmIdentifier  ::=  SEQUENCE  {\r\n        id-ml-dsa\r\n    }\r\nwhich is:\r\n\r\nAlgorithmIdentifier  ::=  SEQUENCE  {\r\n        {\r\n     1.3.6.1.4.1.2.267.12.4.4\r\n      }\r\n  }\r\nAnd the ECDSA-P256-SHA256 would have a SPKI would have an AlgorithmIdentifier of:\r\n\r\n   AlgorithmIdentifier  ::=  SEQUENCE  {\r\n        id-ecPublicKey,\r\n       secp256r1  \r\n  }\r\nwhich is:\r\n\r\n   AlgorithmIdentifier  ::=  SEQUENCE  {\r\n        {\r\n     iso(1) member-body(2) us(840) ansi-X9-62(10045) keyType(2) 1 },\r\n       iso(1) member-body(2) us(840) ansi-X9-62(10045) curves(3) prime(1) 7}\r\nAnd the signature algorithm for id-MLDSA44-ECDSA-P256-SHA256, the first component signature algorithm would have an AlgorithmIdentifier of\r\n\r\n   AlgorithmIdentifier  ::=  SEQUENCE  {\r\n        id-ml-dsa\r\n    }\r\nwhich is:\r\n\r\nAlgorithmIdentifier  ::=  SEQUENCE  {\r\n        {\r\n     1.3.6.1.4.1.2.267.12.4.4\r\n      }\r\n  }\r\nand the second component signature algorithm would have an AlgorithmIdentifier of\r\n\r\n   AlgorithmIdentifier  ::=  SEQUENCE  {\r\n          ecdsa-with-SHA256\r\n  }\r\nwhich is:\r\n\r\nAlgorithmIdentifier  ::=  SEQUENCE  {\r\n           {\r\n     iso(1) member-body(2) us(840) ansi-X9-62(10045) signatures(4) ecdsa-with-SHA2(3) 2\r\n       }\r\n  }\r\nWith that done, we should replace the message prefix values in Sectien 2.4 with the SHA256 hash of the signature AlgorithmIdentifiers. This has two nice properties that are better than using the ASCII encoding of the OID name: 1) they are all the same length (ie the length of SHA256), and 2) if the inner OIDs change, for example with a new Kyber version, then the message prefix changes, which prevents cryptographic compatibility issues; or otherwise stated: provides signature domain-separation based on the component OIDs.\r\n\r\n--- SHA256 of the DER encoding of the following ASN.1 value\r\n--- Security Consideration note: the choice of SHA256 here is not security-relevant since it is only to generate fixed string values.\r\n\r\nSEQUENCE {\r\nAlgorithmIdentifier  ::=  SEQUENCE  {\r\n        {\r\n     1.3.6.1.4.1.2.267.12.4.4\r\n      }\r\n  },\r\nAlgorithmIdentifier  ::=  SEQUENCE  {\r\n           {\r\n     iso(1) member-body(2) us(840) ansi-X9-62(10045) signatures(4) ecdsa-with-SHA2(3) 2\r\n       }\r\n  }\r\n}\r\n",
       "createdAt": "2024-02-16T16:01:24Z",
-      "updatedAt": "2024-07-08T15:16:24Z",
-      "closedAt": null,
+      "updatedAt": "2024-10-18T20:10:02Z",
+      "closedAt": "2024-10-18T20:10:02Z",
       "comments": [
         {
           "author": "johngray-dev",
@@ -964,15 +964,17 @@
       "id": "I_kwDOKRPFO86S_CbX",
       "title": "Public key and private key compression",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/59",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
-      "assignees": [],
+      "assignees": [
+        "johngray-dev"
+      ],
       "labels": [],
       "body": "See: https://github.com/lamps-wg/draft-composite-sigs/issues/6\r\n\r\nThe work here is just to copy over the fix from Sigs.",
       "createdAt": "2024-08-14T14:22:21Z",
-      "updatedAt": "2024-08-14T14:22:21Z",
-      "closedAt": null,
+      "updatedAt": "2024-10-20T01:33:26Z",
+      "closedAt": "2024-10-20T01:33:26Z",
       "comments": []
     },
     {
@@ -980,16 +982,24 @@
       "id": "I_kwDOKRPFO86S_LVT",
       "title": "List security strength of each composite",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/60",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "See:\r\nhttps://github.com/lamps-wg/draft-composite-sigs/issues/29",
       "createdAt": "2024-08-14T14:35:22Z",
-      "updatedAt": "2024-08-14T14:35:22Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2024-10-17T19:54:36Z",
+      "closedAt": "2024-10-17T19:54:36Z",
+      "comments": [
+        {
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "body": "It is hard to quantify the overall strength at any given point it time, because it changes based on cryptanalysis. Therefore, we don't think this table would add value. We have added a strong security considerations section that talks about the strength of the algorithms in terms of their underlying notions.",
+          "createdAt": "2024-10-17T19:54:36Z",
+          "updatedAt": "2024-10-17T19:54:36Z"
+        }
+      ]
     },
     {
       "number": 61,
@@ -1020,15 +1030,17 @@
       "id": "I_kwDOKRPFO86TQ4or",
       "title": "Digicert feedback",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/62",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
-      "assignees": [],
+      "assignees": [
+        "ounsworth"
+      ],
       "labels": [],
       "body": "\r\nhttps://mailarchive.ietf.org/arch/msg/spasm/ReWx7kichMke-HuTHjCih3iZpD0/\r\n\r\nDigiCert's CA engineering team has some comments on the open issues related\r\nto the composite-sigs draft. We're going to put them in one email just\r\nbecause we have comments on quite a few of them.\r\n\r\nISSUE #1\r\n(Github issue:  https://github.com/lamps-wg/draft-composite-sigs/issues/9)\r\n\r\nASN.1 wrapping confuses people. This came up in the hash-based signatures\r\nupdates last call. Nobody knows what ASN.1 is, or what the consequences\r\nof omiting it are (to be clear, there are really none).\r\n\r\nWe agree that this is largely a question of people being unfamiliar with\r\nASN.1, and that explanatory text is sufficient. All that is needed is a\r\nclear explanation of example what the BIT STRING is, and explaining that\r\nit's simply the bits of the key itself seems pretty straightforward.\r\n\r\nOne can then say something similar to: \r\n\r\n\"In some situations and protocols, the key might be wrapped in ASN.1 or \r\nmay have some other additional decoration or encoding. If so, such wrapping \r\nMUST be removed prior to encoding the key itself as a BIT STRING.\"\r\n\r\nHopefully that makes things crystal clear.\r\n\r\nISSUE #2\r\n(Github Issue: https://github.com/lamps-wg/draft-composite-sigs/issues/19)\r\n\r\nWe don't think it's worth the extra complexity and expense of an additional\r\nhash operation just to achieve a fixed size output. The variation in size\r\nis already pretty small.\r\n\r\nISSUE #3\r\n(Github issue: https://github.com/lamps-wg/draft-composite-sigs/issues/6)\r\n\r\nAgain, we don't believe the additional complexity is worth it for a pretty\r\ntrivial improvement in the private key size. But it's not a strong opinion,\r\nwe could go either way.\r\n\r\nOpen Issues affect both Composite Signatures and Composite KEM:\r\nISSUE #4\r\n\r\nChair hat off, I and the CA team are concerned about the slow progress of \r\nthe composite signature work. In particular, tying it to the Composite KEM\r\ndraft and waiting for the CFRG work on KEM Combiners seems like an\r\nabsolutely horrible idea to us. We would like to see Composite Signatures\r\nprogress ASAP.\r\n\r\nISSUE #5\r\n(Github issues:\r\nhttps://github.com/lamps-wg/draft-composite-kem/issues/37\r\nhttps://github.com/lamps-wg/draft-composite-sigs/issues/24\r\nhttps://github.com/lamps-wg/draft-composite-sigs/issues/23)\r\n\r\nThis is a fun one, and we've spent quite a bit of time discussing it\r\ninternally.\r\n\r\nIn particular, we're still debating the question about exactly how many\r\nbackwards compatibility options are really necessary. For example, given\r\nthat you already need to add lattice, is it really necessary to allow\r\nPKCS15 to continue to exist? For RSA, there's the reasonable argument that\r\nthat might be all you have in your validated hardware/software, but if you\r\nhave RSA as a primitive, can't you do PSS instead of PKCS15? Remember, you\r\nalready have to make changes on both the signing and verify side anyway.\r\n\r\nWe're trending in the direction of thinking that the primary decision is\r\nthe security level and post-quantum algorithm, and the classical side is\r\njust determined by what \"makes sense\" for that security level and algorithm.\r\n\r\nSo what you really want is something like \"id-SL1-MLKEM-RSA\" where the\r\ndocument specifies exactly what \"RSA\" means in the context of a SL1 MLKEM512\r\ncomposite, e.g. RSA4096-PSS-SHA512. This basically means striving for\r\nat most one combination for each triple of (security level, PQC flavor, classical \r\nflavor) and eliminating unnecessary complexity and diversity of options in what \r\nis essentially a redundancy/backup mechanism.\r\n\r\nThe basic idea is to more aggressively standardize the backwards \r\ncompatibility options to only what's actually necessary, instead of\r\ntrying to be backwards compatible with the universe of current behavior,\r\nwhich both unnecessarily complicates things, and preserves some practices\r\n(e.g. PKCS15) longer than is perhaps prudent.\r\n\r\n-Tim\r\n",
       "createdAt": "2024-08-16T17:29:56Z",
-      "updatedAt": "2024-08-16T17:29:56Z",
-      "closedAt": null,
+      "updatedAt": "2024-10-19T22:51:36Z",
+      "closedAt": "2024-10-19T22:51:35Z",
       "comments": []
     },
     {
@@ -1061,24 +1073,32 @@
       "labels": [],
       "body": "- [ ] Align the combiner.\r\n- [ ] Fix \"## FIPS Compliance {#sec-fips-compliance}\" to match.",
       "createdAt": "2024-08-28T14:34:52Z",
-      "updatedAt": "2024-09-12T22:06:27Z",
+      "updatedAt": "2024-10-17T19:55:37Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Meeting with NIST happened on October 17th 2024.  We did not find out any new details of content, it is still an open issue.",
+          "createdAt": "2024-10-17T19:55:35Z",
+          "updatedAt": "2024-10-17T19:55:35Z"
+        }
+      ]
     },
     {
       "number": 65,
       "id": "I_kwDOKRPFO86Vrjy6",
       "title": "Align CMS KDF choice to Dan vG's cms-kyber draft",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/65",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "The current CMS KEMRI Conventions:\r\n\r\n| Composite KEM OID                 | KDF         | Key Encryption Alg |\r\n|---------                          | ---         | ---                |\r\n| id-MLKEM768-RSA2048               | SHA3-256 | id-aes128-Wrap     |\r\n| id-MLKEM768-RSA3072               | SHA3-256 | id-aes128-Wrap     |\r\n| id-MLKEM768-ECDH-P384             | SHA3-384 | id-aes256-Wrap     |\r\n| id-MLKEM768-ECDH-brainpoolP256r1  | SHA3-384 | id-aes256-Wrap     |\r\n| id-MLKEM768-X25519                | SHA3-384 | id-aes256-Wrap     |\r\n| id-MLKEM1024-ECDH-P384            | SHA3-512 | id-aes256-Wrap     |\r\n| id-MLKEM1024-ECDH-brainpoolP384r1 | SHA3-512 | id-aes256-Wrap     |\r\n| id-MLKEM1024-X448                 | SHA3-512 | id-aes256-Wrap     |\r\n{: #tab-cms-kdf-wrap title=\"REQUIRED pairings for CMS KDF and WRAP\"}\r\n\r\n\r\nWhich does not currently align with the KDFs used internally within the Composite KEM Combiner, and in fact here it needs to be a proper variable-length KDF since KEMRI has an `L' parameter, so this needs to be fixed. I guess it makes sense for me to align to whatever Dan picks in draft-cms-kyber.\r\n",
       "createdAt": "2024-09-06T21:35:29Z",
-      "updatedAt": "2024-09-06T21:35:29Z",
-      "closedAt": null,
+      "updatedAt": "2024-10-19T22:44:47Z",
+      "closedAt": "2024-10-19T22:44:47Z",
       "comments": []
     },
     {
@@ -1086,15 +1106,15 @@
       "id": "I_kwDOKRPFO86WZ6M2",
       "title": "specify behaviour in light of KEMs with a non-zero failure probability?",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/67",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "> TODO: as per https://www.enisa.europa.eu/publications/post-quantum-cryptography-integration-study section 4.2, might need to specify behaviour in light of KEMs with a non-zero failure probability.",
       "createdAt": "2024-09-12T21:17:54Z",
-      "updatedAt": "2024-10-11T08:20:21Z",
-      "closedAt": null,
+      "updatedAt": "2024-10-17T19:50:26Z",
+      "closedAt": "2024-10-17T19:50:26Z",
       "comments": [
         {
           "author": "ounsworth",
@@ -1232,30 +1252,102 @@
       "id": "I_kwDOKRPFO86YoByu",
       "title": "Algorithm identifier table KDF columns contain hash algorithms",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/73",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "bluegate010",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "It is a bit confusing on first read to see hash algorithms in the section 5 & 6.1 tables' KDF columns (SHA3-256, SHA3-384, SHA3-512).\r\n\r\nFrom reading footnotes under the table in section 6.1, it appears those shortnames refer to [this](https://datatracker.ietf.org/doc/html/draft-ietf-lamps-cms-sha3-hash-01#name-hkdf-with-sha3) draft RFC. It might be clearer to prepend the shortnames in the section 6.1 table with HKDF-* (HKDF-SHA3-256 etc).\r\n\r\nIt is not clear what the hash algorithms in table 5's KDF column refer to.",
       "createdAt": "2024-10-02T04:03:17Z",
-      "updatedAt": "2024-10-02T04:55:01Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2024-10-19T22:51:25Z",
+      "closedAt": "2024-10-19T22:51:25Z",
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Hi @bluegate010 Thank you for the comment.\r\n\r\nThis has been adjusted a bit in the most recent version. We now use either `HKDF-SHA256/256` or `SHA3-256` for the internal KEM combiner KDF -- note that there is no cryptographic reason why we need HKDF-SHA3 because a single iteration of SHA3 by already has the necessary DualPRF properties (but SHA2 does not, hence needing the HMAC / HKDF wrapper).\r\n\r\nFor the KDF used as the CMS KEMRecipientInfo layer we need a proper KDF, not for security property reasons, but because it needs to be variable-length output, so here we use either HKDF-SHA2 or KMAC.\r\n\r\n\r\nPlease see the updated version here (which will be posted to IETF Datatracker on Oct 21). Please let me know if this is still unclear. I am going to close this ticket for now, but feel free to re-open it.\r\n\r\nhttps://lamps-wg.github.io/draft-composite-kem/draft-ietf-lamps-pq-composite-kem.html\r\n\r\n\r\n",
+          "createdAt": "2024-10-19T22:51:25Z",
+          "updatedAt": "2024-10-19T22:51:25Z"
+        }
+      ]
     },
     {
       "number": 74,
       "id": "I_kwDOKRPFO86Z09PE",
       "title": "Make sure it's sufficiently clear that all inputs to the KEM combiner are fixed-length",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/74",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "... at least fixed length for a given composite alg.\r\n\r\nThis came from a private discussion with Russ.",
       "createdAt": "2024-10-11T08:39:01Z",
-      "updatedAt": "2024-10-11T08:39:01Z",
+      "updatedAt": "2024-10-17T19:50:26Z",
+      "closedAt": "2024-10-17T19:50:26Z",
+      "comments": []
+    },
+    {
+      "number": 77,
+      "id": "I_kwDOKRPFO86ar2r9",
+      "title": "Add table of PK, CT sizes",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/77",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "https://mailarchive.ietf.org/arch/msg/spasm/zfWx5fYjvuvohTOI7asQG4m-NDI/\r\n\r\n> Hi Mike,\r\n>\r\n> Your draft:\r\n> https://datatracker.ietf.org/doc/draft-ietf-lamps-pq-composite-kem/\r\n> could do with table  on Npk, Nsk, and NSig sizes. Such tables greatly help\r\n> in implementation.\r\n>\r\n> The idea is from RFC 9180, Section 7.1\r\n> <https://datatracker.ietf.org/doc/rfc9180/>\r\n>\r\n> [image: image.png]\r\n>\r\n> The details of the calculations can be found here:\r\n>\r\n> https://github.com/codespree/quantcrypt/blob/main/additional_info_keysize.md\r\n>\r\n> All the best,\r\n> Varun\r\n\r\nIn my opinion, we should get sample keys, signatures, and ciphertexts for all algorithms, and then measure them. This sounds like a hackathon project.",
+      "createdAt": "2024-10-17T16:15:59Z",
+      "updatedAt": "2024-10-18T09:53:19Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "ZPDSSAI",
+          "authorAssociation": "NONE",
+          "body": "Hi Mike,\r\n\r\nI am Peiduo and I am from Varun(@codespree)'s team. We have computed the public key, secrete key and signature lengths for ML-DSA and its composite variations, and the public key, secrete key, shared secret, and cipher text lengths for ML-KEM and its composite variations. The full table documentation, together with notes on overhead computation, can be found in our project repo [here](https://github.com/codespree/quantcrypt/blob/main/additional_info_keysize.md).\r\n\r\nPlease check if the tables meet the requirement of this issue :)\r\n\r\nBest regards,\r\nZhao Peiduo",
+          "createdAt": "2024-10-18T09:53:18Z",
+          "updatedAt": "2024-10-18T09:53:18Z"
+        }
+      ]
+    },
+    {
+      "number": 79,
+      "id": "I_kwDOKRPFO86a0wRy",
+      "title": "Should be clear that the CompositeML-KEM output is a key, not just a shared secret",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/79",
+      "state": "CLOSED",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Go diving into FIPS 203 and borrow language about what properties the output value has.",
+      "createdAt": "2024-10-18T13:27:03Z",
+      "updatedAt": "2024-10-19T23:07:47Z",
+      "closedAt": "2024-10-19T23:07:47Z",
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I've changed \"shared secret\" to \"shared secret key\" throughout.",
+          "createdAt": "2024-10-19T22:59:15Z",
+          "updatedAt": "2024-10-19T22:59:15Z"
+        }
+      ]
+    },
+    {
+      "number": 81,
+      "id": "I_kwDOKRPFO86a9fP2",
+      "title": "Do we need to define smime caps for each kema?",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/81",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-10-20T01:28:32Z",
+      "updatedAt": "2024-10-20T01:28:32Z",
       "closedAt": null,
       "comments": []
     }
@@ -2596,24 +2688,26 @@
       "id": "PR_kwDOKRPFO8581s1c",
       "title": "Mikeo key reuse",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/71",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2024-09-26T19:23:41Z",
-      "updatedAt": "2024-10-15T19:02:36Z",
+      "updatedAt": "2024-10-17T20:48:02Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "43d8fd88aa950b480ba2d8ba6c1fd5a95a897fa7",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_key_reuse",
-      "headRefOid": "4cfcd21da9f24dbc5115b3f0ff7946d8d9332e60",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "e195957eec0b2463013b8e32194c4860582aa02e",
+      "closedAt": "2024-10-17T20:47:57Z",
+      "mergedAt": "2024-10-17T20:47:57Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "15f90210a93cddb819ddb3195322968426d9e910"
+      },
       "comments": [],
       "reviews": [
         {
@@ -2695,24 +2789,26 @@
       "id": "PR_kwDOKRPFO85-VfAx",
       "title": "Added text about fixed-length inputs and ML-KEM decaps failures",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/75",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Closes #74 \r\nCloses #67 ",
       "createdAt": "2024-10-11T12:04:02Z",
-      "updatedAt": "2024-10-15T17:55:08Z",
+      "updatedAt": "2024-10-17T19:50:25Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "b9c8f48b9eb803bc47afc448b2808bb49723df64",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_lengths",
-      "headRefOid": "bd062a48ca58f485874f7d822c3afbac04989171",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "0088399e87e1ff59189c68bdd4e27d4cf624f95e",
+      "closedAt": "2024-10-17T19:50:25Z",
+      "mergedAt": "2024-10-17T19:50:25Z",
+      "mergedBy": "johngray-dev",
+      "mergeCommit": {
+        "oid": "0fbb50682911cee9aa5bb7c9dc2ad1f3651b5d7a"
+      },
       "comments": [],
       "reviews": [
         {
@@ -2735,24 +2831,26 @@
       "id": "PR_kwDOKRPFO85-liWU",
       "title": "Add explicit ALgorithmIdentifiers of component keys.",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/76",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "janklaussner",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2024-10-14T19:49:10Z",
-      "updatedAt": "2024-10-15T17:45:49Z",
+      "updatedAt": "2024-10-18T20:15:14Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "b9c8f48b9eb803bc47afc448b2808bb49723df64",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "20-add-a-new-section-explicitly-list-spki-algids",
-      "headRefOid": "db9efa6ffdb4bbb3b78cf80a5ee0222230d2d36e",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "2dc3ed64c60fbe72c829c7a5542fa928f8be732d",
+      "closedAt": "2024-10-18T20:10:01Z",
+      "mergedAt": "2024-10-18T20:10:01Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "9a74e4a2de8be612643d3e735356b2687aeb5a40"
+      },
       "comments": [
         {
           "author": "janklaussner",
@@ -2760,8 +2858,411 @@
           "body": "Question to group: for RSA key AlgIds it is possible to be very specific on its usage. Do we want/need this?",
           "createdAt": "2024-10-15T17:45:48Z",
           "updatedAt": "2024-10-15T17:45:48Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "This does not yet provide an encoding of OAEP parameters. We need to address that before merging.\r\n\r\nUpdate: Just need John to provide a DER encoding of the RSA-OAEP params.",
+          "createdAt": "2024-10-17T19:44:04Z",
+          "updatedAt": "2024-10-17T21:09:38Z"
+        },
+        {
+          "author": "janklaussner",
+          "authorAssociation": "COLLABORATOR",
+          "body": "@ounsworth , @johngray-dev : added DER encoding and some places where RSA 4096 combo was missing... I assumed that the OAEP params for RSA 4096 are the same as for RSA 2048",
+          "createdAt": "2024-10-18T12:30:28Z",
+          "updatedAt": "2024-10-18T12:30:28Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Thanks Jan! I'm going to merge this now.",
+          "createdAt": "2024-10-18T19:49:51Z",
+          "updatedAt": "2024-10-18T19:49:51Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@janklaussner your DER encoding of the RSA-OAEP AlgID had an extra NULL at the end that John and I couldn't figure out, so I replaced it with a DER encoding produced by our toolkit.",
+          "createdAt": "2024-10-18T20:05:59Z",
+          "updatedAt": "2024-10-18T20:05:59Z"
         }
       ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO86Nyq0m",
+          "commit": {
+            "abbreviatedOid": "0f406b1"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-10-18T19:52:10Z",
+          "updatedAt": "2024-10-18T19:52:10Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 78,
+      "id": "PR_kwDOKRPFO85_CS6l",
+      "title": "Aligned Use In CMS section with draft-cms-kyber",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/78",
+      "state": "MERGED",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Closes #65",
+      "createdAt": "2024-10-18T00:53:09Z",
+      "updatedAt": "2024-10-19T22:44:47Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "9a74e4a2de8be612643d3e735356b2687aeb5a40",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_cmskyber_align",
+      "headRefOid": "43650524e50277232f8017847e331d80409587b9",
+      "closedAt": "2024-10-19T22:44:46Z",
+      "mergedAt": "2024-10-19T22:44:46Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "4b48abc2e93188b6d5043369d373ed8f4860c400"
+      },
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> Also, from Section 5:\r\n> \r\n> \" _HKDF_: [RFC5869]. Salt is not provided; ie the default salt (all zeroes of length HashLen) will be used. In all cases, the output length of HKDF is the same as the block size of the underlying hash function, for example `HKDF-SHA256/256` means HKDF-SHA256 with an output length `L` of 256 bits (32 octets).\"\r\n> \r\n> \"In all cases...\" is not true anymore, because the output size of HKDF when used in CMS KEMRecipientInfo depends on the key size of the wrap function. Now you will have to be explicit about the output sizes in the instances where HKDF is used.\r\n\r\nYou're right that I needed to clean up that sentence a bit, but your conclusion is not right. This table describes the KDF used inside Composite ML-KEM. With the most recent change, Composite ML-KEM will always output a 256-bit shared secret key (same as ML-KEM). The KDF used with CMS KEMRI (specified separately in Table #tab-cms-kdf-wrap) has a variable output size to match the wrap function.",
+          "createdAt": "2024-10-19T22:07:45Z",
+          "updatedAt": "2024-10-19T22:07:45Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO86NuI5o",
+          "commit": {
+            "abbreviatedOid": "e07ee99"
+          },
+          "author": "danvangeest",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "CHANGES_REQUESTED",
+          "body": "Also, from Section 5:\r\n\r\n\" _HKDF_: [RFC5869]. Salt is not provided; ie the default salt (all zeroes of length HashLen) will be used. In all cases, the output length of HKDF is the same as the block size of the underlying hash function, for example `HKDF-SHA256/256` means HKDF-SHA256 with an output length `L` of 256 bits (32 octets).\"\r\n\r\n\"In all cases...\" is not true anymore, because the output size of HKDF when used in CMS KEMRecipientInfo depends on the key size of the wrap function.  Now you will have to be explicit about the output sizes in the instances where HKDF is used.",
+          "createdAt": "2024-10-18T10:22:15Z",
+          "updatedAt": "2024-10-18T11:39:11Z",
+          "comments": [
+            {
+              "originalPosition": 47,
+              "body": "General comment: Throughout the document, instead of saying \"Composite KEM\", should you say \"Composite ML-KEM\"?",
+              "createdAt": "2024-10-18T10:22:16Z",
+              "updatedAt": "2024-10-18T11:23:56Z"
+            },
+            {
+              "originalPosition": 49,
+              "body": "```suggestion\r\nAll recommendations for using Composite ML-KEM in CMS are fully aligned with the use of ML-KEM in CMS {{I-D.ietf-lamps-cms-kyber}}.\r\n```",
+              "createdAt": "2024-10-18T10:22:55Z",
+              "updatedAt": "2024-10-18T11:23:56Z"
+            },
+            {
+              "originalPosition": 53,
+              "body": "```suggestion\r\nWhen Composite ML-KEM is employed for a recipient, the RecipientInfo alternative for that recipient MUST be OtherRecipientInfo using the KEMRecipientInfo structure as defined in {{RFC9629}}.\r\n```",
+              "createdAt": "2024-10-18T10:23:15Z",
+              "updatedAt": "2024-10-18T11:23:56Z"
+            },
+            {
+              "originalPosition": 61,
+              "body": "```suggestion\r\n> kem identifies the KEM algorithm; it MUST contain one of the Composite ML-KEM identifiers listed in {{sec-alg-ids}}.\r\n```",
+              "createdAt": "2024-10-18T10:25:42Z",
+              "updatedAt": "2024-10-18T11:23:56Z"
+            },
+            {
+              "originalPosition": 65,
+              "body": "```suggestion\r\n> kdf identifies the key-derivation algorithm. Note that the Key Derivation Function (KDF) used for CMS RecipientInfo process MAY be different than the KDF used within the Composite ML-KEM algorithm or one of its components.\r\n```",
+              "createdAt": "2024-10-18T10:27:00Z",
+              "updatedAt": "2024-10-18T11:23:56Z"
+            },
+            {
+              "originalPosition": 69,
+              "body": "```suggestion\r\n> ukm is an optional random input to the key-derivation function. Composite ML-KEM doesn't place any requirements on the ukm contents.\r\n```",
+              "createdAt": "2024-10-18T10:27:17Z",
+              "updatedAt": "2024-10-18T11:23:56Z"
+            },
+            {
+              "originalPosition": 119,
+              "body": "```suggestion\r\n### Components for Composite ML-KEM in CMS\r\n```",
+              "createdAt": "2024-10-18T10:28:22Z",
+              "updatedAt": "2024-10-18T11:23:56Z"
+            },
+            {
+              "originalPosition": 121,
+              "body": "```suggestion\r\nA compliant implementation MUST support the following algorithms combinations for the KEMRecipientInfo kdf and wrap fields when the corresponding Composite ML-KEM algorithm is listed in the KEMRecipientInfo kem field. The KDFs listed below align with the KDF used internally for the KEM combiner. An implementation MAY also support other key-derivation functions and other key-encryption algorithms within CMS KEMRecipientInfo.\r\n```",
+              "createdAt": "2024-10-18T10:28:40Z",
+              "updatedAt": "2024-10-18T11:23:56Z"
+            },
+            {
+              "originalPosition": 121,
+              "body": "I'm making a bunch of theses \"CompositeML-KEM\" -> \"Composite ML-KEM\" suggestions.  I've only found \"CompositeML-KEM\" in the edits for this PR, not elsewhere in the file.  Maybe \"CompositeML-KEM\" is what you want (I don't think it should be; what's a \"CompositeML\"?), but either way it should be consistent throughout the document.  I think all instances of \"Composite KEM\" should be changed to \"Composite ML-KEM\".",
+              "createdAt": "2024-10-18T10:30:46Z",
+              "updatedAt": "2024-10-18T11:23:56Z"
+            },
+            {
+              "originalPosition": 143,
+              "body": "```suggestion\r\n* `id-aes*-wrap` are defined in [RFC3394].\r\n```",
+              "createdAt": "2024-10-18T10:38:56Z",
+              "updatedAt": "2024-10-18T11:23:56Z"
+            },
+            {
+              "originalPosition": 134,
+              "body": "```suggestion\r\n| id-MLKEM768-RSA2048               | id-alg-hkdf-with-sha256 | id-aes128-wrap     |\r\n| id-MLKEM768-RSA3072               | id-alg-hkdf-with-sha256 | id-aes128-wrap     |\r\n| id-MLKEM768-RSA4096               | id-alg-hkdf-with-sha256 | id-aes128-wrap     |\r\n| id-MLKEM768-X25519                | id-sha3-256             | id-aes128-wrap     |\r\n| id-MLKEM768-ECDH-P384             | id-alg-hkdf-with-sha384 | id-aes256-wrap     |\r\n| id-MLKEM768-ECDH-brainpoolP256r1  | id-alg-hkdf-with-sha384 | id-aes256-wrap     |\r\n| id-MLKEM1024-ECDH-P384            | id-sha3-512             | id-aes256-wrap     |\r\n| id-MLKEM1024-ECDH-brainpoolP384r1 | id-sha3-512             | id-aes256-wrap     |\r\n| id-MLKEM1024-X448                 | id-sha3-512             | id-aes256-wrap     |\r\n```",
+              "createdAt": "2024-10-18T10:39:29Z",
+              "updatedAt": "2024-10-18T11:23:56Z"
+            },
+            {
+              "originalPosition": 134,
+              "body": "RFC 3394 doesn't capitalize the W in id-aesXXX-wrap.",
+              "createdAt": "2024-10-18T10:40:12Z",
+              "updatedAt": "2024-10-18T11:23:56Z"
+            },
+            {
+              "originalPosition": 129,
+              "body": "id-sha3-256/512 is not a KDF that can be used by KEMRecipientInfo. RFC 9629 requires the KDF to take IKM, L and info parameters.  A straight SHA3 invocation doesn't take info or length parameters.\r\n\r\nYour options are id-alg-hkdf-with-sha3-256 or id-kmac128.\r\n\r\nIf you use KMAC, you can steal section 2.2.2 of draft-ietf-lamps-cms-kyber-04 as a parallel for your \"Use of the HKDF-based Key Derivation Function\" section: https://datatracker.ietf.org/doc/html/draft-ietf-lamps-cms-kyber-04#section-2.2.2\r\n\r\nIf you use HKDF with SHA3, change the \"HKDF may be used with different hash functions...\" paragraph of the \"Use of the HKDF-based Key Derivation Function\" section to mention SHA3 and HKDF with SHA3 identifiers.",
+              "createdAt": "2024-10-18T10:57:14Z",
+              "updatedAt": "2024-10-18T11:23:56Z"
+            },
+            {
+              "originalPosition": 130,
+              "body": "Per table 3 of https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-57pt1r5.pdf, I don't believe that SHA-384 and SHA3-512 are necessary (although perhaps you're matching with the internal Composite ML-KEM KDF.\r\n\r\nSHA-256/SHA3-256/KMAC128 all have >= 256 bits of (2nd) preimage resistance, which is what's needed for a KDF.  Collision resistance isn't needed , there SHA-256, etc have only 128 bits of security.\r\n\r\nBy this same logic, your KEM Combiner KDFs can also be reduced to use only SHA-256 and SHA3-256 instead of any higher variants.",
+              "createdAt": "2024-10-18T11:11:42Z",
+              "updatedAt": "2024-10-18T11:23:56Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO86Ny0xU",
+          "commit": {
+            "abbreviatedOid": "e07ee99"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-10-18T20:22:22Z",
+          "updatedAt": "2024-10-18T20:22:22Z",
+          "comments": [
+            {
+              "originalPosition": 47,
+              "body": "Good suggestion. I'll do that.",
+              "createdAt": "2024-10-18T20:22:22Z",
+              "updatedAt": "2024-10-18T20:22:22Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO86N05-E",
+          "commit": {
+            "abbreviatedOid": "e07ee99"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-10-19T13:51:13Z",
+          "updatedAt": "2024-10-19T13:51:13Z",
+          "comments": [
+            {
+              "originalPosition": 129,
+              "body": "Oh rats, that's a really good point. Ok. So I can't *fully* align this with the internal hash function used within the KEM combiner. Of course it needs to have the API of a real KDF.",
+              "createdAt": "2024-10-19T13:51:13Z",
+              "updatedAt": "2024-10-19T13:51:13Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO86N1F-N",
+          "commit": {
+            "abbreviatedOid": "e07ee99"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-10-19T14:34:50Z",
+          "updatedAt": "2024-10-19T14:34:50Z",
+          "comments": [
+            {
+              "originalPosition": 129,
+              "body": "Very helpful, thanks.",
+              "createdAt": "2024-10-19T14:34:50Z",
+              "updatedAt": "2024-10-19T14:34:50Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO86N1F-o",
+          "commit": {
+            "abbreviatedOid": "e07ee99"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-10-19T14:34:59Z",
+          "updatedAt": "2024-10-19T14:35:00Z",
+          "comments": [
+            {
+              "originalPosition": 130,
+              "body": "Very helpful, thanks.",
+              "createdAt": "2024-10-19T14:34:59Z",
+              "updatedAt": "2024-10-19T14:35:00Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO86N1LVu",
+          "commit": {
+            "abbreviatedOid": "6ddb734"
+          },
+          "author": "danvangeest",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-10-19T15:06:59Z",
+          "updatedAt": "2024-10-19T15:29:49Z",
+          "comments": [
+            {
+              "originalPosition": 74,
+              "body": "Something's wrong here and I'm not sure what you're trying to say.  Per Table 3, KMAC128 has 128 bits of preimage resistance, not >= 256.  And KMAC hasn't even been brought up yet in this document, so if you're just referring to the KDFs in #tab-kem-algs, remove the mention of KMAC and say they all provider 258 bits of security, not 128.",
+              "createdAt": "2024-10-19T15:06:59Z",
+              "updatedAt": "2024-10-19T15:29:49Z"
+            },
+            {
+              "originalPosition": 74,
+              "body": "And I realize the issue, in one of my previous comments I said that KMAC-128 was one of your options.  I should have said KMAC-256, sorry.  I was confusing KMAC-128 with SHAKE128/256, which does have 256 bits of security.  But per table 3 of SP.800-57pt1r5, KMAC128 has 128 bits and KMAC256 has 256 bits.  Since you're only using ML-KEM-768 and up, KMAC256 makes sense.",
+              "createdAt": "2024-10-19T15:15:50Z",
+              "updatedAt": "2024-10-19T15:29:49Z"
+            },
+            {
+              "originalPosition": 97,
+              "body": "Per my comment above, all this (and the table below) should be KMAC256 instead of KMAC128.",
+              "createdAt": "2024-10-19T15:17:02Z",
+              "updatedAt": "2024-10-19T15:29:49Z"
+            },
+            {
+              "originalPosition": 131,
+              "body": "I can't figure out the logic in the choice between KMAC and HKDF in this table. In particular, sometimes ECDH is paired with HKDF and sometimes it's paired with KMAC.\r\n\r\nDoesn't the same logic from cms-kyber apply here - implementations might not have SHA3 at the CMS level, so that's why we use HKDF-with-SHA2 everywhere?\r\n\r\nI realize that in my previous review I said your options here were KMAC vs HKDF-with-SHA3, but I clearly didn't look at the pairings closely enough to realize I didn't understand why things were paired as they were. ",
+              "createdAt": "2024-10-19T15:28:16Z",
+              "updatedAt": "2024-10-19T15:29:49Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO86N2Eq_",
+          "commit": {
+            "abbreviatedOid": "6ddb734"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-10-19T22:18:48Z",
+          "updatedAt": "2024-10-19T22:18:48Z",
+          "comments": [
+            {
+              "originalPosition": 131,
+              "body": "Hi @danvangeest,\r\n\r\nThe choices have been debated to death on the LAMPS and OpenPGP mailing lists. I have tried to provide some kind of coherent explanation in the very next section \"## Rationale for choices\", so let me know if that doesn't make sense, but the truth is that I can't really defend the choices beyond that I'm trying to balance about 15 conflicting opinions on the mailing list, and while I'm never going to make everyone happy, this set seems to be some kind of global minimum in how much I get yelled at.\r\n\r\n\r\nThe main things I'm trying to align against are:\r\n\r\n1. X-Wing (draft-connolly-cfrg-xwing-kem-04) uses SHA3-256, so our id-MLKEM768-X25519 should do the same.\r\n2. openpgp uses SHA3-256 for all combinations -- https://datatracker.ietf.org/doc/html/draft-ietf-openpgp-pqc-04#name-key-combiner -- Russ has been adamant that these two drafts align as much as possible.\r\n3. Some people want SHA2 combinations, so I somewhat arbitrarily decided to make the ML-KEM768's (except X-Wing) use SHA2, and the ML-KEM1024's use SHA3. This is supposed to be some kind of compromise instead of just 2x\u2019ing the list to provide every combination with both SHA2 and SHA3.\r\n\r\nI guess the test will be if anyone says that the NEED ML-KEM1024 with SHA2, in which case I'll have to ask the LAMPS mailing list whether Objective 2 should be completely thrown out the window in order to satisfy Objective 3, or if I should just 2x the list.",
+              "createdAt": "2024-10-19T22:18:48Z",
+              "updatedAt": "2024-10-19T22:24:45Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO86N2GRL",
+          "commit": {
+            "abbreviatedOid": "6ddb734"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-10-19T22:37:48Z",
+          "updatedAt": "2024-10-19T22:37:48Z",
+          "comments": [
+            {
+              "originalPosition": 74,
+              "body": "Oh I see my mistake.\r\n\r\nSP.800-56pt1r5 Table 3: I didn't read carefully enough. SHA-256 and SHA3-256 are equivalent to KMAC128 when you need collision resistance, but are equivalent to KMAC256 when you only need (2nd) pre-image resistance. Thanks.",
+              "createdAt": "2024-10-19T22:37:48Z",
+              "updatedAt": "2024-10-19T22:37:48Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO86N2HJD",
+          "commit": {
+            "abbreviatedOid": "6ddb734"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-10-19T22:42:00Z",
+          "updatedAt": "2024-10-19T22:42:00Z",
+          "comments": [
+            {
+              "originalPosition": 74,
+              "body": "Done.",
+              "createdAt": "2024-10-19T22:42:00Z",
+              "updatedAt": "2024-10-19T22:42:01Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO86N2HPK",
+          "commit": {
+            "abbreviatedOid": "6ddb734"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-10-19T22:42:12Z",
+          "updatedAt": "2024-10-19T22:42:12Z",
+          "comments": [
+            {
+              "originalPosition": 97,
+              "body": "Done.",
+              "createdAt": "2024-10-19T22:42:12Z",
+              "updatedAt": "2024-10-19T22:42:12Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 80,
+      "id": "PR_kwDOKRPFO85_IUFT",
+      "title": "Public key ASN.1 re-work and Private key compression",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/80",
+      "state": "MERGED",
+      "author": "johngray-dev",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "First text for key format changes.  The ASN.1 module still needs to be updated.",
+      "createdAt": "2024-10-18T17:30:48Z",
+      "updatedAt": "2024-10-20T01:33:12Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "15f90210a93cddb819ddb3195322968426d9e910",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "59-PublicPrivateKeyCompression",
+      "headRefOid": "5f8dc4c6d894ceba31d86b254a0806bac8da8134",
+      "closedAt": "2024-10-20T01:33:12Z",
+      "mergedAt": "2024-10-20T01:33:12Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "db1bcb0f2495cb6375fd35aa58c7918008f13646"
+      },
+      "comments": [],
       "reviews": []
     }
   ]
