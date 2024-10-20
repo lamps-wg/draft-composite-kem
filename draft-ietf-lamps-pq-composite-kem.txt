@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 22 April 2025                                           M. Pala
+Expires: 23 April 2025                                           M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                         19 October 2024
+                                                         20 October 2024
 
 
 Composite ML-KEM for Use in the Internet X.509 Public Key Infrastructure
@@ -63,7 +63,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 22 April 2025.
+   This Internet-Draft will expire on 23 April 2025.
 
 Copyright Notice
 
@@ -656,26 +656,58 @@ Table of Contents
    The following ASN.1 Information Object Class is a template to be used
    in defining all Composite ML-KEM public key types.
 
-   pk-CompositeKEM {
-     OBJECT IDENTIFIER:id, FirstPublicKeyType,
-     SecondPublicKeyType} PUBLIC-KEY ::=
-     {
-       IDENTIFIER id
-       KEY SEQUENCE {
-        BIT STRING (CONTAINING FirstPublicKeyType)
-        BIT STRING (CONTAINING SecondPublicKeyType)
-       }
-       PARAMS ARE absent
-       CERT-KEY-USAGE { keyEncipherment }
-     }
+   RsaCompositeKEMPublicKey ::= SEQUENCE {
+           firstPublicKey BIT STRING (ENCODED BY id-raw-key),
+           secondPublicKey BIT STRING (CONTAINING RSAPublicKey)
+         }
 
-   As an example, the public key type pk-MLKEM512-ECDH-P256 is defined
+   EcCompositeKEMPublicKey ::= SEQUENCE {
+           firstPublicKey BIT STRING (ENCODED BY id-raw-key),
+           secondPublicKey BIT STRING (CONTAINING ECPoint)
+         }
+
+   EdCompositeKEMPublicKey ::= SEQUENCE {
+           firstPublicKey BIT STRING (ENCODED BY id-raw-key),
+           secondPublicKey BIT STRING (CONTAINING id-raw-key)
+         }
+
+   id-raw-key is defined by this document.  It signifies that the public
+   key has no ASN.1 wrapping and the raw bits are placed here according
+   to the encoding of the underlying algorithm specification.  In some
+   situations and protocols, the key might be wrapped in ASN.1 or may
+   have some other additional decoration or encoding.  If so, such
+   wrapping MUST be removed prior to encoding the key itself as a BIT
+   STRING.
+
+   This structure is intentionally generic in the first public key slot
+   since ML-KEM, as defined in [I-D.ietf-lamps-kyber-certificates], does
+   not define any ASN.1 public key structures.  For use with this
+   document, the firstPublicKey MUST be the BIT STRING representation of
+   an ML-KEM key as specified in [I-D.ietf-lamps-kyber-certificates].
+   Note that here we used BIT STRING rather than OCTET STRING so that
+   these keys can be trivially transcoded into a SubjectPublicKeyInfo as
+   necessary, for example when a crypto library requires this for
+   invoking the component algorithm.  The public key for Edwards curve
+   DH component is also encoded as a raw key.
+
+   The following ASN.1 Information Object Class is defined to then allow
+   for compact definitions of each composite algorithm.
+
+     pk-CompositeKEM {OBJECT IDENTIFIER:id, PublicKeyType}
+       PUBLIC-KEY ::= {
+         IDENTIFIER id
+         KEY PublicKeyType
+         PARAMS ARE absent
+         CERT-KEY-USAGE { keyEncipherment }
+       }
+
+   As an example, the public key type pk-MLKEM768-ECDH-P384 is defined
    as:
 
-   pk-MLKEM512-ECDH-P256 PUBLIC-KEY ::=
+   pk-MLKEM768-ECDH-P384 PUBLIC-KEY ::=
      pk-CompositeKEM {
-       id-MLKEM512-ECDH-P256,
-       OCTET STRING, ECPoint }
+       id-MLKEM768-ECDH-P384,
+       EcCompositeKemPublicKey }
 
    The full set of key types defined by this specification can be found
    in the ASN.1 Module in Section 7.
@@ -712,53 +744,57 @@ Table of Contents
 
    Use cases that require an inter-operable encoding for composite
    private keys, such as when private keys are carried in PKCS #12
-   [RFC7292], CMP [RFC4210] or CRMF [RFC4211] MUST use the following
-   structure.
+   [RFC7292], CMP [RFC4210] or CRMF [RFC4211] MUST use the
+   OneAsymmetricKey [RFC5958] structure into which the privateKey field
+   contains the CompositeKEMPrivateKey:
 
-   CompositeKEMPrivateKey ::= SEQUENCE SIZE (2) OF OneAsymmetricKey
+    OneAsymmetricKey ::= SEQUENCE {
+          version                   Version,
+          privateKeyAlgorithm       PrivateKeyAlgorithmIdentifier,
+          privateKey                PrivateKey,
+          attributes            [0] Attributes OPTIONAL,
+          ...,
+          [[2: publicKey        [1] PublicKey OPTIONAL ]],
+          ...
+        }
 
-   Each element is a OneAsymmetricKey [RFC5958] object for a component
-   private key.
+     ...
+     PrivateKey ::= OCTET STRING
+                           -- Content varies based on type of key.  The
+                           -- algorithm identifier dictates the format of
+                           -- the key.
 
-   The parameters field MUST be absent.
+   CompositeKEMPrivateKey ::= SEQUENCE SIZE (2) OF OCTET STRING
 
-   The order of the component keys is the same as the order defined in
-   Section 3.2 for the components of CompositeKEMPublicKey.
+   Each element of the CompositeKEMPrivateKey Sequence is an OCTET
+   STRING representing the PrivateKey for each component algorithm in
+   the same order defined in Section 3.2 for the components of
+   CompositeKEMPublicKey.
 
-   Often, a CompositePrivateKey will be carried within a carrier format
-   such as PKCS#8 which is itself a OneAsymmetricKey structure (version
-   1 of which is also known as PrivateKeyInfo) [RFC5958], then a
-   situation arises where we have CompositeKEMPrivateKey ::= SEQUENCE
-   SIZE (2) OF OneAsymmetricKey inside another OneAsymmetricKey.  On the
-   outer OneAsymmetricKey, the privateKeyAlgorithm field SHALL be set to
-   the corresponding composite algorithm identifier defined according to
-   Section 5, the privateKey field SHALL contain the
-   CompositeKEMPrivateKey, and the publicKey field MUST NOT be present.
-   As discussed in Appendix C.3, the ML-KEM private key encoding already
-   includes a copy of the public key, so the publicKey field of the
-   first OneAsymmetricKey remains OPTIONAL.  However, the public key of
-   the traditional component, RSA or Elliptic Curve, is required as
-   input to the KEM Combiner function, and is not typically carried
-   within an RSA or Elliptic Curve private key.  Therefore the publicKey
-   field of the second OneAsymmetricKey MUST contain the corresponding
-   public key.  See Appendix C.3 for more discussion.  Which
-   AlgorithmIDs to place into the component OneAsymmetricKeys is
-   ambiguous; since
-   OneAsymmetricKey.PrivateKeyAlgorithmIdentifier.AlgorithmID is not
-   optional, producers MUST place something here and MAY either
-   duplicate the composite AlgorithmID into both components, or MAY
-   place the AlgorithmID of the component algorithm.  Parsers SHOULD
-   ignore the component private key AlgorithmIDs and assume that the
-   private keys are in the same order as specified in Table 2.
+   When a CompositeKEMPrivateKey is conveyed inside a OneAsymmetricKey
+   structure (version 1 of which is also known as PrivateKeyInfo)
+   [RFC5958], the privateKeyAlgorithm field SHALL be set to the
+   corresponding composite algorithm identifier defined according to
+   Section 5 and its parameters field MUST be absent.  The privateKey
+   field SHALL contain the CompositeKEMPrivateKey, and the publicKey
+   field MAY be present.
 
-   In some use-cases the private keys that comprise a composite key may
+   In some usecases the private keys that comprise a composite key may
    not be represented in a single structure or even be contained in a
    single cryptographic module; for example if one component is within
    the FIPS boundary of a cryptographic module and the other is not; see
-   Appendix C.1 for more discussion.  The establishment of
-   correspondence between public keys in a CompositeKEMPublicKey and
-   private keys not represented in a single composite structure is
-   beyond the scope of this document.
+   {sec-fips} for more discussion.  The establishment of correspondence
+   between public keys in a CompositeKEMPublicKey and private keys not
+   represented in a single composite structure is beyond the scope of
+   this document.
+
+   Some applications may need to reconstruct the OneAsymmetricKey
+   objects corresponding to each component private key.  Section 5
+   provides the necessary mapping between composite and their component
+   algorithms for doing this reconstruction.
+
+   Component keys of a CompositeKEMPrivateKey MUST NOT be used in any
+   other type of key or as a standalone key.
 
 3.4.  Encoding Rules
 
@@ -769,7 +805,8 @@ Table of Contents
    When an octet string is required, the DER encoding of the composite
    data structure SHALL be used directly.
 
-   CompositeKEMPublicKeyOs ::= OCTET STRING (CONTAINING CompositeKEMPublicKey ENCODED BY der)
+   CompositeKEMPublicKeyOs ::= OCTET STRING
+                     (CONTAINING CompositeKEMPublicKey ENCODED BY der)
 
    When a bit string is required, the octets of the DER encoded
    composite data structure SHALL be used as the bits of the bit string,
@@ -777,7 +814,8 @@ Table of Contents
    bit, and so on, ending with the least significant bit of the last
    octet becoming the last bit of the bit string.
 
-   CompositeKEMPublicKeyBs ::= BIT STRING (CONTAINING CompositeKEMPublicKey ENCODED BY der)
+   CompositeKEMPublicKeyBs ::= BIT STRING
+                   (CONTAINING CompositeKEMPublicKey ENCODED BY der)
 
 3.5.  Key Usage Bits
 
@@ -1361,7 +1399,7 @@ Table of Contents
    CompositeKEMPublicKeyBs ::= BIT STRING (CONTAINING
                                    CompositeKEMPublicKey ENCODED BY der)
 
-   CompositeKEMPrivateKey ::= SEQUENCE SIZE (2) OF OneAsymmetricKey
+   CompositeKEMPrivateKey ::= SEQUENCE SIZE (2) OF OCTET STRING
 
    CompositeCiphertextValue ::= SEQUENCE SIZE (2) OF OCTET STRING
 
@@ -1392,7 +1430,8 @@ Table of Contents
        CERT-KEY-USAGE { keyEncipherment }
      }
 
-   kema-CompositeKEM {OBJECT IDENTIFIER:id,
+   kema-CompositeKEM {
+     OBJECT IDENTIFIER:id,
        PUBLIC-KEY:publicKeyType }
        KEM-ALGORITHM ::= {
             IDENTIFIER id
@@ -1400,7 +1439,7 @@ Table of Contents
             PARAMS ARE absent
             PUBLIC-KEYS { publicKeyType }
             SMIME-CAPS { IDENTIFIED BY id }
-         }
+           }
 
 
 
@@ -1416,13 +1455,13 @@ Table of Contents
 
    pk-MLKEM768-RSA2048 PUBLIC-KEY ::=
      pk-CompositeKEM {
-       id-MLKEM512-RSA2048,
+       id-MLKEM768-RSA2048,
        RsaCompositeKemPublicKey }
 
    kema-MLKEM768-RSA2048 KEM-ALGORITHM ::=
        kema-CompositeKEM{
-         id-MLKEM512-RSA2048,
-         pk-MLKEM512-RSA2048 }
+         id-MLKEM768-RSA2048,
+         pk-MLKEM768-RSA2048 }
 
 
 
@@ -1433,13 +1472,13 @@ Table of Contents
 
    pk-MLKEM768-RSA3072 PUBLIC-KEY ::=
      pk-CompositeKEM {
-       id-MLKEM512-RSA3072,
+       id-MLKEM768-RSA3072,
        RsaCompositeKemPublicKey }
 
    kema-MLKEM768-RSA3072 KEM-ALGORITHM ::=
        kema-CompositeKEM{
-         id-MLKEM512-RSA3072,
-         pk-MLKEM512-RSA3072 }
+         id-MLKEM768-RSA3072,
+         pk-MLKEM768-RSA3072 }
 
 
 
@@ -1561,17 +1600,15 @@ Table of Contents
    --
 
    SMimeCaps SMIME-CAPS ::=
-       { kema-MLKEM512-ECDH-P256-KMAC128.&smimeCaps |
-         kema-MLKEM512-ECDH-brainpoolP256r1-KMAC128.&smimeCaps |
-         kema-MLKEM512-X25519-KMAC128.&smimeCaps |
-         kema-MLKEM512-RSA2048-KMAC128.&smimeCaps |
-         kema-MLKEM512-RSA3072-KMAC128.&smimeCaps |
-         kema-MLKEM768-ECDH-P256-KMAC256.&smimeCaps |
-         kema-MLKEM768-ECDH-brainpoolP256r1-KMAC256.&smimeCaps |
-         kema-MLKEM768-X25519-KMAC256.&smimeCaps |
-         kema-MLKEM1024-ECDH-P384-KMAC256.&smimeCaps |
-         kema-MLKEM1024-ECDH-brainpoolP384r1-KMAC256.&smimeCaps |
-         kema-MLKEM1024-X448-KMAC256.&smimeCaps,
+       { kema-MLKEM768-RSA2048.&smimeCaps |
+         kema-MLKEM768-RSA3072.&smimeCaps |
+         kema-MLKEM768-RSA4096.&smimeCaps |
+         kema-MLKEM768-ECDH-P384.&smimeCaps |
+         kema-MLKEM768-ECDH-brainpoolP256r1.&smimeCaps |
+         kema-MLKEM768-X25519.&smimeCaps |
+         kema-MLKEM1024-ECDH-P384.&smimeCaps |
+         kema-MLKEM1024-ECDH-brainpoolP384r1.&smimeCaps |
+         kema-MLKEM1024-X448.&smimeCaps,
          ... }
 
    END
