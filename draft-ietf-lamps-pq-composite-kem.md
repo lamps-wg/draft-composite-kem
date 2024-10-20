@@ -397,17 +397,49 @@ This specification uses the Post-Quantum KEM ML-KEM as specified in [FIPS.203] a
 
 # Composite ML-KEM Functions
 
-### Composite KeyGen
+## Key Generation
 
-The `KeyGen() -> (pk, sk)` of a composite ML-KEM algorithm will perform the `KeyGen()` of the respective component KEM algorithms and it produces a composite public key `pk` as per {{sec-composite-pub-keys}} and a composite secret key `sk` as per {{sec-priv-key}}.
+To generate a new keypair for Composite schemes, the `KeyGen() -> (pk, sk)` function is used. The KeyGen() function calls the two key generation functions of the component algorithms for the Composite keypair in no particular order. Multi-process or multi-threaded applications might choose to execute the key generation functions in parallel for better key generation performance.
+
+The following process is used to generate composite keypair values:
 
 ~~~
-CompositeKEM.KeyGen():
-  (compositePK[0], compositeSK[0]) = MLKEM.KeyGen()
-  (compositePK[1], compositeSK[1]) = TradKEM.KeyGen()
+KeyGen() -> (pk, sk)
 
-  return (compositePK, compositeSK)
+Explicit Inputs:
+     None
+
+Implicit Input:
+  ML-KEM     A placeholder for the specific ML-KEM algorithm and
+             parameter set to use, for example, could be "ML-KEM-65".
+
+  Trad       A placeholder for the specific traditional algorithm and
+             parameter set to use, for example "RSA-OAEP"
+             or "X25519".
+
+Output:
+  (pk, sk)  The composite keypair.
+
+Function KeyGen():
+
+  (mldsaPK, mldsaSK) <- ML-DSA.KeyGen()
+  (tradPK, tradSK) <- Trad.KeyGen()
+
+  if NOT (mldsaPK, mldsaSK) or NOT (tradPK, tradSK):
+    // Component key generation failure
+    output "Key generation error"
+
+  pk <- CompositeSignaturePublicKey(mldsaPK, tradPK)
+  sk <- CompositeSignaturePrivateKey(mldsaSK, tradSK)
+
+  return (pk, sk)
+
 ~~~
+{: #alg-composite-keygen title="Composite KeyGen(pk, sk)"}
+
+The structures CompositeSignaturePublicKey and CompositeSignaturePrivateKey are described in {{sec-composite-pub-keys}} and {{sec-priv-key}} respectively.
+
+In order to ensure fresh keys, the key generation functions MUST be executed for both component algorithms. Compliant parties MUST NOT use or import component keys that are used in other contexts, combinations, or by themselves as keys for standalone algorithm use.
 
 ### Promotion of RSA-OAEP into a KEM {#sec-RSAOAEPKEM}
 
