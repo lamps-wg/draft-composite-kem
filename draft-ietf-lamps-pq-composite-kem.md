@@ -254,33 +254,36 @@ Interop-affecting changes:
 * Fixed a bug in the definition of the Encaps() functions: KEMs, according to both RFC9180 and FIPS 203 should always return (ss, ct), but we had (ct, ss).
 * Interoperable composite private key format requires component public keys (because public keys are required for decapsulation).
 * Specified that the tradCT and tradPK inputs to the KEM combiner must be the raw values without the OCTET STRING wrapper.
+* Adjusted RSA-OAEP section to follow RFC8017 instead of RFC3560. Does not use the RSA-OAEP label.
+* Aligning algorithm list with LAMPS WG on-list discussions and draft-openpgp-pqc
+  * ML-KEM-768 aligned with P-384 as per Quynh's OpenPGP presentation: https://datatracker.ietf.org/meeting/120/materials/slides-120-openpgp-pqc-with-nist-and-brainpool-curves
+  * Removing ML-KEM-512 combinations as per Sophie's recommendation: https://mailarchive.ietf.org/arch/msg/spasm/khasPf3y0_-Lq_0NtJe92unUw6o/
+* Specified some options to use HKDF-SHA2, and some to use SHA3 / KMAC to facilitate implementations that do not have easy access to SHA3 outside the ML-KEM module.
+* All levels now use 256-bit KDFs, to match ML-KEM's 256-bit shared secret key.
+* Tweaks to combiner function, thanks to Quynh and authors of draft-ietf-openpgp-PQC:
+  * Removed the `counter`.
+  * Un-twisted `tradSS || mlkemSS` to `mlkemSS || tradSS` as you would expect (thanks Quynh for pointing that this is allowed).
+  * Simplified to use 256-bit hashes at all security levels (HKDF-SHA256, SHA3-256, KMAC256), which matches ML-KEM's 256 bit shared secret key at all levels.
+* Updated prototype OIDs and domain separators to reflect that this version is not compatible with previous version.
+
 
 Editorial changes:
 
 * Added an Implementation Consideration section explaining why private keys need to contain the public keys.
 * Added a security consideration about key reuse.
 * Added security considerations about SHA3-vs-HKDF-SHA2 and a warning against generifying this construction to other combinations of ciphers.
-
-
-* Fixed a bug in the definition of the Encap() functions: KEMs, according to both RFC9180 and FIPS 203 should always return (ss, ct), but we had (ct, ss).
-* Adjusted RSA-OAEP section to follow RFC8017 instead of RFC3560. Does not use the RSA-OAEP label.
-* Aligning algorithm list with LAMPS WG on-list discussions and draft-openpgp-pqc
-  * ML-KEM-768 aligned with P-384 as per Quynh's OpenPGP presentation: https://datatracker.ietf.org/meeting/120/materials/slides-120-openpgp-pqc-with-nist-and-brainpool-curves
-  * Removing ML-KEM-512 combinations as per Sophie's recommendation: https://mailarchive.ietf.org/arch/msg/spasm/khasPf3y0_-Lq_0NtJe92unUw6o/
-* Specified some options to use HKDF-SHA2, and some to use SHA3 to facilitate implementations that do not have easy access to SHA3 outside the ML-KEM module.
-* Tweaks to combiner function, thanks to Quynh and authors of draft-ietf-openpgp-PQC:
-  * Removed the `counter`.
-  * Un-twisted `tradSS || mlkemSS` to `mlkemSS || tradSS` as you would expect (thanks Quynh for pointing that this is allowed).
-  * Simplified to use 256-bit hashes at all security levels (HKDF-SHA256, SHA3-256, KMAC256), which matches ML-KEM's 256 bit shared secret key at all levels.
 * Enhanced the section about how to get this FIPS-certified.
-* Updated OIDs and domain separators.
-* ASN.1 module fixes (thanks Russ).
+* ASN.1 module fixes (thanks Russ and Carl).
+  * Renamed the module from Composite-KEM-2023 -> Composite-MLDSA-2024
+  * Simplified the ASN.1 module to make it more compiler-friendly (thanks Carl!) -- should not affect wire encodings.
 
 
 Still to do in a future version:
 
- - `[ ]` We need PEM samples … hackathon? OQS friends? David @ BC? The right format for samples is probably to follow the hackathon ... a Dilithium or ECDSA trust anchor certificate, a composite KEM end entity certificate, and a CMS EnvelopedData sample encrypted for that composite KEM certificate.
- - `[ ]` Open question: do we need to include the ECDH, X25519, X448, and RSA public keys in the KDF? X-Wing does, but previous versions of this spec do not. In general existing ECC and RSA hardware decrypter implementations might not know their own public key.
+- `[ ]` Wait for NIST SP 800-227 to make sure KEM combiner aligns, and update the section explaining how to get this FIPS-certified.
+- `[ ]` We need PEM samples … hackathon? OQS friends? David @ BC? The right format for samples is probably to follow the hackathon ... a Dilithium or ECDSA trust anchor certificate, a composite KEM end entity certificate, and a CMS EnvelopedData sample encrypted for that composite KEM certificate.
+- `[ ]` Open question: do we need to include the ECDH, X25519, X448, and RSA public keys in the KDF? X-Wing does, but previous versions of this spec do not. In general existing ECC and RSA hardware decrypter implementations might not know their own public key.
+- `[ ]` Other outstanding github issues: https://github.com/lamps-wg/draft-composite-kem/issues
 
 
 # Introduction {#sec-intro}
