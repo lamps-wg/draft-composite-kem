@@ -701,13 +701,13 @@ Table of Contents
          CERT-KEY-USAGE { keyEncipherment }
        }
 
-   As an example, the public key type pk-MLKEM512-ECDH-P256 is defined
+   As an example, the public key type pk-MLKEM768-ECDH-P384 is defined
    as:
 
-   pk-MLKEM512-ECDH-P256 PUBLIC-KEY ::=
-     pk-CompositeKEM{
-       id-MLKEM512-ECDH-P256,
-       EcCompositeKEMPublicKey}
+   pk-MLKEM768-ECDH-P384 PUBLIC-KEY ::=
+     pk-CompositeKEM {
+       id-MLKEM768-ECDH-P384,
+       EcCompositeKemPublicKey }
 
    The full set of key types defined by this specification can be found
    in the ASN.1 Module in Section 7.
@@ -805,7 +805,8 @@ Table of Contents
    When an octet string is required, the DER encoding of the composite
    data structure SHALL be used directly.
 
-   CompositeKEMPublicKeyOs ::= OCTET STRING (CONTAINING CompositeKEMPublicKey ENCODED BY der)
+   CompositeKEMPublicKeyOs ::= OCTET STRING
+                     (CONTAINING CompositeKEMPublicKey ENCODED BY der)
 
    When a bit string is required, the octets of the DER encoded
    composite data structure SHALL be used as the bits of the bit string,
@@ -813,7 +814,8 @@ Table of Contents
    bit, and so on, ending with the least significant bit of the last
    octet becoming the last bit of the bit string.
 
-   CompositeKEMPublicKeyBs ::= BIT STRING (CONTAINING CompositeKEMPublicKey ENCODED BY der)
+   CompositeKEMPublicKeyBs ::= BIT STRING
+                   (CONTAINING CompositeKEMPublicKey ENCODED BY der)
 
 3.5.  Key Usage Bits
 
@@ -1428,15 +1430,15 @@ Table of Contents
        CERT-KEY-USAGE { keyEncipherment }
      }
 
-   kema-CompositeKEM {OBJECT IDENTIFIER:id,
+   kema-CompositeKEM {
+     OBJECT IDENTIFIER:id,
        PUBLIC-KEY:publicKeyType }
        KEM-ALGORITHM ::= {
             IDENTIFIER id
             VALUE CompositeCiphertextValue
             PARAMS ARE absent
             PUBLIC-KEYS { publicKeyType }
-            SMIME-CAPS { IDENTIFIED BY id }
-         }
+           }
 
 
 

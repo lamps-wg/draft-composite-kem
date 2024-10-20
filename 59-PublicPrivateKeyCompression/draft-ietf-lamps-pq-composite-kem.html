@@ -1841,13 +1841,13 @@ may have some other additional decoration or encoding. If so, such wrapping MUST
     }
 </pre><a href="#section-3.1-6" class="pilcrow">¶</a>
 </div>
-<p id="section-3.1-7">As an example, the public key type <code>pk-MLKEM512-ECDH-P256</code> is defined as:<a href="#section-3.1-7" class="pilcrow">¶</a></p>
+<p id="section-3.1-7">As an example, the public key type <code>pk-MLKEM768-ECDH-P384</code> is defined as:<a href="#section-3.1-7" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-3.1-8">
 <pre>
-pk-MLKEM512-ECDH-P256 PUBLIC-KEY ::=
-  pk-CompositeKEM{
-    id-MLKEM512-ECDH-P256,
-    EcCompositeKEMPublicKey}
+pk-MLKEM768-ECDH-P384 PUBLIC-KEY ::=
+  pk-CompositeKEM {
+    id-MLKEM768-ECDH-P384,
+    EcCompositeKemPublicKey }
 </pre><a href="#section-3.1-8" class="pilcrow">¶</a>
 </div>
 <p id="section-3.1-9">The full set of key types defined by this specification can be found in the ASN.1 Module in <a href="#sec-asn1-module" class="auto internal xref">Section 7</a>.<a href="#section-3.1-9" class="pilcrow">¶</a></p>
@@ -1916,13 +1916,15 @@ CompositeKEMPrivateKey ::= SEQUENCE SIZE (2) OF OCTET STRING
 <p id="section-3.4-2">When an octet string is required, the DER encoding of the composite data structure SHALL be used directly.<a href="#section-3.4-2" class="pilcrow">¶</a></p>
 <div class="lang-ASN.1 sourcecode" id="section-3.4-3">
 <pre>
-CompositeKEMPublicKeyOs ::= OCTET STRING (CONTAINING CompositeKEMPublicKey ENCODED BY der)
+CompositeKEMPublicKeyOs ::= OCTET STRING
+                  (CONTAINING CompositeKEMPublicKey ENCODED BY der)
 </pre><a href="#section-3.4-3" class="pilcrow">¶</a>
 </div>
 <p id="section-3.4-4">When a bit string is required, the octets of the DER encoded composite data structure SHALL be used as the bits of the bit string, with the most significant bit of the first octet becoming the first bit, and so on, ending with the least significant bit of the last octet becoming the last bit of the bit string.<a href="#section-3.4-4" class="pilcrow">¶</a></p>
 <div class="lang-ASN.1 sourcecode" id="section-3.4-5">
 <pre>
-CompositeKEMPublicKeyBs ::= BIT STRING (CONTAINING CompositeKEMPublicKey ENCODED BY der)
+CompositeKEMPublicKeyBs ::= BIT STRING
+                (CONTAINING CompositeKEMPublicKey ENCODED BY der)
 </pre><a href="#section-3.4-5" class="pilcrow">¶</a>
 </div>
 </section>
@@ -2617,15 +2619,15 @@ pk-CompositeKEM {OBJECT IDENTIFIER:id, PublicKeyType}
     CERT-KEY-USAGE { keyEncipherment }
   }
 
-kema-CompositeKEM {OBJECT IDENTIFIER:id,
+kema-CompositeKEM {
+  OBJECT IDENTIFIER:id,
     PUBLIC-KEY:publicKeyType }
     KEM-ALGORITHM ::= {
          IDENTIFIER id
          VALUE CompositeCiphertextValue
          PARAMS ARE absent
          PUBLIC-KEYS { publicKeyType }
-         SMIME-CAPS { IDENTIFIED BY id }
-      }
+        }
 
 
 
