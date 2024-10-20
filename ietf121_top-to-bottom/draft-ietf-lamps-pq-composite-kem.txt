@@ -85,7 +85,7 @@ Table of Contents
      2.2.  Composite Design Philosophy
    3.  Overview of the Composite ML-KEM Scheme
    4.  Composite ML-KEM Functions
-     4.1.  Composite KeyGen
+     4.1.  Key Generation
        4.1.1.  Promotion of RSA-OAEP into a KEM
        4.1.2.  Promotion of ECDH into a KEM
        4.1.3.  KEM Combiner
@@ -428,18 +428,57 @@ Table of Contents
 
 4.  Composite ML-KEM Functions
 
-4.1.  Composite KeyGen
+4.1.  Key Generation
 
-   The KeyGen() -> (pk, sk) of a composite ML-KEM algorithm will perform
-   the KeyGen() of the respective component KEM algorithms and it
-   produces a composite public key pk as per Section 5.2 and a composite
-   secret key sk as per Section 5.3.
+   To generate a new keypair for Composite schemes, the KeyGen() -> (pk,
+   sk) function is used.  The KeyGen() function calls the two key
+   generation functions of the component algorithms for the Composite
+   keypair in no particular order.  Multi-process or multi-threaded
+   applications might choose to execute the key generation functions in
+   parallel for better key generation performance.
 
-   CompositeKEM.KeyGen():
-     (compositePK[0], compositeSK[0]) = MLKEM.KeyGen()
-     (compositePK[1], compositeSK[1]) = TradKEM.KeyGen()
+   The following process is used to generate composite keypair values:
 
-     return (compositePK, compositeSK)
+   KeyGen() -> (pk, sk)
+
+   Explicit Inputs:
+        None
+
+   Implicit Input:
+     ML-KEM     A placeholder for the specific ML-KEM algorithm and
+                parameter set to use, for example, could be "ML-KEM-65".
+
+     Trad       A placeholder for the specific traditional algorithm and
+                parameter set to use, for example "RSA-OAEP"
+                or "X25519".
+
+   Output:
+     (pk, sk)  The composite keypair.
+
+   Function KeyGen():
+
+     (mldsaPK, mldsaSK) <- ML-DSA.KeyGen()
+     (tradPK, tradSK) <- Trad.KeyGen()
+
+     if NOT (mldsaPK, mldsaSK) or NOT (tradPK, tradSK):
+       // Component key generation failure
+       output "Key generation error"
+
+     pk <- CompositeSignaturePublicKey(mldsaPK, tradPK)
+     sk <- CompositeSignaturePrivateKey(mldsaSK, tradSK)
+
+     return (pk, sk)
+
+                     Figure 1: Composite KeyGen(pk, sk)
+
+   The structures CompositeSignaturePublicKey and
+   CompositeSignaturePrivateKey are described in Section 5.2 and
+   Section 5.3 respectively.
+
+   In order to ensure fresh keys, the key generation functions MUST be
+   executed for both component algorithms.  Compliant parties MUST NOT
+   use or import component keys that are used in other contexts,
+   combinations, or by themselves as keys for standalone algorithm use.
 
 4.1.1.  Promotion of RSA-OAEP into a KEM
 
@@ -531,7 +570,7 @@ Table of Contents
 
      return KDF(mlkemSS || tradSS || tradCT || tradPK || domSep)
 
-                Figure 1: Generic KEM combiner construction
+                Figure 2: Generic KEM combiner construction
 
    where:
 

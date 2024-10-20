@@ -1173,7 +1173,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
             <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-composite-ml-kem-functions" class="internal xref">Composite ML-KEM Functions</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1">
-                <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="auto internal xref">4.1</a>.  <a href="#name-composite-keygen" class="internal xref">Composite KeyGen</a></p>
+                <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="auto internal xref">4.1</a>.  <a href="#name-key-generation" class="internal xref">Key Generation</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1.2.1">
                     <p id="section-toc.1-1.4.2.1.2.1.1"><a href="#section-4.1.1" class="auto internal xref">4.1.1</a>.  <a href="#name-promotion-of-rsa-oaep-into-" class="internal xref">Promotion of RSA-OAEP into a KEM</a></p>
@@ -1619,21 +1619,55 @@ but <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span> uses <code
       <h2 id="name-composite-ml-kem-functions">
 <a href="#section-4" class="section-number selfRef">4. </a><a href="#name-composite-ml-kem-functions" class="section-name selfRef">Composite ML-KEM Functions</a>
       </h2>
-<div id="composite-keygen">
+<div id="key-generation">
 <section id="section-4.1">
-        <h3 id="name-composite-keygen">
-<a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-composite-keygen" class="section-name selfRef">Composite KeyGen</a>
+        <h3 id="name-key-generation">
+<a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-key-generation" class="section-name selfRef">Key Generation</a>
         </h3>
-<p id="section-4.1-1">The <code>KeyGen() -&gt; (pk, sk)</code> of a composite ML-KEM algorithm will perform the <code>KeyGen()</code> of the respective component KEM algorithms and it produces a composite public key <code>pk</code> as per <a href="#sec-composite-pub-keys" class="auto internal xref">Section 5.2</a> and a composite secret key <code>sk</code> as per <a href="#sec-priv-key" class="auto internal xref">Section 5.3</a>.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-4.1-2">
+<p id="section-4.1-1">To generate a new keypair for Composite schemes, the <code>KeyGen() -&gt; (pk, sk)</code> function is used. The KeyGen() function calls the two key generation functions of the component algorithms for the Composite keypair in no particular order. Multi-process or multi-threaded applications might choose to execute the key generation functions in parallel for better key generation performance.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
+<p id="section-4.1-2">The following process is used to generate composite keypair values:<a href="#section-4.1-2" class="pilcrow">¶</a></p>
+<span id="name-composite-keygenpk-sk"></span><div id="alg-composite-keygen">
+<figure id="figure-1">
+          <div class="alignLeft art-text artwork" id="section-4.1-3.1">
 <pre>
-CompositeKEM.KeyGen():
-  (compositePK[0], compositeSK[0]) = MLKEM.KeyGen()
-  (compositePK[1], compositeSK[1]) = TradKEM.KeyGen()
+KeyGen() -&gt; (pk, sk)
 
-  return (compositePK, compositeSK)
-</pre><a href="#section-4.1-2" class="pilcrow">¶</a>
+Explicit Inputs:
+     None
+
+Implicit Input:
+  ML-KEM     A placeholder for the specific ML-KEM algorithm and
+             parameter set to use, for example, could be "ML-KEM-65".
+
+  Trad       A placeholder for the specific traditional algorithm and
+             parameter set to use, for example "RSA-OAEP"
+             or "X25519".
+
+Output:
+  (pk, sk)  The composite keypair.
+
+Function KeyGen():
+
+  (mldsaPK, mldsaSK) &lt;- ML-DSA.KeyGen()
+  (tradPK, tradSK) &lt;- Trad.KeyGen()
+
+  if NOT (mldsaPK, mldsaSK) or NOT (tradPK, tradSK):
+    // Component key generation failure
+    output "Key generation error"
+
+  pk &lt;- CompositeSignaturePublicKey(mldsaPK, tradPK)
+  sk &lt;- CompositeSignaturePrivateKey(mldsaSK, tradSK)
+
+  return (pk, sk)
+
+</pre>
 </div>
+<figcaption><a href="#figure-1" class="selfRef">Figure 1</a>:
+<a href="#name-composite-keygenpk-sk" class="selfRef">Composite KeyGen(pk, sk)</a>
+          </figcaption></figure>
+</div>
+<p id="section-4.1-4">The structures CompositeSignaturePublicKey and CompositeSignaturePrivateKey are described in <a href="#sec-composite-pub-keys" class="auto internal xref">Section 5.2</a> and <a href="#sec-priv-key" class="auto internal xref">Section 5.3</a> respectively.<a href="#section-4.1-4" class="pilcrow">¶</a></p>
+<p id="section-4.1-5">In order to ensure fresh keys, the key generation functions MUST be executed for both component algorithms. Compliant parties MUST NOT use or import component keys that are used in other contexts, combinations, or by themselves as keys for standalone algorithm use.<a href="#section-4.1-5" class="pilcrow">¶</a></p>
 <div id="sec-RSAOAEPKEM">
 <section id="section-4.1.1">
           <h4 id="name-promotion-of-rsa-oaep-into-">
@@ -1703,7 +1737,7 @@ DHKEM.Decap(skR, enc):
 <p id="section-4.1.3-1">TODO: as per https://www.enisa.europa.eu/publications/post-quantum-cryptography-integration-study section 4.2, might need to specify behaviour in light of KEMs with a non-zero failure probability.<a href="#section-4.1.3-1" class="pilcrow">¶</a></p>
 <p id="section-4.1.3-2">The KEM combiner construction is as follows:<a href="#section-4.1.3-2" class="pilcrow">¶</a></p>
 <span id="name-generic-kem-combiner-constr"></span><div id="code-generic-kem-combiner">
-<figure id="figure-1">
+<figure id="figure-2">
             <div class="alignLeft art-text artwork" id="section-4.1.3-3.1">
 <pre>
 Combiner(mlkemSS, tradSS, tradCT, tradPK, domSep) :
@@ -1711,7 +1745,7 @@ Combiner(mlkemSS, tradSS, tradCT, tradPK, domSep) :
   return KDF(mlkemSS || tradSS || tradCT || tradPK || domSep)
 </pre>
 </div>
-<figcaption><a href="#figure-1" class="selfRef">Figure 1</a>:
+<figcaption><a href="#figure-2" class="selfRef">Figure 2</a>:
 <a href="#name-generic-kem-combiner-constr" class="selfRef">Generic KEM combiner construction</a>
             </figcaption></figure>
 </div>
