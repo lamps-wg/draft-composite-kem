@@ -623,7 +623,7 @@ In order to maintain security properties of the composite, applications that use
 
 ## CompositeKEMPrivateKey {#sec-priv-key}
 
-Use cases that require an inter-operable encoding for composite private keys, such as when private keys are carried in PKCS #12 [RFC7292], CMP [RFC4210] or CRMF [RFC4211] MUST use the OneAsymmetricKey [RFC5958] structure into which the privateKey field contains the CompositeSignaturePrivateKey:
+Use cases that require an inter-operable encoding for composite private keys, such as when private keys are carried in PKCS #12 [RFC7292], CMP [RFC4210] or CRMF [RFC4211] MUST use the OneAsymmetricKey [RFC5958] structure into which the privateKey field contains the CompositeKEMPrivateKey:
 
 ~~~ ASN.1
  OneAsymmetricKey ::= SEQUENCE {
