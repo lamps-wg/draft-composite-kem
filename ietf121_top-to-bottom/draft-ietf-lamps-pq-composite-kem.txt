@@ -101,9 +101,10 @@ Table of Contents
      6.1.  kema-CompositeKEM
      6.2.  CompositeCiphertextValue
    7.  Algorithm Identifiers
-     7.1.  Rationale for choices
-     7.2.  Domain Separators
-     7.3.  RSA-OAEP Parameters
+     7.1.  Composite-ML-KEM Algorithm Identifiers
+     7.2.  Rationale for choices
+     7.3.  Domain Separators
+     7.4.  RSA-OAEP Parameters
    8.  Use in CMS
      8.1.  RecipientInfo Conventions
      8.2.  Underlying Components
@@ -131,23 +132,24 @@ Table of Contents
      12.1.  Normative References
      12.2.  Informative References
    Appendix A.  Samples
-   Appendix B.  Fixed Component Algorithm Identifiers
-     B.1.  ML-KEM-512
-     B.2.  ML-KEM-768
-     B.3.  ML-KEM-1024
-     B.4.  RSA - all sizes
-     B.5.  ECDH NIST-P-384
-     B.6.  ECDH BP-256
-     B.7.  ECDH BP-384
-     B.8.  X25519
-     B.9.  X448
-   Appendix C.  Implementation Considerations
-     C.1.  FIPS Certification
-       C.1.1.  FIPS certification of Combiner Function
-     C.2.  Backwards Compatibility
-     C.3.  Decapsulation Requires the Public Key
-   Appendix D.  Intellectual Property Considerations
-   Appendix E.  Contributors and Acknowledgments
+   Appendix B.  Component Algorithm Reference
+   Appendix C.  Fixed Component Algorithm Identifiers
+     C.1.  ML-KEM-512
+     C.2.  ML-KEM-768
+     C.3.  ML-KEM-1024
+     C.4.  RSA - all sizes
+     C.5.  ECDH NIST-P-384
+     C.6.  ECDH BP-256
+     C.7.  ECDH BP-384
+     C.8.  X25519
+     C.9.  X448
+   Appendix D.  Implementation Considerations
+     D.1.  FIPS Certification
+       D.1.1.  FIPS certification of Combiner Function
+     D.2.  Backwards Compatibility
+     D.3.  Decapsulation Requires the Public Key
+   Appendix E.  Intellectual Property Considerations
+   Appendix F.  Contributors and Acknowledgments
    Authors' Addresses
 
 1.  Changes in version -05
@@ -315,7 +317,7 @@ Table of Contents
    Concrete instantiations of composite ML-KEM algorithms are provided
    based on ML-KEM, RSA-OAEP and ECDH.  Backwards compatibility is not
    directly covered in this document, but is the subject of
-   Appendix C.2.
+   Appendix D.2.
 
    Composite ML-KEM is intended for general applicability anywhere that
    key establishment or enveloped content encryption is used within PKIX
@@ -451,7 +453,7 @@ Table of Contents
    so there is no need to also utilize the component domain separators.
 
    The value of ss_len as well as the RSA-OAEP parameters used within
-   this specification can be found in Section 7.3.
+   this specification can be found in Section 7.4.
 
    Decap(sk, ct) -> ss is accomplished in the analogous way.
 
@@ -528,12 +530,12 @@ Table of Contents
       curve or RSA).
 
    *  Domain is the DER encoded value of the object identifier of the
-      Composite ML-KEM algorithm as listed in Section 7.2.
+      Composite ML-KEM algorithm as listed in Section 7.3.
 
    *  || represents concatenation.
 
    Each registered Composite ML-KEM algorithm specifies the choice of
-   KDF andDomain to be used in Section 7 and Section 7.2 below.  Given
+   KDF andDomain to be used in Section 7 and Section 7.3 below.  Given
    that each Composite ML-KEM algorithm fully specifies the component
    algorithms, including for example the size of the RSA modulus, all
    inputs to the KEM combiner are fixed-size and thus do not require
@@ -543,7 +545,7 @@ Table of Contents
 
    The construction of the KEM combiner has implications for security,
    discussed in Section 11.1, and for FIPS-certifiability, discussed in
-   Appendix C.1.
+   Appendix D.1.
 
 3.4.  Decapsulation failure
 
@@ -1018,14 +1020,15 @@ Table of Contents
 7.  Algorithm Identifiers
 
    This table summarizes the list of Composite ML-KEM algorithms and
-   lists the OID, two component algorithms, and the combiner function.
+   lists the OID, two component algorithms, and the KDF to be used
+   within combiner function.  Domain separator values are defined below
+   in Section 7.3.
 
-   EDNOTE: The OID referenced are TBD and MUST be used only for
-   prototyping and replaced with the final IANA-assigned OIDs.
-
-   TODO: OIDs to be replaced by IANA.
+   EDNOTE: these are prototyping OIDs to be replaced by IANA.
 
    <CompKEM>.1 is equal to 2.16.840.1.114027.80.5.2.1
+
+7.1.  Composite-ML-KEM Algorithm Identifiers
 
    +=================+============+=========+===============+==========+
    |Composite ML-KEM |OID         |First    |Second         |KDF       |
@@ -1063,36 +1066,16 @@ Table of Contents
 
                     Table 2: Composite ML-KEM key types
 
-   Full specifications for the referenced algorithms can be found as
-   follows:
+   For the use of HKDF [RFC5869]: a salt is not provided; ie the default
+   salt (all zeroes of length HashLen) will be used.  The output length
+   of HKDF is the same as the block size of the underlying hash
+   function; in particular, HKDF-SHA256/256 means HKDF-SHA256 with an
+   output length L of 256 bits (32 octets).
 
-   *  _ECDH_: There does not appear to be a single IETF definition of
-      ECDH, so we refer to the following:
+   Full specifications for the referenced algorithms can be found in
+   Appendix B.
 
-      -  _ECDH NIST_: SHALL be Elliptic Curve Cryptography Cofactor
-         Diffie-Hellman (ECC CDH) as defined in section 5.7.1.2 of
-         [SP.800-56Ar3].
-
-      -  _ECDH BSI / brainpool_: SHALL be Elliptic Curve Key Agreement
-         algorithm (ECKA) as defined in section 4.3.1 of [BSI-ECC]
-
-   *  _ML-KEM_: [I-D.ietf-lamps-kyber-certificates] and [FIPS.203]
-
-   *  _RSA-OAEP_: [RFC8017]
-
-   *  _X25519 / X448_: [RFC8410]
-
-   *  _HKDF_: [RFC5869].  Salt is not provided; ie the default salt (all
-      zeroes of length HashLen) will be used.  The output length of HKDF
-      is the same as the block size of the underlying hash function; in
-      particular, HKDF-SHA256/256 means HKDF-SHA256 with an output
-      length L of 256 bits (32 octets).
-
-   *  _SHA2_: [FIPS.180-4]
-
-   *  _SHA3_: [FIPS.202]
-
-7.1.  Rationale for choices
+7.2.  Rationale for choices
 
    *  Pair equivalent levels.
 
@@ -1119,7 +1102,7 @@ Table of Contents
    for a KDF to provide 128 bits of security, as allowed in Table 3 of
    [SP.800-57pt1r5].
 
-7.2.  Domain Separators
+7.3.  Domain Separators
 
    The KEM combiner defined in section Section 3.3 requires a domain
    separator Domain input.  The following table shows the HEX-encoded
@@ -1157,7 +1140,7 @@ Table of Contents
    allocation of these OIDs so that we can re-compute the domain
    separators over the final OIDs.
 
-7.3.  RSA-OAEP Parameters
+7.4.  RSA-OAEP Parameters
 
    Use of RSA-OAEP [RFC8017] within id-MLKEM768-RSA2048, id-
    MLKEM768-RSA3072, and id-MLKEM768-RSA4096 requires additional
@@ -2084,6 +2067,11 @@ Table of Contents
               (CRL) Profile", RFC 5280, DOI 10.17487/RFC5280, May 2008,
               <https://www.rfc-editor.org/info/rfc5280>.
 
+   [RFC5480]  Turner, S., Brown, D., Yiu, K., Housley, R., and T. Polk,
+              "Elliptic Curve Cryptography Subject Public Key
+              Information", RFC 5480, DOI 10.17487/RFC5480, March 2009,
+              <https://www.rfc-editor.org/info/rfc5480>.
+
    [RFC5652]  Housley, R., "Cryptographic Message Syntax (CMS)", STD 70,
               RFC 5652, DOI 10.17487/RFC5652, September 2009,
               <https://www.rfc-editor.org/info/rfc5652>.
@@ -2096,6 +2084,11 @@ Table of Contents
    [RFC5958]  Turner, S., "Asymmetric Key Packages", RFC 5958,
               DOI 10.17487/RFC5958, August 2010,
               <https://www.rfc-editor.org/info/rfc5958>.
+
+   [RFC6234]  Eastlake 3rd, D. and T. Hansen, "US Secure Hash Algorithms
+              (SHA and SHA-based HMAC and HKDF)", RFC 6234,
+              DOI 10.17487/RFC6234, May 2011,
+              <https://www.rfc-editor.org/info/rfc6234>.
 
    [RFC8017]  Moriarty, K., Ed., Kaliski, B., Jonsson, J., and A. Rusch,
               "PKCS #1: RSA Cryptography Specifications Version 2.2",
@@ -2127,6 +2120,13 @@ Table of Contents
               Cryptographic Message Syntax (CMS)", RFC 9629,
               DOI 10.17487/RFC9629, August 2024,
               <https://www.rfc-editor.org/info/rfc9629>.
+
+   [SP.800-185]
+              National Institute of Standards and Technology (NIST),
+              "SHA-3 Derived Functions: cSHAKE, KMAC, TupleHash, and
+              ParallelHash", December 2016,
+              <https://nvlpubs.nist.gov/nistpubs/SpecialPublications/
+              NIST.SP.800-185.pdf>.
 
    [SP.800-56Ar3]
               National Institute of Standards and Technology (NIST),
@@ -2306,7 +2306,62 @@ Appendix A.  Samples
 
    TBD
 
-Appendix B.  Fixed Component Algorithm Identifiers
+Appendix B.  Component Algorithm Reference
+
+   This section provides references to the full specification of the
+   algorithms used in the composite constructions.
+
+     +=====================+========================+===============+
+     | Component Signature | OID                    | Specification |
+     | Algorithm ID        |                        |               |
+     +=====================+========================+===============+
+     | id-ML-KEM-768       | 2.16.840.1.101.3.4.4.2 | [FIPS.203]    |
+     +---------------------+------------------------+---------------+
+     | id-ML-KEM-1024      | 2.16.840.1.101.3.4.4.3 | [FIPS.203]    |
+     +---------------------+------------------------+---------------+
+     | id-X25519           | 1.3.101.110            | [RFC8410]     |
+     +---------------------+------------------------+---------------+
+     | id-X448             | 1.3.101.111            | [RFC8410]     |
+     +---------------------+------------------------+---------------+
+     | id-ecDH             | 1.3.132.1.12           | [RFC5480]     |
+     +---------------------+------------------------+---------------+
+     | id-RSAES-OAEP       | 1.2.840.113549.1.1.7   | [RFC8017]     |
+     +---------------------+------------------------+---------------+
+
+        Table 6: Component Encryption Algorithms used in Composite
+                              Constructions
+
+       +==================+=======================+===============+
+       | Elliptic CurveID | OID                   | Specification |
+       +==================+=======================+===============+
+       | secp256r1        | 1.2.840.10045.3.1.7   | [RFC6090]     |
+       +------------------+-----------------------+---------------+
+       | secp384r1        | 1.3.132.0.34          | [RFC6090]     |
+       +------------------+-----------------------+---------------+
+       | brainpoolP256r1  | 1.3.36.3.3.2.8.1.1.7  | [RFC5639]     |
+       +------------------+-----------------------+---------------+
+       | brainpoolP384r1  | 1.3.36.3.3.2.8.1.1.11 | [RFC5639]     |
+       +------------------+-----------------------+---------------+
+
+         Table 7: Elliptic Curves used in Composite Constructions
+
+   +=======================+============================+=============+
+   |HashID                 | OID                        |Specification|
+   +=======================+============================+=============+
+   |id-sha256              | 2.16.840.1.101.3.4.2.1     |[RFC6234]    |
+   +-----------------------+----------------------------+-------------+
+   |id-sha512              | 2.16.840.1..101.3.4.2.3    |[RFC6234]    |
+   +-----------------------+----------------------------+-------------+
+   |id-alg-hkdf-with-sha256| 1.2.840.113549.1.9.16.3.28 |[RFC8619]    |
+   +-----------------------+----------------------------+-------------+
+   |id-sha3-256            | 2.16.840.1.101.3.4.2.8     |[FIPS.202]   |
+   +-----------------------+----------------------------+-------------+
+   |id-KMAC128             | 2.16.840.1.101.3.4.2.21    |[SP.800-185] |
+   +-----------------------+----------------------------+-------------+
+
+         Table 8: Hash algorithms used in Composite Constructions
+
+Appendix C.  Fixed Component Algorithm Identifiers
 
    The following sections list explicitly the DER encoded
    AlgorithmIdentifier that MUST be used when reconstructing
@@ -2316,7 +2371,7 @@ Appendix B.  Fixed Component Algorithm Identifiers
    public key BIT STRING should be taken directly from the respective
    component of the CompositeKEMPublicKey.
 
-B.1.  ML-KEM-512
+C.1.  ML-KEM-512
 
    ASN.1:
 
@@ -2328,7 +2383,7 @@ B.1.  ML-KEM-512
 
      30 0B 06 07 60 86 48 01 65 04 01
 
-B.2.  ML-KEM-768
+C.2.  ML-KEM-768
 
    ASN.1:
 
@@ -2340,7 +2395,7 @@ B.2.  ML-KEM-768
 
      30 0B 06 07 60 86 48 01 65 04 02
 
-B.3.  ML-KEM-1024
+C.3.  ML-KEM-1024
 
    ASN.1:
 
@@ -2352,7 +2407,7 @@ B.3.  ML-KEM-1024
 
      30 0B 06 07 60 86 48 01 65 04 03
 
-B.4.  RSA - all sizes
+C.4.  RSA - all sizes
 
    ASN.1:
 
@@ -2377,7 +2432,7 @@ B.4.  RSA - all sizes
 
  30 4D 06 09 2A 86 48 86 F7 0D 01 01 07 30 40 A0 0F 30 0D 06 09 60 86 48 01 65 03 04 02 01 05 00 A1 1C 30 1A 06 09 2A 86 48 86 F7 0D 01 01 08 30 0D 06 09 60 86 48 01 65 03 04 02 01 05 00 A2 0F 30 0D 06 09 2A 86 48 86 F7 0D 01 01 09 04 00
 
-B.5.  ECDH NIST-P-384
+C.5.  ECDH NIST-P-384
 
    ASN.1:
 
@@ -2394,7 +2449,7 @@ B.5.  ECDH NIST-P-384
 
      30 10 06 07 2A 86 48 CE 3D 02 01 06 05 2B 81 04 00 22
 
-B.6.  ECDH BP-256
+C.6.  ECDH BP-256
 
    ASN.1:
 
@@ -2411,7 +2466,7 @@ B.6.  ECDH BP-256
 
      30 14 06 07 2A 86 48 CE 3D 02 01 06 09 2B 24 03 03 02 08 01 01 07
 
-B.7.  ECDH BP-384
+C.7.  ECDH BP-384
 
    ASN.1:
 
@@ -2428,7 +2483,7 @@ B.7.  ECDH BP-384
 
      30 14 06 07 2A 86 48 CE 3D 02 01 06 09 2B 24 03 03 02 08 01 01 0B
 
-B.8.  X25519
+C.8.  X25519
 
    ASN.1:
 
@@ -2440,7 +2495,7 @@ B.8.  X25519
 
      30 05 06 03 2B 65 6E
 
-B.9.  X448
+C.9.  X448
 
    ASN.1:
 
@@ -2452,9 +2507,9 @@ B.9.  X448
 
      30 05 06 03 2B 65 6F
 
-Appendix C.  Implementation Considerations
+Appendix D.  Implementation Considerations
 
-C.1.  FIPS Certification
+D.1.  FIPS Certification
 
    TODO -- update this once NIST SP 800-227 is published.
 
@@ -2484,7 +2539,7 @@ C.1.  FIPS Certification
    algorithms which combine FIPS cryptography with cryptography from a
    different national standards body.
 
-C.1.1.  FIPS certification of Combiner Function
+D.1.1.  FIPS certification of Combiner Function
 
    TODO: update this to NIST SP 800-227, once it is published.
 
@@ -2505,7 +2560,7 @@ C.1.1.  FIPS certification of Combiner Function
    The SHA3 options can be certified under SP.800-56Cr2 One-Step Key
    Derivation Option 2: H(x) = HMAC-hash(salt, x) with the salt omitted.
 
-C.2.  Backwards Compatibility
+D.2.  Backwards Compatibility
 
    As noted in the introduction, the post-quantum cryptographic
    migration will face challenges in both ensuring cryptographic
@@ -2531,7 +2586,7 @@ C.2.  Backwards Compatibility
    other standardized and proprietary protocols and applications that
    leverage CMS [RFC5652] encrypted structures.
 
-C.3.  Decapsulation Requires the Public Key
+D.3.  Decapsulation Requires the Public Key
 
    ML-KEM always requires the public key in order to perform various
    steps of the Fujisaki-Okamoto decapsulation [FIPS.203], and for this
@@ -2559,7 +2614,7 @@ C.3.  Decapsulation Requires the Public Key
    in this document in Section 5.2 requires the public key of the
    traditional component to be included.
 
-Appendix D.  Intellectual Property Considerations
+Appendix E.  Intellectual Property Considerations
 
    The following IPR Disclosure relates to this draft:
 
@@ -2568,7 +2623,7 @@ Appendix D.  Intellectual Property Considerations
    EDNOTE TODO: Check with Max Pala whether this IPR actually applies to
    this draft.
 
-Appendix E.  Contributors and Acknowledgments
+Appendix F.  Contributors and Acknowledgments
 
    This document incorporates contributions and comments from a large
    group of experts.  The Editors would especially like to acknowledge
