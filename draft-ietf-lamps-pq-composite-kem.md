@@ -757,7 +757,16 @@ The full set of key types defined by this specification can be found in the ASN.
 
 ## CompositeKEMPrivateKey {#sec-priv-key}
 
-Use cases that require an inter-operable encoding for composite private keys, such as when private keys are carried in PKCS #12 [RFC7292], CMP [RFC4210] or CRMF [RFC4211] MUST use the OneAsymmetricKey [RFC5958] structure into which the privateKey field contains the CompositeKEMPrivateKey:
+When a Composite ML-KEM private key is to be exported from a cryptographic module, it uses an analogous definition to the public keys:
+
+~~~ ASN.1
+CompositeKEMPrivateKey ::= SEQUENCE SIZE (2) OF OCTET STRING
+~~~
+{: artwork-name="CompositeKEMPrivateKey-asn.1-structures"}
+
+Each element of the `CompositeKEMPrivateKey` Sequence is an `OCTET STRING` according to the encoding of the underlying algorithm specification and will decode into the respective private key structures in an analogous way to the public key structures defined in {{sec-composite-pub-keys}}. This document does not provide helper classes for private keys.  The PrivateKey for each component algorithm MUST be in the same order as defined in {{sec-composite-pub-keys}}.
+
+Use cases that require an interoperable encoding for composite private keys will often need to place a `CompositeKEMPrivateKey` inside a `OneAsymmetricKey` structure defined in [RFC5958], such as when private keys are carried in PKCS #12 [RFC7292], CMP [RFC4210] or CRMF [RFC4211]. The definition of `OneAsymmetricKey` is copied here for convenience:
 
 ~~~ ASN.1
  OneAsymmetricKey ::= SEQUENCE {
@@ -778,16 +787,7 @@ Use cases that require an inter-operable encoding for composite private keys, su
 ~~~
 {: artwork-name="RFC5958-OneAsymmetricKey-asn.1-structure"}
 
-~~~ ASN.1
-CompositeKEMPrivateKey ::= SEQUENCE SIZE (2) OF OCTET STRING
-~~~
-{: artwork-name="CompositeKEMPrivateKey-asn.1-structures"}
-
-Each element of the CompositeKEMPrivateKey Sequence is an `OCTET STRING` representing the PrivateKey for each component algorithm in the same order defined in {{sec-composite-pub-keys}} for the components of CompositeKEMPublicKey.
-
-When a `CompositeKEMPrivateKey` is conveyed inside a OneAsymmetricKey structure (version 1 of which is also known as PrivateKeyInfo) [RFC5958], the privateKeyAlgorithm field SHALL be set to the corresponding composite algorithm identifier defined according to {{sec-alg-ids}} and its parameters field MUST be absent.  The privateKey field SHALL contain the CompositeKEMPrivateKey, and the publicKey field MAY be present.
-
-In some usecases the private keys that comprise a composite key may not be represented in a single structure or even be contained in a single cryptographic module; for example if one component is within the FIPS boundary of a cryptographic module and the other is not; see {sec-fips} for more discussion. The establishment of correspondence between public keys in a CompositeKEMPublicKey and private keys not represented in a single composite structure is beyond the scope of this document.
+When a `CompositeKEMPrivateKey` is conveyed inside a OneAsymmetricKey structure (version 1 of which is also known as PrivateKeyInfo) [RFC5958], the privateKeyAlgorithm field SHALL be set to the corresponding composite algorithm identifier defined according to {{sec-alg-ids}} and its parameters field MUST be absent.  The privateKey field SHALL contain the `CompositeKEMPrivateKey`, and the `publicKey` field remains OPTIONAL.  If the `publicKey` field is present, it MUST be a `CompositeSignaturePublicKey`.
 
 Some applications may need to reconstruct the `OneAsymmetricKey` objects corresponding to each component private key. {{sec-alg-ids}} provides the necessary mapping between composite and their component algorithms for doing this reconstruction.
 
