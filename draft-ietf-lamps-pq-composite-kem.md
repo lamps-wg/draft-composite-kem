@@ -78,9 +78,10 @@ normative:
   RFC3394:
   RFC4055:
   RFC5280:
+  RFC5480:
   RFC5652:
-  RFC5869:
   RFC5958:
+  RFC6234:
   RFC8017:
   RFC8174:
   RFC8410:
@@ -119,6 +120,12 @@ normative:
     author:
       org: "National Institute of Standards and Technology (NIST)"
     target: https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-57pt1r5.pdf
+  SP.800-185:
+    title: "SHA-3 Derived Functions: cSHAKE, KMAC, TupleHash, and ParallelHash"
+    date: December 2016
+    author:
+      org: "National Institute of Standards and Technology (NIST)"
+    target: https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-185.pdf
   FIPS.180-4:
     title: "FIPS Publication 180-4: Secure Hash Standard"
     date: August 2015
@@ -470,10 +477,10 @@ where:
 * `tradSS` is the shared secret from the traditional component (elliptic curve or RSA).
 * `tradCT` is the ciphertext from the traditional component (elliptic curve or RSA).
 * `tradPK` is the public key of the traditional component (elliptic curve or RSA).
-* `Domain` is the DER encoded value of the object identifier of the Composite ML-KEM algorithm as listed in {{sec-domain}}.
+* `Domain` is the DER encoded value of the object identifier of the Composite ML-KEM algorithm as listed in {{sec-domsep-values}}.
 * `||` represents concatenation.
 
-Each registered Composite ML-KEM algorithm specifies the choice of `KDF` and`Domain` to be used in {{sec-alg-ids}} and {{sec-domain}} below. Given that each Composite ML-KEM algorithm fully specifies the component algorithms, including for example the size of the RSA modulus, all inputs to the KEM combiner are fixed-size and thus do not require length-prefixing. The `CompositeKEM.Decap()` specified in {{sect-composite-decaps}} adds further error handling to protect the KEM combiner from malicious inputs.
+Each registered Composite ML-KEM algorithm specifies the choice of `KDF` and`Domain` to be used in {{sec-alg-ids}} and {{sec-domsep-values}} below. Given that each Composite ML-KEM algorithm fully specifies the component algorithms, including for example the size of the RSA modulus, all inputs to the KEM combiner are fixed-size and thus do not require length-prefixing. The `CompositeKEM.Decap()` specified in {{sect-composite-decaps}} adds further error handling to protect the KEM combiner from malicious inputs.
 
 The construction of the KEM combiner has implications for security, discussed in {{sec-cons-kem-combiner}}, and for FIPS-certifiability, discussed in {{sec-fips}}.
 
@@ -864,13 +871,13 @@ The order of the component ciphertexts is the same as the order defined in {{sec
 
 # Algorithm Identifiers {#sec-alg-ids}
 
-This table summarizes the list of Composite ML-KEM algorithms and lists the OID, two component algorithms, and the combiner function.
+This table summarizes the list of Composite ML-KEM algorithms and lists the OID, two component algorithms, and the KDF to be used within combiner function. Domain separator values are defined below in {{sec-domsep-values}}.
 
-EDNOTE: The OID referenced are TBD and MUST be used only for prototyping and replaced with the final IANA-assigned OIDs.
-
-TODO: OIDs to be replaced by IANA.
+EDNOTE: these are prototyping OIDs to be replaced by IANA.
 
 &lt;CompKEM&gt;.1 is equal to 2.16.840.1.114027.80.5.2.1
+
+## Composite-ML-KEM Algorithm Identifiers
 
 | Composite ML-KEM Algorithm         | OID                  | First Algorithm | Second Algorithm     | KDF      |
 |---------                           | -----------------    | ----------      | ----------           | -------- |
@@ -885,17 +892,9 @@ TODO: OIDs to be replaced by IANA.
 | id-MLKEM1024-X448                  | &lt;CompKEM&gt;.29   | MLKEM1024       | X448                 | SHA3-256 |
 {: #tab-kem-algs title="Composite ML-KEM key types"}
 
-Full specifications for the referenced algorithms can be found as follows:
+For the use of HKDF [RFC5869]: a salt is not provided; ie the default salt (all zeroes of length HashLen) will be used. The output length of HKDF is the same as the block size of the underlying hash function; in particular, `HKDF-SHA256/256` means HKDF-SHA256 with an output length `L` of 256 bits (32 octets).
 
-* _ECDH_: There does not appear to be a single IETF definition of ECDH, so we refer to the following:
-  * _ECDH NIST_: SHALL be Elliptic Curve Cryptography Cofactor Diffie-Hellman (ECC CDH) as defined in section 5.7.1.2 of [SP.800-56Ar3].
-  * _ECDH BSI / brainpool_: SHALL be Elliptic Curve Key Agreement algorithm (ECKA) as defined in section 4.3.1 of [BSI-ECC]
-* _ML-KEM_: {{I-D.ietf-lamps-kyber-certificates}} and [FIPS.203]
-* _RSA-OAEP_: [RFC8017]
-* _X25519 / X448_: [RFC8410]
-* _HKDF_: [RFC5869]. Salt is not provided; ie the default salt (all zeroes of length HashLen) will be used. The output length of HKDF is the same as the block size of the underlying hash function; in particular, `HKDF-SHA256/256` means HKDF-SHA256 with an output length `L` of 256 bits (32 octets).
-* _SHA2_: [FIPS.180-4]
-* _SHA3_: [FIPS.202]
+Full specifications for the referenced algorithms can be found in {{appdx_components}}.
 
 
 ## Rationale for choices
@@ -910,7 +909,7 @@ The lower security levels (ie ML-KEM768) are provided with HKDF-SHA2 as the KDF 
 
 While it may seem odd to use 256-bit hash functions at all security levels, this aligns with ML-KEM which produces a 256-bit shared secret key at all security levels. SHA-256 and SHA3-256 both have >= 256 bits of (2nd) preimage resistance, which is the required property for a KDF to provide 128 bits of security, as allowed in Table 3 of {{SP.800-57pt1r5}}.
 
-## Domain Separators {#sec-domain}
+## Domain Separators {#sec-domsep-values}
 
 The KEM combiner defined in section {{sec-kem-combiner}} requires a domain separator `Domain` input.  The following table shows the HEX-encoded domain separator for each Composite ML-KEM AlgorithmID; to use it, the value should be HEX-decoded and used in binary form. The domain separator is simply the DER encoding of the composite algorithm OID.
 
@@ -1240,6 +1239,38 @@ The Composite ML-KEM design specified in this document, and especially that of t
 # Samples {#appdx-samples}
 
 TBD
+
+# Component Algorithm Reference {#appdx_components}
+
+This section provides references to the full specification of the algorithms used in the composite constructions.
+
+| Component Signature Algorithm ID | OID | Specification |
+| ----------- | ----------- | ----------- |
+| id-ML-KEM-768 | 2.16.840.1.101.3.4.4.2 | [FIPS.203] |
+| id-ML-KEM-1024 | 2.16.840.1.101.3.4.4.3 | [FIPS.203] |
+| id-X25519 | 1.3.101.110 | [RFC8410] |
+| id-X448 | 1.3.101.111 | [RFC8410] |
+| id-ecDH | 1.3.132.1.12 | [RFC5480] |
+| id-RSAES-OAEP | 1.2.840.113549.1.1.7 | [RFC8017] |
+{: #tab-component-encr-algs title="Component Encryption Algorithms used in Composite Constructions"}
+
+| Elliptic CurveID | OID | Specification |
+| ----------- | ----------- | ----------- |
+| secp256r1 | 1.2.840.10045.3.1.7 | [RFC6090] |
+| secp384r1 | 1.3.132.0.34 | [RFC6090] |
+| brainpoolP256r1 | 1.3.36.3.3.2.8.1.1.7 | [RFC5639] |
+| brainpoolP384r1 | 1.3.36.3.3.2.8.1.1.11 | [RFC5639] |
+{: #tab-component-curve-algs title="Elliptic Curves used in Composite Constructions"}
+
+| HashID | OID | Specification |
+| ----------- | ----------- | ----------- |
+| id-sha256 | 2.16.840.1.101.3.4.2.1 | [RFC6234] |
+| id-sha512 | 2.16.840.1..101.3.4.2.3 | [RFC6234] |
+| id-alg-hkdf-with-sha256 | 1.2.840.113549.1.9.16.3.28 | [RFC8619] |
+| id-sha3-256 | 2.16.840.1.101.3.4.2.8 | [FIPS.202] |
+| id-KMAC128  | 2.16.840.1.101.3.4.2.21 | [SP.800-185] |
+{: #tab-component-hash title="Hash algorithms used in Composite Constructions"}
+
 
 # Fixed Component Algorithm Identifiers
 
