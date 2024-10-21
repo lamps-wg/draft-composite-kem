@@ -960,7 +960,7 @@ Table of Contents
    data structure SHALL be used directly.
 
    CompositeKEMPublicKeyOs ::= OCTET STRING
-                     (CONTAINING CompositeKEMPublicKey ENCODED BY der)
+                         (CONTAINING CompositeKEMPublicKey ENCODED BY der)
 
    When a bit string is required, the octets of the DER encoded
    composite data structure SHALL be used as the bits of the bit string,
@@ -969,7 +969,11 @@ Table of Contents
    octet becoming the last bit of the bit string.
 
    CompositeKEMPublicKeyBs ::= BIT STRING
-                   (CONTAINING CompositeKEMPublicKey ENCODED BY der)
+                         (CONTAINING CompositeKEMPublicKey ENCODED BY der)
+
+   In the interests of simplicity and avoiding compatibility issues,
+   implementations that parse these structures MAY accept both BER and
+   DER.
 
 5.4.  Key Usage Bits
 
