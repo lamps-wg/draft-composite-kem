@@ -689,9 +689,16 @@ In order to properly achieve its security properties, the KEM combiner requires 
 
 In order to form composite public keys and ciphertext values, we define ASN.1-based composite encodings such that these structures can be used as a drop-in replacement for existing public key and ciphertext fields such as those found in PKCS#10 [RFC2986], CMP [RFC4210], X.509 [RFC5280], CMS [RFC5652].
 
-## pk-CompositeKEM
+## CompositeKEMPublicKey {#sec-composite-pub-keys}
 
-The following ASN.1 structures represent a composite public key combined with an RSA or Elliptic Curve public key.
+The wire encoding of a Composite ML-KEM public key is:
+
+~~~ ASN.1
+CompositeKEMPublicKey ::= SEQUENCE SIZE (2) OF BIT STRING
+~~~
+{: artwork-name="CompositeKEMPublicKey-asn.1-structures"}
+
+Since RSA and ECDH component public keys are themselves in a DER encoding, the following ASN.1 structures show the internal structure of the various public key types used in this specification:
 
 ~~~ ASN.1
 RsaCompositeKEMPublicKey ::= SEQUENCE {
@@ -714,7 +721,13 @@ EdCompositeKEMPublicKey ::= SEQUENCE {
 `id-raw-key` is defined by this document. It signifies that the public key has no ASN.1 wrapping and the raw bits are placed here according to the encoding of the underlying algorithm specification. In some situations and protocols, the key might be wrapped in ASN.1 or
 may have some other additional decoration or encoding. If so, such wrapping MUST be removed prior to encoding the key itself as a BIT STRING.
 
-For use with this document, ML-KEM keys MUST be be the raw BIT STRING representation as specified in {{I-D.ietf-lamps-kyber-certificates}} and Edwards Curve keys MUST be the raw BIT STRING representation as speified in [RFC8410]. Note that here we used BIT STRING rather than OCTET STRING so that these keys can be trivially transcoded into a SubjectPublicKeyInfo as necessary, for example when a crypto library requires this for invoking the component algorithm.
+For use with this document, ML-KEM keys MUST be be the raw BIT STRING representation as specified in {{I-D.ietf-lamps-kyber-certificates}} and Edwards Curve keys MUST be the raw BIT STRING representation as speified in [RFC8410].
+
+Some applications may need to reconstruct the `SubjectPublicKeyInfo` objects corresponding to each component public key. {{tab-kem-algs}} in {{sec-alg-ids}} provides the necessary mapping between composite and their component algorithms for doing this reconstruction. This also motivates the design choice of `SEQUENCE OF BIT STRING` instead of `SEQUENCE OF OCTET STRING`; using `BIT STRING` allows for easier transcription between CompositeKEMPublicKey and SubjectPublicKeyInfo.
+
+When the CompositeKEMPublicKey must be provided in octet string or bit string format, the data structure is encoded as specified in {{sec-encoding-rules}}.
+
+In order to maintain security properties of the composite, applications that use composite keys MUST always perform fresh key generations of both component keys and MUST NOT reuse existing key material. See {{sec-cons-key-reuse}} for a discussion.
 
 The following ASN.1 Information Object Class is defined to allow for compact definitions of each composite algorithm, leading to a smaller overall ASN.1 module.
 
@@ -740,25 +753,6 @@ pk-MLKEM768-ECDH-P384 PUBLIC-KEY ::=
 ~~~
 
 The full set of key types defined by this specification can be found in the ASN.1 Module in {{sec-asn1-module}}.
-
-
-## CompositeKEMPublicKey {#sec-composite-pub-keys}
-
-Composite public key data is represented by the following structure:
-
-~~~ ASN.1
-CompositeKEMPublicKey ::= SEQUENCE SIZE (2) OF BIT STRING
-~~~
-{: artwork-name="CompositeKEMPublicKey-asn.1-structures"}
-
-
-A composite key MUST contain two component public keys as SEQUENCE of two bit strings. The order of the component keys is determined by the definition of the corresponding algorithm identifier as defined in section {{sec-alg-ids}}.
-
-Some applications may need to reconstruct the `SubjectPublicKeyInfo` objects corresponding to each component public key. {{tab-kem-algs}} in {{sec-alg-ids}} provides the necessary mapping between composite and their component algorithms for doing this reconstruction. This also motivates the design choice of `SEQUENCE OF BIT STRING` instead of `SEQUENCE OF OCTET STRING`; using `BIT STRING` allows for easier transcription between CompositeKEMPublicKey and SubjectPublicKeyInfo.
-
-When the CompositeKEMPublicKey must be provided in octet string or bit string format, the data structure is encoded as specified in {{sec-encoding-rules}}.
-
-In order to maintain security properties of the composite, applications that use composite keys MUST always perform fresh key generations of both component keys and MUST NOT reuse existing key material. See {{sec-cons-key-reuse}} for a discussion.
 
 
 ## CompositeKEMPrivateKey {#sec-priv-key}
