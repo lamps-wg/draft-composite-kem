@@ -2142,7 +2142,7 @@ kema-CompositeKEM {
         <h3 id="name-compositeciphertextvalue">
 <a href="#section-6.2" class="section-number selfRef">6.2. </a><a href="#name-compositeciphertextvalue" class="section-name selfRef">CompositeCiphertextValue</a>
         </h3>
-<p id="section-6.2-1">The compositeCipherTextValue is a SEQUENCE of the ciphertexts of the
+<p id="section-6.2-1">The <code>CompositeCipherTextValue</code> is the DER encoing of a SEQUENCE of the ciphertexts from the
 underlying component algorithms.  It is represented in ASN.1 as follows:<a href="#section-6.2-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-6.2-2">
 <pre>
@@ -2150,8 +2150,6 @@ CompositeCiphertextValue ::= SEQUENCE SIZE (2) OF OCTET STRING
 </pre><a href="#section-6.2-2" class="pilcrow">¶</a>
 </div>
 <p id="section-6.2-3">The order of the component ciphertexts is the same as the order defined in <a href="#sec-composite-pub-keys" class="auto internal xref">Section 5.1</a>.<a href="#section-6.2-3" class="pilcrow">¶</a></p>
-<p id="section-6.2-4">Some of the design choices for the combiner, specifically to place <code>tradSS</code> first, and to allow <code>tradCT || tradPK || Domain</code> to be treated together as a FixedInfo block are made for the purposes of compliance with <span>[<a href="#SP.800-56Cr2" class="cite xref">SP.800-56Cr2</a>]</span>; see <a href="#sec-fips" class="auto internal xref">Appendix C.1</a> for more discussion.<a href="#section-6.2-4" class="pilcrow">¶</a></p>
-<p id="section-6.2-5">See <a href="#sec-cons-kem-combiner" class="auto internal xref">Section 11.1</a> for further discussion of the security considerations of this KEM combiner.<a href="#section-6.2-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
