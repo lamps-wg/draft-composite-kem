@@ -281,7 +281,7 @@ Editorial changes:
 * Added security considerations about SHA3-vs-HKDF-SHA2 and a warning against generifying this construction to other combinations of ciphers.
 * Enhanced the section about how to get this FIPS-certified.
 * ASN.1 module fixes (thanks Russ and Carl).
-  * Renamed the module from Composite-KEM-2023 -> Composite-MLDSA-2024
+  * Renamed the module from Composite-KEM-2023 -> Composite-MLKEM-2024
   * Simplified the ASN.1 module to make it more compiler-friendly (thanks Carl!) -- should not affect wire encodings.
 
 
@@ -641,7 +641,7 @@ Implicit inputs:
   ML-KEM   A placeholder for the specific ML-KEM algorithm and
            parameter set to use, for example, could be "ML-KEM-768".
 
-  Trad     A placeholder for the specific ML-DSA algorithm and
+  Trad     A placeholder for the specific traditional algorithm and
            parameter set to use, for example "RSA-OAEP"
            or "X25519".
 
