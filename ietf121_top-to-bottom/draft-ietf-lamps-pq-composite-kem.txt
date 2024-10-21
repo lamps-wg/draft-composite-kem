@@ -333,13 +333,8 @@ Table of Contents
    "cryptographic algorithm" and "cryptographic scheme" given in
    [I-D.ietf-pquip-pqt-hybrid-terminology].
 
-   *CLIENT*: TODO: Remove me, I donet think the term "Client" is
-   actually used in this document.  Any software that is making use of a
-   cryptographic key.  This includes a signer, verifier, encrypter,
-   decrypter.  This is not meant to imply any sort of client-server
-   relationship between the communicating parties. *COMBINER:* A
-   combiner specifies how multiple shared secrets are combined into a
-   single shared secret.
+   *COMBINER:* A combiner specifies how multiple shared secrets are
+   combined into a single shared secret.
 
    *DER:* Distinguished Encoding Rules as defined in [X.690].
 
@@ -2243,7 +2238,7 @@ Table of Contents
 
 Appendix A.  Samples
 
-   TBD
+   TODO
 
 Appendix B.  Component Algorithm Reference
 
