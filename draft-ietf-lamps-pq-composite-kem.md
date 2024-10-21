@@ -966,7 +966,7 @@ All recommendations for using Composite ML-KEM in CMS are fully aligned with the
 
 ## Underlying Components
 
-A compliant implementation MUST support the following algorithm combinations for the KEMRecipientInfo `kdf` and `wrap` fields when the corresponding Composite ML-KEM algorithm is listed in the KEMRecipientInfo `kem` field. The KDFs listed below align with the KDF used internally within the KEM combiner. An implementation MAY also support other key-derivation functions and other key-encryption algorithms within CMS KEMRecipientInfo.
+A compliant implementation MUST support the following algorithm combinations for the KEMRecipientInfo `kdf` and `wrap` fields when the corresponding Composite ML-KEM algorithm is listed in the KEMRecipientInfo `kem` field. The KDFs listed below align with the KDF used internally within the KEM combiner. An implementation MAY also support other key-derivation functions and other key-encryption algorithms within CMS KEMRecipientInfo and SHOULD use algorithms of equivalent strength or greater.
 
 | Composite ML-KEM Algorithm        | KDF                     | Wrap |
 |---------                          | ---                     | ---                |
