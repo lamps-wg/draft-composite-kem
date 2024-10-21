@@ -964,33 +964,27 @@ Composite ML-KEM algorithms MAY be employed for one or more recipients in the CM
 
 All recommendations for using Composite ML-KEM in CMS are fully aligned with the use of ML-KEM in CMS {{I-D.ietf-lamps-cms-kyber}}.
 
-## RecipientInfo Conventions {#sec-using-recipientInfo}
-
-When Composite ML-KEM is employed for a recipient, the RecipientInfo alternative for that recipient MUST be OtherRecipientInfo using the KEMRecipientInfo structure as defined in {{RFC9629}}.
-
-The fields of the KEMRecipientInfo MUST have the following values:
-
-> version is the syntax version number; it MUST be 0.
-
-> rid identifies the recipient's certificate or public key.
-
-> kem identifies the KEM algorithm; it MUST contain one of the Composite ML-KEM identifiers listed in {{sec-alg-ids}}.
-
-> kemct is the ciphertext produced for this recipient.
-
-> kdf identifies the key-derivation algorithm. Note that the Key Derivation Function (KDF) used for CMS RecipientInfo process MAY be different than the KDF used within the Composite ML-KEM algorithm or one of its components.
-
-> kekLength is the size of the key-encryption key in octets.
-
-> ukm is an optional random input to the key-derivation function. ML-KEM doesn't place any requirements on the ukm contents.
-
-> wrap identifies a key-encryption algorithm used to encrypt the content-encryption key.
-
-<!-- End of recipientinfo conventions section -->
-
 ## Underlying Components
 
-When a particular Composite ML-KEM OID is supported, a CMS implementation MUST support the corresponding KDF and key-encryption algorithms listed in {{tab-cms-kdf-wrap}}, which have been chosen to preserve security and performance characteristics of each composite algorithm.
+A compliant implementation MUST support the following algorithm combinations for the KEMRecipientInfo `kdf` and `wrap` fields when the corresponding Composite ML-KEM algorithm is listed in the KEMRecipientInfo `kem` field. The KDFs listed below align with the KDF used internally within the KEM combiner. An implementation MAY also support other key-derivation functions and other key-encryption algorithms within CMS KEMRecipientInfo.
+
+| Composite ML-KEM Algorithm        | KDF                     | Wrap |
+|---------                          | ---                     | ---                |
+| id-MLKEM768-RSA2048               | id-alg-hkdf-with-sha256 | id-aes128-wrap     |
+| id-MLKEM768-RSA3072               | id-alg-hkdf-with-sha256 | id-aes128-wrap     |
+| id-MLKEM768-RSA4096               | id-alg-hkdf-with-sha256 | id-aes128-wrap     |
+| id-MLKEM768-X25519                | id-kmac256              | id-aes128-wrap     |
+| id-MLKEM768-ECDH-P384             | id-alg-hkdf-with-sha256 | id-aes256-wrap     |
+| id-MLKEM768-ECDH-brainpoolP256r1  | id-alg-hkdf-with-sha256 | id-aes256-wrap     |
+| id-MLKEM1024-ECDH-P384            | id-kmac256              | id-aes256-wrap     |
+| id-MLKEM1024-ECDH-brainpoolP384r1 | id-kmac256              | id-aes256-wrap     |
+| id-MLKEM1024-X448                 | id-kmac256              | id-aes256-wrap     |
+{: #tab-cms-kdf-wrap title="Mandatory-to-implement pairings for CMS KDF and WRAP"}
+
+
+Full specifications for the referenced algorithms can be found either further down in this section, or in {{appdx_components}}.
+
+Note that here we differ slightly from the internal KDF used within the KEM combiner in {{sec-alg-ids}} because [RFC9629] requires that the KDF listed in the KEMRecipientInfo `kdf` field must have an interface which accepts `KDF(IKM, L, info)`, so here we need to use KMAC and cannot directly use SHA3. Since we require 256-bits of (2nd) pre-image resistance, we use KMAC256 for the Composite ML-KEM algoritms with internally use SHA3-256, as aligned with Table 3 of {{SP.800-57pt1r5}}.
 
 
 ### Use of the HKDF-based Key Derivation Function
@@ -1039,54 +1033,30 @@ The object identifier for KMAC256-KDF is id-kmac256, as defined in {{I-D.ietf-la
 Since the customization label to KMAC# is not used, the parameter field MUST be absent when id-kmac256 is used as part of an algorithm identifier specifying the KDF to use for Composite ML-KEM in KemRecipientInfo.
 
 
+## RecipientInfo Conventions {#sec-using-recipientInfo}
 
-### Components for Composite ML-KEM in CMS
+When Composite ML-KEM is employed for a recipient, the RecipientInfo alternative for that recipient MUST be OtherRecipientInfo using the KEMRecipientInfo structure as defined in {{RFC9629}}.
 
-A compliant implementation MUST support the following algorithm combinations for the KEMRecipientInfo `kdf` and `wrap` fields when the corresponding Composite ML-KEM algorithm is listed in the KEMRecipientInfo `kem` field. The KDFs listed below align with the KDF used internally within the KEM combiner. An implementation MAY also support other key-derivation functions and other key-encryption algorithms within CMS KEMRecipientInfo.
+The fields of the KEMRecipientInfo MUST have the following values:
 
-| Composite ML-KEM Algorithm        | KDF                     | Wrap |
-|---------                          | ---                     | ---                |
-| id-MLKEM768-RSA2048               | id-alg-hkdf-with-sha256 | id-aes128-wrap     |
-| id-MLKEM768-RSA3072               | id-alg-hkdf-with-sha256 | id-aes128-wrap     |
-| id-MLKEM768-RSA4096               | id-alg-hkdf-with-sha256 | id-aes128-wrap     |
-| id-MLKEM768-X25519                | id-kmac256              | id-aes128-wrap     |
-| id-MLKEM768-ECDH-P384             | id-alg-hkdf-with-sha256 | id-aes256-wrap     |
-| id-MLKEM768-ECDH-brainpoolP256r1  | id-alg-hkdf-with-sha256 | id-aes256-wrap     |
-| id-MLKEM1024-ECDH-P384            | id-kmac256              | id-aes256-wrap     |
-| id-MLKEM1024-ECDH-brainpoolP384r1 | id-kmac256              | id-aes256-wrap     |
-| id-MLKEM1024-X448                 | id-kmac256              | id-aes256-wrap     |
-{: #tab-cms-kdf-wrap title="Mandatory-to-implement pairings for CMS KDF and WRAP"}
+> version is the syntax version number; it MUST be 0.
 
+> rid identifies the recipient's certificate or public key.
 
-where:
+> kem identifies the KEM algorithm; it MUST contain one of the Composite ML-KEM identifiers listed in {{sec-alg-ids}}.
 
-* `id-alg-hkdf-with-sha256` is defined in [RFC8619].
-* `id-kmac256` is defined in {{I-D.ietf-lamps-cms-sha3-hash}}.
-* `id-aes*-wrap` are defined in [RFC3394].
+> kemct is the ciphertext produced for this recipient.
 
-Note that here we differ slightly from the internal KDF used within the KEM combiner in {{sec-alg-ids}} because [RFC9629] requires that the KDF listed in the KEMRecipientInfo `kdf` field must have an interface which accepts `KDF(IKM, L, info)`, so here we need to use KMAC and cannot directly use SHA3. Since we require 256-bits of (2nd) pre-image resistance, we use KMAC256 for the Composite ML-KEM algoritms with internally use SHA3-256, as aligned with Table 3 of {{SP.800-57pt1r5}}.
+> kdf identifies the key-derivation algorithm. Note that the Key Derivation Function (KDF) used for CMS RecipientInfo process MAY be different than the KDF used within the Composite ML-KEM algorithm or one of its components.
 
-## RecipientInfo Conventions
+> kekLength is the size of the key-encryption key in octets.
 
-When a Composite ML-KEM Algorithm is employed for a recipient, the RecipientInfo alternative for that recipient MUST be OtherRecipientInfo using the KEMRecipientInfo structure [RFC9629]. The fields of the KEMRecipientInfo MUST have the following values:
+> ukm is an optional random input to the key-derivation function. ML-KEM doesn't place any requirements on the ukm contents.
 
-`version` is the syntax version number; it MUST be 0.
+> wrap identifies a key-encryption algorithm used to encrypt the content-encryption key.
 
-`rid` identifies the recipient's certificate or public key.
+<!-- End of recipientinfo conventions section -->
 
-`kem` identifies the KEM algorithm; it MUST contain one of the OIDs listed in {{tab-kem-algs}}.
-
-`kemct` is the ciphertext produced for this recipient; it contains the `ct` output from `Encap(pk)` of the KEM algorithm identified in the `kem` parameter.
-
-`kdf` identifies the key-derivation function (KDF). Note that the KDF used for CMS RecipientInfo process MAY be different than the KDF used within the Composite ML-KEM Algorithm, which MAY be different than the KDFs (if any) used within the component KEMs of the Composite ML-KEM Algorithm.
-
-`kekLength` is the size of the key-encryption key in octets.
-
-`ukm` is an optional random input to the key-derivation function.
-
-`wrap` identifies a key-encryption algorithm used to encrypt the keying material.
-
-`encryptedKey` is the result of encrypting the keying material with the key-encryption key. When used with the CMS enveloped-data content type [RFC5652], the keying material is a content-encryption key. When used with the CMS authenticated-data content type [RFC5652], the keying material is a message-authentication key. When used with the CMS authenticated-enveloped-data content type [RFC5083], the keying material is a content-authenticated-encryption key.
 
 ## Certificate Conventions
 
