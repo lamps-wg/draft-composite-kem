@@ -2951,6 +2951,11 @@ kema-MLKEM1024-X448 KEM-ALGORITHM ::=
 -- Expand the S/MIME capabilities set used by CMS [RFC5911]
 --
 
+-- TODO: this doesn't compile, error:
+-- "The referenced object 'sa-ml-dsa-87' in the 'ValueFromObject'
+-- syntax with the field '&amp;smimeCaps' is invalid or does not exist."
+-- We need help from an SMIME expert
+
 SMimeCaps SMIME-CAPS ::=
     { kema-MLKEM768-RSA2048.&amp;smimeCaps |
       kema-MLKEM768-RSA3072.&amp;smimeCaps |
