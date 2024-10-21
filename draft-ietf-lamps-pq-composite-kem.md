@@ -687,9 +687,11 @@ In order to properly achieve its security properties, the KEM combiner requires 
 
 # Composite Key Structures {#sec-composite-keys}
 
+In order to form composite public keys and ciphertext values, we define ASN.1-based composite encodings such that these structures can be used as a drop-in replacement for existing public key and ciphertext fields such as those found in PKCS#10 [RFC2986], CMP [RFC4210], X.509 [RFC5280], CMS [RFC5652].
+
 ## pk-CompositeKEM
 
-The following ASN.1 Information Object Class is a template to be used in defining all Composite ML-KEM public key types.
+The following ASN.1 structures represent a composite public key combined with an RSA or Elliptic Curve public key.
 
 ~~~ ASN.1
 RsaCompositeKEMPublicKey ::= SEQUENCE {
@@ -704,7 +706,7 @@ EcCompositeKEMPublicKey ::= SEQUENCE {
 
 EdCompositeKEMPublicKey ::= SEQUENCE {
         firstPublicKey BIT STRING (ENCODED BY id-raw-key),
-        secondPublicKey BIT STRING (CONTAINING id-raw-key)
+        secondPublicKey BIT STRING (ENCODED BY id-raw-key)
       }
 
 ~~~
@@ -712,9 +714,9 @@ EdCompositeKEMPublicKey ::= SEQUENCE {
 `id-raw-key` is defined by this document. It signifies that the public key has no ASN.1 wrapping and the raw bits are placed here according to the encoding of the underlying algorithm specification. In some situations and protocols, the key might be wrapped in ASN.1 or
 may have some other additional decoration or encoding. If so, such wrapping MUST be removed prior to encoding the key itself as a BIT STRING.
 
-This structure is intentionally generic in the first public key slot since ML-KEM, as defined in {{I-D.ietf-lamps-kyber-certificates}}, does not define any ASN.1 public key structures. For use with this document, the `firstPublicKey` MUST be the BIT STRING representation of an ML-KEM key as specified in {{I-D.ietf-lamps-kyber-certificates}}. Note that here we used BIT STRING rather than OCTET STRING so that these keys can be trivially transcoded into a SubjectPublicKeyInfo as necessary, for example when a crypto library requires this for invoking the component algorithm. The public key for Edwards curve DH component is also encoded as a raw key.
+For use with this document, ML-KEM keys MUST be be the raw BIT STRING representation as specified in {{I-D.ietf-lamps-kyber-certificates}} and Edwards Curve keys MUST be the raw BIT STRING representation as speified in [RFC8410]. Note that here we used BIT STRING rather than OCTET STRING so that these keys can be trivially transcoded into a SubjectPublicKeyInfo as necessary, for example when a crypto library requires this for invoking the component algorithm.
 
-The following ASN.1 Information Object Class is defined to then allow for compact definitions of each composite algorithm.
+The following ASN.1 Information Object Class is defined to allow for compact definitions of each composite algorithm, leading to a smaller overall ASN.1 module.
 
 ~~~ ASN.1
   pk-CompositeKEM {OBJECT IDENTIFIER:id, PublicKeyType}
@@ -728,7 +730,7 @@ The following ASN.1 Information Object Class is defined to then allow for compac
 {: artwork-name="CompositeKeyObject-asn.1-structures"}
 
 
-As an example, the public key type `pk-MLKEM768-ECDH-P384` is defined as:
+As an example, the public key type `pk-MLKEM768-ECDH-P384` can be defined compactly as:
 
 ~~~
 pk-MLKEM768-ECDH-P384 PUBLIC-KEY ::=
