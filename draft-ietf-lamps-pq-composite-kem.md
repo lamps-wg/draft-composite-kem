@@ -803,17 +803,18 @@ When an octet string is required, the DER encoding of the composite data structu
 
 ~~~ ASN.1
 CompositeKEMPublicKeyOs ::= OCTET STRING
-                  (CONTAINING CompositeKEMPublicKey ENCODED BY der)
+                      (CONTAINING CompositeKEMPublicKey ENCODED BY der)
 ~~~
 
 When a bit string is required, the octets of the DER encoded composite data structure SHALL be used as the bits of the bit string, with the most significant bit of the first octet becoming the first bit, and so on, ending with the least significant bit of the last octet becoming the last bit of the bit string.
 
 ~~~ ASN.1
 CompositeKEMPublicKeyBs ::= BIT STRING
-                (CONTAINING CompositeKEMPublicKey ENCODED BY der)
+                      (CONTAINING CompositeKEMPublicKey ENCODED BY der)
 ~~~
 
 
+In the interests of simplicity and avoiding compatibility issues, implementations that parse these structures MAY accept both BER and DER.
 
 ## Key Usage Bits
 
