@@ -851,7 +851,7 @@ kema-CompositeKEM {
 
 ## CompositeCiphertextValue {#sec-CompositeCiphertextValue}
 
-The compositeCipherTextValue is a SEQUENCE of the ciphertexts of the
+The `CompositeCipherTextValue` is the DER encoing of a SEQUENCE of the ciphertexts from the
 underlying component algorithms.  It is represented in ASN.1 as follows:
 
 ~~~
@@ -859,11 +859,6 @@ CompositeCiphertextValue ::= SEQUENCE SIZE (2) OF OCTET STRING
 ~~~
 
 The order of the component ciphertexts is the same as the order defined in {{sec-composite-pub-keys}}.
-
-
-Some of the design choices for the combiner, specifically to place `tradSS` first, and to allow `tradCT || tradPK || Domain` to be treated together as a FixedInfo block are made for the purposes of compliance with [SP.800-56Cr2]; see {{sec-fips}} for more discussion.
-
-See {{sec-cons-kem-combiner}} for further discussion of the security considerations of this KEM combiner.
 
 
 
