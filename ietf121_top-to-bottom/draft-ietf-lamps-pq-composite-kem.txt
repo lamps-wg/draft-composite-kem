@@ -1209,7 +1209,8 @@ Table of Contents
    KEMRecipientInfo kem field.  The KDFs listed below align with the KDF
    used internally within the KEM combiner.  An implementation MAY also
    support other key-derivation functions and other key-encryption
-   algorithms within CMS KEMRecipientInfo.
+   algorithms within CMS KEMRecipientInfo and SHOULD use algorithms of
+   equivalent strength or greater.
 
         +============================+==============+=============+
         | Composite ML-KEM Algorithm | KDF          | Wrap        |

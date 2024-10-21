@@ -2377,7 +2377,7 @@ CompositeCiphertextValue ::= SEQUENCE SIZE (2) OF OCTET STRING
         <h3 id="name-underlying-components">
 <a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-underlying-components" class="section-name selfRef">Underlying Components</a>
         </h3>
-<p id="section-8.1-1">A compliant implementation MUST support the following algorithm combinations for the KEMRecipientInfo <code>kdf</code> and <code>wrap</code> fields when the corresponding Composite ML-KEM algorithm is listed in the KEMRecipientInfo <code>kem</code> field. The KDFs listed below align with the KDF used internally within the KEM combiner. An implementation MAY also support other key-derivation functions and other key-encryption algorithms within CMS KEMRecipientInfo.<a href="#section-8.1-1" class="pilcrow">¶</a></p>
+<p id="section-8.1-1">A compliant implementation MUST support the following algorithm combinations for the KEMRecipientInfo <code>kdf</code> and <code>wrap</code> fields when the corresponding Composite ML-KEM algorithm is listed in the KEMRecipientInfo <code>kem</code> field. The KDFs listed below align with the KDF used internally within the KEM combiner. An implementation MAY also support other key-derivation functions and other key-encryption algorithms within CMS KEMRecipientInfo and SHOULD use algorithms of equivalent strength or greater.<a href="#section-8.1-1" class="pilcrow">¶</a></p>
 <span id="name-mandatory-to-implement-pair"></span><div id="tab-cms-kdf-wrap">
 <table class="center" id="table-5">
           <caption>
