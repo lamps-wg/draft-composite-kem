@@ -121,7 +121,7 @@ Table of Contents
                PKIX Algorithms
    11. Security Considerations
      11.1.  KEM Combiner Security Analysis
-       11.1.1.  Second pre-image resistance of componet KEMs
+       11.1.1.  Second pre-image resistance of component KEMs
        11.1.2.  SHA3 vs HKDF-SHA2
        11.1.3.  Generifying this construction
      11.2.  Key Reuse
@@ -349,7 +349,7 @@ Table of Contents
 
    *SHARED SECRET KEY:* A value established between two communicating
    parties for use as cryptographic key material suitable for direct use
-   by symmetric cryptigraphic algorithms.  This document is concerned
+   by symmetric cryptographic algorithms.  This document is concerned
    with shared secrets established via public key cryptographic
    operations.
 
@@ -373,7 +373,7 @@ Table of Contents
    CMP [RFC4210], X.509 [RFC5280], CMS [RFC5652], and the Trust Anchor
    Format [RFC5914].  In this way, composites achieve "protocol
    backwards-compatibility" in that they will drop cleanly into any
-   protocol that accepts an analagous single-algorithm cryptographic
+   protocol that accepts an analogous single-algorithm cryptographic
    scheme without requiring any modification of the protocol to handle
    multiple algorithms.
 
@@ -426,7 +426,7 @@ Table of Contents
 
    Note that, at least at the time of writing, the algorithm RSAOAEPKEM
    is not defined as a standalone algorithm within PKIX standards and it
-   does not have an assigned algorithm OID, so it connot be used
+   does not have an assigned algorithm OID, so it cannot be used
    directly with CMS KEMRecipientInfo [RFC9629]; it is merely a building
    block for the composite algorithm.
 
@@ -462,7 +462,7 @@ Table of Contents
 
    Note that, at least at the time of writing, the algorithm DHKEM is
    not defined as a standalone algorithm within PKIX standards and it
-   does not have an assigned algorithm OID, so it connot be used
+   does not have an assigned algorithm OID, so it cannot be used
    directly with CMS KEMRecipientInfo [RFC9629]; it is merely a building
    block for the composite algorithm.
 
@@ -489,7 +489,7 @@ Table of Contents
    explicitly in the Composite ML-KEM combiner, there is no need to
    construct the kem_context object, and since a domain separator is
    included explicitly in the Composite ML-KEM combiner there is no need
-   to perform the labelled steps of ExtractAndExpand().
+   to perform the labeled steps of ExtractAndExpand().
 
 3.3.  KEM Combiner
 
@@ -622,7 +622,7 @@ Table of Contents
    The structures CompositeKEMPublicKey and CompositeKEMPrivateKey are
    described in Section 5.1 and Section 5.2 respectively and are used
    here as placeholders since implementations MAY use their own internal
-   key representations in cases where interoparability is not required.
+   key representations in cases where interoperability is not required.
 
    In order to ensure fresh keys, the key generation functions MUST be
    executed for both component algorithms.  Compliant parties MUST NOT
@@ -842,7 +842,7 @@ Table of Contents
    For use with this document, ML-KEM keys MUST be be the raw BIT STRING
    representation as specified in [I-D.ietf-lamps-kyber-certificates]
    and Edwards Curve keys MUST be the raw BIT STRING representation as
-   speified in [RFC8410].
+   specified in [RFC8410].
 
    Some applications may need to reconstruct the SubjectPublicKeyInfo
    objects corresponding to each component public key.  Table 2 in
@@ -997,7 +997,7 @@ Table of Contents
 
 6.2.  CompositeCiphertextValue
 
-   The CompositeCipherTextValue is the DER encoing of a SEQUENCE of the
+   The CompositeCipherTextValue is the DER encoding of a SEQUENCE of the
    ciphertexts from the underlying component algorithms.  It is
    represented in ASN.1 as follows:
 
@@ -1120,14 +1120,14 @@ Table of Contents
    easy access to SHA3 outside of the ML-KEM function.  Higher security
    levels (ie ML-KEM1024) are paired with SHA3 for computational
    efficiency, and the Edwards Curve (X25519 and X448) combinations are
-   paired with SHA3 for compatibility with other similar spicifications.
+   paired with SHA3 for compatibility with other similar specifications.
 
    While it may seem odd to use 256-bit hash functions at all security
    levels, this aligns with ML-KEM which produces a 256-bit shared
    secret key at all security levels.  SHA-256 and SHA3-256 both have >=
-   256 bits of (2nd) preimage resistance, which is the required property
-   for a KDF to provide 128 bits of security, as allowed in Table 3 of
-   [SP.800-57pt1r5].
+   256 bits of (2nd) pre-image resistance, which is the required
+   property for a KDF to provide 128 bits of security, as allowed in
+   Table 3 of [SP.800-57pt1r5].
 
 7.4.  RSA-OAEP Parameters
 
@@ -1254,7 +1254,7 @@ Table of Contents
    listed in the KEMRecipientInfo kdf field must have an interface which
    accepts KDF(IKM, L, info), so here we need to use KMAC and cannot
    directly use SHA3.  Since we require 256-bits of (2nd) pre-image
-   resistance, we use KMAC256 for the Composite ML-KEM algoritms with
+   resistance, we use KMAC256 for the Composite ML-KEM algorithms with
    internally use SHA3-256, as aligned with Table 3 of [SP.800-57pt1r5].
 
 8.1.1.  Use of the HKDF-based Key Derivation Function
@@ -1808,13 +1808,13 @@ Table of Contents
    also need to consider the case where one of the component algorithms
    is completely broken; that the private key is known to an attacker,
    or worse that the public key, private key, and ciphertext are
-   maniputaled by the attacker.  In this case, we rely on the
+   manipulated by the attacker.  In this case, we rely on the
    construction of the KEM combiner to ensure that the value of the
    other shared secret cannot be leaked or the combined shared secret
    predicted via manipulation of the broken algorithm.  The following
    sections continue this discussion.
 
-11.1.1.  Second pre-image resistance of componet KEMs
+11.1.1.  Second pre-image resistance of component KEMs
 
    The notion of a second pre-image resistant KEM is defined in [X-Wing]
    being the property that it is computationally difficult to find two
@@ -1829,7 +1829,7 @@ Table of Contents
    In [X-Wing] it is proven that ML-KEM is a second pre-image resistant
    KEM and therefore the ML-KEM ciphertext can safely be omitted from
    the KEM combiner.  Note that this makes a fundamental assumption on
-   ML-KEM remaining ciphertext second pre-image resistant, and thefore
+   ML-KEM remaining ciphertext second pre-image resistant, and therefore
    this formulation of KEM combiner does not fully protect against
    implementation errors in the ML-KEM component -- particularly around
    the ciphertext check step of the Fujisaki-Okamoto transform -- which
@@ -1849,7 +1849,7 @@ Table of Contents
 
 11.1.2.  SHA3 vs HKDF-SHA2
 
-   In order to achieve the desired secutiy property that the Composite
+   In order to achieve the desired security property that the Composite
    ML-KEM is IND-CCA2 whenever at least one of the component KEMs is,
    the KDF used in the KEM combiner needs to possess collision and
    second pre-image resistance with respect to each of its inputs
@@ -1868,7 +1868,7 @@ Table of Contents
 
 11.1.3.  Generifying this construction
 
-   It should be cleart that the security analsis of the presented KEM
+   It should be clear that the security analysis of the presented KEM
    combiner construction relies heavily on the specific choices of
    component algorithms and combiner KDF, and this combiner construction
    SHOULD NOT by applied to any other combination of ciphers without
@@ -1883,7 +1883,7 @@ Table of Contents
    such scenarios is not always catastrophic to security and therefore
    often tolerated.  With composite keys we have a much stricter
    security requirement.  However this reasoning does not hold in the PQ
-   / Tradational hybrid setting.
+   / Traditional hybrid setting.
 
    Within the broader context of PQ / Traditional hybrids, we need to
    consider new attack surfaces that arise due to the hybrid
@@ -1895,8 +1895,8 @@ Table of Contents
    signature context this leads to a class of attacks referred to as
    "stripping attacks" where one component signature can be extracted
    and presented as a single-algorithm signature.  Hybrid KEMs using a
-   contacenation-style KEM combiner, as is done in this document, do not
-   have the analagous attack surface because even if an attacker is able
+   concatenation-style KEM combiner, as is done in this document, do not
+   have the analogous attack surface because even if an attacker is able
    to extract and decrypt one of the component ciphertexts, this will
    yield a different shared secret than the overall shared secret
    derived from the composite, so any subsequent symmetric cryptographic
@@ -2433,7 +2433,7 @@ D.1.  FIPS Certification
    presented in this document would pass a FIPS certification.  The SHA3
    instantiations should pass under SP 800-56Cr2 Option 1, but the HKDF-
    SHA2 combinations are technically not allowed under SP 800-56Cr2 even
-   though Option 2 allows HMAC-based constructions, but unfortunalety
+   though Option 2 allows HMAC-based constructions, but unfortunately
    only HKDF-Extract is FIPS-allowed, not HKDF-Expand.  The authors have
    been in contact with NIST to ensure compatibility either by NIST
    making SP 800-227 more flexible, or by changing this specification to
@@ -2462,7 +2462,7 @@ D.1.1.  FIPS certification of Combiner Function
    One of the primary NIST documents which is relevant for certification
    of a composite algorithm is NIST SP.800-56Cr2 [SP.800-56Cr2] by using
    the allowed "hybrid" shared secret of the form Z' = Z || T.
-   Compliance is acheived in the following way:
+   Compliance is achieved in the following way:
 
    SP.800-56Cr2 section 4 "One-Step Key Derivation" requires a counter
    which begins at the 4-byte value 0x00000001.  However, the counter is
@@ -2526,7 +2526,7 @@ D.3.  Decapsulation Requires the Public Key
    the decapsulate routine.  While some implementations might contain
    routines to computationally derive the public key from the private
    key, it is not guaranteed that all implementations will support this;
-   for this reason the interoparable composite private key format given
+   for this reason the interoperable composite private key format given
    in this document in Section 5.2 requires the public key of the
    traditional component to be included.
 
