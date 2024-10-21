@@ -1232,10 +1232,10 @@ svg :is([fill="white"], [fill^="#fff"]) {
                 <p id="section-toc.1-1.7.2.1.1"><a href="#section-7.1" class="auto internal xref">7.1</a>.  <a href="#name-composite-ml-kem-algorithm-" class="internal xref">Composite-ML-KEM Algorithm Identifiers</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.2">
-                <p id="section-toc.1-1.7.2.2.1"><a href="#section-7.2" class="auto internal xref">7.2</a>.  <a href="#name-rationale-for-choices" class="internal xref">Rationale for choices</a></p>
+                <p id="section-toc.1-1.7.2.2.1"><a href="#section-7.2" class="auto internal xref">7.2</a>.  <a href="#name-domain-separators" class="internal xref">Domain Separators</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.3">
-                <p id="section-toc.1-1.7.2.3.1"><a href="#section-7.3" class="auto internal xref">7.3</a>.  <a href="#name-domain-separators" class="internal xref">Domain Separators</a></p>
+                <p id="section-toc.1-1.7.2.3.1"><a href="#section-7.3" class="auto internal xref">7.3</a>.  <a href="#name-rationale-for-choices" class="internal xref">Rationale for choices</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.4">
                 <p id="section-toc.1-1.7.2.4.1"><a href="#section-7.4" class="auto internal xref">7.4</a>.  <a href="#name-rsa-oaep-parameters" class="internal xref">RSA-OAEP Parameters</a></p>
@@ -1710,13 +1710,13 @@ DHKEM.Decap(skR, enc):
             <p id="section-3.3-4.5.1"><code>tradPK</code> is the public key of the traditional component (elliptic curve or RSA).<a href="#section-3.3-4.5.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.3-4.6">
-            <p id="section-3.3-4.6.1"><code>Domain</code> is the DER encoded value of the object identifier of the Composite ML-KEM algorithm as listed in <a href="#sec-domsep-values" class="auto internal xref">Section 7.3</a>.<a href="#section-3.3-4.6.1" class="pilcrow">¶</a></p>
+            <p id="section-3.3-4.6.1"><code>Domain</code> is the DER encoded value of the object identifier of the Composite ML-KEM algorithm as listed in <a href="#sec-domsep-values" class="auto internal xref">Section 7.2</a>.<a href="#section-3.3-4.6.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.3-4.7">
             <p id="section-3.3-4.7.1"><code>||</code> represents concatenation.<a href="#section-3.3-4.7.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-3.3-5">Each registered Composite ML-KEM algorithm specifies the choice of <code>KDF</code> and<code>Domain</code> to be used in <a href="#sec-alg-ids" class="auto internal xref">Section 7</a> and <a href="#sec-domsep-values" class="auto internal xref">Section 7.3</a> below. Given that each Composite ML-KEM algorithm fully specifies the component algorithms, including for example the size of the RSA modulus, all inputs to the KEM combiner are fixed-size and thus do not require length-prefixing. The <code>CompositeKEM.Decap()</code> specified in <a href="#sect-composite-decaps" class="auto internal xref">Section 4.3</a> adds further error handling to protect the KEM combiner from malicious inputs.<a href="#section-3.3-5" class="pilcrow">¶</a></p>
+<p id="section-3.3-5">Each registered Composite ML-KEM algorithm specifies the choice of <code>KDF</code> and<code>Domain</code> to be used in <a href="#sec-alg-ids" class="auto internal xref">Section 7</a> and <a href="#sec-domsep-values" class="auto internal xref">Section 7.2</a> below. Given that each Composite ML-KEM algorithm fully specifies the component algorithms, including for example the size of the RSA modulus, all inputs to the KEM combiner are fixed-size and thus do not require length-prefixing. The <code>CompositeKEM.Decap()</code> specified in <a href="#sect-composite-decaps" class="auto internal xref">Section 4.3</a> adds further error handling to protect the KEM combiner from malicious inputs.<a href="#section-3.3-5" class="pilcrow">¶</a></p>
 <p id="section-3.3-6">The construction of the KEM combiner has implications for security, discussed in <a href="#sec-cons-kem-combiner" class="auto internal xref">Section 11.1</a>, and for FIPS-certifiability, discussed in <a href="#sec-fips" class="auto internal xref">Appendix D.1</a>.<a href="#section-3.3-6" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -2165,7 +2165,7 @@ CompositeCiphertextValue ::= SEQUENCE SIZE (2) OF OCTET STRING
       <h2 id="name-algorithm-identifiers">
 <a href="#section-7" class="section-number selfRef">7. </a><a href="#name-algorithm-identifiers" class="section-name selfRef">Algorithm Identifiers</a>
       </h2>
-<p id="section-7-1">This table summarizes the list of Composite ML-KEM algorithms and lists the OID, two component algorithms, and the KDF to be used within combiner function. Domain separator values are defined below in <a href="#sec-domsep-values" class="auto internal xref">Section 7.3</a>.<a href="#section-7-1" class="pilcrow">¶</a></p>
+<p id="section-7-1">This table summarizes the list of Composite ML-KEM algorithms and lists the OID, two component algorithms, and the KDF to be used within combiner function. Domain separator values are defined below in <a href="#sec-domsep-values" class="auto internal xref">Section 7.2</a>.<a href="#section-7-1" class="pilcrow">¶</a></p>
 <p id="section-7-2">EDNOTE: these are prototyping OIDs to be replaced by IANA.<a href="#section-7-2" class="pilcrow">¶</a></p>
 <p id="section-7-3">&lt;CompKEM&gt;.1 is equal to 2.16.840.1.114027.80.5.2.1<a href="#section-7-3" class="pilcrow">¶</a></p>
 <div id="composite-ml-kem-algorithm-identifiers">
@@ -2259,33 +2259,12 @@ CompositeCiphertextValue ::= SEQUENCE SIZE (2) OF OCTET STRING
 <p id="section-7.1-3">Full specifications for the referenced algorithms can be found in <a href="#appdx_components" class="auto internal xref">Appendix B</a>.<a href="#section-7.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="rationale-for-choices">
-<section id="section-7.2">
-        <h3 id="name-rationale-for-choices">
-<a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-rationale-for-choices" class="section-name selfRef">Rationale for choices</a>
-        </h3>
-<ul class="normal">
-<li class="normal" id="section-7.2-1.1">
-            <p id="section-7.2-1.1.1">Pair equivalent levels.<a href="#section-7.2-1.1.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-7.2-1.2">
-            <p id="section-7.2-1.2.1">NIST-P-384 is CNSA approved <span>[<a href="#CNSA2.0" class="cite xref">CNSA2.0</a>]</span> for all classification levels.<a href="#section-7.2-1.2.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-7.2-1.3">
-            <p id="section-7.2-1.3.1">521 bit curve not widely used.<a href="#section-7.2-1.3.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-<p id="section-7.2-2">A single invocation of SHA3 is known to behave as a dual-PRF, and thus is sufficient for use as a KDF, see <a href="#sec-cons-kem-combiner" class="auto internal xref">Section 11.1</a>, however SHA2 is not us must be wrapped in the HKDF construction.<a href="#section-7.2-2" class="pilcrow">¶</a></p>
-<p id="section-7.2-3">The lower security levels (ie ML-KEM768) are provided with HKDF-SHA2 as the KDF in order to facilitate implementations that do not have easy access to SHA3 outside of the ML-KEM function. Higher security levels (ie ML-KEM1024) are paired with SHA3 for computational efficiency, and the Edwards Curve (X25519 and X448) combinations are paired with SHA3 for compatibility with other similar spicifications.<a href="#section-7.2-3" class="pilcrow">¶</a></p>
-<p id="section-7.2-4">While it may seem odd to use 256-bit hash functions at all security levels, this aligns with ML-KEM which produces a 256-bit shared secret key at all security levels. SHA-256 and SHA3-256 both have &gt;= 256 bits of (2nd) preimage resistance, which is the required property for a KDF to provide 128 bits of security, as allowed in Table 3 of <span>[<a href="#SP.800-57pt1r5" class="cite xref">SP.800-57pt1r5</a>]</span>.<a href="#section-7.2-4" class="pilcrow">¶</a></p>
-</section>
-</div>
 <div id="sec-domsep-values">
-<section id="section-7.3">
+<section id="section-7.2">
         <h3 id="name-domain-separators">
-<a href="#section-7.3" class="section-number selfRef">7.3. </a><a href="#name-domain-separators" class="section-name selfRef">Domain Separators</a>
+<a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-domain-separators" class="section-name selfRef">Domain Separators</a>
         </h3>
-<p id="section-7.3-1">The KEM combiner defined in section <a href="#sec-kem-combiner" class="auto internal xref">Section 3.3</a> requires a domain separator <code>Domain</code> input.  The following table shows the HEX-encoded domain separator for each Composite ML-KEM AlgorithmID; to use it, the value should be HEX-decoded and used in binary form. The domain separator is simply the DER encoding of the composite algorithm OID.<a href="#section-7.3-1" class="pilcrow">¶</a></p>
+<p id="section-7.2-1">The KEM combiner defined in section <a href="#sec-kem-combiner" class="auto internal xref">Section 3.3</a> requires a domain separator <code>Domain</code> input.  The following table shows the HEX-encoded domain separator for each Composite ML-KEM AlgorithmID; to use it, the value should be HEX-decoded and used in binary form. The domain separator is simply the DER encoding of the composite algorithm OID.<a href="#section-7.2-1" class="pilcrow">¶</a></p>
 <span id="name-composite-ml-kem-fixedinfo-"></span><div id="tab-kem-domains">
 <table class="center" id="table-3">
           <caption>
@@ -2338,7 +2317,28 @@ CompositeCiphertextValue ::= SEQUENCE SIZE (2) OF OCTET STRING
           </tbody>
         </table>
 </div>
-<p id="section-7.3-3">EDNOTE: these domain separators are based on the prototyping OIDs assigned on the Entrust arc. We will need to ask for IANA early allocation of these OIDs so that we can re-compute the domain separators over the final OIDs.<a href="#section-7.3-3" class="pilcrow">¶</a></p>
+<p id="section-7.2-3">EDNOTE: these domain separators are based on the prototyping OIDs assigned on the Entrust arc. We will need to ask for IANA early allocation of these OIDs so that we can re-compute the domain separators over the final OIDs.<a href="#section-7.2-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="rationale-for-choices">
+<section id="section-7.3">
+        <h3 id="name-rationale-for-choices">
+<a href="#section-7.3" class="section-number selfRef">7.3. </a><a href="#name-rationale-for-choices" class="section-name selfRef">Rationale for choices</a>
+        </h3>
+<ul class="normal">
+<li class="normal" id="section-7.3-1.1">
+            <p id="section-7.3-1.1.1">Pair equivalent levels.<a href="#section-7.3-1.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-7.3-1.2">
+            <p id="section-7.3-1.2.1">NIST-P-384 is CNSA approved <span>[<a href="#CNSA2.0" class="cite xref">CNSA2.0</a>]</span> for all classification levels.<a href="#section-7.3-1.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-7.3-1.3">
+            <p id="section-7.3-1.3.1">521 bit curve not widely used.<a href="#section-7.3-1.3.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-7.3-2">A single invocation of SHA3 is known to behave as a dual-PRF, and thus is sufficient for use as a KDF, see <a href="#sec-cons-kem-combiner" class="auto internal xref">Section 11.1</a>, however SHA2 is not us must be wrapped in the HKDF construction.<a href="#section-7.3-2" class="pilcrow">¶</a></p>
+<p id="section-7.3-3">The lower security levels (ie ML-KEM768) are provided with HKDF-SHA2 as the KDF in order to facilitate implementations that do not have easy access to SHA3 outside of the ML-KEM function. Higher security levels (ie ML-KEM1024) are paired with SHA3 for computational efficiency, and the Edwards Curve (X25519 and X448) combinations are paired with SHA3 for compatibility with other similar spicifications.<a href="#section-7.3-3" class="pilcrow">¶</a></p>
+<p id="section-7.3-4">While it may seem odd to use 256-bit hash functions at all security levels, this aligns with ML-KEM which produces a 256-bit shared secret key at all security levels. SHA-256 and SHA3-256 both have &gt;= 256 bits of (2nd) preimage resistance, which is the required property for a KDF to provide 128 bits of security, as allowed in Table 3 of <span>[<a href="#SP.800-57pt1r5" class="cite xref">SP.800-57pt1r5</a>]</span>.<a href="#section-7.3-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sect-rsaoaep-params">
