@@ -791,7 +791,7 @@ When a `CompositeKEMPrivateKey` is conveyed inside a OneAsymmetricKey structure 
 
 Some applications may need to reconstruct the `OneAsymmetricKey` objects corresponding to each component private key. {{sec-alg-ids}} provides the necessary mapping between composite and their component algorithms for doing this reconstruction.
 
-Component keys of a CompositeKEMPrivateKey MUST NOT be used in any other type of key or as a standalone key.
+Component keys of a CompositeKEMPrivateKey MUST NOT be used in any other type of key or as a standalone key. For more details on the security considerations around key reuse, see section {{sec-cons-key-reuse}}.
 
 
 ## Encoding Rules {#sec-encoding-rules}
@@ -1212,7 +1212,7 @@ SHA3 is known to have all of the necessary dual-PRF properties [X-Wing], but SHA
 
 It should be cleart that the security analsis of the presented KEM combiner construction relies heavily on the specific choices of component algorithms and combiner KDF, and this combiner construction SHOULD NOT by applied to any other combination of ciphers without performing the appropriate security analysis.
 
-### Key Reuse {#sec-cons-key-reuse}
+## Key Reuse {#sec-cons-key-reuse}
 
 When using single-algorithm cryptography, the best practice is to always generate fresh keying material for each purpose, for example when renewing a certificate, or obtaining both a TLS and S/MIME certificate for the same device, however in practice key reuse in such scenarios is not always catastrophic to security and therefore often tolerated. With composite keys we have a much stricter security requirement. However this reasoning does not hold in the PQ / Tradational hybrid setting.
 
