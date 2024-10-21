@@ -897,18 +897,6 @@ For the use of HKDF [RFC5869]: a salt is not provided; ie the default salt (all 
 Full specifications for the referenced algorithms can be found in {{appdx_components}}.
 
 
-## Rationale for choices
-
-* Pair equivalent levels.
-* NIST-P-384 is CNSA approved [CNSA2.0] for all classification levels.
-* 521 bit curve not widely used.
-
-A single invocation of SHA3 is known to behave as a dual-PRF, and thus is sufficient for use as a KDF, see {{sec-cons-kem-combiner}}, however SHA2 is not us must be wrapped in the HKDF construction.
-
-The lower security levels (ie ML-KEM768) are provided with HKDF-SHA2 as the KDF in order to facilitate implementations that do not have easy access to SHA3 outside of the ML-KEM function. Higher security levels (ie ML-KEM1024) are paired with SHA3 for computational efficiency, and the Edwards Curve (X25519 and X448) combinations are paired with SHA3 for compatibility with other similar spicifications.
-
-While it may seem odd to use 256-bit hash functions at all security levels, this aligns with ML-KEM which produces a 256-bit shared secret key at all security levels. SHA-256 and SHA3-256 both have >= 256 bits of (2nd) preimage resistance, which is the required property for a KDF to provide 128 bits of security, as allowed in Table 3 of {{SP.800-57pt1r5}}.
-
 ## Domain Separators {#sec-domsep-values}
 
 The KEM combiner defined in section {{sec-kem-combiner}} requires a domain separator `Domain` input.  The following table shows the HEX-encoded domain separator for each Composite ML-KEM AlgorithmID; to use it, the value should be HEX-decoded and used in binary form. The domain separator is simply the DER encoding of the composite algorithm OID.
@@ -927,6 +915,19 @@ The KEM combiner defined in section {{sec-kem-combiner}} requires a domain separ
 {: #tab-kem-domains title="Composite ML-KEM fixedInfo Domain Separators"}
 
 EDNOTE: these domain separators are based on the prototyping OIDs assigned on the Entrust arc. We will need to ask for IANA early allocation of these OIDs so that we can re-compute the domain separators over the final OIDs.
+
+
+## Rationale for choices
+
+* Pair equivalent levels.
+* NIST-P-384 is CNSA approved [CNSA2.0] for all classification levels.
+* 521 bit curve not widely used.
+
+A single invocation of SHA3 is known to behave as a dual-PRF, and thus is sufficient for use as a KDF, see {{sec-cons-kem-combiner}}, however SHA2 is not us must be wrapped in the HKDF construction.
+
+The lower security levels (ie ML-KEM768) are provided with HKDF-SHA2 as the KDF in order to facilitate implementations that do not have easy access to SHA3 outside of the ML-KEM function. Higher security levels (ie ML-KEM1024) are paired with SHA3 for computational efficiency, and the Edwards Curve (X25519 and X448) combinations are paired with SHA3 for compatibility with other similar spicifications.
+
+While it may seem odd to use 256-bit hash functions at all security levels, this aligns with ML-KEM which produces a 256-bit shared secret key at all security levels. SHA-256 and SHA3-256 both have >= 256 bits of (2nd) preimage resistance, which is the required property for a KDF to provide 128 bits of security, as allowed in Table 3 of {{SP.800-57pt1r5}}.
 
 ## RSA-OAEP Parameters {#sect-rsaoaep-params}
 
