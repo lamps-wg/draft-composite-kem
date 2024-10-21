@@ -1330,35 +1330,6 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15">
             <p id="section-toc.1-1.15.1"><a href="#appendix-C" class="auto internal xref">Appendix C</a>.  <a href="#name-fixed-component-algorithm-i" class="internal xref">Fixed Component Algorithm Identifiers</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.1">
-                <p id="section-toc.1-1.15.2.1.1"><a href="#appendix-C.1" class="auto internal xref">C.1</a>.  <a href="#name-ml-kem-512" class="internal xref">ML-KEM-512</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.2">
-                <p id="section-toc.1-1.15.2.2.1"><a href="#appendix-C.2" class="auto internal xref">C.2</a>.  <a href="#name-ml-kem-768" class="internal xref">ML-KEM-768</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.3">
-                <p id="section-toc.1-1.15.2.3.1"><a href="#appendix-C.3" class="auto internal xref">C.3</a>.  <a href="#name-ml-kem-1024" class="internal xref">ML-KEM-1024</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.4">
-                <p id="section-toc.1-1.15.2.4.1"><a href="#appendix-C.4" class="auto internal xref">C.4</a>.  <a href="#name-rsa-all-sizes" class="internal xref">RSA - all sizes</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.5">
-                <p id="section-toc.1-1.15.2.5.1"><a href="#appendix-C.5" class="auto internal xref">C.5</a>.  <a href="#name-ecdh-nist-p-384" class="internal xref">ECDH NIST-P-384</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.6">
-                <p id="section-toc.1-1.15.2.6.1"><a href="#appendix-C.6" class="auto internal xref">C.6</a>.  <a href="#name-ecdh-bp-256" class="internal xref">ECDH BP-256</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.7">
-                <p id="section-toc.1-1.15.2.7.1"><a href="#appendix-C.7" class="auto internal xref">C.7</a>.  <a href="#name-ecdh-bp-384" class="internal xref">ECDH BP-384</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.8">
-                <p id="section-toc.1-1.15.2.8.1"><a href="#appendix-C.8" class="auto internal xref">C.8</a>.  <a href="#name-x25519" class="internal xref">X25519</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.9">
-                <p id="section-toc.1-1.15.2.9.1"><a href="#appendix-C.9" class="auto internal xref">C.9</a>.  <a href="#name-x448" class="internal xref">X448</a></p>
-</li>
-            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16">
             <p id="section-toc.1-1.16.1"><a href="#appendix-D" class="auto internal xref">Appendix D</a>.  <a href="#name-implementation-consideratio" class="internal xref">Implementation Considerations</a></p>
@@ -3578,77 +3549,35 @@ END
 <a href="#appendix-C" class="section-number selfRef">Appendix C. </a><a href="#name-fixed-component-algorithm-i" class="section-name selfRef">Fixed Component Algorithm Identifiers</a>
       </h2>
 <p id="appendix-C-1">The following sections list explicitly the DER encoded <code>AlgorithmIdentifier</code> that MUST be used when reconstructing <code>SubjectPublicKeyInfo</code> objects for each component public key, which may be required for example if cryptographic library requires the public key in this form in order to process each component algorithm. The public key <code>BIT STRING</code> should be taken directly from the respective component of the CompositeKEMPublicKey.<a href="#appendix-C-1" class="pilcrow">¶</a></p>
-<div id="ml-kem-512">
-<section id="appendix-C.1">
-        <h3 id="name-ml-kem-512">
-<a href="#appendix-C.1" class="section-number selfRef">C.1. </a><a href="#name-ml-kem-512" class="section-name selfRef">ML-KEM-512</a>
-        </h3>
-<p id="appendix-C.1-1">ASN.1:<a href="#appendix-C.1-1" class="pilcrow">¶</a></p>
-<div class="lang-ASN.1 sourcecode" id="appendix-C.1-2">
+<p id="appendix-C-2"><strong>ML-KEM-768</strong><a href="#appendix-C-2" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-C-3">
 <pre>
+ASN.1:
   algorithm AlgorithmIdentifier ::= {
-    algorithm id-alg-ml-kem-512                    -- (2.16.840.1.101.4.1)
+    algorithm id-alg-ml-kem-768   -- (2.16.840.1.101.4.2)
     }
-</pre><a href="#appendix-C.1-2" class="pilcrow">¶</a>
-</div>
-<p id="appendix-C.1-3">DER:<a href="#appendix-C.1-3" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="appendix-C.1-4">
-<pre>
-  30 0B 06 07 60 86 48 01 65 04 01
-</pre><a href="#appendix-C.1-4" class="pilcrow">¶</a>
-</div>
-</section>
-</div>
-<div id="ml-kem-768">
-<section id="appendix-C.2">
-        <h3 id="name-ml-kem-768">
-<a href="#appendix-C.2" class="section-number selfRef">C.2. </a><a href="#name-ml-kem-768" class="section-name selfRef">ML-KEM-768</a>
-        </h3>
-<p id="appendix-C.2-1">ASN.1:<a href="#appendix-C.2-1" class="pilcrow">¶</a></p>
-<div class="lang-ASN.1 sourcecode" id="appendix-C.2-2">
-<pre>
-  algorithm AlgorithmIdentifier ::= {
-    algorithm id-alg-ml-kem-768                    -- (2.16.840.1.101.4.2)
-    }
-</pre><a href="#appendix-C.2-2" class="pilcrow">¶</a>
-</div>
-<p id="appendix-C.2-3">DER:<a href="#appendix-C.2-3" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="appendix-C.2-4">
-<pre>
+
+DER:
   30 0B 06 07 60 86 48 01 65 04 02
-</pre><a href="#appendix-C.2-4" class="pilcrow">¶</a>
+</pre><a href="#appendix-C-3" class="pilcrow">¶</a>
 </div>
-</section>
-</div>
-<div id="ml-kem-1024">
-<section id="appendix-C.3">
-        <h3 id="name-ml-kem-1024">
-<a href="#appendix-C.3" class="section-number selfRef">C.3. </a><a href="#name-ml-kem-1024" class="section-name selfRef">ML-KEM-1024</a>
-        </h3>
-<p id="appendix-C.3-1">ASN.1:<a href="#appendix-C.3-1" class="pilcrow">¶</a></p>
-<div class="lang-ASN.1 sourcecode" id="appendix-C.3-2">
+<p id="appendix-C-4"><strong>ML-KEM-1024</strong><a href="#appendix-C-4" class="pilcrow">¶</a></p>
+<p id="appendix-C-5">ASN.1:<a href="#appendix-C-5" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-C-6">
 <pre>
+ASN.1:
   algorithm AlgorithmIdentifier ::= {
-    algorithm id-alg-ml-kem-1024                    -- (2.16.840.1.101.4.3)
+    algorithm id-alg-ml-kem-1024   -- (2.16.840.1.101.4.3)
     }
-</pre><a href="#appendix-C.3-2" class="pilcrow">¶</a>
-</div>
-<p id="appendix-C.3-3">DER:<a href="#appendix-C.3-3" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="appendix-C.3-4">
-<pre>
+
+DER:
   30 0B 06 07 60 86 48 01 65 04 03
-</pre><a href="#appendix-C.3-4" class="pilcrow">¶</a>
+</pre><a href="#appendix-C-6" class="pilcrow">¶</a>
 </div>
-</section>
-</div>
-<div id="rsa-all-sizes">
-<section id="appendix-C.4">
-        <h3 id="name-rsa-all-sizes">
-<a href="#appendix-C.4" class="section-number selfRef">C.4. </a><a href="#name-rsa-all-sizes" class="section-name selfRef">RSA - all sizes</a>
-        </h3>
-<p id="appendix-C.4-1">ASN.1:<a href="#appendix-C.4-1" class="pilcrow">¶</a></p>
-<div class="lang-ASN.1 sourcecode" id="appendix-C.4-2">
+<p id="appendix-C-7"><strong>RSA-OAEP - all sizes</strong><a href="#appendix-C-7" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-C-8">
 <pre>
+ASN.1:
   algorithm AlgorithmIdentifier ::= {
     algorithm id-RSAES-OAEP,   -- (1.2.840.113549.1.1.7)
     parameters RSAES-OAEP-params {
@@ -3660,140 +3589,93 @@ END
 
 where
       mgf1SHA256Identifier  AlgorithmIdentifier  ::=  {
-                              algorithm id-mgf1,  -- (1.2.840.113549.1.1.8)
-                              parameters sha256Identifier }
+                          algorithm id-mgf1,  -- (1.2.840.113549.1.1.8)
+                          parameters sha256Identifier }
 
 
         sha256Identifier  AlgorithmIdentifier  ::=  { id-sha256, NULL }
-</pre><a href="#appendix-C.4-2" class="pilcrow">¶</a>
+
+DER:
+ 30 4D 06 09 2A 86 48 86 F7 0D 01 01 07 30 40 A0 0F 30 0D 06 09 60 86
+ 48 01 65 03 04 02 01 05 00 A1 1C 30 1A 06 09 2A 86 48 86 F7 0D 01 01
+ 08 30 0D 06 09 60 86 48 01 65 03 04 02 01 05 00 A2 0F 30 0D 06 09 2A
+ 86 48 86 F7 0D 01 01 09 04 00
+</pre><a href="#appendix-C-8" class="pilcrow">¶</a>
 </div>
-<p id="appendix-C.4-3">DER:<a href="#appendix-C.4-3" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="appendix-C.4-4">
+<p id="appendix-C-9"><strong>ECDH NIST-P-384</strong><a href="#appendix-C-9" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-C-10">
 <pre>
- 30 4D 06 09 2A 86 48 86 F7 0D 01 01 07 30 40 A0 0F 30 0D 06 09 60 86 48 01 65 03 04 02 01 05 00 A1 1C 30 1A 06 09 2A 86 48 86 F7 0D 01 01 08 30 0D 06 09 60 86 48 01 65 03 04 02 01 05 00 A2 0F 30 0D 06 09 2A 86 48 86 F7 0D 01 01 09 04 00
-</pre><a href="#appendix-C.4-4" class="pilcrow">¶</a>
-</div>
-</section>
-</div>
-<div id="ecdh-nist-p-384">
-<section id="appendix-C.5">
-        <h3 id="name-ecdh-nist-p-384">
-<a href="#appendix-C.5" class="section-number selfRef">C.5. </a><a href="#name-ecdh-nist-p-384" class="section-name selfRef">ECDH NIST-P-384</a>
-        </h3>
-<p id="appendix-C.5-1">ASN.1:<a href="#appendix-C.5-1" class="pilcrow">¶</a></p>
-<div class="lang-ASN.1 sourcecode" id="appendix-C.5-2">
-<pre>
+ASN.1:
   algorithm AlgorithmIdentifier ::= {
-    algorithm id-ecPublicKey                          -- (1.2.840.10045.2.1)
+    algorithm id-ecPublicKey   -- (1.2.840.10045.2.1)
     parameters ANY ::= {
       AlgorithmIdentifier ::= {
-        algorithm secp384r1                           -- (1.3.132.0.34)
+        algorithm secp384r1    -- (1.3.132.0.34)
         }
       }
     }
-</pre><a href="#appendix-C.5-2" class="pilcrow">¶</a>
-</div>
-<p id="appendix-C.5-3">DER:<a href="#appendix-C.5-3" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="appendix-C.5-4">
-<pre>
+
+DER:
   30 10 06 07 2A 86 48 CE 3D 02 01 06 05 2B 81 04 00 22
-</pre><a href="#appendix-C.5-4" class="pilcrow">¶</a>
+</pre><a href="#appendix-C-10" class="pilcrow">¶</a>
 </div>
-</section>
-</div>
-<div id="ecdh-bp-256">
-<section id="appendix-C.6">
-        <h3 id="name-ecdh-bp-256">
-<a href="#appendix-C.6" class="section-number selfRef">C.6. </a><a href="#name-ecdh-bp-256" class="section-name selfRef">ECDH BP-256</a>
-        </h3>
-<p id="appendix-C.6-1">ASN.1:<a href="#appendix-C.6-1" class="pilcrow">¶</a></p>
-<div class="lang-ASN.1 sourcecode" id="appendix-C.6-2">
+<p id="appendix-C-11"><strong>ECDH Brainpool-256</strong><a href="#appendix-C-11" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-C-12">
 <pre>
+ASN.1:
   algorithm AlgorithmIdentifier ::= {
-    algorithm id-ecPublicKey                          -- (1.2.840.10045.2.1)
+    algorithm id-ecPublicKey   -- (1.2.840.10045.2.1)
     parameters ANY ::= {
       AlgorithmIdentifier ::= {
-        algorithm brainpoolP256r1                     -- (1.3.36.3.3.2.8.1.1.7)
+        algorithm brainpoolP256r1   -- (1.3.36.3.3.2.8.1.1.7)
         }
       }
     }
-</pre><a href="#appendix-C.6-2" class="pilcrow">¶</a>
-</div>
-<p id="appendix-C.6-3">DER:<a href="#appendix-C.6-3" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="appendix-C.6-4">
-<pre>
+
+DER:
   30 14 06 07 2A 86 48 CE 3D 02 01 06 09 2B 24 03 03 02 08 01 01 07
-</pre><a href="#appendix-C.6-4" class="pilcrow">¶</a>
+</pre><a href="#appendix-C-12" class="pilcrow">¶</a>
 </div>
-</section>
-</div>
-<div id="ecdh-bp-384">
-<section id="appendix-C.7">
-        <h3 id="name-ecdh-bp-384">
-<a href="#appendix-C.7" class="section-number selfRef">C.7. </a><a href="#name-ecdh-bp-384" class="section-name selfRef">ECDH BP-384</a>
-        </h3>
-<p id="appendix-C.7-1">ASN.1:<a href="#appendix-C.7-1" class="pilcrow">¶</a></p>
-<div class="lang-ASN.1 sourcecode" id="appendix-C.7-2">
+<p id="appendix-C-13"><strong>ECDH Brainpool-384</strong><a href="#appendix-C-13" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-C-14">
 <pre>
+ASN.1:
   algorithm AlgorithmIdentifier ::= {
-    algorithm id-ecPublicKey                          -- (1.2.840.10045.2.1)
+    algorithm id-ecPublicKey   -- (1.2.840.10045.2.1)
     parameters ANY ::= {
       AlgorithmIdentifier ::= {
-        algorithm brainpoolP384r1                     -- (1.3.36.3.3.2.8.1.1.11)
+        algorithm brainpoolP384r1   -- (1.3.36.3.3.2.8.1.1.11)
         }
       }
     }
-</pre><a href="#appendix-C.7-2" class="pilcrow">¶</a>
-</div>
-<p id="appendix-C.7-3">DER:<a href="#appendix-C.7-3" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="appendix-C.7-4">
-<pre>
+
+DER:
   30 14 06 07 2A 86 48 CE 3D 02 01 06 09 2B 24 03 03 02 08 01 01 0B
-</pre><a href="#appendix-C.7-4" class="pilcrow">¶</a>
+</pre><a href="#appendix-C-14" class="pilcrow">¶</a>
 </div>
-</section>
-</div>
-<div id="x25519">
-<section id="appendix-C.8">
-        <h3 id="name-x25519">
-<a href="#appendix-C.8" class="section-number selfRef">C.8. </a><a href="#name-x25519" class="section-name selfRef">X25519</a>
-        </h3>
-<p id="appendix-C.8-1">ASN.1:<a href="#appendix-C.8-1" class="pilcrow">¶</a></p>
-<div class="lang-ASN.1 sourcecode" id="appendix-C.8-2">
+<p id="appendix-C-15"><strong>X25519</strong><a href="#appendix-C-15" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-C-16">
 <pre>
+ASN.1:
   algorithm AlgorithmIdentifier ::= {
-    algorithm id-X25519                               -- (1.3.101.110)
+    algorithm id-X25519   -- (1.3.101.110)
     }
-</pre><a href="#appendix-C.8-2" class="pilcrow">¶</a>
-</div>
-<p id="appendix-C.8-3">DER:<a href="#appendix-C.8-3" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="appendix-C.8-4">
-<pre>
+
+DER:
   30 05 06 03 2B 65 6E
-</pre><a href="#appendix-C.8-4" class="pilcrow">¶</a>
+</pre><a href="#appendix-C-16" class="pilcrow">¶</a>
 </div>
-</section>
-</div>
-<div id="x448">
-<section id="appendix-C.9">
-        <h3 id="name-x448">
-<a href="#appendix-C.9" class="section-number selfRef">C.9. </a><a href="#name-x448" class="section-name selfRef">X448</a>
-        </h3>
-<p id="appendix-C.9-1">ASN.1:<a href="#appendix-C.9-1" class="pilcrow">¶</a></p>
-<div class="lang-ASN.1 sourcecode" id="appendix-C.9-2">
+<p id="appendix-C-17"><strong>X448</strong><a href="#appendix-C-17" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-C-18">
 <pre>
+ASN.1:
   algorithm AlgorithmIdentifier ::= {
-    algorithm id-X448                                -- (1.3.101.111)
+    algorithm id-X448   -- (1.3.101.111)
     }
-</pre><a href="#appendix-C.9-2" class="pilcrow">¶</a>
-</div>
-<p id="appendix-C.9-3">DER:<a href="#appendix-C.9-3" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="appendix-C.9-4">
-<pre>
+
+DER:
   30 05 06 03 2B 65 6F
-</pre><a href="#appendix-C.9-4" class="pilcrow">¶</a>
-</div>
-</section>
+</pre><a href="#appendix-C-18" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
