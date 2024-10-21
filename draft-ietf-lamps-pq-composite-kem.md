@@ -341,12 +341,6 @@ In addition, the following terms are used in this document:
           definitions of "cryptographic algorithm" and
           "cryptographic scheme" given in {{I-D.ietf-pquip-pqt-hybrid-terminology}}.
 
-**CLIENT**:
-          TODO: Remove me, I donet think the term "Client" is actually used in this document.
-          Any software that is making use of a cryptographic key.
-          This includes a signer, verifier, encrypter, decrypter.
-          This is not meant to imply any sort of client-server
-          relationship between the communicating parties.
 **COMBINER:**
   A combiner specifies how multiple shared secrets are combined into
   a single shared secret.
@@ -1066,7 +1060,9 @@ The willingness to accept a Composite ML-KEM Algorithm MAY be signaled by the us
 
 The intended application for the public key MAY be indicated in the key usage certificate extension as specified in Section 4.2.1.3 of [RFC5280]. If the keyUsage extension is present in a certificate that conveys a Composite ML-KEM public key, then the key usage extension MUST contain only the following value:
 
+~~~
 keyEncipherment
+~~~
 
 The digitalSignature and dataEncipherment values MUST NOT be present. That is, a public key intended to be employed only with a Composite ML-KEM algorithm MUST NOT also be employed for data encryption or for digital signatures. This requirement does not carry any particular security consideration; only the convention that KEM keys be identified with the `keyEncipherment` key usage.
 
@@ -1209,7 +1205,7 @@ The Composite ML-KEM design specified in this document, and especially that of t
 
 # Samples {#appdx-samples}
 
-TBD
+TODO
 
 # Component Algorithm Reference {#appdx_components}
 
