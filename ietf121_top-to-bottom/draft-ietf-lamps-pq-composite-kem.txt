@@ -93,11 +93,10 @@ Table of Contents
      4.2.  Composite-ML-KEM.Encap
      4.3.  Composite-ML-KEM.Decap
    5.  Composite Key Structures
-     5.1.  pk-CompositeKEM
-     5.2.  CompositeKEMPublicKey
-     5.3.  CompositeKEMPrivateKey
-     5.4.  Encoding Rules
-     5.5.  Key Usage Bits
+     5.1.  CompositeKEMPublicKey
+     5.2.  CompositeKEMPrivateKey
+     5.3.  Encoding Rules
+     5.4.  Key Usage Bits
    6.  Composite ML-KEM Structures
      6.1.  kema-CompositeKEM
      6.2.  CompositeCiphertextValue
@@ -630,7 +629,7 @@ Table of Contents
                      Figure 2: Composite KeyGen(pk, sk)
 
    The structures CompositeKEMPublicKey and CompositeKEMPrivateKey are
-   described in Section 5.2 and Section 5.3 respectively and are used
+   described in Section 5.1 and Section 5.2 respectively and are used
    here as placeholders since implementations MAY use their own internal
    key representations in cases where interoparability is not required.
 
@@ -816,10 +815,15 @@ Table of Contents
    ciphertext fields such as those found in PKCS#10 [RFC2986], CMP
    [RFC4210], X.509 [RFC5280], CMS [RFC5652].
 
-5.1.  pk-CompositeKEM
+5.1.  CompositeKEMPublicKey
 
-   The following ASN.1 structures represent a composite public key
-   combined with an RSA or Elliptic Curve public key.
+   The wire encoding of a Composite ML-KEM public key is:
+
+   CompositeKEMPublicKey ::= SEQUENCE SIZE (2) OF BIT STRING
+
+   Since RSA and ECDH component public keys are themselves in a DER
+   encoding, the following ASN.1 structures show the internal structure
+   of the various public key types used in this specification:
 
    RsaCompositeKEMPublicKey ::= SEQUENCE {
            firstPublicKey BIT STRING (ENCODED BY id-raw-key),
@@ -847,10 +851,24 @@ Table of Contents
    For use with this document, ML-KEM keys MUST be be the raw BIT STRING
    representation as specified in [I-D.ietf-lamps-kyber-certificates]
    and Edwards Curve keys MUST be the raw BIT STRING representation as
-   speified in [RFC8410].  Note that here we used BIT STRING rather than
-   OCTET STRING so that these keys can be trivially transcoded into a
-   SubjectPublicKeyInfo as necessary, for example when a crypto library
-   requires this for invoking the component algorithm.
+   speified in [RFC8410].
+
+   Some applications may need to reconstruct the SubjectPublicKeyInfo
+   objects corresponding to each component public key.  Table 2 in
+   Section 7 provides the necessary mapping between composite and their
+   component algorithms for doing this reconstruction.  This also
+   motivates the design choice of SEQUENCE OF BIT STRING instead of
+   SEQUENCE OF OCTET STRING; using BIT STRING allows for easier
+   transcription between CompositeKEMPublicKey and SubjectPublicKeyInfo.
+
+   When the CompositeKEMPublicKey must be provided in octet string or
+   bit string format, the data structure is encoded as specified in
+   Section 5.3.
+
+   In order to maintain security properties of the composite,
+   applications that use composite keys MUST always perform fresh key
+   generations of both component keys and MUST NOT reuse existing key
+   material.  See Section 11.1.4 for a discussion.
 
    The following ASN.1 Information Object Class is defined to allow for
    compact definitions of each composite algorithm, leading to a smaller
@@ -875,35 +893,7 @@ Table of Contents
    The full set of key types defined by this specification can be found
    in the ASN.1 Module in Section 9.
 
-5.2.  CompositeKEMPublicKey
-
-   Composite public key data is represented by the following structure:
-
-   CompositeKEMPublicKey ::= SEQUENCE SIZE (2) OF BIT STRING
-
-   A composite key MUST contain two component public keys as SEQUENCE of
-   two bit strings.  The order of the component keys is determined by
-   the definition of the corresponding algorithm identifier as defined
-   in section Section 7.
-
-   Some applications may need to reconstruct the SubjectPublicKeyInfo
-   objects corresponding to each component public key.  Table 2 in
-   Section 7 provides the necessary mapping between composite and their
-   component algorithms for doing this reconstruction.  This also
-   motivates the design choice of SEQUENCE OF BIT STRING instead of
-   SEQUENCE OF OCTET STRING; using BIT STRING allows for easier
-   transcription between CompositeKEMPublicKey and SubjectPublicKeyInfo.
-
-   When the CompositeKEMPublicKey must be provided in octet string or
-   bit string format, the data structure is encoded as specified in
-   Section 5.4.
-
-   In order to maintain security properties of the composite,
-   applications that use composite keys MUST always perform fresh key
-   generations of both component keys and MUST NOT reuse existing key
-   material.  See Section 11.1.4 for a discussion.
-
-5.3.  CompositeKEMPrivateKey
+5.2.  CompositeKEMPrivateKey
 
    Use cases that require an inter-operable encoding for composite
    private keys, such as when private keys are carried in PKCS #12
@@ -931,7 +921,7 @@ Table of Contents
 
    Each element of the CompositeKEMPrivateKey Sequence is an OCTET
    STRING representing the PrivateKey for each component algorithm in
-   the same order defined in Section 5.2 for the components of
+   the same order defined in Section 5.1 for the components of
    CompositeKEMPublicKey.
 
    When a CompositeKEMPrivateKey is conveyed inside a OneAsymmetricKey
@@ -959,7 +949,7 @@ Table of Contents
    Component keys of a CompositeKEMPrivateKey MUST NOT be used in any
    other type of key or as a standalone key.
 
-5.4.  Encoding Rules
+5.3.  Encoding Rules
 
    Many protocol specifications will require that the composite public
    key and composite private key data structures be represented by an
@@ -980,7 +970,7 @@ Table of Contents
    CompositeKEMPublicKeyBs ::= BIT STRING
                    (CONTAINING CompositeKEMPublicKey ENCODED BY der)
 
-5.5.  Key Usage Bits
+5.4.  Key Usage Bits
 
    For protocols such as X.509 [RFC5280] that specify key usage along
    with the public key, then the composite public key associated with a
@@ -1016,7 +1006,7 @@ Table of Contents
    CompositeCiphertextValue ::= SEQUENCE SIZE (2) OF OCTET STRING
 
    The order of the component ciphertexts is the same as the order
-   defined in Section 5.2.
+   defined in Section 5.1.
 
    Some of the design choices for the combiner, specifically to place
    tradSS first, and to allow tradCT || tradPK || Domain to be treated
@@ -2555,14 +2545,14 @@ C.3.  Decapsulation Requires the Public Key
    traditional public key as input to the KDF that derives the output
    shared secret.  Therefore it is required to carry the public key
    within the respective OneAsymmetricKey.publicKey as per the private
-   key encoding given in Section 5.3.  Implementers who choose to use a
+   key encoding given in Section 5.2.  Implementers who choose to use a
    different private key encoding than the one specified in this
    document MUST consider how to provide the component public keys to
    the decapsulate routine.  While some implementations might contain
    routines to computationally derive the public key from the private
    key, it is not guaranteed that all implementations will support this;
    for this reason the interoparable composite private key format given
-   in this document in Section 5.3 requires the public key of the
+   in this document in Section 5.2 requires the public key of the
    traditional component to be included.
 
 Appendix D.  Intellectual Property Considerations
