@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-10-20T01:52:13.913777+00:00",
+  "timestamp": "2024-10-22T01:45:54.848586+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -449,15 +449,15 @@
       "id": "I_kwDOKRPFO86OtEHv",
       "title": "Synchronize sections and writing style of composite sigs and kems",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/31",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "By \"synchronize writing style\" I mean that there are probably very similar sections in both drafts that were written independently; we should choose the better text and apply it to both drafts.",
       "createdAt": "2024-07-07T19:05:22Z",
-      "updatedAt": "2024-07-07T20:04:09Z",
-      "closedAt": null,
+      "updatedAt": "2024-10-21T19:49:17Z",
+      "closedAt": "2024-10-21T19:49:17Z",
       "comments": []
     },
     {
@@ -836,7 +836,7 @@
       "id": "I_kwDOKRPFO86RBFo0",
       "title": "Don't name-collide \"DHKEM\" with 9180",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/48",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -845,8 +845,8 @@
       ],
       "body": "Call it something else?\r\nNot sure what.\r\nThis with Peter Campbell's comment in LAMPS 120 chat.\r\n\r\nSophie suggested ECIES -- but I don't think that's quite right either since we are not doing the symmetric encryption + MAC step.\r\n\r\nPersonally, I think we should leave it as \"DHKEM\" -- I don't think 9180 should have a monopoly on this term.",
       "createdAt": "2024-07-26T21:10:03Z",
-      "updatedAt": "2024-09-26T15:00:56Z",
-      "closedAt": null,
+      "updatedAt": "2024-10-21T19:49:07Z",
+      "closedAt": "2024-10-21T19:49:07Z",
       "comments": []
     },
     {
@@ -1340,15 +1340,15 @@
       "id": "I_kwDOKRPFO86a9fP2",
       "title": "Do we need to define smime caps for each kema?",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/81",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2024-10-20T01:28:32Z",
-      "updatedAt": "2024-10-20T01:28:32Z",
-      "closedAt": null,
+      "updatedAt": "2024-10-21T19:49:25Z",
+      "closedAt": "2024-10-21T19:49:25Z",
       "comments": []
     }
   ],
@@ -2838,7 +2838,7 @@
       "labels": [],
       "body": "",
       "createdAt": "2024-10-14T19:49:10Z",
-      "updatedAt": "2024-10-18T20:15:14Z",
+      "updatedAt": "2024-10-21T13:52:44Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "b9c8f48b9eb803bc47afc448b2808bb49723df64",
@@ -2886,6 +2886,13 @@
           "body": "@janklaussner your DER encoding of the RSA-OAEP AlgID had an extra NULL at the end that John and I couldn't figure out, so I replaced it with a DER encoding produced by our toolkit.",
           "createdAt": "2024-10-18T20:05:59Z",
           "updatedAt": "2024-10-18T20:05:59Z"
+        },
+        {
+          "author": "janklaussner",
+          "authorAssociation": "COLLABORATOR",
+          "body": "> @janklaussner your DER encoding of the RSA-OAEP AlgID had an extra NULL at the end that John and I couldn't figure out, so I replaced it with a DER encoding produced by our toolkit.\r\n\r\n@ounsworth @johngray-dev I'm using OpenSSL and try to create or import OAEP keys, but neither my nor your encoding worked. How did you do it? Can you send me an example public key that works for you? Otherwise I doubt this kind of \"key\" is supported by OpenSSL.\r\nThanks!",
+          "createdAt": "2024-10-21T13:52:42Z",
+          "updatedAt": "2024-10-21T13:52:42Z"
         }
       ],
       "reviews": [
@@ -3261,6 +3268,34 @@
       "mergedBy": "ounsworth",
       "mergeCommit": {
         "oid": "db1bcb0f2495cb6375fd35aa58c7918008f13646"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 82,
+      "id": "PR_kwDOKRPFO85_OlVh",
+      "title": "ietf121_top-to-bottom",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/82",
+      "state": "MERGED",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "- [x] Top-to-bottom alignment pass\r\n- [ ] Go through all the xml2rfc compiler warnings\r\n- [x] Run spell-check",
+      "createdAt": "2024-10-20T14:29:18Z",
+      "updatedAt": "2024-10-21T20:34:56Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "db1bcb0f2495cb6375fd35aa58c7918008f13646",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "ietf121_top-to-bottom",
+      "headRefOid": "1b9cb635d5a990decbb1ed637ef1adad43f0f800",
+      "closedAt": "2024-10-21T20:34:48Z",
+      "mergedAt": "2024-10-21T20:34:48Z",
+      "mergedBy": "johngray-dev",
+      "mergeCommit": {
+        "oid": "de2d8de6461c6dc564d1666a75d25b9fd105ad25"
       },
       "comments": [],
       "reviews": []
