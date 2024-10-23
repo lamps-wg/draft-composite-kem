@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 24 April 2025                                           M. Pala
+Expires: 26 April 2025                                           M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                         21 October 2024
+                                                         23 October 2024
 
 
   Composite ML-KEM for use in X.509 Public Key Infrastructure and CMS
@@ -61,7 +61,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 24 April 2025.
+   This Internet-Draft will expire on 26 April 2025.
 
 Copyright Notice
 
@@ -2309,11 +2309,11 @@ Appendix C.  Fixed Component Algorithm Identifiers
 
    ASN.1:
      algorithm AlgorithmIdentifier ::= {
-       algorithm id-alg-ml-kem-768   -- (2.16.840.1.101.4.2)
+       algorithm id-alg-ml-kem-768   -- (2.16.840.1.101.3.4.4.2)
        }
 
    DER:
-     30 0B 06 07 60 86 48 01 65 04 02
+     30 0B 06 07 60 86 48 01 65 03 04 04 02
 
    *ML-KEM-1024*
 
@@ -2321,11 +2321,11 @@ Appendix C.  Fixed Component Algorithm Identifiers
 
    ASN.1:
      algorithm AlgorithmIdentifier ::= {
-       algorithm id-alg-ml-kem-1024   -- (2.16.840.1.101.4.3)
+       algorithm id-alg-ml-kem-1024   -- (2.16.840.1.101.3.4.4.3)
        }
 
    DER:
-     30 0B 06 07 60 86 48 01 65 04 03
+     30 0B 06 07 60 86 48 01 65 03 04 04 03
 
    *RSA-OAEP - all sizes*
 
