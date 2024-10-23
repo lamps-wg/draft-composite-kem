@@ -1249,11 +1249,11 @@ The following sections list explicitly the DER encoded `AlgorithmIdentifier` tha
 ~~~
 ASN.1:
   algorithm AlgorithmIdentifier ::= {
-    algorithm id-alg-ml-kem-768   -- (2.16.840.1.101.4.2)
+    algorithm id-alg-ml-kem-768   -- (2.16.840.1.101.3.4.4.2)
     }
 
 DER:
-  30 0B 06 07 60 86 48 01 65 04 02
+  30 0B 06 07 60 86 48 01 65 03 04 04 02
 ~~~
 
 **ML-KEM-1024**
@@ -1263,11 +1263,11 @@ ASN.1:
 ~~~
 ASN.1:
   algorithm AlgorithmIdentifier ::= {
-    algorithm id-alg-ml-kem-1024   -- (2.16.840.1.101.4.3)
+    algorithm id-alg-ml-kem-1024   -- (2.16.840.1.101.3.4.4.3)
     }
 
 DER:
-  30 0B 06 07 60 86 48 01 65 04 03
+  30 0B 06 07 60 86 48 01 65 03 04 04 03
 ~~~
 
 **RSA-OAEP - all sizes**
