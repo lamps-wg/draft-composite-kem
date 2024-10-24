@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-10-22T01:45:54.848586+00:00",
+  "timestamp": "2024-10-24T01:44:24.778366+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -1349,6 +1349,22 @@
       "createdAt": "2024-10-20T01:28:32Z",
       "updatedAt": "2024-10-21T19:49:25Z",
       "closedAt": "2024-10-21T19:49:25Z",
+      "comments": []
+    },
+    {
+      "number": 83,
+      "id": "I_kwDOKRPFO86bfcql",
+      "title": "The DER Encoded ML-KEM ObjectID are incorrect",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/83",
+      "state": "CLOSED",
+      "author": "johngray-dev",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "The draft currently has this:\r\n\r\n*ML-KEM-768*\r\n\r\n   ASN.1:\r\n     algorithm AlgorithmIdentifier ::= {\r\n       algorithm id-alg-ml-kem-768   -- (2.16.840.1.101.4.2)\r\n       }\r\n\r\n   DER:\r\n     30 0B 06 07 60 86 48 01 65 04 02\r\n\r\n   *ML-KEM-1024*\r\n\r\n   ASN.1:\r\n\r\n   ASN.1:\r\n     algorithm AlgorithmIdentifier ::= {\r\n       algorithm id-alg-ml-kem-1024   -- (2.16.840.1.101.4.3)\r\n       }\r\n\r\n   DER:\r\n     30 0B 06 07 60 86 48 01 65 04 03\r\n\r\nIT should be:\r\n\r\n*ML-KEM-768*\r\n\r\n   ASN.1:\r\n     algorithm AlgorithmIdentifier ::= {\r\n       algorithm id-alg-ml-kem-768   -- (2.16.840.1.101.3.4.4.2)\r\n       }\r\n\r\n   DER:\r\n     30 0B 06 07 60 86 48 01 65 03 04 04 02\r\n\r\n   *ML-KEM-1024*\r\n\r\n   ASN.1:\r\n\r\n   ASN.1:\r\n     algorithm AlgorithmIdentifier ::= {\r\n       algorithm id-alg-ml-kem-1024   -- (2.16.840.1.101.3.4.4.3)\r\n       }\r\n\r\n   DER:\r\n     30 0B 06 07 60 86 48 01 65 03 04 04 03",
+      "createdAt": "2024-10-23T13:54:13Z",
+      "updatedAt": "2024-10-23T14:55:26Z",
+      "closedAt": "2024-10-23T14:55:26Z",
       "comments": []
     }
   ],
@@ -3296,6 +3312,34 @@
       "mergedBy": "johngray-dev",
       "mergeCommit": {
         "oid": "de2d8de6461c6dc564d1666a75d25b9fd105ad25"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 84,
+      "id": "PR_kwDOKRPFO85_n0H2",
+      "title": "Fix the ML-KEM encodings",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/84",
+      "state": "MERGED",
+      "author": "johngray-dev",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "resolves #83",
+      "createdAt": "2024-10-23T13:56:53Z",
+      "updatedAt": "2024-10-23T14:55:25Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "de2d8de6461c6dc564d1666a75d25b9fd105ad25",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "83-Fix-MLKEM-Encodings",
+      "headRefOid": "fe81529d35e07ac7ac83b96a3a4ded45d5500c06",
+      "closedAt": "2024-10-23T14:55:25Z",
+      "mergedAt": "2024-10-23T14:55:25Z",
+      "mergedBy": "johngray-dev",
+      "mergeCommit": {
+        "oid": "af137b53cb1a0e9de0f73c7856a5e2e97f165dcf"
       },
       "comments": [],
       "reviews": []
