@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-10-31T01:46:53.160875+00:00",
+  "timestamp": "2024-11-03T01:51:14.089818+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -3341,6 +3341,32 @@
       "mergeCommit": {
         "oid": "af137b53cb1a0e9de0f73c7856a5e2e97f165dcf"
       },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 85,
+      "id": "PR_kwDOKRPFO86AicuP",
+      "title": "Fix typos",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/85",
+      "state": "OPEN",
+      "author": "jiep",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-10-31T15:29:40Z",
+      "updatedAt": "2024-10-31T15:29:40Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "af137b53cb1a0e9de0f73c7856a5e2e97f165dcf",
+      "headRepository": "jiep/draft-composite-kem",
+      "headRefName": "patch-1",
+      "headRefOid": "747f274e53846548cd1c5019b65402b4801fc4f0",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
       "comments": [],
       "reviews": []
     }
