@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-11-03T01:51:14.089818+00:00",
+  "timestamp": "2024-11-05T01:43:12.611824+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -1365,6 +1365,54 @@
       "createdAt": "2024-10-23T13:54:13Z",
       "updatedAt": "2024-10-23T14:55:26Z",
       "closedAt": "2024-10-23T14:55:26Z",
+      "comments": []
+    },
+    {
+      "number": 86,
+      "id": "I_kwDOKRPFO86c9Qle",
+      "title": "No MLKEM768 and P-256 variant",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/86",
+      "state": "OPEN",
+      "author": "chris-wood",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "P-256 is missing from the draft, yet this will definitely be needed in practice. ",
+      "createdAt": "2024-11-04T16:42:03Z",
+      "updatedAt": "2024-11-04T16:42:18Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 87,
+      "id": "I_kwDOKRPFO86c9SAL",
+      "title": "HKDF-based hybrid variants are unimplementable ",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/87",
+      "state": "OPEN",
+      "author": "chris-wood",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "The generic combiner effectively shoves everything into a KDF to produce a new shared secret, e.g.:\r\n\r\n```\r\nss = KDF(mlkemSS || tradSS || tradCT || tradPK || Domain)\r\n```\r\n\r\nHowever, for HKDF-based KDFs, this simply doesn't make sense. HKDF requires _multiple_ inputs, not just a single input (`mlkemSS || tradSS || tradCT || tradPK || Domain`). As it stands, none of the HKDF-based variants in table 2 can be implemented.",
+      "createdAt": "2024-11-04T16:44:03Z",
+      "updatedAt": "2024-11-04T16:44:03Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 88,
+      "id": "I_kwDOKRPFO86c9S4B",
+      "title": "Drop DER encoding",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/88",
+      "state": "OPEN",
+      "author": "chris-wood",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "An implementation of these KEMs should _not_ need any DER encoding or parsing logic to function. The spec should drop all use of DER encoding for KEM public keys and ciphertexts. Applications or protocols which require DER can wrap them as desired, but for the relevant hybrids here, they are simply not needed and add unnecessary complexity.",
+      "createdAt": "2024-11-04T16:45:41Z",
+      "updatedAt": "2024-11-04T16:45:41Z",
+      "closedAt": null,
       "comments": []
     }
   ],
