@@ -521,7 +521,7 @@ Output:
 
 Key Generation Process:
 
-  1. Generate componint keys
+  1. Generate component keys
 
     (mlkemPK, mlkemSK) = ML-KEM.KeyGen()
     (tradPK, tradSK)   = Trad.KeyGen()
@@ -558,7 +558,7 @@ Composite-ML-KEM.Encap(pk) -> (ss, ct)
 
 Explicit Input:
 
-  pk          Composite public key conisting of encryption public keys
+  pk          Composite public key consisting of encryption public keys
               for each component.
 
 Implicit inputs:
