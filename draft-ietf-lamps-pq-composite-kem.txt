@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 26 April 2025                                           M. Pala
+Expires: 13 May 2025                                             M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                         23 October 2024
+                                                         9 November 2024
 
 
   Composite ML-KEM for use in X.509 Public Key Infrastructure and CMS
@@ -61,7 +61,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 26 April 2025.
+   This Internet-Draft will expire on 13 May 2025.
 
 Copyright Notice
 
@@ -594,7 +594,7 @@ Table of Contents
 
    Key Generation Process:
 
-     1. Generate componint keys
+     1. Generate component keys
 
        (mlkemPK, mlkemSK) = ML-KEM.KeyGen()
        (tradPK, tradSK)   = Trad.KeyGen()
@@ -639,63 +639,63 @@ Table of Contents
    ML-KEM can be used as a direct drop-in replacement anywhere that ML-
    KEM is used.
 
-  Composite-ML-KEM.Encap(pk) -> (ss, ct)
+ Composite-ML-KEM.Encap(pk) -> (ss, ct)
 
-  Explicit Input:
+ Explicit Input:
 
-    pk          Composite public key conisting of encryption public keys
-                for each component.
+   pk          Composite public key consisting of encryption public keys
+               for each component.
 
-  Implicit inputs:
+ Implicit inputs:
 
-    ML-KEM   A placeholder for the specific ML-KEM algorithm and
-             parameter set to use, for example, could be "ML-KEM-768".
+   ML-KEM   A placeholder for the specific ML-KEM algorithm and
+            parameter set to use, for example, could be "ML-KEM-768".
 
-    Trad     A placeholder for the specific ML-KEM algorithm and
-             parameter set to use, for example "RSA-OAEP"
-             or "X25519".
+   Trad     A placeholder for the specific ML-KEM algorithm and
+            parameter set to use, for example "RSA-OAEP"
+            or "X25519".
 
-    KDF      The KDF specified for the given Composite ML-KEM algorithm.
-             See algorithm specifications below.
+   KDF      The KDF specified for the given Composite ML-KEM algorithm.
+            See algorithm specifications below.
 
-    Domain   Domain separator value for binding the signature to the
-             Composite OID. See section on Domain Separators below.
+   Domain   Domain separator value for binding the signature to the
+            Composite OID. See section on Domain Separators below.
 
-  Output:
+ Output:
 
-    ss      The shared secret key, a 256-bit key suitable for use with
-            symmetric cryptographic algorithms.
+   ss      The shared secret key, a 256-bit key suitable for use with
+           symmetric cryptographic algorithms.
 
-    ct      The ciphertext, a CompositeCiphertextValue.
+   ct      The ciphertext, a CompositeCiphertextValue.
 
-  Encap Process:
+ Encap Process:
 
-    1. Separate the public keys.
+   1. Separate the public keys.
 
-        (mlkemPK, tradPK) = pk
+       (mlkemPK, tradPK) = pk
 
-    2.  Perform the respective component Encap operations according to
-        their algorithm specifications.
+   2.  Perform the respective component Encap operations according to
+       their algorithm specifications.
 
-        (mlkemCT, mlkemSS) = MLKEM.Encaps(mlkemPK)
-        (tradCT, tradSS) = TradKEM.Encap(tradPK)
+       (mlkemCT, mlkemSS) = MLKEM.Encaps(mlkemPK)
+       (tradCT, tradSS) = TradKEM.Encap(tradPK)
 
-    3. If either ML-KEM.Encaps() or TradKEM.Encap() return an error,
-       then this process must return an error.
+   3. If either ML-KEM.Encaps() or TradKEM.Encap() return an error,
+      then this process must return an error.
 
-        if NOT (mlkemCT, mlkemSS) or NOT (tradCT, tradSS):
-          output "Encapsulation error"
+       if NOT (mlkemCT, mlkemSS) or NOT (tradCT, tradSS):
+         output "Encapsulation error"
 
-    4. Encode and combine
+   4. Encode and combine
 
-       ct = CompositeCiphertextValue(mlkemCT, tradCT)
-       ss = KDF(mlkemSS || tradSS || tradCT || tradPK || Domain)
+      ct = CompositeCiphertextValue(mlkemCT, tradCT)
+      ss = KDF(mlkemSS || tradSS || tradCT || tradPK || Domain)
 
-    5. Output shared secret key and ciphertext
+   5. Output shared secret key and ciphertext
 
-       return (ss, ct)
+      return (ss, ct)
 
-                   Figure 3: Composite-ML-KEM.Encap(pk)
+                  Figure 3: Composite-ML-KEM.Encap(pk)
 
    The specific values for KDF are defined per Composite ML-KEM
    algorithm in Table 2 and the specific values for Domain are defined
