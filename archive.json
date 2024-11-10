@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-11-07T01:42:45.743937+00:00",
+  "timestamp": "2024-11-10T01:48:16.646525+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -1370,7 +1370,7 @@
     {
       "number": 86,
       "id": "I_kwDOKRPFO86c9Qle",
-      "title": "No MLKEM768 and P-256 variant",
+      "title": "Add a MLKEM768 and P-256 variant",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/86",
       "state": "OPEN",
       "author": "chris-wood",
@@ -1379,7 +1379,7 @@
       "labels": [],
       "body": "P-256 is missing from the draft, yet this will definitely be needed in practice. ",
       "createdAt": "2024-11-04T16:42:03Z",
-      "updatedAt": "2024-11-04T16:42:18Z",
+      "updatedAt": "2024-11-09T18:55:32Z",
       "closedAt": null,
       "comments": []
     },
@@ -1411,7 +1411,100 @@
       "labels": [],
       "body": "An implementation of these KEMs should _not_ need any DER encoding or parsing logic to function. The spec should drop all use of DER encoding for KEM public keys and ciphertexts. Applications or protocols which require DER can wrap them as desired, but for the relevant hybrids here, they are simply not needed and add unnecessary complexity.",
       "createdAt": "2024-11-04T16:45:41Z",
-      "updatedAt": "2024-11-04T16:45:41Z",
+      "updatedAt": "2024-11-09T18:49:35Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Yup. We will do this. It's become clear in the past few weeks that non-PKIX protocols would like to directly re-use our construction.",
+          "createdAt": "2024-11-09T18:49:35Z",
+          "updatedAt": "2024-11-09T18:49:35Z"
+        }
+      ]
+    },
+    {
+      "number": 89,
+      "id": "I_kwDOKRPFO86dZEqO",
+      "title": "Maybe reverse the domain encoding",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/89",
+      "state": "OPEN",
+      "author": "ilaril",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "The KDF input `mlkemSS || tradSS || tradCT || tradPK || Domain` is not parsable, as a domain may be suffix of another. This means the inputs might collide even between what are supposed to be separate domains.\r\n\r\nThe simplest way I can come up to make it parsable (and thus prevent inter-domain collisions) is to reverse the domain encoding:\r\n\r\n`mlkemSS || tradSS || tradCT || tradPK || reverse(Domain)` \r\n\r\n(Since it is possible to parse in reverse from the end.)",
+      "createdAt": "2024-11-07T10:38:24Z",
+      "updatedAt": "2024-11-09T21:07:07Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Ilari, I have no idea what you are trying to say. What do you mean \"not parsable\"? Can you please explain another way?",
+          "createdAt": "2024-11-09T18:52:03Z",
+          "updatedAt": "2024-11-09T18:52:03Z"
+        },
+        {
+          "author": "ilaril",
+          "authorAssociation": "NONE",
+          "body": "The domain separation is not guaranteed: Even if two inputs have different domains, the input to the KDF might still be the same.\r\n\r\nWhile such thing seems to be very unlikely to happen and low impact in practice, cryptography is traditionally conservative and would rather eliminate the possibility altogether.\r\n\r\n",
+          "createdAt": "2024-11-09T21:07:05Z",
+          "updatedAt": "2024-11-09T21:07:05Z"
+        }
+      ]
+    },
+    {
+      "number": 90,
+      "id": "I_kwDOKRPFO86dZMXP",
+      "title": "Drop id-MLKEM768-X25519",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/90",
+      "state": "CLOSED",
+      "author": "ilaril",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "As far as I can tell, this is just an incompatible (different domain) duplicate of the X-Wing.\r\n\r\nIt would be easier for crypto implementers to just have one construction to combine X25519 and MLKEM768, not two.",
+      "createdAt": "2024-11-07T10:46:10Z",
+      "updatedAt": "2024-11-09T20:47:29Z",
+      "closedAt": "2024-11-09T18:54:55Z",
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Ilari, were you in LAMPS? This point was discussed fairly extensively.\r\n\r\nCurrently this combination IS X-Wing (or at least, it is attempting to be), and as such, I am very confused about why the X-Wing draft bothered to include OIDs. Currently the only (substantial) difference between this and X-Wing is their \"simultaneous KeyGen\". We are in discussions with the X-Wing authors about whether we want them to be separate or not.",
+          "createdAt": "2024-11-09T18:54:34Z",
+          "updatedAt": "2024-11-09T18:54:34Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Since this is an open discussion point, I am going to remove this github issue.",
+          "createdAt": "2024-11-09T18:54:55Z",
+          "updatedAt": "2024-11-09T18:54:55Z"
+        },
+        {
+          "author": "ilaril",
+          "authorAssociation": "NONE",
+          "body": "There is another substantial difference besides the keygen: The domain separators are different (060B6086480186FA6B5005021A versus 5c2e2f2f5e5c). So changing the object identifier in public key does not work (whereas it would if the only difference was the keygen).\r\n\r\nRe-watching the session recording, the closest comments I can find are about having two close things being a bad idea, and the keygen difference justifying a new object identifier.",
+          "createdAt": "2024-11-09T20:47:28Z",
+          "updatedAt": "2024-11-09T20:47:28Z"
+        }
+      ]
+    },
+    {
+      "number": 91,
+      "id": "I_kwDOKRPFO86dvTHi",
+      "title": "Composite KEM does not fully protect against implementation errors in ML-KEM",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/91",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "See comment from Peter C:\r\n\r\nhttps://mailarchive.ietf.org/arch/msg/spasm/Fq06ghviNMejesJNR4XzP5x0ecI/",
+      "createdAt": "2024-11-09T18:50:30Z",
+      "updatedAt": "2024-11-09T18:50:30Z",
       "closedAt": null,
       "comments": []
     }
@@ -3397,25 +3490,35 @@
       "id": "PR_kwDOKRPFO86AicuP",
       "title": "Fix typos",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/85",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "jiep",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2024-10-31T15:29:40Z",
-      "updatedAt": "2024-10-31T15:29:40Z",
+      "updatedAt": "2024-11-09T18:56:25Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "af137b53cb1a0e9de0f73c7856a5e2e97f165dcf",
       "headRepository": "jiep/draft-composite-kem",
       "headRefName": "patch-1",
       "headRefOid": "747f274e53846548cd1c5019b65402b4801fc4f0",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
-      "comments": [],
+      "closedAt": "2024-11-09T18:56:25Z",
+      "mergedAt": "2024-11-09T18:56:25Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "8810bc0ebb42fb9553387361765f1a56756170db"
+      },
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Thanks!",
+          "createdAt": "2024-11-09T18:56:17Z",
+          "updatedAt": "2024-11-09T18:56:17Z"
+        }
+      ],
       "reviews": []
     }
   ]
