@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-11-10T01:48:16.646525+00:00",
+  "timestamp": "2024-11-12T01:41:52.283101+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -1379,9 +1379,17 @@
       "labels": [],
       "body": "P-256 is missing from the draft, yet this will definitely be needed in practice. ",
       "createdAt": "2024-11-04T16:42:03Z",
-      "updatedAt": "2024-11-09T18:55:32Z",
+      "updatedAt": "2024-11-11T16:04:38Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "chris-wood",
+          "authorAssociation": "NONE",
+          "body": "@ounsworth do you welcome PRs for this?",
+          "createdAt": "2024-11-11T16:04:36Z",
+          "updatedAt": "2024-11-11T16:04:36Z"
+        }
+      ]
     },
     {
       "number": 87,
@@ -1411,7 +1419,7 @@
       "labels": [],
       "body": "An implementation of these KEMs should _not_ need any DER encoding or parsing logic to function. The spec should drop all use of DER encoding for KEM public keys and ciphertexts. Applications or protocols which require DER can wrap them as desired, but for the relevant hybrids here, they are simply not needed and add unnecessary complexity.",
       "createdAt": "2024-11-04T16:45:41Z",
-      "updatedAt": "2024-11-09T18:49:35Z",
+      "updatedAt": "2024-11-11T16:04:15Z",
       "closedAt": null,
       "comments": [
         {
@@ -1420,6 +1428,13 @@
           "body": "Yup. We will do this. It's become clear in the past few weeks that non-PKIX protocols would like to directly re-use our construction.",
           "createdAt": "2024-11-09T18:49:35Z",
           "updatedAt": "2024-11-09T18:49:35Z"
+        },
+        {
+          "author": "chris-wood",
+          "authorAssociation": "NONE",
+          "body": "Great! Do you want PRs for this, or do you intend to make the change yourself?",
+          "createdAt": "2024-11-11T16:04:14Z",
+          "updatedAt": "2024-11-11T16:04:14Z"
         }
       ]
     },
