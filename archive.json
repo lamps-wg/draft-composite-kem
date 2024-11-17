@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-11-14T01:46:18.127457+00:00",
+  "timestamp": "2024-11-17T01:54:51.631181+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -1520,6 +1520,22 @@
       "body": "See comment from Peter C:\r\n\r\nhttps://mailarchive.ietf.org/arch/msg/spasm/Fq06ghviNMejesJNR4XzP5x0ecI/",
       "createdAt": "2024-11-09T18:50:30Z",
       "updatedAt": "2024-11-09T18:50:30Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 92,
+      "id": "I_kwDOKRPFO86egkdG",
+      "title": "GHP18 analysis may not apply",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/92",
+      "state": "OPEN",
+      "author": "chris-wood",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "The security considerations references [GHP18](https://eprint.iacr.org/2018/024.pdf) as proof of the combiner mechanism in the draft. However, as far as I can tell, the draft does not adhere to the construction in this paper. In GHP18, the output ciphertext is the result of concatenating all of the individual KEM ciphertexts, and the shared secret is the result of a function W applied to all individual KEM shared secrets _and_ the ciphertext, i.e., `K= W(k1,...,kn,c)` where `ki` is the i-th KEM shared secret and `c` is the combined (concatenated) ciphertext.\r\n\r\nHowever, in this document, the shared secret does not include the ciphertext in the same way. It computes the shared secret as:\r\n\r\n```\r\nct = CompositeCiphertextValue(mlkemCT, tradCT)\r\nss = KDF(mlkemSS || tradSS || tradCT || tradPK || Domain)\r\n```\r\n\r\nwhereas for equivalence one would need to do something like:\r\n\r\n```\r\nct = CompositeCiphertextValue(mlkemCT, tradCT)\r\nss = KDF(mlkemSS || tradSS || ct || tradPK || Domain)\r\n```\r\n\r\nPresumably the traditional public key is included for MAL-BIND-K-PK reasons, but it's not really clear to me.\r\n\r\nTo make a long issue short, where is the proof of security for the combiner in this document?",
+      "createdAt": "2024-11-14T16:18:49Z",
+      "updatedAt": "2024-11-14T16:18:49Z",
       "closedAt": null,
       "comments": []
     }
