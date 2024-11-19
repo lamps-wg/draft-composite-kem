@@ -1007,17 +1007,19 @@ EDNOTE: these are prototyping OIDs to be replaced by IANA.
 
 | Composite ML-KEM Algorithm         | OID                  | First Algorithm | Second Algorithm     | KDF      |
 |---------                           | -----------------    | ----------      | ----------           | -------- |
-| id-MLKEM768-RSA2048                | &lt;CompKEM&gt;.21   | MLKEM768        | RSA-OAEP 2048        | SHA3-256 |
-| id-MLKEM768-RSA3072                | &lt;CompKEM&gt;.22   | MLKEM768        | RSA-OAEP 3072        | SHA3-256 |
-| id-MLKEM768-RSA4096                | &lt;CompKEM&gt;.23   | MLKEM768        | RSA-OAEP 4096        | SHA3-256 |
+| id-MLKEM768-RSA2048                | &lt;CompKEM&gt;.21   | MLKEM768        | RSA-OAEP 2048        | HKDF-Extract-SHA256 |
+| id-MLKEM768-RSA3072                | &lt;CompKEM&gt;.22   | MLKEM768        | RSA-OAEP 3072        | HKDF-Extract-SHA256 |
+| id-MLKEM768-RSA4096                | &lt;CompKEM&gt;.23   | MLKEM768        | RSA-OAEP 4096        | HKDF-Extract-SHA256 |
 | id-MLKEM768-X25519                 | &lt;CompKEM&gt;.24   | MLKEM768        | X25519               | SHA3-256 |
-| id-MLKEM768-ECDH-P256              | &lt;CompKEM&gt;.25   | MLKEM768        | ECDH-P256            | SHA3-256 |
-| id-MLKEM768-ECDH-P384              | &lt;CompKEM&gt;.25   | MLKEM768        | ECDH-P384            | SHA3-256 |
-| id-MLKEM768-ECDH-brainpoolP256r1   | &lt;CompKEM&gt;.26   | MLKEM768        | ECDH-brainpoolp256r1 | SHA3-256 |
+| id-MLKEM768-ECDH-P256              | &lt;CompKEM&gt;.25   | MLKEM768        | ECDH-P256            | HKDF-Extract-SHA256 |
+| id-MLKEM768-ECDH-P384              | &lt;CompKEM&gt;.25   | MLKEM768        | ECDH-P384            | HKDF-Extract-SHA256 |
+| id-MLKEM768-ECDH-brainpoolP256r1   | &lt;CompKEM&gt;.26   | MLKEM768        | ECDH-brainpoolp256r1 | HKDF-Extract-SHA256 |
 | id-MLKEM1024-ECDH-P384             | &lt;CompKEM&gt;.27   | MLKEM1024       | ECDH-P384            | SHA3-256 |
 | id-MLKEM1024-ECDH-brainpoolP384r1  | &lt;CompKEM&gt;.28   | MLKEM1024       | ECDH-brainpoolP384r1 | SHA3-256 |
 | id-MLKEM1024-X448                  | &lt;CompKEM&gt;.29   | MLKEM1024       | X448                 | SHA3-256 |
 {: #tab-kem-algs title="Composite ML-KEM key types"}
+
+For the use of HKDF-Extract {{RFC5869}}, a salt is not provided, i.e., the default salt (all zeroes of length HashLen) will be used.
 
 Full specifications for the referenced algorithms can be found in {{appdx_components}}.
 
@@ -1186,53 +1188,6 @@ A compliant implementation MUST support the following algorithm combinations for
 Full specifications for the referenced algorithms can be found either further down in this section, or in {{appdx_components}}.
 
 Note that here we differ slightly from the internal KDF used within the KEM combiner in {{sec-alg-ids}} because [RFC9629] requires that the KDF listed in the KEMRecipientInfo `kdf` field must have an interface which accepts `KDF(IKM, L, info)`, so here we need to use KMAC and cannot directly use SHA3. Since we require 256-bits of (2nd) pre-image resistance, we use KMAC256 for the Composite ML-KEM algorithms with internally use SHA3-256, as aligned with Table 3 of {{SP.800-57pt1r5}}.
-
-
-### Use of the HKDF-based Key Derivation Function
-
-The HMAC-based Extract-and-Expand Key Derivation Function (HKDF) is defined in {{!RFC5869}}.
-
-The HKDF function is a composition of the HKDF-Extract and HKDF-Expand functions.
-
-~~~
-HKDF(salt, IKM, info, L)
-  = HKDF-Expand(HKDF-Extract(salt, IKM), info, L)
-~~~
-
-HKDF(salt, IKM, info, L) takes the following parameters:
-
-salt:
-: optional salt value (a non-secret random value). In this document this parameter is unused, that is it is the zero-length string "".
-
-IKM:
-: input keying material. In this document this is the shared secret outputted from the Encapsulate() or Decapsulate() functions.  This corresponds to the IKM KDF input from {{Section 5 of RFC9629}}.
-
-info:
-: optional context and application specific information. In this document this corresponds to the info KDF input from {{Section 5 of RFC9629}}. This is the ASN.1 DER encoding of CMSORIforKEMOtherInfo.
-
-L:
-: length of output keying material in octets. This corresponds to the L KDF input from {{Section 5 of RFC9629}}, which is identified in the kekLength value from KEMRecipientInfo. Implementations MUST confirm that this value is consistent with the key size of the key-encryption algorithm.
-
-HKDF may be used with different hash functions, including SHA-256 {{FIPS.180-4}}. The object identifier id-alg-hkdf-with-sha256 is defined in [RFC8619], and specifies the use of HKDF with SHA-256. The parameter field MUST be absent when this algorithm identifier is used to specify the KDF for ML-KEM in KemRecipientInfo.
-
-### Use of the KMAC-based Key Derivation Function
-
-KMAC256-KDF is a KMAC-based KDF specified for use in CMS in {{I-D.ietf-lamps-cms-sha3-hash}}. The definition of KMAC is copied here for convenience.  Here, KMAC# indicates the use of either KMAC128-KDF or KMAC256-KDF, although only KMAC256 is used in this specification.
-
-KMAC#(K, X, L, S) takes the following parameters:
-
-> K: the input key-derivation key.  In this document this is the shared secret outputted from the Encapsulate() or Decapsulate() functions.  This corresponds to the IKM KDF input from Section 5 of [RFC9629].
-
-> X: the context, corresponding to the info KDF input from Section 5 of [RFC9629]. This is the ASN.1 DER encoding of CMSORIforKEMOtherInfo.
-
-> L: the output length, in bits.  This corresponds to the L KDF input from Section 5 of [RFC9629], which is identified in the kekLength value from KEMRecipientInfo.  The L KDF input and kekLength values are specified in octets while this L parameter is specified in bits.
-
-> S: the optional customization label.  In this document this parameter is unused, that is it is the zero-length string "".
-
-The object identifier for KMAC256-KDF is id-kmac256, as defined in {{I-D.ietf-lamps-cms-sha3-hash}}.
-
-Since the customization label to KMAC# is not used, the parameter field MUST be absent when id-kmac256 is used as part of an algorithm identifier specifying the KDF to use for Composite ML-KEM in KemRecipientInfo.
-
 
 ## RecipientInfo Conventions {#sec-using-recipientInfo}
 
