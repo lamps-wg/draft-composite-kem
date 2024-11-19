@@ -567,7 +567,7 @@ Encap Process:
 ~~~
 {: #alg-composite-mlkem-encap title="Composite-ML-KEM.Encap(pk)"}
 
-The specific values for `KDF` are defined per Composite ML-KEM algorithm in {{tab-kem-algs}} and the specific values for `Domain` are defined per Composite ML-KEM algorithm in {{sec-alg-ids}}..
+The specific values for `KDF` are defined per Composite ML-KEM algorithm in {{tab-kem-algs}} and the specific values for `Domain` are defined per Composite ML-KEM algorithm in {{sec-alg-ids}}.
 
 ## Decapsulation {#sect-composite-decaps}
 
