@@ -496,9 +496,6 @@ Key Generation Process:
 ~~~
 {: #alg-composite-keygen title="Composite KeyGen(pk, sk)"}
 
-The public key encoding simply concatenates the ML-KEM public key and traditional algorithm public key
-
-The structures CompositeKEMPublicKey and CompositeKEMPrivateKey are described in {{sec-composite-pub-keys}} and {{sec-priv-key}} respectively and are used here as placeholders since implementations MAY use their own internal key representations in cases where interoperability is not required.
 
 In order to ensure fresh keys, the key generation functions MUST be executed for both component algorithms. Compliant parties MUST NOT use or import component keys that are used in other contexts, combinations, or by themselves as keys for standalone algorithm use.
 
