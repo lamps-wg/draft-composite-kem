@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-11-17T01:54:51.631181+00:00",
+  "timestamp": "2024-11-19T01:50:09.337194+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -1538,6 +1538,37 @@
       "updatedAt": "2024-11-14T16:18:49Z",
       "closedAt": null,
       "comments": []
+    },
+    {
+      "number": 93,
+      "id": "I_kwDOKRPFO86fGir-",
+      "title": "Need to specify clearly how to invoke HKDF",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/93",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Currently we just treat it as a generic KDF.\r\n\r\nWe need to take a much closer look at how to define the HKDF-SHA256 combo in a way that is 800-56Cr2 compliant. Technically HKDF (RFC 5869) is allowed under the 2-Step method, but it requires some careful alignment of inputs on the HKDF-Expand step. But in our case we only need to use the HKDF-Extract step for the combiner. \r\n\r\nFix: either specify that we only use the HKDF-Extract() step from RFC 5869, or else just use HMAC directly from RFC 2104\r\n\r\nhttps://datatracker.ietf.org/doc/rfc2104/",
+      "createdAt": "2024-11-18T17:24:38Z",
+      "updatedAt": "2024-11-18T21:59:17Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "chris-wood",
+          "authorAssociation": "NONE",
+          "body": "@ounsworth this is a dupe of #87, I think?",
+          "createdAt": "2024-11-18T21:58:39Z",
+          "updatedAt": "2024-11-18T21:58:39Z"
+        },
+        {
+          "author": "chris-wood",
+          "authorAssociation": "NONE",
+          "body": "In any case, I would recommend just dropping HKDF altogether. Since you're composing with ML-KEM, you already have SHA-3 available, so you might as well just use SHA3-256 as _the one_ KDF across the board. What do you think?",
+          "createdAt": "2024-11-18T21:59:16Z",
+          "updatedAt": "2024-11-18T21:59:16Z"
+        }
+      ]
     }
   ],
   "pulls": [
@@ -3550,6 +3581,32 @@
           "updatedAt": "2024-11-09T18:56:17Z"
         }
       ],
+      "reviews": []
+    },
+    {
+      "number": 94,
+      "id": "PR_kwDOKRPFO86CSeTf",
+      "title": "Drop DER encoding for composite ML-KEM functions",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/94",
+      "state": "OPEN",
+      "author": "chris-wood",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "Closes #88 \r\n\r\nI also moved content around in this PR to make it flow a bit better, e.g., by moving security-relevant stuff to the security considerations and keeping the main implementation details in the primary document.",
+      "createdAt": "2024-11-18T19:02:58Z",
+      "updatedAt": "2024-11-18T19:02:58Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "8810bc0ebb42fb9553387361765f1a56756170db",
+      "headRepository": "chris-wood/draft-composite-kem",
+      "headRefName": "caw/drop-der",
+      "headRefOid": "788d82cd8b6b547f3337d4bba2ca4708dd226ca7",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
       "reviews": []
     }
   ]
