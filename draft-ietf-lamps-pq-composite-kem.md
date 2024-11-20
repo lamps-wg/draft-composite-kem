@@ -671,7 +671,7 @@ Serialization Process:
 
   2. Serialize each of the constituent public keys
 
-     mlkemEncodedPK = MLKEM.SerializePublicKey(mlkemPK)
+     mlkemEncodedPK = ML-KEM.SerializePublicKey(mlkemPK)
      tradEncodedPK = Trad.SerializePublicKey(tradPK)
 
   3. Combine and output the encoded public key
@@ -716,11 +716,11 @@ Deserialization Process:
 
   3. Deserialize the constituent public keys
 
-     mlkemPK = MLKEM.DeserializePublicKey(mlkemEncodedPK)
+     mlkemPK = ML-KEM.DeserializePublicKey(mlkemEncodedPK)
      tradPK = Trad.DeserializePublicKey(tradEncodedPK)
 
   4. If either ML-KEM.DeserializePublicKey() or
-     TradKEM.DeserializePublicKey() return an error,
+     Trad.DeserializePublicKey() return an error,
      then this process must return an error.
 
       if NOT mlkemPK or NOT tradPK:
