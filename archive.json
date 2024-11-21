@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-11-19T01:50:09.337194+00:00",
+  "timestamp": "2024-11-21T01:48:43.719309+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -1419,7 +1419,7 @@
       "labels": [],
       "body": "An implementation of these KEMs should _not_ need any DER encoding or parsing logic to function. The spec should drop all use of DER encoding for KEM public keys and ciphertexts. Applications or protocols which require DER can wrap them as desired, but for the relevant hybrids here, they are simply not needed and add unnecessary complexity.",
       "createdAt": "2024-11-04T16:45:41Z",
-      "updatedAt": "2024-11-11T16:04:15Z",
+      "updatedAt": "2024-11-19T21:08:25Z",
       "closedAt": null,
       "comments": [
         {
@@ -1435,6 +1435,13 @@
           "body": "Great! Do you want PRs for this, or do you intend to make the change yourself?",
           "createdAt": "2024-11-11T16:04:14Z",
           "updatedAt": "2024-11-11T16:04:14Z"
+        },
+        {
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I was planning to remove the DER encoding for both this draft and the composite Signatures draft.   Thanks for suggesting edits, I'll take a look at them.  ",
+          "createdAt": "2024-11-19T21:08:23Z",
+          "updatedAt": "2024-11-19T21:08:23Z"
         }
       ]
     },
@@ -1551,7 +1558,7 @@
       "labels": [],
       "body": "Currently we just treat it as a generic KDF.\r\n\r\nWe need to take a much closer look at how to define the HKDF-SHA256 combo in a way that is 800-56Cr2 compliant. Technically HKDF (RFC 5869) is allowed under the 2-Step method, but it requires some careful alignment of inputs on the HKDF-Expand step. But in our case we only need to use the HKDF-Extract step for the combiner. \r\n\r\nFix: either specify that we only use the HKDF-Extract() step from RFC 5869, or else just use HMAC directly from RFC 2104\r\n\r\nhttps://datatracker.ietf.org/doc/rfc2104/",
       "createdAt": "2024-11-18T17:24:38Z",
-      "updatedAt": "2024-11-18T21:59:17Z",
+      "updatedAt": "2024-11-19T21:00:20Z",
       "closedAt": null,
       "comments": [
         {
@@ -1567,6 +1574,27 @@
           "body": "In any case, I would recommend just dropping HKDF altogether. Since you're composing with ML-KEM, you already have SHA-3 available, so you might as well just use SHA3-256 as _the one_ KDF across the board. What do you think?",
           "createdAt": "2024-11-18T21:59:16Z",
           "updatedAt": "2024-11-18T21:59:16Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> In any case, I would recommend just dropping HKDF altogether. Since you're composing with ML-KEM, you already have SHA-3 available, so you might as well just use SHA3-256 as _the one_ KDF across the board. What do you think?\r\n\r\nAww dude, you're like a year late to this debate. Both Joe Saloway and Deb Cooley were adamant that just because you have an ML-KEM implementation (potentially in a USB smartcard or something) does not mean that you have SHA3 available in, say, the Outlook S/MIME implementation that's gonna do the KEM Combining.\r\n\r\nWe have spent an inordinate amount of time fine-tuning a range of SHA2 and SHA3 offerings that everyone involved are happy with. Please don't re-open this can of worms.",
+          "createdAt": "2024-11-19T20:48:46Z",
+          "updatedAt": "2024-11-19T20:49:38Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> @ounsworth this is a dupe of #87, I think?\r\n\r\nCertainly related. There's a much larger discussion going on relating to how to make the SHA2-based combiner FIPS compatible. Russ is currently proposing that we ditch HKDF and specify raw usage of HMAC. This also has implications for CMS in general since the KEMRecipientInfo RFC that we just published (RFC 9629) has the same problem in that it is non FIPS compliant when used with id-alg-hkdf-with-sha256.\r\n\r\nPlease hold. I'll update github issues once my Outlook stops emitting smoke.",
+          "createdAt": "2024-11-19T20:55:00Z",
+          "updatedAt": "2024-11-19T20:55:00Z"
+        },
+        {
+          "author": "chris-wood",
+          "authorAssociation": "NONE",
+          "body": "I'm sorry, but I don't buy the argument that ML-KEM will be available and SHA-3 will not. Where is discussion about this taking place?",
+          "createdAt": "2024-11-19T21:00:19Z",
+          "updatedAt": "2024-11-19T21:00:19Z"
         }
       ]
     }
@@ -3595,18 +3623,143 @@
       "labels": [],
       "body": "Closes #88 \r\n\r\nI also moved content around in this PR to make it flow a bit better, e.g., by moving security-relevant stuff to the security considerations and keeping the main implementation details in the primary document.",
       "createdAt": "2024-11-18T19:02:58Z",
-      "updatedAt": "2024-11-18T19:02:58Z",
+      "updatedAt": "2024-11-20T18:43:47Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "8810bc0ebb42fb9553387361765f1a56756170db",
       "headRepository": "chris-wood/draft-composite-kem",
       "headRefName": "caw/drop-der",
-      "headRefOid": "788d82cd8b6b547f3337d4bba2ca4708dd226ca7",
+      "headRefOid": "0cd933d08c4fca1a113061df8704fc3f05ecd7dd",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Thanks @chris-wood lots of good changes. @johngray-dev  we'll need to sync up the section re-arranging in composite-sigs to match.\r\n\r\nChris, ironically, I think the one thing you have not done in your PR is drop the DER encoding. The ASN.1 SEQUENCE wrapper is still there, so in fact this does not close #88 \r\n\r\n     CompositeKEMPublicKey ::= SEQUENCE SIZE (2) OF BIT STRING\r\n\r\nWhat was your intention there?",
+          "createdAt": "2024-11-19T18:56:24Z",
+          "updatedAt": "2024-11-19T19:02:11Z"
+        },
+        {
+          "author": "chris-wood",
+          "authorAssociation": "NONE",
+          "body": "The DER encoding is still present for those that want to use it. However, the outputs of the composite ML-KEM key generation function are distinctly _not_ these `CompositeKEMPublicKey` values. They're internal, implementation-specific values. Callers can then invoke `SerializePublicKey`, which is the model for HPKE, to produce a simple, wire-format-encoded public key, or they can encode it using `CompositeKEMPublicKey` if they need to.\r\n\r\nThe point of this PR is to allow both encodings. Does that clarify?",
+          "createdAt": "2024-11-19T20:38:07Z",
+          "updatedAt": "2024-11-19T20:38:07Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> The point of this PR is to allow both encodings. Does that clarify?\r\n\r\nThat sounds super confusing for implementers. Let's just do one encoding. Let's drop the DER entirely.\r\n\r\nBut that does mean that we're going to have to list out explicit byte cutoffs where the first ends and the next begins.",
+          "createdAt": "2024-11-19T20:57:07Z",
+          "updatedAt": "2024-11-19T20:58:56Z"
+        },
+        {
+          "author": "chris-wood",
+          "authorAssociation": "NONE",
+          "body": "> That sounds super confusing for implementers. Let's just do one encoding. Let's drop the DER entirely.\r\n\r\nI would be pleased with this outcome. I'll update the PR to match.\r\n\r\n> But that does mean that we're going to have to list out explicit byte cutoffs where the first ends and the next begins.\r\n\r\nNo? These outputs are fixed-length. There's no need to encode the lengths. ",
+          "createdAt": "2024-11-19T21:00:57Z",
+          "updatedAt": "2024-11-19T21:01:23Z"
+        },
+        {
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "body": "We are trying to keep the Composite Signatures and Composite KEM documents in similar alignment structurally.   I have opened a similar issue for composite signatures (https://github.com/lamps-wg/draft-composite-sigs/issues/85).  We had planned to completely remove the ASN.1 wrapping and keep the similar document structure (where possible) and not have multiple encodings.  It looks like you are okay with that Chris which is great.    So Chris I'll use what you did in Composite KEM as a kind of template to update composite signatures, and then maybe add some tweaks into your branch (fully remove ASN.1) before final merging.  I hope you are okay with that.   I was thinking of adding a simple ML-KEM / ML-DSA size table for key reconstitution.  ",
+          "createdAt": "2024-11-19T21:43:58Z",
+          "updatedAt": "2024-11-19T21:43:58Z"
+        },
+        {
+          "author": "chris-wood",
+          "authorAssociation": "NONE",
+          "body": "@johngray-dev that works for me -- do you want to take over this PR?",
+          "createdAt": "2024-11-19T21:52:09Z",
+          "updatedAt": "2024-11-19T21:52:09Z"
+        },
+        {
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Sure, I can take over this PR since I was just starting the same thing on composite sigs, and I like the way you specified the serialization process, so I'll replicate that in Signatures as well (since the composite key serialization procedures are basically the same thing)...  :)",
+          "createdAt": "2024-11-20T14:13:48Z",
+          "updatedAt": "2024-11-20T14:13:48Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO86R1Fjl",
+          "commit": {
+            "abbreviatedOid": "788d82c"
+          },
+          "author": "chris-wood",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-11-19T20:42:28Z",
+          "updatedAt": "2024-11-19T20:42:29Z",
+          "comments": [
+            {
+              "originalPosition": 163,
+              "body": "```suggestion\r\n```",
+              "createdAt": "2024-11-19T20:42:28Z",
+              "updatedAt": "2024-11-19T20:42:29Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO86R1FsG",
+          "commit": {
+            "abbreviatedOid": "169d9b3"
+          },
+          "author": "chris-wood",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-11-19T20:42:47Z",
+          "updatedAt": "2024-11-19T20:42:48Z",
+          "comments": [
+            {
+              "originalPosition": 203,
+              "body": "```suggestion\r\nThe specific values for `KDF` are defined per Composite ML-KEM algorithm in {{tab-kem-algs}} and the specific values for `Domain` are defined per Composite ML-KEM algorithm in {{sec-alg-ids}}.\r\n```",
+              "createdAt": "2024-11-19T20:42:48Z",
+              "updatedAt": "2024-11-19T20:42:48Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 95,
+      "id": "PR_kwDOKRPFO86Caofv",
+      "title": "Add P-256 variant, use HKDF-Extract instead of HKDF as the combiner KDF, and add HPKE integration section",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/95",
+      "state": "OPEN",
+      "author": "chris-wood",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "This will need to be modified based on #94, in particular to update the `DeriveKeyPair` description, but the rest of the change in this section should stand on its own. \r\n\r\nCloses #93, #87, #86",
+      "createdAt": "2024-11-19T16:42:41Z",
+      "updatedAt": "2024-11-19T21:59:59Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "8810bc0ebb42fb9553387361765f1a56756170db",
+      "headRepository": "chris-wood/draft-composite-kem",
+      "headRefName": "caw/add-p256-and-hpke",
+      "headRefOid": "9e2c2bff4411a245065b9a6933a602a7e83eda67",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "chris-wood",
+          "authorAssociation": "NONE",
+          "body": "@ounsworth @johngray-dev I'll revert the HKDF drop for now, replacing it with HKDF-Extract (as discussed at IETF 121), but I'd like to discuss this again in the future.",
+          "createdAt": "2024-11-19T21:52:33Z",
+          "updatedAt": "2024-11-19T21:59:43Z"
+        }
+      ],
       "reviews": []
     }
   ]
