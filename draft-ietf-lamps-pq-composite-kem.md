@@ -76,7 +76,9 @@ author:
 normative:
   RFC2119:
   RFC4055:
+  RFC5280:
   RFC5480:
+  RFC5652:
   RFC5958:
   RFC6234:
   RFC8017:
