@@ -1212,8 +1212,8 @@ Provided all inputs are well-formed, the key establishment procedure of ML-KEM w
 | Parameter set     | Decapsulation failure rate  |
 |---------          | -----------------           |
 | ML-KEM-512        | 2^(-139)                    |
-| ML-KEM-768	      | 2^(-164)                    |
-| ML-KEM-1024	      | 2^(-174)                    |
+| ML-KEM-768        | 2^(-164)                    |
+| ML-KEM-1024       | 2^(-174)                    |
 {: #tab-mlkem-failure-rate title="ML-KEM decapsulation failure rates"}
 
 In the case of ML-KEM decapsulation failure, Composite ML-KEM MUST preserve the same behaviour and return a well-formed output.
@@ -1345,7 +1345,7 @@ where
                           parameters sha256Identifier }
 
 
-	sha256Identifier  AlgorithmIdentifier  ::=  { id-sha256, NULL }
+      sha256Identifier  AlgorithmIdentifier  ::=  { id-sha256, NULL }
 
 DER:
  30 4D 06 09 2A 86 48 86 F7 0D 01 01 07 30 40 A0 0F 30 0D 06 09 60 86
