@@ -60,7 +60,7 @@ id-raw-key OBJECT IDENTIFIER ::= {
 -- Composite KEM basic structures
 --
 
-CompositeKEMPublicKey ::= SEQUENCE SIZE (2) OF BIT STRING
+CompositeKEMPublicKey ::= BIT STRING
 
 CompositeKEMPublicKeyOs ::= OCTET STRING (CONTAINING 
                                 CompositeKEMPublicKey ENCODED BY der)
@@ -68,24 +68,15 @@ CompositeKEMPublicKeyOs ::= OCTET STRING (CONTAINING
 CompositeKEMPublicKeyBs ::= BIT STRING (CONTAINING 
                                 CompositeKEMPublicKey ENCODED BY der)
 
-CompositeKEMPrivateKey ::= SEQUENCE SIZE (2) OF OCTET STRING
+CompositeKEMPrivateKey ::= OCTET STRING
 
-CompositeCiphertextValue ::= SEQUENCE SIZE (2) OF OCTET STRING
+CompositeCiphertextValue ::= OCTET STRING
 
-RsaCompositeKemPublicKey ::= SEQUENCE {
-        firstPublicKey BIT STRING (ENCODED BY id-raw-key),
-        secondPublicKey BIT STRING (CONTAINING RSAPublicKey)
-      }	  
+RsaCompositeKemPublicKey ::= BIT STRING 
 
-EcCompositeKemPublicKey ::= SEQUENCE {
-        firstPublicKey BIT STRING (ENCODED BY id-raw-key),
-        secondPublicKey BIT STRING (CONTAINING ECPoint)
-      }
+EcCompositeKemPublicKey ::= BIT STRING 
 
-EdCompositeKemPublicKey ::= SEQUENCE {
-        firstPublicKey BIT STRING (ENCODED BY id-raw-key),
-        secondPublicKey BIT STRING (ENCODED BY id-raw-key)
-      }
+EdCompositeKemPublicKey ::= BIT STRING
 
 --
 -- Information Object Classes
