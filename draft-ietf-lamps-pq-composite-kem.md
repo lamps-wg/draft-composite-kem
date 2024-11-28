@@ -721,6 +721,27 @@ Deserialization Process:
 ~~~
 {: #alg-composite-deserialize title="Composite DeserializePublicKey(bytes)"}
 
+## ML-KEM public key, private key and cipher text sizes for serialization and deserialization
+
+As noted above in the public key, private key and CompositeCiphertextValue
+serialization and deserialization methods, ML-KEM uses fixed-length values for
+all of these components.  This means the length encoding of the first component is
+known and does NOT need to be encoded into the serialization and deserialization process
+which simplifies the encoding.  If future composite combinations make use of
+algorithms where the first component uses variable length keys or cipher texts, then
+that specification will need to ensure the length is encoded in a
+fixed-length prefix so the components can be correctly deserialized.
+
+The following table shows the fixed length values in bytes for the public, private and cipher text
+sizes for ML-KEM which can be used to deserialzie the components.
+
+| Algorithm   | Public key  | Private key |  Ciphertext  |
+| ----------- | ----------- | ----------- |  ----------- |
+| ML-KEM-768  |    1184     |     64      |     1952     |
+| ML-KEM-1024 |    1568     |     64      |     2592     |
+{: #tab-mldsa-sizes title="ML-DSA Key and Signature Sizes"}
+
+
 # Composite Key Structures {#sec-composite-keys}
 
 In order to form composite public keys and ciphertext values, we define ASN.1-based composite encodings such that these structures can be used as a drop-in replacement for existing public key and ciphertext fields such as those found in PKCS#10 [RFC2986], CMP [RFC4210], X.509 [RFC5280], CMS [RFC5652].
