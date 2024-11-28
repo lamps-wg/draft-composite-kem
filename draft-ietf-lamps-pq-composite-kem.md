@@ -374,6 +374,12 @@ We also borrow the following algorithms from {{RFC9180}}, which deal with encodi
 
    *  `DeserializePublicKey(bytes) -> pk`: Parse a fixed-length byte string to recover a public key pk. This function can fail if the input byte string is malformed.
 
+We define the following algorithms which are used to serialize and deseralize the CompositeCiphertextValue
+
+   *  `SerializeCiphertextValue(CompositeCiphertextValue) -> bytes`: Produce a fixed-length byte string encoding the CompositeCiphertextValue.
+
+   *  `DeserializeCipherTextValue(bytes) -> pk`: Parse a fixed-length byte string to recover a CompositeCiphertextValue. This function can fail if the input byte string is malformed.
+
 The KEM interface defined above differs from both traditional key transport mechanism (for example for use with KeyTransRecipientInfo defined in {{RFC5652}}), and key agreement (for example for use with KeyAgreeRecipientInfo defined in {{RFC5652}}).
 
 The KEM interface was chosen as the interface for a composite key establishment because it allows for arbitrary combinations of component algorithm types since both key transport and key agreement mechanisms can be promoted into KEMs as described in {{sec-RSAOAEPKEM}} and {{sec-DHKEM}} below.
@@ -628,7 +634,7 @@ It is possible to use component private keys stored in separate software or hard
 
 In order to properly achieve its security properties, the KEM combiner requires that all inputs are fixed-length. Since each Composite ML-KEM algorithm fully specifies its component algorithms, including key sizes, all inputs should be fixed-length in non-error scenarios, however some implementations may need to perform additional checking to handle certain error conditions. In particular, the KEM combiner step should not be performed if either of the component decapsulations returned an error condition indicating malformed inputs. For timing-invariance reasons, it is RECOMMENDED to perform both decapsulation operations and check for errors afterwards to to prevent an attacker from using a timing channel to tell which component failed decapsulation. Also, RSA-based composites MUST ensure that the modulus size (ie the size of tradCT and tradPK) matches that specified for the given Composite ML-KEM algorithm in {{tab-kem-algs}}; depending on the cryptographic library used, this check may be done by the library or may require an explicit check as part of the `CompositeKEM.Decap()` routine.
 
-## SerializePublicKey and DeserializePublicKey
+## SerializePublicKey and DeserializePublicKey {#sec-serialize-deserialize}
 
 The KEM public key serialization routine simply concatenates the fixed-length public keys of the constituent KEMs, as defined below.
 
@@ -721,6 +727,109 @@ Deserialization Process:
 ~~~
 {: #alg-composite-deserialize title="Composite DeserializePublicKey(bytes)"}
 
+## SerializePrivateKey and DeserializePrivateKey
+
+The same serialization and deserialization process as described in {{sec-serialize-deserialize}}
+should be used to serialize and deserialize the private keys.  The only difference is that pk is
+the private key, and the output is the concatenation of the mlkem and traditional private keys for
+serialization, or the mlkem and traditional private keys for deserialization.
+
+## SerializeCiphertextValue and DeSerializeCiphertextValue
+
+The serialization routine for the CompositeCiphertextValue simply concatenates the fixed-length
+ML-KEM cipherText value with the cipherText value from the traditional algorithm, as defined below:
+
+~~~
+Composite-ML-DSA.SerializeCiphertextValue(CompositeCiphertextValue) -> bytes
+
+Explicit Input:
+
+  CompositeCiphertextValue    The Composite CipherText Value obtained from Composite-ML-KEM.Encap(pk)
+
+Implicit inputs:
+
+  ML-KEM   A placeholder for the specific ML-KEM algorithm and
+           parameter set to use, for example, could be "ML-KEM-768".
+
+  Trad     A placeholder for the specific traditional algorithm and
+           parameter set to use, for example "RSAOAEP" or "ECDH".
+
+Output:
+
+  bytes   The encoded CompositeCiphertextValue
+
+Serialization Process:
+
+  1. Separate the cipher texts
+
+     (mldkemct, tradkemct) = CompositeCiphertextValue
+
+  2. Serialize each of the constituent cipher texts
+
+     mlkemEncodedCt = ML-KEM.SerializeCiphertext(mlkemct)
+     tradkemEncodedCT = Trad.SerializeCiphertext(tradkemct)
+
+  3. Combine and output the encoded composite ciphertext
+
+     bytes = mlkemEncodedCt || tradkemEncodedCT
+     output bytes
+~~~
+{: #alg-composite-serialize-ct title="Composite SerializeCiphertextValue(CompositeCiphertextValue)"}
+
+
+Deserialization reverses this process, raising an error in the event that the input is malformed.
+
+~~~
+Composite-ML-KEM.DeserializeCiphertextValue(bytes) -> CompositeCiphertextValue
+
+Explicit Input:
+
+  bytes   An encoded CompositeCiphertextValue
+
+Implicit inputs:
+
+  ML-KEM   A placeholder for the specific ML-KEM algorithm and
+           parameter set to use, for example, could be "ML-KEM-768".
+
+  Trad     A placeholder for the specific traditional algorithm and
+           parameter set to use, for example "RSAOAEP" or "ECDH".
+
+Output:
+
+  CompositeCiphertextValue  The CompositeCiphertextValue
+
+Deserialization Process:
+
+  1. Validate the length of the the input byte string
+
+     if bytes is not the correct length:
+      output "Deserialization error"
+
+  2. Parse each constituent encoded signature.
+       The length of the mlkemEncodedCt is known based on the size of
+       the ML-KEM component signature length specified by the Object ID
+
+     (mlkemEncodedCt, tradkemEncodedCt) = bytes
+
+  3. Deserialize the constituent cipher text values
+
+     mlkemCt = ML-KEM.DeserializeCiphertext(mlkemEncodedCt)
+     tradkemCt = Trad.DeserializeCiphertext(tradkemEncodedCt)
+
+  4. If either ML-KEM.DeserializeCiphertext() or
+     Trad.DeserializeCiphertext() return an error,
+     then this process must return an error.
+
+      if NOT mlkemCt or NOT tradkemCt:
+        output "Deserialization error"
+
+  5. Output the CompositeCiphertextValue
+
+     output (mlkemCt, tradkemCt)
+
+~~~
+{: #alg-composite-deserialize-ct title="Composite DeserializeCiphertextValue(bytes)"}
+
 ## ML-KEM public key, private key and cipher text sizes for serialization and deserialization
 
 As noted above in the public key, private key and CompositeCiphertextValue
@@ -755,24 +864,13 @@ CompositeKEMPublicKey ::= BIT STRING
 ~~~
 {: artwork-name="CompositeKEMPublicKey-asn.1-structures"}
 
-Since RSA and ECDH component public keys are themselves in a DER encoding, the following ASN.1 structures show the internal structure of the various public key types used in this specification:
+Since RSA and ECDH component public keys are themselves in a DER encoding, the following show the internal structure of the various public key types used in this specification:
 
-~~~ ASN.1
-RsaCompositeKEMPublicKey ::= BIT STRING
+When a CompositeKEMPublicKey is used with an RSA public key, the BIT STRING itself is generated by the concatenation of a raw ML-KEM key according to {{I-D.draft-ietf-lamps-kyber-certificates}} and an RSAPublicKey (which is a DER encoded RSAPublicKey).
 
-    The BIT STRING itself is generated by the concatenation of a raw ML-KEM key according to {{I-D.draft-ietf-lamps-kyber-certificates}} and an RSAPublicKey (which is a DER encoded RSAPublicKey).
+When a CompositeKEMPublicKey is used with an EC public key, the BIT STRING itself is generated by the concatenation of a raw ML-KEM key according to {{I-D.draft-ietf-lamps-kyber-certificates}} and an ECDHPublicKey (which is a DER encoded ECPoint).
 
-
-EcCompositeKEMPublicKey ::= BIT STRING
-
-    The BIT STRING itself is generated by the concatenation of a raw ML-KEM key according to {{I-D.draft-ietf-lamps-kyber-certificates}} and an ECDSAPublicKey (which is a DER encoded ECPoint).
-
-
-EdCompositeKEMPublicKey ::= BIT STRING
-
-    The BIT STRING itself is generated by the concatenation of a raw ML-KEM key according to {{I-D.draft-ietf-lamps-kyber-certificates}} and a raw Edwards public key according to [RFC8410].
-
-~~~
+When a CompositeKEMPublicKey is used with an Edwards public key, the BIT STRING itself is generated by the concatenation of a raw ML-KEM key according to {{I-D.draft-ietf-lamps-kyber-certificates}} and a raw Edwards public key according to [RFC8410].
 
 Some applications may need to reconstruct the `SubjectPublicKeyInfo` objects corresponding to each component public key. {{tab-kem-algs}} in {{sec-alg-ids}} provides the necessary mapping between composite and their component algorithms for doing this reconstruction.
 
@@ -852,18 +950,7 @@ Many protocol specifications will require that the composite public key and comp
 
 When an octet string is required, the DER encoding of the composite data structure SHALL be used directly.
 
-~~~ ASN.1
-CompositeKEMPublicKeyOs ::= OCTET STRING
-                      (CONTAINING CompositeKEMPublicKey ENCODED BY der)
-~~~
-
 When a bit string is required, the octets of the DER encoded composite data structure SHALL be used as the bits of the bit string, with the most significant bit of the first octet becoming the first bit, and so on, ending with the least significant bit of the last octet becoming the last bit of the bit string.
-
-~~~ ASN.1
-CompositeKEMPublicKeyBs ::= BIT STRING
-                      (CONTAINING CompositeKEMPublicKey ENCODED BY der)
-~~~
-
 
 In the interests of simplicity and avoiding compatibility issues, implementations that parse these structures MAY accept both BER and DER.
 
