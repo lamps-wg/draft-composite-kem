@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-11-26T01:50:47.133278+00:00",
+  "timestamp": "2024-11-28T01:52:06.167746+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -3623,13 +3623,13 @@
       "labels": [],
       "body": "Closes #88 \r\n\r\nI also moved content around in this PR to make it flow a bit better, e.g., by moving security-relevant stuff to the security considerations and keeping the main implementation details in the primary document.",
       "createdAt": "2024-11-18T19:02:58Z",
-      "updatedAt": "2024-11-20T18:43:47Z",
+      "updatedAt": "2024-11-26T18:57:18Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "8810bc0ebb42fb9553387361765f1a56756170db",
       "headRepository": "chris-wood/draft-composite-kem",
       "headRefName": "caw/drop-der",
-      "headRefOid": "0cd933d08c4fca1a113061df8704fc3f05ecd7dd",
+      "headRefOid": "2bb0a6835fd54563758cfa65eb7353e0bd9449c0",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
