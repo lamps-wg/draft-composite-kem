@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-11-28T01:52:06.167746+00:00",
+  "timestamp": "2024-12-01T02:07:55.740084+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -1374,7 +1374,7 @@
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/86",
       "state": "OPEN",
       "author": "chris-wood",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "P-256 is missing from the draft, yet this will definitely be needed in practice. ",
@@ -1384,7 +1384,7 @@
       "comments": [
         {
           "author": "chris-wood",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "body": "@ounsworth do you welcome PRs for this?",
           "createdAt": "2024-11-11T16:04:36Z",
           "updatedAt": "2024-11-11T16:04:36Z"
@@ -1398,7 +1398,7 @@
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/87",
       "state": "OPEN",
       "author": "chris-wood",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "The generic combiner effectively shoves everything into a KDF to produce a new shared secret, e.g.:\r\n\r\n```\r\nss = KDF(mlkemSS || tradSS || tradCT || tradPK || Domain)\r\n```\r\n\r\nHowever, for HKDF-based KDFs, this simply doesn't make sense. HKDF requires _multiple_ inputs, not just a single input (`mlkemSS || tradSS || tradCT || tradPK || Domain`). As it stands, none of the HKDF-based variants in table 2 can be implemented.",
@@ -1412,15 +1412,15 @@
       "id": "I_kwDOKRPFO86c9S4B",
       "title": "Drop DER encoding",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/88",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "chris-wood",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "An implementation of these KEMs should _not_ need any DER encoding or parsing logic to function. The spec should drop all use of DER encoding for KEM public keys and ciphertexts. Applications or protocols which require DER can wrap them as desired, but for the relevant hybrids here, they are simply not needed and add unnecessary complexity.",
       "createdAt": "2024-11-04T16:45:41Z",
-      "updatedAt": "2024-11-19T21:08:25Z",
-      "closedAt": null,
+      "updatedAt": "2024-11-28T20:04:27Z",
+      "closedAt": "2024-11-28T20:04:27Z",
       "comments": [
         {
           "author": "ounsworth",
@@ -1431,7 +1431,7 @@
         },
         {
           "author": "chris-wood",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "body": "Great! Do you want PRs for this, or do you intend to make the change yourself?",
           "createdAt": "2024-11-11T16:04:14Z",
           "updatedAt": "2024-11-11T16:04:14Z"
@@ -1537,7 +1537,7 @@
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/92",
       "state": "OPEN",
       "author": "chris-wood",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "The security considerations references [GHP18](https://eprint.iacr.org/2018/024.pdf) as proof of the combiner mechanism in the draft. However, as far as I can tell, the draft does not adhere to the construction in this paper. In GHP18, the output ciphertext is the result of concatenating all of the individual KEM ciphertexts, and the shared secret is the result of a function W applied to all individual KEM shared secrets _and_ the ciphertext, i.e., `K= W(k1,...,kn,c)` where `ki` is the i-th KEM shared secret and `c` is the combined (concatenated) ciphertext.\r\n\r\nHowever, in this document, the shared secret does not include the ciphertext in the same way. It computes the shared secret as:\r\n\r\n```\r\nct = CompositeCiphertextValue(mlkemCT, tradCT)\r\nss = KDF(mlkemSS || tradSS || tradCT || tradPK || Domain)\r\n```\r\n\r\nwhereas for equivalence one would need to do something like:\r\n\r\n```\r\nct = CompositeCiphertextValue(mlkemCT, tradCT)\r\nss = KDF(mlkemSS || tradSS || ct || tradPK || Domain)\r\n```\r\n\r\nPresumably the traditional public key is included for MAL-BIND-K-PK reasons, but it's not really clear to me.\r\n\r\nTo make a long issue short, where is the proof of security for the combiner in this document?",
@@ -1563,14 +1563,14 @@
       "comments": [
         {
           "author": "chris-wood",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "body": "@ounsworth this is a dupe of #87, I think?",
           "createdAt": "2024-11-18T21:58:39Z",
           "updatedAt": "2024-11-18T21:58:39Z"
         },
         {
           "author": "chris-wood",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "body": "In any case, I would recommend just dropping HKDF altogether. Since you're composing with ML-KEM, you already have SHA-3 available, so you might as well just use SHA3-256 as _the one_ KDF across the board. What do you think?",
           "createdAt": "2024-11-18T21:59:16Z",
           "updatedAt": "2024-11-18T21:59:16Z"
@@ -1591,12 +1591,28 @@
         },
         {
           "author": "chris-wood",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "body": "I'm sorry, but I don't buy the argument that ML-KEM will be available and SHA-3 will not. Where is discussion about this taking place?",
           "createdAt": "2024-11-19T21:00:19Z",
           "updatedAt": "2024-11-19T21:00:19Z"
         }
       ]
+    },
+    {
+      "number": 96,
+      "id": "I_kwDOKRPFO86hNDE6",
+      "title": "Editorial changes and some proposals (mainly clarifying) to version 5.",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/96",
+      "state": "OPEN",
+      "author": "PiotrPopis",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "**Editorial changes**\r\n1.\tSection 3\r\n> *  KDF(message) represents a key derivation function suitable to the\r\n      chosen KEMs according to {tab-kem-combiners}. All KDFs (\u2026)\r\n\r\n*  KDF(message) represents a key derivation function suitable to the\r\n      chosen KEMs according to Table 2. All KDFs (\u2026)\r\n\r\n2.\tSection 3.3\r\n> Each registered Composite ML-KEM algorithm specifies the choice of\r\n   KDF andDomain to be used in Section 7 and Section 7.2 below.\r\n\r\nEach registered Composite ML-KEM algorithm specifies the choice of\r\n   KDF and Domain to be used in Section 7 and Section 7.2 below.\r\n\r\n3.\tSection 4.1\r\n> 1. Generate componint keys.\r\n\r\n1. Generate component keys.\r\n\r\n4.\tSection 4.2\r\n> Composite public key conisting of encryption public keys   for each component.\r\n\r\nComposite public key consisting of encryption public keys   for each component.\r\n\r\n5.\tSection 4.2\r\n> Trad     A placeholder for the specific ML-KEM algorithm and\r\n             parameter set to use, for example \"RSA-OAEP\"\r\n             or \"X25519\".\r\n\r\nTrad     A placeholder for the specific traditional algorithm and\r\n             parameter set to use, for example \"RSA-OAEP\"\r\n             or \"X25519\".\r\n\r\n6.\tSection 5\r\n> For timing-invariance reasons, it is RECOMMENDED to perform both decapsulation operations and check for errors afterwards to to prevent an attacker from using a timing channel to tell which component failed decapsulation.\r\n\r\nFor timing-invariance reasons, it is RECOMMENDED to perform both decapsulation operations and check for errors afterwards to prevent an attacker from using a timing channel to tell which component failed decapsulation.\r\n\r\n7.\tSection 5\r\n> ie\r\n\r\ni.e.\r\nNote: also Section 7.1, 7.3 (2 times) and 11.3.\r\n\r\n8.\tSection 5.1\r\n> For use with this document, ML-KEM keys MUST be be the raw BIT STRING (\u2026)\r\n\r\nFor use with this document, ML-KEM keys MUST be the raw BIT STRING (\u2026).\r\n \r\n9.\tSection 5.2\r\n> For more details on the security considerations around key reuse, see section Section 11.2.\r\n\r\nFor more details on the security considerations around key reuse, see Section 11.2\r\n\r\n10.\tSection 7.2\r\n> The KEM combiner defined in section Section 3.3 requires a domain\r\n   separator Domain input.\r\n\r\nThe KEM combiner defined in Section 3.3 requires a domain\r\n   separator Domain input.\r\n\r\n11.\tSection 7.3\r\n> (\u2026) however SHA2 is not us must be wrapped in the HKDF construction.\r\n\r\n(\u2026) however SHA2 is not so must be wrapped in the HKDF construction.\r\n\r\n12.\tSection 7.4\r\n> The RSA component keys MUST be generated at the 2048-bit and 3072-bit\r\n   security levels respectively.\r\n\r\nThe RSA component keys MUST be generated at the 2048-bit, 3072-bit and 4096-bit security levels respectively.\r\n\r\n13.\tSection 8.1.1\r\n> IKM:  input keying material.  In this document this is the shared\r\n      secret outputted from the Encapsulate() or Decapsulate() functions.\r\n\r\nIKM:  input keying material.  In this document this is the shared\r\n      secret outputted from the Encaps() or Decaps() functions.\r\n\r\nRationale: Consistency with other parts of the standard, e.g. Section 3.\r\n\r\n14.\tSection 8.1.2\r\n> K: the input key-derivation key.  In this document this is the\r\n      shared secret outputted from the Encapsulate() or Decapsulate()\r\n      functions.\r\n\r\nK: the input key-derivation key.  In this document this is the\r\n      shared secret outputted from the Encaps() or Decaps()\r\n      functions.\r\n\r\n15.\tSection 8.2\r\n> wrap identifies a key-encryption algorithm used to encrypt the\r\n      content-encryption key.\r\n\r\nwrap identifies a key-encryption algorithm used to encrypt the\r\n      content-encryption key.\r\n\r\nencryptedKey is the result of encrypting the CEK with the KEK.\r\n\r\nRationale: To be consistent with RFC 9629 a description of the encryptedKey field should be added.\r\n\r\n16.\tSection 11.1.1\r\n> (\u2026) and therefore secure so, long as one of the component KEMs is.\r\n\r\n(\u2026) and therefore secure so long as one of the component KEMs is.\r\n\r\n17.\tAppendix B\r\n> Component Signature Algorithm\r\n\r\nComponent Encryption Algorithm\r\n\r\n**Proposals (mainly clarifying)**\r\n\r\n18.\tSection 7.2\r\n> to use it, the value should be HEX-decoded and used in binary form.\r\n\r\nto use it, the value MUST be HEX-decoded and used in binary form.\r\n\r\nRationale: For interoperability purposes this type of encoding should be clearly indicated.\r\n\r\n19.\tSection 7.3\r\n> *  Pair equivalent levels.\r\n\r\n*  Pair equivalent levels (except for RSA, especially RSA2048, which were included due to their massive use).\r\n\r\nRationale: security strength of RSA2048 is 112 bits and RSA3072/4096 128 bits.\r\n\r\n20.\tSection 8.1.1\r\n> salt:  optional salt value (a non-secret random value).  In this\r\n      document this parameter is unused, that is it is the zero-length\r\n      string \"\".\r\n\r\nsalt:  optional salt value (a non-secret random value).  In this\r\n      document this parameter is unused, that is it is the string of\r\n      HashLen zeros.\r\n\r\nRationale: Section 2.2 RFC 5869: \r\nsalt     optional salt value (a non-secret random value);\r\n         if not provided, it is set to a string of HashLen zeros.\r\n\r\n21.\tSection 8.2\r\n> kdf identifies the key-derivation algorithm.  Note that the Key\r\n      Derivation Function (KDF) used for CMS RecipientInfo process MAY\r\n      be different than the KDF used within the Composite ML-KEM\r\n      algorithm or one of its components.\r\n\r\nkdf identifies the key-derivation algorithm.  Note that the Key\r\n      Derivation Function (KDF) used for CMS RecipientInfo process (to calculate the KEK key) MAY be different than the KDF used within the Composite ML-KEM algorithm (to calculate the shared secret ss).\r\n\r\nRationale: The removal of the phrase \u201cor one of its components\u201d results from the fact that the traditional component uses RSA-OAEP (and not RSA-KEM as in the previous versions of the document) or uses a simplified version of DHKEM - see Section 3.2. Otherwise, these KDF functions would have to be defined in this document.\r\n\r\nRegards\r\n",
+      "createdAt": "2024-11-29T09:38:44Z",
+      "updatedAt": "2024-11-29T09:38:44Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
@@ -3616,24 +3632,26 @@
       "id": "PR_kwDOKRPFO86CSeTf",
       "title": "Drop DER encoding for composite ML-KEM functions",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/94",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "chris-wood",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Closes #88 \r\n\r\nI also moved content around in this PR to make it flow a bit better, e.g., by moving security-relevant stuff to the security considerations and keeping the main implementation details in the primary document.",
       "createdAt": "2024-11-18T19:02:58Z",
-      "updatedAt": "2024-11-26T18:57:18Z",
+      "updatedAt": "2024-11-28T20:04:26Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "8810bc0ebb42fb9553387361765f1a56756170db",
       "headRepository": "chris-wood/draft-composite-kem",
       "headRefName": "caw/drop-der",
-      "headRefOid": "2bb0a6835fd54563758cfa65eb7353e0bd9449c0",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "9d96c618ae0f6a56976ba2b5fb6bfa7b53c74547",
+      "closedAt": "2024-11-28T20:04:26Z",
+      "mergedAt": "2024-11-28T20:04:26Z",
+      "mergedBy": "johngray-dev",
+      "mergeCommit": {
+        "oid": "0c6ecfa4cb8c47814fe3f5bc98cf250d185ae59b"
+      },
       "comments": [
         {
           "author": "ounsworth",
@@ -3644,7 +3662,7 @@
         },
         {
           "author": "chris-wood",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "body": "The DER encoding is still present for those that want to use it. However, the outputs of the composite ML-KEM key generation function are distinctly _not_ these `CompositeKEMPublicKey` values. They're internal, implementation-specific values. Callers can then invoke `SerializePublicKey`, which is the model for HPKE, to produce a simple, wire-format-encoded public key, or they can encode it using `CompositeKEMPublicKey` if they need to.\r\n\r\nThe point of this PR is to allow both encodings. Does that clarify?",
           "createdAt": "2024-11-19T20:38:07Z",
           "updatedAt": "2024-11-19T20:38:07Z"
@@ -3658,7 +3676,7 @@
         },
         {
           "author": "chris-wood",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "body": "> That sounds super confusing for implementers. Let's just do one encoding. Let's drop the DER entirely.\r\n\r\nI would be pleased with this outcome. I'll update the PR to match.\r\n\r\n> But that does mean that we're going to have to list out explicit byte cutoffs where the first ends and the next begins.\r\n\r\nNo? These outputs are fixed-length. There's no need to encode the lengths. ",
           "createdAt": "2024-11-19T21:00:57Z",
           "updatedAt": "2024-11-19T21:01:23Z"
@@ -3672,7 +3690,7 @@
         },
         {
           "author": "chris-wood",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "body": "@johngray-dev that works for me -- do you want to take over this PR?",
           "createdAt": "2024-11-19T21:52:09Z",
           "updatedAt": "2024-11-19T21:52:09Z"
@@ -3692,7 +3710,7 @@
             "abbreviatedOid": "788d82c"
           },
           "author": "chris-wood",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "state": "COMMENTED",
           "body": "",
           "createdAt": "2024-11-19T20:42:28Z",
@@ -3712,7 +3730,7 @@
             "abbreviatedOid": "169d9b3"
           },
           "author": "chris-wood",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "state": "COMMENTED",
           "body": "",
           "createdAt": "2024-11-19T20:42:47Z",
@@ -3735,7 +3753,7 @@
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/95",
       "state": "OPEN",
       "author": "chris-wood",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "This will need to be modified based on #94, in particular to update the `DeriveKeyPair` description, but the rest of the change in this section should stand on its own. \r\n\r\nCloses #93, #87, #86",
@@ -3754,7 +3772,7 @@
       "comments": [
         {
           "author": "chris-wood",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "body": "@ounsworth @johngray-dev I'll revert the HKDF drop for now, replacing it with HKDF-Extract (as discussed at IETF 121), but I'd like to discuss this again in the future.",
           "createdAt": "2024-11-19T21:52:33Z",
           "updatedAt": "2024-11-19T21:59:43Z"
