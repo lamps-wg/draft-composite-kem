@@ -154,6 +154,8 @@ informative:
   RFC7296:
   RFC8446:
   RFC8551:
+  RFC9180:
+  I-D.draft-connolly-cfrg-xwing-kem-06:
   I-D.draft-ietf-tls-hybrid-design-04:
   I-D.draft-ietf-pquip-pqt-hybrid-terminology-04:
   I-D.draft-ietf-lamps-cms-kyber-05:
@@ -487,7 +489,6 @@ Key Generation Process:
     pk = (mlkemPK, tradPK)
     sk = (mlkemSK, tradSK)
     return (pk, sk)
-
 ~~~
 {: #alg-composite-keygen title="Composite KeyGen(pk, sk)"}
 
@@ -496,7 +497,8 @@ In order to ensure fresh keys, the key generation functions MUST be executed for
 
 Note that in step 2 above, both component key generation processes are invoked, and no indication is given about which one failed. This SHOULD be done in a timing-invariant way to prevent side-channel attackers from learning which component algorithm failed.
 
-## Encapsulation
+
+## Encapsulation {#sect-composite-encaps}
 
 The `Encap(pk)` of a Composite ML-KEM algorithm is designed to behave exactly the same as `ML-KEM.Encaps(ek)` defined in Algorithm 20 in Section 7.2 of [FIPS.203]. Specifically, `Composite-ML-KEM.Encap(pk)` produces a 256-bit shared secret key that can be used directly with any symmetric-key cryptographic algorithm. In this way, Composite ML-KEM can be used as a direct drop-in replacement anywhere that ML-KEM is used.
 
@@ -1008,18 +1010,19 @@ EDNOTE: these are prototyping OIDs to be replaced by IANA.
 
 | Composite ML-KEM Algorithm         | OID                  | First Algorithm | Second Algorithm     | KDF      |
 |---------                           | -----------------    | ----------      | ----------           | -------- |
-| id-MLKEM768-RSA2048                | &lt;CompKEM&gt;.21   | MLKEM768        | RSA-OAEP 2048        | HKDF-SHA256/256 |
-| id-MLKEM768-RSA3072                | &lt;CompKEM&gt;.22   | MLKEM768        | RSA-OAEP 3072        | HKDF-SHA256/256 |
-| id-MLKEM768-RSA4096                | &lt;CompKEM&gt;.23   | MLKEM768        | RSA-OAEP 4096        | HKDF-SHA256/256 |
+| id-MLKEM768-RSA2048                | &lt;CompKEM&gt;.21   | MLKEM768        | RSA-OAEP 2048        | HKDF-Extract-SHA256 |
+| id-MLKEM768-RSA3072                | &lt;CompKEM&gt;.22   | MLKEM768        | RSA-OAEP 3072        | HKDF-Extract-SHA256 |
+| id-MLKEM768-RSA4096                | &lt;CompKEM&gt;.23   | MLKEM768        | RSA-OAEP 4096        | HKDF-Extract-SHA256 |
 | id-MLKEM768-X25519                 | &lt;CompKEM&gt;.24   | MLKEM768        | X25519               | SHA3-256 |
-| id-MLKEM768-ECDH-P384              | &lt;CompKEM&gt;.25   | MLKEM768        | ECDH-P384            | HKDF-SHA256/256 |
-| id-MLKEM768-ECDH-brainpoolP256r1   | &lt;CompKEM&gt;.26   | MLKEM768        | ECDH-brainpoolp256r1 | HKDF-SHA256/256 |
+| id-MLKEM768-ECDH-P256              | &lt;CompKEM&gt;.25   | MLKEM768        | ECDH-P256            | HKDF-Extract-SHA256 |
+| id-MLKEM768-ECDH-P384              | &lt;CompKEM&gt;.25   | MLKEM768        | ECDH-P384            | HKDF-Extract-SHA256 |
+| id-MLKEM768-ECDH-brainpoolP256r1   | &lt;CompKEM&gt;.26   | MLKEM768        | ECDH-brainpoolp256r1 | HKDF-Extract-SHA256 |
 | id-MLKEM1024-ECDH-P384             | &lt;CompKEM&gt;.27   | MLKEM1024       | ECDH-P384            | SHA3-256 |
 | id-MLKEM1024-ECDH-brainpoolP384r1  | &lt;CompKEM&gt;.28   | MLKEM1024       | ECDH-brainpoolP384r1 | SHA3-256 |
 | id-MLKEM1024-X448                  | &lt;CompKEM&gt;.29   | MLKEM1024       | X448                 | SHA3-256 |
 {: #tab-kem-algs title="Composite ML-KEM key types"}
 
-For the use of HKDF [RFC5869]: a salt is not provided; ie the default salt (all zeroes of length HashLen) will be used. The output length of HKDF is the same as the block size of the underlying hash function; in particular, `HKDF-SHA256/256` means HKDF-SHA256 with an output length `L` of 256 bits (32 octets).
+For the use of HKDF-Extract {{RFC5869}}, a salt is not provided, i.e., the default salt (all zeroes of length HashLen) will be used.
 
 Full specifications for the referenced algorithms can be found in {{appdx_components}}.
 
@@ -1034,6 +1037,7 @@ The KEM combiner used in this document requires a domain separator `Domain` inpu
 | id-MLKEM768-RSA3072       | 060B6086480186FA6B50050216 |
 | id-MLKEM768-RSA4096       | 060B6086480186FA6B50050217 |
 | id-MLKEM768-X25519        | 060B6086480186FA6B5005021A |
+| id-MLKEM768-ECDH-P256     | 060B6086480186FA6B5005021E |
 | id-MLKEM768-ECDH-P384     | 060B6086480186FA6B50050218 |
 | id-MLKEM768-ECDH-brainpoolP256r1 | 060B6086480186FA6B50050219 |
 | id-MLKEM1024-ECDH-P384    | 060B6086480186FA6B5005021B |
@@ -1082,6 +1086,80 @@ where:
 
 Note: The mask length, according to [RFC8017], is `k - hLen - 1`, where `k` is the size of the RSA modulus. Since the choice of hash function and the RSA key size is fixed for each composite algorithm, implementations could choose to pre-compute and hard-code the mask length.
 
+# Use in HPKE
+
+This section describes how composite ML-KEM satisfies the HPKE KEM interface in {{RFC9180}}. The `SerializePublicKey` and `DeserializePublicKey` functions are implemented as specified in [TODO]. The `GenerateKeyPair` function is implemented by `KeyGen` in [TODO]. `DeriveKeyPair()` is implemented as follows:
+
+~~~
+DeriveKeyPair(ikm) -> (pk, sk)
+
+Explicit Inputs:
+  ikm        A fixed-length seed of 32 bytes
+
+Implicit Input:
+  ML-KEM     A placeholder for the specific ML-KEM algorithm and
+             parameter set to use, for example, could be "ML-KEM-65".
+
+  Trad       A placeholder for the specific traditional algorithm and
+             parameter set to use, for example "RSA-OAEP" or "X25519".
+
+Output:
+  (pk, sk)  The composite keypair.
+
+Key Generation Process:
+
+  1. Validate input keying material length
+
+    if len(seed) != 32:
+      output "Invalid seed error"
+
+  2. Expand the input keying material
+
+    expanded = SHAKE256(message=ikm, outlen=Nsk)
+
+  3. Derive component keys
+
+    (mlkemPK, mlkemSK) = ML-KEM.KeyGen_internal(expanded[0:32], expanded[32:64])
+    (tradPK, tradSK)   = Trad.KeyGen(expanded[64:])
+
+  4. Check for component key gen failure
+    if NOT (mlkemPK, mlkemSK) or NOT (tradPK, tradSK):
+      output "Key derivation error"
+
+  5. Encode the component keys into composite structures
+
+    pk = CompositeKEMPublicKey(mlkemPK, tradPK)
+    sk = CompositeKEMPrivateKey(mlkemSK, tradSK)
+
+  6. Output the composite keys
+
+    return (pk, sk)
+~~~
+
+`Encap()` is `Encapsulate()` from {{sect-composite-encaps}}, where an ML-KEM encapsulation key check failure causes an HPKE `EncapError`. `Decap()` is `Decapsulate()` from {{sect-composite-decaps}}.
+
+Composite ML-KEM is not an authenticated KEM: it does not support `AuthEncap()` and `AuthDecap()` from {{RFC9180}}.
+
+Nsecret, Nenc, Npk, and Nsk are defined in the following registry updates for a subset of the composite ML-KEM instances in this document. These registry updates are made to the "HPKE KEM Identifiers" registry. An HPKE KEM Identifier codepoint has already been allocated for id-MLKEM768-X25519 in {{I-D.connolly-cfrg-xwing-kem}}.
+
+* id-MLKEM768-ECDH-P256
+  * Value: 0xTODO (please)
+  * KEM: id-MLKEM768-ECDH-P256
+  * Nsecret: 32
+  * Nenc: 1153
+  * Npk: 1249
+  * Nsk: 96
+  * Auth: no
+  * Reference: This document
+* id-MLKEM768-ECDH-P384
+  * Value: 0xTODO (please)
+  * KEM: id-MLKEM768-ECDH-P384
+  * Nsecret: 32
+  * Nenc: 1185
+  * Npk: 1281
+  * Nsk: 112
+  * Auth: no
+  * Reference: This document
 
 # Use in CMS
 
@@ -1101,6 +1179,7 @@ A compliant implementation MUST support the following algorithm combinations for
 | id-MLKEM768-RSA3072               | id-alg-hkdf-with-sha256 | id-aes128-wrap     |
 | id-MLKEM768-RSA4096               | id-alg-hkdf-with-sha256 | id-aes128-wrap     |
 | id-MLKEM768-X25519                | id-kmac256              | id-aes128-wrap     |
+| id-MLKEM768-ECDH-P256             | id-kmac256              | id-aes128-wrap     |
 | id-MLKEM768-ECDH-P384             | id-alg-hkdf-with-sha256 | id-aes256-wrap     |
 | id-MLKEM768-ECDH-brainpoolP256r1  | id-alg-hkdf-with-sha256 | id-aes256-wrap     |
 | id-MLKEM1024-ECDH-P384            | id-kmac256              | id-aes256-wrap     |
@@ -1112,53 +1191,6 @@ A compliant implementation MUST support the following algorithm combinations for
 Full specifications for the referenced algorithms can be found either further down in this section, or in {{appdx_components}}.
 
 Note that here we differ slightly from the internal KDF used within the KEM combiner in {{sec-alg-ids}} because [RFC9629] requires that the KDF listed in the KEMRecipientInfo `kdf` field must have an interface which accepts `KDF(IKM, L, info)`, so here we need to use KMAC and cannot directly use SHA3. Since we require 256-bits of (2nd) pre-image resistance, we use KMAC256 for the Composite ML-KEM algorithms with internally use SHA3-256, as aligned with Table 3 of {{SP.800-57pt1r5}}.
-
-
-### Use of the HKDF-based Key Derivation Function
-
-The HMAC-based Extract-and-Expand Key Derivation Function (HKDF) is defined in {{!RFC5869}}.
-
-The HKDF function is a composition of the HKDF-Extract and HKDF-Expand functions.
-
-~~~
-HKDF(salt, IKM, info, L)
-  = HKDF-Expand(HKDF-Extract(salt, IKM), info, L)
-~~~
-
-HKDF(salt, IKM, info, L) takes the following parameters:
-
-salt:
-: optional salt value (a non-secret random value). In this document this parameter is unused, that is it is the zero-length string "".
-
-IKM:
-: input keying material. In this document this is the shared secret outputted from the Encapsulate() or Decapsulate() functions.  This corresponds to the IKM KDF input from {{Section 5 of RFC9629}}.
-
-info:
-: optional context and application specific information. In this document this corresponds to the info KDF input from {{Section 5 of RFC9629}}. This is the ASN.1 DER encoding of CMSORIforKEMOtherInfo.
-
-L:
-: length of output keying material in octets. This corresponds to the L KDF input from {{Section 5 of RFC9629}}, which is identified in the kekLength value from KEMRecipientInfo. Implementations MUST confirm that this value is consistent with the key size of the key-encryption algorithm.
-
-HKDF may be used with different hash functions, including SHA-256 {{FIPS.180-4}}. The object identifier id-alg-hkdf-with-sha256 is defined in [RFC8619], and specifies the use of HKDF with SHA-256. The parameter field MUST be absent when this algorithm identifier is used to specify the KDF for ML-KEM in KemRecipientInfo.
-
-### Use of the KMAC-based Key Derivation Function
-
-KMAC256-KDF is a KMAC-based KDF specified for use in CMS in {{I-D.ietf-lamps-cms-sha3-hash}}. The definition of KMAC is copied here for convenience.  Here, KMAC# indicates the use of either KMAC128-KDF or KMAC256-KDF, although only KMAC256 is used in this specification.
-
-KMAC#(K, X, L, S) takes the following parameters:
-
-> K: the input key-derivation key.  In this document this is the shared secret outputted from the Encapsulate() or Decapsulate() functions.  This corresponds to the IKM KDF input from Section 5 of [RFC9629].
-
-> X: the context, corresponding to the info KDF input from Section 5 of [RFC9629]. This is the ASN.1 DER encoding of CMSORIforKEMOtherInfo.
-
-> L: the output length, in bits.  This corresponds to the L KDF input from Section 5 of [RFC9629], which is identified in the kekLength value from KEMRecipientInfo.  The L KDF input and kekLength values are specified in octets while this L parameter is specified in bits.
-
-> S: the optional customization label.  In this document this parameter is unused, that is it is the zero-length string "".
-
-The object identifier for KMAC256-KDF is id-kmac256, as defined in {{I-D.ietf-lamps-cms-sha3-hash}}.
-
-Since the customization label to KMAC# is not used, the parameter field MUST be absent when id-kmac256 is used as part of an algorithm identifier specifying the KDF to use for Composite ML-KEM in KemRecipientInfo.
-
 
 ## RecipientInfo Conventions {#sec-using-recipientInfo}
 
