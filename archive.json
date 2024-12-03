@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-12-01T02:07:55.740084+00:00",
+  "timestamp": "2024-12-03T01:54:10.514275+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -3758,13 +3758,13 @@
       "labels": [],
       "body": "This will need to be modified based on #94, in particular to update the `DeriveKeyPair` description, but the rest of the change in this section should stand on its own. \r\n\r\nCloses #93, #87, #86",
       "createdAt": "2024-11-19T16:42:41Z",
-      "updatedAt": "2024-11-19T21:59:59Z",
+      "updatedAt": "2024-12-02T14:04:01Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
-      "baseRefOid": "8810bc0ebb42fb9553387361765f1a56756170db",
+      "baseRefOid": "0c6ecfa4cb8c47814fe3f5bc98cf250d185ae59b",
       "headRepository": "chris-wood/draft-composite-kem",
       "headRefName": "caw/add-p256-and-hpke",
-      "headRefOid": "9e2c2bff4411a245065b9a6933a602a7e83eda67",
+      "headRefOid": "911981fd08840cb1ab6561e8066520f969a1b240",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
