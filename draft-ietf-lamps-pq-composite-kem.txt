@@ -1609,7 +1609,7 @@ Deserialization Process:
    -- TODO: OID to be replaced by IANA
    id-MLKEM768-RSA2048 OBJECT IDENTIFIER ::= {
      joint-iso-itu-t(2) country(16) us(840) organization(1)
-     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 21 }
+     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 30 }
 
    pk-MLKEM768-RSA2048 PUBLIC-KEY ::=
      pk-CompositeKEM {
@@ -1626,7 +1626,7 @@ Deserialization Process:
    -- TODO: OID to be replaced by IANA
    id-MLKEM768-RSA3072 OBJECT IDENTIFIER ::= {
      joint-iso-itu-t(2) country(16) us(840) organization(1)
-     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 22 }
+     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 31 }
 
    pk-MLKEM768-RSA3072 PUBLIC-KEY ::=
      pk-CompositeKEM {
@@ -1643,7 +1643,7 @@ Deserialization Process:
    -- TODO: OID to be replaced by IANA
    id-MLKEM768-RSA4096 OBJECT IDENTIFIER ::= {
      joint-iso-itu-t(2) country(16) us(840) organization(1)
-     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 23 }
+     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 32 }
 
    pk-MLKEM768-RSA4096 PUBLIC-KEY ::=
      pk-CompositeKEM {
@@ -1659,7 +1659,7 @@ Deserialization Process:
    -- TODO: OID to be replaced by IANA
    id-MLKEM768-ECDH-P384 OBJECT IDENTIFIER ::= {
      joint-iso-itu-t(2) country(16) us(840) organization(1)
-     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 25 }
+     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 33 }
 
    pk-MLKEM768-ECDH-P384 PUBLIC-KEY ::=
      pk-CompositeKEM {
@@ -1675,7 +1675,7 @@ Deserialization Process:
    -- TODO: OID to be replaced by IANA
    id-MLKEM768-ECDH-brainpoolP256r1 OBJECT IDENTIFIER ::= {
      joint-iso-itu-t(2) country(16) us(840) organization(1)
-     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 26 }
+     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 34 }
 
    pk-MLKEM768-ECDH-brainpoolP256r1 PUBLIC-KEY ::=
      pk-CompositeKEM {
@@ -1691,7 +1691,7 @@ Deserialization Process:
    -- TODO: OID to be replaced by IANA
    id-MLKEM768-X25519 OBJECT IDENTIFIER ::= {
      joint-iso-itu-t(2) country(16) us(840) organization(1)
-     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 24 }
+     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 35 }
 
    pk-MLKEM768-X25519 PUBLIC-KEY ::=
      pk-CompositeKEM {
@@ -1708,7 +1708,7 @@ Deserialization Process:
    -- TODO: OID to be replaced by IANA
    id-MLKEM1024-ECDH-P384 OBJECT IDENTIFIER ::= {
      joint-iso-itu-t(2) country(16) us(840) organization(1)
-     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 27 }
+     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 36 }
 
    pk-MLKEM1024-ECDH-P384 PUBLIC-KEY ::=
      pk-CompositeKEM {
@@ -1724,7 +1724,7 @@ Deserialization Process:
    -- TODO: OID to be replaced by IANA
    id-MLKEM1024-ECDH-brainpoolP384r1 OBJECT IDENTIFIER ::= {
      joint-iso-itu-t(2) country(16) us(840) organization(1)
-     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 28 }
+     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 37 }
 
    pk-MLKEM1024-ECDH-brainpoolP384r1 PUBLIC-KEY ::=
      pk-CompositeKEM{
@@ -1740,7 +1740,7 @@ Deserialization Process:
    -- TODO: OID to be replaced by IANA
    id-MLKEM1024-X448 OBJECT IDENTIFIER ::= {
      joint-iso-itu-t(2) country(16) us(840) organization(1)
-     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 29 }
+     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 38 }
 
    pk-MLKEM1024-X448 PUBLIC-KEY ::=
      pk-CompositeKEM {
