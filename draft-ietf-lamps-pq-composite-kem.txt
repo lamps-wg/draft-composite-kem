@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 1 June 2025                                             M. Pala
+Expires: 21 June 2025                                            M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                        28 November 2024
+                                                        18 December 2024
 
 
   Composite ML-KEM for use in X.509 Public Key Infrastructure and CMS
@@ -61,7 +61,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 1 June 2025.
+   This Internet-Draft will expire on 21 June 2025.
 
 Copyright Notice
 
@@ -1126,33 +1126,33 @@ Deserialization Process:
    |Composite ML-KEM |OID         |First    |Second         |KDF       |
    |Algorithm        |            |Algorithm|Algorithm      |          |
    +=================+============+=========+===============+==========+
-   |id-              |<CompKEM>.21|MLKEM768 |RSA-OAEP 2048  |HKDF-     |
+   |id-              |<CompKEM>.30|MLKEM768 |RSA-OAEP 2048  |HKDF-     |
    |MLKEM768-RSA2048 |            |         |               |SHA256/256|
    +-----------------+------------+---------+---------------+----------+
-   |id-              |<CompKEM>.22|MLKEM768 |RSA-OAEP 3072  |HKDF-     |
+   |id-              |<CompKEM>.31|MLKEM768 |RSA-OAEP 3072  |HKDF-     |
    |MLKEM768-RSA3072 |            |         |               |SHA256/256|
    +-----------------+------------+---------+---------------+----------+
-   |id-              |<CompKEM>.23|MLKEM768 |RSA-OAEP 4096  |HKDF-     |
+   |id-              |<CompKEM>.32|MLKEM768 |RSA-OAEP 4096  |HKDF-     |
    |MLKEM768-RSA4096 |            |         |               |SHA256/256|
    +-----------------+------------+---------+---------------+----------+
-   |id-              |<CompKEM>.24|MLKEM768 |X25519         |SHA3-256  |
+   |id-              |<CompKEM>.33|MLKEM768 |X25519         |SHA3-256  |
    |MLKEM768-X25519  |            |         |               |          |
    +-----------------+------------+---------+---------------+----------+
-   |id-MLKEM768-     |<CompKEM>.25|MLKEM768 |ECDH-P384      |HKDF-     |
+   |id-MLKEM768-     |<CompKEM>.34|MLKEM768 |ECDH-P384      |HKDF-     |
    |ECDH-P384        |            |         |               |SHA256/256|
    +-----------------+------------+---------+---------------+----------+
-   |id-MLKEM768-     |<CompKEM>.26|MLKEM768 |ECDH-          |HKDF-     |
+   |id-MLKEM768-     |<CompKEM>.35|MLKEM768 |ECDH-          |HKDF-     |
    |ECDH-            |            |         |brainpoolp256r1|SHA256/256|
    |brainpoolP256r1  |            |         |               |          |
    +-----------------+------------+---------+---------------+----------+
-   |id-MLKEM1024-    |<CompKEM>.27|MLKEM1024|ECDH-P384      |SHA3-256  |
+   |id-MLKEM1024-    |<CompKEM>.36|MLKEM1024|ECDH-P384      |SHA3-256  |
    |ECDH-P384        |            |         |               |          |
    +-----------------+------------+---------+---------------+----------+
-   |id-MLKEM1024-    |<CompKEM>.28|MLKEM1024|ECDH-          |SHA3-256  |
+   |id-MLKEM1024-    |<CompKEM>.37|MLKEM1024|ECDH-          |SHA3-256  |
    |ECDH-            |            |         |brainpoolP384r1|          |
    |brainpoolP384r1  |            |         |               |          |
    +-----------------+------------+---------+---------------+----------+
-   |id-              |<CompKEM>.29|MLKEM1024|X448           |SHA3-256  |
+   |id-              |<CompKEM>.38|MLKEM1024|X448           |SHA3-256  |
    |MLKEM1024-X448   |            |         |               |          |
    +-----------------+------------+---------+---------------+----------+
 
@@ -1179,23 +1179,23 @@ Deserialization Process:
     | Composite ML-KEM Algorithm        | Domain Separator (in Hex   |
     |                                   | encoding)                  |
     +===================================+============================+
-    | id-MLKEM768-RSA2048               | 060B6086480186FA6B50050215 |
+    | id-MLKEM768-RSA2048               | 060B6086480186FA6B5005021E |
     +-----------------------------------+----------------------------+
-    | id-MLKEM768-RSA3072               | 060B6086480186FA6B50050216 |
+    | id-MLKEM768-RSA3072               | 060B6086480186FA6B5005021F |
     +-----------------------------------+----------------------------+
-    | id-MLKEM768-RSA4096               | 060B6086480186FA6B50050217 |
+    | id-MLKEM768-RSA4096               | 060B6086480186FA6B50050220 |
     +-----------------------------------+----------------------------+
-    | id-MLKEM768-X25519                | 060B6086480186FA6B5005021A |
+    | id-MLKEM768-X25519                | 060B6086480186FA6B50050221 |
     +-----------------------------------+----------------------------+
-    | id-MLKEM768-ECDH-P384             | 060B6086480186FA6B50050218 |
+    | id-MLKEM768-ECDH-P384             | 060B6086480186FA6B50050222 |
     +-----------------------------------+----------------------------+
-    | id-MLKEM768-ECDH-brainpoolP256r1  | 060B6086480186FA6B50050219 |
+    | id-MLKEM768-ECDH-brainpoolP256r1  | 060B6086480186FA6B50050223 |
     +-----------------------------------+----------------------------+
-    | id-MLKEM1024-ECDH-P384            | 060B6086480186FA6B5005021B |
+    | id-MLKEM1024-ECDH-P384            | 060B6086480186FA6B50050224 |
     +-----------------------------------+----------------------------+
-    | id-MLKEM1024-ECDH-brainpoolP384r1 | 060B6086480186FA6B5005021C |
+    | id-MLKEM1024-ECDH-brainpoolP384r1 | 060B6086480186FA6B50050225 |
     +-----------------------------------+----------------------------+
-    | id-MLKEM1024-X448                 | 060B6086480186FA6B5005021D |
+    | id-MLKEM1024-X448                 | 060B6086480186FA6B50050226 |
     +-----------------------------------+----------------------------+
 
           Table 3: Composite ML-KEM fixedInfo Domain Separators
