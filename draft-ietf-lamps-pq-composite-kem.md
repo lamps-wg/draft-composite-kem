@@ -1008,15 +1008,15 @@ EDNOTE: these are prototyping OIDs to be replaced by IANA.
 
 | Composite ML-KEM Algorithm         | OID                  | First Algorithm | Second Algorithm     | KDF      |
 |---------                           | -----------------    | ----------      | ----------           | -------- |
-| id-MLKEM768-RSA2048                | &lt;CompKEM&gt;.21   | MLKEM768        | RSA-OAEP 2048        | HKDF-SHA256/256 |
-| id-MLKEM768-RSA3072                | &lt;CompKEM&gt;.22   | MLKEM768        | RSA-OAEP 3072        | HKDF-SHA256/256 |
-| id-MLKEM768-RSA4096                | &lt;CompKEM&gt;.23   | MLKEM768        | RSA-OAEP 4096        | HKDF-SHA256/256 |
-| id-MLKEM768-X25519                 | &lt;CompKEM&gt;.24   | MLKEM768        | X25519               | SHA3-256 |
-| id-MLKEM768-ECDH-P384              | &lt;CompKEM&gt;.25   | MLKEM768        | ECDH-P384            | HKDF-SHA256/256 |
-| id-MLKEM768-ECDH-brainpoolP256r1   | &lt;CompKEM&gt;.26   | MLKEM768        | ECDH-brainpoolp256r1 | HKDF-SHA256/256 |
-| id-MLKEM1024-ECDH-P384             | &lt;CompKEM&gt;.27   | MLKEM1024       | ECDH-P384            | SHA3-256 |
-| id-MLKEM1024-ECDH-brainpoolP384r1  | &lt;CompKEM&gt;.28   | MLKEM1024       | ECDH-brainpoolP384r1 | SHA3-256 |
-| id-MLKEM1024-X448                  | &lt;CompKEM&gt;.29   | MLKEM1024       | X448                 | SHA3-256 |
+| id-MLKEM768-RSA2048                | &lt;CompKEM&gt;.30   | MLKEM768        | RSA-OAEP 2048        | HKDF-SHA256/256 |
+| id-MLKEM768-RSA3072                | &lt;CompKEM&gt;.31   | MLKEM768        | RSA-OAEP 3072        | HKDF-SHA256/256 |
+| id-MLKEM768-RSA4096                | &lt;CompKEM&gt;.32   | MLKEM768        | RSA-OAEP 4096        | HKDF-SHA256/256 |
+| id-MLKEM768-X25519                 | &lt;CompKEM&gt;.33   | MLKEM768        | X25519               | SHA3-256 |
+| id-MLKEM768-ECDH-P384              | &lt;CompKEM&gt;.34   | MLKEM768        | ECDH-P384            | HKDF-SHA256/256 |
+| id-MLKEM768-ECDH-brainpoolP256r1   | &lt;CompKEM&gt;.35   | MLKEM768        | ECDH-brainpoolp256r1 | HKDF-SHA256/256 |
+| id-MLKEM1024-ECDH-P384             | &lt;CompKEM&gt;.36   | MLKEM1024       | ECDH-P384            | SHA3-256 |
+| id-MLKEM1024-ECDH-brainpoolP384r1  | &lt;CompKEM&gt;.37   | MLKEM1024       | ECDH-brainpoolP384r1 | SHA3-256 |
+| id-MLKEM1024-X448                  | &lt;CompKEM&gt;.38   | MLKEM1024       | X448                 | SHA3-256 |
 {: #tab-kem-algs title="Composite ML-KEM key types"}
 
 For the use of HKDF [RFC5869]: a salt is not provided; ie the default salt (all zeroes of length HashLen) will be used. The output length of HKDF is the same as the block size of the underlying hash function; in particular, `HKDF-SHA256/256` means HKDF-SHA256 with an output length `L` of 256 bits (32 octets).
@@ -1030,15 +1030,15 @@ The KEM combiner used in this document requires a domain separator `Domain` inpu
 
 | Composite ML-KEM Algorithm| Domain Separator (in Hex encoding)|
 | -----------               | ----------- |
-| id-MLKEM768-RSA2048       | 060B6086480186FA6B50050215 |
-| id-MLKEM768-RSA3072       | 060B6086480186FA6B50050216 |
-| id-MLKEM768-RSA4096       | 060B6086480186FA6B50050217 |
-| id-MLKEM768-X25519        | 060B6086480186FA6B5005021A |
-| id-MLKEM768-ECDH-P384     | 060B6086480186FA6B50050218 |
-| id-MLKEM768-ECDH-brainpoolP256r1 | 060B6086480186FA6B50050219 |
-| id-MLKEM1024-ECDH-P384    | 060B6086480186FA6B5005021B |
-| id-MLKEM1024-ECDH-brainpoolP384r1 | 060B6086480186FA6B5005021C |
-| id-MLKEM1024-X448         | 060B6086480186FA6B5005021D |
+| id-MLKEM768-RSA2048       | 060B6086480186FA6B5005021E |
+| id-MLKEM768-RSA3072       | 060B6086480186FA6B5005021F |
+| id-MLKEM768-RSA4096       | 060B6086480186FA6B50050220 |
+| id-MLKEM768-X25519        | 060B6086480186FA6B50050221 |
+| id-MLKEM768-ECDH-P384     | 060B6086480186FA6B50050222 |
+| id-MLKEM768-ECDH-brainpoolP256r1 | 060B6086480186FA6B50050223 |
+| id-MLKEM1024-ECDH-P384    | 060B6086480186FA6B50050224 |
+| id-MLKEM1024-ECDH-brainpoolP384r1 | 060B6086480186FA6B50050225 |
+| id-MLKEM1024-X448         | 060B6086480186FA6B50050226 |
 {: #tab-kem-domains title="Composite ML-KEM fixedInfo Domain Separators"}
 
 EDNOTE: these domain separators are based on the prototyping OIDs assigned on the Entrust arc. We will need to ask for IANA early allocation of these OIDs so that we can re-compute the domain separators over the final OIDs.
