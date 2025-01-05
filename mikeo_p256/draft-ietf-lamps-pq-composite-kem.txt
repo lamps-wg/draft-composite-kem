@@ -1673,13 +1673,13 @@ Deserialization Process:
 
    pk-MLKEM768-ECDH-P256 PUBLIC-KEY ::=
      pk-CompositeKEM {
-       id-MLKEM768-ECDH-P384,
+       id-MLKEM768-ECDH-P256,
        CompositeKEMPublicKey }
 
    kema-MLKEM768-ECDH-P256 KEM-ALGORITHM ::=
        kema-CompositeKEM{
-         id-MLKEM768-ECDH-P384,
-         pk-MLKEM768-ECDH-P384 }
+         id-MLKEM768-ECDH-P256,
+         pk-MLKEM768-ECDH-P256 }
 
 
    -- TODO: OID to be replaced by IANA
@@ -1689,7 +1689,7 @@ Deserialization Process:
 
    pk-MLKEM768-ECDH-P384 PUBLIC-KEY ::=
      pk-CompositeKEM {
-       id-MLKEM768-ECDH-P384,
+       id-MLKEM768-ECDH-P256,
        CompositeKEMPublicKey }
 
    kema-MLKEM768-ECDH-P384 KEM-ALGORITHM ::=
