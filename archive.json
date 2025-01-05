@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-01-02T01:43:48.876146+00:00",
+  "timestamp": "2025-01-05T01:51:54.956434+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -1549,7 +1549,7 @@
     {
       "number": 93,
       "id": "I_kwDOKRPFO86fGir-",
-      "title": "Need to specify clearly how to invoke HKDF",
+      "title": "Need to specify clearly how to invoke HKDF  in a FIPS-compliant way",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/93",
       "state": "OPEN",
       "author": "ounsworth",
@@ -1558,7 +1558,7 @@
       "labels": [],
       "body": "Currently we just treat it as a generic KDF.\r\n\r\nWe need to take a much closer look at how to define the HKDF-SHA256 combo in a way that is 800-56Cr2 compliant. Technically HKDF (RFC 5869) is allowed under the 2-Step method, but it requires some careful alignment of inputs on the HKDF-Expand step. But in our case we only need to use the HKDF-Extract step for the combiner. \r\n\r\nFix: either specify that we only use the HKDF-Extract() step from RFC 5869, or else just use HMAC directly from RFC 2104\r\n\r\nhttps://datatracker.ietf.org/doc/rfc2104/",
       "createdAt": "2024-11-18T17:24:38Z",
-      "updatedAt": "2024-11-19T21:00:20Z",
+      "updatedAt": "2025-01-05T01:09:29Z",
       "closedAt": null,
       "comments": [
         {
@@ -1595,6 +1595,20 @@
           "body": "I'm sorry, but I don't buy the argument that ML-KEM will be available and SHA-3 will not. Where is discussion about this taking place?",
           "createdAt": "2024-11-19T21:00:19Z",
           "updatedAt": "2024-11-19T21:00:19Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> I'm sorry, but I don't buy the argument that ML-KEM will be available and SHA-3 will not. Where is discussion about this taking place?\r\n\r\nI don't particularly care one way or another, but the request for SHA2 combiners came from Deb Cooley on behalf of NSA. Here's the PQUIP 118 recording where she made her case: https://youtu.be/W46QrMvlLZU?feature=shared&t=5655\r\n\r\nJoe Saloway made a similar request (but not on-recording). If you want the SHA2 combiners to be ditched, then you'll need to get Deb and Joe to withdraw their requests for it.",
+          "createdAt": "2025-01-05T01:06:26Z",
+          "updatedAt": "2025-01-05T01:09:29Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> @ounsworth this is a dupe of #87, I think?\r\n\r\nNot an exact dupe, this one is about how to make it FIPS-compliant, while #87 is about correctly calling the HKDF API. I'll adjust the title to reflect that.",
+          "createdAt": "2025-01-05T01:08:06Z",
+          "updatedAt": "2025-01-05T01:08:06Z"
         }
       ]
     },
@@ -1629,6 +1643,30 @@
       "updatedAt": "2024-12-04T14:44:33Z",
       "closedAt": null,
       "comments": []
+    },
+    {
+      "number": 98,
+      "id": "I_kwDOKRPFO86k6BBB",
+      "title": "Use HPKE DHKEM instead of custom DHKEM",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/98",
+      "state": "OPEN",
+      "author": "chris-wood",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Section {{sec-DHKEM}} describes how to promote an ECDH algorithm, such as X25519, to a KEM. In doing so, it strips down HPKE's DHKEM for its own purpose. This has a number of problems, including:\r\n\r\n(1) There seems to be no analysis suggesting the stripped down version satisfies the necessary properties of a KEM. For example, what are the binding properties of this variant, and do they vary based on the traditional KEM that's used? DHKEM, in comparison, is known to satisfy the IND-CCA2 requirement (when instantiated correctly) and its binding properties are known. \r\n(2) More importantly, when trying to use the composite KEM in HPKE, things become super awkward. Let's take a concrete example. Let's say I want to use composite ML-KEM with P-256 in HPKE. Part of doing that requires one to implement `DeriveKeyPair`, as per RFC9180. However, as the document is currently written, there is no deterministic key generation function on the KEM interface, i.e., one can't simply call `(tradPK, tradSK) = TradKEM.MissingDeterministicKeyGenerationFunction(tradSeed)`. This means we need to either expand the KEM interface in this document, which would mean that there would be two different deterministic key generation functions for P-256, one defined here and one defined in RFC9180, or we can simply use RFC9180's function directly. The former seems quite redundant and undesirable, whereas the latter isn't exactly possible. Recall that we're trying to use ML-KEM with P-256, not ML-KEM with DHKEM(P-256, HKDF-SHA256). \r\n\r\nThese problems vanish if we insist that elliptic-curve-based KEMs must be DHKEM as specified in RFC9180. Then we have a very clean path towards integration into HPKE without compromising on any features.",
+      "createdAt": "2025-01-02T21:33:39Z",
+      "updatedAt": "2025-01-03T02:59:57Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "HPKE DHKEM\r\n----\r\n\r\nI'm not saying no right away, but I think I need to see it written out in order to understand how much complexity you're talking about importing from 9180 into this draft. For example, are we going to end up with layers upon layers of labels, most of which end up getting instantiated with the empty string?\r\n\r\nIf this ends up imposing a bunch of extra complexity on PKI implementers in order to make things easier for HPKE implementers, then I will likely vote No, but I'll keep an open mind until I fully understand what you're proposing.\r\n\r\n\r\nKeyGen\r\n----\r\n\r\nDeirdre also brought up issues with composite KeyGen -- and this is currently what's keeping X-Wing as a separate algorithm, rather than folding it into Composite -- part of the design goal of composite is that for the extremely change-controlled environments, it allows you to start rolling out PQ even if you only currently have RSA- or ECDH-capable hardware. Consider for example this migration scenario, which is one of our primary design goals:\r\n\r\nAll your employees' corporate ID badges double as smartcards to insert into your laptop for Windows login and email decryption.\r\nYou want emails to start being composite-encrypted tomorrow, so you push a patch that will generate a new RSA key on the smartcard, and an ML-KEM key stored in Windows CAPI, and you get a cert for that as a composite. All your over-the-wire emails are now PQ-protected, you can still claim that the whole thing is FIPS-certified because of the RSA smartcards, and you didn't have to replace any hardware (yet).\r\nAs you start getting your hands on FIPS-certified ML-KEM smartcards and issuing them to employees, you can either do the composite in the smartcard if it supports it, or ML-KEM in smartcard and RSA in software, or pure ML-KEM; it's nice and flexible and you get all the benefits of hybrid regardless of which half is in hardware and FIPS-certified.\r\n\r\nMy concern about making this draft overly prescriptive about KeyGen is that we'll lose this flexibility and acceleration of being able to leverage composite to get FIPS-certified ML-KEM hybrids into production before you have a FIPS-certified ML-KEM.",
+          "createdAt": "2025-01-03T02:57:09Z",
+          "updatedAt": "2025-01-03T02:59:57Z"
+        }
+      ]
     }
   ],
   "pulls": [
@@ -3767,21 +3805,21 @@
       "id": "PR_kwDOKRPFO86Caofv",
       "title": "Add P-256 variant, use HKDF-Extract instead of HKDF as the combiner KDF, and add HPKE integration section",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/95",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "chris-wood",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "This will need to be modified based on #94, in particular to update the `DeriveKeyPair` description, but the rest of the change in this section should stand on its own. \r\n\r\nCloses #93, #87, #86",
       "createdAt": "2024-11-19T16:42:41Z",
-      "updatedAt": "2024-12-02T14:04:01Z",
+      "updatedAt": "2025-01-05T01:01:32Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
-      "baseRefOid": "0c6ecfa4cb8c47814fe3f5bc98cf250d185ae59b",
+      "baseRefOid": "2650db111320b4b487e341c9c2d4c03465a586e5",
       "headRepository": "chris-wood/draft-composite-kem",
       "headRefName": "caw/add-p256-and-hpke",
-      "headRefOid": "911981fd08840cb1ab6561e8066520f969a1b240",
-      "closedAt": null,
+      "headRefOid": "0c25d4be8b681b813c262ee582f45dcf4709b8e6",
+      "closedAt": "2025-01-05T01:01:32Z",
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
@@ -3792,6 +3830,82 @@
           "body": "@ounsworth @johngray-dev I'll revert the HKDF drop for now, replacing it with HKDF-Extract (as discussed at IETF 121), but I'd like to discuss this again in the future.",
           "createdAt": "2024-11-19T21:52:33Z",
           "updatedAt": "2024-11-19T21:59:43Z"
+        },
+        {
+          "author": "chris-wood",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@ounsworth @johngray-dev I updated this PR. One question that came up was what KDF do we want to use for turning input seeds into seeds for the underlying component KEMS? To elaborate, the HPKE `DeriveKeyPair` function takes a seed as input. The specification of `DeriveKeyPair` currently expands that seed into two components -- one for each component KEM. The first piece goes to `ML-KEM.KeyGen_internal`, and the second piece goes to the traditional KEM's `DeriveKeyPair` function. Currently, the PR uses SHAKE256 as the XOF to do this expansion, exactly as X-Wing does. But if we believe the premise that SHA3 will _not_ be available in all environments, we might want to do something else.\r\n\r\n(To be clear, I don't think it's reasonable to believe that SHA-3 implementations will _not_ be available. This is new code, after all, and new code could just as well add SHA-3 if it's not available.)\r\n\r\nIn any case, could you please have a look and let me know what you think? This is the final piece of the puzzle before we can get some actual HPKE code points!",
+          "createdAt": "2025-01-02T21:10:59Z",
+          "updatedAt": "2025-01-02T21:10:59Z"
+        },
+        {
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Hi Chris.   Thanks for the update.   I'm okay with these changes except that I noticed you switched the prototype OIDs back to ending with .21 ... .29...    Those were from the previous version and won't be compatible with this update since we removed the ASN.1 sequence wrappings (so this upcoming -06 version will not be binary compatible with the last version).   So if you could update the OIDs to use .30 to .39 then we wouldn't cause prototype interoperability issues.   Eventually we will get official OIDs from IANA, but for people wanting to interoperate now we use these prototype OIDS.   I'm ok with adding the MLKEM768-ECDH-P256 one as well.  So re-numbering the OIDs starting at 30 makes sense.  For example:\r\n\r\n2.16.840.1.114027.80.5.2.30 \u00a0 entrust-Algorithm-ExplicitComposite-KEM.id-MLKEM768-RSA2048\r\n2.16.840.1.114027.80.5.2.31 \u00a0 entrust-Algorithm-ExplicitComposite-KEM.id-MLKEM768-RSA3072\r\n2.16.840.1.114027.80.5.2.32 \u00a0 entrust-Algorithm-ExplicitComposite-KEM.id-MLKEM768-RSA4096\r\n2.16.840.1.114027.80.5.2.33 \u00a0 entrust-Algorithm-ExplicitComposite-KEM.id-MLKEM768-X25519\r\n2.16.840.1.114027.80.5.2.34 \u00a0 entrust-Algorithm-ExplicitComposite-KEM.id-MLKEM768-ECDH-P256\r\n2.16.840.1.114027.80.5.2.35 \u00a0 entrust-Algorithm-ExplicitComposite-KEM.id-MLKEM768-ECDH-P384\r\n2.16.840.1.114027.80.5.2.36 \u00a0 entrust-Algorithm-ExplicitComposite-KEM.id-MLKEM768-ECDH-brainpoolP256r1\r\n2.16.840.1.114027.80.5.2.37 \u00a0 entrust-Algorithm-ExplicitComposite-KEM.id-MLKEM1024-ECDH-P384\r\n2.16.840.1.114027.80.5.2.38 \u00a0 entrust-Algorithm-ExplicitComposite-KEM.id-MLKEM1024-ECDH-brainpoolP384r1\r\n2.16.840.1.114027.80.5.2.39 \u00a0 entrust-Algorithm-ExplicitComposite-KEM.id-MLKEM1024-X448\r\n\r\nThat would also mean you need to update the DER Encoded OID table again.   The ASN.1 module will also need to be updated to add the new MLKEM768-ECDH-P256.   Other than that I think the pull looks great.\r\n\r\n\r\n\r\n\r\n",
+          "createdAt": "2025-01-03T21:46:04Z",
+          "updatedAt": "2025-01-03T21:46:04Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@chris-wood I think this PR is trying to do too much all at once, which makes it hard to review. It would be better if this was broken out into multiple PRs so that we can merge the P-256 thing while we discuss the other parts.",
+          "createdAt": "2025-01-05T00:30:13Z",
+          "updatedAt": "2025-01-05T00:30:13Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@chris-wood\r\n> One question that came up was what KDF do we want to use for turning input seeds into seeds for the underlying component KEMS?\r\n\r\n> ... expands that seed into two components -- one for each component KEM. The first piece goes to ML-KEM.KeyGen_internal, and the second piece goes to the traditional KEM's DeriveKeyPair function.\r\n\r\nBut this is explicitly FIPS-disallowed because FIPS 203 / 204 do not allow a KDF in between your DRBG and Keygen_internal. This is exactly the reason that X-Wing has its own LAMPS draft and is not part of this draft -- X-Wing does not care whether you can make a FIPS-certified implementation of it, but this draft does.\r\n\r\nI consider any kind of combined KeyGen to be a harmful change to this draft and I will reject any PRs that do that.",
+          "createdAt": "2025-01-05T00:41:17Z",
+          "updatedAt": "2025-01-05T00:49:13Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> (To be clear, I don't think it's reasonable to believe that SHA-3 implementations will not be available. This is new code, after all, and new code could just as well add SHA-3 if it's not available.)\r\n\r\nI don't particularly care one way or another, but the request for SHA2 combiners came from Deb Cooley on behalf of NSA. Here's the PQUIP 118 recording where she made her case: https://youtu.be/W46QrMvlLZU?feature=shared&t=5655\r\n\r\nJoe Saloway made a similar request (but not on-recording). If you want the SHA2 combiners to be ditched, then you'll need to get Deb and Joe to withdraw their requests for it.",
+          "createdAt": "2025-01-05T00:55:36Z",
+          "updatedAt": "2025-01-05T00:56:20Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I'll open a separate PR to add the P-256 variant.\r\nI'm ok in principle with adding an HPKE Integration section, but let's have that in its own PR cause I think we'll have to do a few iterations on it to balance the requirements of HPKE and PKI (particularly around KeyGen).",
+          "createdAt": "2025-01-05T01:01:32Z",
+          "updatedAt": "2025-01-05T01:01:32Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 99,
+      "id": "PR_kwDOKRPFO86Gvatf",
+      "title": "Adding a MLKEM768+P256 variant",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/99",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Closes #86 \r\n\r\nTo do before merge:\r\n\r\n- [ ] Assign a prototyping OID for `id-MLKEM768-ECDH-P256` from the Entrust OID arc -- update all the places in the draft that need it.\r\n- [ ] Once the OID is assigned, compute the domain separator for it.",
+      "createdAt": "2025-01-05T01:23:22Z",
+      "updatedAt": "2025-01-05T01:31:46Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "2650db111320b4b487e341c9c2d4c03465a586e5",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_p256",
+      "headRefOid": "20621a46418f13e95537aea1041137c8c2f30ac6",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@chris-wood does this do what you want?",
+          "createdAt": "2025-01-05T01:23:49Z",
+          "updatedAt": "2025-01-05T01:23:49Z"
         }
       ],
       "reviews": []
