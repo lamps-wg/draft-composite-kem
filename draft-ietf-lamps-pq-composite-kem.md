@@ -234,6 +234,12 @@ informative:
     author:
       org: National Institute of Standards and Technology (NIST)
     date: July 26, 2024
+  ETSI.TS.103.744:
+    title: "ETSI TS 103 744 V1.1.1 CYBER; Quantum-safe Hybrid Key Exchanges"
+    target: https://www.etsi.org/deliver/etsi_ts/103700_103799/103744/01.01.01_60/ts_103744v010101p.pdf
+    author:
+      org: ETSI
+    date: 2020-12
 
 
 --- abstract
@@ -261,7 +267,7 @@ Editorial changes:
 * ASN.1 module fixes (thanks Russ and Carl).
   * Renamed the module from Composite-KEM-2023 -> Composite-MLKEM-2024
   * Simplified the ASN.1 module to make it more compiler-friendly (thanks Carl!) -- should not affect wire encodings.
-
+* Added an appendix "Comparison with other Hybred KEMs" with sub-sections on X-Wing and ETSI CatKDF
 
 Still to do in a future version:
 
@@ -281,7 +287,7 @@ Cautious implementers may opt to combine cryptographic algorithms in such a way 
 
 Certain jurisdictions are already recommending or mandating that PQC lattice schemes be used exclusively within a PQ/T hybrid framework. The use of Composite scheme provides a straightforward implementation of hybrid solutions compatible with (and advocated by) some governments and cybersecurity agencies [BSI2021].
 
-In addition, [BSI2021] specifically references this specification as a concrete example of hybrid X.509 certificates.
+In addition, [BSI2021] specifically references the composite specification as a concrete example of hybrid X.509 certificates.
 
 A more recent example is [ANSSI2024], a document co-authored by French Cybersecurity Agency (ANSSI),
 Federal Office for Information Security (BSI), Netherlands National Communications Security Agency (NLNCSA), and
@@ -1584,6 +1590,35 @@ ML-KEM always requires the public key in order to perform various steps of the F
 With regard to the traditional algorithms, RSA or Elliptic Curve, in order to achieve the public-key binding property the KEM combiner used to form the Composite ML-KEM, the combiner requires the traditional public key as input to the KDF that derives the output shared secret. Therefore it is required to carry the public key within the respective `OneAsymmetricKey.publicKey` as per the private key encoding given in {{sec-priv-key}}. Implementers who choose to use a different private key encoding than the one specified in this document MUST consider how to provide the component public keys to the decapsulate routine. While some implementations might contain routines to computationally derive the public key from the private key, it is not guaranteed that all implementations will support this; for this reason the interoperable composite private key format given in this document in {{sec-priv-key}} requires the public key of the traditional component to be included.
 
 <!-- End of Implementation Considerations section -->
+
+# Comparison with other Hybred KEMs
+
+## X-Wing
+
+Thit specification borrows extensively from the analysis and KEM combiner construction presented in [X-Wing]. In particular, X-Wing and id-MLKEM768-X25519 are largely interchangeable. The one difference is that X-Wing uses a combined KeyGen function to generate the two component private keys from the same seed, which gives some additional binding properies. However, using a derived value as the seed for ML-KEM.KeyGen_internal() is explicitely disallowed by [FIPS.203] which makes it impossible to create a FIPS-compliant implentation of X-Wing. For this reason, this specification keeps the key generatation for both components separate so that implementers are free to use an existing certified hardware or software module for one or both components.
+
+Due to the difference in key generation and security properties, X-Wing and id-MLKEM768-X25519 have been registered as separate algorithms with separate OIDs, and they use a different domain separator string in order to ensure that their ciphertexts are not inter-compatible.
+
+## ETSI CatKDF
+
+[ETSI.TS.103.744] section 8.2 defines CatKDF as:
+
+~~~
+1) Form secret = psk || k1 || k 2 || … || k n.
+2) Set f_context = f(context, MA, MB), where f is a context formatting function.
+3) key_material = KDF(secret, label, f_context, length).
+4) Return key_material.
+~~~
+
+While not binary compatible with the KEM combiner presented in this specification, it is largely security-equivalent except for the following points.
+
+This specification binds the public key of the traditional component into the KDF.
+
+This specification does not bind the ML-KEM ciphertext -- which is MA in the ETSI CatKDF.
+
+EDNOTE / TODO: we should discuss on the LAMPS list whether to add this back in.
+
+Additionally, ETSI CatKDF uses HKDF [RFC5869] as the KDF which aligns with some of the variants in this specification, but not the ones that use SHA3.
 
 
 # Intellectual Property Considerations
