@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-01-05T01:51:54.956434+00:00",
+  "timestamp": "2025-01-07T01:45:49.350727+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -1403,9 +1403,17 @@
       "labels": [],
       "body": "The generic combiner effectively shoves everything into a KDF to produce a new shared secret, e.g.:\r\n\r\n```\r\nss = KDF(mlkemSS || tradSS || tradCT || tradPK || Domain)\r\n```\r\n\r\nHowever, for HKDF-based KDFs, this simply doesn't make sense. HKDF requires _multiple_ inputs, not just a single input (`mlkemSS || tradSS || tradCT || tradPK || Domain`). As it stands, none of the HKDF-based variants in table 2 can be implemented.",
       "createdAt": "2024-11-04T16:44:03Z",
-      "updatedAt": "2024-11-04T16:44:03Z",
+      "updatedAt": "2025-01-05T05:17:20Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Yup, good point. Thanks for pointing this out Chris!\r\n\r\nThe relevant spec for this is SP 800-56Cr2, Section 4.1, Option 2; which is:\r\n\r\n> Option 2: H(x) = HMAC-hash(salt, x), where HMAC-hash is an implementation of the HMAC\r\n> algorithm (as defined in [FIPS 198]) employing an approved hash function, hash,\r\n> that meets the selection requirements specified in Section 7. An implementation-\r\n> dependent byte string, salt, whose (non-null) value may be optionally provided in\r\n> OtherInput, serves as the HMAC key, and x (the input to H) is a bit string that serves\r\n> as the HMAC \u201cmessage\u201d as specified in [FIPS 198].\r\n\r\n> If H(x) = HMAC-hash(salt, x), then \u2013 in the absence of an agreed-upon alternative \u2013 the\r\n> default_salt shall be an all-zero byte string whose bit length equals that specified as the bit\r\n> length of an input block for the hash function, hash. (Input-block lengths for the approved\r\n> hash functions that can be employed to implement HMAC-hash are listed in Table 1 of\r\n> Section 4.2.)\r\n\r\nFrom that, I think the correct construction is:\r\n\r\n```\r\nss = HKDF-Extract(salt=0x0000000000000000, IKM=mlkemSS || tradSS || tradCT || tradPK || Domain)\r\n```\r\n\r\nI will also add some text to the FIPS certification section to match.",
+          "createdAt": "2025-01-05T05:11:54Z",
+          "updatedAt": "2025-01-05T05:17:20Z"
+        }
+      ]
     },
     {
       "number": 88,
@@ -1526,9 +1534,17 @@
       "labels": [],
       "body": "See comment from Peter C:\r\n\r\nhttps://mailarchive.ietf.org/arch/msg/spasm/Fq06ghviNMejesJNR4XzP5x0ecI/",
       "createdAt": "2024-11-09T18:50:30Z",
-      "updatedAt": "2024-11-09T18:50:30Z",
+      "updatedAt": "2025-01-06T00:53:43Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "The referenced document is BSI TR-2012-1, which chains to the CatKDF defined in ETSI TS 103 744, which is:\r\n\r\n```\r\nInput:\r\npsk - a secret key. It may be present. If not present this value shall be the empty octet string, \u2205.\r\n(k 1, k 2, \u2026, k n) - n-tuple of octet strings containing shared secrets k i, exchanged through a hybrid key exchange, see\r\nFigure 4.\r\nMA, MB - octet string of a pair of exchanged messages in establishment of the shared secrets k i.\r\ncontext - octet string context set by the instance of the key exchange transaction - this may include a transcript of\r\nadditional exchanged messages.\r\nlabel - an octet string that specifies a separation of use for the application or instance of the key-exchange. Any labels\r\nused in the key exchange should not be provided as an argument to the same hash function for another purpose in the\r\napplication.\r\nlength - the length in octets of the derived key material key_material.\r\nProcess:\r\n1) Form secret = psk || k1 || k 2 || \u2026 || k n.\r\n2) Set f_context = f(context, MA, MB), where f is a context formatting function.\r\n3) key_material = KDF(secret, label, f_context, length).\r\n4) Return key_material.\r\nOutput:\r\nkey_material - derived key material.\r\n```\r\n\r\nCatKDF does not include the public keys, but it does include both ciphertexts.\r\n\r\nPeter C also makes a good point about the intro text. I'll adjust that. And I'll add a note about BSI / ETSI CatKEM.",
+          "createdAt": "2025-01-05T23:55:07Z",
+          "updatedAt": "2025-01-06T00:53:43Z"
+        }
+      ]
     },
     {
       "number": 92,
@@ -1558,7 +1574,7 @@
       "labels": [],
       "body": "Currently we just treat it as a generic KDF.\r\n\r\nWe need to take a much closer look at how to define the HKDF-SHA256 combo in a way that is 800-56Cr2 compliant. Technically HKDF (RFC 5869) is allowed under the 2-Step method, but it requires some careful alignment of inputs on the HKDF-Expand step. But in our case we only need to use the HKDF-Extract step for the combiner. \r\n\r\nFix: either specify that we only use the HKDF-Extract() step from RFC 5869, or else just use HMAC directly from RFC 2104\r\n\r\nhttps://datatracker.ietf.org/doc/rfc2104/",
       "createdAt": "2024-11-18T17:24:38Z",
-      "updatedAt": "2025-01-05T01:09:29Z",
+      "updatedAt": "2025-01-05T05:35:42Z",
       "closedAt": null,
       "comments": [
         {
@@ -1602,13 +1618,6 @@
           "body": "> I'm sorry, but I don't buy the argument that ML-KEM will be available and SHA-3 will not. Where is discussion about this taking place?\r\n\r\nI don't particularly care one way or another, but the request for SHA2 combiners came from Deb Cooley on behalf of NSA. Here's the PQUIP 118 recording where she made her case: https://youtu.be/W46QrMvlLZU?feature=shared&t=5655\r\n\r\nJoe Saloway made a similar request (but not on-recording). If you want the SHA2 combiners to be ditched, then you'll need to get Deb and Joe to withdraw their requests for it.",
           "createdAt": "2025-01-05T01:06:26Z",
           "updatedAt": "2025-01-05T01:09:29Z"
-        },
-        {
-          "author": "ounsworth",
-          "authorAssociation": "CONTRIBUTOR",
-          "body": "> @ounsworth this is a dupe of #87, I think?\r\n\r\nNot an exact dupe, this one is about how to make it FIPS-compliant, while #87 is about correctly calling the HKDF API. I'll adjust the title to reflect that.",
-          "createdAt": "2025-01-05T01:08:06Z",
-          "updatedAt": "2025-01-05T01:08:06Z"
         }
       ]
     },
@@ -1656,7 +1665,7 @@
       "labels": [],
       "body": "Section {{sec-DHKEM}} describes how to promote an ECDH algorithm, such as X25519, to a KEM. In doing so, it strips down HPKE's DHKEM for its own purpose. This has a number of problems, including:\r\n\r\n(1) There seems to be no analysis suggesting the stripped down version satisfies the necessary properties of a KEM. For example, what are the binding properties of this variant, and do they vary based on the traditional KEM that's used? DHKEM, in comparison, is known to satisfy the IND-CCA2 requirement (when instantiated correctly) and its binding properties are known. \r\n(2) More importantly, when trying to use the composite KEM in HPKE, things become super awkward. Let's take a concrete example. Let's say I want to use composite ML-KEM with P-256 in HPKE. Part of doing that requires one to implement `DeriveKeyPair`, as per RFC9180. However, as the document is currently written, there is no deterministic key generation function on the KEM interface, i.e., one can't simply call `(tradPK, tradSK) = TradKEM.MissingDeterministicKeyGenerationFunction(tradSeed)`. This means we need to either expand the KEM interface in this document, which would mean that there would be two different deterministic key generation functions for P-256, one defined here and one defined in RFC9180, or we can simply use RFC9180's function directly. The former seems quite redundant and undesirable, whereas the latter isn't exactly possible. Recall that we're trying to use ML-KEM with P-256, not ML-KEM with DHKEM(P-256, HKDF-SHA256). \r\n\r\nThese problems vanish if we insist that elliptic-curve-based KEMs must be DHKEM as specified in RFC9180. Then we have a very clean path towards integration into HPKE without compromising on any features.",
       "createdAt": "2025-01-02T21:33:39Z",
-      "updatedAt": "2025-01-03T02:59:57Z",
+      "updatedAt": "2025-01-06T21:25:07Z",
       "closedAt": null,
       "comments": [
         {
@@ -1665,6 +1674,27 @@
           "body": "HPKE DHKEM\r\n----\r\n\r\nI'm not saying no right away, but I think I need to see it written out in order to understand how much complexity you're talking about importing from 9180 into this draft. For example, are we going to end up with layers upon layers of labels, most of which end up getting instantiated with the empty string?\r\n\r\nIf this ends up imposing a bunch of extra complexity on PKI implementers in order to make things easier for HPKE implementers, then I will likely vote No, but I'll keep an open mind until I fully understand what you're proposing.\r\n\r\n\r\nKeyGen\r\n----\r\n\r\nDeirdre also brought up issues with composite KeyGen -- and this is currently what's keeping X-Wing as a separate algorithm, rather than folding it into Composite -- part of the design goal of composite is that for the extremely change-controlled environments, it allows you to start rolling out PQ even if you only currently have RSA- or ECDH-capable hardware. Consider for example this migration scenario, which is one of our primary design goals:\r\n\r\nAll your employees' corporate ID badges double as smartcards to insert into your laptop for Windows login and email decryption.\r\nYou want emails to start being composite-encrypted tomorrow, so you push a patch that will generate a new RSA key on the smartcard, and an ML-KEM key stored in Windows CAPI, and you get a cert for that as a composite. All your over-the-wire emails are now PQ-protected, you can still claim that the whole thing is FIPS-certified because of the RSA smartcards, and you didn't have to replace any hardware (yet).\r\nAs you start getting your hands on FIPS-certified ML-KEM smartcards and issuing them to employees, you can either do the composite in the smartcard if it supports it, or ML-KEM in smartcard and RSA in software, or pure ML-KEM; it's nice and flexible and you get all the benefits of hybrid regardless of which half is in hardware and FIPS-certified.\r\n\r\nMy concern about making this draft overly prescriptive about KeyGen is that we'll lose this flexibility and acceleration of being able to leverage composite to get FIPS-certified ML-KEM hybrids into production before you have a FIPS-certified ML-KEM.",
           "createdAt": "2025-01-03T02:57:09Z",
           "updatedAt": "2025-01-03T02:59:57Z"
+        },
+        {
+          "author": "chris-wood",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Thanks @ounsworth. I can update #95 to incorporate my suggestion. It won't affect your design goal of making this work for existing generated keys. This is only necessary for applications that require deterministic key generation, like HPKE. ",
+          "createdAt": "2025-01-06T15:58:08Z",
+          "updatedAt": "2025-01-06T15:58:08Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@chris-wood I find that #95 is a bit crowded, maybe it's better to wait until #99 and #100 are merged, and then start a new PR?\r\n\r\n\r\nIn particular, the thing about your #95 that I don't like is this:\r\n\r\n```\r\n  2. Expand the input keying material\r\n    expanded = SHAKE256(message=ikm, outlen=Nsk)\r\n\r\n  3. Derive component keys\r\n    (mlkemPK, mlkemSK) = ML-KEM.KeyGen_internal(expanded[0:32], expanded[32:64])\r\n    (tradPK, tradSK)   = Trad.KeyGen(expanded[64:])\r\n```\r\n\r\nI have a few problems with this:\r\n\r\n1.\r\nThat is explicitly disallowed by FIPS 203 -- it is very clear that the ML-KEM seed must be DIRECT output of an approved DRBG. If you do this, then you'll have something that walks&talks like ML-KEM, but it cannot be FIPS-certified as ML-KEM.\r\n\r\nHPKE is not my protocol, not my users, not my customers, so I don't officially have an opinion, but it seems wrong to claim that there are zero HPKE implementers in the world who care about having a FIPS-certified implementation of HKPE. Certainly in the PKI / LAMPS world we all care very much about national crypto standards (NIST, BSI, etc), so something that explicitly violates FIPS 203 cannot be in this draft.\r\n\r\n\r\n2.\r\n```\r\n(tradPK, tradSK)   = Trad.KeyGen(expanded[64:])\r\n```\r\n\r\nI understand that that's elegant for X25519, but I have never seen a P256 or RSA API that takes a seed. Forcing people to write new wrappers for their Trad component (which would force the code to go through FIPS evaluation again) is antithetical to the design goal of this draft; we want to use the Trad component in a completely black-box way.\r\n\r\nAlso, I imagine that the way this would have to work for RSA is that you use the seed `expanded[64:]` to seed your SecureRandom object, and then call RSA.keygen() with that SecureRandom instance. That means that the RSA key that you get will depend both on the seed value and on which SecureRandom implementation you use, so this is still under-specified if the goal is to have deterministic keygen from that seed.\r\n\r\n\r\nSo for both reasons, I thoroughly disagree with defining a 1-seed 2-priv-keys KeyGen() in this draft. That's X-Wing. That is in fact the only difference between Composite and X-Wing. It sounds like you actually want to be collaborating on draft-connolly-cfrg-xwing-kem because that shares your design goal.",
+          "createdAt": "2025-01-06T19:23:34Z",
+          "updatedAt": "2025-01-06T19:28:15Z"
+        },
+        {
+          "author": "chris-wood",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@ounsworth to point (2), HPKE _requires_ deterministic key generation. It's not an optional thing. If you're fundamentally opposed to deterministic key generation, then, yeah, we should just stop here. \ud83e\udd37 ",
+          "createdAt": "2025-01-06T21:25:06Z",
+          "updatedAt": "2025-01-06T21:25:06Z"
         }
       ]
     }
@@ -3812,7 +3842,7 @@
       "labels": [],
       "body": "This will need to be modified based on #94, in particular to update the `DeriveKeyPair` description, but the rest of the change in this section should stand on its own. \r\n\r\nCloses #93, #87, #86",
       "createdAt": "2024-11-19T16:42:41Z",
-      "updatedAt": "2025-01-05T01:01:32Z",
+      "updatedAt": "2025-01-06T18:00:39Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "2650db111320b4b487e341c9c2d4c03465a586e5",
@@ -3872,6 +3902,13 @@
           "body": "I'll open a separate PR to add the P-256 variant.\r\nI'm ok in principle with adding an HPKE Integration section, but let's have that in its own PR cause I think we'll have to do a few iterations on it to balance the requirements of HPKE and PKI (particularly around KeyGen).",
           "createdAt": "2025-01-05T01:01:32Z",
           "updatedAt": "2025-01-05T01:01:32Z"
+        },
+        {
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Separating the items into their own issues will make it easier to track down the road, so I'm good with these suggestions.  \r\n",
+          "createdAt": "2025-01-06T18:00:37Z",
+          "updatedAt": "2025-01-06T18:00:37Z"
         }
       ],
       "reviews": []
@@ -3886,15 +3923,15 @@
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
-      "body": "Closes #86 \r\n\r\nTo do before merge:\r\n\r\n- [ ] Assign a prototyping OID for `id-MLKEM768-ECDH-P256` from the Entrust OID arc -- update all the places in the draft that need it.\r\n- [ ] Once the OID is assigned, compute the domain separator for it.",
+      "body": "Closes #86 \r\n\r\nTo do before merge:\r\n\r\n- [x] Assign a prototyping OID for `id-MLKEM768-ECDH-P256` from the Entrust OID arc -- update all the places in the draft that need it.\r\n- [x] Once the OID is assigned, compute the domain separator for it.\r\n- [ ] Review by Chris Wood",
       "createdAt": "2025-01-05T01:23:22Z",
-      "updatedAt": "2025-01-05T01:31:46Z",
+      "updatedAt": "2025-01-06T18:43:12Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "2650db111320b4b487e341c9c2d4c03465a586e5",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_p256",
-      "headRefOid": "20621a46418f13e95537aea1041137c8c2f30ac6",
+      "headRefOid": "0a0f094f661be48460a7b6299391ddd9463343f9",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
@@ -3909,6 +3946,168 @@
         }
       ],
       "reviews": []
+    },
+    {
+      "number": 100,
+      "id": "PR_kwDOKRPFO86Gvlmh",
+      "title": "HKDF tweaks",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/100",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Closes #87\r\nCloses #93 ",
+      "createdAt": "2025-01-05T05:34:58Z",
+      "updatedAt": "2025-01-05T16:16:23Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "2650db111320b4b487e341c9c2d4c03465a586e5",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_hkdf",
+      "headRefOid": "c63ebd56d8a7f09a35f02ac02874d330622071d1",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@chris-wood I would like your review on this.\r\n\r\nRegardless of how you feel about whether or not SHA2 combiners should be included, does this PR address the issue that the HKDF combiner was under-specified?",
+          "createdAt": "2025-01-05T05:37:06Z",
+          "updatedAt": "2025-01-05T05:37:17Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO86W2uK2",
+          "commit": {
+            "abbreviatedOid": "c63ebd5"
+          },
+          "author": "ilaril",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-01-05T16:08:23Z",
+          "updatedAt": "2025-01-05T16:08:24Z",
+          "comments": [
+            {
+              "originalPosition": 46,
+              "body": "The input block length of SHA-256 is 64 bytes, not 32, so the salt should presumably be 64 bytes of zeros, not 32. However, both will lead to the same output (due to how HMAC works).\r\n",
+              "createdAt": "2025-01-05T16:08:23Z",
+              "updatedAt": "2025-01-05T16:08:24Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO86W2uXs",
+          "commit": {
+            "abbreviatedOid": "c63ebd5"
+          },
+          "author": "ilaril",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-01-05T16:14:00Z",
+          "updatedAt": "2025-01-05T16:14:00Z",
+          "comments": [
+            {
+              "originalPosition": 13,
+              "body": "Is that clear enough from parameter names, or should that explicitly be HKDF-Extract-SHA256?\r\n\r\nThere are two HKDF operations (HKDF-Extract and HKDF-Expand), and parameters being salt and IKM only makes sense for HKDF-Extract.",
+              "createdAt": "2025-01-05T16:14:00Z",
+              "updatedAt": "2025-01-05T16:14:01Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO86W2ucp",
+          "commit": {
+            "abbreviatedOid": "c63ebd5"
+          },
+          "author": "ilaril",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-01-05T16:16:23Z",
+          "updatedAt": "2025-01-05T16:16:23Z",
+          "comments": [
+            {
+              "originalPosition": 49,
+              "body": "The SHA-3 one seems to be just SHA3-256, which would be option 1 (hash(x)), not option 2?",
+              "createdAt": "2025-01-05T16:16:23Z",
+              "updatedAt": "2025-01-05T16:16:23Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 101,
+      "id": "PR_kwDOKRPFO86Gw8D6",
+      "title": "Added appdx comparing with X-Wing and ETSI CatKDF.",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/101",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Closes #91\r\n\r\nTODO before merging:\r\n\r\n- [ ] Review from Peter C, especially:\r\n  - the new appendix comparing this specification with ETSI CatKDF\r\n  - The intro is still a bit misleading about the endorsement from BSI, which Peter C correctly points out is to an earlier version of the composite draft, however we have Jan Klau\u00dfner as an author and close collaboration with Stavros Kousidis on the CFRG version, so BSI is a bull collaborator on developing this.\r\n- [ ] Review from Chris Wood / Deirdre / Bas, especially:\r\n  - The new appendix comparing this specification with X-Wing\r\n- [ ] I was not previously aware of ETSI TS 103 744's CatKDF. We should have a discussion on the LAMPS list about whether we want to add the ML-KEM CT to the KDF in order to offer equivalent security properties as ETSI CatKDF.",
+      "createdAt": "2025-01-06T01:05:33Z",
+      "updatedAt": "2025-01-07T00:02:13Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "2650db111320b4b487e341c9c2d4c03465a586e5",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_catkdf",
+      "headRefOid": "6e97f2dcc78769de9923fd1bf58b95ffbbca4edb",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO86W6FTP",
+          "commit": {
+            "abbreviatedOid": "d2714f5"
+          },
+          "author": "bwesterb",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-01-06T10:06:17Z",
+          "updatedAt": "2025-01-06T10:06:17Z",
+          "comments": [
+            {
+              "originalPosition": 39,
+              "body": "- Typo: *Thit*\r\n- \"is explicitely disallowed\". Presently.\r\n- \"it impossible to create a FIPS-compliant\" of X-Wing private key import.",
+              "createdAt": "2025-01-06T10:06:17Z",
+              "updatedAt": "2025-01-06T10:06:17Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO86W_Q3Z",
+          "commit": {
+            "abbreviatedOid": "d2714f5"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-01-07T00:02:12Z",
+          "updatedAt": "2025-01-07T00:02:13Z",
+          "comments": [
+            {
+              "originalPosition": 39,
+              "body": "Thanks, fixed.\r\n\r\nYeah, if NIST eventually softens the prohibition on derived seeds, that would be fantastic and then X-Wing and Composite could fully collapse together, but NIST has not given any indication of when / how / if they are going to do that, so for now I think we need to proceed like this. Sigh.",
+              "createdAt": "2025-01-07T00:02:12Z",
+              "updatedAt": "2025-01-07T00:02:13Z"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
