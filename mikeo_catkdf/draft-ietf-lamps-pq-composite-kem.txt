@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 10 July 2025                                            M. Pala
+Expires: 11 July 2025                                            M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                          6 January 2025
+                                                          7 January 2025
 
 
   Composite ML-KEM for use in X.509 Public Key Infrastructure and CMS
@@ -61,7 +61,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 10 July 2025.
+   This Internet-Draft will expire on 11 July 2025.
 
 Copyright Notice
 
@@ -2685,18 +2685,18 @@ Appendix E.  Comparison with other Hybred KEMs
 
 E.1.  X-Wing
 
-   Thit specification borrows extensively from the analysis and KEM
+   This specification borrows extensively from the analysis and KEM
    combiner construction presented in [X-Wing].  In particular, X-Wing
    and id-MLKEM768-X25519 are largely interchangeable.  The one
    difference is that X-Wing uses a combined KeyGen function to generate
    the two component private keys from the same seed, which gives some
    additional binding properies.  However, using a derived value as the
-   seed for ML-KEM.KeyGen_internal() is explicitely disallowed by
-   [FIPS.203] which makes it impossible to create a FIPS-compliant
-   implentation of X-Wing.  For this reason, this specification keeps
-   the key generatation for both components separate so that
-   implementers are free to use an existing certified hardware or
-   software module for one or both components.
+   seed for ML-KEM.KeyGen_internal() is, at time of writing, explicitely
+   disallowed by [FIPS.203] which makes it impossible to create a FIPS-
+   compliant implentation of X-Wing KeyGen / private key import.  For
+   this reason, this specification keeps the key generatation for both
+   components separate so that implementers are free to use an existing
+   certified hardware or software module for one or both components.
 
    Due to the difference in key generation and security properties,
    X-Wing and id-MLKEM768-X25519 have been registered as separate
