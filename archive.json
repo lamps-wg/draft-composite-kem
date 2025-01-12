@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-01-09T02:12:20.546938+00:00",
+  "timestamp": "2025-01-12T01:53:39.883586+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -1697,6 +1697,22 @@
           "updatedAt": "2025-01-06T21:25:06Z"
         }
       ]
+    },
+    {
+      "number": 102,
+      "id": "I_kwDOKRPFO86ll3hv",
+      "title": "No composite is currently compatible with CNSA 2.0",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/102",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "It just came to my attention (thanks Uri), that CNSA 2.0 allows SHA3 internally to ML-DSA / ML-KEM, but not as a standalone hash function (only SHA2-384 and SHA2-512). It also allows only the Level V parameter sets for ML-DSA and ML-KEM.\r\n\r\nThat means that we currently have zero CompositeML-KEM variants that are compatible with CNSA 2.0 because we use SHA3 as the KEM Combiner on the Level V\u2019s.\r\n\r\nhttps://lamps-wg.github.io/draft-composite-kem/draft-ietf-lamps-pq-composite-kem.html#name-algorithm-identifiers\r\n\r\nI assume this is a problem we should fix by changing id-MLKEM1024-ECDH-P384 to use HKDF-SHA2-512 ?\r\n\r\nNSA\u2019s stance on hybrids is well known, but I think it\u2019s still preferrable that these exist at least one CompositeKEM that is compatible with CNSA 2.0, right?",
+      "createdAt": "2025-01-09T15:43:10Z",
+      "updatedAt": "2025-01-09T15:52:22Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
