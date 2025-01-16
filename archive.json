@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-01-14T01:40:26.289913+00:00",
+  "timestamp": "2025-01-16T01:41:39.505622+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -4070,7 +4070,7 @@
       "labels": [],
       "body": "Closes #91\r\n\r\nTODO before merging:\r\n\r\n- [ ] Review from Peter C, especially:\r\n  - the new appendix comparing this specification with ETSI CatKDF\r\n  - The intro is still a bit misleading about the endorsement from BSI, which Peter C correctly points out is to an earlier version of the composite draft, however we have Jan Klau\u00dfner as an author and close collaboration with Stavros Kousidis on the CFRG version, so BSI is a bull collaborator on developing this.\r\n- [ ] Review from Chris Wood / Deirdre / Bas, especially:\r\n  - The new appendix comparing this specification with X-Wing\r\n- [ ] I was not previously aware of ETSI TS 103 744's CatKDF. We should have a discussion on the LAMPS list about whether we want to add the ML-KEM CT to the KDF in order to offer equivalent security properties as ETSI CatKDF.",
       "createdAt": "2025-01-06T01:05:33Z",
-      "updatedAt": "2025-01-07T00:02:13Z",
+      "updatedAt": "2025-01-14T16:40:32Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "2650db111320b4b487e341c9c2d4c03465a586e5",
@@ -4120,6 +4120,46 @@
               "body": "Thanks, fixed.\r\n\r\nYeah, if NIST eventually softens the prohibition on derived seeds, that would be fantastic and then X-Wing and Composite could fully collapse together, but NIST has not given any indication of when / how / if they are going to do that, so for now I think we need to proceed like this. Sigh.",
               "createdAt": "2025-01-07T00:02:12Z",
               "updatedAt": "2025-01-07T00:02:13Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO86YA3zF",
+          "commit": {
+            "abbreviatedOid": "d2714f5"
+          },
+          "author": "bwesterb",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-01-14T16:38:39Z",
+          "updatedAt": "2025-01-14T16:38:39Z",
+          "comments": [
+            {
+              "originalPosition": 39,
+              "body": "Fantastic indeed: https://groups.google.com/a/list.nist.gov/g/pqc-forum/c/lMTIIPu9yDY/m/38felspKBQAJ ! ",
+              "createdAt": "2025-01-14T16:38:39Z",
+              "updatedAt": "2025-01-14T16:38:39Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO86YA5ae",
+          "commit": {
+            "abbreviatedOid": "d2714f5"
+          },
+          "author": "bwesterb",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-01-14T16:40:32Z",
+          "updatedAt": "2025-01-14T16:40:32Z",
+          "comments": [
+            {
+              "originalPosition": 39,
+              "body": "Given the stated plan, and the fact that there are no ML-KEM-768 modules yet, wouldn't it make sense for the long term to align id-MLKEM768-X25519  with X-Wing. Of course you would want to do something different for the P256 one.",
+              "createdAt": "2025-01-14T16:40:32Z",
+              "updatedAt": "2025-01-14T16:40:32Z"
             }
           ]
         }
