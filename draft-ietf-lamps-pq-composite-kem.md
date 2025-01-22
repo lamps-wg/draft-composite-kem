@@ -250,6 +250,7 @@ This document defines combinations of ML-KEM [FIPS.203] in hybrid with tradition
 Interop-affecting changes:
 
 * Remove the ASN.1 SEQUENCE wrapping around the ASN.1 structures to make it easier to access via other protocols.
+* Add a ML-KEM-768 + ECDH-P256 variant
 
 
 Editorial changes:
@@ -1012,11 +1013,12 @@ EDNOTE: these are prototyping OIDs to be replaced by IANA.
 | id-MLKEM768-RSA3072                | &lt;CompKEM&gt;.31   | MLKEM768        | RSA-OAEP 3072        | HKDF-SHA256/256 |
 | id-MLKEM768-RSA4096                | &lt;CompKEM&gt;.32   | MLKEM768        | RSA-OAEP 4096        | HKDF-SHA256/256 |
 | id-MLKEM768-X25519                 | &lt;CompKEM&gt;.33   | MLKEM768        | X25519               | SHA3-256 |
-| id-MLKEM768-ECDH-P384              | &lt;CompKEM&gt;.34   | MLKEM768        | ECDH-P384            | HKDF-SHA256/256 |
-| id-MLKEM768-ECDH-brainpoolP256r1   | &lt;CompKEM&gt;.35   | MLKEM768        | ECDH-brainpoolp256r1 | HKDF-SHA256/256 |
-| id-MLKEM1024-ECDH-P384             | &lt;CompKEM&gt;.36   | MLKEM1024       | ECDH-P384            | SHA3-256 |
-| id-MLKEM1024-ECDH-brainpoolP384r1  | &lt;CompKEM&gt;.37   | MLKEM1024       | ECDH-brainpoolP384r1 | SHA3-256 |
-| id-MLKEM1024-X448                  | &lt;CompKEM&gt;.38   | MLKEM1024       | X448                 | SHA3-256 |
+| id-MLKEM768-ECDH-P256              | &lt;CompKEM&gt;.34   | MLKEM768        | ECDH-P256            | HKDF-SHA256/256 |
+| id-MLKEM768-ECDH-P384              | &lt;CompKEM&gt;.35   | MLKEM768        | ECDH-P384            | HKDF-SHA256/256 |
+| id-MLKEM768-ECDH-brainpoolP256r1   | &lt;CompKEM&gt;.36   | MLKEM768        | ECDH-brainpoolp256r1 | HKDF-SHA256/256 |
+| id-MLKEM1024-ECDH-P384             | &lt;CompKEM&gt;.37   | MLKEM1024       | ECDH-P384            | SHA3-256 |
+| id-MLKEM1024-ECDH-brainpoolP384r1  | &lt;CompKEM&gt;.38   | MLKEM1024       | ECDH-brainpoolP384r1 | SHA3-256 |
+| id-MLKEM1024-X448                  | &lt;CompKEM&gt;.39   | MLKEM1024       | X448                 | SHA3-256 |
 {: #tab-kem-algs title="Composite ML-KEM key types"}
 
 For the use of HKDF [RFC5869]: a salt is not provided; ie the default salt (all zeroes of length HashLen) will be used. The output length of HKDF is the same as the block size of the underlying hash function; in particular, `HKDF-SHA256/256` means HKDF-SHA256 with an output length `L` of 256 bits (32 octets).
@@ -1034,11 +1036,12 @@ The KEM combiner used in this document requires a domain separator `Domain` inpu
 | id-MLKEM768-RSA3072       | 060B6086480186FA6B5005021F |
 | id-MLKEM768-RSA4096       | 060B6086480186FA6B50050220 |
 | id-MLKEM768-X25519        | 060B6086480186FA6B50050221 |
-| id-MLKEM768-ECDH-P384     | 060B6086480186FA6B50050222 |
-| id-MLKEM768-ECDH-brainpoolP256r1 | 060B6086480186FA6B50050223 |
-| id-MLKEM1024-ECDH-P384    | 060B6086480186FA6B50050224 |
-| id-MLKEM1024-ECDH-brainpoolP384r1 | 060B6086480186FA6B50050225 |
-| id-MLKEM1024-X448         | 060B6086480186FA6B50050226 |
+| id-MLKEM768-ECDH-P256     | 060B6086480186FA6B50050222 |
+| id-MLKEM768-ECDH-P384     | 060B6086480186FA6B50050223 |
+| id-MLKEM768-ECDH-brainpoolP256r1 | 060B6086480186FA6B50050224 |
+| id-MLKEM1024-ECDH-P384    | 060B6086480186FA6B50050225 |
+| id-MLKEM1024-ECDH-brainpoolP384r1 | 060B6086480186FA6B50050226 |
+| id-MLKEM1024-X448         | 060B6086480186FA6B50050227 |
 {: #tab-kem-domains title="Composite ML-KEM fixedInfo Domain Separators"}
 
 EDNOTE: these domain separators are based on the prototyping OIDs assigned on the Entrust arc. We will need to ask for IANA early allocation of these OIDs so that we can re-compute the domain separators over the final OIDs.
@@ -1101,6 +1104,7 @@ A compliant implementation MUST support the following algorithm combinations for
 | id-MLKEM768-RSA3072               | id-alg-hkdf-with-sha256 | id-aes128-wrap     |
 | id-MLKEM768-RSA4096               | id-alg-hkdf-with-sha256 | id-aes128-wrap     |
 | id-MLKEM768-X25519                | id-kmac256              | id-aes128-wrap     |
+| id-MLKEM768-ECDH-P256             | id-alg-hkdf-with-sha256 | id-aes256-wrap     |
 | id-MLKEM768-ECDH-P384             | id-alg-hkdf-with-sha256 | id-aes256-wrap     |
 | id-MLKEM768-ECDH-brainpoolP256r1  | id-alg-hkdf-with-sha256 | id-aes256-wrap     |
 | id-MLKEM1024-ECDH-P384            | id-kmac256              | id-aes256-wrap     |
@@ -1253,6 +1257,10 @@ EDNOTE to IANA: OIDs will need to be replaced in both the ASN.1 module and in {{
   - Description: id-MLKEM768-RSA4096
   - References: This Document
 
+- id-MLKEM768-ECDH-P256
+  - Decimal: IANA Assigned
+  - Description: id-MLKEM768-ECDH-P256
+  - References: This Document
 
 - id-MLKEM768-ECDH-P384
   - Decimal: IANA Assigned
