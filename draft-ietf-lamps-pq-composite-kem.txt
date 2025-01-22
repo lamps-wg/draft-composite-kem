@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 21 June 2025                                            M. Pala
+Expires: 26 July 2025                                            M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                        18 December 2024
+                                                         22 January 2025
 
 
   Composite ML-KEM for use in X.509 Public Key Infrastructure and CMS
@@ -61,11 +61,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 21 June 2025.
+   This Internet-Draft will expire on 26 July 2025.
 
 Copyright Notice
 
-   Copyright (c) 2024 IETF Trust and the persons identified as the
+   Copyright (c) 2025 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -151,6 +151,8 @@ Table of Contents
 
    *  Remove the ASN.1 SEQUENCE wrapping around the ASN.1 structures to
       make it easier to access via other protocols.
+
+   *  Add a ML-KEM-768 + ECDH-P256 variant
 
    Editorial changes:
 
@@ -1138,21 +1140,24 @@ Deserialization Process:
    |id-              |<CompKEM>.33|MLKEM768 |X25519         |SHA3-256  |
    |MLKEM768-X25519  |            |         |               |          |
    +-----------------+------------+---------+---------------+----------+
-   |id-MLKEM768-     |<CompKEM>.34|MLKEM768 |ECDH-P384      |HKDF-     |
+   |id-MLKEM768-     |<CompKEM>.34|MLKEM768 |ECDH-P256      |HKDF-     |
+   |ECDH-P256        |            |         |               |SHA256/256|
+   +-----------------+------------+---------+---------------+----------+
+   |id-MLKEM768-     |<CompKEM>.35|MLKEM768 |ECDH-P384      |HKDF-     |
    |ECDH-P384        |            |         |               |SHA256/256|
    +-----------------+------------+---------+---------------+----------+
-   |id-MLKEM768-     |<CompKEM>.35|MLKEM768 |ECDH-          |HKDF-     |
+   |id-MLKEM768-     |<CompKEM>.36|MLKEM768 |ECDH-          |HKDF-     |
    |ECDH-            |            |         |brainpoolp256r1|SHA256/256|
    |brainpoolP256r1  |            |         |               |          |
    +-----------------+------------+---------+---------------+----------+
-   |id-MLKEM1024-    |<CompKEM>.36|MLKEM1024|ECDH-P384      |SHA3-256  |
+   |id-MLKEM1024-    |<CompKEM>.37|MLKEM1024|ECDH-P384      |SHA3-256  |
    |ECDH-P384        |            |         |               |          |
    +-----------------+------------+---------+---------------+----------+
-   |id-MLKEM1024-    |<CompKEM>.37|MLKEM1024|ECDH-          |SHA3-256  |
+   |id-MLKEM1024-    |<CompKEM>.38|MLKEM1024|ECDH-          |SHA3-256  |
    |ECDH-            |            |         |brainpoolP384r1|          |
    |brainpoolP384r1  |            |         |               |          |
    +-----------------+------------+---------+---------------+----------+
-   |id-              |<CompKEM>.38|MLKEM1024|X448           |SHA3-256  |
+   |id-              |<CompKEM>.39|MLKEM1024|X448           |SHA3-256  |
    |MLKEM1024-X448   |            |         |               |          |
    +-----------------+------------+---------+---------------+----------+
 
@@ -1187,15 +1192,17 @@ Deserialization Process:
     +-----------------------------------+----------------------------+
     | id-MLKEM768-X25519                | 060B6086480186FA6B50050221 |
     +-----------------------------------+----------------------------+
-    | id-MLKEM768-ECDH-P384             | 060B6086480186FA6B50050222 |
+    | id-MLKEM768-ECDH-P256             | 060B6086480186FA6B50050222 |
     +-----------------------------------+----------------------------+
-    | id-MLKEM768-ECDH-brainpoolP256r1  | 060B6086480186FA6B50050223 |
+    | id-MLKEM768-ECDH-P384             | 060B6086480186FA6B50050223 |
     +-----------------------------------+----------------------------+
-    | id-MLKEM1024-ECDH-P384            | 060B6086480186FA6B50050224 |
+    | id-MLKEM768-ECDH-brainpoolP256r1  | 060B6086480186FA6B50050224 |
     +-----------------------------------+----------------------------+
-    | id-MLKEM1024-ECDH-brainpoolP384r1 | 060B6086480186FA6B50050225 |
+    | id-MLKEM1024-ECDH-P384            | 060B6086480186FA6B50050225 |
     +-----------------------------------+----------------------------+
-    | id-MLKEM1024-X448                 | 060B6086480186FA6B50050226 |
+    | id-MLKEM1024-ECDH-brainpoolP384r1 | 060B6086480186FA6B50050226 |
+    +-----------------------------------+----------------------------+
+    | id-MLKEM1024-X448                 | 060B6086480186FA6B50050227 |
     +-----------------------------------+----------------------------+
 
           Table 3: Composite ML-KEM fixedInfo Domain Separators
@@ -1329,6 +1336,9 @@ Deserialization Process:
         +----------------------------+--------------+-------------+
         | id-MLKEM768-X25519         | id-kmac256   | id-         |
         |                            |              | aes128-wrap |
+        +----------------------------+--------------+-------------+
+        | id-MLKEM768-ECDH-P256      | id-alg-hkdf- | id-         |
+        |                            | with-sha256  | aes256-wrap |
         +----------------------------+--------------+-------------+
         | id-MLKEM768-ECDH-P384      | id-alg-hkdf- | id-         |
         |                            | with-sha256  | aes256-wrap |
@@ -1657,13 +1667,29 @@ Deserialization Process:
 
 
    -- TODO: OID to be replaced by IANA
-   id-MLKEM768-ECDH-P384 OBJECT IDENTIFIER ::= {
+   id-MLKEM768-ECDH-P256 OBJECT IDENTIFIER ::= {
      joint-iso-itu-t(2) country(16) us(840) organization(1)
      entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 33 }
 
+   pk-MLKEM768-ECDH-P256 PUBLIC-KEY ::=
+     pk-CompositeKEM {
+       id-MLKEM768-ECDH-P256,
+       CompositeKEMPublicKey }
+
+   kema-MLKEM768-ECDH-P256 KEM-ALGORITHM ::=
+       kema-CompositeKEM{
+         id-MLKEM768-ECDH-P256,
+         pk-MLKEM768-ECDH-P256 }
+
+
+   -- TODO: OID to be replaced by IANA
+   id-MLKEM768-ECDH-P384 OBJECT IDENTIFIER ::= {
+     joint-iso-itu-t(2) country(16) us(840) organization(1)
+     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 34 }
+
    pk-MLKEM768-ECDH-P384 PUBLIC-KEY ::=
      pk-CompositeKEM {
-       id-MLKEM768-ECDH-P384,
+       id-MLKEM768-ECDH-P256,
        CompositeKEMPublicKey }
 
    kema-MLKEM768-ECDH-P384 KEM-ALGORITHM ::=
@@ -1675,7 +1701,7 @@ Deserialization Process:
    -- TODO: OID to be replaced by IANA
    id-MLKEM768-ECDH-brainpoolP256r1 OBJECT IDENTIFIER ::= {
      joint-iso-itu-t(2) country(16) us(840) organization(1)
-     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 34 }
+     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 35 }
 
    pk-MLKEM768-ECDH-brainpoolP256r1 PUBLIC-KEY ::=
      pk-CompositeKEM {
@@ -1691,7 +1717,7 @@ Deserialization Process:
    -- TODO: OID to be replaced by IANA
    id-MLKEM768-X25519 OBJECT IDENTIFIER ::= {
      joint-iso-itu-t(2) country(16) us(840) organization(1)
-     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 35 }
+     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 36 }
 
    pk-MLKEM768-X25519 PUBLIC-KEY ::=
      pk-CompositeKEM {
@@ -1708,7 +1734,7 @@ Deserialization Process:
    -- TODO: OID to be replaced by IANA
    id-MLKEM1024-ECDH-P384 OBJECT IDENTIFIER ::= {
      joint-iso-itu-t(2) country(16) us(840) organization(1)
-     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 36 }
+     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 37 }
 
    pk-MLKEM1024-ECDH-P384 PUBLIC-KEY ::=
      pk-CompositeKEM {
@@ -1724,7 +1750,7 @@ Deserialization Process:
    -- TODO: OID to be replaced by IANA
    id-MLKEM1024-ECDH-brainpoolP384r1 OBJECT IDENTIFIER ::= {
      joint-iso-itu-t(2) country(16) us(840) organization(1)
-     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 37 }
+     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 38 }
 
    pk-MLKEM1024-ECDH-brainpoolP384r1 PUBLIC-KEY ::=
      pk-CompositeKEM{
@@ -1740,7 +1766,7 @@ Deserialization Process:
    -- TODO: OID to be replaced by IANA
    id-MLKEM1024-X448 OBJECT IDENTIFIER ::= {
      joint-iso-itu-t(2) country(16) us(840) organization(1)
-     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 38 }
+     entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 39 }
 
    pk-MLKEM1024-X448 PUBLIC-KEY ::=
      pk-CompositeKEM {
@@ -1826,6 +1852,14 @@ Deserialization Process:
       -  Decimal: IANA Assigned
 
       -  Description: id-MLKEM768-RSA4096
+
+      -  References: This Document
+
+   *  id-MLKEM768-ECDH-P256
+
+      -  Decimal: IANA Assigned
+
+      -  Description: id-MLKEM768-ECDH-P256
 
       -  References: This Document
 

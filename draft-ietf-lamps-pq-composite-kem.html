@@ -29,7 +29,7 @@
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
     intervaltree 3.1.0
-    Jinja2 3.1.4
+    Jinja2 3.1.5
     lxml 5.3.0
     platformdirs 4.3.6
     pycountry 24.6.1
@@ -1055,11 +1055,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">Composite ML-KEM</td>
-<td class="right">December 2024</td>
+<td class="right">January 2025</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Ounsworth, et al.</td>
-<td class="center">Expires 21 June 2025</td>
+<td class="center">Expires 26 July 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1072,12 +1072,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-lamps-pq-composite-kem-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2024-12-18" class="published">18 December 2024</time>
+<time datetime="2025-01-22" class="published">22 January 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-06-21">21 June 2025</time></dd>
+<dd class="expires"><time datetime="2025-07-26">26 July 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1143,7 +1143,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 21 June 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 26 July 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1152,7 +1152,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="#name-copyright-notice" class="section-name selfRef">Copyright Notice</a>
         </h2>
 <p id="section-boilerplate.2-1">
-            Copyright (c) 2024 IETF Trust and the persons identified as the
+            Copyright (c) 2025 IETF Trust and the persons identified as the
             document authors. All rights reserved.<a href="#section-boilerplate.2-1" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.2-2">
             This document is subject to BCP 78 and the IETF Trust's Legal
@@ -1401,6 +1401,9 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <ul class="normal">
 <li class="normal" id="section-1-2.1">
           <p id="section-1-2.1.1">Remove the ASN.1 SEQUENCE wrapping around the ASN.1 structures to make it easier to access via other protocols.<a href="#section-1-2.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-1-2.2">
+          <p id="section-1-2.2.1">Add a ML-KEM-768 + ECDH-P256 variant<a href="#section-1-2.2.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <p id="section-1-3">Editorial changes:<a href="#section-1-3" class="pilcrow">¶</a></p>
@@ -2348,36 +2351,43 @@ CompositeCiphertextValue ::= OCTET STRING
               <td class="text-left" rowspan="1" colspan="1">SHA3-256</td>
             </tr>
             <tr>
-              <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-ECDH-P384</td>
+              <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-ECDH-P256</td>
               <td class="text-left" rowspan="1" colspan="1">&lt;CompKEM&gt;.34</td>
+              <td class="text-left" rowspan="1" colspan="1">MLKEM768</td>
+              <td class="text-left" rowspan="1" colspan="1">ECDH-P256</td>
+              <td class="text-left" rowspan="1" colspan="1">HKDF-SHA256/256</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-ECDH-P384</td>
+              <td class="text-left" rowspan="1" colspan="1">&lt;CompKEM&gt;.35</td>
               <td class="text-left" rowspan="1" colspan="1">MLKEM768</td>
               <td class="text-left" rowspan="1" colspan="1">ECDH-P384</td>
               <td class="text-left" rowspan="1" colspan="1">HKDF-SHA256/256</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-ECDH-brainpoolP256r1</td>
-              <td class="text-left" rowspan="1" colspan="1">&lt;CompKEM&gt;.35</td>
+              <td class="text-left" rowspan="1" colspan="1">&lt;CompKEM&gt;.36</td>
               <td class="text-left" rowspan="1" colspan="1">MLKEM768</td>
               <td class="text-left" rowspan="1" colspan="1">ECDH-brainpoolp256r1</td>
               <td class="text-left" rowspan="1" colspan="1">HKDF-SHA256/256</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">id-MLKEM1024-ECDH-P384</td>
-              <td class="text-left" rowspan="1" colspan="1">&lt;CompKEM&gt;.36</td>
+              <td class="text-left" rowspan="1" colspan="1">&lt;CompKEM&gt;.37</td>
               <td class="text-left" rowspan="1" colspan="1">MLKEM1024</td>
               <td class="text-left" rowspan="1" colspan="1">ECDH-P384</td>
               <td class="text-left" rowspan="1" colspan="1">SHA3-256</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">id-MLKEM1024-ECDH-brainpoolP384r1</td>
-              <td class="text-left" rowspan="1" colspan="1">&lt;CompKEM&gt;.37</td>
+              <td class="text-left" rowspan="1" colspan="1">&lt;CompKEM&gt;.38</td>
               <td class="text-left" rowspan="1" colspan="1">MLKEM1024</td>
               <td class="text-left" rowspan="1" colspan="1">ECDH-brainpoolP384r1</td>
               <td class="text-left" rowspan="1" colspan="1">SHA3-256</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">id-MLKEM1024-X448</td>
-              <td class="text-left" rowspan="1" colspan="1">&lt;CompKEM&gt;.38</td>
+              <td class="text-left" rowspan="1" colspan="1">&lt;CompKEM&gt;.39</td>
               <td class="text-left" rowspan="1" colspan="1">MLKEM1024</td>
               <td class="text-left" rowspan="1" colspan="1">X448</td>
               <td class="text-left" rowspan="1" colspan="1">SHA3-256</td>
@@ -2425,24 +2435,28 @@ CompositeCiphertextValue ::= OCTET STRING
               <td class="text-left" rowspan="1" colspan="1">060B6086480186FA6B50050221</td>
             </tr>
             <tr>
-              <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-ECDH-P384</td>
+              <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-ECDH-P256</td>
               <td class="text-left" rowspan="1" colspan="1">060B6086480186FA6B50050222</td>
             </tr>
             <tr>
-              <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-ECDH-brainpoolP256r1</td>
+              <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-ECDH-P384</td>
               <td class="text-left" rowspan="1" colspan="1">060B6086480186FA6B50050223</td>
             </tr>
             <tr>
-              <td class="text-left" rowspan="1" colspan="1">id-MLKEM1024-ECDH-P384</td>
+              <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-ECDH-brainpoolP256r1</td>
               <td class="text-left" rowspan="1" colspan="1">060B6086480186FA6B50050224</td>
             </tr>
             <tr>
-              <td class="text-left" rowspan="1" colspan="1">id-MLKEM1024-ECDH-brainpoolP384r1</td>
+              <td class="text-left" rowspan="1" colspan="1">id-MLKEM1024-ECDH-P384</td>
               <td class="text-left" rowspan="1" colspan="1">060B6086480186FA6B50050225</td>
             </tr>
             <tr>
-              <td class="text-left" rowspan="1" colspan="1">id-MLKEM1024-X448</td>
+              <td class="text-left" rowspan="1" colspan="1">id-MLKEM1024-ECDH-brainpoolP384r1</td>
               <td class="text-left" rowspan="1" colspan="1">060B6086480186FA6B50050226</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">id-MLKEM1024-X448</td>
+              <td class="text-left" rowspan="1" colspan="1">060B6086480186FA6B50050227</td>
             </tr>
           </tbody>
         </table>
@@ -2576,6 +2590,11 @@ CompositeCiphertextValue ::= OCTET STRING
               <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-X25519</td>
               <td class="text-left" rowspan="1" colspan="1">id-kmac256</td>
               <td class="text-left" rowspan="1" colspan="1">id-aes128-wrap</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-ECDH-P256</td>
+              <td class="text-left" rowspan="1" colspan="1">id-alg-hkdf-with-sha256</td>
+              <td class="text-left" rowspan="1" colspan="1">id-aes256-wrap</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-ECDH-P384</td>
@@ -2915,13 +2934,29 @@ kema-MLKEM768-RSA4096 KEM-ALGORITHM ::=
 
 
 -- TODO: OID to be replaced by IANA
-id-MLKEM768-ECDH-P384 OBJECT IDENTIFIER ::= {
+id-MLKEM768-ECDH-P256 OBJECT IDENTIFIER ::= {
   joint-iso-itu-t(2) country(16) us(840) organization(1)
   entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 33 }
 
+pk-MLKEM768-ECDH-P256 PUBLIC-KEY ::=
+  pk-CompositeKEM {
+    id-MLKEM768-ECDH-P256,
+    CompositeKEMPublicKey }
+
+kema-MLKEM768-ECDH-P256 KEM-ALGORITHM ::=
+    kema-CompositeKEM{
+      id-MLKEM768-ECDH-P256,
+      pk-MLKEM768-ECDH-P256 }
+
+
+-- TODO: OID to be replaced by IANA
+id-MLKEM768-ECDH-P384 OBJECT IDENTIFIER ::= {
+  joint-iso-itu-t(2) country(16) us(840) organization(1)
+  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 34 }
+
 pk-MLKEM768-ECDH-P384 PUBLIC-KEY ::=
   pk-CompositeKEM {
-    id-MLKEM768-ECDH-P384,
+    id-MLKEM768-ECDH-P256,
     CompositeKEMPublicKey }
 
 kema-MLKEM768-ECDH-P384 KEM-ALGORITHM ::=
@@ -2933,7 +2968,7 @@ kema-MLKEM768-ECDH-P384 KEM-ALGORITHM ::=
 -- TODO: OID to be replaced by IANA
 id-MLKEM768-ECDH-brainpoolP256r1 OBJECT IDENTIFIER ::= {
   joint-iso-itu-t(2) country(16) us(840) organization(1)
-  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 34 }
+  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 35 }
 
 pk-MLKEM768-ECDH-brainpoolP256r1 PUBLIC-KEY ::=
   pk-CompositeKEM {
@@ -2949,7 +2984,7 @@ kema-MLKEM768-ECDH-brainpoolP256r1 KEM-ALGORITHM ::=
 -- TODO: OID to be replaced by IANA
 id-MLKEM768-X25519 OBJECT IDENTIFIER ::= {
   joint-iso-itu-t(2) country(16) us(840) organization(1)
-  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 35 }
+  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 36 }
 
 pk-MLKEM768-X25519 PUBLIC-KEY ::=
   pk-CompositeKEM {
@@ -2966,7 +3001,7 @@ kema-MLKEM768-X25519 KEM-ALGORITHM ::=
 -- TODO: OID to be replaced by IANA
 id-MLKEM1024-ECDH-P384 OBJECT IDENTIFIER ::= {
   joint-iso-itu-t(2) country(16) us(840) organization(1)
-  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 36 }
+  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 37 }
 
 pk-MLKEM1024-ECDH-P384 PUBLIC-KEY ::=
   pk-CompositeKEM {
@@ -2982,7 +3017,7 @@ kema-MLKEM1024-ECDH-P384 KEM-ALGORITHM ::=
 -- TODO: OID to be replaced by IANA
 id-MLKEM1024-ECDH-brainpoolP384r1 OBJECT IDENTIFIER ::= {
   joint-iso-itu-t(2) country(16) us(840) organization(1)
-  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 37 }
+  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 38 }
 
 pk-MLKEM1024-ECDH-brainpoolP384r1 PUBLIC-KEY ::=
   pk-CompositeKEM{
@@ -2998,7 +3033,7 @@ kema-MLKEM1024-ECDH-brainpoolP384r1 KEM-ALGORITHM ::=
 -- TODO: OID to be replaced by IANA
 id-MLKEM1024-X448 OBJECT IDENTIFIER ::= {
   joint-iso-itu-t(2) country(16) us(840) organization(1)
-  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 38 }
+  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 39 }
 
 pk-MLKEM1024-X448 PUBLIC-KEY ::=
   pk-CompositeKEM {
@@ -3130,13 +3165,13 @@ END
               </ul>
 </li>
             <li class="normal" id="section-10.1.2-1.8">
-              <p id="section-10.1.2-1.8.1">id-MLKEM768-ECDH-P384<a href="#section-10.1.2-1.8.1" class="pilcrow">¶</a></p>
+              <p id="section-10.1.2-1.8.1">id-MLKEM768-ECDH-P256<a href="#section-10.1.2-1.8.1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-10.1.2-1.8.2.1">
                   <p id="section-10.1.2-1.8.2.1.1">Decimal: IANA Assigned<a href="#section-10.1.2-1.8.2.1.1" class="pilcrow">¶</a></p>
 </li>
                 <li class="normal" id="section-10.1.2-1.8.2.2">
-                  <p id="section-10.1.2-1.8.2.2.1">Description: id-MLKEM768-ECDH-P384<a href="#section-10.1.2-1.8.2.2.1" class="pilcrow">¶</a></p>
+                  <p id="section-10.1.2-1.8.2.2.1">Description: id-MLKEM768-ECDH-P256<a href="#section-10.1.2-1.8.2.2.1" class="pilcrow">¶</a></p>
 </li>
                 <li class="normal" id="section-10.1.2-1.8.2.3">
                   <p id="section-10.1.2-1.8.2.3.1">References: This Document<a href="#section-10.1.2-1.8.2.3.1" class="pilcrow">¶</a></p>
@@ -3144,13 +3179,13 @@ END
               </ul>
 </li>
             <li class="normal" id="section-10.1.2-1.9">
-              <p id="section-10.1.2-1.9.1">id-MLKEM768-ECDH-brainpoolP256r1<a href="#section-10.1.2-1.9.1" class="pilcrow">¶</a></p>
+              <p id="section-10.1.2-1.9.1">id-MLKEM768-ECDH-P384<a href="#section-10.1.2-1.9.1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-10.1.2-1.9.2.1">
                   <p id="section-10.1.2-1.9.2.1.1">Decimal: IANA Assigned<a href="#section-10.1.2-1.9.2.1.1" class="pilcrow">¶</a></p>
 </li>
                 <li class="normal" id="section-10.1.2-1.9.2.2">
-                  <p id="section-10.1.2-1.9.2.2.1">Description: id-MLKEM768-ECDH-brainpoolP256r1<a href="#section-10.1.2-1.9.2.2.1" class="pilcrow">¶</a></p>
+                  <p id="section-10.1.2-1.9.2.2.1">Description: id-MLKEM768-ECDH-P384<a href="#section-10.1.2-1.9.2.2.1" class="pilcrow">¶</a></p>
 </li>
                 <li class="normal" id="section-10.1.2-1.9.2.3">
                   <p id="section-10.1.2-1.9.2.3.1">References: This Document<a href="#section-10.1.2-1.9.2.3.1" class="pilcrow">¶</a></p>
@@ -3158,13 +3193,13 @@ END
               </ul>
 </li>
             <li class="normal" id="section-10.1.2-1.10">
-              <p id="section-10.1.2-1.10.1">id-MLKEM768-X25519<a href="#section-10.1.2-1.10.1" class="pilcrow">¶</a></p>
+              <p id="section-10.1.2-1.10.1">id-MLKEM768-ECDH-brainpoolP256r1<a href="#section-10.1.2-1.10.1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-10.1.2-1.10.2.1">
                   <p id="section-10.1.2-1.10.2.1.1">Decimal: IANA Assigned<a href="#section-10.1.2-1.10.2.1.1" class="pilcrow">¶</a></p>
 </li>
                 <li class="normal" id="section-10.1.2-1.10.2.2">
-                  <p id="section-10.1.2-1.10.2.2.1">Description: id-MLKEM768-X25519<a href="#section-10.1.2-1.10.2.2.1" class="pilcrow">¶</a></p>
+                  <p id="section-10.1.2-1.10.2.2.1">Description: id-MLKEM768-ECDH-brainpoolP256r1<a href="#section-10.1.2-1.10.2.2.1" class="pilcrow">¶</a></p>
 </li>
                 <li class="normal" id="section-10.1.2-1.10.2.3">
                   <p id="section-10.1.2-1.10.2.3.1">References: This Document<a href="#section-10.1.2-1.10.2.3.1" class="pilcrow">¶</a></p>
@@ -3172,13 +3207,13 @@ END
               </ul>
 </li>
             <li class="normal" id="section-10.1.2-1.11">
-              <p id="section-10.1.2-1.11.1">id-MLKEM1024-ECDH-P384<a href="#section-10.1.2-1.11.1" class="pilcrow">¶</a></p>
+              <p id="section-10.1.2-1.11.1">id-MLKEM768-X25519<a href="#section-10.1.2-1.11.1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-10.1.2-1.11.2.1">
                   <p id="section-10.1.2-1.11.2.1.1">Decimal: IANA Assigned<a href="#section-10.1.2-1.11.2.1.1" class="pilcrow">¶</a></p>
 </li>
                 <li class="normal" id="section-10.1.2-1.11.2.2">
-                  <p id="section-10.1.2-1.11.2.2.1">Description: id-MLKEM1024-ECDH-P384<a href="#section-10.1.2-1.11.2.2.1" class="pilcrow">¶</a></p>
+                  <p id="section-10.1.2-1.11.2.2.1">Description: id-MLKEM768-X25519<a href="#section-10.1.2-1.11.2.2.1" class="pilcrow">¶</a></p>
 </li>
                 <li class="normal" id="section-10.1.2-1.11.2.3">
                   <p id="section-10.1.2-1.11.2.3.1">References: This Document<a href="#section-10.1.2-1.11.2.3.1" class="pilcrow">¶</a></p>
@@ -3186,13 +3221,13 @@ END
               </ul>
 </li>
             <li class="normal" id="section-10.1.2-1.12">
-              <p id="section-10.1.2-1.12.1">id-MLKEM1024-ECDH-brainpoolP384r1<a href="#section-10.1.2-1.12.1" class="pilcrow">¶</a></p>
+              <p id="section-10.1.2-1.12.1">id-MLKEM1024-ECDH-P384<a href="#section-10.1.2-1.12.1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-10.1.2-1.12.2.1">
                   <p id="section-10.1.2-1.12.2.1.1">Decimal: IANA Assigned<a href="#section-10.1.2-1.12.2.1.1" class="pilcrow">¶</a></p>
 </li>
                 <li class="normal" id="section-10.1.2-1.12.2.2">
-                  <p id="section-10.1.2-1.12.2.2.1">Description: id-MLKEM1024-ECDH-brainpoolP384r1<a href="#section-10.1.2-1.12.2.2.1" class="pilcrow">¶</a></p>
+                  <p id="section-10.1.2-1.12.2.2.1">Description: id-MLKEM1024-ECDH-P384<a href="#section-10.1.2-1.12.2.2.1" class="pilcrow">¶</a></p>
 </li>
                 <li class="normal" id="section-10.1.2-1.12.2.3">
                   <p id="section-10.1.2-1.12.2.3.1">References: This Document<a href="#section-10.1.2-1.12.2.3.1" class="pilcrow">¶</a></p>
@@ -3200,16 +3235,30 @@ END
               </ul>
 </li>
             <li class="normal" id="section-10.1.2-1.13">
-              <p id="section-10.1.2-1.13.1">id-MLKEM1024-X448<a href="#section-10.1.2-1.13.1" class="pilcrow">¶</a></p>
+              <p id="section-10.1.2-1.13.1">id-MLKEM1024-ECDH-brainpoolP384r1<a href="#section-10.1.2-1.13.1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-10.1.2-1.13.2.1">
                   <p id="section-10.1.2-1.13.2.1.1">Decimal: IANA Assigned<a href="#section-10.1.2-1.13.2.1.1" class="pilcrow">¶</a></p>
 </li>
                 <li class="normal" id="section-10.1.2-1.13.2.2">
-                  <p id="section-10.1.2-1.13.2.2.1">Description: id-MLKEM1024-X448<a href="#section-10.1.2-1.13.2.2.1" class="pilcrow">¶</a></p>
+                  <p id="section-10.1.2-1.13.2.2.1">Description: id-MLKEM1024-ECDH-brainpoolP384r1<a href="#section-10.1.2-1.13.2.2.1" class="pilcrow">¶</a></p>
 </li>
                 <li class="normal" id="section-10.1.2-1.13.2.3">
                   <p id="section-10.1.2-1.13.2.3.1">References: This Document<a href="#section-10.1.2-1.13.2.3.1" class="pilcrow">¶</a></p>
+</li>
+              </ul>
+</li>
+            <li class="normal" id="section-10.1.2-1.14">
+              <p id="section-10.1.2-1.14.1">id-MLKEM1024-X448<a href="#section-10.1.2-1.14.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-10.1.2-1.14.2.1">
+                  <p id="section-10.1.2-1.14.2.1.1">Decimal: IANA Assigned<a href="#section-10.1.2-1.14.2.1.1" class="pilcrow">¶</a></p>
+</li>
+                <li class="normal" id="section-10.1.2-1.14.2.2">
+                  <p id="section-10.1.2-1.14.2.2.1">Description: id-MLKEM1024-X448<a href="#section-10.1.2-1.14.2.2.1" class="pilcrow">¶</a></p>
+</li>
+                <li class="normal" id="section-10.1.2-1.14.2.3">
+                  <p id="section-10.1.2-1.14.2.3.1">References: This Document<a href="#section-10.1.2-1.14.2.3.1" class="pilcrow">¶</a></p>
 </li>
               </ul>
 </li>
