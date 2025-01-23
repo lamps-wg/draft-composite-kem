@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-01-21T01:41:53.714325+00:00",
+  "timestamp": "2025-01-23T01:42:23.300224+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -1372,15 +1372,15 @@
       "id": "I_kwDOKRPFO86c9Qle",
       "title": "Add a MLKEM768 and P-256 variant",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/86",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "chris-wood",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "P-256 is missing from the draft, yet this will definitely be needed in practice. ",
       "createdAt": "2024-11-04T16:42:03Z",
-      "updatedAt": "2024-11-11T16:04:38Z",
-      "closedAt": null,
+      "updatedAt": "2025-01-22T15:53:49Z",
+      "closedAt": "2025-01-22T15:53:49Z",
       "comments": [
         {
           "author": "chris-wood",
@@ -3934,24 +3934,26 @@
       "id": "PR_kwDOKRPFO86Gvatf",
       "title": "Adding a MLKEM768+P256 variant",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/99",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Closes #86 \r\n\r\nTo do before merge:\r\n\r\n- [x] Assign a prototyping OID for `id-MLKEM768-ECDH-P256` from the Entrust OID arc -- update all the places in the draft that need it.\r\n- [x] Once the OID is assigned, compute the domain separator for it.\r\n- [ ] Review by Chris Wood",
       "createdAt": "2025-01-05T01:23:22Z",
-      "updatedAt": "2025-01-06T18:43:12Z",
+      "updatedAt": "2025-01-22T15:53:53Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "2650db111320b4b487e341c9c2d4c03465a586e5",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_p256",
       "headRefOid": "0a0f094f661be48460a7b6299391ddd9463343f9",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-01-22T15:53:48Z",
+      "mergedAt": "2025-01-22T15:53:48Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "dadf513a5e1093dd63055071520d582b951546b1"
+      },
       "comments": [
         {
           "author": "ounsworth",
@@ -4070,7 +4072,7 @@
       "labels": [],
       "body": "Closes #91\r\n\r\nTODO before merging:\r\n\r\n- [ ] Review from Peter C, especially:\r\n  - the new appendix comparing this specification with ETSI CatKDF\r\n  - The intro is still a bit misleading about the endorsement from BSI, which Peter C correctly points out is to an earlier version of the composite draft, however we have Jan Klau\u00dfner as an author and close collaboration with Stavros Kousidis on the CFRG version, so BSI is a bull collaborator on developing this.\r\n- [ ] Review from Chris Wood / Deirdre / Bas, especially:\r\n  - The new appendix comparing this specification with X-Wing\r\n- [ ] I was not previously aware of ETSI TS 103 744's CatKDF. We should have a discussion on the LAMPS list about whether we want to add the ML-KEM CT to the KDF in order to offer equivalent security properties as ETSI CatKDF.",
       "createdAt": "2025-01-06T01:05:33Z",
-      "updatedAt": "2025-01-14T16:40:32Z",
+      "updatedAt": "2025-01-22T16:02:01Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "2650db111320b4b487e341c9c2d4c03465a586e5",
@@ -4081,7 +4083,15 @@
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I should do another pass at making the text clearer. \"This specification\" is unclear -- I should say \"Composite KEM\".\r\nShould also describe more clearly that that paragraph is just highlighting that these are different constructions.",
+          "createdAt": "2025-01-22T16:02:00Z",
+          "updatedAt": "2025-01-22T16:02:00Z"
+        }
+      ],
       "reviews": [
         {
           "id": "PRR_kwDOKRPFO86W6FTP",
@@ -4160,6 +4170,26 @@
               "body": "Given the stated plan, and the fact that there are no ML-KEM-768 modules yet, wouldn't it make sense for the long term to align id-MLKEM768-X25519  with X-Wing. Of course you would want to do something different for the P256 one.",
               "createdAt": "2025-01-14T16:40:32Z",
               "updatedAt": "2025-01-14T16:40:32Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO86ZCvJd",
+          "commit": {
+            "abbreviatedOid": "6e97f2d"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-01-22T15:58:52Z",
+          "updatedAt": "2025-01-22T15:58:52Z",
+          "comments": [
+            {
+              "originalPosition": 60,
+              "body": "```suggestion\r\n\r\n```\r\n\r\nRemove this ednote.",
+              "createdAt": "2025-01-22T15:58:52Z",
+              "updatedAt": "2025-01-22T15:58:53Z"
             }
           ]
         }
