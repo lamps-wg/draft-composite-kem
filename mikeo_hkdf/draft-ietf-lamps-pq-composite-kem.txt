@@ -110,8 +110,10 @@ Table of Contents
      7.4.  RSA-OAEP Parameters
    8.  Use in CMS
      8.1.  Underlying Components
-       8.1.1.  Use of the HKDF-based Key Derivation Function
-       8.1.2.  Use of the KMAC-based Key Derivation Function
+       8.1.1.  Use of the HKDF-based Key Derivation Function within
+               CMS
+       8.1.2.  Use of the KMAC-based Key Derivation Function within
+               CMS
      8.2.  RecipientInfo Conventions
      8.3.  Certificate Conventions
      8.4.  SMIMECapabilities Attribute Conventions
@@ -592,8 +594,8 @@ Encap Process:
   5. Combine the KEM secrets and additional context to yield the composite shared secret
       if KDF is "SHA3-256"
         ss = SHA3-256(mlkemSS || tradSS || tradCT || tradPK || Domain)
-      else if KDF is "HKDF-SHA256"
-        ss = HKDF-Extract-SHA256(salt=0x00000000000000000000000000000000, IKM=mlkemSS || tradSS || tradCT || tradPK || Domain)
+      else if KDF is "HKDF"
+        ss = HKDF-Extract(salt=0x00..00, IKM=mlkemSS || tradSS || tradCT || tradPK || Domain)
 
   6. Output composite shared secret key and ciphertext
 
@@ -1365,7 +1367,7 @@ Deserialization Process:
    resistance, we use KMAC256 for the Composite ML-KEM algorithms with
    internally use SHA3-256, as aligned with Table 3 of [SP.800-57pt1r5].
 
-8.1.1.  Use of the HKDF-based Key Derivation Function
+8.1.1.  Use of the HKDF-based Key Derivation Function within CMS
 
    The HMAC-based Extract-and-Expand Key Derivation Function (HKDF) is
    defined in [RFC5869].
@@ -1404,7 +1406,7 @@ Deserialization Process:
    The parameter field MUST be absent when this algorithm identifier is
    used to specify the KDF for ML-KEM in KemRecipientInfo.
 
-8.1.2.  Use of the KMAC-based Key Derivation Function
+8.1.2.  Use of the KMAC-based Key Derivation Function within CMS
 
    KMAC256-KDF is a KMAC-based KDF specified for use in CMS in
    [I-D.ietf-lamps-cms-sha3-hash].  The definition of KMAC is copied

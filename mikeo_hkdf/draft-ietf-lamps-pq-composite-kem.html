@@ -1275,10 +1275,10 @@ svg :is([fill="white"], [fill^="#fff"]) {
                 <p id="section-toc.1-1.8.2.1.1"><a href="#section-8.1" class="auto internal xref">8.1</a>.  <a href="#name-underlying-components" class="internal xref">Underlying Components</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1.2.1">
-                    <p id="section-toc.1-1.8.2.1.2.1.1"><a href="#section-8.1.1" class="auto internal xref">8.1.1</a>.  <a href="#name-use-of-the-hkdf-based-key-d" class="internal xref">Use of the HKDF-based Key Derivation Function</a></p>
+                    <p id="section-toc.1-1.8.2.1.2.1.1"><a href="#section-8.1.1" class="auto internal xref">8.1.1</a>.  <a href="#name-use-of-the-hkdf-based-key-d" class="internal xref">Use of the HKDF-based Key Derivation Function within CMS</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1.2.2">
-                    <p id="section-toc.1-1.8.2.1.2.2.1"><a href="#section-8.1.2" class="auto internal xref">8.1.2</a>.  <a href="#name-use-of-the-kmac-based-key-d" class="internal xref">Use of the KMAC-based Key Derivation Function</a></p>
+                    <p id="section-toc.1-1.8.2.1.2.2.1"><a href="#section-8.1.2" class="auto internal xref">8.1.2</a>.  <a href="#name-use-of-the-kmac-based-key-d" class="internal xref">Use of the KMAC-based Key Derivation Function within CMS</a></p>
 </li>
                 </ul>
 </li>
@@ -1764,8 +1764,8 @@ Encap Process:
   5. Combine the KEM secrets and additional context to yield the composite shared secret
       if KDF is "SHA3-256"
         ss = SHA3-256(mlkemSS || tradSS || tradCT || tradPK || Domain)
-      else if KDF is "HKDF-SHA256"
-        ss = HKDF-Extract-SHA256(salt=0x00000000000000000000000000000000, IKM=mlkemSS || tradSS || tradCT || tradPK || Domain)
+      else if KDF is "HKDF"
+        ss = HKDF-Extract(salt=0x00..00, IKM=mlkemSS || tradSS || tradCT || tradPK || Domain)
 
   6. Output composite shared secret key and ciphertext
 
@@ -2612,10 +2612,10 @@ CompositeCiphertextValue ::= OCTET STRING
 </div>
 <p id="section-8.1-3">Full specifications for the referenced algorithms can be found either further down in this section, or in <a href="#appdx_components" class="auto internal xref">Appendix B</a>.<a href="#section-8.1-3" class="pilcrow">¶</a></p>
 <p id="section-8.1-4">Note that here we differ slightly from the internal KDF used within the KEM combiner in <a href="#sec-alg-ids" class="auto internal xref">Section 7</a> because <span>[<a href="#RFC9629" class="cite xref">RFC9629</a>]</span> requires that the KDF listed in the KEMRecipientInfo <code>kdf</code> field must have an interface which accepts <code>KDF(IKM, L, info)</code>, so here we need to use KMAC and cannot directly use SHA3. Since we require 256-bits of (2nd) pre-image resistance, we use KMAC256 for the Composite ML-KEM algorithms with internally use SHA3-256, as aligned with Table 3 of <span>[<a href="#SP.800-57pt1r5" class="cite xref">SP.800-57pt1r5</a>]</span>.<a href="#section-8.1-4" class="pilcrow">¶</a></p>
-<div id="use-of-the-hkdf-based-key-derivation-function">
+<div id="use-of-the-hkdf-based-key-derivation-function-within-cms">
 <section id="section-8.1.1">
           <h4 id="name-use-of-the-hkdf-based-key-d">
-<a href="#section-8.1.1" class="section-number selfRef">8.1.1. </a><a href="#name-use-of-the-hkdf-based-key-d" class="section-name selfRef">Use of the HKDF-based Key Derivation Function</a>
+<a href="#section-8.1.1" class="section-number selfRef">8.1.1. </a><a href="#name-use-of-the-hkdf-based-key-d" class="section-name selfRef">Use of the HKDF-based Key Derivation Function within CMS</a>
           </h4>
 <p id="section-8.1.1-1">The HMAC-based Extract-and-Expand Key Derivation Function (HKDF) is defined in <span>[<a href="#RFC5869" class="cite xref">RFC5869</a>]</span>.<a href="#section-8.1.1-1" class="pilcrow">¶</a></p>
 <p id="section-8.1.1-2">The HKDF function is a composition of the HKDF-Extract and HKDF-Expand functions.<a href="#section-8.1.1-2" class="pilcrow">¶</a></p>
@@ -2651,10 +2651,10 @@ HKDF(salt, IKM, info, L)
 <p id="section-8.1.1-6">HKDF may be used with different hash functions, including SHA-256 <span>[<a href="#FIPS.180-4" class="cite xref">FIPS.180-4</a>]</span>. The object identifier id-alg-hkdf-with-sha256 is defined in <span>[<a href="#RFC8619" class="cite xref">RFC8619</a>]</span>, and specifies the use of HKDF with SHA-256. The parameter field MUST be absent when this algorithm identifier is used to specify the KDF for ML-KEM in KemRecipientInfo.<a href="#section-8.1.1-6" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="use-of-the-kmac-based-key-derivation-function">
+<div id="use-of-the-kmac-based-key-derivation-function-within-cms">
 <section id="section-8.1.2">
           <h4 id="name-use-of-the-kmac-based-key-d">
-<a href="#section-8.1.2" class="section-number selfRef">8.1.2. </a><a href="#name-use-of-the-kmac-based-key-d" class="section-name selfRef">Use of the KMAC-based Key Derivation Function</a>
+<a href="#section-8.1.2" class="section-number selfRef">8.1.2. </a><a href="#name-use-of-the-kmac-based-key-d" class="section-name selfRef">Use of the KMAC-based Key Derivation Function within CMS</a>
           </h4>
 <p id="section-8.1.2-1">KMAC256-KDF is a KMAC-based KDF specified for use in CMS in <span>[<a href="#I-D.ietf-lamps-cms-sha3-hash" class="cite xref">I-D.ietf-lamps-cms-sha3-hash</a>]</span>. The definition of KMAC is copied here for convenience.  Here, KMAC# indicates the use of either KMAC128-KDF or KMAC256-KDF, although only KMAC256 is used in this specification.<a href="#section-8.1.2-1" class="pilcrow">¶</a></p>
 <p id="section-8.1.2-2">KMAC#(K, X, L, S) takes the following parameters:<a href="#section-8.1.2-2" class="pilcrow">¶</a></p>
