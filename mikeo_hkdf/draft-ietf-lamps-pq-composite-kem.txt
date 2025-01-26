@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 9 July 2025                                             M. Pala
+Expires: 30 July 2025                                            M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                          5 January 2025
+                                                         26 January 2025
 
 
   Composite ML-KEM for use in X.509 Public Key Infrastructure and CMS
@@ -61,7 +61,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 9 July 2025.
+   This Internet-Draft will expire on 30 July 2025.
 
 Copyright Notice
 
@@ -593,7 +593,7 @@ Encap Process:
       if KDF is "SHA3-256"
         ss = SHA3-256(mlkemSS || tradSS || tradCT || tradPK || Domain)
       else if KDF is "HKDF-SHA256"
-        ss = HKDF-SHA256(salt=0x0000000000000000, IKM=mlkemSS || tradSS || tradCT || tradPK || Domain)
+        ss = HKDF-Extract-SHA256(salt=0x00000000000000000000000000000000, IKM=mlkemSS || tradSS || tradCT || tradPK || Domain)
 
   6. Output composite shared secret key and ciphertext
 
@@ -2605,14 +2605,14 @@ D.1.1.  FIPS certification of Combiner Function
 
    The HKDF-SHA2 options can be certified under SP.800-56Cr2 One-Step
    Key Derivation Option 2: H(x) = HMAC-hash(salt, x) where salt is the
-   fixed value 0x0000000000000000 (ie 32 bytes of zeros) in order to
-   satisfy the requirement in [SP.800-56Cr2] that "nn the absence of an
-   agreed-upon alternative – the default_salt shall be an all-zero byte
-   string whose bit length equals that specified as the bit length of an
-   input block for the hash function, hash".  Note that since the
-   desired shared secret key output length of 256 bits for all security
-   levels aligns with the block size of SHA256, we do not need to use
-   the HKDF-Extract step specified in [RFC5869], which further
+   fixed value 0x00000000000000000000000000000000 (ie 64 bytes of zeros)
+   in order to satisfy the requirement in [SP.800-56Cr2] that "nn the
+   absence of an agreed-upon alternative – the default_salt shall be an
+   all-zero byte string whose bit length equals that specified as the
+   bit length of an input block for the hash function, hash".  Note that
+   since the desired shared secret key output length of 256 bits for all
+   security levels aligns with the block size of SHA256, we do not need
+   to use the HKDF-Extract step specified in [RFC5869], which further
    simplifies FIPS certification by allowing us to use the One-Step KDF
    rather than the Two-Step KDF from [SP.800-56Cr2].
 
@@ -2657,7 +2657,7 @@ D.3.  Decapsulation Requires the Public Key
    OneAsymmetricKey.publicKey field would mean that two copies of the
    public key data are transmitted.
 
-   With regard to the traditional algorithms, RSA or Elliptic Curve, in
+   With regard to the traditional algorithms, RSA or Ellipti c Curve, in
    order to achieve the public-key binding property the KEM combiner
    used to form the Composite ML-KEM, the combiner requires the
    traditional public key as input to the KDF that derives the output
