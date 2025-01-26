@@ -555,8 +555,8 @@ Encap Process:
   5. Combine the KEM secrets and additional context to yield the composite shared secret
       if KDF is "SHA3-256"
         ss = SHA3-256(mlkemSS || tradSS || tradCT || tradPK || Domain)
-      else if KDF is "HKDF-SHA256"
-        ss = HKDF-Extract-SHA256(salt=0x00000000000000000000000000000000, IKM=mlkemSS || tradSS || tradCT || tradPK || Domain)
+      else if KDF is "HKDF"
+        ss = HKDF-Extract(salt=0x00..00, IKM=mlkemSS || tradSS || tradCT || tradPK || Domain)
 
   6. Output composite shared secret key and ciphertext
 
@@ -1119,7 +1119,7 @@ Full specifications for the referenced algorithms can be found either further do
 Note that here we differ slightly from the internal KDF used within the KEM combiner in {{sec-alg-ids}} because [RFC9629] requires that the KDF listed in the KEMRecipientInfo `kdf` field must have an interface which accepts `KDF(IKM, L, info)`, so here we need to use KMAC and cannot directly use SHA3. Since we require 256-bits of (2nd) pre-image resistance, we use KMAC256 for the Composite ML-KEM algorithms with internally use SHA3-256, as aligned with Table 3 of {{SP.800-57pt1r5}}.
 
 
-### Use of the HKDF-based Key Derivation Function
+### Use of the HKDF-based Key Derivation Function within CMS
 
 The HMAC-based Extract-and-Expand Key Derivation Function (HKDF) is defined in {{!RFC5869}}.
 
@@ -1146,7 +1146,7 @@ L:
 
 HKDF may be used with different hash functions, including SHA-256 {{FIPS.180-4}}. The object identifier id-alg-hkdf-with-sha256 is defined in [RFC8619], and specifies the use of HKDF with SHA-256. The parameter field MUST be absent when this algorithm identifier is used to specify the KDF for ML-KEM in KemRecipientInfo.
 
-### Use of the KMAC-based Key Derivation Function
+### Use of the KMAC-based Key Derivation Function within CMS
 
 KMAC256-KDF is a KMAC-based KDF specified for use in CMS in {{I-D.ietf-lamps-cms-sha3-hash}}. The definition of KMAC is copied here for convenience.  Here, KMAC# indicates the use of either KMAC128-KDF or KMAC256-KDF, although only KMAC256 is used in this specification.
 
