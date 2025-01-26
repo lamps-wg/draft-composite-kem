@@ -1275,10 +1275,10 @@ svg :is([fill="white"], [fill^="#fff"]) {
                 <p id="section-toc.1-1.8.2.1.1"><a href="#section-8.1" class="auto internal xref">8.1</a>.  <a href="#name-underlying-components" class="internal xref">Underlying Components</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1.2.1">
-                    <p id="section-toc.1-1.8.2.1.2.1.1"><a href="#section-8.1.1" class="auto internal xref">8.1.1</a>.  <a href="#name-use-of-the-hkdf-based-key-d" class="internal xref">Use of the HKDF-based Key Derivation Function</a></p>
+                    <p id="section-toc.1-1.8.2.1.2.1.1"><a href="#section-8.1.1" class="auto internal xref">8.1.1</a>.  <a href="#name-use-of-the-hkdf-based-key-d" class="internal xref">Use of the HKDF-based Key Derivation Function within CMS</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1.2.2">
-                    <p id="section-toc.1-1.8.2.1.2.2.1"><a href="#section-8.1.2" class="auto internal xref">8.1.2</a>.  <a href="#name-use-of-the-kmac-based-key-d" class="internal xref">Use of the KMAC-based Key Derivation Function</a></p>
+                    <p id="section-toc.1-1.8.2.1.2.2.1"><a href="#section-8.1.2" class="auto internal xref">8.1.2</a>.  <a href="#name-use-of-the-kmac-based-key-d" class="internal xref">Use of the KMAC-based Key Derivation Function within CMS</a></p>
 </li>
                 </ul>
 </li>
@@ -1765,11 +1765,13 @@ Encap Process:
 
   4. Encode the ciphertext
 
-     ct = mlkemCT || tradCT
+      ct = mlkemCT || tradCT
 
   5. Combine the KEM secrets and additional context to yield the composite shared secret
-
-     ss = KDF(mlkemSS || tradSS || tradCT || tradPK || Domain)
+      if KDF is "SHA3-256"
+        ss = SHA3-256(mlkemSS || tradSS || tradCT || tradPK || Domain)
+      else if KDF is "HKDF"
+        ss = HKDF-Extract(salt=0x00..00, IKM=mlkemSS || tradSS || tradCT || tradPK || Domain)
 
   6. Output composite shared secret key and ciphertext
 
@@ -1846,7 +1848,10 @@ Decap Process:
 
   5. Combine the KEM secrets and additional context to yield the composite shared secret
 
-      ss = KDF(mlkemSS || tradSS || tradCT || tradPK || Domain)
+      if KDF is "SHA3-256"
+        ss = SHA3-256(mlkemSS || tradSS || tradCT || tradPK || Domain)
+      else if KDF is "HKDF-SHA256"
+        ss = HKDF-SHA256(salt=0x0000000000000000, IKM=mlkemSS || tradSS || tradCT || tradPK || Domain)
 
   6. Output composite shared secret key
 
@@ -2629,10 +2634,10 @@ CompositeCiphertextValue ::= OCTET STRING
 </div>
 <p id="section-8.1-3">Full specifications for the referenced algorithms can be found either further down in this section, or in <a href="#appdx_components" class="auto internal xref">Appendix B</a>.<a href="#section-8.1-3" class="pilcrow">¶</a></p>
 <p id="section-8.1-4">Note that here we differ slightly from the internal KDF used within the KEM combiner in <a href="#sec-alg-ids" class="auto internal xref">Section 7</a> because <span>[<a href="#RFC9629" class="cite xref">RFC9629</a>]</span> requires that the KDF listed in the KEMRecipientInfo <code>kdf</code> field must have an interface which accepts <code>KDF(IKM, L, info)</code>, so here we need to use KMAC and cannot directly use SHA3. Since we require 256-bits of (2nd) pre-image resistance, we use KMAC256 for the Composite ML-KEM algorithms with internally use SHA3-256, as aligned with Table 3 of <span>[<a href="#SP.800-57pt1r5" class="cite xref">SP.800-57pt1r5</a>]</span>.<a href="#section-8.1-4" class="pilcrow">¶</a></p>
-<div id="use-of-the-hkdf-based-key-derivation-function">
+<div id="use-of-the-hkdf-based-key-derivation-function-within-cms">
 <section id="section-8.1.1">
           <h4 id="name-use-of-the-hkdf-based-key-d">
-<a href="#section-8.1.1" class="section-number selfRef">8.1.1. </a><a href="#name-use-of-the-hkdf-based-key-d" class="section-name selfRef">Use of the HKDF-based Key Derivation Function</a>
+<a href="#section-8.1.1" class="section-number selfRef">8.1.1. </a><a href="#name-use-of-the-hkdf-based-key-d" class="section-name selfRef">Use of the HKDF-based Key Derivation Function within CMS</a>
           </h4>
 <p id="section-8.1.1-1">The HMAC-based Extract-and-Expand Key Derivation Function (HKDF) is defined in <span>[<a href="#RFC5869" class="cite xref">RFC5869</a>]</span>.<a href="#section-8.1.1-1" class="pilcrow">¶</a></p>
 <p id="section-8.1.1-2">The HKDF function is a composition of the HKDF-Extract and HKDF-Expand functions.<a href="#section-8.1.1-2" class="pilcrow">¶</a></p>
@@ -2668,10 +2673,10 @@ HKDF(salt, IKM, info, L)
 <p id="section-8.1.1-6">HKDF may be used with different hash functions, including SHA-256 and SHA-384 <span>[<a href="#FIPS.180-4" class="cite xref">FIPS.180-4</a>]</span>. The object identifier id-alg-hkdf-with-sha256 and id-alg-hkdf-with-sha384 are defined in <span>[<a href="#RFC8619" class="cite xref">RFC8619</a>]</span>, and specify the use of HKDF with SHA-256 and SHA-384. The parameter field MUST be absent when this algorithm identifier is used to specify the KDF for ML-KEM in KemRecipientInfo.<a href="#section-8.1.1-6" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="use-of-the-kmac-based-key-derivation-function">
+<div id="use-of-the-kmac-based-key-derivation-function-within-cms">
 <section id="section-8.1.2">
           <h4 id="name-use-of-the-kmac-based-key-d">
-<a href="#section-8.1.2" class="section-number selfRef">8.1.2. </a><a href="#name-use-of-the-kmac-based-key-d" class="section-name selfRef">Use of the KMAC-based Key Derivation Function</a>
+<a href="#section-8.1.2" class="section-number selfRef">8.1.2. </a><a href="#name-use-of-the-kmac-based-key-d" class="section-name selfRef">Use of the KMAC-based Key Derivation Function within CMS</a>
           </h4>
 <p id="section-8.1.2-1">KMAC256-KDF is a KMAC-based KDF specified for use in CMS in <span>[<a href="#I-D.ietf-lamps-cms-sha3-hash" class="cite xref">I-D.ietf-lamps-cms-sha3-hash</a>]</span>. The definition of KMAC is copied here for convenience.  Here, KMAC# indicates the use of either KMAC128-KDF or KMAC256-KDF, although only KMAC256 is used in this specification.<a href="#section-8.1.2-1" class="pilcrow">¶</a></p>
 <p id="section-8.1.2-2">KMAC#(K, X, L, S) takes the following parameters:<a href="#section-8.1.2-2" class="pilcrow">¶</a></p>
@@ -3957,9 +3962,8 @@ DER:
 <a href="#appendix-D.1" class="section-number selfRef">D.1. </a><a href="#name-fips-certification" class="section-name selfRef">FIPS Certification</a>
         </h3>
 <p id="appendix-D.1-1">TODO -- update this once NIST SP 800-227 is published.<a href="#appendix-D.1-1" class="pilcrow">¶</a></p>
-<p id="appendix-D.1-2">EDNOTE At time of writing, it is unclear that the KEM combiner presented in this document would pass a FIPS certification. The SHA3 instantiations should pass under SP 800-56Cr2 Option 1, but the HKDF-SHA2 combinations are technically not allowed under SP 800-56Cr2 even though Option 2 allows HMAC-based constructions, but unfortunately only HKDF-Extract is FIPS-allowed, not HKDF-Expand. The authors have been in contact with NIST to ensure compatibility either by NIST making SP 800-227 more flexible, or by changing this specification to only use HKDF-Extract.<a href="#appendix-D.1-2" class="pilcrow">¶</a></p>
-<p id="appendix-D.1-3">One of the primary design goals of this specification is for the overall composite algorithm to be able to be considered FIPS-approved even when one of the component algorithms is not. Implementers seeking FIPS certification of a Composite ML-KEM algorithm where only one of the component algorithms has been FIPS-validated or FIPS-approved should credit the FIPS-validated component algorithm with full security strength, the non-FIPS-validated component algorithm with zero security, and the overall composite should be considered full strength and thus FIPS-approved.<a href="#appendix-D.1-3" class="pilcrow">¶</a></p>
-<p id="appendix-D.1-4">The authors wish to note that this gives composite algorithms great future utility both for future cryptographic migrations as well as bridging across jurisdictions; for example defining composite algorithms which combine FIPS cryptography with cryptography from a different national standards body.<a href="#appendix-D.1-4" class="pilcrow">¶</a></p>
+<p id="appendix-D.1-2">One of the primary design goals of this specification is for the overall composite algorithm to be able to be considered FIPS-approved even when one of the component algorithms is not. Implementers seeking FIPS certification of a Composite ML-KEM algorithm where only one of the component algorithms has been FIPS-validated or FIPS-approved should credit the FIPS-validated component algorithm with full security strength, the non-FIPS-validated component algorithm with zero security, and the overall composite should be considered full strength and thus FIPS-approved.<a href="#appendix-D.1-2" class="pilcrow">¶</a></p>
+<p id="appendix-D.1-3">The authors wish to note that this gives composite algorithms great future utility both for future cryptographic migrations as well as bridging across jurisdictions; for example defining composite algorithms which combine FIPS cryptography with cryptography from a different national standards body.<a href="#appendix-D.1-3" class="pilcrow">¶</a></p>
 <div id="fips-certification-of-combiner-function">
 <section id="appendix-D.1.1">
           <h4 id="name-fips-certification-of-combi">
@@ -3967,9 +3971,9 @@ DER:
           </h4>
 <p id="appendix-D.1.1-1">TODO: update this to NIST SP 800-227, once it is published.<a href="#appendix-D.1.1-1" class="pilcrow">¶</a></p>
 <p id="appendix-D.1.1-2">One of the primary NIST documents which is relevant for certification of a composite algorithm is NIST SP.800-56Cr2 <span>[<a href="#SP.800-56Cr2" class="cite xref">SP.800-56Cr2</a>]</span> by using the allowed "hybrid" shared secret of the form <code>Z' = Z || T</code>. Compliance is achieved in the following way:<a href="#appendix-D.1.1-2" class="pilcrow">¶</a></p>
-<p id="appendix-D.1.1-3">SP.800-56Cr2 section 4 "One-Step Key Derivation" requires a <code>counter</code> which begins at the 4-byte value 0x00000001. However, the counter is allowed to be omitted when the hash function is executed only once, as specified on page 159 of the FIPS 140-3 Implementation Guidance <span>[<a href="#FIPS-140-3-IG" class="cite xref">FIPS-140-3-IG</a>]</span>.<a href="#appendix-D.1.1-3" class="pilcrow">¶</a></p>
-<p id="appendix-D.1.1-4">The HKDF-SHA2 options can be certified under SP.800-56Cr2 One-Step Key Derivation Option 1: <code>H(x) = hash(x)</code>.<a href="#appendix-D.1.1-4" class="pilcrow">¶</a></p>
-<p id="appendix-D.1.1-5">The SHA3 options can be certified under SP.800-56Cr2 One-Step Key Derivation Option 2: <code>H(x) = HMAC-hash(salt, x)</code> with the salt omitted.<a href="#appendix-D.1.1-5" class="pilcrow">¶</a></p>
+<p id="appendix-D.1.1-3"><span>[<a href="#SP.800-56Cr2" class="cite xref">SP.800-56Cr2</a>]</span> section 4 "One-Step Key Derivation" requires a <code>counter</code> which begins at the 4-byte value 0x00000001. However, the counter is allowed to be omitted when the hash function is executed only once, as specified on page 159 of the FIPS 140-3 Implementation Guidance <span>[<a href="#FIPS-140-3-IG" class="cite xref">FIPS-140-3-IG</a>]</span>.<a href="#appendix-D.1.1-3" class="pilcrow">¶</a></p>
+<p id="appendix-D.1.1-4">The HKDF-SHA2 options can be certified under SP.800-56Cr2 One-Step Key Derivation Option 2: <code>H(x) = HMAC-hash(salt, x)</code> where <code>salt</code> is the fixed value <code>0x00000000000000000000000000000000</code> (ie 64 bytes of zeros) in order to satisfy the requirement in <span>[<a href="#SP.800-56Cr2" class="cite xref">SP.800-56Cr2</a>]</span> that "nn the absence of an agreed-upon alternative – the default_salt shall be an all-zero byte string whose bit length equals that specified as the bit length of an input block for the hash function, hash". Note that since the desired shared secret key output length of 256 bits for all security levels aligns with the block size of SHA256, we do not need to use the HKDF-Extract step specified in <span>[<a href="#RFC5869" class="cite xref">RFC5869</a>]</span>, which further simplifies FIPS certification by allowing us to use the One-Step KDF rather than the Two-Step KDF from <span>[<a href="#SP.800-56Cr2" class="cite xref">SP.800-56Cr2</a>]</span>.<a href="#appendix-D.1.1-4" class="pilcrow">¶</a></p>
+<p id="appendix-D.1.1-5">The SHA3 options can be certified under <span>[<a href="#SP.800-56Cr2" class="cite xref">SP.800-56Cr2</a>]</span> One-Step Key Derivation Option 2: <code>H(x) = HMAC-hash(salt, x)</code> with the salt omitted.<a href="#appendix-D.1.1-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -3990,7 +3994,7 @@ DER:
 <a href="#appendix-D.3" class="section-number selfRef">D.3. </a><a href="#name-decapsulation-requires-the-" class="section-name selfRef">Decapsulation Requires the Public Key</a>
         </h3>
 <p id="appendix-D.3-1">ML-KEM always requires the public key in order to perform various steps of the Fujisaki-Okamoto decapsulation <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span>, and for this reason the private key encoding specified in FIPS 203 includes the public key. Therefore it is not required to carry it in the <code>OneAsymmetricKey.publicKey</code> field, which remains optional, but is strictly speaking redundant since an ML-KEM public key can be parsed from an ML-KEM private key, and thus populating the <code>OneAsymmetricKey.publicKey</code> field would mean that two copies of the public key data are transmitted.<a href="#appendix-D.3-1" class="pilcrow">¶</a></p>
-<p id="appendix-D.3-2">With regard to the traditional algorithms, RSA or Elliptic Curve, in order to achieve the public-key binding property the KEM combiner used to form the Composite ML-KEM, the combiner requires the traditional public key as input to the KDF that derives the output shared secret. Therefore it is required to carry the public key within the respective <code>OneAsymmetricKey.publicKey</code> as per the private key encoding given in <a href="#sec-priv-key" class="auto internal xref">Section 5.2</a>. Implementers who choose to use a different private key encoding than the one specified in this document MUST consider how to provide the component public keys to the decapsulate routine. While some implementations might contain routines to computationally derive the public key from the private key, it is not guaranteed that all implementations will support this; for this reason the interoperable composite private key format given in this document in <a href="#sec-priv-key" class="auto internal xref">Section 5.2</a> requires the public key of the traditional component to be included.<a href="#appendix-D.3-2" class="pilcrow">¶</a></p>
+<p id="appendix-D.3-2">With regard to the traditional algorithms, RSA or Ellipti c Curve, in order to achieve the public-key binding property the KEM combiner used to form the Composite ML-KEM, the combiner requires the traditional public key as input to the KDF that derives the output shared secret. Therefore it is required to carry the public key within the respective <code>OneAsymmetricKey.publicKey</code> as per the private key encoding given in <a href="#sec-priv-key" class="auto internal xref">Section 5.2</a>. Implementers who choose to use a different private key encoding than the one specified in this document MUST consider how to provide the component public keys to the decapsulate routine. While some implementations might contain routines to computationally derive the public key from the private key, it is not guaranteed that all implementations will support this; for this reason the interoperable composite private key format given in this document in <a href="#sec-priv-key" class="auto internal xref">Section 5.2</a> requires the public key of the traditional component to be included.<a href="#appendix-D.3-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
