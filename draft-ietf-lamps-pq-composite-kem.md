@@ -251,6 +251,7 @@ Interop-affecting changes:
 
 * Remove the ASN.1 SEQUENCE wrapping around the ASN.1 structures to make it easier to access via other protocols.
 * Add a ML-KEM-768 + ECDH-P256 variant
+* Changed the KDF for id-MLKEM1024-ECDH-P384 to HKDF-SHA384/256 so that we have at least one variant that is compliant with CNSA 2.0.
 
 
 Editorial changes:
