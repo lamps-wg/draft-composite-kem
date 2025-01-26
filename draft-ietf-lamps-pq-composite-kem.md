@@ -1608,15 +1608,12 @@ Due to the difference in key generation and security properties, X-Wing and id-M
 2) Set f_context = f(context, MA, MB), where f is a context formatting function.
 3) key_material = KDF(secret, label, f_context, length).
 4) Return key_material.
+
+MA shall contain all of the public keys.
+MB shall contain all of the corresponding public keys and ciphertexts.
 ~~~
 
-While not binary compatible with the KEM combiner presented in this specification, it is largely security-equivalent except for the following points.
-
-This specification binds the public key of the traditional component into the KDF.
-
-This specification does not bind the ML-KEM ciphertext -- which is MA in the ETSI CatKDF.
-
-EDNOTE / TODO: we should discuss on the LAMPS list whether to add this back in.
+The main difference between the Composite KEM combiner and the ETSI CatKDF combiner is that CatKDF makes the more conservative choice to bind the public keys and ciphertexts of both components, while Composite KEM follows the analysis presented in [X-Wing] that while preserving the security properties of the traditional component requires binding the public key and ciphertext of the traditional component, it is not necessary to do so for ML-KEM thanks to the rejection sampling step of the Fujisaki-Okamoto transform.
 
 Additionally, ETSI CatKDF uses HKDF [RFC5869] as the KDF which aligns with some of the variants in this specification, but not the ones that use SHA3.
 
