@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 11 July 2025                                            M. Pala
+Expires: 30 July 2025                                            M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                          7 January 2025
+                                                         26 January 2025
 
 
   Composite ML-KEM for use in X.509 Public Key Infrastructure and CMS
@@ -61,7 +61,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 11 July 2025.
+   This Internet-Draft will expire on 30 July 2025.
 
 Copyright Notice
 
@@ -2713,18 +2713,17 @@ E.2.  ETSI CatKDF
 3) key_material = KDF(secret, label, f_context, length).
 4) Return key_material.
 
-   While not binary compatible with the KEM combiner presented in this
-   specification, it is largely security-equivalent except for the
-   following points.
+MA shall contain all of the public keys.
+MB shall contain all of the corresponding public keys and ciphertexts.
 
-   This specification binds the public key of the traditional component
-   into the KDF.
-
-   This specification does not bind the ML-KEM ciphertext -- which is MA
-   in the ETSI CatKDF.
-
-   EDNOTE / TODO: we should discuss on the LAMPS list whether to add
-   this back in.
+   The main difference between the Composite KEM combiner and the ETSI
+   CatKDF combiner is that CatKDF makes the more conservative choice to
+   bind the public keys and ciphertexts of both components, while
+   Composite KEM follows the analysis presented in [X-Wing] that while
+   preserving the security properties of the traditional component
+   requires binding the public key and ciphertext of the traditional
+   component, it is not necessary to do so for ML-KEM thanks to the
+   rejection sampling step of the Fujisaki-Okamoto transform.
 
    Additionally, ETSI CatKDF uses HKDF [RFC5869] as the KDF which aligns
    with some of the variants in this specification, but not the ones
