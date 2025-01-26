@@ -154,6 +154,9 @@ Table of Contents
 
    *  Add a ML-KEM-768 + ECDH-P256 variant
 
+   *  Changed the KDF for id-MLKEM1024-ECDH-P384 to HKDF-SHA384/256 so
+      that we have at least one variant that is compliant with CNSA 2.0.
+
    Editorial changes:
 
    *  Added an Implementation Consideration section explaining why
