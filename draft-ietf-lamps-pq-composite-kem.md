@@ -1034,21 +1034,23 @@ EDNOTE: these are prototyping OIDs to be replaced by IANA.
 
 | Composite ML-KEM Algorithm         | OID                  | First Algorithm | Second Algorithm     | KDF      |
 |---------                           | -----------------    | ----------      | ----------           | -------- |
-| id-MLKEM768-RSA2048                | &lt;CompKEM&gt;.30   | MLKEM768        | RSA-OAEP 2048        | HKDF-SHA256/256 |
-| id-MLKEM768-RSA3072                | &lt;CompKEM&gt;.31   | MLKEM768        | RSA-OAEP 3072        | HKDF-SHA256/256 |
-| id-MLKEM768-RSA4096                | &lt;CompKEM&gt;.32   | MLKEM768        | RSA-OAEP 4096        | HKDF-SHA256/256 |
+| id-MLKEM768-RSA2048                | &lt;CompKEM&gt;.30   | MLKEM768        | RSA-OAEP 2048        | HKDF-SHA256 |
+| id-MLKEM768-RSA3072                | &lt;CompKEM&gt;.31   | MLKEM768        | RSA-OAEP 3072        | HKDF-SHA256 |
+| id-MLKEM768-RSA4096                | &lt;CompKEM&gt;.32   | MLKEM768        | RSA-OAEP 4096        | HKDF-SHA256 |
 | id-MLKEM768-X25519                 | &lt;CompKEM&gt;.33   | MLKEM768        | X25519               | SHA3-256 |
-| id-MLKEM768-ECDH-P256              | &lt;CompKEM&gt;.34   | MLKEM768        | ECDH-P256            | HKDF-SHA256/256 |
-| id-MLKEM768-ECDH-P384              | &lt;CompKEM&gt;.35   | MLKEM768        | ECDH-P384            | HKDF-SHA256/256 |
-| id-MLKEM768-ECDH-brainpoolP256r1   | &lt;CompKEM&gt;.36   | MLKEM768        | ECDH-brainpoolp256r1 | HKDF-SHA256/256 |
-| id-MLKEM1024-ECDH-P384             | &lt;CompKEM&gt;.37   | MLKEM1024       | ECDH-P384            | SHA3-256 |
+| id-MLKEM768-ECDH-P256              | &lt;CompKEM&gt;.34   | MLKEM768        | ECDH-P256            | HKDF-SHA256 |
+| id-MLKEM768-ECDH-P384              | &lt;CompKEM&gt;.35   | MLKEM768        | ECDH-P384            | HKDF-SHA256 |
+| id-MLKEM768-ECDH-brainpoolP256r1   | &lt;CompKEM&gt;.36   | MLKEM768        | ECDH-brainpoolp256r1 | HKDF-SHA256 |
+| id-MLKEM1024-ECDH-P384             | &lt;CompKEM&gt;.37   | MLKEM1024       | ECDH-P384            | HKDF-SHA384/256 |
 | id-MLKEM1024-ECDH-brainpoolP384r1  | &lt;CompKEM&gt;.38   | MLKEM1024       | ECDH-brainpoolP384r1 | SHA3-256 |
 | id-MLKEM1024-X448                  | &lt;CompKEM&gt;.39   | MLKEM1024       | X448                 | SHA3-256 |
 {: #tab-kem-algs title="Composite ML-KEM key types"}
 
-For the use of HKDF [RFC5869]: a salt is not provided; i.e. the default salt (all zeroes of length HashLen) will be used. The output length of HKDF is the same as the block size of the underlying hash function; in particular, `HKDF-SHA256/256` means HKDF-SHA256 with an output length `L` of 256 bits (32 octets).
+Note that in alignment with ML-KEM which outputs a 256-bit shared secret key at all security levels, all Composite KEM algorithms output a 256-bit shared secret key.
 
-Full specifications for the referenced algorithms can be found in {{appdx_components}}.
+For the use of HKDF [RFC5869]: a salt is not provided; i.e. the default salt (all zeroes of length HashLen) will be used. For HKDF-SHA256 the output of 256 bit output is used directly; for HKDF-SHA384/256, HKDF is invoked with SHA384 and then the output is truncated to 256 bits, meaning that only the first 256 bits of output are used.
+
+Full specifications for the referenced component algorithms can be found in {{appdx_components}}.
 
 
 ## Domain Separators {#sec-domsep-values}
@@ -1135,7 +1137,7 @@ A compliant implementation MUST support the following algorithm combinations for
 | id-MLKEM768-ECDH-P256             | id-alg-hkdf-with-sha256 | id-aes256-wrap     |
 | id-MLKEM768-ECDH-P384             | id-alg-hkdf-with-sha256 | id-aes256-wrap     |
 | id-MLKEM768-ECDH-brainpoolP256r1  | id-alg-hkdf-with-sha256 | id-aes256-wrap     |
-| id-MLKEM1024-ECDH-P384            | id-kmac256              | id-aes256-wrap     |
+| id-MLKEM1024-ECDH-P384            | id-alg-hkdf-with-sha384 | id-aes256-wrap     |
 | id-MLKEM1024-ECDH-brainpoolP384r1 | id-kmac256              | id-aes256-wrap     |
 | id-MLKEM1024-X448                 | id-kmac256              | id-aes256-wrap     |
 {: #tab-cms-kdf-wrap title="Mandatory-to-implement pairings for CMS KDF and WRAP"}
@@ -1171,7 +1173,9 @@ info:
 L:
 : length of output keying material in octets. This corresponds to the L KDF input from {{Section 5 of RFC9629}}, which is identified in the kekLength value from KEMRecipientInfo. Implementations MUST confirm that this value is consistent with the key size of the key-encryption algorithm.
 
-HKDF may be used with different hash functions, including SHA-256 {{FIPS.180-4}}. The object identifier id-alg-hkdf-with-sha256 is defined in [RFC8619], and specifies the use of HKDF with SHA-256. The parameter field MUST be absent when this algorithm identifier is used to specify the KDF for ML-KEM in KemRecipientInfo.
+HKDF may be used with different hash functions, including SHA-256 and SHA-384 {{FIPS.180-4}}. The object identifier id-alg-hkdf-with-sha256 and id-alg-hkdf-with-sha384 are defined in [RFC8619], and specify the use of HKDF with SHA-256 and SHA-384. The parameter field MUST be absent when this algorithm identifier is used to specify the KDF for ML-KEM in KemRecipientInfo.
+
+
 
 ### Use of the KMAC-based Key Derivation Function within CMS
 
@@ -1446,6 +1450,7 @@ This section provides references to the full specification of the algorithms use
 | id-sha256 | 2.16.840.1.101.3.4.2.1 | [RFC6234] |
 | id-sha512 | 2.16.840.1..101.3.4.2.3 | [RFC6234] |
 | id-alg-hkdf-with-sha256 | 1.2.840.113549.1.9.16.3.28 | [RFC8619] |
+| id-alg-hkdf-with-sha384 | 1.2.840.113549.1.9.16.3.29 | [RFC8619] |
 | id-sha3-256 | 2.16.840.1.101.3.4.2.8 | [FIPS.202] |
 | id-KMAC128  | 2.16.840.1.101.3.4.2.21 | [SP.800-185] |
 {: #tab-component-hash title="Hash algorithms used in Composite Constructions"}
