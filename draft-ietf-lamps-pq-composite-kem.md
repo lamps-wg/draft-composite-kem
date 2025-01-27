@@ -206,7 +206,7 @@ informative:
       - ins: A. Roginksy
         name: Allan Reginsky
     org: National Institute of Standards and Technology (NIST)
-  SP800-227ipd:
+  SP-800-227ipd:
     title: "Recommendations for Key-Encapsulation Mechanisms (Initial Public Draft)"
     target: https://csrc.nist.gov/pubs/sp/800/227/ipd
     author:
@@ -1597,7 +1597,7 @@ K ← Expand(Extract(salt, Z), OtherInput)         (13)
 
 The Composite KEM variants that use SHA3 as a combiner fit form (12) while the variants that use HKDF-SHA2 fit form (13).
 
-In terms of the order of inputs, Composite KEM places the two shared secret keys `mlkemSS || tradSS` at the beggining of the KDF input such that all other inputs `tradCT || tradPK || Domain` can be considered to be part of `OtherInput` for the purposes of FIPS certification. {{SP-800-227ipd}} adds an important stipulation that was not present in earlier NIST specifications:
+In terms of the order of inputs, Composite KEM places the two shared secret keys `mlkemSS || tradSS` at the beggining of the KDF input such that all other inputs `tradCT || tradPK || Domain` can be considered to be part of `OtherInput` for the purposes of FIPS certification. [SP-800-227ipd] adds an important stipulation that was not present in earlier NIST specifications:
 
 > This publication approves the use of the key combiner (14) for any t > 1, so long as at
 > least one shared secret (i.e., S j for some j) is a shared secret generated from the key-1077
