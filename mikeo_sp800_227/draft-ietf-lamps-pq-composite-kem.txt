@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 30 July 2025                                            M. Pala
+Expires: 31 July 2025                                            M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                         26 January 2025
+                                                         27 January 2025
 
 
   Composite ML-KEM for use in X.509 Public Key Infrastructure and CMS
@@ -61,7 +61,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 30 July 2025.
+   This Internet-Draft will expire on 31 July 2025.
 
 Copyright Notice
 
@@ -2404,17 +2404,17 @@ Deserialization Process:
               Public Key Encryption", RFC 9180, DOI 10.17487/RFC9180,
               February 2022, <https://www.rfc-editor.org/info/rfc9180>.
 
+   [SP-800-227ipd]
+              Alagic, G., Barker, E., Chen, L., Moody, D., Robinson, A.,
+              Silberg, H., and N. Waller, "Recommendations for Key-
+              Encapsulation Mechanisms (Initial Public Draft)", n.d.,
+              <https://csrc.nist.gov/pubs/sp/800/227/ipd>.
+
    [SP800-131Ar2]
               Barker, E. and A. Roginksy, "Transitioning the Use of
               Cryptographic Algorithms and Key Lengths", n.d.,
               <https://nvlpubs.nist.gov/nistpubs/specialpublications/
               nist.sp.800-131ar2.pdf>.
-
-   [SP800-227ipd]
-              Alagic, G., Barker, E., Chen, L., Moody, D., Robinson, A.,
-              Silberg, H., and N. Waller, "Recommendations for Key-
-              Encapsulation Mechanisms (Initial Public Draft)", n.d.,
-              <https://csrc.nist.gov/pubs/sp/800/227/ipd>.
 
    [X-Wing]   Barbosa, M., Connolly, D., Duarte, J., Kaiser, A.,
               Schwabe, P., Varner, K., and B. Westerbaan, "X-Wing The
@@ -2633,8 +2633,8 @@ D.1.  FIPS Certification
    In terms of the order of inputs, Composite KEM places the two shared
    secret keys mlkemSS || tradSS at the beggining of the KDF input such
    that all other inputs tradCT || tradPK || Domain can be considered to
-   be part of OtherInput for the purposes of FIPS certification.  [SP-
-   800-227ipd] adds an important stipulation that was not present in
+   be part of OtherInput for the purposes of FIPS certification.
+   [SP-800-227ipd] adds an important stipulation that was not present in
    earlier NIST specifications:
 
       This publication approves the use of the key combiner (14) for any
