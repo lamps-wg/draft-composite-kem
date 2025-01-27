@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 26 July 2025                                            M. Pala
+Expires: 31 July 2025                                            M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                         22 January 2025
+                                                         27 January 2025
 
 
   Composite ML-KEM for use in X.509 Public Key Infrastructure and CMS
@@ -61,7 +61,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 26 July 2025.
+   This Internet-Draft will expire on 31 July 2025.
 
 Copyright Notice
 
@@ -692,13 +692,13 @@ Decap Process:
    of the component decapsulations returned an error condition
    indicating malformed inputs.  For timing-invariance reasons, it is
    RECOMMENDED to perform both decapsulation operations and check for
-   errors afterwards to to prevent an attacker from using a timing
-   channel to tell which component failed decapsulation.  Also, RSA-
-   based composites MUST ensure that the modulus size (ie the size of
-   tradCT and tradPK) matches that specified for the given Composite ML-
-   KEM algorithm in Table 2; depending on the cryptographic library
-   used, this check may be done by the library or may require an
-   explicit check as part of the CompositeKEM.Decap() routine.
+   errors afterwards to prevent an attacker from using a timing channel
+   to tell which component failed decapsulation.  Also, RSA-based
+   composites MUST ensure that the modulus size (i.e. the size of tradCT
+   and tradPK) matches that specified for the given Composite ML-KEM
+   algorithm in Table 2; depending on the cryptographic library used,
+   this check may be done by the library or may require an explicit
+   check as part of the CompositeKEM.Decap() routine.
 
 4.4.  SerializePublicKey and DeserializePublicKey
 
@@ -1050,7 +1050,7 @@ Deserialization Process:
 
    Component keys of a CompositeKEMPrivateKey MUST NOT be used in any
    other type of key or as a standalone key.  For more details on the
-   security considerations around key reuse, see section Section 11.3.
+   security considerations around key reuse, see Section 11.3.
 
 5.3.  Encoding Rules
 
@@ -1163,9 +1163,9 @@ Deserialization Process:
 
                     Table 2: Composite ML-KEM key types
 
-   For the use of HKDF [RFC5869]: a salt is not provided; ie the default
-   salt (all zeroes of length HashLen) will be used.  The output length
-   of HKDF is the same as the block size of the underlying hash
+   For the use of HKDF [RFC5869]: a salt is not provided; i.e. the
+   default salt (all zeroes of length HashLen) will be used.  The output
+   length of HKDF is the same as the block size of the underlying hash
    function; in particular, HKDF-SHA256/256 means HKDF-SHA256 with an
    output length L of 256 bits (32 octets).
 
@@ -1177,8 +1177,8 @@ Deserialization Process:
    The KEM combiner used in this document requires a domain separator
    Domain input.  The following table shows the HEX-encoded domain
    separator for each Composite ML-KEM AlgorithmID; to use it, the value
-   should be HEX-decoded and used in binary form.  The domain separator
-   is simply the DER encoding of the composite algorithm OID.
+   MUST be HEX-decoded and used in binary form.  The domain separator is
+   simply the DER encoding of the composite algorithm OID.
 
     +===================================+============================+
     | Composite ML-KEM Algorithm        | Domain Separator (in Hex   |
@@ -1214,23 +1214,31 @@ Deserialization Process:
 
 7.3.  Rationale for choices
 
-   *  Pair equivalent levels.
+   In generating the list of Composite algorithms, the following general
+   guidance was used, however, during development of this specification
+   several algorithms were added by direct request even though they do
+   not fit this guidance.
+
+   *  Pair equivalent security levels between
 
    *  NIST-P-384 is CNSA approved [CNSA2.0] for all classification
       levels.
 
    *  521 bit curve not widely used.
 
+   *  SHA256 and SHA512 generally have better adoption than SHA384.
+
    A single invocation of SHA3 is known to behave as a dual-PRF, and
    thus is sufficient for use as a KDF, see Section 11.1, however SHA2
-   is not us must be wrapped in the HKDF construction.
+   is not so must be wrapped in the HKDF construction.
 
-   The lower security levels (ie ML-KEM768) are provided with HKDF-SHA2
-   as the KDF in order to facilitate implementations that do not have
-   easy access to SHA3 outside of the ML-KEM function.  Higher security
-   levels (ie ML-KEM1024) are paired with SHA3 for computational
-   efficiency, and the Edwards Curve (X25519 and X448) combinations are
-   paired with SHA3 for compatibility with other similar specifications.
+   The lower security levels (i.e.  ML-KEM768) are provided with HKDF-
+   SHA2 as the KDF in order to facilitate implementations that do not
+   have easy access to SHA3 outside of the ML-KEM function.  Higher
+   security levels (i.e.  ML-KEM1024) are paired with SHA3 for
+   computational efficiency, and the Edwards Curve (X25519 and X448)
+   combinations are paired with SHA3 for compatibility with other
+   similar specifications.
 
    While it may seem odd to use 256-bit hash functions at all security
    levels, this aligns with ML-KEM which produces a 256-bit shared
@@ -1384,13 +1392,12 @@ Deserialization Process:
    HKDF(salt, IKM, info, L) takes the following parameters:
 
    salt:  optional salt value (a non-secret random value).  In this
-      document this parameter is unused, that is it is the zero-length
-      string "".
+      document this parameter is left at its default value, which is the
+      string of HashLen zeros.
 
    IKM:  input keying material.  In this document this is the shared
-      secret outputted from the Encapsulate() or Decapsulate()
-      functions.  This corresponds to the IKM KDF input from Section 5
-      of [RFC9629].
+      secret outputted from the Encaps() or Decaps() functions.  This
+      corresponds to the IKM KDF input from Section 5 of [RFC9629].
 
    info:  optional context and application specific information.  In
       this document this corresponds to the info KDF input from
@@ -1420,9 +1427,8 @@ Deserialization Process:
    KMAC#(K, X, L, S) takes the following parameters:
 
       K: the input key-derivation key.  In this document this is the
-      shared secret outputted from the Encapsulate() or Decapsulate()
-      functions.  This corresponds to the IKM KDF input from Section 5
-      of [RFC9629].
+      shared secret outputted from the Encaps() or Decaps() functions.
+      This corresponds to the IKM KDF input from Section 5 of [RFC9629].
 
       X: the context, corresponding to the info KDF input from Section 5
       of [RFC9629].  This is the ASN.1 DER encoding of
@@ -1463,9 +1469,11 @@ Deserialization Process:
       kemct is the ciphertext produced for this recipient.
 
       kdf identifies the key-derivation algorithm.  Note that the Key
-      Derivation Function (KDF) used for CMS RecipientInfo process MAY
-      be different than the KDF used within the Composite ML-KEM
-      algorithm or one of its components.
+      Derivation Function (KDF) used for CMS RecipientInfo process (to
+      calculate the RecipientInfo KEK key) MAY be different than the KDF
+      used within the Composite ML-KEM algorithm (to calculate the
+      shared secret ss) and MAY also be different from any KDFs used
+      internally within a component algorithm.
 
       kekLength is the size of the key-encryption key in octets.
 
@@ -1474,6 +1482,8 @@ Deserialization Process:
 
       wrap identifies a key-encryption algorithm used to encrypt the
       content-encryption key.
+
+      encryptedKey is the result of encryptiong the CEK with the KEK.
 
 8.3.  Certificate Conventions
 
@@ -1931,8 +1941,8 @@ Deserialization Process:
    where:
 
    *  KDF(message) represents a key derivation function suitable to the
-      chosen KEMs according to {tab-kem-combiners}. All KDFs produce a
-      256-bit shared secret key to match ML-KEM.
+      chosen KEMs according to Table 2.  All KDFs produce a 256-bit
+      shared secret key, which matches ML-KEM.
 
    *  mlkemSS is the shared secret key from the ML-KEM component.
 
@@ -1951,7 +1961,7 @@ Deserialization Process:
    *  || represents concatenation.
 
    Each registered Composite ML-KEM algorithm specifies the choice of
-   KDF andDomain to be used in Section 7 and Section 7.2 below.  Given
+   KDF and Domain to be used in Section 7 and Section 7.2 below.  Given
    that each Composite ML-KEM algorithm fully specifies the component
    algorithms, including for example the size of the RSA modulus, all
    inputs to the KEM combiner are fixed-size and thus do not require
@@ -2013,7 +2023,7 @@ Deserialization Process:
    ciphertexts (c1, c2) and (c1', c2'), we must obtain a unique overall
    shared secret so long as either c1 != c1' or c2 != c2' -- i.e. the
    overall Composite ML-KEM is second pre-image resistant, and therefore
-   secure so, long as one of the component KEMs is.
+   secure so long as one of the component KEMs is.
 
    In [X-Wing] it is proven that ML-KEM is a second pre-image resistant
    KEM and therefore the ML-KEM ciphertext can safely be omitted from
@@ -2129,7 +2139,7 @@ Deserialization Process:
    especially that of the KEM combiner specified in this document, and
    discussed in Section 11.1, means that the overall Composite ML-KEM
    algorithm should be considered to have the security strength of the
-   strongest of its component algorithms; ie as long as one component
+   strongest of its component algorithms; i.e. as long as one component
    algorithm remains strong, then the overall composite algorithm
    remains strong.
 
