@@ -1307,7 +1307,7 @@ The following KEM combiner construction is as follows is used by both `Composite
 
 where:
 
-* `KDF(message)` represents a key derivation function suitable to the chosen KEMs according to {{tab-kem-combiners}}. All KDFs produce a 256-bit shared secret key to match ML-KEM.
+* `KDF(message)` represents a key derivation function suitable to the chosen KEMs according to {{tab-kem-algs}}. All KDFs produce a 256-bit shared secret key, which matches ML-KEM.
 * `mlkemSS` is the shared secret key from the ML-KEM component.
 * `tradSS` is the shared secret from the traditional component (elliptic curve or RSA).
 * `tradCT` is the ciphertext from the traditional component (elliptic curve or RSA).
