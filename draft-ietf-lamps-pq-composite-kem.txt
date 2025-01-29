@@ -2685,12 +2685,12 @@ D.1.1.  FIPS certification of Combiner Function
    as specified on page 159 of the FIPS 140-3 Implementation Guidance
    [FIPS-140-3-IG].
 
-   The HKDF-SHA2 options can be certified under SP.800-56Cr2 One-Step
+   The HKDF-SHA2 options can be certified under [SP.800-56Cr2] One-Step
    Key Derivation Option 2: H(x) = HMAC-hash(salt, x) where salt is the
    empty (0 octet) string, which will internally be mapped to the zero
    vector 0x00..00 of the correct input size for the underlying hash
    function in order to satisfy the requirement in [SP.800-56Cr2] that
-   "nn the absence of an agreed-upon alternative – the default_salt
+   "in the absence of an agreed-upon alternative – the default_salt
    shall be an all-zero byte string whose bit length equals that
    specified as the bit length of an input block for the hash function,
    hash".  Note that since the desired shared secret key output length
