@@ -557,6 +557,7 @@ Encap Process:
         ss = SHA3-256(mlkemSS || tradSS || tradCT || tradPK || Domain)
       else if KDF is "HKDF"
         ss = HKDF-Extract(salt=0x00..00, IKM=mlkemSS || tradSS || tradCT || tradPK || Domain)
+        # note that "0x00..00" represents the zero-vector of the appropriate size for the chosen hash function.
 
   6. Output composite shared secret key and ciphertext
 
@@ -628,6 +629,8 @@ Decap Process:
         ss = SHA3-256(mlkemSS || tradSS || tradCT || tradPK || Domain)
       else if KDF is "HKDF-SHA256"
         ss = HKDF-SHA256(salt=0x0000000000000000, IKM=mlkemSS || tradSS || tradCT || tradPK || Domain)
+      else if KDF is "HKDF-SHA512"
+        ss = HKDF-SHA256(salt=0x00000000000000000000000000000000, IKM=mlkemSS || tradSS || tradCT || tradPK || Domain)
 
   6. Output composite shared secret key
 
