@@ -557,8 +557,8 @@ Encap Process:
         ss = SHA3-256(mlkemSS || tradSS || tradCT || tradPK || Domain)
       else if KDF is "HKDF"
         ss = HKDF-Extract(salt="", IKM=mlkemSS || tradSS || tradCT || tradPK || Domain)
-          # Note: salt is the empty string (0 octets), which will internally be mapped 
-          # to the zero vector `0x00..00` of the correct input size for the underlying 
+          # Note: salt is the empty string (0 octets), which will internally be mapped
+          # to the zero vector `0x00..00` of the correct input size for the underlying
           # hash function.
 
   6. Output composite shared secret key and ciphertext
