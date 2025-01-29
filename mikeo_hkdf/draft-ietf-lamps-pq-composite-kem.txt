@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 30 July 2025                                            M. Pala
+Expires: 2 August 2025                                           M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                         26 January 2025
+                                                         29 January 2025
 
 
   Composite ML-KEM for use in X.509 Public Key Infrastructure and CMS
@@ -61,7 +61,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 30 July 2025.
+   This Internet-Draft will expire on 2 August 2025.
 
 Copyright Notice
 
@@ -596,6 +596,7 @@ Encap Process:
         ss = SHA3-256(mlkemSS || tradSS || tradCT || tradPK || Domain)
       else if KDF is "HKDF"
         ss = HKDF-Extract(salt=0x00..00, IKM=mlkemSS || tradSS || tradCT || tradPK || Domain)
+        # note that "0x00..00" represents the zero-vector of the appropriate size for the chosen hash function.
 
   6. Output composite shared secret key and ciphertext
 
@@ -674,6 +675,8 @@ Decap Process:
         ss = SHA3-256(mlkemSS || tradSS || tradCT || tradPK || Domain)
       else if KDF is "HKDF-SHA256"
         ss = HKDF-SHA256(salt=0x0000000000000000, IKM=mlkemSS || tradSS || tradCT || tradPK || Domain)
+      else if KDF is "HKDF-SHA512"
+        ss = HKDF-SHA256(salt=0x00000000000000000000000000000000, IKM=mlkemSS || tradSS || tradCT || tradPK || Domain)
 
   6. Output composite shared secret key
 
