@@ -79,6 +79,7 @@ normative:
   RFC5280:
   RFC5480:
   RFC5652:
+  RFC5869:
   RFC5958:
   RFC6234:
   RFC8017:
@@ -551,11 +552,16 @@ Encap Process:
 
   4. Encode the ciphertext
 
-     ct = mlkemCT || tradCT
+      ct = mlkemCT || tradCT
 
   5. Combine the KEM secrets and additional context to yield the composite shared secret
-
-     ss = KDF(mlkemSS || tradSS || tradCT || tradPK || Domain)
+      if KDF is "SHA3-256"
+        ss = SHA3-256(mlkemSS || tradSS || tradCT || tradPK || Domain)
+      else if KDF is "HKDF"
+        ss = HKDF-Extract(salt="", IKM=mlkemSS || tradSS || tradCT || tradPK || Domain)
+          # Note: salt is the empty string (0 octets), which will internally be mapped
+          # to the zero vector `0x00..00` of the correct input size for the underlying
+          # hash function as per [RFC 5869].
 
   6. Output composite shared secret key and ciphertext
 
@@ -623,7 +629,13 @@ Decap Process:
 
   5. Combine the KEM secrets and additional context to yield the composite shared secret
 
-      ss = KDF(mlkemSS || tradSS || tradCT || tradPK || Domain)
+      if KDF is "SHA3-256"
+        ss = SHA3-256(mlkemSS || tradSS || tradCT || tradPK || Domain)
+      else if KDF is "HKDF"
+        ss = HKDF-Extract(salt="", IKM=mlkemSS || tradSS || tradCT || tradPK || Domain)
+          # Note: salt is the empty string (0 octets), which will internally be mapped
+          # to the zero vector `0x00..00` of the correct input size for the underlying
+          # hash function as per [RFC 5869].
 
   6. Output composite shared secret key
 
@@ -1121,7 +1133,7 @@ Full specifications for the referenced algorithms can be found either further do
 Note that here we differ slightly from the internal KDF used within the KEM combiner in {{sec-alg-ids}} because [RFC9629] requires that the KDF listed in the KEMRecipientInfo `kdf` field must have an interface which accepts `KDF(IKM, L, info)`, so here we need to use KMAC and cannot directly use SHA3. Since we require 256-bits of (2nd) pre-image resistance, we use KMAC256 for the Composite ML-KEM algorithms with internally use SHA3-256, as aligned with Table 3 of {{SP.800-57pt1r5}}.
 
 
-### Use of the HKDF-based Key Derivation Function
+### Use of the HKDF-based Key Derivation Function within CMS
 
 The HMAC-based Extract-and-Expand Key Derivation Function (HKDF) is defined in {{!RFC5869}}.
 
@@ -1148,7 +1160,7 @@ L:
 
 HKDF may be used with different hash functions, including SHA-256 {{FIPS.180-4}}. The object identifier id-alg-hkdf-with-sha256 is defined in [RFC8619], and specifies the use of HKDF with SHA-256. The parameter field MUST be absent when this algorithm identifier is used to specify the KDF for ML-KEM in KemRecipientInfo.
 
-### Use of the KMAC-based Key Derivation Function
+### Use of the KMAC-based Key Derivation Function within CMS
 
 KMAC256-KDF is a KMAC-based KDF specified for use in CMS in {{I-D.ietf-lamps-cms-sha3-hash}}. The definition of KMAC is copied here for convenience.  Here, KMAC# indicates the use of either KMAC128-KDF or KMAC256-KDF, although only KMAC256 is used in this specification.
 
@@ -1570,8 +1582,6 @@ DER:
 
 TODO -- update this once NIST SP 800-227 is published.
 
-EDNOTE At time of writing, it is unclear that the KEM combiner presented in this document would pass a FIPS certification. The SHA3 instantiations should pass under SP 800-56Cr2 Option 1, but the HKDF-SHA2 combinations are technically not allowed under SP 800-56Cr2 even though Option 2 allows HMAC-based constructions, but unfortunately only HKDF-Extract is FIPS-allowed, not HKDF-Expand. The authors have been in contact with NIST to ensure compatibility either by NIST making SP 800-227 more flexible, or by changing this specification to only use HKDF-Extract.
-
 One of the primary design goals of this specification is for the overall composite algorithm to be able to be considered FIPS-approved even when one of the component algorithms is not. Implementers seeking FIPS certification of a Composite ML-KEM algorithm where only one of the component algorithms has been FIPS-validated or FIPS-approved should credit the FIPS-validated component algorithm with full security strength, the non-FIPS-validated component algorithm with zero security, and the overall composite should be considered full strength and thus FIPS-approved.
 
 The authors wish to note that this gives composite algorithms great future utility both for future cryptographic migrations as well as bridging across jurisdictions; for example defining composite algorithms which combine FIPS cryptography with cryptography from a different national standards body.
@@ -1582,11 +1592,11 @@ TODO: update this to NIST SP 800-227, once it is published.
 
 One of the primary NIST documents which is relevant for certification of a composite algorithm is NIST SP.800-56Cr2 [SP.800-56Cr2] by using the allowed "hybrid" shared secret of the form `Z' = Z || T`. Compliance is achieved in the following way:
 
-SP.800-56Cr2 section 4 "One-Step Key Derivation" requires a `counter` which begins at the 4-byte value 0x00000001. However, the counter is allowed to be omitted when the hash function is executed only once, as specified on page 159 of the FIPS 140-3 Implementation Guidance [FIPS-140-3-IG].
+[SP.800-56Cr2] section 4 "One-Step Key Derivation" requires a `counter` which begins at the 4-byte value 0x00000001. However, the counter is allowed to be omitted when the hash function is executed only once, as specified on page 159 of the FIPS 140-3 Implementation Guidance [FIPS-140-3-IG].
 
-The HKDF-SHA2 options can be certified under SP.800-56Cr2 One-Step Key Derivation Option 1: `H(x) = hash(x)`.
+The HKDF-SHA2 options can be certified under SP.800-56Cr2 One-Step Key Derivation Option 2: `H(x) = HMAC-hash(salt, x)` where `salt` is the empty (0 octet) string, which will internally be mapped to the zero vector `0x00..00` of the correct input size for the underlying hash function in order to satisfy the requirement in [SP.800-56Cr2] that "nn the absence of an agreed-upon alternative – the default_salt shall be an all-zero byte string whose bit length equals that specified as the bit length of an input block for the hash function, hash". Note that since the desired shared secret key output length of 256 bits for all security levels aligns with the block size of SHA256, we do not need to use the HKDF-Extract step specified in [RFC5869], which further simplifies FIPS certification by allowing us to use the One-Step KDF rather than the Two-Step KDF from [SP.800-56Cr2].
 
-The SHA3 options can be certified under SP.800-56Cr2 One-Step Key Derivation Option 2: `H(x) = HMAC-hash(salt, x)` with the salt omitted.
+The SHA3 options can be certified under [SP.800-56Cr2] One-Step Key Derivation Option 1: `H(x) = hash(x)`.
 
 
 ## Backwards Compatibility {#sec-backwards-compat}
