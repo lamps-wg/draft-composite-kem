@@ -595,9 +595,10 @@ Encap Process:
       if KDF is "SHA3-256"
         ss = SHA3-256(mlkemSS || tradSS || tradCT || tradPK || Domain)
       else if KDF is "HKDF"
-        ss = HKDF-Extract(salt=0x00..00, IKM=mlkemSS || tradSS || tradCT || tradPK || Domain)
-          # Note that "0x00..00" represents the zero-vector of the appropriate size for the
-          # chosen hash function, 32 bytes for SHA256 and 64 bytes for SHA512
+        ss = HKDF-Extract(salt="", IKM=mlkemSS || tradSS || tradCT || tradPK || Domain)
+          # Note: salt is the empty string (0 octets), which will internally be mapped
+          # to the zero vector `0x00..00` of the correct input size for the underlying
+          # hash function.
 
   6. Output composite shared secret key and ciphertext
 
@@ -2611,17 +2612,18 @@ D.1.1.  FIPS certification of Combiner Function
 
    The HKDF-SHA2 options can be certified under SP.800-56Cr2 One-Step
    Key Derivation Option 2: H(x) = HMAC-hash(salt, x) where salt is the
-   fixed value 0x00..00 (ie 64 bytes of zeros for SHA2-256 and 96 bytes
-   of zeros for SHA2-384) in order to satisfy the requirement in
-   [SP.800-56Cr2] that "nn the absence of an agreed-upon alternative –
-   the default_salt shall be an all-zero byte string whose bit length
-   equals that specified as the bit length of an input block for the
-   hash function, hash".  Note that since the desired shared secret key
-   output length of 256 bits for all security levels aligns with the
-   block size of SHA256, we do not need to use the HKDF-Extract step
-   specified in [RFC5869], which further simplifies FIPS certification
-   by allowing us to use the One-Step KDF rather than the Two-Step KDF
-   from [SP.800-56Cr2].
+   empty (0 octet) string, which will internally be mapped to the zero
+   vector 0x00..00 of the correct input size for the underlying hash
+   function in order to satisfy the requirement in [SP.800-56Cr2] that
+   "nn the absence of an agreed-upon alternative – the default_salt
+   shall be an all-zero byte string whose bit length equals that
+   specified as the bit length of an input block for the hash function,
+   hash".  Note that since the desired shared secret key output length
+   of 256 bits for all security levels aligns with the block size of
+   SHA256, we do not need to use the HKDF-Extract step specified in
+   [RFC5869], which further simplifies FIPS certification by allowing us
+   to use the One-Step KDF rather than the Two-Step KDF from
+   [SP.800-56Cr2].
 
    The SHA3 options can be certified under [SP.800-56Cr2] One-Step Key
    Derivation Option 1: H(x) = hash(x).
@@ -2664,7 +2666,7 @@ D.3.  Decapsulation Requires the Public Key
    OneAsymmetricKey.publicKey field would mean that two copies of the
    public key data are transmitted.
 
-   With regard to the traditional algorithms, RSA or Ellipti c Curve, in
+   With regard to the traditional algorithms, RSA or Elliptic Curve, in
    order to achieve the public-key binding property the KEM combiner
    used to form the Composite ML-KEM, the combiner requires the
    traditional public key as input to the KDF that derives the output
