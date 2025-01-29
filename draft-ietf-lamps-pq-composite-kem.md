@@ -1577,7 +1577,7 @@ ss = KDF(mlkemSS || tradSS || tradCT || tradPK || Domain)
 where KDF is either SHA3 or HKDF-SHA2.
 
 
-NIST SP 800-227 [SP-800-227idp], which at of the time of writing is in its initial public draft period, allows hybrid key combiners of the following form:
+NIST SP 800-227 [SP-800-227idp], which at the time of writing is in its initial public draft period, allows hybrid key combiners of the following form:
 
 ```
 K ← KDM(S1‖S2‖ · · · ‖St , OtherInput)           (14)
@@ -1597,13 +1597,13 @@ K ← Expand(Extract(salt, Z), OtherInput)         (13)
 
 The Composite KEM variants that use SHA3 as a combiner fit form (12) while the variants that use HKDF-SHA2 fit form (13).
 
-In terms of the order of inputs, Composite KEM places the two shared secret keys `mlkemSS || tradSS` at the beggining of the KDF input such that all other inputs `tradCT || tradPK || Domain` can be considered to be part of `OtherInput` for the purposes of FIPS certification. [SP-800-227ipd] adds an important stipulation that was not present in earlier NIST specifications:
+In terms of the order of inputs, Composite KEM places the two shared secret keys `mlkemSS || tradSS` at the beggining of the KDF input such that all other inputs `tradCT || tradPK || Domain` can be considered part of `OtherInput` for the purposes of FIPS certification. [SP-800-227ipd] adds an important stipulation that was not present in earlier NIST specifications:
 
 > This publication approves the use of the key combiner (14) for any t > 1, so long as at
-> least one shared secret (i.e., S j for some j) is a shared secret generated from the key-1077
-> establishment methods of SP 800-56A [1] or SP 800-56B [2], or an approved KEM.
+> least one shared secret (i.e., S_j for some j) is a shared secret generated from the key-
+> establishment methods of SP 800-56A or SP 800-56B, or an approved KEM.
 
-This means that although Composite KEM always places the shared secret key from ML-KEM in the first slot, a Composite KEM can be FIPS certified so long as either component is FIPS certified. This is important for several reasons. First, in the early stages of PQC migration, composites allow for a non-FIPS certified ML-KEM implementation to be added to a module that has a FIPS certified traditional component. Second, when eventually RSA and Elliptic Curve are no longer FIPS-allowed, the composite can retain its FIPS certified status on the strength of the ML-KEM component. And third, while this is outside the scope of this document, the general composite construction could be used to create FIPS certified algorithms that contain a component algorithm from a different jurisdiction.
+This means that although Composite KEM always places the shared secret key from ML-KEM in the first slot, a Composite KEM can be FIPS certified so long as either component is FIPS certified. This is important for several reasons. First, in the early stages of PQC migration, composites allow for a non-FIPS certified ML-KEM implementation to be added to a module that already has a FIPS certified traditional component, and the resulting composite can be FIPS certified. Second, when eventually RSA and Elliptic Curve are no longer FIPS-allowed, the composite can retain its FIPS certified status on the strength of the ML-KEM component. Third, while this is outside the scope of this document, the general composite construction could be used to create FIPS certified algorithms that contain a component algorithm from a different jurisdiction.
 
 
 ### FIPS certification of Combiner Function
