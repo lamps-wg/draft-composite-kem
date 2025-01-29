@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 31 July 2025                                            M. Pala
+Expires: 2 August 2025                                           M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                         27 January 2025
+                                                         29 January 2025
 
 
   Composite ML-KEM for use in X.509 Public Key Infrastructure and CMS
@@ -61,7 +61,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 31 July 2025.
+   This Internet-Draft will expire on 2 August 2025.
 
 Copyright Notice
 
@@ -123,13 +123,14 @@ Table of Contents
        10.1.2.  Object Identifier Registrations - SMI Security for
                PKIX Algorithms
    11. Security Considerations
-     11.1.  KEM Combiner
-     11.2.  Decapsulation failure
-       11.2.1.  Second pre-image resistance of component KEMs
-       11.2.2.  SHA3 vs HKDF-SHA2
-       11.2.3.  Generifying this construction
-     11.3.  Key Reuse
-     11.4.  Policy for Deprecated and Acceptable Algorithms
+     11.1.  Why Hybrids?
+     11.2.  KEM Combiner
+     11.3.  Decapsulation failure
+       11.3.1.  Second pre-image resistance of component KEMs
+       11.3.2.  SHA3 vs HKDF-SHA2
+       11.3.3.  Generifying this construction
+     11.4.  Key Reuse
+     11.5.  Policy for Deprecated and Acceptable Algorithms
    12. References
      12.1.  Normative References
      12.2.  Informative References
@@ -970,7 +971,7 @@ Deserialization Process:
    In order to maintain security properties of the composite,
    applications that use composite keys MUST always perform fresh key
    generations of both component keys and MUST NOT reuse existing key
-   material.  See Section 11.3 for a discussion.
+   material.  See Section 11.4 for a discussion.
 
    The following ASN.1 Information Object Class is defined to allow for
    compact definitions of each composite algorithm, leading to a smaller
@@ -1050,7 +1051,7 @@ Deserialization Process:
 
    Component keys of a CompositeKEMPrivateKey MUST NOT be used in any
    other type of key or as a standalone key.  For more details on the
-   security considerations around key reuse, see Section 11.3.
+   security considerations around key reuse, see Section 11.4.
 
 5.3.  Encoding Rules
 
@@ -1229,7 +1230,7 @@ Deserialization Process:
    *  SHA256 and SHA512 generally have better adoption than SHA384.
 
    A single invocation of SHA3 is known to behave as a dual-PRF, and
-   thus is sufficient for use as a KDF, see Section 11.1, however SHA2
+   thus is sufficient for use as a KDF, see Section 11.2, however SHA2
    is not so must be wrapped in the HKDF construction.
 
    The lower security levels (i.e.  ML-KEM768) are provided with HKDF-
@@ -1923,7 +1924,36 @@ Deserialization Process:
 
 11.  Security Considerations
 
-11.1.  KEM Combiner
+11.1.  Why Hybrids?
+
+   In broad terms, a PQ/T Hybrid can be used either to provide dual-
+   algorithm security or to provide migration flexibility.  Let's
+   quickly explore both.
+
+   Dual-algorithm security.  The general idea is that the data is
+   proctected by two algorithms such that an attacker would need to
+   break both in order to compromise the data.  As with most of
+   cryptography, this property is easy to state in general terms, but
+   becomes more complicated when expressed in formalisms.  The following
+   sections go into more detail here.
+
+   Migration flexibility.  Some PQ/T hybrids exist to provide a sort of
+   "OR" mode where the client can choose to use one algorithm or the
+   other or both.  The intention is that the PQ/T hybrid mechanism
+   builds in backwards compatibility to allow legacy and upgraded
+   clients to co-exist and communicate.  The Composites presented in
+   this specification do not provide this since they operate in a strict
+   "AND" mode, but they do provide codebase migration flexibility.
+   Consider that an organization has today a mature, validated,
+   certified, hardened implementation of RSA or ECC.  Composites allow
+   them to add to this an ML-KEM implementation which immediately starts
+   providing benefits against harvest-now-decrypt-later attacks even if
+   that ML-KEM implemtation is still experimental, non-validated, non-
+   certified, non-hardened implementation.  More details of obtaining
+   FIPS certification of a composite algorithm can be found in
+   Appendix D.1.
+
+11.2.  KEM Combiner
 
    EDNOTE: the exact text to put here depends on the outcome of the CFRG
    KEM Combiners and X-Wing discussion.  If CFRG doesn't move fast
@@ -1981,7 +2011,7 @@ Deserialization Process:
    predicted via manipulation of the broken algorithm.  The following
    sections continue this discussion.
 
-11.2.  Decapsulation failure
+11.3.  Decapsulation failure
 
    Provided all inputs are well-formed, the key establishment procedure
    of ML-KEM will never explicitly fail.  Specifically, the ML-
@@ -2013,7 +2043,7 @@ Deserialization Process:
    In the case of ML-KEM decapsulation failure, Composite ML-KEM MUST
    preserve the same behaviour and return a well-formed output.
 
-11.2.1.  Second pre-image resistance of component KEMs
+11.3.1.  Second pre-image resistance of component KEMs
 
    The notion of a second pre-image resistant KEM is defined in [X-Wing]
    being the property that it is computationally difficult to find two
@@ -2046,7 +2076,7 @@ Deserialization Process:
    that c != c' will yield a unique ciphertext, and thus restoring
    second pre-image resistance to the overall Composite ML-KEM.
 
-11.2.2.  SHA3 vs HKDF-SHA2
+11.3.2.  SHA3 vs HKDF-SHA2
 
    In order to achieve the desired security property that the Composite
    ML-KEM is IND-CCA2 whenever at least one of the component KEMs is,
@@ -2065,7 +2095,7 @@ Deserialization Process:
    constructions MUST use SHA2 within an HMAC construction such as HKDF-
    SHA2 [GHP18].
 
-11.2.3.  Generifying this construction
+11.3.3.  Generifying this construction
 
    It should be clear that the security analysis of the presented KEM
    combiner construction relies heavily on the specific choices of
@@ -2073,7 +2103,7 @@ Deserialization Process:
    SHOULD NOT by applied to any other combination of ciphers without
    performing the appropriate security analysis.
 
-11.3.  Key Reuse
+11.4.  Key Reuse
 
    When using single-algorithm cryptography, the best practice is to
    always generate fresh keying material for each purpose, for example
@@ -2114,7 +2144,7 @@ Deserialization Process:
    RECOMMENDED that CAs performing revocation checks on a composite key
    should also check both component keys independently.
 
-11.4.  Policy for Deprecated and Acceptable Algorithms
+11.5.  Policy for Deprecated and Acceptable Algorithms
 
    Traditionally, a public key or certificate contains a single
    cryptographic algorithm.  If and when an algorithm becomes deprecated
@@ -2137,7 +2167,7 @@ Deserialization Process:
 
    The Composite ML-KEM design specified in this document, and
    especially that of the KEM combiner specified in this document, and
-   discussed in Section 11.1, means that the overall Composite ML-KEM
+   discussed in Section 11.2, means that the overall Composite ML-KEM
    algorithm should be considered to have the security strength of the
    strongest of its component algorithms; i.e. as long as one component
    algorithm remains strong, then the overall composite algorithm
