@@ -157,6 +157,9 @@ Table of Contents
 
    *  Add a ML-KEM-768 + ECDH-P256 variant
 
+   *  Changed the ML-KEM-1024 + P256 variant to use HKDF-SHA384 instead
+      of SHA3 so that it is compliant with CNSA 2.0.
+
    Editorial changes:
 
    *  Added an Implementation Consideration section explaining why
@@ -1257,9 +1260,10 @@ Deserialization Process:
    SHA2 as the KDF in order to facilitate implementations that do not
    have easy access to SHA3 outside of the ML-KEM function.  Higher
    security levels (i.e.  ML-KEM1024) are paired with SHA3 for
-   computational efficiency, and the Edwards Curve (X25519 and X448)
-   combinations are paired with SHA3 for compatibility with other
-   similar specifications.
+   computational efficiency except for one variant paired with HKDF-
+   SHA2-384 for compliance with [CNSA2.0], and the Edwards Curve (X25519
+   and X448) combinations are paired with SHA3 for compatibility with
+   other similar specifications.
 
    While it may seem odd to use 256-bit hash functions at all security
    levels, this aligns with ML-KEM which produces a 256-bit shared
@@ -1401,11 +1405,14 @@ Deserialization Process:
 
 8.1.1.  Use of the HKDF-based Key Derivation Function within CMS
 
-   The HMAC-based Extract-and-Expand Key Derivation Function (HKDF) is
-   defined in [RFC5869].
+   Unlike within the Composite KEM Combiner function, When used as a KDF
+   for CMS, HKDF requires use of the HKDF-Expand step so that it can
+   accept the length parameter kekLength from CMS KEMRecipientInfo as
+   the HKDF parameter L.
 
-   The HKDF function is a composition of the HKDF-Extract and HKDF-
-   Expand functions.
+   The HMAC-based Extract-and-Expand Key Derivation Function (HKDF) is
+   defined in [RFC5869].  The HKDF function is a composition of the
+   HKDF-Extract and HKDF-Expand functions.
 
    HKDF(salt, IKM, info, L)
      = HKDF-Expand(HKDF-Extract(salt, IKM), info, L)

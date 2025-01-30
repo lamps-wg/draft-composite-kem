@@ -1408,6 +1408,9 @@ svg :is([fill="white"], [fill^="#fff"]) {
         <li class="normal" id="section-1-2.2">
           <p id="section-1-2.2.1">Add a ML-KEM-768 + ECDH-P256 variant<a href="#section-1-2.2.1" class="pilcrow">¶</a></p>
 </li>
+        <li class="normal" id="section-1-2.3">
+          <p id="section-1-2.3.1">Changed the ML-KEM-1024 + P256 variant to use HKDF-SHA384 instead of SHA3 so that it is compliant with CNSA 2.0.<a href="#section-1-2.3.1" class="pilcrow">¶</a></p>
+</li>
       </ul>
 <p id="section-1-3">Editorial changes:<a href="#section-1-3" class="pilcrow">¶</a></p>
 <ul class="normal">
@@ -2503,7 +2506,7 @@ CompositeCiphertextValue ::= OCTET STRING
 </li>
         </ul>
 <p id="section-7.3-3">A single invocation of SHA3 is known to behave as a dual-PRF, and thus is sufficient for use as a KDF, see <a href="#sec-cons-kem-combiner" class="auto internal xref">Section 11.2</a>, however SHA2 is not so must be wrapped in the HKDF construction.<a href="#section-7.3-3" class="pilcrow">¶</a></p>
-<p id="section-7.3-4">The lower security levels (i.e. ML-KEM768) are provided with HKDF-SHA2 as the KDF in order to facilitate implementations that do not have easy access to SHA3 outside of the ML-KEM function. Higher security levels (i.e. ML-KEM1024) are paired with SHA3 for computational efficiency, and the Edwards Curve (X25519 and X448) combinations are paired with SHA3 for compatibility with other similar specifications.<a href="#section-7.3-4" class="pilcrow">¶</a></p>
+<p id="section-7.3-4">The lower security levels (i.e. ML-KEM768) are provided with HKDF-SHA2 as the KDF in order to facilitate implementations that do not have easy access to SHA3 outside of the ML-KEM function. Higher security levels (i.e. ML-KEM1024) are paired with SHA3 for computational efficiency except for one variant paired with HKDF-SHA2-384 for compliance with <span>[<a href="#CNSA2.0" class="cite xref">CNSA2.0</a>]</span>, and the Edwards Curve (X25519 and X448) combinations are paired with SHA3 for compatibility with other similar specifications.<a href="#section-7.3-4" class="pilcrow">¶</a></p>
 <p id="section-7.3-5">While it may seem odd to use 256-bit hash functions at all security levels, this aligns with ML-KEM which produces a 256-bit shared secret key at all security levels. SHA-256 and SHA3-256 both have &gt;= 256 bits of (2nd) pre-image resistance, which is the required property for a KDF to provide 128 bits of security, as allowed in Table 3 of <span>[<a href="#SP.800-57pt1r5" class="cite xref">SP.800-57pt1r5</a>]</span>.<a href="#section-7.3-5" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -2653,8 +2656,8 @@ CompositeCiphertextValue ::= OCTET STRING
           <h4 id="name-use-of-the-hkdf-based-key-d">
 <a href="#section-8.1.1" class="section-number selfRef">8.1.1. </a><a href="#name-use-of-the-hkdf-based-key-d" class="section-name selfRef">Use of the HKDF-based Key Derivation Function within CMS</a>
           </h4>
-<p id="section-8.1.1-1">The HMAC-based Extract-and-Expand Key Derivation Function (HKDF) is defined in <span>[<a href="#RFC5869" class="cite xref">RFC5869</a>]</span>.<a href="#section-8.1.1-1" class="pilcrow">¶</a></p>
-<p id="section-8.1.1-2">The HKDF function is a composition of the HKDF-Extract and HKDF-Expand functions.<a href="#section-8.1.1-2" class="pilcrow">¶</a></p>
+<p id="section-8.1.1-1">Unlike within the Composite KEM Combiner function, When used as a KDF for CMS, HKDF requires use of the HKDF-Expand step so that it can accept the length parameter <code>kekLength</code> from CMS KEMRecipientInfo as the HKDF parameter <code>L</code>.<a href="#section-8.1.1-1" class="pilcrow">¶</a></p>
+<p id="section-8.1.1-2">The HMAC-based Extract-and-Expand Key Derivation Function (HKDF) is defined in <span>[<a href="#RFC5869" class="cite xref">RFC5869</a>]</span>. The HKDF function is a composition of the HKDF-Extract and HKDF-Expand functions.<a href="#section-8.1.1-2" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-8.1.1-3">
 <pre>
 HKDF(salt, IKM, info, L)
