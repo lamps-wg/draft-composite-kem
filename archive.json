@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-01-28T01:41:45.418890+00:00",
+  "timestamp": "2025-01-30T01:40:49.774967+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -1403,15 +1403,15 @@
       "id": "I_kwDOKRPFO86c9SAL",
       "title": "HKDF-based hybrid variants are unimplementable ",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/87",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "chris-wood",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "The generic combiner effectively shoves everything into a KDF to produce a new shared secret, e.g.:\r\n\r\n```\r\nss = KDF(mlkemSS || tradSS || tradCT || tradPK || Domain)\r\n```\r\n\r\nHowever, for HKDF-based KDFs, this simply doesn't make sense. HKDF requires _multiple_ inputs, not just a single input (`mlkemSS || tradSS || tradCT || tradPK || Domain`). As it stands, none of the HKDF-based variants in table 2 can be implemented.",
       "createdAt": "2024-11-04T16:44:03Z",
-      "updatedAt": "2025-01-05T05:17:20Z",
-      "closedAt": null,
+      "updatedAt": "2025-01-29T19:10:02Z",
+      "closedAt": "2025-01-29T19:10:02Z",
       "comments": [
         {
           "author": "ounsworth",
@@ -1574,15 +1574,15 @@
       "id": "I_kwDOKRPFO86fGir-",
       "title": "Need to specify clearly how to invoke HKDF  in a FIPS-compliant way",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/93",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Currently we just treat it as a generic KDF.\r\n\r\nWe need to take a much closer look at how to define the HKDF-SHA256 combo in a way that is 800-56Cr2 compliant. Technically HKDF (RFC 5869) is allowed under the 2-Step method, but it requires some careful alignment of inputs on the HKDF-Expand step. But in our case we only need to use the HKDF-Extract step for the combiner. \r\n\r\nFix: either specify that we only use the HKDF-Extract() step from RFC 5869, or else just use HMAC directly from RFC 2104\r\n\r\nhttps://datatracker.ietf.org/doc/rfc2104/",
       "createdAt": "2024-11-18T17:24:38Z",
-      "updatedAt": "2025-01-05T05:35:42Z",
-      "closedAt": null,
+      "updatedAt": "2025-01-29T19:10:03Z",
+      "closedAt": "2025-01-29T19:10:03Z",
       "comments": [
         {
           "author": "chris-wood",
@@ -1649,15 +1649,15 @@
       "id": "I_kwDOKRPFO86iARAI",
       "title": "Extra example for key reuse",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/97",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "The question then is whether an attacker could take a messages signed by {PQ, RSA} and by simply dropping a signature make it appear to have been signed by either the {RSA} or {PQ} cert, and thus be processed under a different verifier policy?  The obvious counter-argument is that if you can break RSA then why do you need to tamper with an originally-valid message, why not just forge a completely new message? An example would be that you can't yet fully break RSA, but you want to force a downgrade so that an S/MIME reply is only encrypted with RSA instead of the hybrid and thus you can file it away for eventual harvest-now-decrypt-later.",
       "createdAt": "2024-12-04T14:44:33Z",
-      "updatedAt": "2024-12-04T14:44:33Z",
-      "closedAt": null,
+      "updatedAt": "2025-01-29T15:30:04Z",
+      "closedAt": "2025-01-29T15:30:04Z",
       "comments": []
     },
     {
@@ -3977,24 +3977,26 @@
       "id": "PR_kwDOKRPFO86Gvlmh",
       "title": "HKDF tweaks",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/100",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Closes #87\r\nCloses #93 ",
       "createdAt": "2025-01-05T05:34:58Z",
-      "updatedAt": "2025-01-27T09:41:02Z",
+      "updatedAt": "2025-01-29T19:10:09Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "2650db111320b4b487e341c9c2d4c03465a586e5",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_hkdf",
-      "headRefOid": "e71c69dda1d770138b600b9db0f560372976ec35",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "c4c6b922e29a13911d9e501a82f056fb5d942e12",
+      "closedAt": "2025-01-29T19:10:01Z",
+      "mergedAt": "2025-01-29T19:10:01Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "eecf979901fdbbebc8d30d7d3c63e2411f9a7b77"
+      },
       "comments": [
         {
           "author": "ounsworth",
@@ -4002,6 +4004,13 @@
           "body": "@chris-wood I would like your review on this.\r\n\r\nRegardless of how you feel about whether or not SHA2 combiners should be included, does this PR address the issue that the HKDF combiner was under-specified?",
           "createdAt": "2025-01-05T05:37:06Z",
           "updatedAt": "2025-01-05T05:37:17Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I'm going to merge this so that we can proceed with the other PRs that depend on it. If Ilari has more comments, we can address those separately.",
+          "createdAt": "2025-01-29T19:04:39Z",
+          "updatedAt": "2025-01-29T19:04:39Z"
         }
       ],
       "reviews": [
@@ -4122,6 +4131,86 @@
               "body": "Nit: Input block size of SHA384 is 128 bytes (16 words of 8 bytes each).\r\n\r\n(Not that it makes actual difference as HMAC would zero-extend the key anyway.)",
               "createdAt": "2025-01-27T09:41:02Z",
               "updatedAt": "2025-01-27T09:41:02Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO86Z3lsQ",
+          "commit": {
+            "abbreviatedOid": "e71c69d"
+          },
+          "author": "janklaussner",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-01-29T15:51:05Z",
+          "updatedAt": "2025-01-29T15:51:06Z",
+          "comments": [
+            {
+              "originalPosition": 76,
+              "body": "this is a typo",
+              "createdAt": "2025-01-29T15:51:06Z",
+              "updatedAt": "2025-01-29T15:51:06Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO86Z4SJh",
+          "commit": {
+            "abbreviatedOid": "e71c69d"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-01-29T16:54:19Z",
+          "updatedAt": "2025-01-29T16:54:19Z",
+          "comments": [
+            {
+              "originalPosition": 5,
+              "body": "Right. I need to actually go read FIPS 180-4 so that I don't continue getting this wrong.",
+              "createdAt": "2025-01-29T16:54:19Z",
+              "updatedAt": "2025-01-29T16:54:19Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO86Z45Xb",
+          "commit": {
+            "abbreviatedOid": "e71c69d"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-01-29T18:01:17Z",
+          "updatedAt": "2025-01-29T18:01:17Z",
+          "comments": [
+            {
+              "originalPosition": 5,
+              "body": "Wait. HKDF (RFC 5869) says:\r\n> if not provided, it is set to a string of HashLen zeros\r\n\r\nAnd some of its test vectors have `salt = (0 octets)`, so maybe it's easier for me to do the same instead of trying to figure out the correct-width input? As you say, HKDF will internally handle this properly.",
+              "createdAt": "2025-01-29T18:01:17Z",
+              "updatedAt": "2025-01-29T18:01:17Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO86Z47el",
+          "commit": {
+            "abbreviatedOid": "e71c69d"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-01-29T18:05:37Z",
+          "updatedAt": "2025-01-29T18:05:37Z",
+          "comments": [
+            {
+              "originalPosition": 5,
+              "body": "@ilaril Can you please re-check that the current wording is ok?",
+              "createdAt": "2025-01-29T18:05:37Z",
+              "updatedAt": "2025-01-29T18:05:38Z"
             }
           ]
         }
@@ -4294,7 +4383,7 @@
       "labels": [],
       "body": "\u2026 so that it is compliant with CNSA 2.0.\r\n\r\nCloses #102 \r\n\r\nRebased on top of #100. Merge that one first.",
       "createdAt": "2025-01-26T02:24:16Z",
-      "updatedAt": "2025-01-26T22:18:28Z",
+      "updatedAt": "2025-01-29T19:30:44Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "dadf513a5e1093dd63055071520d582b951546b1",
@@ -4305,7 +4394,15 @@
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Not ready, more work required.\r\n\r\nNow that the general HKDF tweaks are merged to main, I should just cherry-pick the commit that changes MLKEM1024 from SHA3 to HKDF-SHA384, and start a new PR.",
+          "createdAt": "2025-01-29T19:30:43Z",
+          "updatedAt": "2025-01-29T19:30:43Z"
+        }
+      ],
       "reviews": []
     },
     {
@@ -4320,13 +4417,13 @@
       "labels": [],
       "body": "Closes #64 ",
       "createdAt": "2025-01-26T03:47:59Z",
-      "updatedAt": "2025-01-27T03:21:14Z",
+      "updatedAt": "2025-01-29T20:31:19Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
-      "baseRefOid": "dadf513a5e1093dd63055071520d582b951546b1",
+      "baseRefOid": "2d680d15552e5b5f0c3f9c2c21ab13161bbcd531",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_sp800_227",
-      "headRefOid": "c9db39524f9b9defbdd358156bdc6c1268fb3d6a",
+      "headRefOid": "95149a1681905e28b1a9d3205ae91a32674237c0",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
@@ -4358,6 +4455,34 @@
       "mergedBy": "ounsworth",
       "mergeCommit": {
         "oid": "90d5c2de6c9eee0900c596f8e72f4eb90a055bf7"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 106,
+      "id": "PR_kwDOKRPFO86JKi6D",
+      "title": "Added a \"Why Hybrids?\" security consideration.",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/106",
+      "state": "MERGED",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Closes #97",
+      "createdAt": "2025-01-28T03:01:04Z",
+      "updatedAt": "2025-01-29T15:30:32Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "90d5c2de6c9eee0900c596f8e72f4eb90a055bf7",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_97",
+      "headRefOid": "14080149410ecf969ab38bcb6a8d2f4660a27517",
+      "closedAt": "2025-01-29T15:30:03Z",
+      "mergedAt": "2025-01-29T15:30:03Z",
+      "mergedBy": "johngray-dev",
+      "mergeCommit": {
+        "oid": "c13d23e334748789cff37329f591e36c143175db"
       },
       "comments": [],
       "reviews": []
