@@ -207,6 +207,18 @@ informative:
       - ins: A. Roginksy
         name: Allan Reginsky
     org: National Institute of Standards and Technology (NIST)
+  SP-800-227ipd:
+    title: "Recommendations for Key-Encapsulation Mechanisms (Initial Public Draft)"
+    target: https://csrc.nist.gov/pubs/sp/800/227/ipd
+    author:
+      - name: Gorjan Alagic
+      - name: Elaine Barker
+      - name: Lily Chen
+      - name: Dustin Moody
+      - name: Angela Robinson
+      - name: Hamilton Silberg
+      - name: Noah Waller
+    org: National Institute of Standards and Technology (NIST)
   GHP18:
     title: KEM Combiners
     author:
@@ -263,6 +275,7 @@ Editorial changes:
 * ASN.1 module fixes (thanks Russ and Carl).
   * Renamed the module from Composite-KEM-2023 -> Composite-MLKEM-2024
   * Simplified the ASN.1 module to make it more compiler-friendly (thanks Carl!) -- should not affect wire encodings.
+* Added alignment text with SP 800-227.
 
 
 Still to do in a future version:
@@ -1580,11 +1593,43 @@ DER:
 
 ## FIPS Certification {#sec-fips}
 
-TODO -- update this once NIST SP 800-227 is published.
+For reference, the KEM Combiner used in Composite KEM is:
 
-One of the primary design goals of this specification is for the overall composite algorithm to be able to be considered FIPS-approved even when one of the component algorithms is not. Implementers seeking FIPS certification of a Composite ML-KEM algorithm where only one of the component algorithms has been FIPS-validated or FIPS-approved should credit the FIPS-validated component algorithm with full security strength, the non-FIPS-validated component algorithm with zero security, and the overall composite should be considered full strength and thus FIPS-approved.
+```
+ss = KDF(mlkemSS || tradSS || tradCT || tradPK || Domain)
+```
 
-The authors wish to note that this gives composite algorithms great future utility both for future cryptographic migrations as well as bridging across jurisdictions; for example defining composite algorithms which combine FIPS cryptography with cryptography from a different national standards body.
+where KDF is either SHA3 or HKDF-SHA2.
+
+
+NIST SP 800-227 [SP-800-227idp], which at the time of writing is in its initial public draft period, allows hybrid key combiners of the following form:
+
+```
+K ← KDM(S1‖S2‖ · · · ‖St , OtherInput)           (14)
+```
+
+The key derivation method KDM can take one of two forms, either
+
+```
+K ← KDF(Z‖OtherInput)                            (12)
+```
+
+or
+
+```
+K ← Expand(Extract(salt, Z), OtherInput)         (13)
+```
+
+The Composite KEM variants that use SHA3 as a combiner fit form (12) while the variants that use HKDF-SHA2 fit form (13).
+
+In terms of the order of inputs, Composite KEM places the two shared secret keys `mlkemSS || tradSS` at the beggining of the KDF input such that all other inputs `tradCT || tradPK || Domain` can be considered part of `OtherInput` for the purposes of FIPS certification. [SP-800-227ipd] adds an important stipulation that was not present in earlier NIST specifications:
+
+> This publication approves the use of the key combiner (14) for any t > 1, so long as at
+> least one shared secret (i.e., S_j for some j) is a shared secret generated from the key-
+> establishment methods of SP 800-56A or SP 800-56B, or an approved KEM.
+
+This means that although Composite KEM always places the shared secret key from ML-KEM in the first slot, a Composite KEM can be FIPS certified so long as either component is FIPS certified. This is important for several reasons. First, in the early stages of PQC migration, composites allow for a non-FIPS certified ML-KEM implementation to be added to a module that already has a FIPS certified traditional component, and the resulting composite can be FIPS certified. Second, when eventually RSA and Elliptic Curve are no longer FIPS-allowed, the composite can retain its FIPS certified status on the strength of the ML-KEM component. Third, while this is outside the scope of this document, the general composite construction could be used to create FIPS certified algorithms that contain a component algorithm from a different jurisdiction.
+
 
 ### FIPS certification of Combiner Function
 
