@@ -264,6 +264,7 @@ Interop-affecting changes:
 
 * Remove the ASN.1 SEQUENCE wrapping around the ASN.1 structures to make it easier to access via other protocols.
 * Add a ML-KEM-768 + ECDH-P256 variant
+* Changed the ML-KEM-1024 + P256 variant to use HKDF-SHA384 instead of SHA3 so that it is compliant with CNSA 2.0.
 
 
 Editorial changes:
@@ -1085,7 +1086,7 @@ In generating the list of Composite algorithms, the following general guidance w
 
 A single invocation of SHA3 is known to behave as a dual-PRF, and thus is sufficient for use as a KDF, see {{sec-cons-kem-combiner}}, however SHA2 is not so must be wrapped in the HKDF construction.
 
-The lower security levels (i.e. ML-KEM768) are provided with HKDF-SHA2 as the KDF in order to facilitate implementations that do not have easy access to SHA3 outside of the ML-KEM function. Higher security levels (i.e. ML-KEM1024) are paired with SHA3 for computational efficiency, and the Edwards Curve (X25519 and X448) combinations are paired with SHA3 for compatibility with other similar specifications.
+The lower security levels (i.e. ML-KEM768) are provided with HKDF-SHA2 as the KDF in order to facilitate implementations that do not have easy access to SHA3 outside of the ML-KEM function. Higher security levels (i.e. ML-KEM1024) are paired with SHA3 for computational efficiency except for one variant paired with HKDF-SHA2-384 for compliance with [CNSA2.0], and the Edwards Curve (X25519 and X448) combinations are paired with SHA3 for compatibility with other similar specifications.
 
 While it may seem odd to use 256-bit hash functions at all security levels, this aligns with ML-KEM which produces a 256-bit shared secret key at all security levels. SHA-256 and SHA3-256 both have >= 256 bits of (2nd) pre-image resistance, which is the required property for a KDF to provide 128 bits of security, as allowed in Table 3 of {{SP.800-57pt1r5}}.
 
@@ -1150,9 +1151,9 @@ Note that here we differ slightly from the internal KDF used within the KEM comb
 
 ### Use of the HKDF-based Key Derivation Function within CMS
 
-The HMAC-based Extract-and-Expand Key Derivation Function (HKDF) is defined in {{!RFC5869}}.
+Unlike within the Composite KEM Combiner function, When used as a KDF for CMS, HKDF requires use of the HKDF-Expand step so that it can accept the length parameter `kekLength` from CMS KEMRecipientInfo as the HKDF parameter `L`.
 
-The HKDF function is a composition of the HKDF-Extract and HKDF-Expand functions.
+The HMAC-based Extract-and-Expand Key Derivation Function (HKDF) is defined in {{!RFC5869}}. The HKDF function is a composition of the HKDF-Extract and HKDF-Expand functions.
 
 ~~~
 HKDF(salt, IKM, info, L)
