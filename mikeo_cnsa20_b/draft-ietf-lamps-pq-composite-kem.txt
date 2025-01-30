@@ -1261,7 +1261,7 @@ Deserialization Process:
    have easy access to SHA3 outside of the ML-KEM function.  Higher
    security levels (i.e.  ML-KEM1024) are paired with SHA3 for
    computational efficiency except for one variant paired with HKDF-
-   SHA2-384 for compliance with [CNSA2.0], and the Edwards Curve (X25519
+   SHA384 for compliance with [CNSA2.0], and the Edwards Curve (X25519
    and X448) combinations are paired with SHA3 for compatibility with
    other similar specifications.
 
