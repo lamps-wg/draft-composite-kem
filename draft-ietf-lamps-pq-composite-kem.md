@@ -1216,7 +1216,7 @@ The SMIMECapability SEQUENCE representing a Composite ML-KEM Algorithm MUST incl
 
 <CODE STARTS>
 
-{::include Composite-MLKEM-2024.asn}
+{::include Composite-MLKEM-2025.asn}
 
 <CODE ENDS>
 
