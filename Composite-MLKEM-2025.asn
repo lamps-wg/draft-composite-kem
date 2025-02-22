@@ -1,0 +1,269 @@
+Composite-MLKEM-2025
+      { iso(1) identified-organization(3) dod(6) internet(1) 
+        security(5) mechanisms(5) pkix(7) id-mod(0) 
+        id-mod-composite-mlkem-2025(TBDMOD) }
+
+DEFINITIONS IMPLICIT TAGS ::= BEGIN
+
+EXPORTS ALL;
+
+IMPORTS
+
+PUBLIC-KEY, AlgorithmIdentifier{}, SMIME-CAPS
+  FROM AlgorithmInformation-2009  -- RFC 5912 [X509ASN1]
+      { iso(1) identified-organization(3) dod(6) internet(1)
+        security(5) mechanisms(5) pkix(7) id-mod(0)
+        id-mod-algorithmInformation-02(58) }
+
+KEM-ALGORITHM
+  FROM KEMAlgorithmInformation-2023
+      { iso(1) identified-organization(3) dod(6) internet(1)
+        security(5) mechanisms(5) pkix(7) id-mod(0)
+        id-mod-kemAlgorithmInformation-2023(109) }
+;
+
+
+--
+-- Object Identifiers
+--
+
+-- Defined in ITU-T X.690
+der OBJECT IDENTIFIER ::=
+  {joint-iso-itu-t asn1(1) ber-derived(2) distinguished-encoding(1)}
+
+--
+-- Composite KEM basic structures
+--
+
+-- When a CompositeKEMPublicKey is used with an RSA public key, the BIT STRING itself is generated
+-- by the concatenation of a raw ML-KEM key according to {{I-D.ietf-lamps-kyber-certificates}} and
+-- an RSAPublicKey (which is a DER encoded RSAPublicKey).
+
+-- When a CompositeKEMPublicKey is used with an EC public key, the BIT STRING itself is generated
+-- by the concatenation of a raw ML-KEM key according to {{I-D.ietf-lamps-kyber-certificates}} and
+-- an ECDHPublicKey (which is a DER encoded ECPoint).
+
+-- When a CompositeKEMPublicKey is used with an Edwards public key, the BIT STRING itself is generated
+-- by the concatenation of a raw ML-KEM key according to {{I-D.ietf-lamps-kyber-certificates}} and
+-- a raw Edwards public key according to [RFC8410].
+
+CompositeKEMPublicKey ::= BIT STRING
+
+-- When a CompositeKEMPrivateKey is used with an RSA private key, the BIT STRING itself is generated
+-- by the concatenation of a raw ML-KEM key according to {{I-D.ietf-lamps-kyber-certificates}} and
+-- an RSAPrivateKey (which is a DER encoded RSAPrivateKey).
+
+-- When a CompositeKEMPrivateKey is used with an EC private key, the BIT STRING itself is generated
+-- by the concatenation of a raw ML-KEM key according to {{I-D.ietf-lamps-kyber-certificates}} and
+-- an ECDHPrivateKey (which is a DER encoded ECPoint).
+
+-- When a CompositeKEMPrivateKey is used with an Edwards private key, the BIT STRING itself is generated
+-- by the concatenation of a raw ML-KEM key according to {{I-D.ietf-lamps-kyber-certificates}} and
+-- a raw Edwards private key according to [RFC8410].
+
+CompositeKEMPrivateKey ::= OCTET STRING
+
+-- Composite Ciphertext Value is just an OCTET STRING and is a concatenation of the component ciphertext
+-- values.
+
+CompositeCiphertextValue ::= OCTET STRING
+
+--
+-- Information Object Classes
+--
+
+pk-CompositeKEM {OBJECT IDENTIFIER:id, PublicKeyType}
+  PUBLIC-KEY ::= {
+    IDENTIFIER id
+    KEY PublicKeyType
+    PARAMS ARE absent
+    CERT-KEY-USAGE { keyEncipherment }
+  }
+
+kema-CompositeKEM {
+  OBJECT IDENTIFIER:id,
+    PUBLIC-KEY:publicKeyType }
+    KEM-ALGORITHM ::= {
+         IDENTIFIER id
+         VALUE CompositeCiphertextValue
+         PARAMS ARE absent
+         PUBLIC-KEYS { publicKeyType }
+         SMIME-CAPS { IDENTIFIED BY id }
+        }
+
+
+
+--
+-- Composite KEM Algorithms
+--
+
+
+-- TODO: OID to be replaced by IANA
+id-MLKEM768-RSA2048 OBJECT IDENTIFIER ::= {
+  joint-iso-itu-t(2) country(16) us(840) organization(1) 
+  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 30 }
+
+pk-MLKEM768-RSA2048 PUBLIC-KEY ::= 
+  pk-CompositeKEM { 
+    id-MLKEM768-RSA2048, 
+    CompositeKEMPublicKey }
+
+kema-MLKEM768-RSA2048 KEM-ALGORITHM ::= 
+    kema-CompositeKEM{
+      id-MLKEM768-RSA2048, 
+      pk-MLKEM768-RSA2048 }
+
+
+
+-- TODO: OID to be replaced by IANA
+id-MLKEM768-RSA3072 OBJECT IDENTIFIER ::= {
+  joint-iso-itu-t(2) country(16) us(840) organization(1) 
+  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 31 }
+
+pk-MLKEM768-RSA3072 PUBLIC-KEY ::= 
+  pk-CompositeKEM {
+    id-MLKEM768-RSA3072, 
+    CompositeKEMPublicKey }
+
+kema-MLKEM768-RSA3072 KEM-ALGORITHM ::=
+    kema-CompositeKEM{
+      id-MLKEM768-RSA3072, 
+      pk-MLKEM768-RSA3072 }
+
+
+
+-- TODO: OID to be replaced by IANA
+id-MLKEM768-RSA4096 OBJECT IDENTIFIER ::= {
+  joint-iso-itu-t(2) country(16) us(840) organization(1) 
+  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 32 }
+
+pk-MLKEM768-RSA4096 PUBLIC-KEY ::= 
+  pk-CompositeKEM {
+    id-MLKEM768-RSA4096, 
+    CompositeKEMPublicKey }
+
+kema-MLKEM768-RSA4096 KEM-ALGORITHM ::=
+    kema-CompositeKEM{
+      id-MLKEM768-RSA4096, 
+      pk-MLKEM768-RSA4096 }
+
+
+-- TODO: OID to be replaced by IANA
+id-MLKEM768-ECDH-P384 OBJECT IDENTIFIER ::= {
+  joint-iso-itu-t(2) country(16) us(840) organization(1) 
+  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 33 }
+
+pk-MLKEM768-ECDH-P384 PUBLIC-KEY ::= 
+  pk-CompositeKEM {
+    id-MLKEM768-ECDH-P384, 
+    CompositeKEMPublicKey }
+
+kema-MLKEM768-ECDH-P384 KEM-ALGORITHM ::= 
+    kema-CompositeKEM{
+      id-MLKEM768-ECDH-P384, 
+      pk-MLKEM768-ECDH-P384 }
+
+
+-- TODO: OID to be replaced by IANA
+id-MLKEM768-ECDH-brainpoolP256r1 OBJECT IDENTIFIER ::= {
+  joint-iso-itu-t(2) country(16) us(840) organization(1) 
+  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 34 }
+
+pk-MLKEM768-ECDH-brainpoolP256r1 PUBLIC-KEY ::= 
+  pk-CompositeKEM {
+    id-MLKEM768-ECDH-brainpoolP256r1, 
+    CompositeKEMPublicKey }
+
+kema-MLKEM768-ECDH-brainpoolP256r1 KEM-ALGORITHM ::= 
+    kema-CompositeKEM{
+      id-MLKEM768-ECDH-brainpoolP256r1, 
+      pk-MLKEM768-ECDH-brainpoolP256r1 }
+
+
+-- TODO: OID to be replaced by IANA
+id-MLKEM768-X25519 OBJECT IDENTIFIER ::= {
+  joint-iso-itu-t(2) country(16) us(840) organization(1)
+  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 35 }
+
+pk-MLKEM768-X25519 PUBLIC-KEY ::= 
+  pk-CompositeKEM {
+    id-MLKEM768-X25519, 
+    CompositeKEMPublicKey }
+
+kema-MLKEM768-X25519 KEM-ALGORITHM ::= 
+    kema-CompositeKEM{
+      id-MLKEM768-X25519, 
+      pk-MLKEM768-X25519 }
+
+
+
+-- TODO: OID to be replaced by IANA
+id-MLKEM1024-ECDH-P384 OBJECT IDENTIFIER ::= {
+  joint-iso-itu-t(2) country(16) us(840) organization(1)
+  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 36 }
+
+pk-MLKEM1024-ECDH-P384 PUBLIC-KEY ::= 
+  pk-CompositeKEM {
+    id-MLKEM1024-ECDH-P384, 
+    CompositeKEMPublicKey }
+
+kema-MLKEM1024-ECDH-P384 KEM-ALGORITHM ::= 
+    kema-CompositeKEM{
+      id-MLKEM1024-ECDH-P384, 
+      pk-MLKEM1024-ECDH-P384 }
+
+
+-- TODO: OID to be replaced by IANA
+id-MLKEM1024-ECDH-brainpoolP384r1 OBJECT IDENTIFIER ::= {
+  joint-iso-itu-t(2) country(16) us(840) organization(1) 
+  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 37 }
+
+pk-MLKEM1024-ECDH-brainpoolP384r1 PUBLIC-KEY ::= 
+  pk-CompositeKEM{
+    id-MLKEM1024-ECDH-brainpoolP384r1, 
+    CompositeKEMPublicKey }
+
+kema-MLKEM1024-ECDH-brainpoolP384r1 KEM-ALGORITHM ::= 
+    kema-CompositeKEM{
+      id-MLKEM1024-ECDH-brainpoolP384r1, 
+      pk-MLKEM1024-ECDH-brainpoolP384r1 }
+      
+
+-- TODO: OID to be replaced by IANA
+id-MLKEM1024-X448 OBJECT IDENTIFIER ::= {
+  joint-iso-itu-t(2) country(16) us(840) organization(1) 
+  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 38 }
+
+pk-MLKEM1024-X448 PUBLIC-KEY ::= 
+  pk-CompositeKEM {
+    id-MLKEM1024-X448, 
+    CompositeKEMPublicKey }
+
+kema-MLKEM1024-X448 KEM-ALGORITHM ::= 
+    kema-CompositeKEM{
+      id-MLKEM1024-X448, 
+      pk-MLKEM1024-X448 }
+
+
+--
+-- Expand the S/MIME capabilities set used by CMS [RFC5911]
+--
+
+-- TODO: this doesn't compile, error:
+-- "The referenced object in the 'ValueFromObject' 
+-- syntax with the field '&smimeCaps' is invalid or does not exist."
+-- We need help from an SMIME expert
+
+SMimeCaps SMIME-CAPS ::=
+    { kema-MLKEM768-RSA2048.&smimeCaps |
+      kema-MLKEM768-RSA3072.&smimeCaps |
+      kema-MLKEM768-RSA4096.&smimeCaps |
+      kema-MLKEM768-ECDH-P384.&smimeCaps |
+      kema-MLKEM768-ECDH-brainpoolP256r1.&smimeCaps |
+      kema-MLKEM768-X25519.&smimeCaps |
+      kema-MLKEM1024-ECDH-P384.&smimeCaps |
+      kema-MLKEM1024-ECDH-brainpoolP384r1.&smimeCaps |
+      kema-MLKEM1024-X448.&smimeCaps,
+      ... }
+
+END
