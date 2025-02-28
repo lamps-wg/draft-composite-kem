@@ -1420,6 +1420,27 @@ The Composite ML-KEM design specified in this document, and especially that of t
 
 --- back
 
+# Key and Ciphertext Sizes
+
++-----------------------------------+------+--------+--------+--------+
+| KEM                               | Npk  |   Nsk  |   Nss  |   Nct  |
++-----------------------------------+------+--------+--------+--------+
+| ML-KEM768                        | TODO |  TODO  |   32   |  TODO  |
+| id-MLKEM768-RSA2048               | 1468 |  N/A   |   32   |  1356  |
+| id-MLKEM768-RSA3072               | 1596 |  N/A   |   32   |  1484  |
+| id-MLKEM768-RSA4096               | 1724 |  N/A   |   32   |  1612  |
+| id-MLKEM768-X25519                | 1228 |  2517  |   32   |  1130  |
+| id-MLKEM768-ECDH-P256             | 1261 |  2550  |   32   |  1163  |
+| id-MLKEM768-ECDH-P384             | 1293 |  2599  |   32   |  1195  |
+| id-MLKEM768-ECDH-brainpoolP256r1  | 1261 |  2550  |   32   |  1163  |
+| ML-KEM1024                       | TODO |  TODO  |   32   |  TODO  |
+| id-MLKEM1024-ECDH-P384            | 1677 |  3367  |   32   |  1675  |
+| id-MLKEM1024-ECDH-brainpoolP384r1 | 1677 |  3367  |   32   |  1675  |
+| id-MLKEM1024-X448                 | 1636 |  3334  |   32   |  1634  |
++-----------------------------------+------+--------+--------+--------+
+
+Non-hybrid ML-KEM is included for reference.
+
 # Samples {#appdx-samples}
 
 TODO
