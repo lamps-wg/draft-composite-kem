@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 26 August 2025                                          M. Pala
+Expires: 2 September 2025                                        M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                        22 February 2025
+                                                            1 March 2025
 
 
   Composite ML-KEM for use in X.509 Public Key Infrastructure and CMS
@@ -61,7 +61,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 26 August 2025.
+   This Internet-Draft will expire on 2 September 2025.
 
 Copyright Notice
 
@@ -144,8 +144,11 @@ Table of Contents
        D.1.1.  FIPS certification of Combiner Function
      D.2.  Backwards Compatibility
      D.3.  Decapsulation Requires the Public Key
-   Appendix E.  Intellectual Property Considerations
-   Appendix F.  Contributors and Acknowledgments
+   Appendix E.  Comparison with other Hybred KEMs
+     E.1.  X-Wing
+     E.2.  ETSI CatKDF
+   Appendix F.  Intellectual Property Considerations
+   Appendix G.  Contributors and Acknowledgments
    Authors' Addresses
 
 1.  Changes in version -06
@@ -181,24 +184,18 @@ Table of Contents
       -  Simplified the ASN.1 module to make it more compiler-friendly
          (thanks Carl!) -- should not affect wire encodings.
 
+   *  Added an appendix "Comparison with other Hybred KEMs" with sub-
+      sections on X-Wing and ETSI CatKDF
+
    *  Added alignment text with SP 800-227.
 
    Still to do in a future version:
-
-   *  [ ] Wait for NIST SP 800-227 to make sure KEM combiner aligns, and
-      update the section explaining how to get this FIPS-certified.
 
    *  [ ] We need PEM samples … hackathon?  OQS friends?  David @ BC?
       The right format for samples is probably to follow the hackathon
       ... a Dilithium or ECDSA trust anchor certificate, a composite KEM
       end entity certificate, and a CMS EnvelopedData sample encrypted
       for that composite KEM certificate.
-
-   *  [ ] Open question: do we need to include the ECDH, X25519, X448,
-      and RSA public keys in the KDF?  X-Wing does, but previous
-      versions of this spec do not.  In general existing ECC and RSA
-      hardware decrypter implementations might not know their own public
-      key.
 
    *  [ ] Other outstanding github issues: https://github.com/lamps-wg/
       draft-composite-kem/issues
@@ -234,8 +231,8 @@ Table of Contents
    of hybrid solutions compatible with (and advocated by) some
    governments and cybersecurity agencies [BSI2021].
 
-   In addition, [BSI2021] specifically references this specification as
-   a concrete example of hybrid X.509 certificates.
+   In addition, [BSI2021] specifically references the composite
+   specification as a concrete example of hybrid X.509 certificates.
 
    A more recent example is [ANSSI2024], a document co-authored by
    French Cybersecurity Agency (ANSSI), Federal Office for Information
@@ -2353,6 +2350,13 @@ Deserialization Process:
               <https://media.defense.gov/2022/Sep/07/2003071834/-1/-1/0/
               CSA_CNSA_2.0_ALGORITHMS_.PDF>.
 
+   [ETSI.TS.103.744]
+              ETSI, "ETSI TS 103 744 V1.1.1 CYBER; Quantum-safe Hybrid
+              Key Exchanges", December 2020,
+              <https://www.etsi.org/deliver/
+              etsi_ts/103700_103799/103744/01.01.01_60/
+              ts_103744v010101p.pdf>.
+
    [FIPS-140-3-IG]
               National Institute of Standards and Technology (NIST),
               "Implementation Guidance for FIPS 140-3 and the
@@ -2795,7 +2799,55 @@ D.3.  Decapsulation Requires the Public Key
    in this document in Section 5.2 requires the public key of the
    traditional component to be included.
 
-Appendix E.  Intellectual Property Considerations
+Appendix E.  Comparison with other Hybred KEMs
+
+E.1.  X-Wing
+
+   This specification borrows extensively from the analysis and KEM
+   combiner construction presented in [X-Wing].  In particular, X-Wing
+   and id-MLKEM768-X25519 are largely interchangeable.  The one
+   difference is that X-Wing uses a combined KeyGen function to generate
+   the two component private keys from the same seed, which gives some
+   additional binding properies.  However, using a derived value as the
+   seed for ML-KEM.KeyGen_internal() is, at time of writing, explicitely
+   disallowed by [FIPS.203] which makes it impossible to create a FIPS-
+   compliant implentation of X-Wing KeyGen / private key import.  For
+   this reason, this specification keeps the key generatation for both
+   components separate so that implementers are free to use an existing
+   certified hardware or software module for one or both components.
+
+   Due to the difference in key generation and security properties,
+   X-Wing and id-MLKEM768-X25519 have been registered as separate
+   algorithms with separate OIDs, and they use a different domain
+   separator string in order to ensure that their ciphertexts are not
+   inter-compatible.
+
+E.2.  ETSI CatKDF
+
+   [ETSI.TS.103.744] section 8.2 defines CatKDF as:
+
+1) Form secret = psk || k1 || k 2 || … || k n.
+2) Set f_context = f(context, MA, MB), where f is a context formatting function.
+3) key_material = KDF(secret, label, f_context, length).
+4) Return key_material.
+
+MA shall contain all of the public keys.
+MB shall contain all of the corresponding public keys and ciphertexts.
+
+   The main difference between the Composite KEM combiner and the ETSI
+   CatKDF combiner is that CatKDF makes the more conservative choice to
+   bind the public keys and ciphertexts of both components, while
+   Composite KEM follows the analysis presented in [X-Wing] that while
+   preserving the security properties of the traditional component
+   requires binding the public key and ciphertext of the traditional
+   component, it is not necessary to do so for ML-KEM thanks to the
+   rejection sampling step of the Fujisaki-Okamoto transform.
+
+   Additionally, ETSI CatKDF uses HKDF [RFC5869] as the KDF which aligns
+   with some of the variants in this specification, but not the ones
+   that use SHA3.
+
+Appendix F.  Intellectual Property Considerations
 
    The following IPR Disclosure relates to this draft:
 
@@ -2804,7 +2856,7 @@ Appendix E.  Intellectual Property Considerations
    EDNOTE TODO: Check with Max Pala whether this IPR actually applies to
    this draft.
 
-Appendix F.  Contributors and Acknowledgments
+Appendix G.  Contributors and Acknowledgments
 
    This document incorporates contributions and comments from a large
    group of experts.  The Editors would especially like to acknowledge
