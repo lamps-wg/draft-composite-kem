@@ -189,20 +189,11 @@ Table of Contents
 
    Still to do in a future version:
 
-   *  [ ] Wait for NIST SP 800-227 to make sure KEM combiner aligns, and
-      update the section explaining how to get this FIPS-certified.
-
    *  [ ] We need PEM samples … hackathon?  OQS friends?  David @ BC?
       The right format for samples is probably to follow the hackathon
       ... a Dilithium or ECDSA trust anchor certificate, a composite KEM
       end entity certificate, and a CMS EnvelopedData sample encrypted
       for that composite KEM certificate.
-
-   *  [ ] Open question: do we need to include the ECDH, X25519, X448,
-      and RSA public keys in the KDF?  X-Wing does, but previous
-      versions of this spec do not.  In general existing ECC and RSA
-      hardware decrypter implementations might not know their own public
-      key.
 
    *  [ ] Other outstanding github issues: https://github.com/lamps-wg/
       draft-composite-kem/issues
