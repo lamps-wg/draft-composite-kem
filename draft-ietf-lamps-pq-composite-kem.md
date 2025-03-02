@@ -1362,13 +1362,16 @@ Each registered Composite ML-KEM algorithm specifies the choice of `KDF` and `Do
 
 The primary security property of the KEM combiner is that it preserves IND-CCA2 of the overall Composite ML-KEM so long as at least one component is IND-CCA2 [[X-Wing]] [GHP18]. Additionally, we also need to consider the case where one of the component algorithms is completely broken; that the private key is known to an attacker, or worse that the public key, private key, and ciphertext are manipulated by the attacker. In this case, we rely on the construction of the KEM combiner to ensure that the value of the other shared secret cannot be leaked or the combined shared secret predicted via manipulation of the broken algorithm. The following sections continue this discussion.
 
-Note that length-tagging of the inputs to the KDF is not required as all inputs are fixed-length:
+Note that length-tagging of the inputs to the KDF is not required:
 
 * `mlkemSS` is always 32 bytes.
-* `tradSS` is derived by the decapsulator in the case of ECDH, and in the case of RSA-OAEP .... ???? PROBLEM??
+* `tradSS` in the case of ECDH this is derived by the decapsulator and therefore the length is not controlled by the attacker, however in the case of RSA-OAEP this value is directly chosen by the sender and both the length and content could be freely chosen by an attacker.
 * `tradCT` is either an elliptic curve public key or an RSA-OAEP ciphertext which is required to have its length checked by step 1b of RSAES-OAEP-DECRYPT in [RFC8017].
 * `tradPK` is the public key of the traditional component (elliptic curve or RSA) and therefore fixed-length.
 * `Domain` is a fixed value specified in this document.
+
+In the case of a composite with ECDH, all inputs to the KDF are fixed-length.
+In the case of a composite with RSA-OAEP the `tradSS` is controlled by the attacker but this still does not require length tagging because, unless there is a weakness in the KDF, length-manipulation of only one input is not sufficient to trivially produce collisions.
 
 ### Security of the hybrid scheme
 
