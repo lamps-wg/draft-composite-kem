@@ -3341,13 +3341,13 @@ END
         </ul>
 <p id="section-11.2-5">Each registered Composite ML-KEM algorithm specifies the choice of <code>KDF</code> and <code>Domain</code> to be used in <a href="#sec-alg-ids" class="auto internal xref">Section 7</a> and <a href="#sec-domsep-values" class="auto internal xref">Section 7.2</a> below. Given that each Composite ML-KEM algorithm fully specifies the component algorithms, including for example the size of the RSA modulus, all inputs to the KEM combiner are fixed-size and thus do not require length-prefixing. The <code>CompositeKEM.Decap()</code> specified in <a href="#sect-composite-decaps" class="auto internal xref">Section 4.3</a> adds further error handling to protect the KEM combiner from malicious inputs.<a href="#section-11.2-5" class="pilcrow">¶</a></p>
 <p id="section-11.2-6">The primary security property of the KEM combiner is that it preserves IND-CCA2 of the overall Composite ML-KEM so long as at least one component is IND-CCA2 <span><a href="#GHP18" class="internal xref">[X-Wing]</a> [<a href="#GHP18" class="cite xref">GHP18</a>]</span>. Additionally, we also need to consider the case where one of the component algorithms is completely broken; that the private key is known to an attacker, or worse that the public key, private key, and ciphertext are manipulated by the attacker. In this case, we rely on the construction of the KEM combiner to ensure that the value of the other shared secret cannot be leaked or the combined shared secret predicted via manipulation of the broken algorithm. The following sections continue this discussion.<a href="#section-11.2-6" class="pilcrow">¶</a></p>
-<p id="section-11.2-7">Note that length-tagging of the inputs to the KDF is not required as all inputs are fixed-length:<a href="#section-11.2-7" class="pilcrow">¶</a></p>
+<p id="section-11.2-7">Note that length-tagging of the inputs to the KDF is not required:<a href="#section-11.2-7" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-11.2-8.1">
             <p id="section-11.2-8.1.1"><code>mlkemSS</code> is always 32 bytes.<a href="#section-11.2-8.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-11.2-8.2">
-            <p id="section-11.2-8.2.1"><code>tradSS</code> is derived by the decapsulator in the case of ECDH, and in the case of RSA-OAEP .... ???? PROBLEM??<a href="#section-11.2-8.2.1" class="pilcrow">¶</a></p>
+            <p id="section-11.2-8.2.1"><code>tradSS</code> in the case of ECDH this is derived by the decapsulator and therefore the length is not controlled by the attacker, however in the case of RSA-OAEP this value is directly chosen by the sender and both the length and content could be freely chosen by an attacker.<a href="#section-11.2-8.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-11.2-8.3">
             <p id="section-11.2-8.3.1"><code>tradCT</code> is either an elliptic curve public key or an RSA-OAEP ciphertext which is required to have its length checked by step 1b of RSAES-OAEP-DECRYPT in <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span>.<a href="#section-11.2-8.3.1" class="pilcrow">¶</a></p>
@@ -3359,6 +3359,8 @@ END
             <p id="section-11.2-8.5.1"><code>Domain</code> is a fixed value specified in this document.<a href="#section-11.2-8.5.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
+<p id="section-11.2-9">In the case of a composite with ECDH, all inputs to the KDF are fixed-length.
+In the case of a composite with RSA-OAEP the <code>tradSS</code> is controlled by the attacker but this still does not require length tagging because, unless there is a weakness in the KDF, length-manipulation of only one input is not sufficient to trivially produce collisions.<a href="#section-11.2-9" class="pilcrow">¶</a></p>
 <div id="security-of-the-hybrid-scheme">
 <section id="section-11.2.1">
           <h4 id="name-security-of-the-hybrid-sche">
