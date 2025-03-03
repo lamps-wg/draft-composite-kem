@@ -397,15 +397,15 @@ We borrow here the definition of a key encapsulation mechanism (KEM) from {{I-D.
 
 We also borrow the following algorithms from {{RFC9180}}, which deal with encoding and decoding of KEM public key values.
 
-   *  `SerializePublicKey(pk) -> bytes`: Produce a fixed-length byte string encoding the public key pk.
+   *  `SerializePublicKey(pk) -> bytes`: Produce a byte string encoding the public key pk.
 
-   *  `DeserializePublicKey(bytes) -> pk`: Parse a fixed-length byte string to recover a public key pk. This function can fail if the input byte string is malformed.
+   *  `DeserializePublicKey(bytes) -> pk`: Parse a byte string to recover a public key pk. This function can fail if the input byte string is malformed.
 
 We define the following algorithms which are used to serialize and deseralize the CompositeCiphertextValue
 
-   *  `SerializeCiphertextValue(CompositeCiphertextValue) -> bytes`: Produce a fixed-length byte string encoding the CompositeCiphertextValue.
+   *  `SerializeCiphertextValue(CompositeCiphertextValue) -> bytes`: Produce a byte string encoding the CompositeCiphertextValue.
 
-   *  `DeserializeCipherTextValue(bytes) -> pk`: Parse a fixed-length byte string to recover a CompositeCiphertextValue. This function can fail if the input byte string is malformed.
+   *  `DeserializeCipherTextValue(bytes) -> pk`: Parse a byte string to recover a CompositeCiphertextValue. This function can fail if the input byte string is malformed.
 
 The KEM interface defined above differs from both traditional key transport mechanism (for example for use with KeyTransRecipientInfo defined in {{RFC5652}}), and key agreement (for example for use with KeyAgreeRecipientInfo defined in {{RFC5652}}).
 
@@ -674,7 +674,7 @@ In order to properly achieve its security properties, the KEM combiner requires 
 
 ## SerializePublicKey and DeserializePublicKey {#sec-serialize-deserialize}
 
-The KEM public key serialization routine simply concatenates the public keys of the constituent KEMs, as defined below.
+Each component KEM public key is serialized according to its respective standard as shown in {{appdx_components}} and concatenated together using a fixed 4-byte length field denoting the length in bytes of the first component key, as defined below.
 
 ~~~
 Composite-ML-KEM.SerializePublicKey(pk) -> bytes
@@ -707,6 +707,8 @@ Serialization Process:
      (mlkemPK, tradPK) = pk
 
   2. Serialize each of the constituent public keys
+       The component keys are serialized according to their respective standard
+       as shown in the component algorithm appendix.
 
      mlkemEncodedPK = ML-KEM.SerializePublicKey(mlkemPK)
      tradEncodedPK = Trad.SerializePublicKey(tradPK)
@@ -722,7 +724,8 @@ Serialization Process:
 ~~~
 {: #alg-composite-serialize title="Composite SerializePublicKey(pk)"}
 
-Deserialization reverses this process, raising an error in the event that the input is malformed.
+Deserialization reverses this process, raising an error in the event that the input is malformed.  Each component
+key is deserialized according to their respective standard as shown in {{appdx_components}}.
 
 ~~~
 Composite-ML-KEM.DeserializePublicKey(bytes) -> pk
@@ -758,6 +761,8 @@ Deserialization Process:
      (mlkemEncodedPK, tradEncodedPK) = bytes
 
   3. Deserialize the constituent public keys
+        The component keys are deserialized according to their respective standard
+        as shown in the component algorithm appendix.
 
      mlkemPK = ML-KEM.DeserializePublicKey(mlkemEncodedPK)
      tradPK = Trad.DeserializePublicKey(tradEncodedPK)
@@ -784,8 +789,7 @@ serialization, or the mlkem and traditional private keys for deserialization.
 
 ## SerializeCiphertextValue and DeSerializeCiphertextValue
 
-The serialization routine for the CompositeCiphertextValue simply concatenates the fixed-length
-ML-KEM cipherText value with the cipherText value from the traditional algorithm, as defined below:
+Each Ciphertext component of CompositeCiphertextValue is serialized according to their respective standard as shown in {{appdx_components}} and concatenated together using a fixed 4-byte length field denoting the length in bytes of the first component signature, as shown below.  For the Traditional component, the CipherText is the encrypted value 'enc' as described in {{sec-RSAOAEPKEM}} or {{sec-DHKEM}} depending on the chosen component algorithm.
 
 ~~~
 Composite-ML-DSA.SerializeCiphertextValue(CompositeCiphertextValue) -> bytes
@@ -817,6 +821,10 @@ Serialization Process:
      (mldkemct, tradkemct) = CompositeCiphertextValue
 
   2. Serialize each of the constituent cipher texts
+       The component cipher texts are serialized according to their respective standard
+       as shown in the component algorithm appendix.  For the tradkemEncodedCT the
+       ciphertext is the encrypted output as defined in 'Promotion of RSA-OAEP into a KEM'
+       or 'Promotion of ECDH into a KEM'.
 
      mlkemEncodedCt = ML-KEM.SerializeCiphertext(mlkemct)
      tradkemEncodedCT = Trad.SerializeCiphertext(tradkemct)
@@ -832,8 +840,10 @@ Serialization Process:
 ~~~
 {: #alg-composite-serialize-ct title="Composite SerializeCiphertextValue(CompositeCiphertextValue)"}
 
-
-Deserialization reverses this process, raising an error in the event that the input is malformed.
+Deserialization reverses this process, raising an error in the event that the input is malformed.  Each component
+ciphertext is deserialized according to their respective standard as shown in {{appdx_components}}.  For the traditional
+component, the ciphertext is the encrypted value 'enc' as described in {{sec-RSAOAEPKEM}} or {{sec-DHKEM}} depending
+on the chosen component algorithm.
 
 ~~~
 Composite-ML-KEM.DeserializeCiphertextValue(bytes) -> CompositeCiphertextValue
