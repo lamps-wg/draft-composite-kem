@@ -1414,13 +1414,16 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <p id="section-1-1">Interop-affecting changes:<a href="#section-1-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-1-2.1">
-          <p id="section-1-2.1.1">Remove the ASN.1 SEQUENCE wrapping around the ASN.1 structures to make it easier to access via other protocols.<a href="#section-1-2.1.1" class="pilcrow">¶</a></p>
+          <p id="section-1-2.1.1">Removed the ASN.1 wrapping and added a fixed 4-byte length encoding value for the first mlkem component so the keys and ciphertexts can be separated.<a href="#section-1-2.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-1-2.2">
-          <p id="section-1-2.2.1">Add a ML-KEM-768 + ECDH-P256 variant<a href="#section-1-2.2.1" class="pilcrow">¶</a></p>
+          <p id="section-1-2.2.1">Add a ML-KEM-768 + ECDH-P256 variant.<a href="#section-1-2.2.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-1-2.3">
           <p id="section-1-2.3.1">Changed the ML-KEM-1024 + P256 variant to use HKDF-SHA384 instead of SHA3 so that it is compliant with CNSA 2.0.<a href="#section-1-2.3.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-1-2.4">
+          <p id="section-1-2.4.1">In the KEM combiner, HKDF refers to the HKDF-extract() without HKDF-expand().  When used with CMS, HKDF-extract() with HKDF-expand() is used.<a href="#section-1-2.4.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <p id="section-1-3">Editorial changes:<a href="#section-1-3" class="pilcrow">¶</a></p>
@@ -1438,24 +1441,13 @@ svg :is([fill="white"], [fill^="#fff"]) {
           <p id="section-1-4.4.1">Enhanced the section about how to get this FIPS-certified.<a href="#section-1-4.4.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-1-4.5">
-          <p id="section-1-4.5.1">ASN.1 module fixes (thanks Russ and Carl).<a href="#section-1-4.5.1" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-1-4.5.2.1">
-              <p id="section-1-4.5.2.1.1">Renamed the module from Composite-KEM-2023 -&gt; Composite-MLKEM-2024<a href="#section-1-4.5.2.1.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="normal" id="section-1-4.5.2.2">
-              <p id="section-1-4.5.2.2.1">Simplified the ASN.1 module to make it more compiler-friendly (thanks Carl!) -- should not affect wire encodings.<a href="#section-1-4.5.2.2.1" class="pilcrow">¶</a></p>
-</li>
-          </ul>
+          <p id="section-1-4.5.1">Renamed the module from Composite-KEM-2023 -&gt; Composite-MLKEM-2025.<a href="#section-1-4.5.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-1-4.6">
-          <p id="section-1-4.6.1">Added an appendix "Comparison with other Hybred KEMs" with sub-sections on X-Wing and ETSI CatKDF<a href="#section-1-4.6.1" class="pilcrow">¶</a></p>
+          <p id="section-1-4.6.1">Added an appendix "Comparison with other Hybred KEMs" with sub-sections on X-Wing and ETSI CatKDF.<a href="#section-1-4.6.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-1-4.7">
           <p id="section-1-4.7.1">Added alignment text with SP 800-227.<a href="#section-1-4.7.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="section-1-4.8">
-          <p id="section-1-4.8.1">Removed the ASN.1 wrapping and added a fixed 4-byte length encoding value for the first mlkem component so the keys and ciphertexts can be separated.<a href="#section-1-4.8.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <p id="section-1-5">Still to do in a future version:<a href="#section-1-5" class="pilcrow">¶</a></p>
