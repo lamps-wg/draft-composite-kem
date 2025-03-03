@@ -139,7 +139,12 @@ normative:
     author:
       org: "National Institute of Standards and Technology (NIST)"
     target: https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.203.pdf
-
+  FIPS.204:
+    title: "Module-Lattice-Based Digital Signature Standard"
+    date: August 13, 2024
+    author:
+      org: "National Institute of Standards and Technology (NIST)"
+    target: https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.204.pdf
 
 informative:
   RFC2986:
@@ -284,6 +289,7 @@ Editorial changes:
   * Simplified the ASN.1 module to make it more compiler-friendly (thanks Carl!) -- should not affect wire encodings.
 * Added an appendix "Comparison with other Hybred KEMs" with sub-sections on X-Wing and ETSI CatKDF
 * Added alignment text with SP 800-227.
+* Removed the ASN.1 wrapping and added a fixed 4-byte length encoding value for the first mlkem component so the keys and ciphertexts can be separated.
 
 
 Still to do in a future version:
@@ -668,7 +674,7 @@ In order to properly achieve its security properties, the KEM combiner requires 
 
 ## SerializePublicKey and DeserializePublicKey {#sec-serialize-deserialize}
 
-The KEM public key serialization routine simply concatenates the fixed-length public keys of the constituent KEMs, as defined below.
+The KEM public key serialization routine simply concatenates the public keys of the constituent KEMs, as defined below.
 
 ~~~
 Composite-ML-KEM.SerializePublicKey(pk) -> bytes
@@ -686,6 +692,10 @@ Implicit inputs:
            parameter set to use, for example "RSA-OAEP"
            or "X25519".
 
+  IntegerToBytes  A function that takes an Integer and converts it to
+           a byte representation of size byteLength.  See definition in
+           [FIPS.204]
+
 Output:
 
   bytes   The encoded public key
@@ -701,9 +711,13 @@ Serialization Process:
      mlkemEncodedPK = ML-KEM.SerializePublicKey(mlkemPK)
      tradEncodedPK = Trad.SerializePublicKey(tradPK)
 
-  3. Combine and output the encoded public key
+  3. Calculate the length encoding of the mlkemEncodedPK
 
-     bytes = mlkemEncodedPK || tradEncodedPK
+     encodedLength = IntegerToBytes(mlkemEncodedPK.length, 4)
+
+  4. Combine and output the encoded public key
+
+     bytes = encodedLength || mlkemEncodedPK || tradEncodedPK
      output bytes
 ~~~
 {: #alg-composite-serialize title="Composite SerializePublicKey(pk)"}
@@ -738,7 +752,9 @@ Deserialization Process:
       output "Deserialization error"
 
   2. Parse each constituent encoded public key
-
+       The first 4 bytes encodes the length of mlkemEncodedPK, which MAY
+       be used to separate the mlkemEncodedPK and tradEncodedPK, and then
+       is to be discarded.
      (mlkemEncodedPK, tradEncodedPK) = bytes
 
   3. Deserialize the constituent public keys
@@ -786,6 +802,10 @@ Implicit inputs:
   Trad     A placeholder for the specific traditional algorithm and
            parameter set to use, for example "RSAOAEP" or "ECDH".
 
+  IntegerToBytes  A function that takes an Integer and converts it to
+           a byte representation of size byteLength.  See definition in
+           [FIPS.204]
+
 Output:
 
   bytes   The encoded CompositeCiphertextValue
@@ -801,9 +821,13 @@ Serialization Process:
      mlkemEncodedCt = ML-KEM.SerializeCiphertext(mlkemct)
      tradkemEncodedCT = Trad.SerializeCiphertext(tradkemct)
 
-  3. Combine and output the encoded composite ciphertext
+  3. Calculate the length encoding of the mlkemEncodedCt
 
-     bytes = mlkemEncodedCt || tradkemEncodedCT
+     encodedLength = IntegerToBytes(mlkemEncodedCt.length, 4)
+
+  4. Combine and output the encoded composite ciphertext
+
+     bytes = encodedLength || mlkemEncodedCt || tradkemEncodedCT
      output bytes
 ~~~
 {: #alg-composite-serialize-ct title="Composite SerializeCiphertextValue(CompositeCiphertextValue)"}
@@ -838,8 +862,9 @@ Deserialization Process:
       output "Deserialization error"
 
   2. Parse each constituent encoded cipher text.
-       The length of the mlkemEncodedCt is known based on the size of
-       the ML-KEM component cipher text length specified by the Object ID
+       The first 4 bytes encodes the length of mlkemEncodedCt, which MAY
+       be used to separate the mlkemEncodedCt and tradkemEncodedCT,
+       and then is to be discarded.
 
      (mlkemEncodedCt, tradkemEncodedCt) = bytes
 
@@ -865,21 +890,23 @@ Deserialization Process:
 ## ML-KEM public key, private key and cipher text sizes for serialization and deserialization
 
 As noted above in the public key, private key and CompositeCiphertextValue
-serialization and deserialization methods, ML-KEM uses fixed-length values for
-all of these components.  This means the length encoding of the first component is
-known and does NOT need to be encoded into the serialization and deserialization process
-which simplifies the encoding.  If future composite combinations make use of
-algorithms where the first component uses variable length keys or cipher texts, then
-that specification will need to ensure the length is encoded in a
-fixed-length prefix so the components can be correctly deserialized.
+serialization and deserialization methods use a fixed 4-byte length value to
+indicate the size of the first component. This is to allow the separation of the first
+component from the second component.  It is RECOMMENDED that the length specified for the
+first component be checked against the values from the table below to ensure the encoding
+has been done propertly.
+
+If future composite combinations make use of algorithms where the first component uses
+variable length keys or cipher texts, then this fixed 4-byte length value can be used to
+ensure the components are correctly deserialized.
 
 The following table shows the fixed length values in bytes for the public, private and cipher text
 sizes for ML-KEM which can be used to deserialzie the components.
 
 | Algorithm   | Public key  | Private key |  Ciphertext  |
 | ----------- | ----------- | ----------- |  ----------- |
-| ML-KEM-768  |    1184     |     64      |     1952     |
-| ML-KEM-1024 |    1568     |     64      |     2592     |
+| ML-KEM-768  |    1184     |     64 or 2400 or 2464     |     1088     |
+| ML-KEM-1024 |    1568     |     64 or 3168 or 3232     |     1568     |
 {: #tab-mlkem-sizes title="ML-KEM Key and Ciphertext Sizes"}
 
 
