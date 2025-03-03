@@ -127,11 +127,12 @@ Table of Contents
    11. Security Considerations
      11.1.  Why Hybrids?
      11.2.  KEM Combiner
-     11.3.  Decapsulation failure
-       11.3.1.  Second pre-image resistance of component KEMs
-       11.3.2.  SHA3 vs HKDF-SHA2
-       11.3.3.  Generifying this construction
-     11.4.  Key Reuse
+       11.2.1.  Security of the hybrid scheme
+       11.2.2.  Second pre-image resistance of component KEMs
+       11.2.3.  SHA3 vs HKDF-SHA2
+       11.2.4.  Generifying this construction
+     11.3.  Key Reuse
+     11.4.  Decapsulation failure
      11.5.  Policy for Deprecated and Acceptable Algorithms
    12. References
      12.1.  Normative References
@@ -188,6 +189,9 @@ Table of Contents
       sections on X-Wing and ETSI CatKDF.
 
    *  Added alignment text with SP 800-227.
+
+   *  Improved the security considerations around security proofs of the
+      hybrid construction.
 
    Still to do in a future version:
 
@@ -1034,7 +1038,7 @@ Deserialization Process:
    In order to maintain security properties of the composite,
    applications that use composite keys MUST always perform fresh key
    generations of both component keys and MUST NOT reuse existing key
-   material.  See Section 11.4 for a discussion.
+   material.  See Section 11.3 for a discussion.
 
    The following ASN.1 Information Object Class is defined to allow for
    compact definitions of each composite algorithm, leading to a smaller
@@ -1114,7 +1118,7 @@ Deserialization Process:
 
    Component keys of a CompositeKEMPrivateKey MUST NOT be used in any
    other type of key or as a standalone key.  For more details on the
-   security considerations around key reuse, see Section 11.4.
+   security considerations around key reuse, see Section 11.3.
 
 5.3.  Encoding Rules
 
@@ -2012,11 +2016,6 @@ Deserialization Process:
 
 11.2.  KEM Combiner
 
-   EDNOTE: the exact text to put here depends on the outcome of the CFRG
-   KEM Combiners and X-Wing discussion.  If CFRG doesn't move fast
-   enough for us, then we may need to leverage this security
-   consideration directly on top of the X-Wing paper [X-Wing].
-
    The following KEM combiner construction is as follows is used by both
    Composite-ML-KEM.Encap() and Composite-ML-KEM.Decap() and is split
    out here for easier analysis.
@@ -2058,7 +2057,7 @@ Deserialization Process:
 
    The primary security property of the KEM combiner is that it
    preserves IND-CCA2 of the overall Composite ML-KEM so long as at
-   least one component is IND-CCA2 X-Wing [GHP18].  Additionally, we
+   least one component is IND-CCA2 [X-Wing] [GHP18].  Additionally, we
    also need to consider the case where one of the component algorithms
    is completely broken; that the private key is known to an attacker,
    or worse that the public key, private key, and ciphertext are
@@ -2068,39 +2067,62 @@ Deserialization Process:
    predicted via manipulation of the broken algorithm.  The following
    sections continue this discussion.
 
-11.3.  Decapsulation failure
+   Note that length-tagging of the inputs to the KDF is not required:
 
-   Provided all inputs are well-formed, the key establishment procedure
-   of ML-KEM will never explicitly fail.  Specifically, the ML-
-   KEM.Encaps and ML-KEM.Decaps algorithms from [FIPS.203] will always
-   output a value with the same data type as a shared secret key, and
-   will never output an error or failure symbol.  However, it is
-   possible (though extremely unlikely) that the process will fail in
-   the sense that ML-KEM.Encaps and ML-KEM.Decaps will produce different
-   outputs, even though both of them are behaving honestly and no
-   adversarial interference is present.  In this case, the sender and
-   recipient clearly did not succeed in producing a shared secret key.
-   This event is called a decapsulation failure.  Estimates for the
-   decapsulation failure probability (or rate) for each of the ML-KEM
-   parameter sets are provided in Table 1 of [FIPS.203] and reproduced
-   here in Table 6.
+   *  mlkemSS is always 32 bytes.
 
-              +===============+============================+
-              | Parameter set | Decapsulation failure rate |
-              +===============+============================+
-              | ML-KEM-512    | 2^(-139)                   |
-              +---------------+----------------------------+
-              | ML-KEM-768    | 2^(-164)                   |
-              +---------------+----------------------------+
-              | ML-KEM-1024   | 2^(-174)                   |
-              +---------------+----------------------------+
+   *  tradSS in the case of ECDH this is derived by the decapsulator and
+      therefore the length is not controlled by the attacker, however in
+      the case of RSA-OAEP this value is directly chosen by the sender
+      and both the length and content could be freely chosen by an
+      attacker.
 
-               Table 6: ML-KEM decapsulation failure rates
+   *  tradCT is either an elliptic curve public key or an RSA-OAEP
+      ciphertext which is required to have its length checked by step 1b
+      of RSAES-OAEP-DECRYPT in [RFC8017].
 
-   In the case of ML-KEM decapsulation failure, Composite ML-KEM MUST
-   preserve the same behaviour and return a well-formed output.
+   *  tradPK is the public key of the traditional component (elliptic
+      curve or RSA) and therefore fixed-length.
 
-11.3.1.  Second pre-image resistance of component KEMs
+   *  Domain is a fixed value specified in this document.
+
+   In the case of a composite with ECDH, all inputs to the KDF are
+   fixed-length.  In the case of a composite with RSA-OAEP the tradSS is
+   controlled by the attacker but this still does not require length
+   tagging because, unless there is a weakness in the KDF, length-
+   manipulation of only one input is not sufficient to trivially produce
+   collisions.
+
+11.2.1.  Security of the hybrid scheme
+
+   Informally, a Composite ML-KEM algorithm is secure if the combiner
+   (HKDF-SHA2 or SHA3) is secure, and either ML-KEM is secure or the
+   traditional component (RSA-OAEP, ECDH, or X25519) is secure.
+
+   The security of ML-KEM and ECDH hybrids is covered in [[X-Wing]] and
+   requires that the first KEM component (ML-KEM in this construction)
+   is IND-CCA and second ciphertext preimage resistant (C2PRI) and that
+   the second traditional component is IND-CCA.  This design choice
+   improves performance by not including the large ML-KEM public key and
+   ciphertext, but means that an implementation error in the ML-KEM
+   component that affects the ciphertext check step of the FO transform
+   could result in the overall composite no longer achieving IND-CCA2
+   security.
+
+   The QSF framework presented in [[X-Wing]] is extended to cover RSA-
+   OAEP as the traditional algorithm in place of ECDH by noting that
+   RSA-OAEP is also IND-CCA secure [RFC8017].
+
+   Note that X-Wing uses SHA3 as the combiner KDF whereas Composite ML-
+   KEM uses either SHA3 or HKDF-SHA2 which are interchangeable in the
+   X-Wing proof since both behave as random oracles under multiple
+   concatenated inputs.
+
+   The Composite combiner cannot be assumed to be secure when used with
+   different KEMs and a more cautious approach would bind the public key
+   and ciphertext of the first KEM as well.
+
+11.2.2.  Second pre-image resistance of component KEMs
 
    The notion of a second pre-image resistant KEM is defined in [X-Wing]
    being the property that it is computationally difficult to find two
@@ -2110,7 +2132,7 @@ Deserialization Process:
    ciphertexts (c1, c2) and (c1', c2'), we must obtain a unique overall
    shared secret so long as either c1 != c1' or c2 != c2' -- i.e. the
    overall Composite ML-KEM is second pre-image resistant, and therefore
-   secure so long as one of the component KEMs is.
+   secure so long as one of the component KEMs is secure.
 
    In [X-Wing] it is proven that ML-KEM is a second pre-image resistant
    KEM and therefore the ML-KEM ciphertext can safely be omitted from
@@ -2133,7 +2155,7 @@ Deserialization Process:
    that c != c' will yield a unique ciphertext, and thus restoring
    second pre-image resistance to the overall Composite ML-KEM.
 
-11.3.2.  SHA3 vs HKDF-SHA2
+11.2.3.  SHA3 vs HKDF-SHA2
 
    In order to achieve the desired security property that the Composite
    ML-KEM is IND-CCA2 whenever at least one of the component KEMs is,
@@ -2152,7 +2174,7 @@ Deserialization Process:
    constructions MUST use SHA2 within an HMAC construction such as HKDF-
    SHA2 [GHP18].
 
-11.3.3.  Generifying this construction
+11.2.4.  Generifying this construction
 
    It should be clear that the security analysis of the presented KEM
    combiner construction relies heavily on the specific choices of
@@ -2160,7 +2182,7 @@ Deserialization Process:
    SHOULD NOT by applied to any other combination of ciphers without
    performing the appropriate security analysis.
 
-11.4.  Key Reuse
+11.3.  Key Reuse
 
    When using single-algorithm cryptography, the best practice is to
    always generate fresh keying material for each purpose, for example
@@ -2200,6 +2222,38 @@ Deserialization Process:
    always generate fresh component keys for a new composite.  It is also
    RECOMMENDED that CAs performing revocation checks on a composite key
    should also check both component keys independently.
+
+11.4.  Decapsulation failure
+
+   Provided all inputs are well-formed, the key establishment procedure
+   of ML-KEM will never explicitly fail.  Specifically, the ML-
+   KEM.Encaps and ML-KEM.Decaps algorithms from [FIPS.203] will always
+   output a value with the same data type as a shared secret key, and
+   will never output an error or failure symbol.  However, it is
+   possible (though extremely unlikely) that the process will fail in
+   the sense that ML-KEM.Encaps and ML-KEM.Decaps will produce different
+   outputs, even though both of them are behaving honestly and no
+   adversarial interference is present.  In this case, the sender and
+   recipient clearly did not succeed in producing a shared secret key.
+   This event is called a decapsulation failure.  Estimates for the
+   decapsulation failure probability (or rate) for each of the ML-KEM
+   parameter sets are provided in Table 1 of [FIPS.203] and reproduced
+   here in Table 6.
+
+              +===============+============================+
+              | Parameter set | Decapsulation failure rate |
+              +===============+============================+
+              | ML-KEM-512    | 2^(-139)                   |
+              +---------------+----------------------------+
+              | ML-KEM-768    | 2^(-164)                   |
+              +---------------+----------------------------+
+              | ML-KEM-1024   | 2^(-174)                   |
+              +---------------+----------------------------+
+
+               Table 6: ML-KEM decapsulation failure rates
+
+   In the case of ML-KEM decapsulation failure, Composite ML-KEM MUST
+   preserve the same behaviour and return a well-formed output.
 
 11.5.  Policy for Deprecated and Acceptable Algorithms
 
