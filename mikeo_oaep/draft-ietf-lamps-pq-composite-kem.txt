@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 3 September 2025                                        M. Pala
+Expires: 4 September 2025                                        M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                            2 March 2025
+                                                            3 March 2025
 
 
   Composite ML-KEM for use in X.509 Public Key Infrastructure and CMS
@@ -61,7 +61,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 3 September 2025.
+   This Internet-Draft will expire on 4 September 2025.
 
 Copyright Notice
 
@@ -2062,11 +2062,11 @@ Deserialization Process:
    Note that X-Wing uses SHA3 as the combiner KDF whereas Composite ML-
    KEM uses either SHA3 or HKDF-SHA2 which are interchangeable in the
    X-Wing proof since both behave as random oracles under multiple
-   concetaneted inputs.
+   concatenated inputs.
 
    The Composite combiner cannot be assumed to be secure when used with
    different KEMs and a more cautious approach would bind the public key
-   and ciphertext of the first KEM also.
+   and ciphertext of the first KEM as well.
 
 11.2.2.  Second pre-image resistance of component KEMs
 
@@ -2078,7 +2078,7 @@ Deserialization Process:
    ciphertexts (c1, c2) and (c1', c2'), we must obtain a unique overall
    shared secret so long as either c1 != c1' or c2 != c2' -- i.e. the
    overall Composite ML-KEM is second pre-image resistant, and therefore
-   secure so long as one of the component KEMs is.
+   secure so long as one of the component KEMs is secure.
 
    In [X-Wing] it is proven that ML-KEM is a second pre-image resistant
    KEM and therefore the ML-KEM ciphertext can safely be omitted from

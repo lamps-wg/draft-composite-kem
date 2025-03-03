@@ -17,14 +17,14 @@
 
 
     " name="description">
-<meta content="xml2rfc 3.27.0" name="generator">
+<meta content="xml2rfc 3.28.0" name="generator">
 <meta content="X.509" name="keyword">
 <meta content="CMS" name="keyword">
 <meta content="Post-Quantum" name="keyword">
 <meta content="KEM" name="keyword">
 <meta content="draft-ietf-lamps-pq-composite-kem-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.27.0
+  xml2rfc 3.28.0
     Python 3.12.9
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
@@ -1059,7 +1059,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Ounsworth, et al.</td>
-<td class="center">Expires 3 September 2025</td>
+<td class="center">Expires 4 September 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1072,12 +1072,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-lamps-pq-composite-kem-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-03-02" class="published">2 March 2025</time>
+<time datetime="2025-03-03" class="published">3 March 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-09-03">3 September 2025</time></dd>
+<dd class="expires"><time datetime="2025-09-04">4 September 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1143,7 +1143,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 3 September 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 4 September 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -3369,8 +3369,8 @@ In the case of a composite with RSA-OAEP the <code>tradSS</code> is controlled b
 <p id="section-11.2.1-1">Informally, a Composite ML-KEM algorithm is secure if the combiner (HKDF-SHA2 or SHA3) is secure, and either ML-KEM is secure or the traditional component (RSA-OAEP, ECDH, or X25519) is secure.<a href="#section-11.2.1-1" class="pilcrow">¶</a></p>
 <p id="section-11.2.1-2">The security of ML-KEM and ECDH hybrids is covered in [<span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span>] and requires that the first KEM component (ML-KEM in this construction) is IND-CCA and second ciphertext preimage resistant (C2PRI) and that the second traditional component is IND-CCA. This design choice improves performance by not including the large ML-KEM public key and ciphertext, but means that an implementation error in the ML-KEM component that affects the ciphertext check step of the FO transform could result in the overall composite no longer achieving IND-CCA2 security.<a href="#section-11.2.1-2" class="pilcrow">¶</a></p>
 <p id="section-11.2.1-3">The QSF framework presented in [<span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span>] is extended to cover RSA-OAEP as the traditional algorithm in place of ECDH by noting that RSA-OAEP is also IND-CCA secure <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span>.<a href="#section-11.2.1-3" class="pilcrow">¶</a></p>
-<p id="section-11.2.1-4">Note that X-Wing uses SHA3 as the combiner KDF whereas Composite ML-KEM uses either SHA3 or HKDF-SHA2 which are interchangeable in the X-Wing proof since both behave as random oracles under multiple concetaneted inputs.<a href="#section-11.2.1-4" class="pilcrow">¶</a></p>
-<p id="section-11.2.1-5">The Composite combiner cannot be assumed to be secure when used with different KEMs and a more cautious approach would bind the public key and ciphertext of the first KEM also.<a href="#section-11.2.1-5" class="pilcrow">¶</a></p>
+<p id="section-11.2.1-4">Note that X-Wing uses SHA3 as the combiner KDF whereas Composite ML-KEM uses either SHA3 or HKDF-SHA2 which are interchangeable in the X-Wing proof since both behave as random oracles under multiple concatenated inputs.<a href="#section-11.2.1-4" class="pilcrow">¶</a></p>
+<p id="section-11.2.1-5">The Composite combiner cannot be assumed to be secure when used with different KEMs and a more cautious approach would bind the public key and ciphertext of the first KEM as well.<a href="#section-11.2.1-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-cons-ct-collision">
@@ -3378,7 +3378,7 @@ In the case of a composite with RSA-OAEP the <code>tradSS</code> is controlled b
           <h4 id="name-second-pre-image-resistance">
 <a href="#section-11.2.2" class="section-number selfRef">11.2.2. </a><a href="#name-second-pre-image-resistance" class="section-name selfRef">Second pre-image resistance of component KEMs</a>
           </h4>
-<p id="section-11.2.2-1">The notion of a second pre-image resistant KEM is defined in <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span> being the property that it is computationally difficult to find two different ciphertexts <code>c != c'</code> that will decapsulate to the same shared secret under the same public key. For the purposes of a hybrid KEM combiner, this property means that given two composite ciphertexts <code>(c1, c2)</code> and <code>(c1', c2')</code>, we must obtain a unique overall shared secret so long as either <code>c1 != c1'</code> or <code>c2 != c2'</code> -- i.e. the overall Composite ML-KEM is second pre-image resistant, and therefore secure so long as one of the component KEMs is.<a href="#section-11.2.2-1" class="pilcrow">¶</a></p>
+<p id="section-11.2.2-1">The notion of a second pre-image resistant KEM is defined in <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span> being the property that it is computationally difficult to find two different ciphertexts <code>c != c'</code> that will decapsulate to the same shared secret under the same public key. For the purposes of a hybrid KEM combiner, this property means that given two composite ciphertexts <code>(c1, c2)</code> and <code>(c1', c2')</code>, we must obtain a unique overall shared secret so long as either <code>c1 != c1'</code> or <code>c2 != c2'</code> -- i.e. the overall Composite ML-KEM is second pre-image resistant, and therefore secure so long as one of the component KEMs is secure.<a href="#section-11.2.2-1" class="pilcrow">¶</a></p>
 <p id="section-11.2.2-2">In <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span> it is proven that ML-KEM is a second pre-image resistant KEM and therefore the ML-KEM ciphertext can safely be omitted from the KEM combiner. Note that this makes a fundamental assumption on ML-KEM remaining ciphertext second pre-image resistant, and therefore this formulation of KEM combiner does not fully protect against implementation errors in the ML-KEM component -- particularly around the ciphertext check step of the Fujisaki-Okamoto transform -- which could trivially lead to second ciphertext pre-image attacks that break the IND-CCA2 security of the ML-KEM component and of the overall Composite ML-KEM. This could be more fully mitigated by binding the ML-KEM ciphertext in the combiner, but a design decision was made to settle for protection against algorithmic attacks and not implementation attacks against ML-KEM in order to increase performance.<a href="#section-11.2.2-2" class="pilcrow">¶</a></p>
 <p id="section-11.2.2-3">However, since neither RSA-OAEP nor ECDH guarantee second pre-image resistance at all, even in a correct implementation, these ciphertexts are bound to the key derivation in order to guarantee that <code>c != c'</code> will yield a unique ciphertext, and thus restoring second pre-image resistance to the overall Composite ML-KEM.<a href="#section-11.2.2-3" class="pilcrow">¶</a></p>
 </section>
