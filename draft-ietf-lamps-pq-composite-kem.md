@@ -273,10 +273,10 @@ This document defines combinations of ML-KEM [FIPS.203] in hybrid with tradition
 
 Interop-affecting changes:
 
-* Remove the ASN.1 SEQUENCE wrapping around the ASN.1 structures to make it easier to access via other protocols.
-* Add a ML-KEM-768 + ECDH-P256 variant
+* Removed the ASN.1 wrapping and added a fixed 4-byte length encoding value for the first mlkem component so the keys and ciphertexts can be separated.
+* Add a ML-KEM-768 + ECDH-P256 variant.
 * Changed the ML-KEM-1024 + P256 variant to use HKDF-SHA384 instead of SHA3 so that it is compliant with CNSA 2.0.
-
+* In the KEM combiner, HKDF refers to the HKDF-extract() without HKDF-expand().  When used with CMS, HKDF-extract() with HKDF-expand() is used.
 
 Editorial changes:
 
@@ -284,12 +284,9 @@ Editorial changes:
 * Added a security consideration about key reuse.
 * Added security considerations about SHA3-vs-HKDF-SHA2 and a warning against generifying this construction to other combinations of ciphers.
 * Enhanced the section about how to get this FIPS-certified.
-* ASN.1 module fixes (thanks Russ and Carl).
-  * Renamed the module from Composite-KEM-2023 -> Composite-MLKEM-2024
-  * Simplified the ASN.1 module to make it more compiler-friendly (thanks Carl!) -- should not affect wire encodings.
-* Added an appendix "Comparison with other Hybred KEMs" with sub-sections on X-Wing and ETSI CatKDF
+* Renamed the module from Composite-KEM-2023 -> Composite-MLKEM-2025.
+* Added an appendix "Comparison with other Hybred KEMs" with sub-sections on X-Wing and ETSI CatKDF.
 * Added alignment text with SP 800-227.
-* Removed the ASN.1 wrapping and added a fixed 4-byte length encoding value for the first mlkem component so the keys and ciphertexts can be separated.
 
 
 Still to do in a future version:
