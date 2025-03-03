@@ -1583,19 +1583,19 @@ but <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span> uses <code
 <p id="section-3-3">We also borrow the following algorithms from <span>[<a href="#RFC9180" class="cite xref">RFC9180</a>]</span>, which deal with encoding and decoding of KEM public key values.<a href="#section-3-3" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3-4.1">
-          <p id="section-3-4.1.1"><code>SerializePublicKey(pk) -&gt; bytes</code>: Produce a fixed-length byte string encoding the public key pk.<a href="#section-3-4.1.1" class="pilcrow">¶</a></p>
+          <p id="section-3-4.1.1"><code>SerializePublicKey(pk) -&gt; bytes</code>: Produce a byte string encoding the public key pk.<a href="#section-3-4.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-3-4.2">
-          <p id="section-3-4.2.1"><code>DeserializePublicKey(bytes) -&gt; pk</code>: Parse a fixed-length byte string to recover a public key pk. This function can fail if the input byte string is malformed.<a href="#section-3-4.2.1" class="pilcrow">¶</a></p>
+          <p id="section-3-4.2.1"><code>DeserializePublicKey(bytes) -&gt; pk</code>: Parse a byte string to recover a public key pk. This function can fail if the input byte string is malformed.<a href="#section-3-4.2.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <p id="section-3-5">We define the following algorithms which are used to serialize and deseralize the CompositeCiphertextValue<a href="#section-3-5" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3-6.1">
-          <p id="section-3-6.1.1"><code>SerializeCiphertextValue(CompositeCiphertextValue) -&gt; bytes</code>: Produce a fixed-length byte string encoding the CompositeCiphertextValue.<a href="#section-3-6.1.1" class="pilcrow">¶</a></p>
+          <p id="section-3-6.1.1"><code>SerializeCiphertextValue(CompositeCiphertextValue) -&gt; bytes</code>: Produce a byte string encoding the CompositeCiphertextValue.<a href="#section-3-6.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-3-6.2">
-          <p id="section-3-6.2.1"><code>DeserializeCipherTextValue(bytes) -&gt; pk</code>: Parse a fixed-length byte string to recover a CompositeCiphertextValue. This function can fail if the input byte string is malformed.<a href="#section-3-6.2.1" class="pilcrow">¶</a></p>
+          <p id="section-3-6.2.1"><code>DeserializeCipherTextValue(bytes) -&gt; pk</code>: Parse a byte string to recover a CompositeCiphertextValue. This function can fail if the input byte string is malformed.<a href="#section-3-6.2.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <p id="section-3-7">The KEM interface defined above differs from both traditional key transport mechanism (for example for use with KeyTransRecipientInfo defined in <span>[<a href="#RFC5652" class="cite xref">RFC5652</a>]</span>), and key agreement (for example for use with KeyAgreeRecipientInfo defined in <span>[<a href="#RFC5652" class="cite xref">RFC5652</a>]</span>).<a href="#section-3-7" class="pilcrow">¶</a></p>
@@ -1894,7 +1894,7 @@ Decap Process:
         <h3 id="name-serializepublickey-and-dese">
 <a href="#section-4.4" class="section-number selfRef">4.4. </a><a href="#name-serializepublickey-and-dese" class="section-name selfRef">SerializePublicKey and DeserializePublicKey</a>
         </h3>
-<p id="section-4.4-1">The KEM public key serialization routine simply concatenates the public keys of the constituent KEMs, as defined below.<a href="#section-4.4-1" class="pilcrow">¶</a></p>
+<p id="section-4.4-1">Each component KEM public key is serialized according to its respective standard as shown in <a href="#appdx_components" class="auto internal xref">Appendix B</a> and concatenated together using a fixed 4-byte length field denoting the length in bytes of the first component key, as defined below.<a href="#section-4.4-1" class="pilcrow">¶</a></p>
 <span id="name-composite-serializepublicke"></span><div id="alg-composite-serialize">
 <figure id="figure-4">
           <div class="alignLeft art-text artwork" id="section-4.4-2.1">
@@ -1929,6 +1929,8 @@ Serialization Process:
      (mlkemPK, tradPK) = pk
 
   2. Serialize each of the constituent public keys
+       The component keys are serialized according to their respective standard
+       as shown in the component algorithm appendix.
 
      mlkemEncodedPK = ML-KEM.SerializePublicKey(mlkemPK)
      tradEncodedPK = Trad.SerializePublicKey(tradPK)
@@ -1950,7 +1952,8 @@ Serialization Process:
 <a href="#name-composite-serializepublicke" class="selfRef">Composite SerializePublicKey(pk)</a>
           </figcaption></figure>
 </div>
-<p id="section-4.4-3">Deserialization reverses this process, raising an error in the event that the input is malformed.<a href="#section-4.4-3" class="pilcrow">¶</a></p>
+<p id="section-4.4-3">Deserialization reverses this process, raising an error in the event that the input is malformed.  Each component
+key is deserialized according to their respective standard as shown in <a href="#appdx_components" class="auto internal xref">Appendix B</a>.<a href="#section-4.4-3" class="pilcrow">¶</a></p>
 <span id="name-composite-deserializepublic"></span><div id="alg-composite-deserialize">
 <figure id="figure-5">
           <div class="alignLeft art-text artwork" id="section-4.4-4.1">
@@ -1990,6 +1993,8 @@ Deserialization Process:
      (mlkemEncodedPK, tradEncodedPK) = bytes
 
   3. Deserialize the constituent public keys
+        The component keys are deserialized according to their respective standard
+        as shown in the component algorithm appendix.
 
      mlkemPK = ML-KEM.DeserializePublicKey(mlkemEncodedPK)
      tradPK = Trad.DeserializePublicKey(tradEncodedPK)
@@ -2028,8 +2033,7 @@ serialization, or the mlkem and traditional private keys for deserialization.<a 
         <h3 id="name-serializeciphertextvalue-an">
 <a href="#section-4.6" class="section-number selfRef">4.6. </a><a href="#name-serializeciphertextvalue-an" class="section-name selfRef">SerializeCiphertextValue and DeSerializeCiphertextValue</a>
         </h3>
-<p id="section-4.6-1">The serialization routine for the CompositeCiphertextValue simply concatenates the fixed-length
-ML-KEM cipherText value with the cipherText value from the traditional algorithm, as defined below:<a href="#section-4.6-1" class="pilcrow">¶</a></p>
+<p id="section-4.6-1">Each Ciphertext component of CompositeCiphertextValue is serialized according to their respective standard as shown in <a href="#appdx_components" class="auto internal xref">Appendix B</a> and concatenated together using a fixed 4-byte length field denoting the length in bytes of the first component signature, as shown below.  For the Traditional component, the CipherText is the encrypted value 'enc' as described in <a href="#sec-RSAOAEPKEM" class="auto internal xref">Section 3.1</a> or <a href="#sec-DHKEM" class="auto internal xref">Section 3.2</a> depending on the chosen component algorithm.<a href="#section-4.6-1" class="pilcrow">¶</a></p>
 <span id="name-composite-serializecipherte"></span><div id="alg-composite-serialize-ct">
 <figure id="figure-6">
           <div class="alignLeft art-text artwork" id="section-4.6-2.1">
@@ -2063,6 +2067,10 @@ Serialization Process:
      (mldkemct, tradkemct) = CompositeCiphertextValue
 
   2. Serialize each of the constituent cipher texts
+       The component cipher texts are serialized according to their respective standard
+       as shown in the component algorithm appendix.  For the tradkemEncodedCT the
+       ciphertext is the encrypted output as defined in 'Promotion of RSA-OAEP into a KEM'
+       or 'Promotion of ECDH into a KEM'.
 
      mlkemEncodedCt = ML-KEM.SerializeCiphertext(mlkemct)
      tradkemEncodedCT = Trad.SerializeCiphertext(tradkemct)
@@ -2084,7 +2092,10 @@ Serialization Process:
 <a href="#name-composite-serializecipherte" class="selfRef">Composite SerializeCiphertextValue(CompositeCiphertextValue)</a>
           </figcaption></figure>
 </div>
-<p id="section-4.6-3">Deserialization reverses this process, raising an error in the event that the input is malformed.<a href="#section-4.6-3" class="pilcrow">¶</a></p>
+<p id="section-4.6-3">Deserialization reverses this process, raising an error in the event that the input is malformed.  Each component
+ciphertext is deserialized according to their respective standard as shown in <a href="#appdx_components" class="auto internal xref">Appendix B</a>.  For the traditional
+component, the ciphertext is the encrypted value 'enc' as described in <a href="#sec-RSAOAEPKEM" class="auto internal xref">Section 3.1</a> or <a href="#sec-DHKEM" class="auto internal xref">Section 3.2</a> depending
+on the chosen component algorithm.<a href="#section-4.6-3" class="pilcrow">¶</a></p>
 <span id="name-composite-deserializecipher"></span><div id="alg-composite-deserialize-ct">
 <figure id="figure-7">
           <div class="alignLeft art-text artwork" id="section-4.6-4.1">

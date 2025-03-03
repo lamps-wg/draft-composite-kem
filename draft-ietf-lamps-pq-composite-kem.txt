@@ -366,23 +366,22 @@ Table of Contents
    We also borrow the following algorithms from [RFC9180], which deal
    with encoding and decoding of KEM public key values.
 
-   *  SerializePublicKey(pk) -> bytes: Produce a fixed-length byte
-      string encoding the public key pk.
+   *  SerializePublicKey(pk) -> bytes: Produce a byte string encoding
+      the public key pk.
 
-   *  DeserializePublicKey(bytes) -> pk: Parse a fixed-length byte
-      string to recover a public key pk.  This function can fail if the
-      input byte string is malformed.
+   *  DeserializePublicKey(bytes) -> pk: Parse a byte string to recover
+      a public key pk.  This function can fail if the input byte string
+      is malformed.
 
    We define the following algorithms which are used to serialize and
    deseralize the CompositeCiphertextValue
 
    *  SerializeCiphertextValue(CompositeCiphertextValue) -> bytes:
-      Produce a fixed-length byte string encoding the
-      CompositeCiphertextValue.
+      Produce a byte string encoding the CompositeCiphertextValue.
 
-   *  DeserializeCipherTextValue(bytes) -> pk: Parse a fixed-length byte
-      string to recover a CompositeCiphertextValue.  This function can
-      fail if the input byte string is malformed.
+   *  DeserializeCipherTextValue(bytes) -> pk: Parse a byte string to
+      recover a CompositeCiphertextValue.  This function can fail if the
+      input byte string is malformed.
 
    The KEM interface defined above differs from both traditional key
    transport mechanism (for example for use with KeyTransRecipientInfo
@@ -722,59 +721,64 @@ Decap Process:
 
 4.4.  SerializePublicKey and DeserializePublicKey
 
-   The KEM public key serialization routine simply concatenates the
-   public keys of the constituent KEMs, as defined below.
+   Each component KEM public key is serialized according to its
+   respective standard as shown in Appendix B and concatenated together
+   using a fixed 4-byte length field denoting the length in bytes of the
+   first component key, as defined below.
 
- Composite-ML-KEM.SerializePublicKey(pk) -> bytes
+Composite-ML-KEM.SerializePublicKey(pk) -> bytes
 
- Explicit Input:
+Explicit Input:
 
-   pk    Composite ML-KEM public key
+  pk    Composite ML-KEM public key
 
- Implicit inputs:
+Implicit inputs:
 
-   ML-KEM   A placeholder for the specific ML-KEM algorithm and
-            parameter set to use, for example, could be "ML-KEM-768".
+  ML-KEM   A placeholder for the specific ML-KEM algorithm and
+           parameter set to use, for example, could be "ML-KEM-768".
 
-   Trad     A placeholder for the specific traditional algorithm and
-            parameter set to use, for example "RSA-OAEP"
-            or "X25519".
+  Trad     A placeholder for the specific traditional algorithm and
+           parameter set to use, for example "RSA-OAEP"
+           or "X25519".
 
-   IntegerToBytes  A function that takes an Integer and converts it to
-            a byte representation of size byteLength.  See definition in
-            [FIPS.204]
+  IntegerToBytes  A function that takes an Integer and converts it to
+           a byte representation of size byteLength.  See definition in
+           [FIPS.204]
 
- Output:
+Output:
 
-   bytes   The encoded public key
+  bytes   The encoded public key
 
- Serialization Process:
+Serialization Process:
 
-   1. Separate the public keys
+  1. Separate the public keys
 
-      (mlkemPK, tradPK) = pk
+     (mlkemPK, tradPK) = pk
 
-   2. Serialize each of the constituent public keys
+  2. Serialize each of the constituent public keys
+       The component keys are serialized according to their respective standard
+       as shown in the component algorithm appendix.
 
-      mlkemEncodedPK = ML-KEM.SerializePublicKey(mlkemPK)
-      tradEncodedPK = Trad.SerializePublicKey(tradPK)
+     mlkemEncodedPK = ML-KEM.SerializePublicKey(mlkemPK)
+     tradEncodedPK = Trad.SerializePublicKey(tradPK)
 
-   3. Calculate the length encoding of the mlkemEncodedPK
+  3. Calculate the length encoding of the mlkemEncodedPK
 
-      If (mlkemEncodedPK.length) > 2^32
-          then output "message too long" and stop.
+     If (mlkemEncodedPK.length) > 2^32
+         then output "message too long" and stop.
 
-      encodedLength = IntegerToBytes(mlkemEncodedPK.length, 4)
+     encodedLength = IntegerToBytes(mlkemEncodedPK.length, 4)
 
-   4. Combine and output the encoded public key
+  4. Combine and output the encoded public key
 
-      bytes = encodedLength || mlkemEncodedPK || tradEncodedPK
-      output bytes
+     bytes = encodedLength || mlkemEncodedPK || tradEncodedPK
+     output bytes
 
-               Figure 4: Composite SerializePublicKey(pk)
+              Figure 4: Composite SerializePublicKey(pk)
 
    Deserialization reverses this process, raising an error in the event
-   that the input is malformed.
+   that the input is malformed.  Each component key is deserialized
+   according to their respective standard as shown in Appendix B.
 
 Composite-ML-KEM.DeserializePublicKey(bytes) -> pk
 
@@ -811,6 +815,8 @@ Deserialization Process:
      (mlkemEncodedPK, tradEncodedPK) = bytes
 
   3. Deserialize the constituent public keys
+        The component keys are deserialized according to their respective standard
+        as shown in the component algorithm appendix.
 
      mlkemPK = ML-KEM.DeserializePublicKey(mlkemEncodedPK)
      tradPK = Trad.DeserializePublicKey(tradEncodedPK)
@@ -839,9 +845,13 @@ Deserialization Process:
 
 4.6.  SerializeCiphertextValue and DeSerializeCiphertextValue
 
-   The serialization routine for the CompositeCiphertextValue simply
-   concatenates the fixed-length ML-KEM cipherText value with the
-   cipherText value from the traditional algorithm, as defined below:
+   Each Ciphertext component of CompositeCiphertextValue is serialized
+   according to their respective standard as shown in Appendix B and
+   concatenated together using a fixed 4-byte length field denoting the
+   length in bytes of the first component signature, as shown below.
+   For the Traditional component, the CipherText is the encrypted value
+   'enc' as described in Section 3.1 or Section 3.2 depending on the
+   chosen component algorithm.
 
 Composite-ML-DSA.SerializeCiphertextValue(CompositeCiphertextValue) -> bytes
 
@@ -872,6 +882,10 @@ Serialization Process:
      (mldkemct, tradkemct) = CompositeCiphertextValue
 
   2. Serialize each of the constituent cipher texts
+       The component cipher texts are serialized according to their respective standard
+       as shown in the component algorithm appendix.  For the tradkemEncodedCT the
+       ciphertext is the encrypted output as defined in 'Promotion of RSA-OAEP into a KEM'
+       or 'Promotion of ECDH into a KEM'.
 
      mlkemEncodedCt = ML-KEM.SerializeCiphertext(mlkemct)
      tradkemEncodedCT = Trad.SerializeCiphertext(tradkemct)
@@ -892,7 +906,11 @@ Serialization Process:
           SerializeCiphertextValue(CompositeCiphertextValue)
 
    Deserialization reverses this process, raising an error in the event
-   that the input is malformed.
+   that the input is malformed.  Each component ciphertext is
+   deserialized according to their respective standard as shown in
+   Appendix B.  For the traditional component, the ciphertext is the
+   encrypted value 'enc' as described in Section 3.1 or Section 3.2
+   depending on the chosen component algorithm.
 
 Composite-ML-KEM.DeserializeCiphertextValue(bytes) -> CompositeCiphertextValue
 
