@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-01-30T01:40:49.774967+00:00",
+  "timestamp": "2025-03-06T01:49:18.740210+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -932,16 +932,66 @@
       "id": "I_kwDOKRPFO86RpPjG",
       "title": "Should we have a security proof for the ML-KEM+RSA-OAEP composite KEM?",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/54",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "johngray-dev",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "For a security proof of the ML-KEM + ECDH combos, we can point to the X-Wing paper. We should have a similar proof for the RSA-OAEP combos. Not sure how to go about attracting someone to help with this, or if we should attempt proof-writing ourselves.",
       "createdAt": "2024-08-01T21:31:58Z",
-      "updatedAt": "2024-08-01T21:31:58Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2025-03-03T19:59:02Z",
+      "closedAt": "2025-03-03T19:59:02Z",
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "What we need is some justification of the statement _\"A composite of ML-KEM and RSA-OAEP is IND-CCA so long as either component is.\"_ That breaks down into two cases:\n\nA) _\"A composite of ML-KEM and RSA-OAEP is IND-CCA as long as RSA-OAEP is\"_: **We need some sentence about how the RSA component is bound to the composite. I'm sure this is a single sentence, but I don't know what it is**. Next, we claim that RSA-OAEP is IND-CCA, which is proved in [1]\n\nB) _\"A composite of ML-KEM and RSA-OAEP is IND-CCA as long as ML-KEM is\"_: Here, I think we get to just point at the X-Wing paper. To my reading, it's proof that the QSF framework is allowed to omit the ML-KEM public key and ciphertext from the combiner hinges only on ML-KEM being ciphertext second pre-image resistant, which FO transform based KEM is. To my reading, this should hold for any choice of the second KEM, even a horribly insecure one (which is what we want for a composite).\n\n\nI am not at all confident about this, and would love for someone with some more academic background to review and help draft Security Considerations text.\n\n\n[1]: Barthe, G., Gr\u00e9goire, B., Lakhnech, Y., Zanella B\u00e9guelin, S. (2011). Beyond Provable Security Verifiable IND-CCA Security of OAEP. In: Kiayias, A. (eds) Topics in Cryptology \u2013 CT-RSA 2011. CT-RSA 2011. Lecture Notes in Computer Science, vol 6558. Springer, Berlin, Heidelberg. https://doi.org/10.1007/978-3-642-19074-2_13",
+          "createdAt": "2025-01-31T01:41:59Z",
+          "updatedAt": "2025-01-31T01:50:33Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I found this:\n> The original 1994 paper of Bellare and Rogaway [9] proves that, under the hypothesis that the underlying trapdoor permutation family is one-way, OAEP is semantically secure\nunder chosen-ciphertext attacks. \n\n\nAlso this paper\nhttps://link.springer.com/chapter/10.1007/978-3-642-19074-2_13\n\ncontains:\n\n> Theorem 1 (IND-CCA security of OAEP)\n\nbut it's behind a paywall. Is it cheating to cite it anyway?",
+          "createdAt": "2025-01-31T01:48:35Z",
+          "updatedAt": "2025-01-31T01:48:35Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Maybe I have enough to cobble this paragraph together. Here's an attempt (borrowed heavily from the security consideration of the X-Wing I-D)\n\n> Informally, a Composite ML-KEM algorithm is secure if the combiner (HKDF-SHA2 or SHA3) is secure, and either ML-KEM-768 is secure or the traditional component (RSA-OAEP, ECDH, or X25519) is secure.\n>\n> More precisely, if HKDF-SHA256, HKDF-SHA384, and SHA3-256, may be modelled as a random oracle under multiple concatenated inputs, then the IND-CCA security of X-Wing is bounded by the IND-CCA security of ML-KEM-768, and the IND-CCA security of RSA-OAEP. ML-KEM is known to be IND-CCA secure [FIPS.203] and RSA-OAEP is known to be IND-CCA secure, see [1].\n>\n> The overall security of the composite inherits the IND-CCA property of RSA-OAEP trivially since the composite combiner binds the RSA-OAEP public key and ciphertext meaning that even if RSA-OAEP is not ciphertext second preimage resistant, any alternate publickey-ciphertext pairs will result in a different output shared secret key. The composite inherits the IND-CCA property of ML-KEM due to the specifics of the Fujisaki-Okamoto transformation used in ML-KEM as proved in [X-Wing]: the Composite combiner cannot be assumed to be secure when used with different KEMs. In particular it is not known to be safe to leave out the post-quantum ciphertext from the combiner in the general case.\n>\n> [1]: Barthe, G., Gr\u00e9goire, B., Lakhnech, Y., Zanella B\u00e9guelin, S. (2011). Beyond Provable Security Verifiable IND-CCA Security of OAEP. In: Kiayias, A. (eds) Topics in Cryptology \u2013 CT-RSA 2011. CT-RSA 2011. Lecture Notes in Computer Science, vol 6558. Springer, Berlin, Heidelberg. https://doi.org/10.1007/978-3-642-19074-2_13",
+          "createdAt": "2025-01-31T02:03:13Z",
+          "updatedAt": "2025-01-31T02:03:29Z"
+        },
+        {
+          "author": "fluppe2",
+          "authorAssociation": "NONE",
+          "body": "> I found this:\n> \n> > The original 1994 paper of Bellare and Rogaway [9] proves that, under the hypothesis that the underlying trapdoor permutation family is one-way, OAEP is semantically secure\n> > under chosen-ciphertext attacks.\n> \n> Also this paper https://link.springer.com/chapter/10.1007/978-3-642-19074-2_13\n> \n> contains:\n> \n> > Theorem 1 (IND-CCA security of OAEP)\n> \n> but it's behind a paywall. Is it cheating to cite it anyway?\n\nI think the paper you are looking for is available here: https://software.imdea.org/~szanella/Zanella.2011.RSA.pdf",
+          "createdAt": "2025-02-01T05:33:19Z",
+          "updatedAt": "2025-02-01T05:33:19Z"
+        },
+        {
+          "author": "fluppe2",
+          "authorAssociation": "NONE",
+          "body": "With ML-KEM + RSA-OAEP you leave the QSF Framework described in the X-Wing paper (https://eprint.iacr.org/2024/039), which in its building blocks uses a nominal group (an abstraction of an elliptic curve) and another KEM (ultimately intended to deliver quantum safety but does not harm pre-quantum safety even if it gets broken). The pre-quantum security is therefore reduced to a Diffie-Hellman intractability notion and C2PRI for the KEM.\n\nI think, it is not relevant if RSA-OAEP is C2PRI for your ML-KEM + RSA-OAEP composites, as this is not the security property that RSA-OAEP is asked to deliver in this construction. It is rather that one has to argue that the IND-CCA2-security of the ML-KEM + RSA-OAEP composites (where the RSA-OAEP ciphertext is fed to the combiner) reduce to the IND-CCA2-security of RSA-OAEP and C2PRI of ML-KEM. I guess in that light you are getting closer to a construction given in the paper \"KEM Combiners\" (https://eprint.iacr.org/2018/024), i.e. one might rather argue along their arguments that one can drop the ciphertext of a C2PRI KEM.",
+          "createdAt": "2025-02-01T06:36:32Z",
+          "updatedAt": "2025-02-01T06:36:32Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Douglas points out that the rsaSS is completely variable-length (chosen by the sender), and the rsaCT and rsaPK may be variable length.\n\nWe could add length tag into the combiner input, or maybe more simply is add a step to the Decaps() routine to check the lengths since the decryptor knows what the lengths of all these things should be.",
+          "createdAt": "2025-02-04T02:18:36Z",
+          "updatedAt": "2025-02-04T02:18:36Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Thanks @fluppe2 !\n\n> I think, it is not relevant if RSA-OAEP is C2PRI for your ML-KEM + RSA-OAEP composites, as this is not the security property that RSA-OAEP is asked to deliver in this construction. ... i.e. one might rather argue along their arguments that one can drop the ciphertext of a C2PRI KEM.\n\nYes. This is also my understanding. I guess I did not do a good job of writing it clearly. Thanks for the extra references. I have also asked a few other people to look at this. I'm will do another round of edits.",
+          "createdAt": "2025-02-04T02:20:44Z",
+          "updatedAt": "2025-02-04T02:20:44Z"
+        }
+      ]
     },
     {
       "number": 58,
@@ -1066,15 +1116,15 @@
       "id": "I_kwDOKRPFO86UjRPn",
       "title": "Align with SP 800-227",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/64",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "- [ ] Align the combiner.\r\n- [ ] Fix \"## FIPS Compliance {#sec-fips-compliance}\" to match.",
       "createdAt": "2024-08-28T14:34:52Z",
-      "updatedAt": "2025-01-26T02:37:42Z",
-      "closedAt": null,
+      "updatedAt": "2025-01-30T20:03:27Z",
+      "closedAt": "2025-01-30T20:03:27Z",
       "comments": [
         {
           "author": "johngray-dev",
@@ -1306,7 +1356,7 @@
       "labels": [],
       "body": "https://mailarchive.ietf.org/arch/msg/spasm/zfWx5fYjvuvohTOI7asQG4m-NDI/\r\n\r\n> Hi Mike,\r\n>\r\n> Your draft:\r\n> https://datatracker.ietf.org/doc/draft-ietf-lamps-pq-composite-kem/\r\n> could do with table  on Npk, Nsk, and NSig sizes. Such tables greatly help\r\n> in implementation.\r\n>\r\n> The idea is from RFC 9180, Section 7.1\r\n> <https://datatracker.ietf.org/doc/rfc9180/>\r\n>\r\n> [image: image.png]\r\n>\r\n> The details of the calculations can be found here:\r\n>\r\n> https://github.com/codespree/quantcrypt/blob/main/additional_info_keysize.md\r\n>\r\n> All the best,\r\n> Varun\r\n\r\nIn my opinion, we should get sample keys, signatures, and ciphertexts for all algorithms, and then measure them. This sounds like a hackathon project.",
       "createdAt": "2024-10-17T16:15:59Z",
-      "updatedAt": "2024-10-18T09:53:19Z",
+      "updatedAt": "2025-02-27T22:03:45Z",
       "closedAt": null,
       "comments": [
         {
@@ -1315,6 +1365,20 @@
           "body": "Hi Mike,\r\n\r\nI am Peiduo and I am from Varun(@codespree)'s team. We have computed the public key, secrete key and signature lengths for ML-DSA and its composite variations, and the public key, secrete key, shared secret, and cipher text lengths for ML-KEM and its composite variations. The full table documentation, together with notes on overhead computation, can be found in our project repo [here](https://github.com/codespree/quantcrypt/blob/main/additional_info_keysize.md).\r\n\r\nPlease check if the tables meet the requirement of this issue :)\r\n\r\nBest regards,\r\nZhao Peiduo",
           "createdAt": "2024-10-18T09:53:18Z",
           "updatedAt": "2024-10-18T09:53:18Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "We discussed at an author's meeting, and we think that generating a toble like this is trickier than it looks because RSA public key size is not constant: things like leading zeros, or choosing a public exponent of 3, 11, 0x10001 are going to lead to a slight difference in overall size.\n\nI am starting to think that the right answer is to not put a table, but instead when we include test vectors / samples, we could list the public key and ciphertext sizes in those samples.",
+          "createdAt": "2025-02-05T15:52:06Z",
+          "updatedAt": "2025-02-05T15:52:06Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "It should be just Len(ml-kem) + Len(trad) ... easy since we removed the ASN.1 wrapper.\n\nBut it would be easier to just wait until we have samples ...\n\n**For now: just put in an empty table and say TBD: pending samples**",
+          "createdAt": "2025-02-27T22:01:39Z",
+          "updatedAt": "2025-02-27T22:03:45Z"
         }
       ]
     },
@@ -1465,15 +1529,15 @@
       "id": "I_kwDOKRPFO86dZEqO",
       "title": "Maybe reverse the domain encoding",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/89",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ilaril",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "The KDF input `mlkemSS || tradSS || tradCT || tradPK || Domain` is not parsable, as a domain may be suffix of another. This means the inputs might collide even between what are supposed to be separate domains.\r\n\r\nThe simplest way I can come up to make it parsable (and thus prevent inter-domain collisions) is to reverse the domain encoding:\r\n\r\n`mlkemSS || tradSS || tradCT || tradPK || reverse(Domain)` \r\n\r\n(Since it is possible to parse in reverse from the end.)",
       "createdAt": "2024-11-07T10:38:24Z",
-      "updatedAt": "2024-11-09T21:07:07Z",
-      "closedAt": null,
+      "updatedAt": "2025-02-06T09:06:24Z",
+      "closedAt": "2025-02-06T09:06:23Z",
       "comments": [
         {
           "author": "ounsworth",
@@ -1488,6 +1552,20 @@
           "body": "The domain separation is not guaranteed: Even if two inputs have different domains, the input to the KDF might still be the same.\r\n\r\nWhile such thing seems to be very unlikely to happen and low impact in practice, cryptography is traditionally conservative and would rather eliminate the possibility altogether.\r\n\r\n",
           "createdAt": "2024-11-09T21:07:05Z",
           "updatedAt": "2024-11-09T21:07:05Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@ilaril the domain separator value `Domain` is a hard-coded binary value (specifically, it's the DER encoding of the OID of the composite algorithm). I don't understand why byte-reversing the DER-encoded OID helps with your argument?\n\nYes, one OID can be the suffix of another, but for a whole Domain value to be the suffix of another, you would need to do something incredibly weird where the DER TLV tagging would need to appear in the middle of another value. Possible, I guess, but I don't see how byte-order-reversing the value helps.",
+          "createdAt": "2025-02-05T15:58:57Z",
+          "updatedAt": "2025-02-05T16:04:39Z"
+        },
+        {
+          "author": "ilaril",
+          "authorAssociation": "NONE",
+          "body": "OID DER TLV encoding is prefix-free, and byte-order-reversal of any prefix-free encoding is suffix-free, so byte-order-reversed OID DER TLV encoding is suffix-free.\n\nHowever, even generating collisions seems to be incredibly difficult task (as trad* values need to be consistent). Closing this, as I no longer think this is a practical issue.",
+          "createdAt": "2025-02-06T09:06:23Z",
+          "updatedAt": "2025-02-06T09:06:23Z"
         }
       ]
     },
@@ -1534,15 +1612,15 @@
       "id": "I_kwDOKRPFO86dvTHi",
       "title": "Composite KEM does not fully protect against implementation errors in ML-KEM",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/91",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "See comment from Peter C:\r\n\r\nhttps://mailarchive.ietf.org/arch/msg/spasm/Fq06ghviNMejesJNR4XzP5x0ecI/",
       "createdAt": "2024-11-09T18:50:30Z",
-      "updatedAt": "2025-01-06T00:53:43Z",
-      "closedAt": null,
+      "updatedAt": "2025-03-01T23:33:49Z",
+      "closedAt": "2025-03-01T23:33:49Z",
       "comments": [
         {
           "author": "ounsworth",
@@ -1558,16 +1636,24 @@
       "id": "I_kwDOKRPFO86egkdG",
       "title": "GHP18 analysis may not apply",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/92",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "chris-wood",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "The security considerations references [GHP18](https://eprint.iacr.org/2018/024.pdf) as proof of the combiner mechanism in the draft. However, as far as I can tell, the draft does not adhere to the construction in this paper. In GHP18, the output ciphertext is the result of concatenating all of the individual KEM ciphertexts, and the shared secret is the result of a function W applied to all individual KEM shared secrets _and_ the ciphertext, i.e., `K= W(k1,...,kn,c)` where `ki` is the i-th KEM shared secret and `c` is the combined (concatenated) ciphertext.\r\n\r\nHowever, in this document, the shared secret does not include the ciphertext in the same way. It computes the shared secret as:\r\n\r\n```\r\nct = CompositeCiphertextValue(mlkemCT, tradCT)\r\nss = KDF(mlkemSS || tradSS || tradCT || tradPK || Domain)\r\n```\r\n\r\nwhereas for equivalence one would need to do something like:\r\n\r\n```\r\nct = CompositeCiphertextValue(mlkemCT, tradCT)\r\nss = KDF(mlkemSS || tradSS || ct || tradPK || Domain)\r\n```\r\n\r\nPresumably the traditional public key is included for MAL-BIND-K-PK reasons, but it's not really clear to me.\r\n\r\nTo make a long issue short, where is the proof of security for the combiner in this document?",
       "createdAt": "2024-11-14T16:18:49Z",
-      "updatedAt": "2024-11-14T16:18:49Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2025-03-03T19:59:02Z",
+      "closedAt": "2025-03-03T19:59:02Z",
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Security considerations have been added that more closely base the security proof of this combiner on the security proof of X-Wing. I think that addresses these comments.",
+          "createdAt": "2025-03-01T23:36:07Z",
+          "updatedAt": "2025-03-01T23:36:07Z"
+        }
+      ]
     },
     {
       "number": 93,
@@ -1665,15 +1751,15 @@
       "id": "I_kwDOKRPFO86k6BBB",
       "title": "Use HPKE DHKEM instead of custom DHKEM",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/98",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "chris-wood",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Section {{sec-DHKEM}} describes how to promote an ECDH algorithm, such as X25519, to a KEM. In doing so, it strips down HPKE's DHKEM for its own purpose. This has a number of problems, including:\r\n\r\n(1) There seems to be no analysis suggesting the stripped down version satisfies the necessary properties of a KEM. For example, what are the binding properties of this variant, and do they vary based on the traditional KEM that's used? DHKEM, in comparison, is known to satisfy the IND-CCA2 requirement (when instantiated correctly) and its binding properties are known. \r\n(2) More importantly, when trying to use the composite KEM in HPKE, things become super awkward. Let's take a concrete example. Let's say I want to use composite ML-KEM with P-256 in HPKE. Part of doing that requires one to implement `DeriveKeyPair`, as per RFC9180. However, as the document is currently written, there is no deterministic key generation function on the KEM interface, i.e., one can't simply call `(tradPK, tradSK) = TradKEM.MissingDeterministicKeyGenerationFunction(tradSeed)`. This means we need to either expand the KEM interface in this document, which would mean that there would be two different deterministic key generation functions for P-256, one defined here and one defined in RFC9180, or we can simply use RFC9180's function directly. The former seems quite redundant and undesirable, whereas the latter isn't exactly possible. Recall that we're trying to use ML-KEM with P-256, not ML-KEM with DHKEM(P-256, HKDF-SHA256). \r\n\r\nThese problems vanish if we insist that elliptic-curve-based KEMs must be DHKEM as specified in RFC9180. Then we have a very clean path towards integration into HPKE without compromising on any features.",
       "createdAt": "2025-01-02T21:33:39Z",
-      "updatedAt": "2025-01-06T21:25:07Z",
-      "closedAt": null,
+      "updatedAt": "2025-03-01T23:38:56Z",
+      "closedAt": "2025-03-01T23:38:56Z",
       "comments": [
         {
           "author": "ounsworth",
@@ -1702,6 +1788,13 @@
           "body": "@ounsworth to point (2), HPKE _requires_ deterministic key generation. It's not an optional thing. If you're fundamentally opposed to deterministic key generation, then, yeah, we should just stop here. \ud83e\udd37 ",
           "createdAt": "2025-01-06T21:25:06Z",
           "updatedAt": "2025-01-06T21:25:06Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I am not sure what the status of this is. @chris-wood do you still want to use this draft to cross-register these algs to the HPKE registry?\n\nI am going to close this issue for now, but we can re-open if we want to re-persue this.",
+          "createdAt": "2025-03-01T23:37:53Z",
+          "updatedAt": "2025-03-01T23:38:55Z"
         }
       ]
     },
@@ -1710,14 +1803,118 @@
       "id": "I_kwDOKRPFO86ll3hv",
       "title": "No composite is currently compatible with CNSA 2.0",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/102",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "It just came to my attention (thanks Uri), that CNSA 2.0 allows SHA3 internally to ML-DSA / ML-KEM, but not as a standalone hash function (only SHA2-384 and SHA2-512). It also allows only the Level V parameter sets for ML-DSA and ML-KEM.\r\n\r\nThat means that we currently have zero CompositeML-KEM variants that are compatible with CNSA 2.0 because we use SHA3 as the KEM Combiner on the Level V\u2019s.\r\n\r\nhttps://lamps-wg.github.io/draft-composite-kem/draft-ietf-lamps-pq-composite-kem.html#name-algorithm-identifiers\r\n\r\nI assume this is a problem we should fix by changing id-MLKEM1024-ECDH-P384 to use HKDF-SHA2-512 ?\r\n\r\nNSA\u2019s stance on hybrids is well known, but I think it\u2019s still preferrable that these exist at least one CompositeKEM that is compatible with CNSA 2.0, right?",
       "createdAt": "2025-01-09T15:43:10Z",
-      "updatedAt": "2025-01-09T15:52:22Z",
+      "updatedAt": "2025-01-30T22:24:46Z",
+      "closedAt": "2025-01-30T22:24:45Z",
+      "comments": []
+    },
+    {
+      "number": 108,
+      "id": "I_kwDOKRPFO86o4P6V",
+      "title": "We need samples / test vectors",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/108",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Question: how do we do sample ciphertexts? Inside a CMS? Just raw ciphertexts? Probably raw ciphertexts.\n\nWe should mimic the format of the kyber-certificates draft.",
+      "createdAt": "2025-02-05T15:47:31Z",
+      "updatedAt": "2025-02-05T15:47:31Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 109,
+      "id": "I_kwDOKRPFO86sADll",
+      "title": "Update private key structs to match the outcome of the SEEDs mess",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/109",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-02-27T21:59:32Z",
+      "updatedAt": "2025-02-27T21:59:32Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 112,
+      "id": "I_kwDOKRPFO86sQKVB",
+      "title": "Add length encoding to handle variable length keys",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/112",
+      "state": "CLOSED",
+      "author": "johngray-dev",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "The private key format for ML_KEM can be a seed, and expanded format or both.  The Composite KEM draft at the moment only supports the seed format.   To better align with the ML-KEM drafts at IETF, we will add a 4-byte length tag to encode the length of the ML-KEM kem, so that it can be separated.\n",
+      "createdAt": "2025-03-03T01:00:19Z",
+      "updatedAt": "2025-03-03T16:00:06Z",
+      "closedAt": "2025-03-03T16:00:05Z",
+      "comments": [
+        {
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "body": "This was resolved in #113 ",
+          "createdAt": "2025-03-03T16:00:05Z",
+          "updatedAt": "2025-03-03T16:00:05Z"
+        }
+      ]
+    },
+    {
+      "number": 114,
+      "id": "I_kwDOKRPFO86sXDr4",
+      "title": "Add reference to component algorithm section in serialization methods to make it clear how the individual component keys should be encoded.",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/114",
+      "state": "OPEN",
+      "author": "johngray-dev",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Add reference to component algorithm section in serialization methods to make it clear how the individual component keys should be encoded.\n\n",
+      "createdAt": "2025-03-03T16:31:35Z",
+      "updatedAt": "2025-03-03T16:31:35Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 117,
+      "id": "I_kwDOKRPFO86st39_",
+      "title": "Clean up \"DER encoding\" sentences",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/117",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "We have instances of \"DER encoding\" in the document. Many of them do not make sense anymore since we removed the ASN.1 wrapper around public keys and signatures.\n\nGo through each one and see if it still makes sense.\n\nAlso, the entire section \"Encoding Rules\" probably does not need to exist anymore since we now explicitly lay out the byte encoding of the structure.",
+      "createdAt": "2025-03-05T15:47:23Z",
+      "updatedAt": "2025-03-05T15:51:43Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 118,
+      "id": "I_kwDOKRPFO86sucd2",
+      "title": "Add KATs",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/118",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "For Composite KEM, we should follow exactly the ACVP test vector format, which can be found here:\n\nhttps://github.com/usnistgov/ACVP-Server/blob/master/gen-val/json-files/ML-KEM-keyGen-FIPS203/expectedResults.json\nhttps://github.com/usnistgov/ACVP-Server/blob/master/gen-val/json-files/ML-KEM-encapDecap-FIPS203/expectedResults.json\n\nThat would mean that for each composite, we include a JSON blob like:\n\n~~~\n \"tests\": [\n        {\n          \"tcId\": \"id-MLKEM768-RSA2048\",\n          \"ek\": \"A1B2C3...\",\n          \"dk\": \"3CB2A1...\",\n          \"c\": \"5A9B...\",\n          \"k\": \"F91B8C7477A6005992EE947BB365EBF1CFE15688BD25DEEFAD54F90922B4B84C\"\n        },\n}\n~~~",
+      "createdAt": "2025-03-05T16:48:52Z",
+      "updatedAt": "2025-03-05T16:49:26Z",
       "closedAt": null,
       "comments": []
     }
@@ -4221,24 +4418,26 @@
       "id": "PR_kwDOKRPFO86Gw8D6",
       "title": "Added appdx comparing with X-Wing and ETSI CatKDF.",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/101",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Closes #91\r\n\r\nTODO before merging:\r\n\r\n- [ ] Review from Peter C, especially:\r\n  - the new appendix comparing this specification with ETSI CatKDF\r\n  - The intro is still a bit misleading about the endorsement from BSI, which Peter C correctly points out is to an earlier version of the composite draft, however we have Jan Klau\u00dfner as an author and close collaboration with Stavros Kousidis on the CFRG version, so BSI is a bull collaborator on developing this.\r\n- [ ] Review from Chris Wood / Deirdre / Bas, especially:\r\n  - The new appendix comparing this specification with X-Wing\r\n- [ ] I was not previously aware of ETSI TS 103 744's CatKDF. We should have a discussion on the LAMPS list about whether we want to add the ML-KEM CT to the KDF in order to offer equivalent security properties as ETSI CatKDF.",
       "createdAt": "2025-01-06T01:05:33Z",
-      "updatedAt": "2025-01-26T01:02:22Z",
+      "updatedAt": "2025-03-01T23:33:51Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
-      "baseRefOid": "2650db111320b4b487e341c9c2d4c03465a586e5",
+      "baseRefOid": "71163b933921b010cdd40e39659f0c81091aa22f",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_catkdf",
-      "headRefOid": "87a652a34576b1003eeb09c2df671730fc5c932c",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "6aea5967ae7714f8c501061f57a38396121ecc27",
+      "closedAt": "2025-03-01T23:33:48Z",
+      "mergedAt": "2025-03-01T23:33:48Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "1e772eadfe5cacc1841b4ac84b392e9f9b948684"
+      },
       "comments": [
         {
           "author": "ounsworth",
@@ -4376,21 +4575,21 @@
       "id": "PR_kwDOKRPFO86I_ox4",
       "title": "Adjusted the combiner of id-MLKEM1024-ECDH-P384 from SHA3 to SHA2-384",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/103",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "\u2026 so that it is compliant with CNSA 2.0.\r\n\r\nCloses #102 \r\n\r\nRebased on top of #100. Merge that one first.",
       "createdAt": "2025-01-26T02:24:16Z",
-      "updatedAt": "2025-01-29T19:30:44Z",
+      "updatedAt": "2025-01-30T21:16:28Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "dadf513a5e1093dd63055071520d582b951546b1",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_cnsa20",
       "headRefOid": "15dbcfc83766e38385438db622fe82e97103f39f",
-      "closedAt": null,
+      "closedAt": "2025-01-30T21:16:28Z",
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
@@ -4401,6 +4600,13 @@
           "body": "Not ready, more work required.\r\n\r\nNow that the general HKDF tweaks are merged to main, I should just cherry-pick the commit that changes MLKEM1024 from SHA3 to HKDF-SHA384, and start a new PR.",
           "createdAt": "2025-01-29T19:30:43Z",
           "updatedAt": "2025-01-29T19:30:43Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Replaced by #107 ",
+          "createdAt": "2025-01-30T21:16:28Z",
+          "updatedAt": "2025-01-30T21:16:28Z"
         }
       ],
       "reviews": []
@@ -4410,24 +4616,26 @@
       "id": "PR_kwDOKRPFO86I_tli",
       "title": "Updated the FIPS Certification section to reflect SP 800-227ipd",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/104",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Closes #64 ",
       "createdAt": "2025-01-26T03:47:59Z",
-      "updatedAt": "2025-01-29T20:31:19Z",
+      "updatedAt": "2025-01-30T20:03:29Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "2d680d15552e5b5f0c3f9c2c21ab13161bbcd531",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_sp800_227",
       "headRefOid": "95149a1681905e28b1a9d3205ae91a32674237c0",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-01-30T20:03:26Z",
+      "mergedAt": "2025-01-30T20:03:26Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "6655e33e910fbe9a0f052960580640d4ad7ed678"
+      },
       "comments": [],
       "reviews": []
     },
@@ -4483,6 +4691,180 @@
       "mergedBy": "johngray-dev",
       "mergeCommit": {
         "oid": "c13d23e334748789cff37329f591e36c143175db"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 107,
+      "id": "PR_kwDOKRPFO86JjaUd",
+      "title": "Adjusted the combiner of id-MLKEM1024-ECDH-P384 from SHA3 to SHA2-384\u2026",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/107",
+      "state": "MERGED",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "\u2026 so that it is compliant with CNSA 2.0.\r\n\r\nCloses #102 \r\n\r\nReplaces #103 ",
+      "createdAt": "2025-01-30T21:16:04Z",
+      "updatedAt": "2025-01-30T22:24:48Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "6655e33e910fbe9a0f052960580640d4ad7ed678",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_cnsa20_b",
+      "headRefOid": "51456ac12dc319e315ec04682e9de16adb14c9a7",
+      "closedAt": "2025-01-30T22:24:45Z",
+      "mergedAt": "2025-01-30T22:24:44Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "ff8f0be1f4830ad3e006e8a631df0082523ae947"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 110,
+      "id": "PR_kwDOKRPFO86M-msl",
+      "title": "Added size table",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/110",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Closes #77 \r\n\r\n\r\n- [ ] I have no idea if the numbers are right. In particular, Varun and Zhao Peiduo included ASN.1 overhead in the calculation, but I think we have since removed this?  https://github.com/codespree/quantcrypt/blob/main/additional_info_keysize.md",
+      "createdAt": "2025-02-28T19:04:58Z",
+      "updatedAt": "2025-02-28T19:04:58Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "71163b933921b010cdd40e39659f0c81091aa22f",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_size_table",
+      "headRefOid": "7076491d7ae73e6dbc2efb0579b7616cb1ad4d5e",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 111,
+      "id": "PR_kwDOKRPFO86NDEhM",
+      "title": "Hybrid security considerations",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/111",
+      "state": "MERGED",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "DO NOT MERGE UNTIL:\r\n\r\n- [x] Resolve that RSA-OAEP ciphertext is variable-length.\r\n\r\nCloses #54 \r\nCloses #92 ",
+      "createdAt": "2025-03-01T23:28:25Z",
+      "updatedAt": "2025-03-03T19:59:01Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "71163b933921b010cdd40e39659f0c81091aa22f",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_oaep",
+      "headRefOid": "205acd0e369b538a049d15c725f525489df753aa",
+      "closedAt": "2025-03-03T19:59:01Z",
+      "mergedAt": "2025-03-03T19:59:01Z",
+      "mergedBy": "johngray-dev",
+      "mergeCommit": {
+        "oid": "c45bedaf8fa44bfbe7635fd2b785b5de9d203308"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 113,
+      "id": "PR_kwDOKRPFO86NFUqo",
+      "title": "Added a fixed 4-byte length encoding value for the first mlkem compon\u2026",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/113",
+      "state": "MERGED",
+      "author": "johngray-dev",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "\u2026ent so the keys and ciphertexts can be separated.",
+      "createdAt": "2025-03-03T01:35:47Z",
+      "updatedAt": "2025-03-03T01:38:15Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "1e772eadfe5cacc1841b4ac84b392e9f9b948684",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "112_jg_add_length_encoding",
+      "headRefOid": "02a83a4758b8382eb297552477da7e7e130f1eeb",
+      "closedAt": "2025-03-03T01:38:15Z",
+      "mergedAt": "2025-03-03T01:38:15Z",
+      "mergedBy": "johngray-dev",
+      "mergeCommit": {
+        "oid": "f631b3f5d650317c19898c996e116a48703f5f11"
+      },
+      "comments": [
+        {
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "body": "closes #112",
+          "createdAt": "2025-03-03T01:36:31Z",
+          "updatedAt": "2025-03-03T01:36:31Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 115,
+      "id": "PR_kwDOKRPFO86NLpGH",
+      "title": "Clarify the encoding used for the KEM keys and Ciphertexts",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/115",
+      "state": "MERGED",
+      "author": "johngray-dev",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-03-03T16:58:56Z",
+      "updatedAt": "2025-03-03T18:21:19Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "f631b3f5d650317c19898c996e116a48703f5f11",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "114_jg_clarify_component_Serialization",
+      "headRefOid": "5a836ad42be72496ed3171b6f811ebfab0da30e2",
+      "closedAt": "2025-03-03T18:21:19Z",
+      "mergedAt": "2025-03-03T18:21:19Z",
+      "mergedBy": "johngray-dev",
+      "mergeCommit": {
+        "oid": "4ce5ccb869e5b20d92ea388dd2256d13bc234606"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 116,
+      "id": "PR_kwDOKRPFO86NMHF0",
+      "title": "Add 4-byte length check guidance for key and ciphertext serialization",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/116",
+      "state": "MERGED",
+      "author": "johngray-dev",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-03-03T18:02:45Z",
+      "updatedAt": "2025-03-03T18:03:29Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "f631b3f5d650317c19898c996e116a48703f5f11",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "112_jg_add_length_encoding",
+      "headRefOid": "08ab18b2e00904ab411946f706c434d3aeaa771a",
+      "closedAt": "2025-03-03T18:03:29Z",
+      "mergedAt": "2025-03-03T18:03:29Z",
+      "mergedBy": "johngray-dev",
+      "mergeCommit": {
+        "oid": "5b57dab38e47b2717329407002168fefb182c3a1"
       },
       "comments": [],
       "reviews": []
