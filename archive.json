@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-03-06T01:49:18.740210+00:00",
+  "timestamp": "2025-03-09T01:34:09.093330+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -1915,6 +1915,22 @@
       "body": "For Composite KEM, we should follow exactly the ACVP test vector format, which can be found here:\n\nhttps://github.com/usnistgov/ACVP-Server/blob/master/gen-val/json-files/ML-KEM-keyGen-FIPS203/expectedResults.json\nhttps://github.com/usnistgov/ACVP-Server/blob/master/gen-val/json-files/ML-KEM-encapDecap-FIPS203/expectedResults.json\n\nThat would mean that for each composite, we include a JSON blob like:\n\n~~~\n \"tests\": [\n        {\n          \"tcId\": \"id-MLKEM768-RSA2048\",\n          \"ek\": \"A1B2C3...\",\n          \"dk\": \"3CB2A1...\",\n          \"c\": \"5A9B...\",\n          \"k\": \"F91B8C7477A6005992EE947BB365EBF1CFE15688BD25DEEFAD54F90922B4B84C\"\n        },\n}\n~~~",
       "createdAt": "2025-03-05T16:48:52Z",
       "updatedAt": "2025-03-05T16:49:26Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 119,
+      "id": "I_kwDOKRPFO86tCyn0",
+      "title": "Composite private key encoding",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/119",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "From the mailing list:\n\nhttps://mailarchive.ietf.org/arch/msg/spasm/04czobwhAH7Z0iLx00Ow4Y9MaHY/\n\n> have a sequence of octet string representing\n> the private key octet strings as they would appear in the single key\n> PrivateKeyInfo object. \n\nThis is what we intended to do in the IETF 122 drafts, but we missed updating the private key text. The format would be:\n\n> `CompositePrivateKey ::= OCTET STRING`\n> where that OCTET STRING is\n> `len(pqkey) || pqkey || tradkey`\n> and the pqkey, trad key are as they would appear in a single-key PrivateKeyInfo.privateKey or OneAsymmetricKey.privateKey. \n",
+      "createdAt": "2025-03-07T14:45:10Z",
+      "updatedAt": "2025-03-07T14:49:14Z",
       "closedAt": null,
       "comments": []
     }
