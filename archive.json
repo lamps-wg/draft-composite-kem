@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-03-18T01:51:20.481226+00:00",
+  "timestamp": "2025-03-20T01:50:36.172921+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -1931,6 +1931,38 @@
       "body": "From the mailing list:\n\nhttps://mailarchive.ietf.org/arch/msg/spasm/04czobwhAH7Z0iLx00Ow4Y9MaHY/\n\n> have a sequence of octet string representing\n> the private key octet strings as they would appear in the single key\n> PrivateKeyInfo object. \n\nThis is what we intended to do in the IETF 122 drafts, but we missed updating the private key text. The format would be:\n\n> `CompositePrivateKey ::= OCTET STRING`\n> where that OCTET STRING is\n> `len(pqkey) || pqkey || tradkey`\n> and the pqkey, trad key are as they would appear in a single-key PrivateKeyInfo.privateKey or OneAsymmetricKey.privateKey. \n",
       "createdAt": "2025-03-07T14:45:10Z",
       "updatedAt": "2025-03-07T14:49:14Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 120,
+      "id": "I_kwDOKRPFO86ue0bm",
+      "title": "Do a top-to-bottom consistency-check between -sigs and -kems",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/120",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Go through the two documents side-by-side and look for wording differences.",
+      "createdAt": "2025-03-18T06:23:23Z",
+      "updatedAt": "2025-03-18T06:23:23Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 121,
+      "id": "I_kwDOKRPFO86ue6Vw",
+      "title": "Add the KDF back into the OID text name",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/121",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Reasons: \n\n* in the future someone might need the same combination of algs, but with a different KDF. \n* Putting that in the OID name makes that non-ambiguous. It follows the same naming pattern as pre-hashed signature algorithms.",
+      "createdAt": "2025-03-18T06:35:18Z",
+      "updatedAt": "2025-03-18T06:35:18Z",
       "closedAt": null,
       "comments": []
     }
