@@ -1528,9 +1528,9 @@ The structure is that a global `cacert` is provided which is used to sign each K
 * `k` the derived shared secret key.
 
 
-```
+~~~
 {::include src/testvectors.json}
-```
+~~~
 
 
 # Component Algorithm Reference {#appdx_components}
