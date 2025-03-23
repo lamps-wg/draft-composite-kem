@@ -1514,24 +1514,6 @@ The Composite ML-KEM design specified in this document, and especially that of t
 
 --- back
 
-# Test Vectors {#appdx-samples}
-
-The following test vectors are provided in a format similar to the NIST ACVP Known-Answer-Tests (KATs).
-
-The structure is that a global `cacert` is provided which is used to sign each KEM certificate, then within each test there are the following values:
-
-* `tcId` the OID of the algorithm.
-* `ek` the encapsulation public key.
-* `x5c` the X.509 certificate of the encapsulation key, signed by the cacert.
-* `dk` the decapsulation private key.
-* `c` the ciphertext.
-* `k` the derived shared secret key.
-
-
-~~~
-{::include src/testvectors.json}
-~~~
-
 
 # Component Algorithm Reference {#appdx_components}
 
@@ -1776,7 +1758,7 @@ With regard to the traditional algorithms, RSA or Elliptic Curve, in order to ac
 
 <!-- End of Implementation Considerations section -->
 
-# Comparison with other Hybred KEMs
+# Comparison with other Hybrid KEMs
 
 ## X-Wing
 
@@ -1803,6 +1785,26 @@ The main difference between the Composite KEM combiner and the ETSI CatKDF combi
 Additionally, ETSI CatKDF uses HKDF [RFC5869] as the KDF which aligns with some of the variants in this specification, but not the ones that use SHA3.
 
 
+# Test Vectors {#appdx-samples}
+
+The following test vectors are provided in a format similar to the NIST ACVP Known-Answer-Tests (KATs).
+
+The structure is that a global `cacert` is provided which is used to sign each KEM certificate, then within each test there are the following values:
+
+* `tcId` the OID of the algorithm.
+* `ek` the encapsulation public key.
+* `x5c` the X.509 certificate of the encapsulation key, signed by the cacert.
+* `dk` the decapsulation private key.
+* `c` the ciphertext.
+* `k` the derived shared secret key.
+
+
+~~~
+{::include src/testvectors.json}
+~~~
+
+
+
 # Intellectual Property Considerations
 
 The following IPR Disclosure relates to this draft:
@@ -1819,6 +1821,8 @@ This document incorporates contributions and comments from a large group of expe
 
 Serge Mister (Entrust), Ali Noman (Entrust), Peter C. (UK NCSC), Sophie Schmieg (Google), Deirdre Connolly (SandboxAQ), Falko Strenzke (MTG AG), Dan van Geest (Crypto Next), Piotr Popis (Enigma), and
 Douglas Stebila (University of Waterloo).
+
+Thanks to Giacomo Pope (github.com/GiacomoPope) whose ML-DSA and ML-KEM implementation was used to generate the test vectors.
 
 We are grateful to all, including any contributors who may have
 been inadvertently omitted from this list.
