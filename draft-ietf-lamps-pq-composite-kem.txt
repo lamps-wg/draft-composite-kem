@@ -138,17 +138,17 @@ Table of Contents
    12. References
      12.1.  Normative References
      12.2.  Informative References
-   Appendix A.  Test Vectors
-   Appendix B.  Component Algorithm Reference
-   Appendix C.  Fixed Component Algorithm Identifiers
-   Appendix D.  Implementation Considerations
-     D.1.  FIPS Certification
-       D.1.1.  FIPS certification of Combiner Function
-     D.2.  Backwards Compatibility
-     D.3.  Decapsulation Requires the Public Key
-   Appendix E.  Comparison with other Hybred KEMs
-     E.1.  X-Wing
-     E.2.  ETSI CatKDF
+   Appendix A.  Component Algorithm Reference
+   Appendix B.  Fixed Component Algorithm Identifiers
+   Appendix C.  Implementation Considerations
+     C.1.  FIPS Certification
+       C.1.1.  FIPS certification of Combiner Function
+     C.2.  Backwards Compatibility
+     C.3.  Decapsulation Requires the Public Key
+   Appendix D.  Comparison with other Hybrid KEMs
+     D.1.  X-Wing
+     D.2.  ETSI CatKDF
+   Appendix E.  Test Vectors
    Appendix F.  Intellectual Property Considerations
    Appendix G.  Contributors and Acknowledgments
    Authors' Addresses
@@ -249,7 +249,7 @@ Table of Contents
    Concrete instantiations of composite ML-KEM algorithms are provided
    based on ML-KEM, RSA-OAEP and ECDH.  Backwards compatibility is not
    directly covered in this document, but is the subject of
-   Appendix D.2.
+   Appendix C.2.
 
    Composite ML-KEM is intended for general applicability anywhere that
    key establishment or enveloped content encryption is used within PKIX
@@ -721,7 +721,7 @@ Decap Process:
 4.5.  SerializePublicKey and DeserializePublicKey
 
    Each component KEM public key is serialized according to its
-   respective standard as shown in Appendix B and concatenated together
+   respective standard as shown in Appendix A and concatenated together
    using a fixed 4-byte length field denoting the length in bytes of the
    first component key, as defined below.
 
@@ -777,7 +777,7 @@ Serialization Process:
 
    Deserialization reverses this process, raising an error in the event
    that the input is malformed.  Each component key is deserialized
-   according to their respective standard as shown in Appendix B.
+   according to their respective standard as shown in Appendix A.
 
 Composite-ML-KEM.DeserializePublicKey(bytes) -> pk
 
@@ -845,7 +845,7 @@ Deserialization Process:
 4.7.  SerializeCiphertextValue and DeSerializeCiphertextValue
 
    Each Ciphertext component of CompositeCiphertextValue is serialized
-   according to their respective standard as shown in Appendix B and
+   according to their respective standard as shown in Appendix A and
    concatenated together using a fixed 4-byte length field denoting the
    length in bytes of the first component signature, as shown below.
    For the Traditional component, the CipherText is the encrypted value
@@ -907,7 +907,7 @@ Serialization Process:
    Deserialization reverses this process, raising an error in the event
    that the input is malformed.  Each component ciphertext is
    deserialized according to their respective standard as shown in
-   Appendix B.  For the traditional component, the ciphertext is the
+   Appendix A.  For the traditional component, the ciphertext is the
    encrypted value 'enc' as described in Section 3.1 or Section 3.2
    depending on the chosen component algorithm.
 
@@ -1242,7 +1242,7 @@ Deserialization Process:
    are used.
 
    Full specifications for the referenced component algorithms can be
-   found in Appendix B.
+   found in Appendix A.
 
 7.2.  Domain Separators
 
@@ -1448,7 +1448,7 @@ Deserialization Process:
       Table 5: Mandatory-to-implement pairings for CMS KDF and WRAP
 
    Full specifications for the referenced algorithms can be found either
-   further down in this section, or in Appendix B.
+   further down in this section, or in Appendix A.
 
    Note that here we differ slightly from the internal KDF used within
    the KEM combiner in Section 7 because [RFC9629] requires that the KDF
@@ -2018,7 +2018,7 @@ Deserialization Process:
    that ML-KEM implemtation is still experimental, non-validated, non-
    certified, non-hardened implementation.  More details of obtaining
    FIPS certification of a composite algorithm can be found in
-   Appendix D.1.
+   Appendix C.1.
 
 11.2.  KEM Combiner
 
@@ -2588,7 +2588,375 @@ Deserialization Process:
               Hybrid KEM You’ve Been Looking For", 9 January 2024,
               <https://eprint.iacr.org/2024/039.pdf>.
 
-Appendix A.  Test Vectors
+Appendix A.  Component Algorithm Reference
+
+   This section provides references to the full specification of the
+   algorithms used in the composite constructions.
+
+        +================+========================+===============+
+        | Component KEM  | OID                    | Specification |
+        | Algorithm ID   |                        |               |
+        +================+========================+===============+
+        | id-ML-KEM-768  | 2.16.840.1.101.3.4.4.2 | [FIPS.203]    |
+        +----------------+------------------------+---------------+
+        | id-ML-KEM-1024 | 2.16.840.1.101.3.4.4.3 | [FIPS.203]    |
+        +----------------+------------------------+---------------+
+        | id-X25519      | 1.3.101.110            | [RFC8410]     |
+        +----------------+------------------------+---------------+
+        | id-X448        | 1.3.101.111            | [RFC8410]     |
+        +----------------+------------------------+---------------+
+        | id-ecDH        | 1.3.132.1.12           | [RFC5480]     |
+        +----------------+------------------------+---------------+
+        | id-RSAES-OAEP  | 1.2.840.113549.1.1.7   | [RFC8017]     |
+        +----------------+------------------------+---------------+
+
+              Table 7: Component Encryption Algorithms used in
+                          Composite Constructions
+
+       +==================+=======================+===============+
+       | Elliptic CurveID | OID                   | Specification |
+       +==================+=======================+===============+
+       | secp256r1        | 1.2.840.10045.3.1.7   | [RFC6090]     |
+       +------------------+-----------------------+---------------+
+       | secp384r1        | 1.3.132.0.34          | [RFC6090]     |
+       +------------------+-----------------------+---------------+
+       | brainpoolP256r1  | 1.3.36.3.3.2.8.1.1.7  | [RFC5639]     |
+       +------------------+-----------------------+---------------+
+       | brainpoolP384r1  | 1.3.36.3.3.2.8.1.1.11 | [RFC5639]     |
+       +------------------+-----------------------+---------------+
+
+         Table 8: Elliptic Curves used in Composite Constructions
+
+   +=======================+============================+=============+
+   |HashID                 | OID                        |Specification|
+   +=======================+============================+=============+
+   |id-sha256              | 2.16.840.1.101.3.4.2.1     |[RFC6234]    |
+   +-----------------------+----------------------------+-------------+
+   |id-sha512              | 2.16.840.1..101.3.4.2.3    |[RFC6234]    |
+   +-----------------------+----------------------------+-------------+
+   |id-alg-hkdf-with-sha256| 1.2.840.113549.1.9.16.3.28 |[RFC8619]    |
+   +-----------------------+----------------------------+-------------+
+   |id-alg-hkdf-with-sha384| 1.2.840.113549.1.9.16.3.29 |[RFC8619]    |
+   +-----------------------+----------------------------+-------------+
+   |id-sha3-256            | 2.16.840.1.101.3.4.2.8     |[FIPS.202]   |
+   +-----------------------+----------------------------+-------------+
+   |id-KMAC128             | 2.16.840.1.101.3.4.2.21    |[SP.800-185] |
+   +-----------------------+----------------------------+-------------+
+
+         Table 9: Hash algorithms used in Composite Constructions
+
+Appendix B.  Fixed Component Algorithm Identifiers
+
+   The following sections list explicitly the DER encoded
+   AlgorithmIdentifier that MUST be used when reconstructing
+   SubjectPublicKeyInfo objects for each component public key, which may
+   be required for example if cryptographic library requires the public
+   key in this form in order to process each component algorithm.  The
+   public key BIT STRING should be taken directly from the respective
+   component of the CompositeKEMPublicKey.
+
+   *ML-KEM-768*
+
+   ASN.1:
+     algorithm AlgorithmIdentifier ::= {
+       algorithm id-alg-ml-kem-768   -- (2.16.840.1.101.3.4.4.2)
+       }
+
+   DER:
+     30 0B 06 07 60 86 48 01 65 03 04 04 02
+
+   *ML-KEM-1024*
+
+   ASN.1:
+
+   ASN.1:
+     algorithm AlgorithmIdentifier ::= {
+       algorithm id-alg-ml-kem-1024   -- (2.16.840.1.101.3.4.4.3)
+       }
+
+   DER:
+     30 0B 06 07 60 86 48 01 65 03 04 04 03
+
+   *RSA-OAEP - all sizes*
+
+ ASN.1:
+   algorithm AlgorithmIdentifier ::= {
+     algorithm id-RSAES-OAEP,   -- (1.2.840.113549.1.1.7)
+     parameters RSAES-OAEP-params {
+          hashFunc      [0] id-sha256,  -- (2.16.840.1.101.3.4.2.1)
+          maskGenFunc   [1] mgf1SHA256Identifier,
+          pSourceFunc   [2] pSpecifiedEmpty  }
+     }
+
+
+ where
+       mgf1SHA256Identifier  AlgorithmIdentifier  ::=  {
+                           algorithm id-mgf1,  -- (1.2.840.113549.1.1.8)
+                           parameters sha256Identifier }
+
+
+       sha256Identifier  AlgorithmIdentifier  ::=  { id-sha256, NULL }
+
+ DER:
+  30 4D 06 09 2A 86 48 86 F7 0D 01 01 07 30 40 A0 0F 30 0D 06 09 60 86
+  48 01 65 03 04 02 01 05 00 A1 1C 30 1A 06 09 2A 86 48 86 F7 0D 01 01
+  08 30 0D 06 09 60 86 48 01 65 03 04 02 01 05 00 A2 0F 30 0D 06 09 2A
+  86 48 86 F7 0D 01 01 09 04 00
+
+   *ECDH NIST-P-384*
+
+   ASN.1:
+     algorithm AlgorithmIdentifier ::= {
+       algorithm id-ecPublicKey   -- (1.2.840.10045.2.1)
+       parameters ANY ::= {
+         AlgorithmIdentifier ::= {
+           algorithm secp384r1    -- (1.3.132.0.34)
+           }
+         }
+       }
+
+   DER:
+     30 10 06 07 2A 86 48 CE 3D 02 01 06 05 2B 81 04 00 22
+
+   *ECDH Brainpool-256*
+
+   ASN.1:
+     algorithm AlgorithmIdentifier ::= {
+       algorithm id-ecPublicKey   -- (1.2.840.10045.2.1)
+       parameters ANY ::= {
+         AlgorithmIdentifier ::= {
+           algorithm brainpoolP256r1   -- (1.3.36.3.3.2.8.1.1.7)
+           }
+         }
+       }
+
+   DER:
+     30 14 06 07 2A 86 48 CE 3D 02 01 06 09 2B 24 03 03 02 08 01 01 07
+
+   *ECDH Brainpool-384*
+
+   ASN.1:
+     algorithm AlgorithmIdentifier ::= {
+       algorithm id-ecPublicKey   -- (1.2.840.10045.2.1)
+       parameters ANY ::= {
+         AlgorithmIdentifier ::= {
+           algorithm brainpoolP384r1   -- (1.3.36.3.3.2.8.1.1.11)
+           }
+         }
+       }
+
+   DER:
+     30 14 06 07 2A 86 48 CE 3D 02 01 06 09 2B 24 03 03 02 08 01 01 0B
+
+   *X25519*
+
+   ASN.1:
+     algorithm AlgorithmIdentifier ::= {
+       algorithm id-X25519   -- (1.3.101.110)
+       }
+
+   DER:
+     30 05 06 03 2B 65 6E
+
+   *X448*
+
+   ASN.1:
+     algorithm AlgorithmIdentifier ::= {
+       algorithm id-X448   -- (1.3.101.111)
+       }
+
+   DER:
+     30 05 06 03 2B 65 6F
+
+Appendix C.  Implementation Considerations
+
+C.1.  FIPS Certification
+
+   For reference, the KEM Combiner used in Composite KEM is:
+
+   ss = KDF(mlkemSS || tradSS || tradCT || tradPK || Domain)
+
+   where KDF is either SHA3 or HKDF-SHA2.
+
+   NIST SP 800-227 [SP-800-227idp], which at the time of writing is in
+   its initial public draft period, allows hybrid key combiners of the
+   following form:
+
+   K ← KDM(S1‖S2‖ · · · ‖St , OtherInput) (14)
+
+   The key derivation method KDM can take one of two forms, either
+
+   K ← KDF(Z‖OtherInput) (12)
+
+   or
+
+   K ← Expand(Extract(salt, Z), OtherInput) (13)
+
+   The Composite KEM variants that use SHA3 as a combiner fit form (12)
+   while the variants that use HKDF-SHA2 fit form (13).
+
+   In terms of the order of inputs, Composite KEM places the two shared
+   secret keys mlkemSS || tradSS at the beggining of the KDF input such
+   that all other inputs tradCT || tradPK || Domain can be considered
+   part of OtherInput for the purposes of FIPS certification.
+   [SP-800-227ipd] adds an important stipulation that was not present in
+   earlier NIST specifications:
+
+      This publication approves the use of the key combiner (14) for any
+      t > 1, so long as at least one shared secret (i.e., S_j for some
+      j) is a shared secret generated from the key- establishment
+      methods of SP 800-56A or SP 800-56B, or an approved KEM.
+
+   This means that although Composite KEM always places the shared
+   secret key from ML-KEM in the first slot, a Composite KEM can be FIPS
+   certified so long as either component is FIPS certified.  This is
+   important for several reasons.  First, in the early stages of PQC
+   migration, composites allow for a non-FIPS certified ML-KEM
+   implementation to be added to a module that already has a FIPS
+   certified traditional component, and the resulting composite can be
+   FIPS certified.  Second, when eventually RSA and Elliptic Curve are
+   no longer FIPS-allowed, the composite can retain its FIPS certified
+   status on the strength of the ML-KEM component.  Third, while this is
+   outside the scope of this document, the general composite
+   construction could be used to create FIPS certified algorithms that
+   contain a component algorithm from a different jurisdiction.
+
+C.1.1.  FIPS certification of Combiner Function
+
+   TODO: update this to NIST SP 800-227, once it is published.
+
+   One of the primary NIST documents which is relevant for certification
+   of a composite algorithm is NIST SP.800-56Cr2 [SP.800-56Cr2] by using
+   the allowed "hybrid" shared secret of the form Z' = Z || T.
+   Compliance is achieved in the following way:
+
+   [SP.800-56Cr2] section 4 "One-Step Key Derivation" requires a counter
+   which begins at the 4-byte value 0x00000001.  However, the counter is
+   allowed to be omitted when the hash function is executed only once,
+   as specified on page 159 of the FIPS 140-3 Implementation Guidance
+   [FIPS-140-3-IG].
+
+   The HKDF-SHA2 options can be certified under [SP.800-56Cr2] One-Step
+   Key Derivation Option 2: H(x) = HMAC-hash(salt, x) where salt is the
+   empty (0 octet) string, which will internally be mapped to the zero
+   vector 0x00..00 of the correct input size for the underlying hash
+   function in order to satisfy the requirement in [SP.800-56Cr2] that
+   "in the absence of an agreed-upon alternative – the default_salt
+   shall be an all-zero byte string whose bit length equals that
+   specified as the bit length of an input block for the hash function,
+   hash".  Note that since the desired shared secret key output length
+   of 256 bits for all security levels aligns with the block size of
+   SHA256, we do not need to use the HKDF-Extract step specified in
+   [RFC5869], which further simplifies FIPS certification by allowing us
+   to use the One-Step KDF rather than the Two-Step KDF from
+   [SP.800-56Cr2].
+
+   The SHA3 options can be certified under [SP.800-56Cr2] One-Step Key
+   Derivation Option 1: H(x) = hash(x).
+
+C.2.  Backwards Compatibility
+
+   As noted in the introduction, the post-quantum cryptographic
+   migration will face challenges in both ensuring cryptographic
+   strength against adversaries of unknown capabilities, as well as
+   providing ease of migration.  The composite mechanisms defined in
+   this document primarily address cryptographic strength, however this
+   section contains notes on how backwards compatibility may be
+   obtained.
+
+   The term "ease of migration" is used here to mean that existing
+   systems can be gracefully transitioned to the new technology without
+   requiring large service disruptions or expensive upgrades.  The term
+   "backwards compatibility" is used here to mean something more
+   specific; that existing systems as they are deployed today can inter-
+   operate with the upgraded systems of the future.
+
+   These migration and interoperability concerns need to be thought
+   about in the context of various types of protocols that make use of
+   X.509 and PKIX with relation to key establishment and content
+   encryption, from online negotiated protocols such as TLS 1.3
+   [RFC8446] and IKEv2 [RFC7296], to non-negotiated asynchronous
+   protocols such as S/MIME signed email [RFC8551], as well as myriad
+   other standardized and proprietary protocols and applications that
+   leverage CMS [RFC5652] encrypted structures.
+
+C.3.  Decapsulation Requires the Public Key
+
+   ML-KEM always requires the public key in order to perform various
+   steps of the Fujisaki-Okamoto decapsulation [FIPS.203], and for this
+   reason the private key encoding specified in FIPS 203 includes the
+   public key.  Therefore it is not required to carry it in the
+   OneAsymmetricKey.publicKey field, which remains optional, but is
+   strictly speaking redundant since an ML-KEM public key can be parsed
+   from an ML-KEM private key, and thus populating the
+   OneAsymmetricKey.publicKey field would mean that two copies of the
+   public key data are transmitted.
+
+   With regard to the traditional algorithms, RSA or Elliptic Curve, in
+   order to achieve the public-key binding property the KEM combiner
+   used to form the Composite ML-KEM, the combiner requires the
+   traditional public key as input to the KDF that derives the output
+   shared secret.  Therefore it is required to carry the public key
+   within the respective OneAsymmetricKey.publicKey as per the private
+   key encoding given in Section 5.2.  Implementers who choose to use a
+   different private key encoding than the one specified in this
+   document MUST consider how to provide the component public keys to
+   the decapsulate routine.  While some implementations might contain
+   routines to computationally derive the public key from the private
+   key, it is not guaranteed that all implementations will support this;
+   for this reason the interoperable composite private key format given
+   in this document in Section 5.2 requires the public key of the
+   traditional component to be included.
+
+Appendix D.  Comparison with other Hybrid KEMs
+
+D.1.  X-Wing
+
+   This specification borrows extensively from the analysis and KEM
+   combiner construction presented in [X-Wing].  In particular, X-Wing
+   and id-MLKEM768-X25519-SHA3-256 are largely interchangeable.  The one
+   difference is that X-Wing uses a combined KeyGen function to generate
+   the two component private keys from the same seed, which gives some
+   additional binding properies.  However, using a derived value as the
+   seed for ML-KEM.KeyGen_internal() is, at time of writing, explicitely
+   disallowed by [FIPS.203] which makes it impossible to create a FIPS-
+   compliant implentation of X-Wing KeyGen / private key import.  For
+   this reason, this specification keeps the key generatation for both
+   components separate so that implementers are free to use an existing
+   certified hardware or software module for one or both components.
+
+   Due to the difference in key generation and security properties,
+   X-Wing and id-MLKEM768-X25519-SHA3-256 have been registered as
+   separate algorithms with separate OIDs, and they use a different
+   domain separator string in order to ensure that their ciphertexts are
+   not inter-compatible.
+
+D.2.  ETSI CatKDF
+
+   [ETSI.TS.103.744] section 8.2 defines CatKDF as:
+
+1) Form secret = psk || k1 || k 2 || … || k n.
+2) Set f_context = f(context, MA, MB), where f is a context formatting function.
+3) key_material = KDF(secret, label, f_context, length).
+4) Return key_material.
+
+MA shall contain all of the public keys.
+MB shall contain all of the corresponding public keys and ciphertexts.
+
+   The main difference between the Composite KEM combiner and the ETSI
+   CatKDF combiner is that CatKDF makes the more conservative choice to
+   bind the public keys and ciphertexts of both components, while
+   Composite KEM follows the analysis presented in [X-Wing] that while
+   preserving the security properties of the traditional component
+   requires binding the public key and ciphertext of the traditional
+   component, it is not necessary to do so for ML-KEM thanks to the
+   rejection sampling step of the Fujisaki-Okamoto transform.
+
+   Additionally, ETSI CatKDF uses HKDF [RFC5869] as the KDF which aligns
+   with some of the variants in this specification, but not the ones
+   that use SHA3.
+
+Appendix E.  Test Vectors
 
    The following test vectors are provided in a format similar to the
    NIST ACVP Known-Answer-Tests (KATs).
@@ -4963,374 +5331,6 @@ Appendix A.  Test Vectors
    ]
    }
 
-Appendix B.  Component Algorithm Reference
-
-   This section provides references to the full specification of the
-   algorithms used in the composite constructions.
-
-        +================+========================+===============+
-        | Component KEM  | OID                    | Specification |
-        | Algorithm ID   |                        |               |
-        +================+========================+===============+
-        | id-ML-KEM-768  | 2.16.840.1.101.3.4.4.2 | [FIPS.203]    |
-        +----------------+------------------------+---------------+
-        | id-ML-KEM-1024 | 2.16.840.1.101.3.4.4.3 | [FIPS.203]    |
-        +----------------+------------------------+---------------+
-        | id-X25519      | 1.3.101.110            | [RFC8410]     |
-        +----------------+------------------------+---------------+
-        | id-X448        | 1.3.101.111            | [RFC8410]     |
-        +----------------+------------------------+---------------+
-        | id-ecDH        | 1.3.132.1.12           | [RFC5480]     |
-        +----------------+------------------------+---------------+
-        | id-RSAES-OAEP  | 1.2.840.113549.1.1.7   | [RFC8017]     |
-        +----------------+------------------------+---------------+
-
-              Table 7: Component Encryption Algorithms used in
-                          Composite Constructions
-
-       +==================+=======================+===============+
-       | Elliptic CurveID | OID                   | Specification |
-       +==================+=======================+===============+
-       | secp256r1        | 1.2.840.10045.3.1.7   | [RFC6090]     |
-       +------------------+-----------------------+---------------+
-       | secp384r1        | 1.3.132.0.34          | [RFC6090]     |
-       +------------------+-----------------------+---------------+
-       | brainpoolP256r1  | 1.3.36.3.3.2.8.1.1.7  | [RFC5639]     |
-       +------------------+-----------------------+---------------+
-       | brainpoolP384r1  | 1.3.36.3.3.2.8.1.1.11 | [RFC5639]     |
-       +------------------+-----------------------+---------------+
-
-         Table 8: Elliptic Curves used in Composite Constructions
-
-   +=======================+============================+=============+
-   |HashID                 | OID                        |Specification|
-   +=======================+============================+=============+
-   |id-sha256              | 2.16.840.1.101.3.4.2.1     |[RFC6234]    |
-   +-----------------------+----------------------------+-------------+
-   |id-sha512              | 2.16.840.1..101.3.4.2.3    |[RFC6234]    |
-   +-----------------------+----------------------------+-------------+
-   |id-alg-hkdf-with-sha256| 1.2.840.113549.1.9.16.3.28 |[RFC8619]    |
-   +-----------------------+----------------------------+-------------+
-   |id-alg-hkdf-with-sha384| 1.2.840.113549.1.9.16.3.29 |[RFC8619]    |
-   +-----------------------+----------------------------+-------------+
-   |id-sha3-256            | 2.16.840.1.101.3.4.2.8     |[FIPS.202]   |
-   +-----------------------+----------------------------+-------------+
-   |id-KMAC128             | 2.16.840.1.101.3.4.2.21    |[SP.800-185] |
-   +-----------------------+----------------------------+-------------+
-
-         Table 9: Hash algorithms used in Composite Constructions
-
-Appendix C.  Fixed Component Algorithm Identifiers
-
-   The following sections list explicitly the DER encoded
-   AlgorithmIdentifier that MUST be used when reconstructing
-   SubjectPublicKeyInfo objects for each component public key, which may
-   be required for example if cryptographic library requires the public
-   key in this form in order to process each component algorithm.  The
-   public key BIT STRING should be taken directly from the respective
-   component of the CompositeKEMPublicKey.
-
-   *ML-KEM-768*
-
-   ASN.1:
-     algorithm AlgorithmIdentifier ::= {
-       algorithm id-alg-ml-kem-768   -- (2.16.840.1.101.3.4.4.2)
-       }
-
-   DER:
-     30 0B 06 07 60 86 48 01 65 03 04 04 02
-
-   *ML-KEM-1024*
-
-   ASN.1:
-
-   ASN.1:
-     algorithm AlgorithmIdentifier ::= {
-       algorithm id-alg-ml-kem-1024   -- (2.16.840.1.101.3.4.4.3)
-       }
-
-   DER:
-     30 0B 06 07 60 86 48 01 65 03 04 04 03
-
-   *RSA-OAEP - all sizes*
-
- ASN.1:
-   algorithm AlgorithmIdentifier ::= {
-     algorithm id-RSAES-OAEP,   -- (1.2.840.113549.1.1.7)
-     parameters RSAES-OAEP-params {
-          hashFunc      [0] id-sha256,  -- (2.16.840.1.101.3.4.2.1)
-          maskGenFunc   [1] mgf1SHA256Identifier,
-          pSourceFunc   [2] pSpecifiedEmpty  }
-     }
-
-
- where
-       mgf1SHA256Identifier  AlgorithmIdentifier  ::=  {
-                           algorithm id-mgf1,  -- (1.2.840.113549.1.1.8)
-                           parameters sha256Identifier }
-
-
-       sha256Identifier  AlgorithmIdentifier  ::=  { id-sha256, NULL }
-
- DER:
-  30 4D 06 09 2A 86 48 86 F7 0D 01 01 07 30 40 A0 0F 30 0D 06 09 60 86
-  48 01 65 03 04 02 01 05 00 A1 1C 30 1A 06 09 2A 86 48 86 F7 0D 01 01
-  08 30 0D 06 09 60 86 48 01 65 03 04 02 01 05 00 A2 0F 30 0D 06 09 2A
-  86 48 86 F7 0D 01 01 09 04 00
-
-   *ECDH NIST-P-384*
-
-   ASN.1:
-     algorithm AlgorithmIdentifier ::= {
-       algorithm id-ecPublicKey   -- (1.2.840.10045.2.1)
-       parameters ANY ::= {
-         AlgorithmIdentifier ::= {
-           algorithm secp384r1    -- (1.3.132.0.34)
-           }
-         }
-       }
-
-   DER:
-     30 10 06 07 2A 86 48 CE 3D 02 01 06 05 2B 81 04 00 22
-
-   *ECDH Brainpool-256*
-
-   ASN.1:
-     algorithm AlgorithmIdentifier ::= {
-       algorithm id-ecPublicKey   -- (1.2.840.10045.2.1)
-       parameters ANY ::= {
-         AlgorithmIdentifier ::= {
-           algorithm brainpoolP256r1   -- (1.3.36.3.3.2.8.1.1.7)
-           }
-         }
-       }
-
-   DER:
-     30 14 06 07 2A 86 48 CE 3D 02 01 06 09 2B 24 03 03 02 08 01 01 07
-
-   *ECDH Brainpool-384*
-
-   ASN.1:
-     algorithm AlgorithmIdentifier ::= {
-       algorithm id-ecPublicKey   -- (1.2.840.10045.2.1)
-       parameters ANY ::= {
-         AlgorithmIdentifier ::= {
-           algorithm brainpoolP384r1   -- (1.3.36.3.3.2.8.1.1.11)
-           }
-         }
-       }
-
-   DER:
-     30 14 06 07 2A 86 48 CE 3D 02 01 06 09 2B 24 03 03 02 08 01 01 0B
-
-   *X25519*
-
-   ASN.1:
-     algorithm AlgorithmIdentifier ::= {
-       algorithm id-X25519   -- (1.3.101.110)
-       }
-
-   DER:
-     30 05 06 03 2B 65 6E
-
-   *X448*
-
-   ASN.1:
-     algorithm AlgorithmIdentifier ::= {
-       algorithm id-X448   -- (1.3.101.111)
-       }
-
-   DER:
-     30 05 06 03 2B 65 6F
-
-Appendix D.  Implementation Considerations
-
-D.1.  FIPS Certification
-
-   For reference, the KEM Combiner used in Composite KEM is:
-
-   ss = KDF(mlkemSS || tradSS || tradCT || tradPK || Domain)
-
-   where KDF is either SHA3 or HKDF-SHA2.
-
-   NIST SP 800-227 [SP-800-227idp], which at the time of writing is in
-   its initial public draft period, allows hybrid key combiners of the
-   following form:
-
-   K ← KDM(S1‖S2‖ · · · ‖St , OtherInput) (14)
-
-   The key derivation method KDM can take one of two forms, either
-
-   K ← KDF(Z‖OtherInput) (12)
-
-   or
-
-   K ← Expand(Extract(salt, Z), OtherInput) (13)
-
-   The Composite KEM variants that use SHA3 as a combiner fit form (12)
-   while the variants that use HKDF-SHA2 fit form (13).
-
-   In terms of the order of inputs, Composite KEM places the two shared
-   secret keys mlkemSS || tradSS at the beggining of the KDF input such
-   that all other inputs tradCT || tradPK || Domain can be considered
-   part of OtherInput for the purposes of FIPS certification.
-   [SP-800-227ipd] adds an important stipulation that was not present in
-   earlier NIST specifications:
-
-      This publication approves the use of the key combiner (14) for any
-      t > 1, so long as at least one shared secret (i.e., S_j for some
-      j) is a shared secret generated from the key- establishment
-      methods of SP 800-56A or SP 800-56B, or an approved KEM.
-
-   This means that although Composite KEM always places the shared
-   secret key from ML-KEM in the first slot, a Composite KEM can be FIPS
-   certified so long as either component is FIPS certified.  This is
-   important for several reasons.  First, in the early stages of PQC
-   migration, composites allow for a non-FIPS certified ML-KEM
-   implementation to be added to a module that already has a FIPS
-   certified traditional component, and the resulting composite can be
-   FIPS certified.  Second, when eventually RSA and Elliptic Curve are
-   no longer FIPS-allowed, the composite can retain its FIPS certified
-   status on the strength of the ML-KEM component.  Third, while this is
-   outside the scope of this document, the general composite
-   construction could be used to create FIPS certified algorithms that
-   contain a component algorithm from a different jurisdiction.
-
-D.1.1.  FIPS certification of Combiner Function
-
-   TODO: update this to NIST SP 800-227, once it is published.
-
-   One of the primary NIST documents which is relevant for certification
-   of a composite algorithm is NIST SP.800-56Cr2 [SP.800-56Cr2] by using
-   the allowed "hybrid" shared secret of the form Z' = Z || T.
-   Compliance is achieved in the following way:
-
-   [SP.800-56Cr2] section 4 "One-Step Key Derivation" requires a counter
-   which begins at the 4-byte value 0x00000001.  However, the counter is
-   allowed to be omitted when the hash function is executed only once,
-   as specified on page 159 of the FIPS 140-3 Implementation Guidance
-   [FIPS-140-3-IG].
-
-   The HKDF-SHA2 options can be certified under [SP.800-56Cr2] One-Step
-   Key Derivation Option 2: H(x) = HMAC-hash(salt, x) where salt is the
-   empty (0 octet) string, which will internally be mapped to the zero
-   vector 0x00..00 of the correct input size for the underlying hash
-   function in order to satisfy the requirement in [SP.800-56Cr2] that
-   "in the absence of an agreed-upon alternative – the default_salt
-   shall be an all-zero byte string whose bit length equals that
-   specified as the bit length of an input block for the hash function,
-   hash".  Note that since the desired shared secret key output length
-   of 256 bits for all security levels aligns with the block size of
-   SHA256, we do not need to use the HKDF-Extract step specified in
-   [RFC5869], which further simplifies FIPS certification by allowing us
-   to use the One-Step KDF rather than the Two-Step KDF from
-   [SP.800-56Cr2].
-
-   The SHA3 options can be certified under [SP.800-56Cr2] One-Step Key
-   Derivation Option 1: H(x) = hash(x).
-
-D.2.  Backwards Compatibility
-
-   As noted in the introduction, the post-quantum cryptographic
-   migration will face challenges in both ensuring cryptographic
-   strength against adversaries of unknown capabilities, as well as
-   providing ease of migration.  The composite mechanisms defined in
-   this document primarily address cryptographic strength, however this
-   section contains notes on how backwards compatibility may be
-   obtained.
-
-   The term "ease of migration" is used here to mean that existing
-   systems can be gracefully transitioned to the new technology without
-   requiring large service disruptions or expensive upgrades.  The term
-   "backwards compatibility" is used here to mean something more
-   specific; that existing systems as they are deployed today can inter-
-   operate with the upgraded systems of the future.
-
-   These migration and interoperability concerns need to be thought
-   about in the context of various types of protocols that make use of
-   X.509 and PKIX with relation to key establishment and content
-   encryption, from online negotiated protocols such as TLS 1.3
-   [RFC8446] and IKEv2 [RFC7296], to non-negotiated asynchronous
-   protocols such as S/MIME signed email [RFC8551], as well as myriad
-   other standardized and proprietary protocols and applications that
-   leverage CMS [RFC5652] encrypted structures.
-
-D.3.  Decapsulation Requires the Public Key
-
-   ML-KEM always requires the public key in order to perform various
-   steps of the Fujisaki-Okamoto decapsulation [FIPS.203], and for this
-   reason the private key encoding specified in FIPS 203 includes the
-   public key.  Therefore it is not required to carry it in the
-   OneAsymmetricKey.publicKey field, which remains optional, but is
-   strictly speaking redundant since an ML-KEM public key can be parsed
-   from an ML-KEM private key, and thus populating the
-   OneAsymmetricKey.publicKey field would mean that two copies of the
-   public key data are transmitted.
-
-   With regard to the traditional algorithms, RSA or Elliptic Curve, in
-   order to achieve the public-key binding property the KEM combiner
-   used to form the Composite ML-KEM, the combiner requires the
-   traditional public key as input to the KDF that derives the output
-   shared secret.  Therefore it is required to carry the public key
-   within the respective OneAsymmetricKey.publicKey as per the private
-   key encoding given in Section 5.2.  Implementers who choose to use a
-   different private key encoding than the one specified in this
-   document MUST consider how to provide the component public keys to
-   the decapsulate routine.  While some implementations might contain
-   routines to computationally derive the public key from the private
-   key, it is not guaranteed that all implementations will support this;
-   for this reason the interoperable composite private key format given
-   in this document in Section 5.2 requires the public key of the
-   traditional component to be included.
-
-Appendix E.  Comparison with other Hybred KEMs
-
-E.1.  X-Wing
-
-   This specification borrows extensively from the analysis and KEM
-   combiner construction presented in [X-Wing].  In particular, X-Wing
-   and id-MLKEM768-X25519-SHA3-256 are largely interchangeable.  The one
-   difference is that X-Wing uses a combined KeyGen function to generate
-   the two component private keys from the same seed, which gives some
-   additional binding properies.  However, using a derived value as the
-   seed for ML-KEM.KeyGen_internal() is, at time of writing, explicitely
-   disallowed by [FIPS.203] which makes it impossible to create a FIPS-
-   compliant implentation of X-Wing KeyGen / private key import.  For
-   this reason, this specification keeps the key generatation for both
-   components separate so that implementers are free to use an existing
-   certified hardware or software module for one or both components.
-
-   Due to the difference in key generation and security properties,
-   X-Wing and id-MLKEM768-X25519-SHA3-256 have been registered as
-   separate algorithms with separate OIDs, and they use a different
-   domain separator string in order to ensure that their ciphertexts are
-   not inter-compatible.
-
-E.2.  ETSI CatKDF
-
-   [ETSI.TS.103.744] section 8.2 defines CatKDF as:
-
-1) Form secret = psk || k1 || k 2 || … || k n.
-2) Set f_context = f(context, MA, MB), where f is a context formatting function.
-3) key_material = KDF(secret, label, f_context, length).
-4) Return key_material.
-
-MA shall contain all of the public keys.
-MB shall contain all of the corresponding public keys and ciphertexts.
-
-   The main difference between the Composite KEM combiner and the ETSI
-   CatKDF combiner is that CatKDF makes the more conservative choice to
-   bind the public keys and ciphertexts of both components, while
-   Composite KEM follows the analysis presented in [X-Wing] that while
-   preserving the security properties of the traditional component
-   requires binding the public key and ciphertext of the traditional
-   component, it is not necessary to do so for ML-KEM thanks to the
-   rejection sampling step of the Fujisaki-Okamoto transform.
-
-   Additionally, ETSI CatKDF uses HKDF [RFC5869] as the KDF which aligns
-   with some of the variants in this specification, but not the ones
-   that use SHA3.
-
 Appendix F.  Intellectual Property Considerations
 
    The following IPR Disclosure relates to this draft:
@@ -5353,6 +5353,9 @@ Appendix G.  Contributors and Acknowledgments
    Sophie Schmieg (Google), Deirdre Connolly (SandboxAQ), Falko Strenzke
    (MTG AG), Dan van Geest (Crypto Next), Piotr Popis (Enigma), and
    Douglas Stebila (University of Waterloo).
+
+   Thanks to Giacomo Pope (github.com/GiacomoPope) whose ML-DSA and ML-
+   KEM implementation was used to generate the test vectors.
 
    We are grateful to all, including any contributors who may have been
    inadvertently omitted from this list.
