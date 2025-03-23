@@ -1791,13 +1791,17 @@ The following test vectors are provided in a format similar to the NIST ACVP Kno
 
 The structure is that a global `cacert` is provided which is used to sign each KEM certificate, then within each test there are the following values:
 
-* `tcId` the OID of the algorithm.
+* `tcId` the name of the algorithm.
 * `ek` the encapsulation public key.
 * `x5c` the X.509 certificate of the encapsulation key, signed by the cacert.
 * `dk` the decapsulation private key.
 * `c` the ciphertext.
 * `k` the derived shared secret key.
 
+Implemnters should be able to perform the following tests using the test vectors below:
+
+* Load the public key `ek` or certificate `x5c` and perform an encapsulation for it.
+* Load the decapsulation private key `dk` and the ciphertext `c` and ensure that the same shared secret key `k` can be derived.
 
 ~~~
 {::include src/testvectors.json}
