@@ -4169,7 +4169,7 @@ MB shall contain all of the corresponding public keys and ciphertexts.
 <p id="appendix-E-2">The structure is that a global <code>cacert</code> is provided which is used to sign each KEM certificate, then within each test there are the following values:<a href="#appendix-E-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="appendix-E-3.1">
-          <p id="appendix-E-3.1.1"><code>tcId</code> the OID of the algorithm.<a href="#appendix-E-3.1.1" class="pilcrow">¶</a></p>
+          <p id="appendix-E-3.1.1"><code>tcId</code> the name of the algorithm.<a href="#appendix-E-3.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-E-3.2">
           <p id="appendix-E-3.2.1"><code>ek</code> the encapsulation public key.<a href="#appendix-E-3.2.1" class="pilcrow">¶</a></p>
@@ -4187,7 +4187,16 @@ MB shall contain all of the corresponding public keys and ciphertexts.
           <p id="appendix-E-3.6.1"><code>k</code> the derived shared secret key.<a href="#appendix-E-3.6.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<div class="alignLeft art-text artwork" id="appendix-E-4">
+<p id="appendix-E-4">Implemnters should be able to perform the following tests using the test vectors below:<a href="#appendix-E-4" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-E-5.1">
+          <p id="appendix-E-5.1.1">Load the public key <code>ek</code> or certificate <code>x5c</code> and perform an encapsulation for it.<a href="#appendix-E-5.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-E-5.2">
+          <p id="appendix-E-5.2.1">Load the decapsulation private key <code>dk</code> and the ciphertext <code>c</code> and ensure that the same shared secret key <code>k</code> can be derived.<a href="#appendix-E-5.2.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<div class="alignLeft art-text artwork" id="appendix-E-6">
 <pre>
 {
 "cacert": "MIIVpzCCCKSgAwIBAgIUO5VhDeVEyfoAEBmEnDZp4m0MUkQwCwYJYIZ
@@ -6541,7 +6550,7 @@ KSyuExam4aFr+PL8YGELZxj/Oo=",
 }
 ]
 }
-</pre><a href="#appendix-E-4" class="pilcrow">¶</a>
+</pre><a href="#appendix-E-6" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
