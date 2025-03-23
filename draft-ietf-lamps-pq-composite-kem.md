@@ -269,26 +269,15 @@ This document defines combinations of ML-KEM [FIPS.203] in hybrid with tradition
 
 --- middle
 
-# Changes in version -06
+# Changes in version -07
 
 Interop-affecting changes:
 
-* Removed the ASN.1 wrapping and added a fixed 4-byte length encoding value for the first mlkem component so the keys and ciphertexts can be separated.
-* Add a ML-KEM-768 + ECDH-P256 variant.
-* Changed the ML-KEM-1024 + P256 variant to use HKDF-SHA384 instead of SHA3 so that it is compliant with CNSA 2.0.
-* In the KEM combiner, HKDF refers to the HKDF-extract() without HKDF-expand().  When used with CMS, HKDF-extract() with HKDF-expand() is used.
+* .
 
 Editorial changes:
 
-* Added an Implementation Consideration section explaining why private keys need to contain the public keys.
-* Added a security consideration about key reuse.
-* Added security considerations about SHA3-vs-HKDF-SHA2 and a warning against generifying this construction to other combinations of ciphers.
-* Enhanced the section about how to get this FIPS-certified.
-* Renamed the module from Composite-KEM-2023 -> Composite-MLKEM-2025.
-* Added an appendix "Comparison with other Hybred KEMs" with sub-sections on X-Wing and ETSI CatKDF.
-* Added alignment text with SP 800-227.
-* Improved the security considerations around security proofs of the hybrid construction.
-
+* Added an informative section on the difference between SHA3 and HKDF-SHA2 combiners, and the difference between HKDF(), HKDF-Extract(), and HMAC().
 
 Still to do in a future version:
 
@@ -468,6 +457,8 @@ DHKEM.Decap(skR, enc):
 This construction applies for all variants of elliptic curve Diffie-Hellman used in this specification: ECDH, X25519, and X448.
 
 The simplifications from the DHKEM definition in [RFC9180] is that since the ciphertext and receiver's public key are included explicitly in the Composite ML-KEM combiner, there is no need to construct the `kem_context` object, and since a domain separator is included explicitly in the Composite ML-KEM combiner there is no need to perform the labeled steps of `ExtractAndExpand()`.
+
+
 
 # Composite ML-KEM Functions {#sec-composite-mlkem}
 
@@ -669,6 +660,36 @@ Decap Process:
 It is possible to use component private keys stored in separate software or hardware keystores. Variations in the process to accommodate particular private key storage mechanisms are considered to be conformant to this document so long as it produces the same output and error handling as the process sketched above.
 
 In order to properly achieve its security properties, the KEM combiner requires that all inputs are fixed-length. Since each Composite ML-KEM algorithm fully specifies its component algorithms, including key sizes, all inputs should be fixed-length in non-error scenarios, however some implementations may need to perform additional checking to handle certain error conditions. In particular, the KEM combiner step should not be performed if either of the component decapsulations returned an error condition indicating malformed inputs. For timing-invariance reasons, it is RECOMMENDED to perform both decapsulation operations and check for errors afterwards to prevent an attacker from using a timing channel to tell which component failed decapsulation. Also, RSA-based composites MUST ensure that the modulus size (i.e. the size of tradCT and tradPK) matches that specified for the given Composite ML-KEM algorithm in {{tab-kem-algs}}; depending on the cryptographic library used, this check may be done by the library or may require an explicit check as part of the `CompositeKEM.Decap()` routine.
+
+
+## KEM Combiner Function
+
+As noted in the Encapsulation and Decapsulation proceedures above, this specification defines two
+KEM combiner constructions, one with SHA3 and one with HKDF-SHA2.
+
+
+```
+if KDF is "SHA3-256"
+  ss = SHA3-256(mlkemSS || tradSS || tradCT || tradPK || Domain)
+else if KDF is "HKDF"
+  ss = HKDF-Extract(salt="", IKM=mlkemSS || tradSS || tradCT || tradPK || Domain)
+    # Note: salt is the empty string (0 octets), which will internally be mapped
+    # to the zero vector `0x00..00` of the correct input size for the underlying
+    # hash function as per [RFC 5869].
+
+```
+
+Implementation note: many cryptographic libraries provide only a combined interface for HKDF and do not
+expose HKDF-Extract() and HKDF-Expand() separately.
+Note that HKDF() even with the correct output length and empty `info` param is not equivalent to
+HKDF-Extract() since an extra iteration of HMAC will be performed.
+If HKDF-Extract() is not exposed, then it can be implemented directly with the HMAC primitive as:
+
+```
+HKDF-Extract(salt="", IKM=mlkemSS || tradSS || tradCT || tradPK || Domain)
+   = HMAC-Hash(salt="", IKM=mlkemSS || tradSS || tradCT || tradPK || Domain)
+```
+
 
 ## SerializePublicKey and DeserializePublicKey {#sec-serialize-deserialize}
 
@@ -973,7 +994,7 @@ As an example, the public key type `pk-MLKEM768-ECDH-P384` can be defined compac
 ~~~
 pk-MLKEM768-ECDH-P384 PUBLIC-KEY ::=
   pk-CompositeKEM {
-    id-MLKEM768-ECDH-P384,
+    id-MLKEM768-ECDH-P384-HKDF-SHA256,
     EcCompositeKemPublicKey }
 ~~~
 
@@ -1084,16 +1105,16 @@ EDNOTE: these are prototyping OIDs to be replaced by IANA.
 
 | Composite ML-KEM Algorithm         | OID                  | First Algorithm | Second Algorithm     | KDF      |
 |---------                           | -----------------    | ----------      | ----------           | -------- |
-| id-MLKEM768-RSA2048                | &lt;CompKEM&gt;.30   | MLKEM768        | RSA-OAEP 2048        | HKDF-SHA256 |
-| id-MLKEM768-RSA3072                | &lt;CompKEM&gt;.31   | MLKEM768        | RSA-OAEP 3072        | HKDF-SHA256 |
-| id-MLKEM768-RSA4096                | &lt;CompKEM&gt;.32   | MLKEM768        | RSA-OAEP 4096        | HKDF-SHA256 |
-| id-MLKEM768-X25519                 | &lt;CompKEM&gt;.33   | MLKEM768        | X25519               | SHA3-256 |
-| id-MLKEM768-ECDH-P256              | &lt;CompKEM&gt;.34   | MLKEM768        | ECDH-P256            | HKDF-SHA256 |
-| id-MLKEM768-ECDH-P384              | &lt;CompKEM&gt;.35   | MLKEM768        | ECDH-P384            | HKDF-SHA256 |
-| id-MLKEM768-ECDH-brainpoolP256r1   | &lt;CompKEM&gt;.36   | MLKEM768        | ECDH-brainpoolp256r1 | HKDF-SHA256 |
-| id-MLKEM1024-ECDH-P384             | &lt;CompKEM&gt;.37   | MLKEM1024       | ECDH-P384            | HKDF-SHA384/256 |
-| id-MLKEM1024-ECDH-brainpoolP384r1  | &lt;CompKEM&gt;.38   | MLKEM1024       | ECDH-brainpoolP384r1 | SHA3-256 |
-| id-MLKEM1024-X448                  | &lt;CompKEM&gt;.39   | MLKEM1024       | X448                 | SHA3-256 |
+| id-MLKEM768-RSA2048-HKDF-SHA256    | &lt;CompKEM&gt;.30   | MLKEM768        | RSA-OAEP 2048        | HKDF-SHA256 |
+| id-MLKEM768-RSA3072-HKDF-SHA256    | &lt;CompKEM&gt;.31   | MLKEM768        | RSA-OAEP 3072        | HKDF-SHA256 |
+| id-MLKEM768-RSA4096-HKDF-SHA256    | &lt;CompKEM&gt;.32   | MLKEM768        | RSA-OAEP 4096        | HKDF-SHA256 |
+| id-MLKEM768-X25519-SHA3-256        | &lt;CompKEM&gt;.33   | MLKEM768        | X25519               | SHA3-256 |
+| id-MLKEM768-ECDH-P256-HKDF-SHA256  | &lt;CompKEM&gt;.34   | MLKEM768        | ECDH-P256            | HKDF-SHA256 |
+| id-MLKEM768-ECDH-P384-HKDF-SHA256  | &lt;CompKEM&gt;.35   | MLKEM768        | ECDH-P384            | HKDF-SHA256 |
+| id-MLKEM768-ECDH-brainpoolP256r1-HKDF-SHA256   | &lt;CompKEM&gt;.36   | MLKEM768        | ECDH-brainpoolp256r1 | HKDF-SHA256 |
+| id-MLKEM1024-ECDH-P384-HKDF-SHA384 | &lt;CompKEM&gt;.37   | MLKEM1024       | ECDH-P384            | HKDF-SHA384/256 |
+| id-MLKEM1024-ECDH-brainpoolP384r1-HKDF-SHA384  | &lt;CompKEM&gt;.38   | MLKEM1024       | ECDH-brainpoolP384r1 | SHA3-256 |
+| id-MLKEM1024-X448-SHA3-256         | &lt;CompKEM&gt;.39   | MLKEM1024       | X448                 | SHA3-256 |
 {: #tab-kem-algs title="Composite ML-KEM key types"}
 
 Note that in alignment with ML-KEM which outputs a 256-bit shared secret key at all security levels, all Composite KEM algorithms output a 256-bit shared secret key.
@@ -1109,16 +1130,16 @@ The KEM combiner used in this document requires a domain separator `Domain` inpu
 
 | Composite ML-KEM Algorithm| Domain Separator (in Hex encoding)|
 | -----------               | ----------- |
-| id-MLKEM768-RSA2048       | 060B6086480186FA6B5005021E |
-| id-MLKEM768-RSA3072       | 060B6086480186FA6B5005021F |
-| id-MLKEM768-RSA4096       | 060B6086480186FA6B50050220 |
-| id-MLKEM768-X25519        | 060B6086480186FA6B50050221 |
-| id-MLKEM768-ECDH-P256     | 060B6086480186FA6B50050222 |
-| id-MLKEM768-ECDH-P384     | 060B6086480186FA6B50050223 |
-| id-MLKEM768-ECDH-brainpoolP256r1 | 060B6086480186FA6B50050224 |
-| id-MLKEM1024-ECDH-P384    | 060B6086480186FA6B50050225 |
-| id-MLKEM1024-ECDH-brainpoolP384r1 | 060B6086480186FA6B50050226 |
-| id-MLKEM1024-X448         | 060B6086480186FA6B50050227 |
+| id-MLKEM768-RSA2048-HKDF-SHA256       | 060B6086480186FA6B5005021E |
+| id-MLKEM768-RSA3072-HKDF-SHA256       | 060B6086480186FA6B5005021F |
+| id-MLKEM768-RSA4096-HKDF-SHA256       | 060B6086480186FA6B50050220 |
+| id-MLKEM768-X25519-SHA3-256        | 060B6086480186FA6B50050221 |
+| id-MLKEM768-ECDH-P256-HKDF-SHA256     | 060B6086480186FA6B50050222 |
+| id-MLKEM768-ECDH-P384-HKDF-SHA256     | 060B6086480186FA6B50050223 |
+| id-MLKEM768-ECDH-brainpoolP256r1-HKDF-SHA256 | 060B6086480186FA6B50050224 |
+| id-MLKEM1024-ECDH-P384-HKDF-SHA384    | 060B6086480186FA6B50050225 |
+| id-MLKEM1024-ECDH-brainpoolP384r1-HKDF-SHA384 | 060B6086480186FA6B50050226 |
+| id-MLKEM1024-X448-SHA3-256         | 060B6086480186FA6B50050227 |
 {: #tab-kem-domains title="Composite ML-KEM fixedInfo Domain Separators"}
 
 EDNOTE: these domain separators are based on the prototyping OIDs assigned on the Entrust arc. We will need to ask for IANA early allocation of these OIDs so that we can re-compute the domain separators over the final OIDs.
@@ -1141,13 +1162,13 @@ While it may seem odd to use 256-bit hash functions at all security levels, this
 
 ## RSA-OAEP Parameters {#sect-rsaoaep-params}
 
-Use of RSA-OAEP [RFC8017] within `id-MLKEM768-RSA2048`, `id-MLKEM768-RSA3072`, and `id-MLKEM768-RSA4096` requires additional specification.
+Use of RSA-OAEP [RFC8017] within `id-MLKEM768-RSA2048-HKDF-SHA256`, `id-MLKEM768-RSA3072-HKDF-SHA256`, and `id-MLKEM768-RSA4096-HKDF-SHA256` requires additional specification.
 
 First, a quick note on the choice of RSA-OAEP as the supported RSA encryption primitive. RSA-KEM [RFC5990] is more straightforward to work with, but it has fairly limited adoption and therefore is of limited backwards compatibility value. Also, while RSA-PKCS#1v1.5 [RFC8017] is still everywhere, but hard to make secure and no longer FIPS-approved as of the end of 2023 [SP800-131Ar2], so it is of limited forwards value. This leaves RSA-OAEP [RFC8017] as the remaining choice.
 
 The RSA component keys MUST be generated at the 2048-bit and 3072-bit security levels respectively.
 
-As with the other Composite ML-KEM algorithms, when `id-MLKEM768-RSA2048`, `id-MLKEM768-RSA3072`, or `id-MLKEM-RSA4096` is used in an AlgorithmIdentifier, the parameters MUST be absent. The RSA-OAEP SHALL be instantiated with the following hard-coded parameters which are the same for the 2048, 3072 and 4096 bit security levels.
+As with the other Composite ML-KEM algorithms, when `id-MLKEM768-RSA2048-HKDF-SHA256`, `id-MLKEM768-RSA3072-HKDF-SHA256`, or `id-MLKEM-RSA4096` is used in an AlgorithmIdentifier, the parameters MUST be absent. The RSA-OAEP SHALL be instantiated with the following hard-coded parameters which are the same for the 2048, 3072 and 4096 bit security levels.
 
 | RSAES-OAEP-params           | Value                       |
 | ----------------------      | ---------------             |
@@ -1180,16 +1201,16 @@ A compliant implementation MUST support the following algorithm combinations for
 
 | Composite ML-KEM Algorithm        | KDF                     | Wrap |
 |---------                          | ---                     | ---                |
-| id-MLKEM768-RSA2048               | id-alg-hkdf-with-sha256 | id-aes128-wrap     |
-| id-MLKEM768-RSA3072               | id-alg-hkdf-with-sha256 | id-aes128-wrap     |
-| id-MLKEM768-RSA4096               | id-alg-hkdf-with-sha256 | id-aes128-wrap     |
-| id-MLKEM768-X25519                | id-kmac256              | id-aes128-wrap     |
-| id-MLKEM768-ECDH-P256             | id-alg-hkdf-with-sha256 | id-aes256-wrap     |
-| id-MLKEM768-ECDH-P384             | id-alg-hkdf-with-sha256 | id-aes256-wrap     |
-| id-MLKEM768-ECDH-brainpoolP256r1  | id-alg-hkdf-with-sha256 | id-aes256-wrap     |
-| id-MLKEM1024-ECDH-P384            | id-alg-hkdf-with-sha384 | id-aes256-wrap     |
-| id-MLKEM1024-ECDH-brainpoolP384r1 | id-kmac256              | id-aes256-wrap     |
-| id-MLKEM1024-X448                 | id-kmac256              | id-aes256-wrap     |
+| id-MLKEM768-RSA2048-HKDF-SHA256               | id-alg-hkdf-with-sha256 | id-aes128-wrap     |
+| id-MLKEM768-RSA3072-HKDF-SHA256               | id-alg-hkdf-with-sha256 | id-aes128-wrap     |
+| id-MLKEM768-RSA4096-HKDF-SHA256               | id-alg-hkdf-with-sha256 | id-aes128-wrap     |
+| id-MLKEM768-X25519-SHA3-256                | id-kmac256              | id-aes128-wrap     |
+| id-MLKEM768-ECDH-P256-HKDF-SHA256             | id-alg-hkdf-with-sha256 | id-aes256-wrap     |
+| id-MLKEM768-ECDH-P384-HKDF-SHA256             | id-alg-hkdf-with-sha256 | id-aes256-wrap     |
+| id-MLKEM768-ECDH-brainpoolP256r1-HKDF-SHA256  | id-alg-hkdf-with-sha256 | id-aes256-wrap     |
+| id-MLKEM1024-ECDH-P384-HKDF-SHA384            | id-alg-hkdf-with-sha384 | id-aes256-wrap     |
+| id-MLKEM1024-ECDH-brainpoolP384r1-HKDF-SHA384 | id-kmac256              | id-aes256-wrap     |
+| id-MLKEM1024-X448-SHA3-256                 | id-kmac256              | id-aes256-wrap     |
 {: #tab-cms-kdf-wrap title="Mandatory-to-implement pairings for CMS KDF and WRAP"}
 
 
@@ -1326,54 +1347,54 @@ EDNOTE to IANA: OIDs will need to be replaced in both the ASN.1 module and in {{
   - Description: Designates a public key BIT STRING with no ASN.1 structure.
   - References: This Document
 
-- id-MLKEM768-RSA2048
+- id-MLKEM768-RSA2048-HKDF-SHA256
   - Decimal: IANA Assigned
-  - Description: id-MLKEM768-RSA2048
+  - Description: id-MLKEM768-RSA2048-HKDF-SHA256
   - References: This Document
 
-- id-MLKEM768-RSA3072
+- id-MLKEM768-RSA3072-HKDF-SHA256
   - Decimal: IANA Assigned
-  - Description: id-MLKEM768-RSA3072
+  - Description: id-MLKEM768-RSA3072-HKDF-SHA256
   - References: This Document
 
-- id-MLKEM768-RSA4096
+- id-MLKEM768-RSA4096-HKDF-SHA256
   - Decimal: IANA Assigned
-  - Description: id-MLKEM768-RSA4096
+  - Description: id-MLKEM768-RSA4096-HKDF-SHA256
   - References: This Document
 
-- id-MLKEM768-ECDH-P256
+- id-MLKEM768-ECDH-P256-HKDF-SHA256
   - Decimal: IANA Assigned
-  - Description: id-MLKEM768-ECDH-P256
+  - Description: id-MLKEM768-ECDH-P256-HKDF-SHA256
   - References: This Document
 
-- id-MLKEM768-ECDH-P384
+- id-MLKEM768-ECDH-P384-HKDF-SHA256
   - Decimal: IANA Assigned
-  - Description: id-MLKEM768-ECDH-P384
+  - Description: id-MLKEM768-ECDH-P384-HKDF-SHA256
   - References: This Document
 
-- id-MLKEM768-ECDH-brainpoolP256r1
+- id-MLKEM768-ECDH-brainpoolP256r1-HKDF-SHA256
   - Decimal: IANA Assigned
-  - Description: id-MLKEM768-ECDH-brainpoolP256r1
+  - Description: id-MLKEM768-ECDH-brainpoolP256r1-HKDF-SHA256
   - References: This Document
 
-- id-MLKEM768-X25519
+- id-MLKEM768-X25519-SHA3-256
   - Decimal: IANA Assigned
-  - Description: id-MLKEM768-X25519
+  - Description: id-MLKEM768-X25519-SHA3-256
   - References: This Document
 
-- id-MLKEM1024-ECDH-P384
+- id-MLKEM1024-ECDH-P384-HKDF-SHA384
   - Decimal: IANA Assigned
-  - Description: id-MLKEM1024-ECDH-P384
+  - Description: id-MLKEM1024-ECDH-P384-HKDF-SHA384
   - References: This Document
 
-- id-MLKEM1024-ECDH-brainpoolP384r1
+- id-MLKEM1024-ECDH-brainpoolP384r1-HKDF-SHA384
   - Decimal: IANA Assigned
-  - Description: id-MLKEM1024-ECDH-brainpoolP384r1
+  - Description: id-MLKEM1024-ECDH-brainpoolP384r1-HKDF-SHA384
   - References: This Document
 
-- id-MLKEM1024-X448
+- id-MLKEM1024-X448-SHA3-256
   - Decimal: IANA Assigned
-  - Description: id-MLKEM1024-X448
+  - Description: id-MLKEM1024-X448-SHA3-256
   - References: This Document
 
 <!-- End of IANA Considerations section -->
@@ -1493,9 +1514,24 @@ The Composite ML-KEM design specified in this document, and especially that of t
 
 --- back
 
-# Samples {#appdx-samples}
+# Test Vectors {#appdx-samples}
 
-TODO
+The following test vectors are provided in a format similar to the NIST ACVP Known-Answer-Tests (KATs).
+
+The structure is that a global `cacert` is provided which is used to sign each KEM certificate, then within each test there are the following values:
+
+* `tcId` the OID of the algorithm.
+* `ek` the encapsulation public key.
+* `x5c` the X.509 certificate of the encapsulation key, signed by the cacert.
+* `dk` the decapsulation private key.
+* `c` the ciphertext.
+* `k` the derived shared secret key.
+
+
+```
+{::include src/testvectors.json}
+```
+
 
 # Component Algorithm Reference {#appdx_components}
 
@@ -1744,9 +1780,9 @@ With regard to the traditional algorithms, RSA or Elliptic Curve, in order to ac
 
 ## X-Wing
 
-This specification borrows extensively from the analysis and KEM combiner construction presented in [X-Wing]. In particular, X-Wing and id-MLKEM768-X25519 are largely interchangeable. The one difference is that X-Wing uses a combined KeyGen function to generate the two component private keys from the same seed, which gives some additional binding properies. However, using a derived value as the seed for ML-KEM.KeyGen_internal() is, at time of writing, explicitely disallowed by [FIPS.203] which makes it impossible to create a FIPS-compliant implentation of X-Wing KeyGen / private key import. For this reason, this specification keeps the key generatation for both components separate so that implementers are free to use an existing certified hardware or software module for one or both components.
+This specification borrows extensively from the analysis and KEM combiner construction presented in [X-Wing]. In particular, X-Wing and id-MLKEM768-X25519-SHA3-256 are largely interchangeable. The one difference is that X-Wing uses a combined KeyGen function to generate the two component private keys from the same seed, which gives some additional binding properies. However, using a derived value as the seed for ML-KEM.KeyGen_internal() is, at time of writing, explicitely disallowed by [FIPS.203] which makes it impossible to create a FIPS-compliant implentation of X-Wing KeyGen / private key import. For this reason, this specification keeps the key generatation for both components separate so that implementers are free to use an existing certified hardware or software module for one or both components.
 
-Due to the difference in key generation and security properties, X-Wing and id-MLKEM768-X25519 have been registered as separate algorithms with separate OIDs, and they use a different domain separator string in order to ensure that their ciphertexts are not inter-compatible.
+Due to the difference in key generation and security properties, X-Wing and id-MLKEM768-X25519-SHA3-256 have been registered as separate algorithms with separate OIDs, and they use a different domain separator string in order to ensure that their ciphertexts are not inter-compatible.
 
 ## ETSI CatKDF
 
