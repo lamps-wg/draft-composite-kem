@@ -1,4 +1,5 @@
-# pyasn1
-# pyasn1_modules
-# pyasn1-alt-modules
+pyasn1
+pyasn1-alt-modules
 cryptography
+dilithium-py
+kyber-py

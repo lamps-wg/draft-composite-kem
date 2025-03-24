@@ -1803,6 +1803,8 @@ Implementers should be able to perform the following tests using the test vector
 * Load the public key `ek` or certificate `x5c` and perform an encapsulation for it.
 * Load the decapsulation private key `dk` and the ciphertext `c` and ensure that the same shared secret key `k` can be derived.
 
+Test vectors are provided for each underlying component in isolation for the purposes of debugging.
+
 ~~~
 {::include src/testvectors_wrapped.json}
 ~~~

@@ -66,7 +66,7 @@ class ECDHP256KEM(KEM):
     ss = esk.exchange(ec.ECDH(), self.pk)
     ct = esk.public_key().public_bytes(
                   encoding=serialization.Encoding.X962,
-                  format=serialization.PublicFormat.CompressedPoint
+                  format=serialization.PublicFormat.UncompressedPoint
                 ) 
     return (ct, ss)
 
@@ -79,7 +79,7 @@ class ECDHP256KEM(KEM):
   def public_key_bytes(self):
     return self.pk.public_bytes(
                       encoding=serialization.Encoding.X962,
-                      format=serialization.PublicFormat.CompressedPoint
+                      format=serialization.PublicFormat.UncompressedPoint
                     )
 
   def private_key_bytes(self):    
@@ -104,7 +104,7 @@ class ECDHP384KEM(ECDHP256KEM):
     ss = esk.exchange(ec.ECDH(), self.pk)
     ct = esk.public_key().public_bytes(
               encoding=serialization.Encoding.X962,
-              format=serialization.PublicFormat.CompressedPoint
+              format=serialization.PublicFormat.UncompressedPoint
             ) 
     return (ct, ss)
   
@@ -130,7 +130,7 @@ class ECDHBP256KEM(ECDHP256KEM):
     ss = esk.exchange(ec.ECDH(), self.pk)
     ct = esk.public_key().public_bytes(
               encoding=serialization.Encoding.X962,
-              format=serialization.PublicFormat.CompressedPoint
+              format=serialization.PublicFormat.UncompressedPoint
             ) 
     return (ct, ss)
   
@@ -155,7 +155,7 @@ class ECDHBP384KEM(ECDHP256KEM):
     ss = esk.exchange(ec.ECDH(), self.pk)
     ct = esk.public_key().public_bytes(
               encoding=serialization.Encoding.X962,
-              format=serialization.PublicFormat.CompressedPoint
+              format=serialization.PublicFormat.UncompressedPoint
             ) 
     return (ct, ss)
   
@@ -807,12 +807,12 @@ def main():
   # Single algs - remove these, just for testing
   jsonOutput['tests'].append( doKEM(X25519KEM(), caSK) )
   jsonOutput['tests'].append( doKEM(ECDHP256KEM(), caSK) )
-  # jsonOutput['tests'].append( doKEM(ECDHP384KEM(), caSK) )
+  jsonOutput['tests'].append( doKEM(ECDHP384KEM(), caSK) )
   jsonOutput['tests'].append( doKEM(RSA2048OAEPKEM(), caSK) )
-  # jsonOutput['tests'].append( doKEM(RSA3072OAEPKEM(), caSK) )
-  # jsonOutput['tests'].append( doKEM(RSA4096OAEPKEM(), caSK) )
+  jsonOutput['tests'].append( doKEM(RSA3072OAEPKEM(), caSK) )
+  jsonOutput['tests'].append( doKEM(RSA4096OAEPKEM(), caSK) )
   jsonOutput['tests'].append( doKEM(MLKEM768(), caSK) )
-  # jsonOutput['tests'].append( doKEM(MLKEM1024(), caSK) )
+  jsonOutput['tests'].append( doKEM(MLKEM1024(), caSK) )
 
   
   # Composites
