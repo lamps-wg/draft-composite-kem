@@ -50,9 +50,6 @@ class KEM:
 
   def private_key_bytes(self):
     raise Exception("Not implemented")
-  
-  def ct_bytes(self, ct):
-    raise Exception("Not implemented")
 
 
 
@@ -67,16 +64,22 @@ class ECDHP256KEM(KEM):
   def encap(self):    
     esk = ec.generate_private_key(ec.SECP256R1())
     ss = esk.exchange(ec.ECDH(), self.pk)
-    return (esk.public_key(), ss)
+    ct = esk.public_key().public_bytes(
+                  encoding=serialization.Encoding.X962,
+                  format=serialization.PublicFormat.CompressedPoint
+                ) 
+    return (ct, ss)
 
   def decap(self, ct):
+    if isinstance(ct, bytes):
+      ct = ec.EllipticCurvePublicKey.from_encoded_point(ec.SECP256R1(), ct)
     return self.sk.exchange(ec.ECDH(), ct)
   
 
   def public_key_bytes(self):
     return self.pk.public_bytes(
                       encoding=serialization.Encoding.X962,
-                      format=serialization.PublicFormat.UncompressedPoint
+                      format=serialization.PublicFormat.CompressedPoint
                     )
 
   def private_key_bytes(self):    
@@ -85,12 +88,7 @@ class ECDHP256KEM(KEM):
                         format=serialization.PrivateFormat.PKCS8,
                         encryption_algorithm=serialization.NoEncryption()
                     )
-  
-  def ct_bytes(self, ct):
-    return ct.public_bytes(
-                  encoding=serialization.Encoding.X962,
-                  format=serialization.PublicFormat.UncompressedPoint
-                ) 
+
   
 # skip some copy&paste'ing by inheriting from P256
 class ECDHP384KEM(ECDHP256KEM):
@@ -104,7 +102,17 @@ class ECDHP384KEM(ECDHP256KEM):
   def encap(self):    
     esk = ec.generate_private_key(ec.SECP384R1())
     ss = esk.exchange(ec.ECDH(), self.pk)
-    return (esk.public_key(), ss)
+    ct = esk.public_key().public_bytes(
+              encoding=serialization.Encoding.X962,
+              format=serialization.PublicFormat.CompressedPoint
+            ) 
+    return (ct, ss)
+  
+  def decap(self, ct):
+    if isinstance(ct, bytes):
+      ct = ec.EllipticCurvePublicKey.from_encoded_point(ec.SECP384R1(), ct)
+    return self.sk.exchange(ec.ECDH(), ct)
+  
 
 
   
@@ -120,7 +128,16 @@ class ECDHBP256KEM(ECDHP256KEM):
   def encap(self):    
     esk = ec.generate_private_key(ec.BrainpoolP256R1())
     ss = esk.exchange(ec.ECDH(), self.pk)
-    return (esk.public_key(), ss)
+    ct = esk.public_key().public_bytes(
+              encoding=serialization.Encoding.X962,
+              format=serialization.PublicFormat.CompressedPoint
+            ) 
+    return (ct, ss)
+  
+  def decap(self, ct):
+    if isinstance(ct, bytes):
+      ct = ec.EllipticCurvePublicKey.from_encoded_point(ec.BrainpoolP256R1(), ct)
+    return self.sk.exchange(ec.ECDH(), ct)
   
 
   
@@ -136,8 +153,16 @@ class ECDHBP384KEM(ECDHP256KEM):
   def encap(self):    
     esk = ec.generate_private_key(ec.BrainpoolP384R1())
     ss = esk.exchange(ec.ECDH(), self.pk)
-    return (esk.public_key(), ss)
+    ct = esk.public_key().public_bytes(
+              encoding=serialization.Encoding.X962,
+              format=serialization.PublicFormat.CompressedPoint
+            ) 
+    return (ct, ss)
   
+  def decap(self, ct):
+    if isinstance(ct, bytes):
+      ct = ec.EllipticCurvePublicKey.from_encoded_point(ec.BrainpoolP384R1(), ct)
+    return self.sk.exchange(ec.ECDH(), ct)
 
 
 class X25519KEM(KEM):
@@ -151,9 +176,15 @@ class X25519KEM(KEM):
   def encap(self):    
     esk = x25519.X25519PrivateKey.generate()
     ss = esk.exchange(self.pk)
-    return (esk.public_key(), ss)
+    ct = esk.public_key().public_bytes(
+                  encoding=serialization.Encoding.Raw,
+                  format=serialization.PublicFormat.Raw
+                ) 
+    return (ct, ss)
 
-  def decap(self, ct):    
+  def decap(self, ct):
+    if isinstance(ct, bytes):
+      ct = x25519.X25519PublicKey.from_public_bytes(ct)
     return self.sk.exchange(ct)
   
 
@@ -171,11 +202,6 @@ class X25519KEM(KEM):
                         encryption_algorithm=serialization.NoEncryption()
                     )
 
-  def ct_bytes(self, ct):
-    return ct.public_bytes(
-                  encoding=serialization.Encoding.Raw,
-                  format=serialization.PublicFormat.Raw
-                ) 
   
 
 class X448KEM(X25519KEM):
@@ -189,7 +215,17 @@ class X448KEM(X25519KEM):
   def encap(self):    
     esk = x448.X448PrivateKey.generate()
     ss = esk.exchange(self.pk)
-    return (esk.public_key(), ss)
+    ct = esk.public_key().public_bytes(
+              encoding=serialization.Encoding.Raw,
+              format=serialization.PublicFormat.Raw
+            ) 
+    return (ct, ss)
+
+  def decap(self, ct):
+    if isinstance(ct, bytes):
+      ct = x448.X448PublicKey.from_public_bytes(ct)
+    return self.sk.exchange(ct)
+
 
 
 class RSA2048OAEPKEM(KEM):
@@ -245,8 +281,6 @@ class RSA2048OAEPKEM(KEM):
                         encryption_algorithm=serialization.NoEncryption()
                     )
 
-  def ct_bytes(self, ct):
-    return ct
 
 # save some copy&paste by inheriting
 class RSA3072OAEPKEM(RSA2048OAEPKEM):
@@ -301,8 +335,6 @@ class MLKEM768(KEM):
   def private_key_bytes(self):
     return self.sk
   
-  def ct_bytes(self, ct):
-    return ct
 
 
 class MLKEM1024(KEM):
@@ -330,8 +362,6 @@ class MLKEM1024(KEM):
   def private_key_bytes(self):
     return self.sk
   
-  def ct_bytes(self, ct):
-    return ct
 
 
 
@@ -359,12 +389,10 @@ class CompositeKEM(KEM):
     (ct1, ss1) = self.mlkem.encap()
     (ct2, ss2) = self.tradkem.encap()
 
-    ct1_bytes = self.mlkem.ct_bytes(ct1)
-    ct1_len = len(ct1_bytes).to_bytes(4, 'big')
-    ct2_bytes = self.tradkem.ct_bytes(ct2)
-    ct = ct1_len + ct1_bytes + ct2_bytes
+    ct1_len = len(ct1).to_bytes(4, 'big')
+    ct = ct1_len + ct1 + ct2
 
-    ss = kemCombiner(self, ss1, ss2, ct2_bytes, self.tradkem.public_key_bytes())
+    ss = kemCombiner(self, ss1, ss2, ct2, self.tradkem.public_key_bytes())
 
     return (ct, ss)
 
@@ -374,9 +402,10 @@ class CompositeKEM(KEM):
     if self.mlkem == None or self.tradkem == None:
       raise Exception("Cannot Decap for a KEM with no SK.")
     
-    ct1_len = int.from_bytes(ct[0:3], 'big')
-    ct1 = ct[4:ct1_len]
-    ct2 = ct[ct1_len:]
+    # first 4 bytes is the length tag of ct1
+    ct1_len = int.from_bytes(ct[0:4], 'big')
+    ct1 = ct[4:4+ct1_len]
+    ct2 = ct[4+ct1_len:]
 
     ss1 = self.mlkem.decap(ct1)
     ss2 = self.tradkem.decap(ct2)
@@ -397,10 +426,6 @@ class CompositeKEM(KEM):
     tradSK  = self.tradkem.private_key_bytes()
 
     return len(mlkemSK).to_bytes(4, 'big') + mlkemSK + tradSK
-  
-  def ct_bytes(self, ct):
-    return ct
-
 
 
 
@@ -758,8 +783,10 @@ def formatResults(kem, caSK, ct, ss ):
 def doKEM(kem, caSK):
   kem.keyGen()
   (ct, ss) = kem.encap()
+  _ss = kem.decap(ct)
+  assert ss == _ss
 
-  return formatResults(kem, caSK, kem.ct_bytes(ct), ss)
+  return formatResults(kem, caSK, ct, ss)
 
 
 def main():
@@ -801,8 +828,10 @@ def main():
   jsonOutput['tests'].append( doKEM(MLKEM1024_X448_SHA3_256(), caSK) )
 
 
-  
   with open('testvectors.json', 'w') as f:
+    f.write(json.dumps(jsonOutput, indent=2))
+  
+  with open('testvectors_wrapped.json', 'w') as f:
     f.write('\n'.join(textwrap.wrap(''.join(json.dumps(jsonOutput, indent="")), 
                                   width=68,
                                   replace_whitespace=False,

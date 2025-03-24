@@ -1798,13 +1798,13 @@ The structure is that a global `cacert` is provided which is used to sign each K
 * `c` the ciphertext.
 * `k` the derived shared secret key.
 
-Implemnters should be able to perform the following tests using the test vectors below:
+Implementers should be able to perform the following tests using the test vectors below:
 
 * Load the public key `ek` or certificate `x5c` and perform an encapsulation for it.
 * Load the decapsulation private key `dk` and the ciphertext `c` and ensure that the same shared secret key `k` can be derived.
 
 ~~~
-{::include src/testvectors.json}
+{::include src/testvectors_wrapped.json}
 ~~~
 
 
