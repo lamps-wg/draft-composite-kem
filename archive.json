@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-03-23T01:57:49.370913+00:00",
+  "timestamp": "2025-03-25T01:53:02.396697+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -1965,6 +1965,54 @@
       "updatedAt": "2025-03-18T06:35:18Z",
       "closedAt": null,
       "comments": []
+    },
+    {
+      "number": 122,
+      "id": "I_kwDOKRPFO86vZEMK",
+      "title": "We probably need to say something about compressed vs uncompressed points",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/122",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "I think the right thing is to allow anything that is in use today.\n\nSuggested text for the \"Promoting ECDH to a KEM\" section\n\n> In order to support maximum interoperability with already deployed code bases, producers MAY emit elliptic curve public keys (including KEM ciphertexts, which are EC public keys) as either compressed or uncompressed points. Parsers SHOULD accept either compressed or uncompressed EC public keys.\n\nNote: the same will apply to -sigs.",
+      "createdAt": "2025-03-24T09:24:18Z",
+      "updatedAt": "2025-03-24T09:53:51Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Allowing multiple valid encodings of the EC point. I wonder what that does to IND-CCA2 and EUF-CMA. That is literally the definition of ciphertext collisions. I guess that's a very good reason for binding the trad ct in the KEM combiner KDF1\n#cryptographyIsHard",
+          "createdAt": "2025-03-24T09:53:50Z",
+          "updatedAt": "2025-03-24T09:53:50Z"
+        }
+      ]
+    },
+    {
+      "number": 123,
+      "id": "I_kwDOKRPFO86vbW5c",
+      "title": "Add Implementation Consideration: \"Pick a small number to implement\"",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/123",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Add a new section in Implementation Considerations that it is NOT RECOMMENDED for anyone to implement all options. Many options are defined to serve different usecases, but as a note to other standards bodies implementers who will define profiles, PLEASE select a small subset of these options so that development can be focused down.",
+      "createdAt": "2025-03-24T12:57:52Z",
+      "updatedAt": "2025-03-24T13:52:27Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Proposed text:\n\n># Implementation Considerations\n>## Profiling down the number of options\n>\n>One immediately daunting aspect of this specification is the number of composite algorithm combinations.\nEach option has been specified because there is a community that has a direct application for it; typically because the traditional component is already deployed in a change-managed environment, or because that specific traditional component is required for regulatory reasons.\n>\n>However, this large number of combinations leads either to fracturing of the ecosystem into non-interoperable sub-groups when different communities choose non-overlapping subsets to support, or on the other hand it leads to spreading development resources too thin when trying to support all options.\n>\n>This specification does not make any recommendations or list any particular composite algorithm as mandatory-to-implement, however it is strongly recommended to not implement them all. Organizations that operate within specific application domains are encouraged to define profiles that select a small number of composites appropriate for that application domain.",
+          "createdAt": "2025-03-24T13:52:27Z",
+          "updatedAt": "2025-03-24T13:52:27Z"
+        }
+      ]
     }
   ],
   "pulls": [
