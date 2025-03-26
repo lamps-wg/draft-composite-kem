@@ -37,7 +37,7 @@ The output format is intended to be reminiscent of the NIST ACVP KAT JSON format
         {
           "tcId": "<composite_oid_name>",
           "ek": "<raw_key>",
-          "x5c": "<x509_cert_of_ex>",
+          "x5c": "<x509_cert_of_ek>",
           "dk": "<sk>",
           "c": "<ciphertext>",
           "k": "<ss>"
