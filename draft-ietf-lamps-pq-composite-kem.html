@@ -1059,7 +1059,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Ounsworth, et al.</td>
-<td class="center">Expires 27 September 2025</td>
+<td class="center">Expires 28 September 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1072,12 +1072,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-lamps-pq-composite-kem-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-03-26" class="published">26 March 2025</time>
+<time datetime="2025-03-27" class="published">27 March 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-09-27">27 September 2025</time></dd>
+<dd class="expires"><time datetime="2025-09-28">28 September 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1143,7 +1143,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 27 September 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 28 September 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1420,7 +1420,13 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <p id="section-1-1">Interop-affecting changes:<a href="#section-1-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-1-2.1">
-          <p id="section-1-2.1.1">.<a href="#section-1-2.1.1" class="pilcrow">¶</a></p>
+          <p id="section-1-2.1.1">ML-KEM secret keys are now only seeds.<a href="#section-1-2.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-1-2.2">
+          <p id="section-1-2.2.1">Since all ML-KEM keys and ciphertexts are now fixed-length, dropped the length-tagged encoding.<a href="#section-1-2.2.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-1-2.3">
+          <p id="section-1-2.3.1">Added complete test vectors.<a href="#section-1-2.3.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <p id="section-1-3">Editorial changes:<a href="#section-1-3" class="pilcrow">¶</a></p>
@@ -4166,7 +4172,8 @@ MB shall contain all of the corresponding public keys and ciphertexts.
 <a href="#appendix-E" class="section-number selfRef">Appendix E. </a><a href="#name-test-vectors" class="section-name selfRef">Test Vectors</a>
       </h2>
 <p id="appendix-E-1">The following test vectors are provided in a format similar to the NIST ACVP Known-Answer-Tests (KATs).<a href="#appendix-E-1" class="pilcrow">¶</a></p>
-<p id="appendix-E-2">The structure is that a global <code>cacert</code> is provided which is used to sign each KEM certificate, then within each test there are the following values:<a href="#appendix-E-2" class="pilcrow">¶</a></p>
+<p id="appendix-E-2">The structure is that a global <code>cacert</code> is provided which is used to sign each KEM certificate.
+Within each test case there are the following values:<a href="#appendix-E-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="appendix-E-3.1">
           <p id="appendix-E-3.1.1"><code>tcId</code> the name of the algorithm.<a href="#appendix-E-3.1.1" class="pilcrow">¶</a></p>
@@ -4188,16 +4195,18 @@ MB shall contain all of the corresponding public keys and ciphertexts.
 </li>
       </ul>
 <p id="appendix-E-4">Implementers should be able to perform the following tests using the test vectors below:<a href="#appendix-E-4" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="appendix-E-5.1">
+<ol start="1" type="1" class="normal type-1" id="appendix-E-5">
+<li id="appendix-E-5.1">
           <p id="appendix-E-5.1.1">Load the public key <code>ek</code> or certificate <code>x5c</code> and perform an encapsulation for it.<a href="#appendix-E-5.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="appendix-E-5.2">
+        <li id="appendix-E-5.2">
           <p id="appendix-E-5.2.1">Load the decapsulation private key <code>dk</code> and the ciphertext <code>c</code> and ensure that the same shared secret key <code>k</code> can be derived.<a href="#appendix-E-5.2.1" class="pilcrow">¶</a></p>
 </li>
-      </ul>
+      </ol>
 <p id="appendix-E-6">Test vectors are provided for each underlying component in isolation for the purposes of debugging.<a href="#appendix-E-6" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="appendix-E-7">
+<p id="appendix-E-7">Due to the length of the test vectors, you may prefer to retrieve them from GitHub. The reference implementation that generated them is also available:<a href="#appendix-E-7" class="pilcrow">¶</a></p>
+<p id="appendix-E-8">https://github.com/lamps-wg/draft-composite-kem/tree/main/src<a href="#appendix-E-8" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-E-9">
 <pre>
 {
 "cacert": "MIIVpzCCCKSgAwIBAgIUJFpptDm8MVjmw9zRrtrAK2MC9K8wCwYJYIZ
@@ -7112,7 +7121,7 @@ xkNd9a2hNfKKaol2LnQgWaMw3A=",
 }
 ]
 }
-</pre><a href="#appendix-E-7" class="pilcrow">¶</a>
+</pre><a href="#appendix-E-9" class="pilcrow">¶</a>
 </div>
 </section>
 </div>

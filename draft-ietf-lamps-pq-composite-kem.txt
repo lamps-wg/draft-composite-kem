@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 27 September 2025                                       M. Pala
+Expires: 28 September 2025                                       M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                           26 March 2025
+                                                           27 March 2025
 
 
   Composite ML-KEM for use in X.509 Public Key Infrastructure and CMS
@@ -61,7 +61,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 27 September 2025.
+   This Internet-Draft will expire on 28 September 2025.
 
 Copyright Notice
 
@@ -157,7 +157,12 @@ Table of Contents
 
    Interop-affecting changes:
 
-   *  .
+   *  ML-KEM secret keys are now only seeds.
+
+   *  Since all ML-KEM keys and ciphertexts are now fixed-length,
+      dropped the length-tagged encoding.
+
+   *  Added complete test vectors.
 
    Editorial changes:
 
@@ -2962,7 +2967,7 @@ Appendix E.  Test Vectors
    NIST ACVP Known-Answer-Tests (KATs).
 
    The structure is that a global cacert is provided which is used to
-   sign each KEM certificate, then within each test there are the
+   sign each KEM certificate.  Within each test case there are the
    following values:
 
    *  tcId the name of the algorithm.
@@ -2981,14 +2986,20 @@ Appendix E.  Test Vectors
    Implementers should be able to perform the following tests using the
    test vectors below:
 
-   *  Load the public key ek or certificate x5c and perform an
-      encapsulation for it.
+   1.  Load the public key ek or certificate x5c and perform an
+       encapsulation for it.
 
-   *  Load the decapsulation private key dk and the ciphertext c and
-      ensure that the same shared secret key k can be derived.
+   2.  Load the decapsulation private key dk and the ciphertext c and
+       ensure that the same shared secret key k can be derived.
 
    Test vectors are provided for each underlying component in isolation
    for the purposes of debugging.
+
+   Due to the length of the test vectors, you may prefer to retrieve
+   them from GitHub.  The reference implementation that generated them
+   is also available:
+
+   https://github.com/lamps-wg/draft-composite-kem/tree/main/src
 
    {
    "cacert": "MIIVpzCCCKSgAwIBAgIUJFpptDm8MVjmw9zRrtrAK2MC9K8wCwYJYIZ
