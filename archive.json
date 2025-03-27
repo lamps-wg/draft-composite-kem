@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-03-25T01:53:02.396697+00:00",
+  "timestamp": "2025-03-27T01:52:01.402500+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -2000,17 +2000,17 @@
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
-      "body": "Add a new section in Implementation Considerations that it is NOT RECOMMENDED for anyone to implement all options. Many options are defined to serve different usecases, but as a note to other standards bodies implementers who will define profiles, PLEASE select a small subset of these options so that development can be focused down.",
+      "body": "Add a new section in Implementation Considerations that it is NOT RECOMMENDED for anyone to implement all options.\n\nProposed text:\n\n># Implementation Considerations\n>## Profiling down the number of options\n>\n>One immediately daunting aspect of this specification is the number of composite algorithm combinations.\nEach option has been specified because there is a community that has a direct application for it; typically because the traditional component is already deployed in a change-managed environment, or because that specific traditional component is required for regulatory reasons.\n>\n>However, this large number of combinations leads either to fracturing of the ecosystem into non-interoperable sub-groups when different communities choose non-overlapping subsets to support, or on the other hand it leads to spreading development resources too thin when trying to support all options.\n>\n>This specification does not list any particular composite algorithm as mandatory-to-implement, however organizations that operate within specific application domains are encouraged to define profiles that select a small number of composites appropriate for that application domain.\nFor applications that do not have any regulatory requirements or legacy implementations to consider, it is RECOMMENDED to implement:\n> (Signatures)\n> * id-MLDSA65-ECDSA-P256\n>\n> (KEMs)\n> * id-MLKEM768-X25519-SHA3-256\n> * id-MLKEM768-ECDH-P256-HKDF-SHA256",
       "createdAt": "2025-03-24T12:57:52Z",
-      "updatedAt": "2025-03-24T13:52:27Z",
+      "updatedAt": "2025-03-25T13:25:09Z",
       "closedAt": null,
       "comments": [
         {
-          "author": "ounsworth",
-          "authorAssociation": "CONTRIBUTOR",
-          "body": "Proposed text:\n\n># Implementation Considerations\n>## Profiling down the number of options\n>\n>One immediately daunting aspect of this specification is the number of composite algorithm combinations.\nEach option has been specified because there is a community that has a direct application for it; typically because the traditional component is already deployed in a change-managed environment, or because that specific traditional component is required for regulatory reasons.\n>\n>However, this large number of combinations leads either to fracturing of the ecosystem into non-interoperable sub-groups when different communities choose non-overlapping subsets to support, or on the other hand it leads to spreading development resources too thin when trying to support all options.\n>\n>This specification does not make any recommendations or list any particular composite algorithm as mandatory-to-implement, however it is strongly recommended to not implement them all. Organizations that operate within specific application domains are encouraged to define profiles that select a small number of composites appropriate for that application domain.",
-          "createdAt": "2025-03-24T13:52:27Z",
-          "updatedAt": "2025-03-24T13:52:27Z"
+          "author": "PiotrPopis",
+          "authorAssociation": "NONE",
+          "body": "Limiting the number of recommended composite algorithms to a few is desirable. In my opinion, the proposed compositions will be sufficient for many typical applications. My company implements many PKI-based applications in the government sector, and although we are outside the US, NSA CNSA 2.0 guidelines are also required/desirable in Poland (I expect it is similar in other countries). Leaving OIDs containing MLDSA-87 and MLKEM-1024 in the documents in this context seems sufficient (even if they are not \"recommended\").",
+          "createdAt": "2025-03-25T13:25:08Z",
+          "updatedAt": "2025-03-25T13:25:08Z"
         }
       ]
     }
@@ -4962,6 +4962,32 @@
       "mergeCommit": {
         "oid": "5b57dab38e47b2717329407002168fefb182c3a1"
       },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 124,
+      "id": "PR_kwDOKRPFO86QQUR2",
+      "title": "Overhaul of the serialization sections",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/124",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-03-26T18:20:35Z",
+      "updatedAt": "2025-03-26T18:20:35Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "53a7d8de6ad5fd4a485f7d3cf47826ee66c3084d",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_no_length_tag",
+      "headRefOid": "df954eb7b757c559c2119f0df3788cabcf21ec17",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
       "comments": [],
       "reviews": []
     }
