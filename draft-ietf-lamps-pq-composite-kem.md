@@ -1881,7 +1881,8 @@ The structure is that a global `cacert` is provided which is used to sign each K
 * `tcId` the name of the algorithm.
 * `ek` the encapsulation public key.
 * `x5c` the X.509 certificate of the encapsulation key, signed by the cacert.
-* `dk` the decapsulation private key.
+* `dk` the raw decapsulation private key.
+* `dk_pkcs8` the decapsulation private key in a PKCS#8 object.
 * `c` the ciphertext.
 * `k` the derived shared secret key.
 

@@ -17,6 +17,7 @@ import json
 import textwrap
 
 from pyasn1.type import univ
+from pyasn1_alt_modules import rfc5208
 from pyasn1_alt_modules import rfc5280
 from pyasn1.codec.der.decoder import decode
 from pyasn1.codec.der.encoder import encode
@@ -774,6 +775,16 @@ def formatResults(kem, caSK, ct, ss ):
   kemCert = signKemCert(caSK, kem)
   jsonTest['x5c'] = base64.b64encode(kemCert.public_bytes(encoding=serialization.Encoding.DER)).decode('ascii')
   jsonTest['dk'] = base64.b64encode(kem.private_key_bytes()).decode('ascii')
+
+  # Construct PKCS#8
+  pki = rfc5208.PrivateKeyInfo()
+  pki['version'] = 0
+  algId = rfc5208.AlgorithmIdentifier()
+  algId['algorithm'] = kem.oid
+  pki['privateKeyAlgorithm'] = algId
+  pki['privateKey'] = univ.OctetString(kem.private_key_bytes())
+  jsonTest['dk_pkcs8'] = base64.b64encode(encode(pki)).decode('ascii')
+
   jsonTest['c'] = base64.b64encode(ct).decode('ascii')
   jsonTest['k'] = base64.b64encode(ss).decode('ascii')
 
@@ -807,12 +818,12 @@ def main():
   # Single algs - remove these, just for testing
   jsonOutput['tests'].append( doKEM(X25519KEM(), caSK) )
   jsonOutput['tests'].append( doKEM(ECDHP256KEM(), caSK) )
-  jsonOutput['tests'].append( doKEM(ECDHP384KEM(), caSK) )
+  # jsonOutput['tests'].append( doKEM(ECDHP384KEM(), caSK) )
   jsonOutput['tests'].append( doKEM(RSA2048OAEPKEM(), caSK) )
-  jsonOutput['tests'].append( doKEM(RSA3072OAEPKEM(), caSK) )
-  jsonOutput['tests'].append( doKEM(RSA4096OAEPKEM(), caSK) )
+  # jsonOutput['tests'].append( doKEM(RSA3072OAEPKEM(), caSK) )
+  # jsonOutput['tests'].append( doKEM(RSA4096OAEPKEM(), caSK) )
   jsonOutput['tests'].append( doKEM(MLKEM768(), caSK) )
-  jsonOutput['tests'].append( doKEM(MLKEM1024(), caSK) )
+  # jsonOutput['tests'].append( doKEM(MLKEM1024(), caSK) )
 
   
   # Composites

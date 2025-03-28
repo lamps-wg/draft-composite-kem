@@ -39,6 +39,7 @@ The output format is intended to be reminiscent of the NIST ACVP KAT JSON format
           "ek": "<raw_key>",
           "x5c": "<x509_cert_of_ex>",
           "dk": "<sk>",
+          "dk_pkcs8": <pkcs8>
           "c": "<ciphertext>",
           "k": "<ss>"
         },
