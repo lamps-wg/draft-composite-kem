@@ -830,7 +830,7 @@ Explicit Input:
 
   mlkemKey  The ML-KEM public key, which is bytes.
 
-  tradKey   The traditional public key in the appropriate 
+  tradKey   The traditional public key in the appropriate
             encoding for the underlying component algorithm.
 
 Output:
@@ -864,7 +864,7 @@ Output:
 
   mlkemKey  The ML-DSA public key, which is bytes.
 
-  tradKey   The traditional public key in the appropriate 
+  tradKey   The traditional public key in the appropriate
             encoding for the underlying component algorithm.
 
 Deserialization Process:
@@ -872,7 +872,7 @@ Deserialization Process:
   1. Parse each constituent encoded public key.
        The length of the mlkemKey is known based on the size of
        the ML-KEM component key length specified by the Object ID
-    
+
      switch ML-KEM do
         case ML-KEM-768:
           mlkemKey = bytes[:1184]
@@ -905,7 +905,7 @@ Explicit Input:
 
   mlkemSeed  The ML-KEM private key, which is the bytes of the seed.
 
-  tradKey   The traditional private key in the appropriate 
+  tradKey   The traditional private key in the appropriate
             encoding for the underlying component algorithm.
 
 Output:
@@ -934,7 +934,7 @@ Output:
 
   mldsaSeed  The ML-DSA private key, which is the bytes of the seed.
 
-  tradKey   The traditional private key in the appropriate 
+  tradKey   The traditional private key in the appropriate
             encoding for the underlying component algorithm.
 
 Deserialization Process:
@@ -942,7 +942,7 @@ Deserialization Process:
   1. Parse each constituent encoded key.
        The length of an ML-KEM private key is always a 64 byte seed
        for all parameter sets.
-    
+
       mldsaSeed = bytes[:64]
       tradKey  = bytes[64:]
 
@@ -970,7 +970,7 @@ Explicit Inputs:
 
   mlkemCT  The ML-KEM ciphertext, which is bytes.
 
-  tradCT   The traditional ciphertext in the appropriate 
+  tradCT   The traditional ciphertext in the appropriate
             encoding for the underlying component algorithm.
 
 Output:
@@ -982,7 +982,7 @@ Serialization Process:
   1. Combine and output the encoded composite signature
 
      output mlkemCT || tradEncodedSignature
-     
+
 ~~~
 {: #alg-composite-serialize-ct title="SerializeCiphertext(mldsaCT, tradCT) -> bytes"}
 
@@ -1005,7 +1005,7 @@ Output:
 
   mlkemCT  The ML-KEM ciphertext, which is bytes.
 
-  tradCT   The traditional ciphertext in the appropriate 
+  tradCT   The traditional ciphertext in the appropriate
             encoding for the underlying component algorithm.
 
 Deserialization Process:
@@ -1013,7 +1013,7 @@ Deserialization Process:
   1. Parse each constituent encoded ciphertext.
        The length of the mlkemCT is known based on the size of
        the ML-KEM component signature length specified by the Object ID
-    
+
      switch ML-KEM do
         case ML-KEM-768:
           mlkemCT = bytes[:1088]
