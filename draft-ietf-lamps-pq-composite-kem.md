@@ -273,7 +273,9 @@ This document defines combinations of ML-KEM [FIPS.203] in hybrid with tradition
 
 Interop-affecting changes:
 
-* .
+* ML-KEM secret keys are now only seeds.
+* Since all ML-KEM keys and ciphertexts are now fixed-length, dropped the length-tagged encoding.
+* Added complete test vectors.
 
 Editorial changes:
 
@@ -1876,7 +1878,8 @@ Additionally, ETSI CatKDF uses HKDF [RFC5869] as the KDF which aligns with some 
 
 The following test vectors are provided in a format similar to the NIST ACVP Known-Answer-Tests (KATs).
 
-The structure is that a global `cacert` is provided which is used to sign each KEM certificate, then within each test there are the following values:
+The structure is that a global `cacert` is provided which is used to sign each KEM certificate.
+Within each test case there are the following values:
 
 * `tcId` the name of the algorithm.
 * `ek` the encapsulation public key.
@@ -1888,10 +1891,15 @@ The structure is that a global `cacert` is provided which is used to sign each K
 
 Implementers should be able to perform the following tests using the test vectors below:
 
-* Load the public key `ek` or certificate `x5c` and perform an encapsulation for it.
-* Load the decapsulation private key `dk` and the ciphertext `c` and ensure that the same shared secret key `k` can be derived.
+1. Load the public key `ek` or certificate `x5c` and perform an encapsulation for it.
+2. Load the decapsulation private key `dk` and the ciphertext `c` and ensure that the same shared secret key `k` can be derived.
 
 Test vectors are provided for each underlying component in isolation for the purposes of debugging.
+
+
+Due to the length of the test vectors, you may prefer to retrieve them from GitHub. The reference implementation that generated them is also available:
+
+https://github.com/lamps-wg/draft-composite-kem/tree/main/src
 
 ~~~
 {::include src/testvectors_wrapped.json}

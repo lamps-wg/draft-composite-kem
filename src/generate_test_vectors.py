@@ -314,12 +314,11 @@ class RSA4096OAEPKEM(RSA2048OAEPKEM):
 class MLKEM768(KEM):
   id = "id-alg-ml-kem-768"
   oid = univ.ObjectIdentifier((2,16,840,1,101,3,4,4,2))
-  dk=None
 
   # returns nothing
   def keyGen(self):
     self.sk = secrets.token_bytes(64)
-    self.pk, self.dk = ML_KEM_768.key_derive(self.sk)
+    self.pk, _ = ML_KEM_768.key_derive(self.sk)
     
   # returns (ct, ss)
   def encap(self):
@@ -328,7 +327,8 @@ class MLKEM768(KEM):
 
   # returns (ss)
   def decap(self, ct):
-    return ML_KEM_768.decaps(self.dk, ct)
+    _, dk = ML_KEM_768.key_derive(self.sk)
+    return ML_KEM_768.decaps(dk, ct)
 
   def public_key_bytes(self):
     return self.pk
@@ -341,12 +341,11 @@ class MLKEM768(KEM):
 class MLKEM1024(KEM):
   id = "id-alg-ml-kem-1024"
   oid = univ.ObjectIdentifier((2,16,840,1,101,3,4,4,3))
-  dk=None
 
   # returns nothing
   def keyGen(self):
     self.sk = secrets.token_bytes(64)
-    self.pk, self.dk = ML_KEM_1024.key_derive(self.sk)
+    self.pk, _ = ML_KEM_1024.key_derive(self.sk)
     
   # returns (ct, ss)
   def encap(self):
@@ -355,7 +354,8 @@ class MLKEM1024(KEM):
 
   # returns (ss)
   def decap(self, ct):
-    return ML_KEM_1024.decaps(self.dk, ct)
+    _, dk = ML_KEM_1024.key_derive(self.sk)
+    return ML_KEM_1024.decaps(dk, ct)
 
   def public_key_bytes(self):
     return self.pk
@@ -382,6 +382,86 @@ class CompositeKEM(KEM):
     self.sk = self.public_key_bytes()
 
 
+  
+  def serializePublicKey(self):
+    """
+    (pk1, pk2) -> pk
+    """
+    mlkemPK = self.mlkem.public_key_bytes()
+    tradPK  = self.tradkem.public_key_bytes()
+    return mlkemPK + tradPK
+  
+  def deserializePublicKey(self, keyBytes):
+    """
+    pk -> (pk1, pk2)
+    """
+    assert isinstance(keyBytes, bytes)
+
+    if isinstance(self.mlkem, MLKEM768):
+      return keyBytes[:1184], keyBytes[1184:]
+    elif isinstance(self.mlkem, MLKEM1024):
+      return keyBytes[:1568], keyBytes[1568:]
+  
+
+  def serializePrivateKey(self):
+    """
+    (mlkemSK, tradSK) -> sk
+    """
+    mlkemSK = self.mlkem.private_key_bytes()
+    tradSK  = self.tradkem.private_key_bytes()
+    return mlkemSK + tradSK
+  
+  def deserializePrivateKey(self, keyBytes):
+    """
+    sk -> (mlkemSK, tradSK)
+    """
+    assert isinstance(keyBytes, bytes)
+    return keyBytes[:64], keyBytes[64:]
+  
+  def public_key_bytes(self):
+    return self.serializePublicKey()
+
+  def private_key_bytes(self):
+    return self.serializePrivateKey()
+  
+
+  # def compositeEncode(self, v1, v2):
+  #   """
+  #   (v1, v2) -> v
+  #   """
+  #   assert isinstance(v1, bytes)
+  #   assert isinstance(v2, bytes)
+  #   return len(v1).to_bytes(4, 'big') + v1 + v2
+  
+
+  # def compositeDecode(self, v):
+  #   """
+  #   v -> (v1, v2)
+  #   """
+  #   assert isinstance(v, bytes)
+  #   # first 4 bytes is the length tag of ct1
+  #   v1_len = int.from_bytes(v[0:4], 'big')
+  #   v1 = v[4:4+v1_len]
+  #   v2 = v[4+v1_len:]
+  #   return (v1, v2)
+  
+
+  def serializeCiphertext(self, ct1, ct2):
+    assert isinstance(ct1, bytes)
+    assert isinstance(ct2, bytes)
+    return ct1 + ct2
+  
+
+  def deserializeCiphertext(self, ct):
+    assert isinstance(ct, bytes)
+
+    if isinstance(self.mlkem, MLKEM768):
+      return ct[:1088], ct[1088:]
+    elif isinstance(self.mlkem, MLKEM1024):
+      return ct[:1568], ct[1568:]
+
+
+
   # returns (ct, ss)
   def encap(self):
     if self.mlkem == None or self.tradkem == None:
@@ -390,8 +470,7 @@ class CompositeKEM(KEM):
     (ct1, ss1) = self.mlkem.encap()
     (ct2, ss2) = self.tradkem.encap()
 
-    ct1_len = len(ct1).to_bytes(4, 'big')
-    ct = ct1_len + ct1 + ct2
+    ct = self.serializeCiphertext(ct1, ct2)
 
     ss = kemCombiner(self, ss1, ss2, ct2, self.tradkem.public_key_bytes())
 
@@ -403,30 +482,14 @@ class CompositeKEM(KEM):
     if self.mlkem == None or self.tradkem == None:
       raise Exception("Cannot Decap for a KEM with no SK.")
     
-    # first 4 bytes is the length tag of ct1
-    ct1_len = int.from_bytes(ct[0:4], 'big')
-    ct1 = ct[4:4+ct1_len]
-    ct2 = ct[4+ct1_len:]
+    (mlkemCT, tradCT) = self.deserializeCiphertext(ct)
 
-    ss1 = self.mlkem.decap(ct1)
-    ss2 = self.tradkem.decap(ct2)
+    mlkemSS = self.mlkem.decap(mlkemCT)
+    tradSS = self.tradkem.decap(tradCT)
 
-    ss = kemCombiner(self, ss1, ss2, ct2, self.tradkem.public_key_bytes())
+    ss = kemCombiner(self, mlkemSS, tradSS, tradCT, self.tradkem.public_key_bytes())
 
     return ss
-  
-
-  def public_key_bytes(self):
-    mlkemPK = self.mlkem.public_key_bytes()
-    tradPK  = self.tradkem.public_key_bytes()
-
-    return len(mlkemPK).to_bytes(4, 'big') + mlkemPK + tradPK
-
-  def private_key_bytes(self):
-    mlkemSK = self.mlkem.private_key_bytes()
-    tradSK  = self.tradkem.private_key_bytes()
-
-    return len(mlkemSK).to_bytes(4, 'big') + mlkemSK + tradSK
 
 
 
@@ -769,8 +832,7 @@ def signKemCert(caSK, kem):
 def formatResults(kem, caSK, ct, ss ):
   jsonTest = {}
   jsonTest['tcId'] = kem.id
-  pkBytes = kem.public_key_bytes()
-  jsonTest['ek'] = base64.b64encode(pkBytes).decode('ascii')
+  jsonTest['ek'] = base64.b64encode(kem.public_key_bytes()).decode('ascii')
 
   kemCert = signKemCert(caSK, kem)
   jsonTest['x5c'] = base64.b64encode(kemCert.public_bytes(encoding=serialization.Encoding.DER)).decode('ascii')
