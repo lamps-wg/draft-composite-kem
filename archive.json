@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-03-30T02:00:06.990022+00:00",
+  "timestamp": "2025-04-03T01:52:50.753314+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -2013,6 +2013,38 @@
           "updatedAt": "2025-03-25T13:25:08Z"
         }
       ]
+    },
+    {
+      "number": 125,
+      "id": "I_kwDOKRPFO86ws_yA",
+      "title": "We currently have two FIPS Certification sections --> Merge them!",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/125",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "D.1. FIPS Certification\n\nD.1.1. FIPS certification of Combiner Function\n\nAlso, referencing a specific page number is a bad idea because IGs get updated and page numbers change.\n\n> [SP.800-56Cr2] section 4 \"One-Step Key Derivation\" requires a counter\n   which begins at the 4-byte value 0x00000001.  However, the counter is\n   allowed to be omitted when the hash function is executed only once,\n   as specified on page 159 of the FIPS 140-3 Implementation Guidance\n   [FIPS-140-3-IG].\n\n",
+      "createdAt": "2025-04-01T21:12:02Z",
+      "updatedAt": "2025-04-01T22:19:10Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 126,
+      "id": "I_kwDOKRPFO86w0v0I",
+      "title": "Split out Use in CMS into its own I-D",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/126",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Reasoning: generating and cross-testing CMS test vectors will slow down this draft.",
+      "createdAt": "2025-04-02T14:44:24Z",
+      "updatedAt": "2025-04-02T14:44:24Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
