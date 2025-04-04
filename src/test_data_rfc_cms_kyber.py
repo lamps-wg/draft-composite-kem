@@ -3,11 +3,13 @@
 # Used to generate test data for test_rfcTBD.py.
 #
 # Written by Russ Housley for test_cms_kyber on 12 December 2024.
+# Enhanced by Mike Ounsworth on 28 March 2025.
 
 import os
 import base64
 import binascii
 import textwrap
+from pyasn1_alt_modules import rfc5208
 from pyasn1_alt_modules import rfc5280
 from pyasn1_alt_modules import rfc5652
 from pyasn1_alt_modules import rfc5083
@@ -16,6 +18,11 @@ from pyasn1.type import univ, char, tag, constraint
 from pyasn1_alt_modules import pem
 from pyasn1.codec.der.decoder import decode as der_decode
 from pyasn1.codec.der.encoder import encode as der_encode
+
+from kyber_py.ml_kem import ML_KEM_512
+from cryptography.hazmat.primitives import hashes, keywrap
+from cryptography.hazmat.primitives.kdf.hkdf import HKDF
+
 
 import rfc_cms_kyber
 
@@ -42,6 +49,8 @@ DQYLKoZIhvcNAQkQAxwCASAwCwYJYIZIAWUDBAEtBCgSWjJGbANW6249qJezunw8
 TekPnqeXQxQsCApolNdBREvHJzVFD8fxMDoGCSqGSIb3DQEHATAeBglghkgBZQME
 AS4wEQQM09P1v4RTaKUfxd6/AgEQgA0W/2sAf/+wpWYbxab8BBAcFxeZJbrC7Ifl
 jQHB7vah"""
+
+pem_priv_key = "MFICAQAwCwYJYIZIAWUDBAQBBEAAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAhIiMkJSYnKCkqKywtLi8wMTIzNDU2Nzg5Ojs8PT4/"
 
 recipient_kid = univ.OctetString(hexValue='599788c37aed400ee405d1b2a3366ab17d824a51')
 
@@ -70,8 +79,34 @@ assert 0 == kemri['version']
 assert kemri['rid']['subjectKeyIdentifier'] == recipient_kid
 assert kemri['kem']['algorithm'] == rfc_cms_kyber.id_alg_ml_kem_512
 assert kemri['kdf']['algorithm'] == rfc_cms_kyber.id_alg_hkdf_with_sha256
+assert kemri['wrap']['algorithm'] == rfc_cms_kyber.id_aes256_wrap
+assert kemri['kekLength'] == 32
 
-print ('')
-print ('pem_text = """\\')
-print(pem_text)
-print ('"""')
+# Unwrap the encrypted key
+# Decode private key info
+pki = der_decode(base64.b64decode(pem_priv_key), asn1spec=rfc5208.PrivateKeyInfo())[0]
+assert pki[0] == 0  # version
+assert pki[1][0] == rfc_cms_kyber.id_alg_ml_kem_512
+dk_seed = bytes(pki[2])
+assert dk_seed == bytes(range(64))  # the sample key is \x00\01..\3f
+ek, dk = ML_KEM_512.key_derive(dk_seed)
+
+ss = ML_KEM_512.decaps(dk, bytes(kemri['kemct']))
+
+CMSORIforKEMOtherInfo = rfc9629.CMSORIforKEMOtherInfo()
+CMSORIforKEMOtherInfo['wrap'] = kemri['wrap']
+CMSORIforKEMOtherInfo['kekLength'] = kemri['kekLength']
+
+hkdf = HKDF(
+    algorithm=hashes.SHA256(),
+    length=kemri['kekLength'],
+    salt=b'',
+    info=der_encode(CMSORIforKEMOtherInfo),
+)
+
+kek = hkdf.derive(ss)
+# Ugg. Python cryptography only seems to support rfc3394 aes_key_wrap
+# but not rfc3565 aes256_key_wrap
+
+print(kemri)
+print(ss)
