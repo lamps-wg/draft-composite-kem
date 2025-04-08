@@ -1,5 +1,5 @@
 ---
-title: Composite ML-KEM for use in X.509 Public Key Infrastructure and CMS
+title: Composite ML-KEM for use in X.509 Public Key Infrastructure
 abbrev: Composite ML-KEM
 docname: draft-ietf-lamps-pq-composite-kem-latest
 
@@ -262,7 +262,7 @@ informative:
 
 --- abstract
 
-This document defines combinations of ML-KEM [FIPS.203] in hybrid with traditional algorithms RSA-OAEP, ECDH, X25519, and X448. These combinations are tailored to meet security best practices and regulatory requirements. Composite ML-KEM is applicable in any application that uses X.509, PKIX, and CMS data structures and protocols that accept ML-KEM, but where the operator wants extra protection against breaks or catastrophic bugs in ML-KEM. For use within CMS, this document is intended to be coupled with the CMS KEMRecipientInfo mechanism in {{RFC9629}}.
+This document defines combinations of ML-KEM [FIPS.203] in hybrid with traditional algorithms RSA-OAEP, ECDH, X25519, and X448. These combinations are tailored to meet security best practices and regulatory requirements. Composite ML-KEM is applicable in any application that uses X.509 or PKIX data structures that accept ML-KEM, but where the operator wants extra protection against breaks or catastrophic bugs in ML-KEM.
 
 <!-- End of Abstract -->
 
@@ -314,7 +314,7 @@ PQ/T Hybrid cryptography can, in general, provide solutions to two migration pro
 
 This document defines a specific instantiation of the PQ/T Hybrid paradigm called "composite" where multiple cryptographic algorithms are combined to form a single key encapsulation mechanism (KEM) key and ciphertext such that they can be treated as a single atomic algorithm at the protocol level. Composite algorithms address algorithm strength uncertainty because the composite algorithm remains strong so long as one of its components remains strong. Concrete instantiations of composite ML-KEM algorithms are provided based on ML-KEM, RSA-OAEP and ECDH. Backwards compatibility is not directly covered in this document, but is the subject of {{sec-backwards-compat}}.
 
-Composite ML-KEM is intended for general applicability anywhere that key establishment or enveloped content encryption is used within PKIX or CMS structures.
+Composite ML-KEM is intended for general applicability anywhere that key establishment or enveloped content encryption is used within PKIX protocols.
 
 
 
@@ -1343,11 +1343,6 @@ EDNOTE to IANA: OIDs will need to be replaced in both the ASN.1 module and in {{
 -  References: This Document
 
 ###  Object Identifier Registrations - SMI Security for PKIX Algorithms
-
--  id-raw-key
-  - Decimal: IANA Assigned
-  - Description: Designates a public key BIT STRING with no ASN.1 structure.
-  - References: This Document
 
 - id-MLKEM768-RSA2048-HKDF-SHA256
   - Decimal: IANA Assigned
