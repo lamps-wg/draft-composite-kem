@@ -245,25 +245,4 @@ kema-MLKEM1024-X448 KEM-ALGORITHM ::=
       pk-MLKEM1024-X448 }
 
 
---
--- Expand the S/MIME capabilities set used by CMS [RFC5911]
---
-
--- TODO: this doesn't compile, error:
--- "The referenced object in the 'ValueFromObject' 
--- syntax with the field '&smimeCaps' is invalid or does not exist."
--- We need help from an SMIME expert
-
-SMimeCaps SMIME-CAPS ::=
-    { kema-MLKEM768-RSA2048.&smimeCaps |
-      kema-MLKEM768-RSA3072.&smimeCaps |
-      kema-MLKEM768-RSA4096.&smimeCaps |
-      kema-MLKEM768-ECDH-P384.&smimeCaps |
-      kema-MLKEM768-ECDH-brainpoolP256r1.&smimeCaps |
-      kema-MLKEM768-X25519.&smimeCaps |
-      kema-MLKEM1024-ECDH-P384.&smimeCaps |
-      kema-MLKEM1024-ECDH-brainpoolP384r1.&smimeCaps |
-      kema-MLKEM1024-X448.&smimeCaps,
-      ... }
-
 END

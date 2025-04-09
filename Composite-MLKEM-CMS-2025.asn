@@ -1,0 +1,52 @@
+Composite-MLKEM-CMS-2025
+      { iso(1) identified-organization(3) dod(6) internet(1) 
+        security(5) mechanisms(5) pkix(7) id-mod(0) 
+        id-mod-composite-mlkem-cms-2025(TBDMOD) }
+
+DEFINITIONS IMPLICIT TAGS ::= BEGIN
+
+EXPORTS ALL;
+
+IMPORTS
+
+SMIME-CAPS
+  FROM AlgorithmInformation-2009  -- RFC 5912 [X509ASN1]
+      { iso(1) identified-organization(3) dod(6) internet(1)
+        security(5) mechanisms(5) pkix(7) id-mod(0)
+        id-mod-algorithmInformation-02(58) }
+
+kema-MLKEM768-RSA2048, kema-MLKEM768-RSA3072, kema-MLKEM768-RSA4096,
+kema-MLKEM768-ECDH-P384, kema-MLKEM768-ECDH-brainpoolP256r1,
+kema-MLKEM768-X25519, kema-MLKEM1024-ECDH-P384,
+kema-MLKEM1024-ECDH-brainpoolP384r1, kema-MLKEM1024-X448
+  FROM Composite-MLKEM-2025
+      { iso(1) identified-organization(3) dod(6) internet(1) 
+        security(5) mechanisms(5) pkix(7) id-mod(0) 
+        id-mod-composite-mlkem-2025(TBDCompositeMOD) }
+
+;
+
+
+
+--
+-- Expand the S/MIME capabilities set used by CMS [RFC5911]
+--
+
+-- TODO: this doesn't compile, error:
+-- "The referenced object in the 'ValueFromObject' 
+-- syntax with the field '&smimeCaps' is invalid or does not exist."
+-- We need help from an SMIME expert
+
+SMimeCaps SMIME-CAPS ::=
+    { kema-MLKEM768-RSA2048.&smimeCaps |
+      kema-MLKEM768-RSA3072.&smimeCaps |
+      kema-MLKEM768-RSA4096.&smimeCaps |
+      kema-MLKEM768-ECDH-P384.&smimeCaps |
+      kema-MLKEM768-ECDH-brainpoolP256r1.&smimeCaps |
+      kema-MLKEM768-X25519.&smimeCaps |
+      kema-MLKEM1024-ECDH-P384.&smimeCaps |
+      kema-MLKEM1024-ECDH-brainpoolP384r1.&smimeCaps |
+      kema-MLKEM1024-X448.&smimeCaps,
+      ... }
+
+END
