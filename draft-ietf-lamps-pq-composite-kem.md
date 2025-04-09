@@ -576,7 +576,7 @@ Encap Process:
         ss = HKDF-Extract(salt="", IKM=mlkemSS || tradSS || tradCT || tradPK || Domain)
           # Note: salt is the empty string (0 octets), which will internally be mapped
           # to the zero vector `0x00..00` of the correct input size for the underlying
-          # hash function as per [RFC 5869].
+          # hash function as per [RFC5869].
 
   6. Output composite shared secret key and ciphertext
 
@@ -1299,7 +1299,7 @@ where:
 
 Each registered Composite ML-KEM algorithm specifies the choice of `KDF` and `Domain` to be used in {{sec-alg-ids}} and {{sec-domsep-values}} below. Given that each Composite ML-KEM algorithm fully specifies the component algorithms, including for example the size of the RSA modulus, all inputs to the KEM combiner are fixed-size and thus do not require length-prefixing. The `CompositeKEM.Decap()` specified in {{sect-composite-decaps}} adds further error handling to protect the KEM combiner from malicious inputs.
 
-The primary security property of the KEM combiner is that it preserves IND-CCA2 of the overall Composite ML-KEM so long as at least one component is IND-CCA2 [[X-Wing]] [GHP18]. Additionally, we also need to consider the case where one of the component algorithms is completely broken; that the private key is known to an attacker, or worse that the public key, private key, and ciphertext are manipulated by the attacker. In this case, we rely on the construction of the KEM combiner to ensure that the value of the other shared secret cannot be leaked or the combined shared secret predicted via manipulation of the broken algorithm. The following sections continue this discussion.
+The primary security property of the KEM combiner is that it preserves IND-CCA2 of the overall Composite ML-KEM so long as at least one component is IND-CCA2 {X-Wing} [GHP18]. Additionally, we also need to consider the case where one of the component algorithms is completely broken; that the private key is known to an attacker, or worse that the public key, private key, and ciphertext are manipulated by the attacker. In this case, we rely on the construction of the KEM combiner to ensure that the value of the other shared secret cannot be leaked or the combined shared secret predicted via manipulation of the broken algorithm. The following sections continue this discussion.
 
 Note that length-tagging of the inputs to the KDF is not required:
 
@@ -1316,9 +1316,9 @@ In the case of a composite with RSA-OAEP the `tradSS` is controlled by the attac
 
 Informally, a Composite ML-KEM algorithm is secure if the combiner (HKDF-SHA2 or SHA3) is secure, and either ML-KEM is secure or the traditional component (RSA-OAEP, ECDH, or X25519) is secure.
 
-The security of ML-KEM and ECDH hybrids is covered in [[X-Wing]] and requires that the first KEM component (ML-KEM in this construction) is IND-CCA and second ciphertext preimage resistant (C2PRI) and that the second traditional component is IND-CCA. This design choice improves performance by not including the large ML-KEM public key and ciphertext, but means that an implementation error in the ML-KEM component that affects the ciphertext check step of the FO transform could result in the overall composite no longer achieving IND-CCA2 security.
+The security of ML-KEM and ECDH hybrids is covered in [X-Wing] and requires that the first KEM component (ML-KEM in this construction) is IND-CCA and second ciphertext preimage resistant (C2PRI) and that the second traditional component is IND-CCA. This design choice improves performance by not including the large ML-KEM public key and ciphertext, but means that an implementation error in the ML-KEM component that affects the ciphertext check step of the FO transform could result in the overall composite no longer achieving IND-CCA2 security.
 
-The QSF framework presented in [[X-Wing]] is extended to cover RSA-OAEP as the traditional algorithm in place of ECDH by noting that RSA-OAEP is also IND-CCA secure [RFC8017].
+The QSF framework presented in [X-Wing] is extended to cover RSA-OAEP as the traditional algorithm in place of ECDH by noting that RSA-OAEP is also IND-CCA secure [RFC8017].
 
 Note that X-Wing uses SHA3 as the combiner KDF whereas Composite ML-KEM uses either SHA3 or HKDF-SHA2 which are interchangeable in the X-Wing proof since both behave as random oracles under multiple concatenated inputs.
 
@@ -1567,7 +1567,7 @@ ss = KDF(mlkemSS || tradSS || tradCT || tradPK || Domain)
 where KDF is either SHA3 or HKDF-SHA2.
 
 
-NIST SP 800-227 [SP-800-227idp], which at the time of writing is in its initial public draft period, allows hybrid key combiners of the following form:
+NIST SP 800-227 [SP-800-227ipd], which at the time of writing is in its initial public draft period, allows hybrid key combiners of the following form:
 
 ```
 K ← KDM(S1‖S2‖ · · · ‖St , OtherInput)           (14)
