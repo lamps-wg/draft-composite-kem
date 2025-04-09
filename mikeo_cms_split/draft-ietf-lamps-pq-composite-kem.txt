@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 10 October 2025                                         M. Pala
+Expires: 11 October 2025                                         M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                            8 April 2025
+                                                            9 April 2025
 
 
       Composite ML-KEM for use in X.509 Public Key Infrastructure
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 10 October 2025.
+   This Internet-Draft will expire on 11 October 2025.
 
 Copyright Notice
 
@@ -572,7 +572,7 @@ Encap Process:
         ss = HKDF-Extract(salt="", IKM=mlkemSS || tradSS || tradCT || tradPK || Domain)
           # Note: salt is the empty string (0 octets), which will internally be mapped
           # to the zero vector `0x00..00` of the correct input size for the underlying
-          # hash function as per [RFC 5869].
+          # hash function as per [RFC5869].
 
   6. Output composite shared secret key and ciphertext
 
@@ -1803,7 +1803,7 @@ Deserialization Process:
 
    The primary security property of the KEM combiner is that it
    preserves IND-CCA2 of the overall Composite ML-KEM so long as at
-   least one component is IND-CCA2 [X-Wing] [GHP18].  Additionally, we
+   least one component is IND-CCA2 {X-Wing} [GHP18].  Additionally, we
    also need to consider the case where one of the component algorithms
    is completely broken; that the private key is known to an attacker,
    or worse that the public key, private key, and ciphertext are
@@ -1845,7 +1845,7 @@ Deserialization Process:
    (HKDF-SHA2 or SHA3) is secure, and either ML-KEM is secure or the
    traditional component (RSA-OAEP, ECDH, or X25519) is secure.
 
-   The security of ML-KEM and ECDH hybrids is covered in [[X-Wing]] and
+   The security of ML-KEM and ECDH hybrids is covered in [X-Wing] and
    requires that the first KEM component (ML-KEM in this construction)
    is IND-CCA and second ciphertext preimage resistant (C2PRI) and that
    the second traditional component is IND-CCA.  This design choice
@@ -1855,9 +1855,9 @@ Deserialization Process:
    could result in the overall composite no longer achieving IND-CCA2
    security.
 
-   The QSF framework presented in [[X-Wing]] is extended to cover RSA-
-   OAEP as the traditional algorithm in place of ECDH by noting that
-   RSA-OAEP is also IND-CCA secure [RFC8017].
+   The QSF framework presented in [X-Wing] is extended to cover RSA-OAEP
+   as the traditional algorithm in place of ECDH by noting that RSA-OAEP
+   is also IND-CCA secure [RFC8017].
 
    Note that X-Wing uses SHA3 as the combiner KDF whereas Composite ML-
    KEM uses either SHA3 or HKDF-SHA2 which are interchangeable in the
@@ -2518,7 +2518,7 @@ C.1.  FIPS Certification
 
    where KDF is either SHA3 or HKDF-SHA2.
 
-   NIST SP 800-227 [SP-800-227idp], which at the time of writing is in
+   NIST SP 800-227 [SP-800-227ipd], which at the time of writing is in
    its initial public draft period, allows hybrid key combiners of the
    following form:
 
