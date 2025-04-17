@@ -650,7 +650,7 @@ Decap Process:
         ss = HKDF-Extract(salt="", IKM=mlkemSS || tradSS || tradCT || tradPK || Domain)
           # Note: salt is the empty string (0 octets), which will internally be mapped
           # to the zero vector `0x00..00` of the correct input size for the underlying
-          # hash function as per [RFC 5869].
+          # hash function as per [RFC5869].
 
   6. Output composite shared secret key
 
@@ -676,7 +676,7 @@ else if KDF is "HKDF"
   ss = HKDF-Extract(salt="", IKM=mlkemSS || tradSS || tradCT || tradPK || Domain)
     # Note: salt is the empty string (0 octets), which will internally be mapped
     # to the zero vector `0x00..00` of the correct input size for the underlying
-    # hash function as per [RFC 5869].
+    # hash function as per [RFC5869].
 
 ```
 
@@ -805,76 +805,193 @@ Deserialization Process:
 ~~~
 {: #alg-composite-deserialize title="Composite DeserializePublicKey(bytes)"}
 
-## SerializePrivateKey and DeserializePrivateKey
 
-The same serialization and deserialization process as described in {{sec-serialize-deserialize}}
-should be used to serialize and deserialize the private keys.  The only difference is that pk is
-the private key, and the output is the concatenation of the mlkem and traditional private keys for
-serialization, or the mlkem and traditional private keys for deserialization.
+## Serialization
 
-## SerializeCiphertextValue and DeSerializeCiphertextValue
+This section presents routines for serializing and deserializing composite public keys, private keys (seeds), and ciphertext values to bytes via simple concatenation of the underlying encodings of the component algorithms.
+Deserialization is possible because ML-KEM has fixed-length public keys, private keys (seeds), and ciphertext values as shown in the following table.
 
-Each Ciphertext component of CompositeCiphertextValue is serialized according to their respective standard as shown in {{appdx_components}} and concatenated together using a fixed 4-byte length field denoting the length in bytes of the first component signature, as shown below.  For the Traditional component, the CipherText is the encrypted value 'enc' as described in {{sec-RSAOAEPKEM}} or {{sec-DHKEM}} depending on the chosen component algorithm.
+| Algorithm   | Public key  | Private key |  Ciphertext  |
+| ----------- | ----------- | ----------- |  ----------- |
+| ML-KEM-768  |    1184     |     64      |     1088     |
+| ML-KEM-1024 |    1568     |     64      |     1568     |
+{: #tab-mlkem-sizes title="ML-KEM Key and Ciphertext Sizes"}
+
+When these values are required to be carried in an ASN.1 structure, they are wrapped as described in {{sec-composite-keys}} and {{sec-CompositeCiphertextValue}}.
+
+
+## SerializePublicKey and DeserializePublicKey
+
+The serialization routine for keys simply concatenates the fixed-length public keys of the component KEM algorithms, as defined below:
 
 ~~~
-Composite-ML-DSA.SerializeCiphertextValue(CompositeCiphertextValue) -> bytes
+Composite-ML-KEM.SerializePublicKey(mlkemKey, tradKey) -> bytes
 
 Explicit Input:
 
-  CompositeCiphertextValue    The Composite CipherText Value obtained from Composite-ML-KEM.Encap(pk)
+  mlkemKey  The ML-KEM public key, which is bytes.
+
+  tradKey   The traditional public key in the appropriate
+            encoding for the underlying component algorithm.
+
+Output:
+
+  bytes   The encoded composite public key
+
+Serialization Process:
+
+  1. Combine and output the encoded public key
+
+     output mlkemPK || tradPK
+~~~
+{: #alg-composite-serialize-pub-key title="SerializePublicKey(mlkemKey, tradKey) -> bytes"}
+
+
+Deserialization reverses this process, raising an error in the event that the input is malformed.
+
+~~~
+Composite-ML-DSA.DeserializePublicKey(bytes) -> (mlkemKey, tradKey)
+
+Explicit Input:
+
+  bytes   An encoded composite public key
 
 Implicit inputs:
 
   ML-KEM   A placeholder for the specific ML-KEM algorithm and
            parameter set to use, for example, could be "ML-KEM-768".
 
-  Trad     A placeholder for the specific traditional algorithm and
-           parameter set to use, for example "RSAOAEP" or "ECDH".
+Output:
 
-  IntegerToBytes  A function that takes an Integer and converts it to
-           a byte representation of size byteLength.  See definition in
-           [FIPS.204]
+  mlkemKey  The ML-DSA public key, which is bytes.
+
+  tradKey   The traditional public key in the appropriate
+            encoding for the underlying component algorithm.
+
+Deserialization Process:
+
+  1. Parse each constituent encoded public key.
+       The length of the mlkemKey is known based on the size of
+       the ML-KEM component key length specified by the Object ID
+
+     switch ML-KEM do
+        case ML-KEM-768:
+          mlkemKey = bytes[:1184]
+          tradKey  = bytes[1184:]
+        case MLDSA65:
+          mldsaKey = bytes[:1568]
+          tradKey  = bytes[1568:]
+
+     Note that while ML-KEM has fixed-length keys, RSA and ECDH
+     may not, depending on encoding, so rigorous length-checking is
+     not always possible here.
+
+  2. Output the component public keys
+
+     output (mlkemKey, tradKey)
+~~~
+{: #alg-composite-deserialize-pub-key title="DeserializePublicKey(bytes) -> (mlkemKey, tradKey)"}
+
+
+
+
+## SerializePrivateKey and DeserializePrivateKey
+
+The serialization routine for keys simply concatenates the fixed-length private keys of the component signature algorithms, as defined below:
+
+~~~
+Composite-ML-KEM.SerializePrivateKey(mlkemKey, tradKey) -> bytes
+
+Explicit Input:
+
+  mlkemSeed  The ML-KEM private key, which is the bytes of the seed.
+
+  tradKey   The traditional private key in the appropriate
+            encoding for the underlying component algorithm.
 
 Output:
 
-  bytes   The encoded CompositeCiphertextValue
+  bytes   The encoded composite private key
 
 Serialization Process:
 
-  1. Separate the cipher texts
+  1. Combine and output the encoded private key
 
-     (mldkemct, tradkemct) = CompositeCiphertextValue
-
-  2. Serialize each of the constituent cipher texts
-       The component cipher texts are serialized according to their respective standard
-       as shown in the component algorithm appendix.  For the tradkemEncodedCT the
-       ciphertext is the encrypted output as defined in 'Promotion of RSA-OAEP into a KEM'
-       or 'Promotion of ECDH into a KEM'.
-
-     mlkemEncodedCt = ML-KEM.SerializeCiphertext(mlkemct)
-     tradkemEncodedCT = Trad.SerializeCiphertext(tradkemct)
-
-  3. Calculate the length encoding of the mlkemEncodedCt
-
-     If (mlkemEncodedCt.length) > 2^32
-         then output "message too long" and stop.
-
-     encodedLength = IntegerToBytes(mlkemEncodedCt.length, 4)
-
-  4. Combine and output the encoded composite ciphertext
-
-     bytes = encodedLength || mlkemEncodedCt || tradkemEncodedCT
-     output bytes
+     output mlkemSeed || tradKey
 ~~~
-{: #alg-composite-serialize-ct title="Composite SerializeCiphertextValue(CompositeCiphertextValue)"}
+{: #alg-composite-serialize-priv-key title="SerializePrivateKey(mlkemSeed, tradKey) -> bytes"}
 
-Deserialization reverses this process, raising an error in the event that the input is malformed.  Each component
-ciphertext is deserialized according to their respective standard as shown in {{appdx_components}}.  For the traditional
-component, the ciphertext is the encrypted value 'enc' as described in {{sec-RSAOAEPKEM}} or {{sec-DHKEM}} depending
-on the chosen component algorithm.
+
+Deserialization reverses this process, raising an error in the event that the input is malformed.
 
 ~~~
-Composite-ML-KEM.DeserializeCiphertextValue(bytes) -> CompositeCiphertextValue
+Composite-ML-KEM.DeserializePrivateKey(bytes) -> (mlkemSeed, tradKey)
+
+Explicit Input:
+
+  bytes   An encoded composite private key
+
+Output:
+
+  mldsaSeed  The ML-DSA private key, which is the bytes of the seed.
+
+  tradKey   The traditional private key in the appropriate
+            encoding for the underlying component algorithm.
+
+Deserialization Process:
+
+  1. Parse each constituent encoded key.
+       The length of an ML-KEM private key is always a 64 byte seed
+       for all parameter sets.
+
+      mldsaSeed = bytes[:64]
+      tradKey  = bytes[64:]
+
+     Note that while ML-KEM has fixed-length keys (seeds), RSA and ECDSA
+     may not, depending on encoding, so rigorous length-checking is
+     not always possible here.
+
+  2. Output the component private keys
+
+     output (mldsaSeed, tradKey)
+~~~
+{: #alg-composite-deserialize-priv-key title="DeserializeKey(bytes) -> (mlkemSeed, tradKey)"}
+
+
+
+## SerializeCiphertextValue and DeSerializeCiphertextValue
+
+The serialization routine for the CompositeCiphertextValue simply concatenates the fixed-length
+ML-KEM ciphertext with the ciphertext from the traditional algorithm, as defined below:
+
+~~~
+Composite-ML-KEM.SerializeCiphertext(mldsaCT, tradCT) -> bytes
+
+Explicit Inputs:
+
+  mlkemCT  The ML-KEM ciphertext, which is bytes.
+
+  tradCT   The traditional ciphertext in the appropriate
+            encoding for the underlying component algorithm.
+
+Output:
+
+  bytes   The encoded CompositeSignatureValue
+
+Serialization Process:
+
+  1. Combine and output the encoded composite signature
+
+     output mlkemCT || tradEncodedSignature
+
+~~~
+{: #alg-composite-serialize-ct title="SerializeCiphertext(mldsaCT, tradCT) -> bytes"}
+
+
+Deserialization reverses this process, raising an error in the event that the input is malformed.
+
+~~~
+Composite-ML-KEM.DeserializeCiphertext(bytes) -> (mldkemCT, tradCT)
 
 Explicit Input:
 
@@ -885,68 +1002,38 @@ Implicit inputs:
   ML-KEM   A placeholder for the specific ML-KEM algorithm and
            parameter set to use, for example, could be "ML-KEM-768".
 
-  Trad     A placeholder for the specific traditional algorithm and
-           parameter set to use, for example "RSAOAEP" or "ECDH".
-
 Output:
 
-  CompositeCiphertextValue  The CompositeCiphertextValue
+  mlkemCT  The ML-KEM ciphertext, which is bytes.
+
+  tradCT   The traditional ciphertext in the appropriate
+            encoding for the underlying component algorithm.
 
 Deserialization Process:
 
-  1. Validate the length of the the input byte string
+  1. Parse each constituent encoded ciphertext.
+       The length of the mlkemCT is known based on the size of
+       the ML-KEM component signature length specified by the Object ID
 
-     if bytes is not the correct length:
-      output "Deserialization error"
+     switch ML-KEM do
+        case ML-KEM-768:
+          mlkemCT = bytes[:1088]
+          tradSig  = bytes[1088:]
+        case ML-KEM-1024:
+          mldsaSig = bytes[:1568]
+          tradSig  = bytes[1568:]
 
-  2. Parse each constituent encoded cipher text.
-       The first 4 bytes encodes the length of mlkemEncodedCt, which MAY
-       be used to separate the mlkemEncodedCt and tradkemEncodedCT,
-       and then is to be discarded.  The mlkemEncodedCt length SHOULD
-       be checked against the expected length value as per ML-KEM.
+     Note that while ML-KEM has fixed-length ciphectexts, RSA and ECDSA
+     may not, depending on encoding, so rigorous length-checking is
+     not always possible here.
 
-     (mlkemEncodedCt, tradkemEncodedCt) = bytes
+  2. Output the component signature values
 
-  3. Deserialize the constituent cipher text values
-
-     mlkemCt = ML-KEM.DeserializeCiphertext(mlkemEncodedCt)
-     tradkemCt = Trad.DeserializeCiphertext(tradkemEncodedCt)
-
-  4. If either ML-KEM.DeserializeCiphertext() or
-     Trad.DeserializeCiphertext() return an error,
-     then this process must return an error.
-
-      if NOT mlkemCt or NOT tradkemCt:
-        output "Deserialization error"
-
-  5. Output the CompositeCiphertextValue
-
-     output (mlkemCt, tradkemCt)
-
+     output (mlkemCT, tradCT)
 ~~~
-{: #alg-composite-deserialize-ct title="Composite DeserializeCiphertextValue(bytes)"}
+{: #alg-composite-deserialize-ct title="DeserializeCiphertext(bytes) -> (mldkemCT, tradCT)"}
 
-## ML-KEM public key, private key and cipher text sizes for serialization and deserialization
 
-As noted above in the public key, private key and CompositeCiphertextValue
-serialization and deserialization methods use a fixed 4-byte length value to
-indicate the size of the first component. This is to allow the separation of the first
-component from the second component.  It is RECOMMENDED that the length specified for the
-first component be checked against the values from the table below to ensure the encoding
-has been done propertly.
-
-If future composite combinations make use of algorithms where the first component uses
-variable length keys or cipher texts, then this fixed 4-byte length value can be used to
-ensure the components are correctly deserialized.
-
-The following table shows the fixed length values in bytes for the public, private and cipher text
-sizes for ML-KEM which can be used to deserialzie the components.
-
-| Algorithm   | Public key  | Private key |  Ciphertext  |
-| ----------- | ----------- | ----------- |  ----------- |
-| ML-KEM-768  |    1184     |     64 or 2400 or 2464     |     1088     |
-| ML-KEM-1024 |    1568     |     64 or 3168 or 3232     |     1568     |
-{: #tab-mlkem-sizes title="ML-KEM Key and Ciphertext Sizes"}
 
 
 # Composite Key Structures {#sec-composite-keys}
@@ -1663,7 +1750,8 @@ Within each test case there are the following values:
 * `tcId` the name of the algorithm.
 * `ek` the encapsulation public key.
 * `x5c` the X.509 certificate of the encapsulation key, signed by the cacert.
-* `dk` the decapsulation private key.
+* `dk` the raw decapsulation private key.
+* `dk_pkcs8` the decapsulation private key in a PKCS#8 object.
 * `c` the ciphertext.
 * `k` the derived shared secret key.
 
