@@ -650,7 +650,7 @@ Decap Process:
         ss = HKDF-Extract(salt="", IKM=mlkemSS || tradSS || tradCT || tradPK || Domain)
           # Note: salt is the empty string (0 octets), which will internally be mapped
           # to the zero vector `0x00..00` of the correct input size for the underlying
-          # hash function as per [RFC 5869].
+          # hash function as per [RFC5869].
 
   6. Output composite shared secret key
 
@@ -676,7 +676,7 @@ else if KDF is "HKDF"
   ss = HKDF-Extract(salt="", IKM=mlkemSS || tradSS || tradCT || tradPK || Domain)
     # Note: salt is the empty string (0 octets), which will internally be mapped
     # to the zero vector `0x00..00` of the correct input size for the underlying
-    # hash function as per [RFC 5869].
+    # hash function as per [RFC5869].
 
 ```
 
@@ -817,7 +817,7 @@ Deserialization is possible because ML-KEM has fixed-length public keys, private
 | ML-KEM-1024 |    1568     |     64      |     1568     |
 {: #tab-mlkem-sizes title="ML-KEM Key and Ciphertext Sizes"}
 
-When these values are required to be carried in an ASN.1 structure, they are wrapped as described in {{sec-composite-key-structs}} and {{sec-composite-sigs-structs}}.
+When these values are required to be carried in an ASN.1 structure, they are wrapped as described in {{sec-composite-keys}} and {{sec-CompositeCiphertextValue}}.
 
 
 ## SerializePublicKey and DeserializePublicKey
@@ -844,7 +844,7 @@ Serialization Process:
 
      output mlkemPK || tradPK
 ~~~
-{: #alg-composite-serialize title="SerializePublicKey(mlkemKey, tradKey) -> bytes"}
+{: #alg-composite-serialize-pub-key title="SerializePublicKey(mlkemKey, tradKey) -> bytes"}
 
 
 Deserialization reverses this process, raising an error in the event that the input is malformed.
@@ -890,7 +890,7 @@ Deserialization Process:
 
      output (mlkemKey, tradKey)
 ~~~
-{: #alg-composite-deserialize title="DeserializePublicKey(bytes) -> (mlkemKey, tradKey)"}
+{: #alg-composite-deserialize-pub-key title="DeserializePublicKey(bytes) -> (mlkemKey, tradKey)"}
 
 
 
@@ -919,7 +919,7 @@ Serialization Process:
 
      output mlkemSeed || tradKey
 ~~~
-{: #alg-composite-serialize title="SerializePrivateKey(mlkemSeed, tradKey) -> bytes"}
+{: #alg-composite-serialize-priv-key title="SerializePrivateKey(mlkemSeed, tradKey) -> bytes"}
 
 
 Deserialization reverses this process, raising an error in the event that the input is malformed.
@@ -955,7 +955,7 @@ Deserialization Process:
 
      output (mldsaSeed, tradKey)
 ~~~
-{: #alg-composite-deserialize title="DeserializeKey(bytes) -> (mlkemSeed, tradKey)"}
+{: #alg-composite-deserialize-priv-key title="DeserializeKey(bytes) -> (mlkemSeed, tradKey)"}
 
 
 
