@@ -5,16 +5,16 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 3 October 2025                                          M. Pala
+Expires: 19 October 2025                                         M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                            1 April 2025
+                                                           17 April 2025
 
 
-  Composite ML-KEM for use in X.509 Public Key Infrastructure and CMS
+      Composite ML-KEM for use in X.509 Public Key Infrastructure
                 draft-ietf-lamps-pq-composite-kem-latest
 
 Abstract
@@ -23,11 +23,9 @@ Abstract
    with traditional algorithms RSA-OAEP, ECDH, X25519, and X448.  These
    combinations are tailored to meet security best practices and
    regulatory requirements.  Composite ML-KEM is applicable in any
-   application that uses X.509, PKIX, and CMS data structures and
-   protocols that accept ML-KEM, but where the operator wants extra
-   protection against breaks or catastrophic bugs in ML-KEM.  For use
-   within CMS, this document is intended to be coupled with the CMS
-   KEMRecipientInfo mechanism in [RFC9629].
+   application that uses X.509 or PKIX data structures that accept ML-
+   KEM, but where the operator wants extra protection against breaks or
+   catastrophic bugs in ML-KEM.
 
 About This Document
 
@@ -61,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 3 October 2025.
+   This Internet-Draft will expire on 19 October 2025.
 
 Copyright Notice
 
@@ -109,35 +107,26 @@ Table of Contents
      7.2.  Domain Separators
      7.3.  Rationale for choices
      7.4.  RSA-OAEP Parameters
-   8.  Use in CMS
-     8.1.  Underlying Components
-       8.1.1.  Use of the HKDF-based Key Derivation Function within
-               CMS
-       8.1.2.  Use of the KMAC-based Key Derivation Function within
-               CMS
-     8.2.  RecipientInfo Conventions
-     8.3.  Certificate Conventions
-     8.4.  SMIMECapabilities Attribute Conventions
-   9.  ASN.1 Module
-   10. IANA Considerations
-     10.1.  Object Identifier Allocations
-       10.1.1.  Module Registration - SMI Security for PKIX Module
+   8.  ASN.1 Module
+   9.  IANA Considerations
+     9.1.  Object Identifier Allocations
+       9.1.1.  Module Registration - SMI Security for PKIX Module
                Identifier
-       10.1.2.  Object Identifier Registrations - SMI Security for
-               PKIX Algorithms
-   11. Security Considerations
-     11.1.  Why Hybrids?
-     11.2.  KEM Combiner
-       11.2.1.  Security of the hybrid scheme
-       11.2.2.  Second pre-image resistance of component KEMs
-       11.2.3.  SHA3 vs HKDF-SHA2
-       11.2.4.  Generifying this construction
-     11.3.  Key Reuse
-     11.4.  Decapsulation failure
-     11.5.  Policy for Deprecated and Acceptable Algorithms
-   12. References
-     12.1.  Normative References
-     12.2.  Informative References
+       9.1.2.  Object Identifier Registrations - SMI Security for PKIX
+               Algorithms
+   10. Security Considerations
+     10.1.  Why Hybrids?
+     10.2.  KEM Combiner
+       10.2.1.  Security of the hybrid scheme
+       10.2.2.  Second pre-image resistance of component KEMs
+       10.2.3.  SHA3 vs HKDF-SHA2
+       10.2.4.  Generifying this construction
+     10.3.  Key Reuse
+     10.4.  Decapsulation failure
+     10.5.  Policy for Deprecated and Acceptable Algorithms
+   11. References
+     11.1.  Normative References
+     11.2.  Informative References
    Appendix A.  Component Algorithm Reference
    Appendix B.  Fixed Component Algorithm Identifiers
    Appendix C.  Implementation Considerations
@@ -258,7 +247,7 @@ Table of Contents
 
    Composite ML-KEM is intended for general applicability anywhere that
    key establishment or enveloped content encryption is used within PKIX
-   or CMS structures.
+   protocols.
 
 2.1.  Conventions and Terminology
 
@@ -583,7 +572,7 @@ Encap Process:
         ss = HKDF-Extract(salt="", IKM=mlkemSS || tradSS || tradCT || tradPK || Domain)
           # Note: salt is the empty string (0 octets), which will internally be mapped
           # to the zero vector `0x00..00` of the correct input size for the underlying
-          # hash function as per [RFC 5869].
+          # hash function as per [RFC5869].
 
   6. Output composite shared secret key and ciphertext
 
@@ -1042,7 +1031,7 @@ Deserialization Process:
    In order to maintain security properties of the composite,
    applications that use composite keys MUST always perform fresh key
    generations of both component keys and MUST NOT reuse existing key
-   material.  See Section 11.3 for a discussion.
+   material.  See Section 10.3 for a discussion.
 
    The following ASN.1 Information Object Class is defined to allow for
    compact definitions of each composite algorithm, leading to a smaller
@@ -1065,7 +1054,7 @@ Deserialization Process:
        EcCompositeKemPublicKey }
 
    The full set of key types defined by this specification can be found
-   in the ASN.1 Module in Section 9.
+   in the ASN.1 Module in Section 8.
 
 5.2.  CompositeKEMPrivateKey
 
@@ -1122,7 +1111,7 @@ Deserialization Process:
 
    Component keys of a CompositeKEMPrivateKey MUST NOT be used in any
    other type of key or as a standalone key.  For more details on the
-   security considerations around key reuse, see Section 11.3.
+   security considerations around key reuse, see Section 10.3.
 
 5.3.  Encoding Rules
 
@@ -1313,7 +1302,7 @@ Deserialization Process:
    *  SHA256 and SHA512 generally have better adoption than SHA384.
 
    A single invocation of SHA3 is known to behave as a dual-PRF, and
-   thus is sufficient for use as a KDF, see Section 11.2, however SHA2
+   thus is sufficient for use as a KDF, see Section 10.2, however SHA2
    is not so must be wrapped in the HKDF construction.
 
    The lower security levels (i.e. ML-KEM768) are provided with HKDF-
@@ -1387,231 +1376,7 @@ Deserialization Process:
    implementations could choose to pre-compute and hard-code the mask
    length.
 
-8.  Use in CMS
-
-   [EDNOTE: The convention in LAMPS is to specify algorithms and their
-   CMS conventions in separate documents.  Here we have presented them
-   in the same document, but this section has been written so that it
-   can easily be moved to a standalone document.]
-
-   Composite ML-KEM algorithms MAY be employed for one or more
-   recipients in the CMS enveloped-data content type [RFC5652], the CMS
-   authenticated-data content type [RFC5652], or the CMS authenticated-
-   enveloped-data content type [RFC5083].  In each case, the
-   KEMRecipientInfo [RFC9629] is used with the chosen Composite ML-KEM
-   Algorithm to securely transfer the content-encryption key from the
-   originator to the recipient.
-
-   All recommendations for using Composite ML-KEM in CMS are fully
-   aligned with the use of ML-KEM in CMS [I-D.ietf-lamps-cms-kyber].
-
-8.1.  Underlying Components
-
-   A compliant implementation MUST support the following algorithm
-   combinations for the KEMRecipientInfo kdf and wrap fields when the
-   corresponding Composite ML-KEM algorithm is listed in the
-   KEMRecipientInfo kem field.  The KDFs listed below align with the KDF
-   used internally within the KEM combiner.  An implementation MAY also
-   support other key-derivation functions and other key-encryption
-   algorithms within CMS KEMRecipientInfo and SHOULD use algorithms of
-   equivalent strength or greater.
-
-     +=================================+==============+=============+
-     | Composite ML-KEM Algorithm      | KDF          | Wrap        |
-     +=================================+==============+=============+
-     | id-MLKEM768-RSA2048-HKDF-SHA256 | id-alg-hkdf- | id-         |
-     |                                 | with-sha256  | aes128-wrap |
-     +---------------------------------+--------------+-------------+
-     | id-MLKEM768-RSA3072-HKDF-SHA256 | id-alg-hkdf- | id-         |
-     |                                 | with-sha256  | aes128-wrap |
-     +---------------------------------+--------------+-------------+
-     | id-MLKEM768-RSA4096-HKDF-SHA256 | id-alg-hkdf- | id-         |
-     |                                 | with-sha256  | aes128-wrap |
-     +---------------------------------+--------------+-------------+
-     | id-MLKEM768-X25519-SHA3-256     | id-kmac256   | id-         |
-     |                                 |              | aes128-wrap |
-     +---------------------------------+--------------+-------------+
-     | id-MLKEM768-ECDH-P256-HKDF-     | id-alg-hkdf- | id-         |
-     | SHA256                          | with-sha256  | aes256-wrap |
-     +---------------------------------+--------------+-------------+
-     | id-MLKEM768-ECDH-P384-HKDF-     | id-alg-hkdf- | id-         |
-     | SHA256                          | with-sha256  | aes256-wrap |
-     +---------------------------------+--------------+-------------+
-     | id-MLKEM768-ECDH-               | id-alg-hkdf- | id-         |
-     | brainpoolP256r1-HKDF-SHA256     | with-sha256  | aes256-wrap |
-     +---------------------------------+--------------+-------------+
-     | id-MLKEM1024-ECDH-P384-HKDF-    | id-alg-hkdf- | id-         |
-     | SHA384                          | with-sha384  | aes256-wrap |
-     +---------------------------------+--------------+-------------+
-     | id-MLKEM1024-ECDH-              | id-kmac256   | id-         |
-     | brainpoolP384r1-HKDF-SHA384     |              | aes256-wrap |
-     +---------------------------------+--------------+-------------+
-     | id-MLKEM1024-X448-SHA3-256      | id-kmac256   | id-         |
-     |                                 |              | aes256-wrap |
-     +---------------------------------+--------------+-------------+
-
-      Table 5: Mandatory-to-implement pairings for CMS KDF and WRAP
-
-   Full specifications for the referenced algorithms can be found either
-   further down in this section, or in Appendix A.
-
-   Note that here we differ slightly from the internal KDF used within
-   the KEM combiner in Section 7 because [RFC9629] requires that the KDF
-   listed in the KEMRecipientInfo kdf field must have an interface which
-   accepts KDF(IKM, L, info), so here we need to use KMAC and cannot
-   directly use SHA3.  Since we require 256-bits of (2nd) pre-image
-   resistance, we use KMAC256 for the Composite ML-KEM algorithms with
-   internally use SHA3-256, as aligned with Table 3 of [SP.800-57pt1r5].
-
-8.1.1.  Use of the HKDF-based Key Derivation Function within CMS
-
-   Unlike within the Composite KEM Combiner function, When used as a KDF
-   for CMS, HKDF requires use of the HKDF-Expand step so that it can
-   accept the length parameter kekLength from CMS KEMRecipientInfo as
-   the HKDF parameter L.
-
-   The HMAC-based Extract-and-Expand Key Derivation Function (HKDF) is
-   defined in [RFC5869].  The HKDF function is a composition of the
-   HKDF-Extract and HKDF-Expand functions.
-
-   HKDF(salt, IKM, info, L)
-     = HKDF-Expand(HKDF-Extract(salt, IKM), info, L)
-
-   HKDF(salt, IKM, info, L) takes the following parameters:
-
-   salt:  optional salt value (a non-secret random value).  In this
-      document this parameter is left at its default value, which is the
-      string of HashLen zeros.
-
-   IKM:  input keying material.  In this document this is the shared
-      secret outputted from the Encaps() or Decaps() functions.  This
-      corresponds to the IKM KDF input from Section 5 of [RFC9629].
-
-   info:  optional context and application specific information.  In
-      this document this corresponds to the info KDF input from
-      Section 5 of [RFC9629].  This is the ASN.1 DER encoding of
-      CMSORIforKEMOtherInfo.
-
-   L:  length of output keying material in octets.  This corresponds to
-      the L KDF input from Section 5 of [RFC9629], which is identified
-      in the kekLength value from KEMRecipientInfo.  Implementations
-      MUST confirm that this value is consistent with the key size of
-      the key-encryption algorithm.
-
-   HKDF may be used with different hash functions, including SHA-256 and
-   SHA-384 [FIPS.180-4].  The object identifier id-alg-hkdf-with-sha256
-   and id-alg-hkdf-with-sha384 are defined in [RFC8619], and specify the
-   use of HKDF with SHA-256 and SHA-384.  The parameter field MUST be
-   absent when this algorithm identifier is used to specify the KDF for
-   ML-KEM in KemRecipientInfo.
-
-8.1.2.  Use of the KMAC-based Key Derivation Function within CMS
-
-   KMAC256-KDF is a KMAC-based KDF specified for use in CMS in
-   [I-D.ietf-lamps-cms-sha3-hash].  The definition of KMAC is copied
-   here for convenience.  Here, KMAC# indicates the use of either
-   KMAC128-KDF or KMAC256-KDF, although only KMAC256 is used in this
-   specification.
-
-   KMAC#(K, X, L, S) takes the following parameters:
-
-      K: the input key-derivation key.  In this document this is the
-      shared secret outputted from the Encaps() or Decaps() functions.
-      This corresponds to the IKM KDF input from Section 5 of [RFC9629].
-
-      X: the context, corresponding to the info KDF input from Section 5
-      of [RFC9629].  This is the ASN.1 DER encoding of
-      CMSORIforKEMOtherInfo.
-
-      L: the output length, in bits.  This corresponds to the L KDF
-      input from Section 5 of [RFC9629], which is identified in the
-      kekLength value from KEMRecipientInfo.  The L KDF input and
-      kekLength values are specified in octets while this L parameter is
-      specified in bits.
-
-      S: the optional customization label.  In this document this
-      parameter is unused, that is it is the zero-length string "".
-
-   The object identifier for KMAC256-KDF is id-kmac256, as defined in
-   [I-D.ietf-lamps-cms-sha3-hash].
-
-   Since the customization label to KMAC# is not used, the parameter
-   field MUST be absent when id-kmac256 is used as part of an algorithm
-   identifier specifying the KDF to use for Composite ML-KEM in
-   KemRecipientInfo.
-
-8.2.  RecipientInfo Conventions
-
-   When Composite ML-KEM is employed for a recipient, the RecipientInfo
-   alternative for that recipient MUST be OtherRecipientInfo using the
-   KEMRecipientInfo structure as defined in [RFC9629].
-
-   The fields of the KEMRecipientInfo MUST have the following values:
-
-      version is the syntax version number; it MUST be 0.
-
-      rid identifies the recipient's certificate or public key.
-
-      kem identifies the KEM algorithm; it MUST contain one of the
-      Composite ML-KEM identifiers listed in Section 7.
-
-      kemct is the ciphertext produced for this recipient.
-
-      kdf identifies the key-derivation algorithm.  Note that the Key
-      Derivation Function (KDF) used for CMS RecipientInfo process (to
-      calculate the RecipientInfo KEK key) MAY be different than the KDF
-      used within the Composite ML-KEM algorithm (to calculate the
-      shared secret ss) and MAY also be different from any KDFs used
-      internally within a component algorithm.
-
-      kekLength is the size of the key-encryption key in octets.
-
-      ukm is an optional random input to the key-derivation function.
-      ML-KEM doesn't place any requirements on the ukm contents.
-
-      wrap identifies a key-encryption algorithm used to encrypt the
-      content-encryption key.
-
-      encryptedKey is the result of encryptiong the CEK with the KEK.
-
-8.3.  Certificate Conventions
-
-   The conventions specified in this section augment RFC 5280 [RFC5280].
-
-   The willingness to accept a Composite ML-KEM Algorithm MAY be
-   signaled by the use of the SMIMECapabilities Attribute as specified
-   in Section 2.5.2. of [RFC8551] or the SMIMECapabilities certificate
-   extension as specified in [RFC4262].
-
-   The intended application for the public key MAY be indicated in the
-   key usage certificate extension as specified in Section 4.2.1.3 of
-   [RFC5280].  If the keyUsage extension is present in a certificate
-   that conveys a Composite ML-KEM public key, then the key usage
-   extension MUST contain only the following value:
-
-   keyEncipherment
-
-   The digitalSignature and dataEncipherment values MUST NOT be present.
-   That is, a public key intended to be employed only with a Composite
-   ML-KEM algorithm MUST NOT also be employed for data encryption or for
-   digital signatures.  This requirement does not carry any particular
-   security consideration; only the convention that KEM keys be
-   identified with the keyEncipherment key usage.
-
-8.4.  SMIMECapabilities Attribute Conventions
-
-   Section 2.5.2 of [RFC8551] defines the SMIMECapabilities attribute to
-   announce a partial list of algorithms that an S/MIME implementation
-   can support.  When constructing a CMS signed-data content type
-   [RFC5652], a compliant implementation MAY include the
-   SMIMECapabilities attribute that announces support for the RSA-OAEP
-   Algorithm.
-
-   The SMIMECapability SEQUENCE representing a Composite ML-KEM
-   Algorithm MUST include the appropriate object identifier as per
-   Table 2 in the capabilityID field.
-
-9.  ASN.1 Module
+8.  ASN.1 Module
 
    <CODE STARTS>
 
@@ -1862,39 +1627,18 @@ Deserialization Process:
          pk-MLKEM1024-X448 }
 
 
-   --
-   -- Expand the S/MIME capabilities set used by CMS [RFC5911]
-   --
-
-   -- TODO: this doesn't compile, error:
-   -- "The referenced object in the 'ValueFromObject'
-   -- syntax with the field '&smimeCaps' is invalid or does not exist."
-   -- We need help from an SMIME expert
-
-   SMimeCaps SMIME-CAPS ::=
-       { kema-MLKEM768-RSA2048.&smimeCaps |
-         kema-MLKEM768-RSA3072.&smimeCaps |
-         kema-MLKEM768-RSA4096.&smimeCaps |
-         kema-MLKEM768-ECDH-P384.&smimeCaps |
-         kema-MLKEM768-ECDH-brainpoolP256r1.&smimeCaps |
-         kema-MLKEM768-X25519.&smimeCaps |
-         kema-MLKEM1024-ECDH-P384.&smimeCaps |
-         kema-MLKEM1024-ECDH-brainpoolP384r1.&smimeCaps |
-         kema-MLKEM1024-X448.&smimeCaps,
-         ... }
-
    END
 
    <CODE ENDS>
 
-10.  IANA Considerations
+9.  IANA Considerations
 
-10.1.  Object Identifier Allocations
+9.1.  Object Identifier Allocations
 
    EDNOTE to IANA: OIDs will need to be replaced in both the ASN.1
    module and in Table 2.
 
-10.1.1.  Module Registration - SMI Security for PKIX Module Identifier
+9.1.1.  Module Registration - SMI Security for PKIX Module Identifier
 
    *  Decimal: IANA Assigned - *Replace TBDMOD*
 
@@ -1902,17 +1646,8 @@ Deserialization Process:
 
    *  References: This Document
 
-10.1.2.  Object Identifier Registrations - SMI Security for PKIX
-         Algorithms
-
-   *  id-raw-key
-
-   *  Decimal: IANA Assigned
-
-   *  Description: Designates a public key BIT STRING with no ASN.1
-      structure.
-
-   *  References: This Document
+9.1.2.  Object Identifier Registrations - SMI Security for PKIX
+        Algorithms
 
    *  id-MLKEM768-RSA2048-HKDF-SHA256
 
@@ -1994,9 +1729,9 @@ Deserialization Process:
 
       -  References: This Document
 
-11.  Security Considerations
+10.  Security Considerations
 
-11.1.  Why Hybrids?
+10.1.  Why Hybrids?
 
    In broad terms, a PQ/T Hybrid can be used either to provide dual-
    algorithm security or to provide migration flexibility.  Let's
@@ -2025,7 +1760,7 @@ Deserialization Process:
    FIPS certification of a composite algorithm can be found in
    Appendix C.1.
 
-11.2.  KEM Combiner
+10.2.  KEM Combiner
 
    The following KEM combiner construction is as follows is used by both
    Composite-ML-KEM.Encap() and Composite-ML-KEM.Decap() and is split
@@ -2068,7 +1803,7 @@ Deserialization Process:
 
    The primary security property of the KEM combiner is that it
    preserves IND-CCA2 of the overall Composite ML-KEM so long as at
-   least one component is IND-CCA2 [X-Wing] [GHP18].  Additionally, we
+   least one component is IND-CCA2 {X-Wing} [GHP18].  Additionally, we
    also need to consider the case where one of the component algorithms
    is completely broken; that the private key is known to an attacker,
    or worse that the public key, private key, and ciphertext are
@@ -2104,13 +1839,13 @@ Deserialization Process:
    manipulation of only one input is not sufficient to trivially produce
    collisions.
 
-11.2.1.  Security of the hybrid scheme
+10.2.1.  Security of the hybrid scheme
 
    Informally, a Composite ML-KEM algorithm is secure if the combiner
    (HKDF-SHA2 or SHA3) is secure, and either ML-KEM is secure or the
    traditional component (RSA-OAEP, ECDH, or X25519) is secure.
 
-   The security of ML-KEM and ECDH hybrids is covered in [[X-Wing]] and
+   The security of ML-KEM and ECDH hybrids is covered in [X-Wing] and
    requires that the first KEM component (ML-KEM in this construction)
    is IND-CCA and second ciphertext preimage resistant (C2PRI) and that
    the second traditional component is IND-CCA.  This design choice
@@ -2120,9 +1855,9 @@ Deserialization Process:
    could result in the overall composite no longer achieving IND-CCA2
    security.
 
-   The QSF framework presented in [[X-Wing]] is extended to cover RSA-
-   OAEP as the traditional algorithm in place of ECDH by noting that
-   RSA-OAEP is also IND-CCA secure [RFC8017].
+   The QSF framework presented in [X-Wing] is extended to cover RSA-OAEP
+   as the traditional algorithm in place of ECDH by noting that RSA-OAEP
+   is also IND-CCA secure [RFC8017].
 
    Note that X-Wing uses SHA3 as the combiner KDF whereas Composite ML-
    KEM uses either SHA3 or HKDF-SHA2 which are interchangeable in the
@@ -2133,7 +1868,7 @@ Deserialization Process:
    different KEMs and a more cautious approach would bind the public key
    and ciphertext of the first KEM as well.
 
-11.2.2.  Second pre-image resistance of component KEMs
+10.2.2.  Second pre-image resistance of component KEMs
 
    The notion of a second pre-image resistant KEM is defined in [X-Wing]
    being the property that it is computationally difficult to find two
@@ -2166,7 +1901,7 @@ Deserialization Process:
    that c != c' will yield a unique ciphertext, and thus restoring
    second pre-image resistance to the overall Composite ML-KEM.
 
-11.2.3.  SHA3 vs HKDF-SHA2
+10.2.3.  SHA3 vs HKDF-SHA2
 
    In order to achieve the desired security property that the Composite
    ML-KEM is IND-CCA2 whenever at least one of the component KEMs is,
@@ -2185,7 +1920,7 @@ Deserialization Process:
    constructions MUST use SHA2 within an HMAC construction such as HKDF-
    SHA2 [GHP18].
 
-11.2.4.  Generifying this construction
+10.2.4.  Generifying this construction
 
    It should be clear that the security analysis of the presented KEM
    combiner construction relies heavily on the specific choices of
@@ -2193,7 +1928,7 @@ Deserialization Process:
    SHOULD NOT by applied to any other combination of ciphers without
    performing the appropriate security analysis.
 
-11.3.  Key Reuse
+10.3.  Key Reuse
 
    When using single-algorithm cryptography, the best practice is to
    always generate fresh keying material for each purpose, for example
@@ -2234,7 +1969,7 @@ Deserialization Process:
    RECOMMENDED that CAs performing revocation checks on a composite key
    should also check both component keys independently.
 
-11.4.  Decapsulation failure
+10.4.  Decapsulation failure
 
    Provided all inputs are well-formed, the key establishment procedure
    of ML-KEM will never explicitly fail.  Specifically, the ML-
@@ -2249,7 +1984,7 @@ Deserialization Process:
    This event is called a decapsulation failure.  Estimates for the
    decapsulation failure probability (or rate) for each of the ML-KEM
    parameter sets are provided in Table 1 of [FIPS.203] and reproduced
-   here in Table 6.
+   here in Table 5.
 
               +===============+============================+
               | Parameter set | Decapsulation failure rate |
@@ -2261,12 +1996,12 @@ Deserialization Process:
               | ML-KEM-1024   | 2^(-174)                   |
               +---------------+----------------------------+
 
-               Table 6: ML-KEM decapsulation failure rates
+               Table 5: ML-KEM decapsulation failure rates
 
    In the case of ML-KEM decapsulation failure, Composite ML-KEM MUST
    preserve the same behaviour and return a well-formed output.
 
-11.5.  Policy for Deprecated and Acceptable Algorithms
+10.5.  Policy for Deprecated and Acceptable Algorithms
 
    Traditionally, a public key or certificate contains a single
    cryptographic algorithm.  If and when an algorithm becomes deprecated
@@ -2289,15 +2024,15 @@ Deserialization Process:
 
    The Composite ML-KEM design specified in this document, and
    especially that of the KEM combiner specified in this document, and
-   discussed in Section 11.2, means that the overall Composite ML-KEM
+   discussed in Section 10.2, means that the overall Composite ML-KEM
    algorithm should be considered to have the security strength of the
    strongest of its component algorithms; i.e. as long as one component
    algorithm remains strong, then the overall composite algorithm
    remains strong.
 
-12.  References
+11.  References
 
-12.1.  Normative References
+11.1.  Normative References
 
    [FIPS.180-4]
               National Institute of Standards and Technology (NIST),
@@ -2443,7 +2178,7 @@ Deserialization Process:
               Encoding Rules (CER) and Distinguished Encoding Rules
               (DER)", ISO/IEC 8825-1:2015, November 2015.
 
-12.2.  Informative References
+11.2.  Informative References
 
    [ANSSI2024]
               French Cybersecurity Agency (ANSSI), Federal Office for
@@ -2615,7 +2350,7 @@ Appendix A.  Component Algorithm Reference
         | id-RSAES-OAEP  | 1.2.840.113549.1.1.7   | [RFC8017]     |
         +----------------+------------------------+---------------+
 
-              Table 7: Component Encryption Algorithms used in
+              Table 6: Component Encryption Algorithms used in
                           Composite Constructions
 
        +==================+=======================+===============+
@@ -2630,7 +2365,7 @@ Appendix A.  Component Algorithm Reference
        | brainpoolP384r1  | 1.3.36.3.3.2.8.1.1.11 | [RFC5639]     |
        +------------------+-----------------------+---------------+
 
-         Table 8: Elliptic Curves used in Composite Constructions
+         Table 7: Elliptic Curves used in Composite Constructions
 
    +=======================+============================+=============+
    |HashID                 | OID                        |Specification|
@@ -2648,7 +2383,7 @@ Appendix A.  Component Algorithm Reference
    |id-KMAC128             | 2.16.840.1.101.3.4.2.21    |[SP.800-185] |
    +-----------------------+----------------------------+-------------+
 
-         Table 9: Hash algorithms used in Composite Constructions
+         Table 8: Hash algorithms used in Composite Constructions
 
 Appendix B.  Fixed Component Algorithm Identifiers
 
@@ -2783,7 +2518,7 @@ C.1.  FIPS Certification
 
    where KDF is either SHA3 or HKDF-SHA2.
 
-   NIST SP 800-227 [SP-800-227idp], which at the time of writing is in
+   NIST SP 800-227 [SP-800-227ipd], which at the time of writing is in
    its initial public draft period, allows hybrid key combiners of the
    following form:
 

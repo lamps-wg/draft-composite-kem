@@ -4,34 +4,33 @@
 <meta charset="utf-8">
 <meta content="Common,Latin" name="scripts">
 <meta content="initial-scale=1.0" name="viewport">
-<title>Composite ML-KEM for use in X.509 Public Key Infrastructure and CMS</title>
+<title>Composite ML-KEM for use in X.509 Public Key Infrastructure</title>
 <meta content="Mike Ounsworth" name="author">
 <meta content="John Gray" name="author">
 <meta content="Massimiliano Pala" name="author">
 <meta content="Jan Klaussner" name="author">
 <meta content="Scott Fluhrer" name="author">
 <meta content="
-       This document defines combinations of ML-KEM   in hybrid with traditional algorithms RSA-OAEP, ECDH, X25519, and X448. These combinations are tailored to meet security best practices and regulatory requirements. Composite ML-KEM is applicable in any application that uses X.509, PKIX, and CMS data structures and protocols that accept ML-KEM, but where the operator wants extra protection against breaks or catastrophic bugs in ML-KEM. For use within CMS, this document is intended to be coupled with the CMS KEMRecipientInfo mechanism in  . 
+       This document defines combinations of ML-KEM   in hybrid with traditional algorithms RSA-OAEP, ECDH, X25519, and X448. These combinations are tailored to meet security best practices and regulatory requirements. Composite ML-KEM is applicable in any application that uses X.509 or PKIX data structures that accept ML-KEM, but where the operator wants extra protection against breaks or catastrophic bugs in ML-KEM. 
        
 
 
 
     " name="description">
-<meta content="xml2rfc 3.28.0" name="generator">
+<meta content="xml2rfc 3.28.1" name="generator">
 <meta content="X.509" name="keyword">
-<meta content="CMS" name="keyword">
 <meta content="Post-Quantum" name="keyword">
 <meta content="KEM" name="keyword">
 <meta content="draft-ietf-lamps-pq-composite-kem-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.28.0
+  xml2rfc 3.28.1
     Python 3.12.9
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
     intervaltree 3.1.0
     Jinja2 3.1.6
     lxml 5.3.0
-    platformdirs 4.3.6
+    platformdirs 4.3.7
     pycountry 24.6.1
     PyYAML 6.0.2
     requests 2.32.3
@@ -1059,7 +1058,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Ounsworth, et al.</td>
-<td class="center">Expires 3 October 2025</td>
+<td class="center">Expires 19 October 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1072,12 +1071,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-lamps-pq-composite-kem-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-04-01" class="published">1 April 2025</time>
+<time datetime="2025-04-17" class="published">17 April 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-10-03">3 October 2025</time></dd>
+<dd class="expires"><time datetime="2025-10-19">19 October 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1103,10 +1102,10 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </dd>
 </dl>
 </div>
-<h1 id="title">Composite ML-KEM for use in X.509 Public Key Infrastructure and CMS</h1>
+<h1 id="title">Composite ML-KEM for use in X.509 Public Key Infrastructure</h1>
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
-<p id="section-abstract-1">This document defines combinations of ML-KEM <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span> in hybrid with traditional algorithms RSA-OAEP, ECDH, X25519, and X448. These combinations are tailored to meet security best practices and regulatory requirements. Composite ML-KEM is applicable in any application that uses X.509, PKIX, and CMS data structures and protocols that accept ML-KEM, but where the operator wants extra protection against breaks or catastrophic bugs in ML-KEM. For use within CMS, this document is intended to be coupled with the CMS KEMRecipientInfo mechanism in <span>[<a href="#RFC9629" class="cite xref">RFC9629</a>]</span>.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+<p id="section-abstract-1">This document defines combinations of ML-KEM <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span> in hybrid with traditional algorithms RSA-OAEP, ECDH, X25519, and X448. These combinations are tailored to meet security best practices and regulatory requirements. Composite ML-KEM is applicable in any application that uses X.509 or PKIX data structures that accept ML-KEM, but where the operator wants extra protection against breaks or catastrophic bugs in ML-KEM.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-about-this-document">
@@ -1143,7 +1142,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 3 October 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 19 October 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1272,141 +1271,116 @@ svg :is([fill="white"], [fill^="#fff"]) {
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
-            <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-use-in-cms" class="internal xref">Use in CMS</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1">
-                <p id="section-toc.1-1.8.2.1.1"><a href="#section-8.1" class="auto internal xref">8.1</a>.  <a href="#name-underlying-components" class="internal xref">Underlying Components</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1.2.1">
-                    <p id="section-toc.1-1.8.2.1.2.1.1"><a href="#section-8.1.1" class="auto internal xref">8.1.1</a>.  <a href="#name-use-of-the-hkdf-based-key-d" class="internal xref">Use of the HKDF-based Key Derivation Function within CMS</a></p>
+            <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-asn1-module" class="internal xref">ASN.1 Module</a></p>
 </li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1.2.2">
-                    <p id="section-toc.1-1.8.2.1.2.2.1"><a href="#section-8.1.2" class="auto internal xref">8.1.2</a>.  <a href="#name-use-of-the-kmac-based-key-d" class="internal xref">Use of the KMAC-based Key Derivation Function within CMS</a></p>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
+            <p id="section-toc.1-1.9.1"><a href="#section-9" class="auto internal xref">9</a>.  <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.1">
+                <p id="section-toc.1-1.9.2.1.1"><a href="#section-9.1" class="auto internal xref">9.1</a>.  <a href="#name-object-identifier-allocatio" class="internal xref">Object Identifier Allocations</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.1.2.1">
+                    <p id="section-toc.1-1.9.2.1.2.1.1"><a href="#section-9.1.1" class="auto internal xref">9.1.1</a>.  <a href="#name-module-registration-smi-sec" class="internal xref">Module Registration - SMI Security for PKIX Module Identifier</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.1.2.2">
+                    <p id="section-toc.1-1.9.2.1.2.2.1"><a href="#section-9.1.2" class="auto internal xref">9.1.2</a>.  <a href="#name-object-identifier-registrat" class="internal xref">Object Identifier Registrations - SMI Security for PKIX Algorithms</a></p>
 </li>
                 </ul>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.2">
-                <p id="section-toc.1-1.8.2.2.1"><a href="#section-8.2" class="auto internal xref">8.2</a>.  <a href="#name-recipientinfo-conventions" class="internal xref">RecipientInfo Conventions</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.3">
-                <p id="section-toc.1-1.8.2.3.1"><a href="#section-8.3" class="auto internal xref">8.3</a>.  <a href="#name-certificate-conventions" class="internal xref">Certificate Conventions</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.4">
-                <p id="section-toc.1-1.8.2.4.1"><a href="#section-8.4" class="auto internal xref">8.4</a>.  <a href="#name-smimecapabilities-attribute" class="internal xref">SMIMECapabilities Attribute Conventions</a></p>
 </li>
             </ul>
 </li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
-            <p id="section-toc.1-1.9.1"><a href="#section-9" class="auto internal xref">9</a>.  <a href="#name-asn1-module" class="internal xref">ASN.1 Module</a></p>
-</li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
-            <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
+            <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.1">
-                <p id="section-toc.1-1.10.2.1.1"><a href="#section-10.1" class="auto internal xref">10.1</a>.  <a href="#name-object-identifier-allocatio" class="internal xref">Object Identifier Allocations</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.1.2.1">
-                    <p id="section-toc.1-1.10.2.1.2.1.1"><a href="#section-10.1.1" class="auto internal xref">10.1.1</a>.  <a href="#name-module-registration-smi-sec" class="internal xref">Module Registration - SMI Security for PKIX Module Identifier</a></p>
+                <p id="section-toc.1-1.10.2.1.1"><a href="#section-10.1" class="auto internal xref">10.1</a>.  <a href="#name-why-hybrids" class="internal xref">Why Hybrids?</a></p>
 </li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.1.2.2">
-                    <p id="section-toc.1-1.10.2.1.2.2.1"><a href="#section-10.1.2" class="auto internal xref">10.1.2</a>.  <a href="#name-object-identifier-registrat" class="internal xref">Object Identifier Registrations - SMI Security for PKIX Algorithms</a></p>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.2">
+                <p id="section-toc.1-1.10.2.2.1"><a href="#section-10.2" class="auto internal xref">10.2</a>.  <a href="#name-kem-combiner" class="internal xref">KEM Combiner</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.2.2.1">
+                    <p id="section-toc.1-1.10.2.2.2.1.1"><a href="#section-10.2.1" class="auto internal xref">10.2.1</a>.  <a href="#name-security-of-the-hybrid-sche" class="internal xref">Security of the hybrid scheme</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.2.2.2">
+                    <p id="section-toc.1-1.10.2.2.2.2.1"><a href="#section-10.2.2" class="auto internal xref">10.2.2</a>.  <a href="#name-second-pre-image-resistance" class="internal xref">Second pre-image resistance of component KEMs</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.2.2.3">
+                    <p id="section-toc.1-1.10.2.2.2.3.1"><a href="#section-10.2.3" class="auto internal xref">10.2.3</a>.  <a href="#name-sha3-vs-hkdf-sha2" class="internal xref">SHA3 vs HKDF-SHA2</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.2.2.4">
+                    <p id="section-toc.1-1.10.2.2.2.4.1"><a href="#section-10.2.4" class="auto internal xref">10.2.4</a>.  <a href="#name-generifying-this-constructi" class="internal xref">Generifying this construction</a></p>
 </li>
                 </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.3">
+                <p id="section-toc.1-1.10.2.3.1"><a href="#section-10.3" class="auto internal xref">10.3</a>.  <a href="#name-key-reuse" class="internal xref">Key Reuse</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.4">
+                <p id="section-toc.1-1.10.2.4.1"><a href="#section-10.4" class="auto internal xref">10.4</a>.  <a href="#name-decapsulation-failure" class="internal xref">Decapsulation failure</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.5">
+                <p id="section-toc.1-1.10.2.5.1"><a href="#section-10.5" class="auto internal xref">10.5</a>.  <a href="#name-policy-for-deprecated-and-a" class="internal xref">Policy for Deprecated and Acceptable Algorithms</a></p>
 </li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
-            <p id="section-toc.1-1.11.1"><a href="#section-11" class="auto internal xref">11</a>. <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+            <p id="section-toc.1-1.11.1"><a href="#section-11" class="auto internal xref">11</a>. <a href="#name-references" class="internal xref">References</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.1">
-                <p id="section-toc.1-1.11.2.1.1"><a href="#section-11.1" class="auto internal xref">11.1</a>.  <a href="#name-why-hybrids" class="internal xref">Why Hybrids?</a></p>
+                <p id="section-toc.1-1.11.2.1.1"><a href="#section-11.1" class="auto internal xref">11.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.2">
-                <p id="section-toc.1-1.11.2.2.1"><a href="#section-11.2" class="auto internal xref">11.2</a>.  <a href="#name-kem-combiner" class="internal xref">KEM Combiner</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.2.2.1">
-                    <p id="section-toc.1-1.11.2.2.2.1.1"><a href="#section-11.2.1" class="auto internal xref">11.2.1</a>.  <a href="#name-security-of-the-hybrid-sche" class="internal xref">Security of the hybrid scheme</a></p>
-</li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.2.2.2">
-                    <p id="section-toc.1-1.11.2.2.2.2.1"><a href="#section-11.2.2" class="auto internal xref">11.2.2</a>.  <a href="#name-second-pre-image-resistance" class="internal xref">Second pre-image resistance of component KEMs</a></p>
-</li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.2.2.3">
-                    <p id="section-toc.1-1.11.2.2.2.3.1"><a href="#section-11.2.3" class="auto internal xref">11.2.3</a>.  <a href="#name-sha3-vs-hkdf-sha2" class="internal xref">SHA3 vs HKDF-SHA2</a></p>
-</li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.2.2.4">
-                    <p id="section-toc.1-1.11.2.2.2.4.1"><a href="#section-11.2.4" class="auto internal xref">11.2.4</a>.  <a href="#name-generifying-this-constructi" class="internal xref">Generifying this construction</a></p>
-</li>
-                </ul>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.3">
-                <p id="section-toc.1-1.11.2.3.1"><a href="#section-11.3" class="auto internal xref">11.3</a>.  <a href="#name-key-reuse" class="internal xref">Key Reuse</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.4">
-                <p id="section-toc.1-1.11.2.4.1"><a href="#section-11.4" class="auto internal xref">11.4</a>.  <a href="#name-decapsulation-failure" class="internal xref">Decapsulation failure</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.5">
-                <p id="section-toc.1-1.11.2.5.1"><a href="#section-11.5" class="auto internal xref">11.5</a>.  <a href="#name-policy-for-deprecated-and-a" class="internal xref">Policy for Deprecated and Acceptable Algorithms</a></p>
+                <p id="section-toc.1-1.11.2.2.1"><a href="#section-11.2" class="auto internal xref">11.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
 </li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
-            <p id="section-toc.1-1.12.1"><a href="#section-12" class="auto internal xref">12</a>. <a href="#name-references" class="internal xref">References</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.1">
-                <p id="section-toc.1-1.12.2.1.1"><a href="#section-12.1" class="auto internal xref">12.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.2">
-                <p id="section-toc.1-1.12.2.2.1"><a href="#section-12.2" class="auto internal xref">12.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
-</li>
-            </ul>
+            <p id="section-toc.1-1.12.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-component-algorithm-referen" class="internal xref">Component Algorithm Reference</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13">
-            <p id="section-toc.1-1.13.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-component-algorithm-referen" class="internal xref">Component Algorithm Reference</a></p>
+            <p id="section-toc.1-1.13.1"><a href="#appendix-B" class="auto internal xref">Appendix B</a>.  <a href="#name-fixed-component-algorithm-i" class="internal xref">Fixed Component Algorithm Identifiers</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14">
-            <p id="section-toc.1-1.14.1"><a href="#appendix-B" class="auto internal xref">Appendix B</a>.  <a href="#name-fixed-component-algorithm-i" class="internal xref">Fixed Component Algorithm Identifiers</a></p>
-</li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15">
-            <p id="section-toc.1-1.15.1"><a href="#appendix-C" class="auto internal xref">Appendix C</a>.  <a href="#name-implementation-consideratio" class="internal xref">Implementation Considerations</a></p>
+            <p id="section-toc.1-1.14.1"><a href="#appendix-C" class="auto internal xref">Appendix C</a>.  <a href="#name-implementation-consideratio" class="internal xref">Implementation Considerations</a></p>
 <ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.1">
-                <p id="section-toc.1-1.15.2.1.1"><a href="#appendix-C.1" class="auto internal xref">C.1</a>.  <a href="#name-fips-certification" class="internal xref">FIPS Certification</a></p>
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14.2.1">
+                <p id="section-toc.1-1.14.2.1.1"><a href="#appendix-C.1" class="auto internal xref">C.1</a>.  <a href="#name-fips-certification" class="internal xref">FIPS Certification</a></p>
 <ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.1.2.1">
-                    <p id="section-toc.1-1.15.2.1.2.1.1"><a href="#appendix-C.1.1" class="auto internal xref">C.1.1</a>.  <a href="#name-fips-certification-of-combi" class="internal xref">FIPS certification of Combiner Function</a></p>
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14.2.1.2.1">
+                    <p id="section-toc.1-1.14.2.1.2.1.1"><a href="#appendix-C.1.1" class="auto internal xref">C.1.1</a>.  <a href="#name-fips-certification-of-combi" class="internal xref">FIPS certification of Combiner Function</a></p>
 </li>
                 </ul>
 </li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.2">
-                <p id="section-toc.1-1.15.2.2.1"><a href="#appendix-C.2" class="auto internal xref">C.2</a>.  <a href="#name-backwards-compatibility" class="internal xref">Backwards Compatibility</a></p>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14.2.2">
+                <p id="section-toc.1-1.14.2.2.1"><a href="#appendix-C.2" class="auto internal xref">C.2</a>.  <a href="#name-backwards-compatibility" class="internal xref">Backwards Compatibility</a></p>
 </li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.3">
-                <p id="section-toc.1-1.15.2.3.1"><a href="#appendix-C.3" class="auto internal xref">C.3</a>.  <a href="#name-decapsulation-requires-the-" class="internal xref">Decapsulation Requires the Public Key</a></p>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14.2.3">
+                <p id="section-toc.1-1.14.2.3.1"><a href="#appendix-C.3" class="auto internal xref">C.3</a>.  <a href="#name-decapsulation-requires-the-" class="internal xref">Decapsulation Requires the Public Key</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15">
+            <p id="section-toc.1-1.15.1"><a href="#appendix-D" class="auto internal xref">Appendix D</a>.  <a href="#name-comparison-with-other-hybri" class="internal xref">Comparison with other Hybrid KEMs</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.1">
+                <p id="section-toc.1-1.15.2.1.1"><a href="#appendix-D.1" class="auto internal xref">D.1</a>.  <a href="#name-x-wing" class="internal xref">X-Wing</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.2">
+                <p id="section-toc.1-1.15.2.2.1"><a href="#appendix-D.2" class="auto internal xref">D.2</a>.  <a href="#name-etsi-catkdf" class="internal xref">ETSI CatKDF</a></p>
 </li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16">
-            <p id="section-toc.1-1.16.1"><a href="#appendix-D" class="auto internal xref">Appendix D</a>.  <a href="#name-comparison-with-other-hybri" class="internal xref">Comparison with other Hybrid KEMs</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16.2.1">
-                <p id="section-toc.1-1.16.2.1.1"><a href="#appendix-D.1" class="auto internal xref">D.1</a>.  <a href="#name-x-wing" class="internal xref">X-Wing</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16.2.2">
-                <p id="section-toc.1-1.16.2.2.1"><a href="#appendix-D.2" class="auto internal xref">D.2</a>.  <a href="#name-etsi-catkdf" class="internal xref">ETSI CatKDF</a></p>
-</li>
-            </ul>
+            <p id="section-toc.1-1.16.1"><a href="#appendix-E" class="auto internal xref">Appendix E</a>.  <a href="#name-test-vectors" class="internal xref">Test Vectors</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.17">
-            <p id="section-toc.1-1.17.1"><a href="#appendix-E" class="auto internal xref">Appendix E</a>.  <a href="#name-test-vectors" class="internal xref">Test Vectors</a></p>
+            <p id="section-toc.1-1.17.1"><a href="#appendix-F" class="auto internal xref">Appendix F</a>.  <a href="#name-intellectual-property-consi" class="internal xref">Intellectual Property Considerations</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.18">
-            <p id="section-toc.1-1.18.1"><a href="#appendix-F" class="auto internal xref">Appendix F</a>.  <a href="#name-intellectual-property-consi" class="internal xref">Intellectual Property Considerations</a></p>
+            <p id="section-toc.1-1.18.1"><a href="#appendix-G" class="auto internal xref">Appendix G</a>.  <a href="#name-contributors-and-acknowledg" class="internal xref">Contributors and Acknowledgments</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.19">
-            <p id="section-toc.1-1.19.1"><a href="#appendix-G" class="auto internal xref">Appendix G</a>.  <a href="#name-contributors-and-acknowledg" class="internal xref">Contributors and Acknowledgments</a></p>
-</li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.20">
-            <p id="section-toc.1-1.20.1"><a href="#appendix-H" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
+            <p id="section-toc.1-1.19.1"><a href="#appendix-H" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
 </li>
         </ul>
 </nav>
@@ -1475,7 +1449,7 @@ Swedish National Communications Security Authority, Swedish Armed Forces which m
 </li>
       </ul>
 <p id="section-2-11">This document defines a specific instantiation of the PQ/T Hybrid paradigm called "composite" where multiple cryptographic algorithms are combined to form a single key encapsulation mechanism (KEM) key and ciphertext such that they can be treated as a single atomic algorithm at the protocol level. Composite algorithms address algorithm strength uncertainty because the composite algorithm remains strong so long as one of its components remains strong. Concrete instantiations of composite ML-KEM algorithms are provided based on ML-KEM, RSA-OAEP and ECDH. Backwards compatibility is not directly covered in this document, but is the subject of <a href="#sec-backwards-compat" class="auto internal xref">Appendix C.2</a>.<a href="#section-2-11" class="pilcrow">¶</a></p>
-<p id="section-2-12">Composite ML-KEM is intended for general applicability anywhere that key establishment or enveloped content encryption is used within PKIX or CMS structures.<a href="#section-2-12" class="pilcrow">¶</a></p>
+<p id="section-2-12">Composite ML-KEM is intended for general applicability anywhere that key establishment or enveloped content encryption is used within PKIX protocols.<a href="#section-2-12" class="pilcrow">¶</a></p>
 <div id="sec-terminology">
 <section id="section-2.1">
         <h3 id="name-conventions-and-terminology">
@@ -1768,7 +1742,7 @@ Encap Process:
         ss = HKDF-Extract(salt="", IKM=mlkemSS || tradSS || tradCT || tradPK || Domain)
           # Note: salt is the empty string (0 octets), which will internally be mapped
           # to the zero vector `0x00..00` of the correct input size for the underlying
-          # hash function as per [RFC 5869].
+          # hash function as per [RFC5869].
 
   6. Output composite shared secret key and ciphertext
 
@@ -2234,7 +2208,7 @@ CompositeKEMPublicKey ::= BIT STRING
 <p id="section-5.1-6">When a CompositeKEMPublicKey is used with an Edwards public key, the BIT STRING itself is generated by the concatenation of a raw ML-KEM key according to <span>[<a href="#I-D.ietf-lamps-kyber-certificates" class="cite xref">I-D.ietf-lamps-kyber-certificates</a>]</span> and a raw Edwards public key according to <span>[<a href="#RFC8410" class="cite xref">RFC8410</a>]</span>.<a href="#section-5.1-6" class="pilcrow">¶</a></p>
 <p id="section-5.1-7">Some applications may need to reconstruct the <code>SubjectPublicKeyInfo</code> objects corresponding to each component public key. <a href="#tab-kem-algs" class="auto internal xref">Table 2</a> in <a href="#sec-alg-ids" class="auto internal xref">Section 7</a> provides the necessary mapping between composite and their component algorithms for doing this reconstruction.<a href="#section-5.1-7" class="pilcrow">¶</a></p>
 <p id="section-5.1-8">When the CompositeKEMPublicKey must be provided in octet string or bit string format, the data structure is encoded as specified in <a href="#sec-encoding-rules" class="auto internal xref">Section 5.3</a>.<a href="#section-5.1-8" class="pilcrow">¶</a></p>
-<p id="section-5.1-9">In order to maintain security properties of the composite, applications that use composite keys MUST always perform fresh key generations of both component keys and MUST NOT reuse existing key material. See <a href="#sec-cons-key-reuse" class="auto internal xref">Section 11.3</a> for a discussion.<a href="#section-5.1-9" class="pilcrow">¶</a></p>
+<p id="section-5.1-9">In order to maintain security properties of the composite, applications that use composite keys MUST always perform fresh key generations of both component keys and MUST NOT reuse existing key material. See <a href="#sec-cons-key-reuse" class="auto internal xref">Section 10.3</a> for a discussion.<a href="#section-5.1-9" class="pilcrow">¶</a></p>
 <p id="section-5.1-10">The following ASN.1 Information Object Class is defined to allow for compact definitions of each composite algorithm, leading to a smaller overall ASN.1 module.<a href="#section-5.1-10" class="pilcrow">¶</a></p>
 <div class="lang-ASN.1 sourcecode" id="section-5.1-11">
 <pre>
@@ -2256,7 +2230,7 @@ pk-MLKEM768-ECDH-P384 PUBLIC-KEY ::=
     EcCompositeKemPublicKey }
 </pre><a href="#section-5.1-13" class="pilcrow">¶</a>
 </div>
-<p id="section-5.1-14">The full set of key types defined by this specification can be found in the ASN.1 Module in <a href="#sec-asn1-module" class="auto internal xref">Section 9</a>.<a href="#section-5.1-14" class="pilcrow">¶</a></p>
+<p id="section-5.1-14">The full set of key types defined by this specification can be found in the ASN.1 Module in <a href="#sec-asn1-module" class="auto internal xref">Section 8</a>.<a href="#section-5.1-14" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-priv-key">
@@ -2293,7 +2267,7 @@ CompositeKEMPrivateKey ::= OCTET STRING
 </div>
 <p id="section-5.2-6">When a <code>CompositeKEMPrivateKey</code> is conveyed inside a OneAsymmetricKey structure (version 1 of which is also known as PrivateKeyInfo) <span>[<a href="#RFC5958" class="cite xref">RFC5958</a>]</span>, the privateKeyAlgorithm field SHALL be set to the corresponding composite algorithm identifier defined according to <a href="#sec-alg-ids" class="auto internal xref">Section 7</a> and its parameters field MUST be absent.  The privateKey field SHALL contain the <code>CompositeKEMPrivateKey</code>, and the <code>publicKey</code> field remains OPTIONAL.  If the <code>publicKey</code> field is present, it MUST be a <code>CompositeKEMPublicKey</code>.<a href="#section-5.2-6" class="pilcrow">¶</a></p>
 <p id="section-5.2-7">Some applications may need to reconstruct the <code>OneAsymmetricKey</code> objects corresponding to each component private key. <a href="#sec-alg-ids" class="auto internal xref">Section 7</a> provides the necessary mapping between composite and their component algorithms for doing this reconstruction.<a href="#section-5.2-7" class="pilcrow">¶</a></p>
-<p id="section-5.2-8">Component keys of a CompositeKEMPrivateKey MUST NOT be used in any other type of key or as a standalone key. For more details on the security considerations around key reuse, see <a href="#sec-cons-key-reuse" class="auto internal xref">Section 11.3</a>.<a href="#section-5.2-8" class="pilcrow">¶</a></p>
+<p id="section-5.2-8">Component keys of a CompositeKEMPrivateKey MUST NOT be used in any other type of key or as a standalone key. For more details on the security considerations around key reuse, see <a href="#sec-cons-key-reuse" class="auto internal xref">Section 10.3</a>.<a href="#section-5.2-8" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-encoding-rules">
@@ -2560,7 +2534,7 @@ CompositeCiphertextValue ::= OCTET STRING
             <p id="section-7.3-2.4.1">SHA256 and SHA512 generally have better adoption than SHA384.<a href="#section-7.3-2.4.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-7.3-3">A single invocation of SHA3 is known to behave as a dual-PRF, and thus is sufficient for use as a KDF, see <a href="#sec-cons-kem-combiner" class="auto internal xref">Section 11.2</a>, however SHA2 is not so must be wrapped in the HKDF construction.<a href="#section-7.3-3" class="pilcrow">¶</a></p>
+<p id="section-7.3-3">A single invocation of SHA3 is known to behave as a dual-PRF, and thus is sufficient for use as a KDF, see <a href="#sec-cons-kem-combiner" class="auto internal xref">Section 10.2</a>, however SHA2 is not so must be wrapped in the HKDF construction.<a href="#section-7.3-3" class="pilcrow">¶</a></p>
 <p id="section-7.3-4">The lower security levels (i.e. ML-KEM768) are provided with HKDF-SHA2 as the KDF in order to facilitate implementations that do not have easy access to SHA3 outside of the ML-KEM function. Higher security levels (i.e. ML-KEM1024) are paired with SHA3 for computational efficiency except for one variant paired with HKDF-SHA384 for compliance with <span>[<a href="#CNSA2.0" class="cite xref">CNSA2.0</a>]</span>, and the Edwards Curve (X25519 and X448) combinations are paired with SHA3 for compatibility with other similar specifications.<a href="#section-7.3-4" class="pilcrow">¶</a></p>
 <p id="section-7.3-5">While it may seem odd to use 256-bit hash functions at all security levels, this aligns with ML-KEM which produces a 256-bit shared secret key at all security levels. SHA-256 and SHA3-256 both have &gt;= 256 bits of (2nd) pre-image resistance, which is the required property for a KDF to provide 128 bits of security, as allowed in Table 3 of <span>[<a href="#SP.800-57pt1r5" class="cite xref">SP.800-57pt1r5</a>]</span>.<a href="#section-7.3-5" class="pilcrow">¶</a></p>
 </section>
@@ -2623,248 +2597,12 @@ CompositeCiphertextValue ::= OCTET STRING
 </div>
 </section>
 </div>
-<div id="use-in-cms">
-<section id="section-8">
-      <h2 id="name-use-in-cms">
-<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-use-in-cms" class="section-name selfRef">Use in CMS</a>
-      </h2>
-<p id="section-8-1">[EDNOTE: The convention in LAMPS is to specify algorithms and their CMS conventions in separate documents. Here we have presented them in the same document, but this section has been written so that it can easily be moved to a standalone document.]<a href="#section-8-1" class="pilcrow">¶</a></p>
-<p id="section-8-2">Composite ML-KEM algorithms MAY be employed for one or more recipients in the CMS enveloped-data content type <span>[<a href="#RFC5652" class="cite xref">RFC5652</a>]</span>, the CMS authenticated-data content type <span>[<a href="#RFC5652" class="cite xref">RFC5652</a>]</span>, or the CMS authenticated-enveloped-data content type <span>[<a href="#RFC5083" class="cite xref">RFC5083</a>]</span>. In each case, the KEMRecipientInfo <span>[<a href="#RFC9629" class="cite xref">RFC9629</a>]</span> is used with the chosen Composite ML-KEM Algorithm to securely transfer the content-encryption key from the originator to the recipient.<a href="#section-8-2" class="pilcrow">¶</a></p>
-<p id="section-8-3">All recommendations for using Composite ML-KEM in CMS are fully aligned with the use of ML-KEM in CMS <span>[<a href="#I-D.ietf-lamps-cms-kyber" class="cite xref">I-D.ietf-lamps-cms-kyber</a>]</span>.<a href="#section-8-3" class="pilcrow">¶</a></p>
-<div id="underlying-components">
-<section id="section-8.1">
-        <h3 id="name-underlying-components">
-<a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-underlying-components" class="section-name selfRef">Underlying Components</a>
-        </h3>
-<p id="section-8.1-1">A compliant implementation MUST support the following algorithm combinations for the KEMRecipientInfo <code>kdf</code> and <code>wrap</code> fields when the corresponding Composite ML-KEM algorithm is listed in the KEMRecipientInfo <code>kem</code> field. The KDFs listed below align with the KDF used internally within the KEM combiner. An implementation MAY also support other key-derivation functions and other key-encryption algorithms within CMS KEMRecipientInfo and SHOULD use algorithms of equivalent strength or greater.<a href="#section-8.1-1" class="pilcrow">¶</a></p>
-<span id="name-mandatory-to-implement-pair"></span><div id="tab-cms-kdf-wrap">
-<table class="center" id="table-5">
-          <caption>
-<a href="#table-5" class="selfRef">Table 5</a>:
-<a href="#name-mandatory-to-implement-pair" class="selfRef">Mandatory-to-implement pairings for CMS KDF and WRAP</a>
-          </caption>
-<thead>
-            <tr>
-              <th class="text-left" rowspan="1" colspan="1">Composite ML-KEM Algorithm</th>
-              <th class="text-left" rowspan="1" colspan="1">KDF</th>
-              <th class="text-left" rowspan="1" colspan="1">Wrap</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-RSA2048-HKDF-SHA256</td>
-              <td class="text-left" rowspan="1" colspan="1">id-alg-hkdf-with-sha256</td>
-              <td class="text-left" rowspan="1" colspan="1">id-aes128-wrap</td>
-            </tr>
-            <tr>
-              <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-RSA3072-HKDF-SHA256</td>
-              <td class="text-left" rowspan="1" colspan="1">id-alg-hkdf-with-sha256</td>
-              <td class="text-left" rowspan="1" colspan="1">id-aes128-wrap</td>
-            </tr>
-            <tr>
-              <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-RSA4096-HKDF-SHA256</td>
-              <td class="text-left" rowspan="1" colspan="1">id-alg-hkdf-with-sha256</td>
-              <td class="text-left" rowspan="1" colspan="1">id-aes128-wrap</td>
-            </tr>
-            <tr>
-              <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-X25519-SHA3-256</td>
-              <td class="text-left" rowspan="1" colspan="1">id-kmac256</td>
-              <td class="text-left" rowspan="1" colspan="1">id-aes128-wrap</td>
-            </tr>
-            <tr>
-              <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-ECDH-P256-HKDF-SHA256</td>
-              <td class="text-left" rowspan="1" colspan="1">id-alg-hkdf-with-sha256</td>
-              <td class="text-left" rowspan="1" colspan="1">id-aes256-wrap</td>
-            </tr>
-            <tr>
-              <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-ECDH-P384-HKDF-SHA256</td>
-              <td class="text-left" rowspan="1" colspan="1">id-alg-hkdf-with-sha256</td>
-              <td class="text-left" rowspan="1" colspan="1">id-aes256-wrap</td>
-            </tr>
-            <tr>
-              <td class="text-left" rowspan="1" colspan="1">id-MLKEM768-ECDH-brainpoolP256r1-HKDF-SHA256</td>
-              <td class="text-left" rowspan="1" colspan="1">id-alg-hkdf-with-sha256</td>
-              <td class="text-left" rowspan="1" colspan="1">id-aes256-wrap</td>
-            </tr>
-            <tr>
-              <td class="text-left" rowspan="1" colspan="1">id-MLKEM1024-ECDH-P384-HKDF-SHA384</td>
-              <td class="text-left" rowspan="1" colspan="1">id-alg-hkdf-with-sha384</td>
-              <td class="text-left" rowspan="1" colspan="1">id-aes256-wrap</td>
-            </tr>
-            <tr>
-              <td class="text-left" rowspan="1" colspan="1">id-MLKEM1024-ECDH-brainpoolP384r1-HKDF-SHA384</td>
-              <td class="text-left" rowspan="1" colspan="1">id-kmac256</td>
-              <td class="text-left" rowspan="1" colspan="1">id-aes256-wrap</td>
-            </tr>
-            <tr>
-              <td class="text-left" rowspan="1" colspan="1">id-MLKEM1024-X448-SHA3-256</td>
-              <td class="text-left" rowspan="1" colspan="1">id-kmac256</td>
-              <td class="text-left" rowspan="1" colspan="1">id-aes256-wrap</td>
-            </tr>
-          </tbody>
-        </table>
-</div>
-<p id="section-8.1-3">Full specifications for the referenced algorithms can be found either further down in this section, or in <a href="#appdx_components" class="auto internal xref">Appendix A</a>.<a href="#section-8.1-3" class="pilcrow">¶</a></p>
-<p id="section-8.1-4">Note that here we differ slightly from the internal KDF used within the KEM combiner in <a href="#sec-alg-ids" class="auto internal xref">Section 7</a> because <span>[<a href="#RFC9629" class="cite xref">RFC9629</a>]</span> requires that the KDF listed in the KEMRecipientInfo <code>kdf</code> field must have an interface which accepts <code>KDF(IKM, L, info)</code>, so here we need to use KMAC and cannot directly use SHA3. Since we require 256-bits of (2nd) pre-image resistance, we use KMAC256 for the Composite ML-KEM algorithms with internally use SHA3-256, as aligned with Table 3 of <span>[<a href="#SP.800-57pt1r5" class="cite xref">SP.800-57pt1r5</a>]</span>.<a href="#section-8.1-4" class="pilcrow">¶</a></p>
-<div id="use-of-the-hkdf-based-key-derivation-function-within-cms">
-<section id="section-8.1.1">
-          <h4 id="name-use-of-the-hkdf-based-key-d">
-<a href="#section-8.1.1" class="section-number selfRef">8.1.1. </a><a href="#name-use-of-the-hkdf-based-key-d" class="section-name selfRef">Use of the HKDF-based Key Derivation Function within CMS</a>
-          </h4>
-<p id="section-8.1.1-1">Unlike within the Composite KEM Combiner function, When used as a KDF for CMS, HKDF requires use of the HKDF-Expand step so that it can accept the length parameter <code>kekLength</code> from CMS KEMRecipientInfo as the HKDF parameter <code>L</code>.<a href="#section-8.1.1-1" class="pilcrow">¶</a></p>
-<p id="section-8.1.1-2">The HMAC-based Extract-and-Expand Key Derivation Function (HKDF) is defined in <span>[<a href="#RFC5869" class="cite xref">RFC5869</a>]</span>. The HKDF function is a composition of the HKDF-Extract and HKDF-Expand functions.<a href="#section-8.1.1-2" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-8.1.1-3">
-<pre>
-HKDF(salt, IKM, info, L)
-  = HKDF-Expand(HKDF-Extract(salt, IKM), info, L)
-</pre><a href="#section-8.1.1-3" class="pilcrow">¶</a>
-</div>
-<p id="section-8.1.1-4">HKDF(salt, IKM, info, L) takes the following parameters:<a href="#section-8.1.1-4" class="pilcrow">¶</a></p>
-<span class="break"></span><dl class="dlParallel" id="section-8.1.1-5">
-            <dt id="section-8.1.1-5.1">salt:</dt>
-            <dd style="margin-left: 1.5em" id="section-8.1.1-5.2">
-              <p id="section-8.1.1-5.2.1">optional salt value (a non-secret random value). In this document this parameter is left at its default value, which is the string of HashLen zeros.<a href="#section-8.1.1-5.2.1" class="pilcrow">¶</a></p>
-</dd>
-            <dd class="break"></dd>
-<dt id="section-8.1.1-5.3">IKM:</dt>
-            <dd style="margin-left: 1.5em" id="section-8.1.1-5.4">
-              <p id="section-8.1.1-5.4.1">input keying material. In this document this is the shared secret outputted from the Encaps() or Decaps() functions.  This corresponds to the IKM KDF input from <span><a href="https://rfc-editor.org/rfc/rfc9629#section-5" class="relref">Section 5</a> of [<a href="#RFC9629" class="cite xref">RFC9629</a>]</span>.<a href="#section-8.1.1-5.4.1" class="pilcrow">¶</a></p>
-</dd>
-            <dd class="break"></dd>
-<dt id="section-8.1.1-5.5">info:</dt>
-            <dd style="margin-left: 1.5em" id="section-8.1.1-5.6">
-              <p id="section-8.1.1-5.6.1">optional context and application specific information. In this document this corresponds to the info KDF input from <span><a href="https://rfc-editor.org/rfc/rfc9629#section-5" class="relref">Section 5</a> of [<a href="#RFC9629" class="cite xref">RFC9629</a>]</span>. This is the ASN.1 DER encoding of CMSORIforKEMOtherInfo.<a href="#section-8.1.1-5.6.1" class="pilcrow">¶</a></p>
-</dd>
-            <dd class="break"></dd>
-<dt id="section-8.1.1-5.7">L:</dt>
-            <dd style="margin-left: 1.5em" id="section-8.1.1-5.8">
-              <p id="section-8.1.1-5.8.1">length of output keying material in octets. This corresponds to the L KDF input from <span><a href="https://rfc-editor.org/rfc/rfc9629#section-5" class="relref">Section 5</a> of [<a href="#RFC9629" class="cite xref">RFC9629</a>]</span>, which is identified in the kekLength value from KEMRecipientInfo. Implementations MUST confirm that this value is consistent with the key size of the key-encryption algorithm.<a href="#section-8.1.1-5.8.1" class="pilcrow">¶</a></p>
-</dd>
-          <dd class="break"></dd>
-</dl>
-<p id="section-8.1.1-6">HKDF may be used with different hash functions, including SHA-256 and SHA-384 <span>[<a href="#FIPS.180-4" class="cite xref">FIPS.180-4</a>]</span>. The object identifier id-alg-hkdf-with-sha256 and id-alg-hkdf-with-sha384 are defined in <span>[<a href="#RFC8619" class="cite xref">RFC8619</a>]</span>, and specify the use of HKDF with SHA-256 and SHA-384. The parameter field MUST be absent when this algorithm identifier is used to specify the KDF for ML-KEM in KemRecipientInfo.<a href="#section-8.1.1-6" class="pilcrow">¶</a></p>
-</section>
-</div>
-<div id="use-of-the-kmac-based-key-derivation-function-within-cms">
-<section id="section-8.1.2">
-          <h4 id="name-use-of-the-kmac-based-key-d">
-<a href="#section-8.1.2" class="section-number selfRef">8.1.2. </a><a href="#name-use-of-the-kmac-based-key-d" class="section-name selfRef">Use of the KMAC-based Key Derivation Function within CMS</a>
-          </h4>
-<p id="section-8.1.2-1">KMAC256-KDF is a KMAC-based KDF specified for use in CMS in <span>[<a href="#I-D.ietf-lamps-cms-sha3-hash" class="cite xref">I-D.ietf-lamps-cms-sha3-hash</a>]</span>. The definition of KMAC is copied here for convenience.  Here, KMAC# indicates the use of either KMAC128-KDF or KMAC256-KDF, although only KMAC256 is used in this specification.<a href="#section-8.1.2-1" class="pilcrow">¶</a></p>
-<p id="section-8.1.2-2">KMAC#(K, X, L, S) takes the following parameters:<a href="#section-8.1.2-2" class="pilcrow">¶</a></p>
-<ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-8.1.2-3.1">
-              <p id="section-8.1.2-3.1.1">K: the input key-derivation key.  In this document this is the shared secret outputted from the Encaps() or Decaps() functions.  This corresponds to the IKM KDF input from Section 5 of <span>[<a href="#RFC9629" class="cite xref">RFC9629</a>]</span>.<a href="#section-8.1.2-3.1.1" class="pilcrow">¶</a></p>
-</li>
-          </ul>
-<ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-8.1.2-4.1">
-              <p id="section-8.1.2-4.1.1">X: the context, corresponding to the info KDF input from Section 5 of <span>[<a href="#RFC9629" class="cite xref">RFC9629</a>]</span>. This is the ASN.1 DER encoding of CMSORIforKEMOtherInfo.<a href="#section-8.1.2-4.1.1" class="pilcrow">¶</a></p>
-</li>
-          </ul>
-<ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-8.1.2-5.1">
-              <p id="section-8.1.2-5.1.1">L: the output length, in bits.  This corresponds to the L KDF input from Section 5 of <span>[<a href="#RFC9629" class="cite xref">RFC9629</a>]</span>, which is identified in the kekLength value from KEMRecipientInfo.  The L KDF input and kekLength values are specified in octets while this L parameter is specified in bits.<a href="#section-8.1.2-5.1.1" class="pilcrow">¶</a></p>
-</li>
-          </ul>
-<ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-8.1.2-6.1">
-              <p id="section-8.1.2-6.1.1">S: the optional customization label.  In this document this parameter is unused, that is it is the zero-length string "".<a href="#section-8.1.2-6.1.1" class="pilcrow">¶</a></p>
-</li>
-          </ul>
-<p id="section-8.1.2-7">The object identifier for KMAC256-KDF is id-kmac256, as defined in <span>[<a href="#I-D.ietf-lamps-cms-sha3-hash" class="cite xref">I-D.ietf-lamps-cms-sha3-hash</a>]</span>.<a href="#section-8.1.2-7" class="pilcrow">¶</a></p>
-<p id="section-8.1.2-8">Since the customization label to KMAC# is not used, the parameter field MUST be absent when id-kmac256 is used as part of an algorithm identifier specifying the KDF to use for Composite ML-KEM in KemRecipientInfo.<a href="#section-8.1.2-8" class="pilcrow">¶</a></p>
-</section>
-</div>
-</section>
-</div>
-<div id="sec-using-recipientInfo">
-<section id="section-8.2">
-        <h3 id="name-recipientinfo-conventions">
-<a href="#section-8.2" class="section-number selfRef">8.2. </a><a href="#name-recipientinfo-conventions" class="section-name selfRef">RecipientInfo Conventions</a>
-        </h3>
-<p id="section-8.2-1">When Composite ML-KEM is employed for a recipient, the RecipientInfo alternative for that recipient MUST be OtherRecipientInfo using the KEMRecipientInfo structure as defined in <span>[<a href="#RFC9629" class="cite xref">RFC9629</a>]</span>.<a href="#section-8.2-1" class="pilcrow">¶</a></p>
-<p id="section-8.2-2">The fields of the KEMRecipientInfo MUST have the following values:<a href="#section-8.2-2" class="pilcrow">¶</a></p>
-<ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-8.2-3.1">
-            <p id="section-8.2-3.1.1">version is the syntax version number; it MUST be 0.<a href="#section-8.2-3.1.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-<ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-8.2-4.1">
-            <p id="section-8.2-4.1.1">rid identifies the recipient's certificate or public key.<a href="#section-8.2-4.1.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-<ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-8.2-5.1">
-            <p id="section-8.2-5.1.1">kem identifies the KEM algorithm; it MUST contain one of the Composite ML-KEM identifiers listed in <a href="#sec-alg-ids" class="auto internal xref">Section 7</a>.<a href="#section-8.2-5.1.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-<ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-8.2-6.1">
-            <p id="section-8.2-6.1.1">kemct is the ciphertext produced for this recipient.<a href="#section-8.2-6.1.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-<ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-8.2-7.1">
-            <p id="section-8.2-7.1.1">kdf identifies the key-derivation algorithm. Note that the Key Derivation Function (KDF) used for CMS RecipientInfo process (to calculate the RecipientInfo KEK key) MAY be different than the KDF used within the Composite ML-KEM algorithm (to calculate the shared secret ss) and MAY also be different from any KDFs used internally within a component algorithm.<a href="#section-8.2-7.1.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-<ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-8.2-8.1">
-            <p id="section-8.2-8.1.1">kekLength is the size of the key-encryption key in octets.<a href="#section-8.2-8.1.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-<ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-8.2-9.1">
-            <p id="section-8.2-9.1.1">ukm is an optional random input to the key-derivation function. ML-KEM doesn't place any requirements on the ukm contents.<a href="#section-8.2-9.1.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-<ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-8.2-10.1">
-            <p id="section-8.2-10.1.1">wrap identifies a key-encryption algorithm used to encrypt the content-encryption key.<a href="#section-8.2-10.1.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-<ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-8.2-11.1">
-            <p id="section-8.2-11.1.1">encryptedKey is the result of encryptiong the CEK with the KEK.<a href="#section-8.2-11.1.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-</section>
-</div>
-<div id="certificate-conventions">
-<section id="section-8.3">
-        <h3 id="name-certificate-conventions">
-<a href="#section-8.3" class="section-number selfRef">8.3. </a><a href="#name-certificate-conventions" class="section-name selfRef">Certificate Conventions</a>
-        </h3>
-<p id="section-8.3-1">The conventions specified in this section augment RFC 5280 <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>.<a href="#section-8.3-1" class="pilcrow">¶</a></p>
-<p id="section-8.3-2">The willingness to accept a Composite ML-KEM Algorithm MAY be signaled by the use of the SMIMECapabilities Attribute as specified in Section 2.5.2. of <span>[<a href="#RFC8551" class="cite xref">RFC8551</a>]</span> or the SMIMECapabilities certificate extension as specified in <span>[<a href="#RFC4262" class="cite xref">RFC4262</a>]</span>.<a href="#section-8.3-2" class="pilcrow">¶</a></p>
-<p id="section-8.3-3">The intended application for the public key MAY be indicated in the key usage certificate extension as specified in Section 4.2.1.3 of <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>. If the keyUsage extension is present in a certificate that conveys a Composite ML-KEM public key, then the key usage extension MUST contain only the following value:<a href="#section-8.3-3" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-8.3-4">
-<pre>
-keyEncipherment
-</pre><a href="#section-8.3-4" class="pilcrow">¶</a>
-</div>
-<p id="section-8.3-5">The digitalSignature and dataEncipherment values MUST NOT be present. That is, a public key intended to be employed only with a Composite ML-KEM algorithm MUST NOT also be employed for data encryption or for digital signatures. This requirement does not carry any particular security consideration; only the convention that KEM keys be identified with the <code>keyEncipherment</code> key usage.<a href="#section-8.3-5" class="pilcrow">¶</a></p>
-</section>
-</div>
-<div id="smimecapabilities-attribute-conventions">
-<section id="section-8.4">
-        <h3 id="name-smimecapabilities-attribute">
-<a href="#section-8.4" class="section-number selfRef">8.4. </a><a href="#name-smimecapabilities-attribute" class="section-name selfRef">SMIMECapabilities Attribute Conventions</a>
-        </h3>
-<p id="section-8.4-1">Section 2.5.2 of <span>[<a href="#RFC8551" class="cite xref">RFC8551</a>]</span> defines the SMIMECapabilities attribute to announce a partial list of algorithms that an S/MIME implementation can support. When constructing a CMS signed-data content type <span>[<a href="#RFC5652" class="cite xref">RFC5652</a>]</span>, a compliant implementation MAY include the SMIMECapabilities attribute that announces support for the RSA-OAEP Algorithm.<a href="#section-8.4-1" class="pilcrow">¶</a></p>
-<p id="section-8.4-2">The SMIMECapability SEQUENCE representing a Composite ML-KEM Algorithm MUST include the appropriate object identifier as per <a href="#tab-kem-algs" class="auto internal xref">Table 2</a> in the capabilityID field.<a href="#section-8.4-2" class="pilcrow">¶</a></p>
-</section>
-</div>
-</section>
-</div>
 <div id="sec-asn1-module">
-<section id="section-9">
+<section id="section-8">
       <h2 id="name-asn1-module">
-<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-asn1-module" class="section-name selfRef">ASN.1 Module</a>
+<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-asn1-module" class="section-name selfRef">ASN.1 Module</a>
       </h2>
-<div class="breakable lang-ASN.1 sourcecode" id="section-9-1">
+<div class="breakable lang-ASN.1 sourcecode" id="section-8-1">
 <pre>
 &lt;CODE STARTS&gt;
 
@@ -3115,219 +2853,186 @@ kema-MLKEM1024-X448 KEM-ALGORITHM ::=
       pk-MLKEM1024-X448 }
 
 
---
--- Expand the S/MIME capabilities set used by CMS [RFC5911]
---
-
--- TODO: this doesn't compile, error:
--- "The referenced object in the 'ValueFromObject'
--- syntax with the field '&amp;smimeCaps' is invalid or does not exist."
--- We need help from an SMIME expert
-
-SMimeCaps SMIME-CAPS ::=
-    { kema-MLKEM768-RSA2048.&amp;smimeCaps |
-      kema-MLKEM768-RSA3072.&amp;smimeCaps |
-      kema-MLKEM768-RSA4096.&amp;smimeCaps |
-      kema-MLKEM768-ECDH-P384.&amp;smimeCaps |
-      kema-MLKEM768-ECDH-brainpoolP256r1.&amp;smimeCaps |
-      kema-MLKEM768-X25519.&amp;smimeCaps |
-      kema-MLKEM1024-ECDH-P384.&amp;smimeCaps |
-      kema-MLKEM1024-ECDH-brainpoolP384r1.&amp;smimeCaps |
-      kema-MLKEM1024-X448.&amp;smimeCaps,
-      ... }
-
 END
 
 &lt;CODE ENDS&gt;
 
-</pre><a href="#section-9-1" class="pilcrow">¶</a>
+</pre><a href="#section-8-1" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
 <div id="sec-iana">
-<section id="section-10">
+<section id="section-9">
       <h2 id="name-iana-considerations">
-<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
       </h2>
 <div id="object-identifier-allocations">
-<section id="section-10.1">
+<section id="section-9.1">
         <h3 id="name-object-identifier-allocatio">
-<a href="#section-10.1" class="section-number selfRef">10.1. </a><a href="#name-object-identifier-allocatio" class="section-name selfRef">Object Identifier Allocations</a>
+<a href="#section-9.1" class="section-number selfRef">9.1. </a><a href="#name-object-identifier-allocatio" class="section-name selfRef">Object Identifier Allocations</a>
         </h3>
-<p id="section-10.1-1">EDNOTE to IANA: OIDs will need to be replaced in both the ASN.1 module and in <a href="#tab-kem-algs" class="auto internal xref">Table 2</a>.<a href="#section-10.1-1" class="pilcrow">¶</a></p>
+<p id="section-9.1-1">EDNOTE to IANA: OIDs will need to be replaced in both the ASN.1 module and in <a href="#tab-kem-algs" class="auto internal xref">Table 2</a>.<a href="#section-9.1-1" class="pilcrow">¶</a></p>
 <div id="module-registration-smi-security-for-pkix-module-identifier">
-<section id="section-10.1.1">
+<section id="section-9.1.1">
           <h4 id="name-module-registration-smi-sec">
-<a href="#section-10.1.1" class="section-number selfRef">10.1.1. </a><a href="#name-module-registration-smi-sec" class="section-name selfRef">Module Registration - SMI Security for PKIX Module Identifier</a>
+<a href="#section-9.1.1" class="section-number selfRef">9.1.1. </a><a href="#name-module-registration-smi-sec" class="section-name selfRef">Module Registration - SMI Security for PKIX Module Identifier</a>
           </h4>
 <ul class="normal">
-<li class="normal" id="section-10.1.1-1.1">
-              <p id="section-10.1.1-1.1.1">Decimal: IANA Assigned - <strong>Replace TBDMOD</strong><a href="#section-10.1.1-1.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-9.1.1-1.1">
+              <p id="section-9.1.1-1.1.1">Decimal: IANA Assigned - <strong>Replace TBDMOD</strong><a href="#section-9.1.1-1.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-10.1.1-1.2">
-              <p id="section-10.1.1-1.2.1">Description: Composite-KEM-2023 - id-mod-composite-kems<a href="#section-10.1.1-1.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-9.1.1-1.2">
+              <p id="section-9.1.1-1.2.1">Description: Composite-KEM-2023 - id-mod-composite-kems<a href="#section-9.1.1-1.2.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-10.1.1-1.3">
-              <p id="section-10.1.1-1.3.1">References: This Document<a href="#section-10.1.1-1.3.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-9.1.1-1.3">
+              <p id="section-9.1.1-1.3.1">References: This Document<a href="#section-9.1.1-1.3.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 </section>
 </div>
 <div id="object-identifier-registrations-smi-security-for-pkix-algorithms">
-<section id="section-10.1.2">
+<section id="section-9.1.2">
           <h4 id="name-object-identifier-registrat">
-<a href="#section-10.1.2" class="section-number selfRef">10.1.2. </a><a href="#name-object-identifier-registrat" class="section-name selfRef">Object Identifier Registrations - SMI Security for PKIX Algorithms</a>
+<a href="#section-9.1.2" class="section-number selfRef">9.1.2. </a><a href="#name-object-identifier-registrat" class="section-name selfRef">Object Identifier Registrations - SMI Security for PKIX Algorithms</a>
           </h4>
 <ul class="normal">
-<li class="normal" id="section-10.1.2-1.1">
-              <p id="section-10.1.2-1.1.1">id-raw-key<a href="#section-10.1.2-1.1.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="normal" id="section-10.1.2-1.2">
-              <p id="section-10.1.2-1.2.1">Decimal: IANA Assigned<a href="#section-10.1.2-1.2.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="normal" id="section-10.1.2-1.3">
-              <p id="section-10.1.2-1.3.1">Description: Designates a public key BIT STRING with no ASN.1 structure.<a href="#section-10.1.2-1.3.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="normal" id="section-10.1.2-1.4">
-              <p id="section-10.1.2-1.4.1">References: This Document<a href="#section-10.1.2-1.4.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="normal" id="section-10.1.2-1.5">
-              <p id="section-10.1.2-1.5.1">id-MLKEM768-RSA2048-HKDF-SHA256<a href="#section-10.1.2-1.5.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-9.1.2-1.1">
+              <p id="section-9.1.2-1.1.1">id-MLKEM768-RSA2048-HKDF-SHA256<a href="#section-9.1.2-1.1.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-10.1.2-1.5.2.1">
-                  <p id="section-10.1.2-1.5.2.1.1">Decimal: IANA Assigned<a href="#section-10.1.2-1.5.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-9.1.2-1.1.2.1">
+                  <p id="section-9.1.2-1.1.2.1.1">Decimal: IANA Assigned<a href="#section-9.1.2-1.1.2.1.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-10.1.2-1.5.2.2">
-                  <p id="section-10.1.2-1.5.2.2.1">Description: id-MLKEM768-RSA2048-HKDF-SHA256<a href="#section-10.1.2-1.5.2.2.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-9.1.2-1.1.2.2">
+                  <p id="section-9.1.2-1.1.2.2.1">Description: id-MLKEM768-RSA2048-HKDF-SHA256<a href="#section-9.1.2-1.1.2.2.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-10.1.2-1.5.2.3">
-                  <p id="section-10.1.2-1.5.2.3.1">References: This Document<a href="#section-10.1.2-1.5.2.3.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-9.1.2-1.1.2.3">
+                  <p id="section-9.1.2-1.1.2.3.1">References: This Document<a href="#section-9.1.2-1.1.2.3.1" class="pilcrow">¶</a></p>
 </li>
               </ul>
 </li>
-            <li class="normal" id="section-10.1.2-1.6">
-              <p id="section-10.1.2-1.6.1">id-MLKEM768-RSA3072-HKDF-SHA256<a href="#section-10.1.2-1.6.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-9.1.2-1.2">
+              <p id="section-9.1.2-1.2.1">id-MLKEM768-RSA3072-HKDF-SHA256<a href="#section-9.1.2-1.2.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-10.1.2-1.6.2.1">
-                  <p id="section-10.1.2-1.6.2.1.1">Decimal: IANA Assigned<a href="#section-10.1.2-1.6.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-9.1.2-1.2.2.1">
+                  <p id="section-9.1.2-1.2.2.1.1">Decimal: IANA Assigned<a href="#section-9.1.2-1.2.2.1.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-10.1.2-1.6.2.2">
-                  <p id="section-10.1.2-1.6.2.2.1">Description: id-MLKEM768-RSA3072-HKDF-SHA256<a href="#section-10.1.2-1.6.2.2.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-9.1.2-1.2.2.2">
+                  <p id="section-9.1.2-1.2.2.2.1">Description: id-MLKEM768-RSA3072-HKDF-SHA256<a href="#section-9.1.2-1.2.2.2.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-10.1.2-1.6.2.3">
-                  <p id="section-10.1.2-1.6.2.3.1">References: This Document<a href="#section-10.1.2-1.6.2.3.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-9.1.2-1.2.2.3">
+                  <p id="section-9.1.2-1.2.2.3.1">References: This Document<a href="#section-9.1.2-1.2.2.3.1" class="pilcrow">¶</a></p>
 </li>
               </ul>
 </li>
-            <li class="normal" id="section-10.1.2-1.7">
-              <p id="section-10.1.2-1.7.1">id-MLKEM768-RSA4096-HKDF-SHA256<a href="#section-10.1.2-1.7.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-9.1.2-1.3">
+              <p id="section-9.1.2-1.3.1">id-MLKEM768-RSA4096-HKDF-SHA256<a href="#section-9.1.2-1.3.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-10.1.2-1.7.2.1">
-                  <p id="section-10.1.2-1.7.2.1.1">Decimal: IANA Assigned<a href="#section-10.1.2-1.7.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-9.1.2-1.3.2.1">
+                  <p id="section-9.1.2-1.3.2.1.1">Decimal: IANA Assigned<a href="#section-9.1.2-1.3.2.1.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-10.1.2-1.7.2.2">
-                  <p id="section-10.1.2-1.7.2.2.1">Description: id-MLKEM768-RSA4096-HKDF-SHA256<a href="#section-10.1.2-1.7.2.2.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-9.1.2-1.3.2.2">
+                  <p id="section-9.1.2-1.3.2.2.1">Description: id-MLKEM768-RSA4096-HKDF-SHA256<a href="#section-9.1.2-1.3.2.2.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-10.1.2-1.7.2.3">
-                  <p id="section-10.1.2-1.7.2.3.1">References: This Document<a href="#section-10.1.2-1.7.2.3.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-9.1.2-1.3.2.3">
+                  <p id="section-9.1.2-1.3.2.3.1">References: This Document<a href="#section-9.1.2-1.3.2.3.1" class="pilcrow">¶</a></p>
 </li>
               </ul>
 </li>
-            <li class="normal" id="section-10.1.2-1.8">
-              <p id="section-10.1.2-1.8.1">id-MLKEM768-ECDH-P256-HKDF-SHA256<a href="#section-10.1.2-1.8.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-9.1.2-1.4">
+              <p id="section-9.1.2-1.4.1">id-MLKEM768-ECDH-P256-HKDF-SHA256<a href="#section-9.1.2-1.4.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-10.1.2-1.8.2.1">
-                  <p id="section-10.1.2-1.8.2.1.1">Decimal: IANA Assigned<a href="#section-10.1.2-1.8.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-9.1.2-1.4.2.1">
+                  <p id="section-9.1.2-1.4.2.1.1">Decimal: IANA Assigned<a href="#section-9.1.2-1.4.2.1.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-10.1.2-1.8.2.2">
-                  <p id="section-10.1.2-1.8.2.2.1">Description: id-MLKEM768-ECDH-P256-HKDF-SHA256<a href="#section-10.1.2-1.8.2.2.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-9.1.2-1.4.2.2">
+                  <p id="section-9.1.2-1.4.2.2.1">Description: id-MLKEM768-ECDH-P256-HKDF-SHA256<a href="#section-9.1.2-1.4.2.2.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-10.1.2-1.8.2.3">
-                  <p id="section-10.1.2-1.8.2.3.1">References: This Document<a href="#section-10.1.2-1.8.2.3.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-9.1.2-1.4.2.3">
+                  <p id="section-9.1.2-1.4.2.3.1">References: This Document<a href="#section-9.1.2-1.4.2.3.1" class="pilcrow">¶</a></p>
 </li>
               </ul>
 </li>
-            <li class="normal" id="section-10.1.2-1.9">
-              <p id="section-10.1.2-1.9.1">id-MLKEM768-ECDH-P384-HKDF-SHA256<a href="#section-10.1.2-1.9.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-9.1.2-1.5">
+              <p id="section-9.1.2-1.5.1">id-MLKEM768-ECDH-P384-HKDF-SHA256<a href="#section-9.1.2-1.5.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-10.1.2-1.9.2.1">
-                  <p id="section-10.1.2-1.9.2.1.1">Decimal: IANA Assigned<a href="#section-10.1.2-1.9.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-9.1.2-1.5.2.1">
+                  <p id="section-9.1.2-1.5.2.1.1">Decimal: IANA Assigned<a href="#section-9.1.2-1.5.2.1.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-10.1.2-1.9.2.2">
-                  <p id="section-10.1.2-1.9.2.2.1">Description: id-MLKEM768-ECDH-P384-HKDF-SHA256<a href="#section-10.1.2-1.9.2.2.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-9.1.2-1.5.2.2">
+                  <p id="section-9.1.2-1.5.2.2.1">Description: id-MLKEM768-ECDH-P384-HKDF-SHA256<a href="#section-9.1.2-1.5.2.2.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-10.1.2-1.9.2.3">
-                  <p id="section-10.1.2-1.9.2.3.1">References: This Document<a href="#section-10.1.2-1.9.2.3.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-9.1.2-1.5.2.3">
+                  <p id="section-9.1.2-1.5.2.3.1">References: This Document<a href="#section-9.1.2-1.5.2.3.1" class="pilcrow">¶</a></p>
 </li>
               </ul>
 </li>
-            <li class="normal" id="section-10.1.2-1.10">
-              <p id="section-10.1.2-1.10.1">id-MLKEM768-ECDH-brainpoolP256r1-HKDF-SHA256<a href="#section-10.1.2-1.10.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-9.1.2-1.6">
+              <p id="section-9.1.2-1.6.1">id-MLKEM768-ECDH-brainpoolP256r1-HKDF-SHA256<a href="#section-9.1.2-1.6.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-10.1.2-1.10.2.1">
-                  <p id="section-10.1.2-1.10.2.1.1">Decimal: IANA Assigned<a href="#section-10.1.2-1.10.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-9.1.2-1.6.2.1">
+                  <p id="section-9.1.2-1.6.2.1.1">Decimal: IANA Assigned<a href="#section-9.1.2-1.6.2.1.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-10.1.2-1.10.2.2">
-                  <p id="section-10.1.2-1.10.2.2.1">Description: id-MLKEM768-ECDH-brainpoolP256r1-HKDF-SHA256<a href="#section-10.1.2-1.10.2.2.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-9.1.2-1.6.2.2">
+                  <p id="section-9.1.2-1.6.2.2.1">Description: id-MLKEM768-ECDH-brainpoolP256r1-HKDF-SHA256<a href="#section-9.1.2-1.6.2.2.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-10.1.2-1.10.2.3">
-                  <p id="section-10.1.2-1.10.2.3.1">References: This Document<a href="#section-10.1.2-1.10.2.3.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-9.1.2-1.6.2.3">
+                  <p id="section-9.1.2-1.6.2.3.1">References: This Document<a href="#section-9.1.2-1.6.2.3.1" class="pilcrow">¶</a></p>
 </li>
               </ul>
 </li>
-            <li class="normal" id="section-10.1.2-1.11">
-              <p id="section-10.1.2-1.11.1">id-MLKEM768-X25519-SHA3-256<a href="#section-10.1.2-1.11.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-9.1.2-1.7">
+              <p id="section-9.1.2-1.7.1">id-MLKEM768-X25519-SHA3-256<a href="#section-9.1.2-1.7.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-10.1.2-1.11.2.1">
-                  <p id="section-10.1.2-1.11.2.1.1">Decimal: IANA Assigned<a href="#section-10.1.2-1.11.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-9.1.2-1.7.2.1">
+                  <p id="section-9.1.2-1.7.2.1.1">Decimal: IANA Assigned<a href="#section-9.1.2-1.7.2.1.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-10.1.2-1.11.2.2">
-                  <p id="section-10.1.2-1.11.2.2.1">Description: id-MLKEM768-X25519-SHA3-256<a href="#section-10.1.2-1.11.2.2.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-9.1.2-1.7.2.2">
+                  <p id="section-9.1.2-1.7.2.2.1">Description: id-MLKEM768-X25519-SHA3-256<a href="#section-9.1.2-1.7.2.2.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-10.1.2-1.11.2.3">
-                  <p id="section-10.1.2-1.11.2.3.1">References: This Document<a href="#section-10.1.2-1.11.2.3.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-9.1.2-1.7.2.3">
+                  <p id="section-9.1.2-1.7.2.3.1">References: This Document<a href="#section-9.1.2-1.7.2.3.1" class="pilcrow">¶</a></p>
 </li>
               </ul>
 </li>
-            <li class="normal" id="section-10.1.2-1.12">
-              <p id="section-10.1.2-1.12.1">id-MLKEM1024-ECDH-P384-HKDF-SHA384<a href="#section-10.1.2-1.12.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-9.1.2-1.8">
+              <p id="section-9.1.2-1.8.1">id-MLKEM1024-ECDH-P384-HKDF-SHA384<a href="#section-9.1.2-1.8.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-10.1.2-1.12.2.1">
-                  <p id="section-10.1.2-1.12.2.1.1">Decimal: IANA Assigned<a href="#section-10.1.2-1.12.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-9.1.2-1.8.2.1">
+                  <p id="section-9.1.2-1.8.2.1.1">Decimal: IANA Assigned<a href="#section-9.1.2-1.8.2.1.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-10.1.2-1.12.2.2">
-                  <p id="section-10.1.2-1.12.2.2.1">Description: id-MLKEM1024-ECDH-P384-HKDF-SHA384<a href="#section-10.1.2-1.12.2.2.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-9.1.2-1.8.2.2">
+                  <p id="section-9.1.2-1.8.2.2.1">Description: id-MLKEM1024-ECDH-P384-HKDF-SHA384<a href="#section-9.1.2-1.8.2.2.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-10.1.2-1.12.2.3">
-                  <p id="section-10.1.2-1.12.2.3.1">References: This Document<a href="#section-10.1.2-1.12.2.3.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-9.1.2-1.8.2.3">
+                  <p id="section-9.1.2-1.8.2.3.1">References: This Document<a href="#section-9.1.2-1.8.2.3.1" class="pilcrow">¶</a></p>
 </li>
               </ul>
 </li>
-            <li class="normal" id="section-10.1.2-1.13">
-              <p id="section-10.1.2-1.13.1">id-MLKEM1024-ECDH-brainpoolP384r1-HKDF-SHA384<a href="#section-10.1.2-1.13.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-9.1.2-1.9">
+              <p id="section-9.1.2-1.9.1">id-MLKEM1024-ECDH-brainpoolP384r1-HKDF-SHA384<a href="#section-9.1.2-1.9.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-10.1.2-1.13.2.1">
-                  <p id="section-10.1.2-1.13.2.1.1">Decimal: IANA Assigned<a href="#section-10.1.2-1.13.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-9.1.2-1.9.2.1">
+                  <p id="section-9.1.2-1.9.2.1.1">Decimal: IANA Assigned<a href="#section-9.1.2-1.9.2.1.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-10.1.2-1.13.2.2">
-                  <p id="section-10.1.2-1.13.2.2.1">Description: id-MLKEM1024-ECDH-brainpoolP384r1-HKDF-SHA384<a href="#section-10.1.2-1.13.2.2.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-9.1.2-1.9.2.2">
+                  <p id="section-9.1.2-1.9.2.2.1">Description: id-MLKEM1024-ECDH-brainpoolP384r1-HKDF-SHA384<a href="#section-9.1.2-1.9.2.2.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-10.1.2-1.13.2.3">
-                  <p id="section-10.1.2-1.13.2.3.1">References: This Document<a href="#section-10.1.2-1.13.2.3.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-9.1.2-1.9.2.3">
+                  <p id="section-9.1.2-1.9.2.3.1">References: This Document<a href="#section-9.1.2-1.9.2.3.1" class="pilcrow">¶</a></p>
 </li>
               </ul>
 </li>
-            <li class="normal" id="section-10.1.2-1.14">
-              <p id="section-10.1.2-1.14.1">id-MLKEM1024-X448-SHA3-256<a href="#section-10.1.2-1.14.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-9.1.2-1.10">
+              <p id="section-9.1.2-1.10.1">id-MLKEM1024-X448-SHA3-256<a href="#section-9.1.2-1.10.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-10.1.2-1.14.2.1">
-                  <p id="section-10.1.2-1.14.2.1.1">Decimal: IANA Assigned<a href="#section-10.1.2-1.14.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-9.1.2-1.10.2.1">
+                  <p id="section-9.1.2-1.10.2.1.1">Decimal: IANA Assigned<a href="#section-9.1.2-1.10.2.1.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-10.1.2-1.14.2.2">
-                  <p id="section-10.1.2-1.14.2.2.1">Description: id-MLKEM1024-X448-SHA3-256<a href="#section-10.1.2-1.14.2.2.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-9.1.2-1.10.2.2">
+                  <p id="section-9.1.2-1.10.2.2.1">Description: id-MLKEM1024-X448-SHA3-256<a href="#section-9.1.2-1.10.2.2.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-10.1.2-1.14.2.3">
-                  <p id="section-10.1.2-1.14.2.3.1">References: This Document<a href="#section-10.1.2-1.14.2.3.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-9.1.2-1.10.2.3">
+                  <p id="section-9.1.2-1.10.2.3.1">References: This Document<a href="#section-9.1.2-1.10.2.3.1" class="pilcrow">¶</a></p>
 </li>
               </ul>
 </li>
@@ -3339,29 +3044,29 @@ END
 </section>
 </div>
 <div id="security-considerations">
-<section id="section-11">
+<section id="section-10">
       <h2 id="name-security-considerations">
-<a href="#section-11" class="section-number selfRef">11. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
+<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
 <div id="why-hybrids">
-<section id="section-11.1">
+<section id="section-10.1">
         <h3 id="name-why-hybrids">
-<a href="#section-11.1" class="section-number selfRef">11.1. </a><a href="#name-why-hybrids" class="section-name selfRef">Why Hybrids?</a>
+<a href="#section-10.1" class="section-number selfRef">10.1. </a><a href="#name-why-hybrids" class="section-name selfRef">Why Hybrids?</a>
         </h3>
-<p id="section-11.1-1">In broad terms, a PQ/T Hybrid can be used either to provide dual-algorithm security or to provide migration flexibility. Let's quickly explore both.<a href="#section-11.1-1" class="pilcrow">¶</a></p>
-<p id="section-11.1-2">Dual-algorithm security. The general idea is that the data is proctected by two algorithms such that an attacker would need to break both in order to compromise the data. As with most of cryptography, this property is easy to state in general terms, but becomes more complicated when expressed in formalisms. The following sections go into more detail here.<a href="#section-11.1-2" class="pilcrow">¶</a></p>
-<p id="section-11.1-3">Migration flexibility. Some PQ/T hybrids exist to provide a sort of "OR" mode where the client can choose to use one algorithm or the other or both. The intention is that the PQ/T hybrid mechanism builds in backwards compatibility to allow legacy and upgraded clients to co-exist and communicate. The Composites presented in this specification do not provide this since they operate in a strict "AND" mode, but they do provide codebase migration flexibility. Consider that an organization has today a mature, validated, certified, hardened implementation of RSA or ECC. Composites allow them to add to this an ML-KEM implementation which immediately starts providing benefits against harvest-now-decrypt-later attacks even if that ML-KEM implemtation is still experimental, non-validated, non-certified, non-hardened implementation. More details of obtaining FIPS certification of a composite algorithm can be found in <a href="#sec-fips" class="auto internal xref">Appendix C.1</a>.<a href="#section-11.1-3" class="pilcrow">¶</a></p>
+<p id="section-10.1-1">In broad terms, a PQ/T Hybrid can be used either to provide dual-algorithm security or to provide migration flexibility. Let's quickly explore both.<a href="#section-10.1-1" class="pilcrow">¶</a></p>
+<p id="section-10.1-2">Dual-algorithm security. The general idea is that the data is proctected by two algorithms such that an attacker would need to break both in order to compromise the data. As with most of cryptography, this property is easy to state in general terms, but becomes more complicated when expressed in formalisms. The following sections go into more detail here.<a href="#section-10.1-2" class="pilcrow">¶</a></p>
+<p id="section-10.1-3">Migration flexibility. Some PQ/T hybrids exist to provide a sort of "OR" mode where the client can choose to use one algorithm or the other or both. The intention is that the PQ/T hybrid mechanism builds in backwards compatibility to allow legacy and upgraded clients to co-exist and communicate. The Composites presented in this specification do not provide this since they operate in a strict "AND" mode, but they do provide codebase migration flexibility. Consider that an organization has today a mature, validated, certified, hardened implementation of RSA or ECC. Composites allow them to add to this an ML-KEM implementation which immediately starts providing benefits against harvest-now-decrypt-later attacks even if that ML-KEM implemtation is still experimental, non-validated, non-certified, non-hardened implementation. More details of obtaining FIPS certification of a composite algorithm can be found in <a href="#sec-fips" class="auto internal xref">Appendix C.1</a>.<a href="#section-10.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-cons-kem-combiner">
-<section id="section-11.2">
+<section id="section-10.2">
         <h3 id="name-kem-combiner">
-<a href="#section-11.2" class="section-number selfRef">11.2. </a><a href="#name-kem-combiner" class="section-name selfRef">KEM Combiner</a>
+<a href="#section-10.2" class="section-number selfRef">10.2. </a><a href="#name-kem-combiner" class="section-name selfRef">KEM Combiner</a>
         </h3>
-<p id="section-11.2-1">The following KEM combiner construction is as follows is used by both <code>Composite-ML-KEM.Encap()</code> and <code>Composite-ML-KEM.Decap()</code> and is split out here for easier analysis.<a href="#section-11.2-1" class="pilcrow">¶</a></p>
+<p id="section-10.2-1">The following KEM combiner construction is as follows is used by both <code>Composite-ML-KEM.Encap()</code> and <code>Composite-ML-KEM.Decap()</code> and is split out here for easier analysis.<a href="#section-10.2-1" class="pilcrow">¶</a></p>
 <span id="name-kem-combiner-construction"></span><div id="code-generic-kem-combiner">
 <figure id="figure-8">
-          <div class="alignLeft art-text artwork" id="section-11.2-2.1">
+          <div class="alignLeft art-text artwork" id="section-10.2-2.1">
 <pre>
   KDF(mlkemSS || tradSS || tradCT || tradPK || Domain)
 </pre>
@@ -3370,113 +3075,113 @@ END
 <a href="#name-kem-combiner-construction" class="selfRef">KEM combiner construction</a>
           </figcaption></figure>
 </div>
-<p id="section-11.2-3">where:<a href="#section-11.2-3" class="pilcrow">¶</a></p>
+<p id="section-10.2-3">where:<a href="#section-10.2-3" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-11.2-4.1">
-            <p id="section-11.2-4.1.1"><code>KDF(message)</code> represents a key derivation function suitable to the chosen KEMs according to <a href="#tab-kem-algs" class="auto internal xref">Table 2</a>. All KDFs produce a 256-bit shared secret key, which matches ML-KEM.<a href="#section-11.2-4.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-10.2-4.1">
+            <p id="section-10.2-4.1.1"><code>KDF(message)</code> represents a key derivation function suitable to the chosen KEMs according to <a href="#tab-kem-algs" class="auto internal xref">Table 2</a>. All KDFs produce a 256-bit shared secret key, which matches ML-KEM.<a href="#section-10.2-4.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-11.2-4.2">
-            <p id="section-11.2-4.2.1"><code>mlkemSS</code> is the shared secret key from the ML-KEM component.<a href="#section-11.2-4.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-10.2-4.2">
+            <p id="section-10.2-4.2.1"><code>mlkemSS</code> is the shared secret key from the ML-KEM component.<a href="#section-10.2-4.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-11.2-4.3">
-            <p id="section-11.2-4.3.1"><code>tradSS</code> is the shared secret from the traditional component (elliptic curve or RSA).<a href="#section-11.2-4.3.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-10.2-4.3">
+            <p id="section-10.2-4.3.1"><code>tradSS</code> is the shared secret from the traditional component (elliptic curve or RSA).<a href="#section-10.2-4.3.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-11.2-4.4">
-            <p id="section-11.2-4.4.1"><code>tradCT</code> is the ciphertext from the traditional component (elliptic curve or RSA).<a href="#section-11.2-4.4.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-10.2-4.4">
+            <p id="section-10.2-4.4.1"><code>tradCT</code> is the ciphertext from the traditional component (elliptic curve or RSA).<a href="#section-10.2-4.4.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-11.2-4.5">
-            <p id="section-11.2-4.5.1"><code>tradPK</code> is the public key of the traditional component (elliptic curve or RSA).<a href="#section-11.2-4.5.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-10.2-4.5">
+            <p id="section-10.2-4.5.1"><code>tradPK</code> is the public key of the traditional component (elliptic curve or RSA).<a href="#section-10.2-4.5.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-11.2-4.6">
-            <p id="section-11.2-4.6.1"><code>Domain</code> is the DER encoded value of the object identifier of the Composite ML-KEM algorithm as listed in <a href="#sec-domsep-values" class="auto internal xref">Section 7.2</a>.<a href="#section-11.2-4.6.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-10.2-4.6">
+            <p id="section-10.2-4.6.1"><code>Domain</code> is the DER encoded value of the object identifier of the Composite ML-KEM algorithm as listed in <a href="#sec-domsep-values" class="auto internal xref">Section 7.2</a>.<a href="#section-10.2-4.6.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-11.2-4.7">
-            <p id="section-11.2-4.7.1"><code>||</code> represents concatenation.<a href="#section-11.2-4.7.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-10.2-4.7">
+            <p id="section-10.2-4.7.1"><code>||</code> represents concatenation.<a href="#section-10.2-4.7.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-11.2-5">Each registered Composite ML-KEM algorithm specifies the choice of <code>KDF</code> and <code>Domain</code> to be used in <a href="#sec-alg-ids" class="auto internal xref">Section 7</a> and <a href="#sec-domsep-values" class="auto internal xref">Section 7.2</a> below. Given that each Composite ML-KEM algorithm fully specifies the component algorithms, including for example the size of the RSA modulus, all inputs to the KEM combiner are fixed-size and thus do not require length-prefixing. The <code>CompositeKEM.Decap()</code> specified in <a href="#sect-composite-decaps" class="auto internal xref">Section 4.3</a> adds further error handling to protect the KEM combiner from malicious inputs.<a href="#section-11.2-5" class="pilcrow">¶</a></p>
-<p id="section-11.2-6">The primary security property of the KEM combiner is that it preserves IND-CCA2 of the overall Composite ML-KEM so long as at least one component is IND-CCA2 <span><a href="#GHP18" class="internal xref">[X-Wing]</a> [<a href="#GHP18" class="cite xref">GHP18</a>]</span>. Additionally, we also need to consider the case where one of the component algorithms is completely broken; that the private key is known to an attacker, or worse that the public key, private key, and ciphertext are manipulated by the attacker. In this case, we rely on the construction of the KEM combiner to ensure that the value of the other shared secret cannot be leaked or the combined shared secret predicted via manipulation of the broken algorithm. The following sections continue this discussion.<a href="#section-11.2-6" class="pilcrow">¶</a></p>
-<p id="section-11.2-7">Note that length-tagging of the inputs to the KDF is not required:<a href="#section-11.2-7" class="pilcrow">¶</a></p>
+<p id="section-10.2-5">Each registered Composite ML-KEM algorithm specifies the choice of <code>KDF</code> and <code>Domain</code> to be used in <a href="#sec-alg-ids" class="auto internal xref">Section 7</a> and <a href="#sec-domsep-values" class="auto internal xref">Section 7.2</a> below. Given that each Composite ML-KEM algorithm fully specifies the component algorithms, including for example the size of the RSA modulus, all inputs to the KEM combiner are fixed-size and thus do not require length-prefixing. The <code>CompositeKEM.Decap()</code> specified in <a href="#sect-composite-decaps" class="auto internal xref">Section 4.3</a> adds further error handling to protect the KEM combiner from malicious inputs.<a href="#section-10.2-5" class="pilcrow">¶</a></p>
+<p id="section-10.2-6">The primary security property of the KEM combiner is that it preserves IND-CCA2 of the overall Composite ML-KEM so long as at least one component is IND-CCA2 {X-Wing} <span>[<a href="#GHP18" class="cite xref">GHP18</a>]</span>. Additionally, we also need to consider the case where one of the component algorithms is completely broken; that the private key is known to an attacker, or worse that the public key, private key, and ciphertext are manipulated by the attacker. In this case, we rely on the construction of the KEM combiner to ensure that the value of the other shared secret cannot be leaked or the combined shared secret predicted via manipulation of the broken algorithm. The following sections continue this discussion.<a href="#section-10.2-6" class="pilcrow">¶</a></p>
+<p id="section-10.2-7">Note that length-tagging of the inputs to the KDF is not required:<a href="#section-10.2-7" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-11.2-8.1">
-            <p id="section-11.2-8.1.1"><code>mlkemSS</code> is always 32 bytes.<a href="#section-11.2-8.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-10.2-8.1">
+            <p id="section-10.2-8.1.1"><code>mlkemSS</code> is always 32 bytes.<a href="#section-10.2-8.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-11.2-8.2">
-            <p id="section-11.2-8.2.1"><code>tradSS</code> in the case of ECDH this is derived by the decapsulator and therefore the length is not controlled by the attacker, however in the case of RSA-OAEP this value is directly chosen by the sender and both the length and content could be freely chosen by an attacker.<a href="#section-11.2-8.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-10.2-8.2">
+            <p id="section-10.2-8.2.1"><code>tradSS</code> in the case of ECDH this is derived by the decapsulator and therefore the length is not controlled by the attacker, however in the case of RSA-OAEP this value is directly chosen by the sender and both the length and content could be freely chosen by an attacker.<a href="#section-10.2-8.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-11.2-8.3">
-            <p id="section-11.2-8.3.1"><code>tradCT</code> is either an elliptic curve public key or an RSA-OAEP ciphertext which is required to have its length checked by step 1b of RSAES-OAEP-DECRYPT in <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span>.<a href="#section-11.2-8.3.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-10.2-8.3">
+            <p id="section-10.2-8.3.1"><code>tradCT</code> is either an elliptic curve public key or an RSA-OAEP ciphertext which is required to have its length checked by step 1b of RSAES-OAEP-DECRYPT in <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span>.<a href="#section-10.2-8.3.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-11.2-8.4">
-            <p id="section-11.2-8.4.1"><code>tradPK</code> is the public key of the traditional component (elliptic curve or RSA) and therefore fixed-length.<a href="#section-11.2-8.4.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-10.2-8.4">
+            <p id="section-10.2-8.4.1"><code>tradPK</code> is the public key of the traditional component (elliptic curve or RSA) and therefore fixed-length.<a href="#section-10.2-8.4.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-11.2-8.5">
-            <p id="section-11.2-8.5.1"><code>Domain</code> is a fixed value specified in this document.<a href="#section-11.2-8.5.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-10.2-8.5">
+            <p id="section-10.2-8.5.1"><code>Domain</code> is a fixed value specified in this document.<a href="#section-10.2-8.5.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-11.2-9">In the case of a composite with ECDH, all inputs to the KDF are fixed-length.
-In the case of a composite with RSA-OAEP the <code>tradSS</code> is controlled by the attacker but this still does not require length tagging because, unless there is a weakness in the KDF, length-manipulation of only one input is not sufficient to trivially produce collisions.<a href="#section-11.2-9" class="pilcrow">¶</a></p>
+<p id="section-10.2-9">In the case of a composite with ECDH, all inputs to the KDF are fixed-length.
+In the case of a composite with RSA-OAEP the <code>tradSS</code> is controlled by the attacker but this still does not require length tagging because, unless there is a weakness in the KDF, length-manipulation of only one input is not sufficient to trivially produce collisions.<a href="#section-10.2-9" class="pilcrow">¶</a></p>
 <div id="security-of-the-hybrid-scheme">
-<section id="section-11.2.1">
+<section id="section-10.2.1">
           <h4 id="name-security-of-the-hybrid-sche">
-<a href="#section-11.2.1" class="section-number selfRef">11.2.1. </a><a href="#name-security-of-the-hybrid-sche" class="section-name selfRef">Security of the hybrid scheme</a>
+<a href="#section-10.2.1" class="section-number selfRef">10.2.1. </a><a href="#name-security-of-the-hybrid-sche" class="section-name selfRef">Security of the hybrid scheme</a>
           </h4>
-<p id="section-11.2.1-1">Informally, a Composite ML-KEM algorithm is secure if the combiner (HKDF-SHA2 or SHA3) is secure, and either ML-KEM is secure or the traditional component (RSA-OAEP, ECDH, or X25519) is secure.<a href="#section-11.2.1-1" class="pilcrow">¶</a></p>
-<p id="section-11.2.1-2">The security of ML-KEM and ECDH hybrids is covered in [<span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span>] and requires that the first KEM component (ML-KEM in this construction) is IND-CCA and second ciphertext preimage resistant (C2PRI) and that the second traditional component is IND-CCA. This design choice improves performance by not including the large ML-KEM public key and ciphertext, but means that an implementation error in the ML-KEM component that affects the ciphertext check step of the FO transform could result in the overall composite no longer achieving IND-CCA2 security.<a href="#section-11.2.1-2" class="pilcrow">¶</a></p>
-<p id="section-11.2.1-3">The QSF framework presented in [<span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span>] is extended to cover RSA-OAEP as the traditional algorithm in place of ECDH by noting that RSA-OAEP is also IND-CCA secure <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span>.<a href="#section-11.2.1-3" class="pilcrow">¶</a></p>
-<p id="section-11.2.1-4">Note that X-Wing uses SHA3 as the combiner KDF whereas Composite ML-KEM uses either SHA3 or HKDF-SHA2 which are interchangeable in the X-Wing proof since both behave as random oracles under multiple concatenated inputs.<a href="#section-11.2.1-4" class="pilcrow">¶</a></p>
-<p id="section-11.2.1-5">The Composite combiner cannot be assumed to be secure when used with different KEMs and a more cautious approach would bind the public key and ciphertext of the first KEM as well.<a href="#section-11.2.1-5" class="pilcrow">¶</a></p>
+<p id="section-10.2.1-1">Informally, a Composite ML-KEM algorithm is secure if the combiner (HKDF-SHA2 or SHA3) is secure, and either ML-KEM is secure or the traditional component (RSA-OAEP, ECDH, or X25519) is secure.<a href="#section-10.2.1-1" class="pilcrow">¶</a></p>
+<p id="section-10.2.1-2">The security of ML-KEM and ECDH hybrids is covered in <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span> and requires that the first KEM component (ML-KEM in this construction) is IND-CCA and second ciphertext preimage resistant (C2PRI) and that the second traditional component is IND-CCA. This design choice improves performance by not including the large ML-KEM public key and ciphertext, but means that an implementation error in the ML-KEM component that affects the ciphertext check step of the FO transform could result in the overall composite no longer achieving IND-CCA2 security.<a href="#section-10.2.1-2" class="pilcrow">¶</a></p>
+<p id="section-10.2.1-3">The QSF framework presented in <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span> is extended to cover RSA-OAEP as the traditional algorithm in place of ECDH by noting that RSA-OAEP is also IND-CCA secure <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span>.<a href="#section-10.2.1-3" class="pilcrow">¶</a></p>
+<p id="section-10.2.1-4">Note that X-Wing uses SHA3 as the combiner KDF whereas Composite ML-KEM uses either SHA3 or HKDF-SHA2 which are interchangeable in the X-Wing proof since both behave as random oracles under multiple concatenated inputs.<a href="#section-10.2.1-4" class="pilcrow">¶</a></p>
+<p id="section-10.2.1-5">The Composite combiner cannot be assumed to be secure when used with different KEMs and a more cautious approach would bind the public key and ciphertext of the first KEM as well.<a href="#section-10.2.1-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-cons-ct-collision">
-<section id="section-11.2.2">
+<section id="section-10.2.2">
           <h4 id="name-second-pre-image-resistance">
-<a href="#section-11.2.2" class="section-number selfRef">11.2.2. </a><a href="#name-second-pre-image-resistance" class="section-name selfRef">Second pre-image resistance of component KEMs</a>
+<a href="#section-10.2.2" class="section-number selfRef">10.2.2. </a><a href="#name-second-pre-image-resistance" class="section-name selfRef">Second pre-image resistance of component KEMs</a>
           </h4>
-<p id="section-11.2.2-1">The notion of a second pre-image resistant KEM is defined in <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span> being the property that it is computationally difficult to find two different ciphertexts <code>c != c'</code> that will decapsulate to the same shared secret under the same public key. For the purposes of a hybrid KEM combiner, this property means that given two composite ciphertexts <code>(c1, c2)</code> and <code>(c1', c2')</code>, we must obtain a unique overall shared secret so long as either <code>c1 != c1'</code> or <code>c2 != c2'</code> -- i.e. the overall Composite ML-KEM is second pre-image resistant, and therefore secure so long as one of the component KEMs is secure.<a href="#section-11.2.2-1" class="pilcrow">¶</a></p>
-<p id="section-11.2.2-2">In <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span> it is proven that ML-KEM is a second pre-image resistant KEM and therefore the ML-KEM ciphertext can safely be omitted from the KEM combiner. Note that this makes a fundamental assumption on ML-KEM remaining ciphertext second pre-image resistant, and therefore this formulation of KEM combiner does not fully protect against implementation errors in the ML-KEM component -- particularly around the ciphertext check step of the Fujisaki-Okamoto transform -- which could trivially lead to second ciphertext pre-image attacks that break the IND-CCA2 security of the ML-KEM component and of the overall Composite ML-KEM. This could be more fully mitigated by binding the ML-KEM ciphertext in the combiner, but a design decision was made to settle for protection against algorithmic attacks and not implementation attacks against ML-KEM in order to increase performance.<a href="#section-11.2.2-2" class="pilcrow">¶</a></p>
-<p id="section-11.2.2-3">However, since neither RSA-OAEP nor ECDH guarantee second pre-image resistance at all, even in a correct implementation, these ciphertexts are bound to the key derivation in order to guarantee that <code>c != c'</code> will yield a unique ciphertext, and thus restoring second pre-image resistance to the overall Composite ML-KEM.<a href="#section-11.2.2-3" class="pilcrow">¶</a></p>
+<p id="section-10.2.2-1">The notion of a second pre-image resistant KEM is defined in <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span> being the property that it is computationally difficult to find two different ciphertexts <code>c != c'</code> that will decapsulate to the same shared secret under the same public key. For the purposes of a hybrid KEM combiner, this property means that given two composite ciphertexts <code>(c1, c2)</code> and <code>(c1', c2')</code>, we must obtain a unique overall shared secret so long as either <code>c1 != c1'</code> or <code>c2 != c2'</code> -- i.e. the overall Composite ML-KEM is second pre-image resistant, and therefore secure so long as one of the component KEMs is secure.<a href="#section-10.2.2-1" class="pilcrow">¶</a></p>
+<p id="section-10.2.2-2">In <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span> it is proven that ML-KEM is a second pre-image resistant KEM and therefore the ML-KEM ciphertext can safely be omitted from the KEM combiner. Note that this makes a fundamental assumption on ML-KEM remaining ciphertext second pre-image resistant, and therefore this formulation of KEM combiner does not fully protect against implementation errors in the ML-KEM component -- particularly around the ciphertext check step of the Fujisaki-Okamoto transform -- which could trivially lead to second ciphertext pre-image attacks that break the IND-CCA2 security of the ML-KEM component and of the overall Composite ML-KEM. This could be more fully mitigated by binding the ML-KEM ciphertext in the combiner, but a design decision was made to settle for protection against algorithmic attacks and not implementation attacks against ML-KEM in order to increase performance.<a href="#section-10.2.2-2" class="pilcrow">¶</a></p>
+<p id="section-10.2.2-3">However, since neither RSA-OAEP nor ECDH guarantee second pre-image resistance at all, even in a correct implementation, these ciphertexts are bound to the key derivation in order to guarantee that <code>c != c'</code> will yield a unique ciphertext, and thus restoring second pre-image resistance to the overall Composite ML-KEM.<a href="#section-10.2.2-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sha3-vs-hkdf-sha2">
-<section id="section-11.2.3">
+<section id="section-10.2.3">
           <h4 id="name-sha3-vs-hkdf-sha2">
-<a href="#section-11.2.3" class="section-number selfRef">11.2.3. </a><a href="#name-sha3-vs-hkdf-sha2" class="section-name selfRef">SHA3 vs HKDF-SHA2</a>
+<a href="#section-10.2.3" class="section-number selfRef">10.2.3. </a><a href="#name-sha3-vs-hkdf-sha2" class="section-name selfRef">SHA3 vs HKDF-SHA2</a>
           </h4>
-<p id="section-11.2.3-1">In order to achieve the desired security property that the Composite ML-KEM is IND-CCA2 whenever at least one of the component KEMs is, the KDF used in the KEM combiner needs to possess collision and second pre-image resistance with respect to each of its inputs independently; a property sometimes called "dual-PRF" <span>[<a href="#Aviram22" class="cite xref">Aviram22</a>]</span>. Collision and second-pre-image resistance protects against compromise of one component algorithm from resulting in the ability to construct multiple different ciphertexts which result in the same shared secret. Pre-image resistance protects against compromise of one component algorithm being used to attack and learn the value of the other shared secret.<a href="#section-11.2.3-1" class="pilcrow">¶</a></p>
-<p id="section-11.2.3-2">SHA3 is known to have all of the necessary dual-PRF properties <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span>, but SHA2 does not and therefore all SHA2-based constructions MUST use SHA2 within an HMAC construction such as HKDF-SHA2 <span>[<a href="#GHP18" class="cite xref">GHP18</a>]</span>.<a href="#section-11.2.3-2" class="pilcrow">¶</a></p>
+<p id="section-10.2.3-1">In order to achieve the desired security property that the Composite ML-KEM is IND-CCA2 whenever at least one of the component KEMs is, the KDF used in the KEM combiner needs to possess collision and second pre-image resistance with respect to each of its inputs independently; a property sometimes called "dual-PRF" <span>[<a href="#Aviram22" class="cite xref">Aviram22</a>]</span>. Collision and second-pre-image resistance protects against compromise of one component algorithm from resulting in the ability to construct multiple different ciphertexts which result in the same shared secret. Pre-image resistance protects against compromise of one component algorithm being used to attack and learn the value of the other shared secret.<a href="#section-10.2.3-1" class="pilcrow">¶</a></p>
+<p id="section-10.2.3-2">SHA3 is known to have all of the necessary dual-PRF properties <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span>, but SHA2 does not and therefore all SHA2-based constructions MUST use SHA2 within an HMAC construction such as HKDF-SHA2 <span>[<a href="#GHP18" class="cite xref">GHP18</a>]</span>.<a href="#section-10.2.3-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="generifying-this-construction">
-<section id="section-11.2.4">
+<section id="section-10.2.4">
           <h4 id="name-generifying-this-constructi">
-<a href="#section-11.2.4" class="section-number selfRef">11.2.4. </a><a href="#name-generifying-this-constructi" class="section-name selfRef">Generifying this construction</a>
+<a href="#section-10.2.4" class="section-number selfRef">10.2.4. </a><a href="#name-generifying-this-constructi" class="section-name selfRef">Generifying this construction</a>
           </h4>
-<p id="section-11.2.4-1">It should be clear that the security analysis of the presented KEM combiner construction relies heavily on the specific choices of component algorithms and combiner KDF, and this combiner construction SHOULD NOT by applied to any other combination of ciphers without performing the appropriate security analysis.<a href="#section-11.2.4-1" class="pilcrow">¶</a></p>
+<p id="section-10.2.4-1">It should be clear that the security analysis of the presented KEM combiner construction relies heavily on the specific choices of component algorithms and combiner KDF, and this combiner construction SHOULD NOT by applied to any other combination of ciphers without performing the appropriate security analysis.<a href="#section-10.2.4-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
 </div>
 <div id="sec-cons-key-reuse">
-<section id="section-11.3">
+<section id="section-10.3">
         <h3 id="name-key-reuse">
-<a href="#section-11.3" class="section-number selfRef">11.3. </a><a href="#name-key-reuse" class="section-name selfRef">Key Reuse</a>
+<a href="#section-10.3" class="section-number selfRef">10.3. </a><a href="#name-key-reuse" class="section-name selfRef">Key Reuse</a>
         </h3>
-<p id="section-11.3-1">When using single-algorithm cryptography, the best practice is to always generate fresh keying material for each purpose, for example when renewing a certificate, or obtaining both a TLS and S/MIME certificate for the same device, however in practice key reuse in such scenarios is not always catastrophic to security and therefore often tolerated. With composite keys we have a much stricter security requirement. However this reasoning does not hold in the PQ / Traditional hybrid setting.<a href="#section-11.3-1" class="pilcrow">¶</a></p>
-<p id="section-11.3-2">Within the broader context of PQ / Traditional hybrids, we need to consider new attack surfaces that arise due to the hybrid constructions and did not exist in single-algorithm contexts. One of these is key reuse where the component keys within a hybrid are also used by themselves within a single-algorithm context. For example, it might be tempting for an operator to take already-deployed RSA keys and add an ML-KEM key to them to form a hybrid. Within a hybrid signature context this leads to a class of attacks referred to as "stripping attacks" where one component signature can be extracted and presented as a single-algorithm signature. Hybrid KEMs using a concatenation-style KEM combiner, as is done in this document, do not have the analogous attack surface because even if an attacker is able to extract and decrypt one of the component ciphertexts, this will yield a different shared secret than the overall shared secret derived from the composite, so any subsequent symmetric cryptographic operations will fail. However there is still a risk of key reuse which relates to certificate revocation, as well as general key reuse security issues.<a href="#section-11.3-2" class="pilcrow">¶</a></p>
-<p id="section-11.3-3">Upon receiving a new certificate enrollment request, many certification authorities will check if the requested public key has been previously revoked due to key compromise. Often a CA will perform this check by using the public key hash. Therefore, even if both components of a composite have been previously revoked, the CA may only check the hash of the combined composite key and not find the revocations. Therefore, it is RECOMMENDED to avoid key reuse and always generate fresh component keys for a new composite. It is also RECOMMENDED that CAs performing revocation checks on a composite key should also check both component keys independently.<a href="#section-11.3-3" class="pilcrow">¶</a></p>
+<p id="section-10.3-1">When using single-algorithm cryptography, the best practice is to always generate fresh keying material for each purpose, for example when renewing a certificate, or obtaining both a TLS and S/MIME certificate for the same device, however in practice key reuse in such scenarios is not always catastrophic to security and therefore often tolerated. With composite keys we have a much stricter security requirement. However this reasoning does not hold in the PQ / Traditional hybrid setting.<a href="#section-10.3-1" class="pilcrow">¶</a></p>
+<p id="section-10.3-2">Within the broader context of PQ / Traditional hybrids, we need to consider new attack surfaces that arise due to the hybrid constructions and did not exist in single-algorithm contexts. One of these is key reuse where the component keys within a hybrid are also used by themselves within a single-algorithm context. For example, it might be tempting for an operator to take already-deployed RSA keys and add an ML-KEM key to them to form a hybrid. Within a hybrid signature context this leads to a class of attacks referred to as "stripping attacks" where one component signature can be extracted and presented as a single-algorithm signature. Hybrid KEMs using a concatenation-style KEM combiner, as is done in this document, do not have the analogous attack surface because even if an attacker is able to extract and decrypt one of the component ciphertexts, this will yield a different shared secret than the overall shared secret derived from the composite, so any subsequent symmetric cryptographic operations will fail. However there is still a risk of key reuse which relates to certificate revocation, as well as general key reuse security issues.<a href="#section-10.3-2" class="pilcrow">¶</a></p>
+<p id="section-10.3-3">Upon receiving a new certificate enrollment request, many certification authorities will check if the requested public key has been previously revoked due to key compromise. Often a CA will perform this check by using the public key hash. Therefore, even if both components of a composite have been previously revoked, the CA may only check the hash of the combined composite key and not find the revocations. Therefore, it is RECOMMENDED to avoid key reuse and always generate fresh component keys for a new composite. It is also RECOMMENDED that CAs performing revocation checks on a composite key should also check both component keys independently.<a href="#section-10.3-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="decapsulation-failure">
-<section id="section-11.4">
+<section id="section-10.4">
         <h3 id="name-decapsulation-failure">
-<a href="#section-11.4" class="section-number selfRef">11.4. </a><a href="#name-decapsulation-failure" class="section-name selfRef">Decapsulation failure</a>
+<a href="#section-10.4" class="section-number selfRef">10.4. </a><a href="#name-decapsulation-failure" class="section-name selfRef">Decapsulation failure</a>
         </h3>
-<p id="section-11.4-1">Provided all inputs are well-formed, the key establishment procedure of ML-KEM will never explicitly fail. Specifically, the ML-KEM.Encaps and ML-KEM.Decaps algorithms from <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span> will always output a value with the same data type as a shared secret key, and will never output an error or failure symbol. However, it is possible (though extremely unlikely) that the process will fail in the sense that ML-KEM.Encaps and ML-KEM.Decaps will produce different outputs, even though both of them are behaving honestly and no adversarial interference is present. In this case, the sender and recipient clearly did not succeed in producing a shared secret key. This event is called a decapsulation failure. Estimates for the decapsulation failure probability (or rate) for each of the ML-KEM parameter sets are provided in Table 1  of <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span> and reproduced here in <a href="#tab-mlkem-failure-rate" class="auto internal xref">Table 6</a>.<a href="#section-11.4-1" class="pilcrow">¶</a></p>
+<p id="section-10.4-1">Provided all inputs are well-formed, the key establishment procedure of ML-KEM will never explicitly fail. Specifically, the ML-KEM.Encaps and ML-KEM.Decaps algorithms from <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span> will always output a value with the same data type as a shared secret key, and will never output an error or failure symbol. However, it is possible (though extremely unlikely) that the process will fail in the sense that ML-KEM.Encaps and ML-KEM.Decaps will produce different outputs, even though both of them are behaving honestly and no adversarial interference is present. In this case, the sender and recipient clearly did not succeed in producing a shared secret key. This event is called a decapsulation failure. Estimates for the decapsulation failure probability (or rate) for each of the ML-KEM parameter sets are provided in Table 1  of <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span> and reproduced here in <a href="#tab-mlkem-failure-rate" class="auto internal xref">Table 5</a>.<a href="#section-10.4-1" class="pilcrow">¶</a></p>
 <span id="name-ml-kem-decapsulation-failur"></span><div id="tab-mlkem-failure-rate">
-<table class="center" id="table-6">
+<table class="center" id="table-5">
           <caption>
-<a href="#table-6" class="selfRef">Table 6</a>:
+<a href="#table-5" class="selfRef">Table 5</a>:
 <a href="#name-ml-kem-decapsulation-failur" class="selfRef">ML-KEM decapsulation failure rates</a>
           </caption>
 <thead>
@@ -3501,31 +3206,31 @@ In the case of a composite with RSA-OAEP the <code>tradSS</code> is controlled b
           </tbody>
         </table>
 </div>
-<p id="section-11.4-3">In the case of ML-KEM decapsulation failure, Composite ML-KEM MUST preserve the same behaviour and return a well-formed output.<a href="#section-11.4-3" class="pilcrow">¶</a></p>
+<p id="section-10.4-3">In the case of ML-KEM decapsulation failure, Composite ML-KEM MUST preserve the same behaviour and return a well-formed output.<a href="#section-10.4-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="policy-for-deprecated-and-acceptable-algorithms">
-<section id="section-11.5">
+<section id="section-10.5">
         <h3 id="name-policy-for-deprecated-and-a">
-<a href="#section-11.5" class="section-number selfRef">11.5. </a><a href="#name-policy-for-deprecated-and-a" class="section-name selfRef">Policy for Deprecated and Acceptable Algorithms</a>
+<a href="#section-10.5" class="section-number selfRef">10.5. </a><a href="#name-policy-for-deprecated-and-a" class="section-name selfRef">Policy for Deprecated and Acceptable Algorithms</a>
         </h3>
-<p id="section-11.5-1">Traditionally, a public key or certificate contains a single cryptographic algorithm. If and when an algorithm becomes deprecated (for example, RSA-512, or SHA1), the path to deprecating it and removing it from operational environments is, at least is principle, straightforward.<a href="#section-11.5-1" class="pilcrow">¶</a></p>
-<p id="section-11.5-2">In the composite model this is less obvious since implementers may decide that certain cryptographic algorithms have complementary security properties and are acceptable in combination even though one or both algorithms are deprecated for individual use. As such, a single composite public key or certificate may contain a mixture of deprecated and non-deprecated algorithms.<a href="#section-11.5-2" class="pilcrow">¶</a></p>
-<p id="section-11.5-3">Since composite algorithms are registered independently of their component algorithms, their deprecation can be handled independently from that of their component algorithms. For example a cryptographic policy might continue to allow <code>id-MLKEM512-ECDH-P256</code> even after ECDH-P256 is deprecated.<a href="#section-11.5-3" class="pilcrow">¶</a></p>
-<p id="section-11.5-4">The Composite ML-KEM design specified in this document, and especially that of the KEM combiner specified in this document, and discussed in <a href="#sec-cons-kem-combiner" class="auto internal xref">Section 11.2</a>, means that the overall Composite ML-KEM algorithm should be considered to have the security strength of the strongest of its component algorithms; i.e. as long as one component algorithm remains strong, then the overall composite algorithm remains strong.<a href="#section-11.5-4" class="pilcrow">¶</a></p>
+<p id="section-10.5-1">Traditionally, a public key or certificate contains a single cryptographic algorithm. If and when an algorithm becomes deprecated (for example, RSA-512, or SHA1), the path to deprecating it and removing it from operational environments is, at least is principle, straightforward.<a href="#section-10.5-1" class="pilcrow">¶</a></p>
+<p id="section-10.5-2">In the composite model this is less obvious since implementers may decide that certain cryptographic algorithms have complementary security properties and are acceptable in combination even though one or both algorithms are deprecated for individual use. As such, a single composite public key or certificate may contain a mixture of deprecated and non-deprecated algorithms.<a href="#section-10.5-2" class="pilcrow">¶</a></p>
+<p id="section-10.5-3">Since composite algorithms are registered independently of their component algorithms, their deprecation can be handled independently from that of their component algorithms. For example a cryptographic policy might continue to allow <code>id-MLKEM512-ECDH-P256</code> even after ECDH-P256 is deprecated.<a href="#section-10.5-3" class="pilcrow">¶</a></p>
+<p id="section-10.5-4">The Composite ML-KEM design specified in this document, and especially that of the KEM combiner specified in this document, and discussed in <a href="#sec-cons-kem-combiner" class="auto internal xref">Section 10.2</a>, means that the overall Composite ML-KEM algorithm should be considered to have the security strength of the strongest of its component algorithms; i.e. as long as one component algorithm remains strong, then the overall composite algorithm remains strong.<a href="#section-10.5-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
 </div>
 <div id="sec-combined-references">
-<section id="section-12">
+<section id="section-11">
       <h2 id="name-references">
-<a href="#section-12" class="section-number selfRef">12. </a><a href="#name-references" class="section-name selfRef">References</a>
+<a href="#section-11" class="section-number selfRef">11. </a><a href="#name-references" class="section-name selfRef">References</a>
       </h2>
 <div id="sec-normative-references">
-<section id="section-12.1">
+<section id="section-11.1">
         <h3 id="name-normative-references">
-<a href="#section-12.1" class="section-number selfRef">12.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+<a href="#section-11.1" class="section-number selfRef">11.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
         </h3>
 <dl class="references">
 <dt id="FIPS.180-4">[FIPS.180-4]</dt>
@@ -3632,9 +3337,9 @@ In the case of a composite with RSA-OAEP the <code>tradSS</code> is controlled b
 </section>
 </div>
 <div id="sec-informative-references">
-<section id="section-12.2">
+<section id="section-11.2">
         <h3 id="name-informative-references">
-<a href="#section-12.2" class="section-number selfRef">12.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+<a href="#section-11.2" class="section-number selfRef">11.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
         </h3>
 <dl class="references">
 <dt id="ANSSI2024">[ANSSI2024]</dt>
@@ -3757,9 +3462,9 @@ In the case of a composite with RSA-OAEP the <code>tradSS</code> is controlled b
       </h2>
 <p id="appendix-A-1">This section provides references to the full specification of the algorithms used in the composite constructions.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
 <span id="name-component-encryption-algori"></span><div id="tab-component-encr-algs">
-<table class="center" id="table-7">
+<table class="center" id="table-6">
         <caption>
-<a href="#table-7" class="selfRef">Table 7</a>:
+<a href="#table-6" class="selfRef">Table 6</a>:
 <a href="#name-component-encryption-algori" class="selfRef">Component Encryption Algorithms used in Composite Constructions</a>
         </caption>
 <thead>
@@ -3816,9 +3521,9 @@ In the case of a composite with RSA-OAEP the <code>tradSS</code> is controlled b
       </table>
 </div>
 <span id="name-elliptic-curves-used-in-com"></span><div id="tab-component-curve-algs">
-<table class="center" id="table-8">
+<table class="center" id="table-7">
         <caption>
-<a href="#table-8" class="selfRef">Table 8</a>:
+<a href="#table-7" class="selfRef">Table 7</a>:
 <a href="#name-elliptic-curves-used-in-com" class="selfRef">Elliptic Curves used in Composite Constructions</a>
         </caption>
 <thead>
@@ -3861,9 +3566,9 @@ In the case of a composite with RSA-OAEP the <code>tradSS</code> is controlled b
       </table>
 </div>
 <span id="name-hash-algorithms-used-in-com"></span><div id="tab-component-hash">
-<table class="center" id="table-9">
+<table class="center" id="table-8">
         <caption>
-<a href="#table-9" class="selfRef">Table 9</a>:
+<a href="#table-8" class="selfRef">Table 8</a>:
 <a href="#name-hash-algorithms-used-in-com" class="selfRef">Hash algorithms used in Composite Constructions</a>
         </caption>
 <thead>
@@ -4072,7 +3777,7 @@ DER:
 ss = KDF(mlkemSS || tradSS || tradCT || tradPK || Domain)
 </code><a href="#appendix-C.1-2" class="pilcrow">¶</a></p>
 <p id="appendix-C.1-3">where KDF is either SHA3 or HKDF-SHA2.<a href="#appendix-C.1-3" class="pilcrow">¶</a></p>
-<p id="appendix-C.1-4">NIST SP 800-227 [SP-800-227idp], which at the time of writing is in its initial public draft period, allows hybrid key combiners of the following form:<a href="#appendix-C.1-4" class="pilcrow">¶</a></p>
+<p id="appendix-C.1-4">NIST SP 800-227 <span>[<a href="#SP-800-227ipd" class="cite xref">SP-800-227ipd</a>]</span>, which at the time of writing is in its initial public draft period, allows hybrid key combiners of the following form:<a href="#appendix-C.1-4" class="pilcrow">¶</a></p>
 <p id="appendix-C.1-5"><code>
 K ← KDM(S1‖S2‖ · · · ‖St , OtherInput)           (14)
 </code><a href="#appendix-C.1-5" class="pilcrow">¶</a></p>
