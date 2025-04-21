@@ -44,7 +44,7 @@ OID_TABLE = {
   "id-MLKEM768-ECDH-brainpoolP256r1-HKDF-SHA256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,36)),
   "id-MLKEM1024-ECDH-P384-HKDF-SHA384": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,37)),
   "id-MLKEM1024-ECDH-brainpoolP384r1-HKDF-SHA384": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,38)),
-  "id-MLKEM1024-ECDH-brainpoolP384r1-HKDF-SHA384": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,38)),
+  "id-MLKEM1024-X448-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,39)),
 }
 
 class KEM:
@@ -598,7 +598,7 @@ class MLKEM1024_ECDH_P384_HKDF_SHA384(CompositeKEM):
 
 class MLKEM1024_ECDH_brainpoolP384r1_HKDF_SHA384(CompositeKEM):
   id = "id-MLKEM1024-ECDH-brainpoolP384r1-HKDF-SHA384"
-  oid = univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,38))
+  # oid = univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,38))
   mlkem = MLKEM1024()
   tradkem = ECDHBP384KEM()
   kdf = "HKDF-SHA384"
@@ -607,8 +607,8 @@ class MLKEM1024_ECDH_brainpoolP384r1_HKDF_SHA384(CompositeKEM):
 
 
 class MLKEM1024_X448_SHA3_256(CompositeKEM):
-  id = "id-MLKEM1024-ECDH-brainpoolP384r1-HKDF-SHA384"
-  oid = univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,38))
+  id = "id-MLKEM1024-X448-SHA3-256"
+  # oid = univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,38))
   mlkem = MLKEM1024()
   tradkem = X448KEM()
   kdf = "SHA3-256"
@@ -835,7 +835,7 @@ def signKemCert(caSK, kem):
 
   spki = rfc5280.SubjectPublicKeyInfo()
   algid = rfc5280.AlgorithmIdentifier()
-  algid['algorithm'] = kem.oid
+  algid['algorithm'] = OID_TABLE[kem.id]
   spki['algorithm'] = algid
   spki['subjectPublicKey'] = univ.BitString(hexValue=kem.public_key_bytes().hex())
 
@@ -865,7 +865,7 @@ def formatResults(kem, caSK, ct, ss ):
   pki = rfc5208.PrivateKeyInfo()
   pki['version'] = 0
   algId = rfc5208.AlgorithmIdentifier()
-  algId['algorithm'] = kem.oid
+  algId['algorithm'] = OID_TABLE[kem.id]
   pki['privateKeyAlgorithm'] = algId
   pki['privateKey'] = univ.OctetString(kem.private_key_bytes())
   jsonTest['dk_pkcs8'] = base64.b64encode(encode(pki)).decode('ascii')
@@ -956,5 +956,5 @@ def main():
 
 
 
-
-main()
+if __name__ == "__main__":
+  main()
