@@ -1422,24 +1422,25 @@ The Composite ML-KEM design specified in this document, and especially that of t
 
 # Key and Ciphertext Sizes
 
-+-----------------------------------+------+--------+--------+--------+
-| KEM                               | Npk  |   Nsk  |   Nss  |   Nct  |
-+-----------------------------------+------+--------+--------+--------+
-| ML-KEM768                        | TODO |  TODO  |   32   |  TODO  |
-| id-MLKEM768-RSA2048               | 1468 |  N/A   |   32   |  1356  |
-| id-MLKEM768-RSA3072               | 1596 |  N/A   |   32   |  1484  |
-| id-MLKEM768-RSA4096               | 1724 |  N/A   |   32   |  1612  |
-| id-MLKEM768-X25519                | 1228 |  2517  |   32   |  1130  |
-| id-MLKEM768-ECDH-P256             | 1261 |  2550  |   32   |  1163  |
-| id-MLKEM768-ECDH-P384             | 1293 |  2599  |   32   |  1195  |
-| id-MLKEM768-ECDH-brainpoolP256r1  | 1261 |  2550  |   32   |  1163  |
-| ML-KEM1024                       | TODO |  TODO  |   32   |  TODO  |
-| id-MLKEM1024-ECDH-P384            | 1677 |  3367  |   32   |  1675  |
-| id-MLKEM1024-ECDH-brainpoolP384r1 | 1677 |  3367  |   32   |  1675  |
-| id-MLKEM1024-X448                 | 1636 |  3334  |   32   |  1634  |
-+-----------------------------------+------+--------+--------+--------+
+| Algorithm                                     |  Public key  |  Private key |  Ciphertext  |  SS  |
+| --------------------------------------------- | ------------ | ------------ |  ----------- |  --  |
+| id-alg-ml-kem-768                             |     1184     |      64      |     1088     |  32  |
+| id-alg-ml-kem-1024                            |     1568     |      64      |     1568     |  32  |
+| id-MLKEM768-RSA2048-HKDF-SHA256               |     1454     |     1281     |     1344     |  32  |
+| id-MLKEM768-RSA3072-HKDF-SHA256               |     1582     |     1857     |     1472     |  32  |
+| id-MLKEM768-RSA4096-HKDF-SHA256               |     1710     |     2439     |     1600     |  32  |
+| id-MLKEM768-X25519-SHA3-256                   |     1216     |      96      |     1120     |  32  |
+| id-MLKEM768-ECDH-P256-HKDF-SHA256             |     1249     |     202      |     1153     |  32  |
+| id-MLKEM768-ECDH-P384-HKDF-SHA256             |     1281     |     249      |     1185     |  32  |
+| id-MLKEM768-ECDH-brainpoolP256r1-HKDF-SHA256  |     1249     |     203      |     1153     |  32  |
+| id-MLKEM1024-ECDH-P384-HKDF-SHA384            |     1665     |     249      |     1665     |  32  |
+| id-MLKEM1024-ECDH-brainpoolP384r1-HKDF-SHA384 |     1665     |     253      |     1665     |  32  |
+| id-MLKEM1024-X448-SHA3-256                    |     1624     |     120      |     1624     |  32  |
+
 
 Non-hybrid ML-KEM is included for reference.
+
+Note that since this specification allows for multiple encodings of the traditional component, small variations in size could be encountered. Implementations MUST NOT perform strict length checking based on the values in this table.
 
 # Samples {#appdx-samples}
 
