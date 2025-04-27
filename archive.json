@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-04-20T02:02:09.888768+00:00",
+  "timestamp": "2025-04-27T02:02:45.945175+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -52,6 +52,11 @@
       "name": "pull request",
       "description": "This issue is addressed by an open PR",
       "color": "67267D"
+    },
+    {
+      "name": "Post-WGLC",
+      "description": null,
+      "color": "aaaaaa"
     }
   ],
   "issues": [
@@ -1819,32 +1824,48 @@
       "id": "I_kwDOKRPFO86o4P6V",
       "title": "We need samples / test vectors",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/108",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Question: how do we do sample ciphertexts? Inside a CMS? Just raw ciphertexts? Probably raw ciphertexts.\n\nWe should mimic the format of the kyber-certificates draft.",
       "createdAt": "2025-02-05T15:47:31Z",
-      "updatedAt": "2025-02-05T15:47:31Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2025-04-24T20:59:49Z",
+      "closedAt": "2025-04-24T20:59:48Z",
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Done!",
+          "createdAt": "2025-04-24T20:59:49Z",
+          "updatedAt": "2025-04-24T20:59:49Z"
+        }
+      ]
     },
     {
       "number": 109,
       "id": "I_kwDOKRPFO86sADll",
       "title": "Update private key structs to match the outcome of the SEEDs mess",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/109",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2025-02-27T21:59:32Z",
-      "updatedAt": "2025-02-27T21:59:32Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2025-04-24T21:00:18Z",
+      "closedAt": "2025-04-24T21:00:17Z",
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Duplicate of #119 ",
+          "createdAt": "2025-04-24T21:00:17Z",
+          "updatedAt": "2025-04-24T21:00:17Z"
+        }
+      ]
     },
     {
       "number": 112,
@@ -1907,16 +1928,24 @@
       "id": "I_kwDOKRPFO86sucd2",
       "title": "Add KATs",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/118",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "For Composite KEM, we should follow exactly the ACVP test vector format, which can be found here:\n\nhttps://github.com/usnistgov/ACVP-Server/blob/master/gen-val/json-files/ML-KEM-keyGen-FIPS203/expectedResults.json\nhttps://github.com/usnistgov/ACVP-Server/blob/master/gen-val/json-files/ML-KEM-encapDecap-FIPS203/expectedResults.json\n\nThat would mean that for each composite, we include a JSON blob like:\n\n~~~\n \"tests\": [\n        {\n          \"tcId\": \"id-MLKEM768-RSA2048\",\n          \"ek\": \"A1B2C3...\",\n          \"dk\": \"3CB2A1...\",\n          \"c\": \"5A9B...\",\n          \"k\": \"F91B8C7477A6005992EE947BB365EBF1CFE15688BD25DEEFAD54F90922B4B84C\"\n        },\n}\n~~~",
       "createdAt": "2025-03-05T16:48:52Z",
-      "updatedAt": "2025-03-05T16:49:26Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2025-04-24T20:59:31Z",
+      "closedAt": "2025-04-24T20:59:30Z",
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Done!",
+          "createdAt": "2025-04-24T20:59:30Z",
+          "updatedAt": "2025-04-24T20:59:30Z"
+        }
+      ]
     },
     {
       "number": 119,
@@ -2055,10 +2084,12 @@
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "Post-WGLC"
+      ],
       "body": "",
       "createdAt": "2025-04-08T15:24:02Z",
-      "updatedAt": "2025-04-08T15:24:02Z",
+      "updatedAt": "2025-04-24T20:58:58Z",
       "closedAt": null,
       "comments": []
     },
@@ -2103,10 +2134,46 @@
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "Post-WGLC"
+      ],
       "body": "",
       "createdAt": "2025-04-18T00:48:06Z",
-      "updatedAt": "2025-04-18T00:48:06Z",
+      "updatedAt": "2025-04-24T20:58:42Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 132,
+      "id": "I_kwDOKRPFO86z6azJ",
+      "title": "Add P521 combos",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/132",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [
+        "ounsworth"
+      ],
+      "labels": [],
+      "body": "From Richard Kettlewell:\n\n\u2022 MLDSA87-ECDSA-P521-SHA512\n\u2022 HashMLDSA87-ECDSA-P521-SHA512\n\nFor Composite KEM document:\n\u2022 MLKEM1024-ECDH-P521",
+      "createdAt": "2025-04-24T20:58:23Z",
+      "updatedAt": "2025-04-24T20:58:23Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 133,
+      "id": "I_kwDOKRPFO86z7Pwm",
+      "title": "Add py script to generate domain separators",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/133",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-04-24T23:29:15Z",
+      "updatedAt": "2025-04-24T23:29:15Z",
       "closedAt": null,
       "comments": []
     }
@@ -5114,6 +5181,58 @@
       "mergeCommit": {
         "oid": "105b31fe27e1c3da232954d2cf5cb9658b0570bf"
       },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 134,
+      "id": "PR_kwDOKRPFO86T139G",
+      "title": "Added domain separator generation to the python script",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/134",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Closes #133 ",
+      "createdAt": "2025-04-24T23:47:54Z",
+      "updatedAt": "2025-04-24T23:47:54Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "d390094b8c9f78f9ed9bebf8eedbefd2c5c774ad",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_domsep",
+      "headRefOid": "c1bc8033436568106dae315badcd1550672da0a2",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 135,
+      "id": "PR_kwDOKRPFO86T2FS8",
+      "title": "Add P521 combo",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/135",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Closes #132 \r\n\r\nRebased on top of #134 , therefore that one needs to be merged first.",
+      "createdAt": "2025-04-25T00:52:20Z",
+      "updatedAt": "2025-04-25T00:53:12Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "d390094b8c9f78f9ed9bebf8eedbefd2c5c774ad",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_p521",
+      "headRefOid": "2596475ddfd5973c7e65bf9db216c9048ed4eb08",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
       "comments": [],
       "reviews": []
     }
