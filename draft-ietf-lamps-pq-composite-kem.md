@@ -89,13 +89,12 @@ normative:
   RFC9629:
   I-D.draft-ietf-lamps-cms-sha3-hash-04:
   I-D.draft-ietf-lamps-kyber-certificates-06:
-  X.690:
-      title: "Information technology - ASN.1 encoding Rules: Specification of Basic Encoding Rules (BER), Canonical Encoding Rules (CER) and Distinguished Encoding Rules (DER)"
-      date: November 2015
-      author:
-        org: ITU-T
-      seriesinfo:
-        ISO/IEC: 8825-1:2015
+  SEC2:
+    title: "SEC 2: Recommended Elliptic Curve Domain Parameters"
+    date: January 27, 2010
+    author:
+      org: "Certicom Research"
+    target: https://www.secg.org/sec2-v2.pdf
   SP.800-56Ar3:
     title: "Recommendation for Pair-Wise Key-Establishment Schemes Using Discrete Logarithm Cryptography"
     date: April 2018
@@ -337,9 +336,6 @@ In addition, the following terms are used in this document:
 **COMBINER:**
   A combiner specifies how multiple shared secrets are combined into
   a single shared secret.
-
-**DER:**
-  Distinguished Encoding Rules as defined in [X.690].
 
 **KEM:**
    A key encapsulation mechanism as defined in {{sec-kems}}.
@@ -1127,17 +1123,6 @@ Some applications may need to reconstruct the `OneAsymmetricKey` objects corresp
 
 Component keys of a CompositeKEMPrivateKey MUST NOT be used in any other type of key or as a standalone key. For more details on the security considerations around key reuse, see {{sec-cons-key-reuse}}.
 
-
-## Encoding Rules {#sec-encoding-rules}
-<!-- EDNOTE 7: Examples of how other specifications specify how a data structure is converted to a bit string can be found in RFC 2313, section 10.1.4, 3279 section 2.3.5, and RFC 4055, section 3.2. -->
-
-Many protocol specifications will require that the composite public key and composite private key data structures be represented by an octet string or bit string.
-
-When an octet string is required, the DER encoding of the composite data structure SHALL be used directly.
-
-When a bit string is required, the octets of the DER encoded composite data structure SHALL be used as the bits of the bit string, with the most significant bit of the first octet becoming the first bit, and so on, ending with the least significant bit of the last octet becoming the last bit of the bit string.
-
-In the interests of simplicity and avoiding compatibility issues, implementations that parse these structures MAY accept both BER and DER.
 
 ## Key Usage Bits
 
