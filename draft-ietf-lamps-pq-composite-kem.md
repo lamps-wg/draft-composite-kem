@@ -1055,7 +1055,7 @@ When a CompositeKEMPublicKey is used with an Edwards public key, the BIT STRING 
 
 Some applications may need to reconstruct the `SubjectPublicKeyInfo` objects corresponding to each component public key. {{tab-kem-algs}} in {{sec-alg-ids}} provides the necessary mapping between composite and their component algorithms for doing this reconstruction.
 
-When the CompositeKEMPublicKey must be provided in octet string or bit string format, the data structure is encoded as specified in {{sec-encoding-rules}}.
+When the CompositeKEMPublicKey must be provided in octet string or bit string format, the raw bytes are used with no ASN.1 or DER wrapping.
 
 In order to maintain security properties of the composite, applications that use composite keys MUST always perform fresh key generations of both component keys and MUST NOT reuse existing key material. See {{sec-cons-key-reuse}} for a discussion.
 
