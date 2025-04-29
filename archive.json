@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-04-27T02:02:45.945175+00:00",
+  "timestamp": "2025-04-29T01:57:59.804119+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -1361,7 +1361,7 @@
       "labels": [],
       "body": "https://mailarchive.ietf.org/arch/msg/spasm/zfWx5fYjvuvohTOI7asQG4m-NDI/\r\n\r\n> Hi Mike,\r\n>\r\n> Your draft:\r\n> https://datatracker.ietf.org/doc/draft-ietf-lamps-pq-composite-kem/\r\n> could do with table  on Npk, Nsk, and NSig sizes. Such tables greatly help\r\n> in implementation.\r\n>\r\n> The idea is from RFC 9180, Section 7.1\r\n> <https://datatracker.ietf.org/doc/rfc9180/>\r\n>\r\n> [image: image.png]\r\n>\r\n> The details of the calculations can be found here:\r\n>\r\n> https://github.com/codespree/quantcrypt/blob/main/additional_info_keysize.md\r\n>\r\n> All the best,\r\n> Varun\r\n\r\nIn my opinion, we should get sample keys, signatures, and ciphertexts for all algorithms, and then measure them. This sounds like a hackathon project.",
       "createdAt": "2024-10-17T16:15:59Z",
-      "updatedAt": "2025-02-27T22:03:45Z",
+      "updatedAt": "2025-04-27T19:34:40Z",
       "closedAt": null,
       "comments": [
         {
@@ -1384,6 +1384,13 @@
           "body": "It should be just Len(ml-kem) + Len(trad) ... easy since we removed the ASN.1 wrapper.\n\nBut it would be easier to just wait until we have samples ...\n\n**For now: just put in an empty table and say TBD: pending samples**",
           "createdAt": "2025-02-27T22:01:39Z",
           "updatedAt": "2025-02-27T22:03:45Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "This table will need a \n\n> Note that since this specification allows for multiple encodings of the traditional component, small variations in size could be encountered. Implementations MUST NOT perform strict length checking based on the values in this table.",
+          "createdAt": "2025-04-27T19:34:39Z",
+          "updatedAt": "2025-04-27T19:34:39Z"
         }
       ]
     },
@@ -1899,13 +1906,23 @@
       "state": "OPEN",
       "author": "johngray-dev",
       "authorAssociation": "COLLABORATOR",
-      "assignees": [],
+      "assignees": [
+        "johngray-dev"
+      ],
       "labels": [],
       "body": "Add reference to component algorithm section in serialization methods to make it clear how the individual component keys should be encoded.\n\n",
       "createdAt": "2025-03-03T16:31:35Z",
-      "updatedAt": "2025-03-03T16:31:35Z",
+      "updatedAt": "2025-04-27T13:20:53Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@johngray-dev  I'll assign this one to you because I'm not fully sure what you have in mind.",
+          "createdAt": "2025-04-27T13:20:52Z",
+          "updatedAt": "2025-04-27T13:20:52Z"
+        }
+      ]
     },
     {
       "number": 117,
@@ -4992,15 +5009,15 @@
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
-      "body": "Closes #77 \r\n\r\n\r\n- [ ] I have no idea if the numbers are right. In particular, Varun and Zhao Peiduo included ASN.1 overhead in the calculation, but I think we have since removed this?  https://github.com/codespree/quantcrypt/blob/main/additional_info_keysize.md",
+      "body": "Closes #77 ",
       "createdAt": "2025-02-28T19:04:58Z",
-      "updatedAt": "2025-02-28T19:04:58Z",
+      "updatedAt": "2025-04-27T20:33:44Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "71163b933921b010cdd40e39659f0c81091aa22f",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_size_table",
-      "headRefOid": "7076491d7ae73e6dbc2efb0579b7616cb1ad4d5e",
+      "headRefOid": "0465675a9d44f0d0ed9fabd08423290c63b06ede",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
@@ -5196,7 +5213,7 @@
       "labels": [],
       "body": "Closes #133 ",
       "createdAt": "2025-04-24T23:47:54Z",
-      "updatedAt": "2025-04-24T23:47:54Z",
+      "updatedAt": "2025-04-27T20:33:57Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "d390094b8c9f78f9ed9bebf8eedbefd2c5c774ad",
@@ -5222,13 +5239,65 @@
       "labels": [],
       "body": "Closes #132 \r\n\r\nRebased on top of #134 , therefore that one needs to be merged first.",
       "createdAt": "2025-04-25T00:52:20Z",
-      "updatedAt": "2025-04-25T00:53:12Z",
+      "updatedAt": "2025-04-27T20:34:20Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "d390094b8c9f78f9ed9bebf8eedbefd2c5c774ad",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_p521",
       "headRefOid": "2596475ddfd5973c7e65bf9db216c9048ed4eb08",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 136,
+      "id": "PR_kwDOKRPFO86UElvF",
+      "title": "Remove DER Encoding Rules section",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/136",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Since we are not encoding as raw bytes, no need for the section on DER encoding rules.\r\n\r\nCloses #117 ",
+      "createdAt": "2025-04-27T13:43:17Z",
+      "updatedAt": "2025-04-27T20:34:37Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "d390094b8c9f78f9ed9bebf8eedbefd2c5c774ad",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_noder",
+      "headRefOid": "726a2d266f1d650a0144b19fd97bd5514d096fa7",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 137,
+      "id": "PR_kwDOKRPFO86UFL7Q",
+      "title": "Tweakes to serialization sections",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/137",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Closes #119 ",
+      "createdAt": "2025-04-27T19:46:47Z",
+      "updatedAt": "2025-04-27T20:34:50Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "d390094b8c9f78f9ed9bebf8eedbefd2c5c774ad",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_serialization",
+      "headRefOid": "e5b47944c85ab93063aa4bf4b9eae23b266dfd01",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
