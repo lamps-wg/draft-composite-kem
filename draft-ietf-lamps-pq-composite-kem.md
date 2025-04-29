@@ -697,13 +697,16 @@ HKDF-Extract(salt="", IKM=mlkemSS || tradSS || tradCT || tradPK || Domain)
 This section presents routines for serializing and deserializing composite public keys, private keys (seeds), and ciphertext values to bytes via simple concatenation of the underlying encodings of the component algorithms.
 Deserialization is possible because ML-KEM has fixed-length public keys, private keys (seeds), and ciphertext values as shown in the following table.
 
-| Algorithm   | Public key  | Private key |  Ciphertext  |
+| Algorithm   | Public Key  | Private Key |  Ciphertext  |
 | ----------- | ----------- | ----------- |  ----------- |
 | ML-KEM-768  |    1184     |     64      |     1088     |
 | ML-KEM-1024 |    1568     |     64      |     1568     |
 {: #tab-mlkem-sizes title="ML-KEM Key and Ciphertext Sizes"}
 
 When these values are required to be carried in an ASN.1 structure, they are wrapped as described in {{sec-composite-keys}} and {{sec-CompositeCiphertextValue}}.
+
+While ML-KEM has a single representation for each of Public key, private key, and ciphertext, the traditional component might allow multiple valid encodings; for example an elliptic curve public key, and therefore also ciphertext, might be validly encoded either compressed or uncompressed. Since a design goal of this specification is to treat the traditional component as a pre-existing black box, no requirements are imposed on a composite implementation as to what encodings should be accepted for the traditional component.
+For this reason, the size of the traditional component is left unspecified and all encoding and decoding routines are specified in terms of the fixed size of the ML-KEM component and assumes that "the rest" is the traditional component. See further discussion of security implications in {{sec-hybrid-security}}.
 
 
 ### SerializePublicKey and DeserializePublicKey {#sec-serialize-deserialize}
@@ -1361,11 +1364,11 @@ Note that length-tagging of the inputs to the KDF is not required:
 In the case of a composite with ECDH, all inputs to the KDF are fixed-length.
 In the case of a composite with RSA-OAEP the `tradSS` is controlled by the attacker but this still does not require length tagging because, unless there is a weakness in the KDF, length-manipulation of only one input is not sufficient to trivially produce collisions.
 
-### Security of the hybrid scheme
+### Security of the hybrid scheme {#sec-hybrid-security}
 
 Informally, a Composite ML-KEM algorithm is secure if the combiner (HKDF-SHA2 or SHA3) is secure, and either ML-KEM is secure or the traditional component (RSA-OAEP, ECDH, or X25519) is secure.
 
-The security of ML-KEM and ECDH hybrids is covered in [X-Wing] and requires that the first KEM component (ML-KEM in this construction) is IND-CCA and second ciphertext preimage resistant (C2PRI) and that the second traditional component is IND-CCA. This design choice improves performance by not including the large ML-KEM public key and ciphertext, but means that an implementation error in the ML-KEM component that affects the ciphertext check step of the FO transform could result in the overall composite no longer achieving IND-CCA2 security.
+The security of ML-KEM and ECDH hybrids is covered in [X-Wing] and requires that the first KEM component (ML-KEM in this construction) is IND-CCA and second ciphertext preimage resistant (C2PRI) and that the second traditional component is IND-CCA. This design choice improves performance by not including the large ML-KEM public key and ciphertext, but means that an implementation error in the ML-KEM component that affects the ciphertext check step of the FO transform could result in the overall composite no longer achieving IND-CCA2 security. Note that ciphertext collisions exist in the traditional component by the composite design choice to support any underlying encoding of the traditional component, such as compressed vs uncompressed EC points as the ECDH KEM ciphertext. This solution remains IND-CCA due to binding the `tradPK` and `tradCT` in the KEM combiner.
 
 The QSF framework presented in [X-Wing] is extended to cover RSA-OAEP as the traditional algorithm in place of ECDH by noting that RSA-OAEP is also IND-CCA secure [RFC8017].
 
