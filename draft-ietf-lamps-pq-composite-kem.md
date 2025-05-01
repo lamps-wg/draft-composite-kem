@@ -1224,19 +1224,19 @@ Full specifications for the referenced component algorithms can be found in {{ap
 
 The KEM combiner used in this document requires a domain separator `Domain` input.  The following table shows the HEX-encoded domain separator for each Composite ML-KEM AlgorithmID; to use it, the value MUST be HEX-decoded and used in binary form. The domain separator is simply the DER encoding of the composite algorithm OID.
 
-| Composite ML-KEM Algorithm                    | Domain Separator (in Hex encoding)|
-| -----------                                   | ----------- |
-| id-MLKEM768-RSA2048-HKDF-SHA256               | 060B6086480186FA6B5005021E |
-| id-MLKEM768-RSA3072-HKDF-SHA256               | 060B6086480186FA6B5005021F |
-| id-MLKEM768-RSA4096-HKDF-SHA256               | 060B6086480186FA6B50050220 |
-| id-MLKEM768-X25519-SHA3-256                   | 060B6086480186FA6B50050221 |
-| id-MLKEM768-ECDH-P256-HKDF-SHA256             | 060B6086480186FA6B50050222 |
-| id-MLKEM768-ECDH-P384-HKDF-SHA256             | 060B6086480186FA6B50050223 |
-| id-MLKEM768-ECDH-brainpoolP256r1-HKDF-SHA256  | 060B6086480186FA6B50050224 |
-| id-MLKEM1024-ECDH-P384-HKDF-SHA384            | 060B6086480186FA6B50050225 |
+| Composite Signature Algorithm | Domain Separator (in Hex encoding)|
+| id-MLKEM768-RSA2048-HKDF-SHA256 | 060B6086480186FA6B5005021E |
+| id-MLKEM768-RSA3072-HKDF-SHA256 | 060B6086480186FA6B5005021F |
+| id-MLKEM768-RSA4096-HKDF-SHA256 | 060B6086480186FA6B50050220 |
+| id-MLKEM768-X25519-SHA3-256 | 060B6086480186FA6B50050221 |
+| id-MLKEM768-ECDH-P256-HKDF-SHA256 | 060B6086480186FA6B50050222 |
+| id-MLKEM768-ECDH-P384-HKDF-SHA256 | 060B6086480186FA6B50050223 |
+| id-MLKEM768-ECDH-brainpoolP256r1-HKDF-SHA256 | 060B6086480186FA6B50050224 |
+| id-MLKEM1024-ECDH-P384-HKDF-SHA384 | 060B6086480186FA6B50050225 |
 | id-MLKEM1024-ECDH-brainpoolP384r1-HKDF-SHA384 | 060B6086480186FA6B50050226 |
-| id-MLKEM1024-X448-SHA3-256                    | 060B6086480186FA6B50050227 |
-| id-MLKEM1024-ECDH-P521-HKDF-SHA384            | 060B6086480186FA6B50050228 |
+| id-MLKEM1024-X448-SHA3-256 | 060B6086480186FA6B50050227 |
+| id-MLKEM1024-ECDH-P521-HKDF-SHA384 | 060B6086480186FA6B50050228 |
+
 {: #tab-kem-domains title="Composite ML-KEM fixedInfo Domain Separators"}
 
 EDNOTE: these domain separators are based on the prototyping OIDs assigned on the Entrust arc. We will need to ask for IANA early allocation of these OIDs so that we can re-compute the domain separators over the final OIDs.
@@ -1504,7 +1504,7 @@ Non-hybrid ML-KEM is included for reference.
 | id-alg-ml-kem-1024                            |     1568     |      64      |     1568     |  32  |
 | id-MLKEM768-RSA2048-HKDF-SHA256               |     1454     |     1281     |     1344     |  32  |
 | id-MLKEM768-RSA3072-HKDF-SHA256               |     1582     |     1857     |     1472     |  32  |
-| id-MLKEM768-RSA4096-HKDF-SHA256               |     1710     |     2439     |     1600     |  32  |
+| id-MLKEM768-RSA4096-HKDF-SHA256               |     1710     |     2437     |     1600     |  32  |
 | id-MLKEM768-X25519-SHA3-256                   |     1216     |      96      |     1120     |  32  |
 | id-MLKEM768-ECDH-P256-HKDF-SHA256             |     1249     |     202      |     1153     |  32  |
 | id-MLKEM768-ECDH-P384-HKDF-SHA256             |     1281     |     249      |     1185     |  32  |
@@ -1512,6 +1512,7 @@ Non-hybrid ML-KEM is included for reference.
 | id-MLKEM1024-ECDH-P384-HKDF-SHA384            |     1665     |     249      |     1665     |  32  |
 | id-MLKEM1024-ECDH-brainpoolP384r1-HKDF-SHA384 |     1665     |     253      |     1665     |  32  |
 | id-MLKEM1024-X448-SHA3-256                    |     1624     |     120      |     1624     |  32  |
+| id-MLKEM1024-ECDH-P521-HKDF-SHA384            |     1701     |     305      |     1701     |  32  |
 {: #tab-size-values title="Approximate size values of composite ML-KEM"}
 
 
