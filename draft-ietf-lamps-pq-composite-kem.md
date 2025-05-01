@@ -1420,7 +1420,21 @@ The Composite ML-KEM design specified in this document, and especially that of t
 
 --- back
 
-# Key and Ciphertext Sizes
+# Approximate Key and Ciphertext Sizes
+
+Note that the sizes listed below are approximate: these values are measured from the test vectors, but other implementations could produce values where the traditional component has a different size. For example, this could be due to:
+
+* Compressed vs uncompressed EC point.
+* The RSA public key `(n, e)` allows `e` to vary is size between 3 and `n -1` [RFC8017].
+* [RFC8017] allows for RSA private keys to be represented as either `(n, d)` or as Chinese Remainder Theorem as a quintuple `(p, q, dP, dQ, qInv)` and a (possibly empty) sequence of triplets `(r_i, d_i, t_i)`.
+* When the underlying RSA or EC value is itself DER-encoded, integer values could occaisionally be shorter than expected due to leading zeros being dropped from the encoding.
+
+Note that by contrast, ML-KEM values are always fixed size, so composite values can always be correctly de-serialized based on the size of the ML-KEM component.
+
+Implementations MUST NOT perform strict length checking based on the values in this table.
+
+Non-hybrid ML-KEM is included for reference.
+
 
 | Algorithm                                     |  Public key  |  Private key |  Ciphertext  |  SS  |
 | --------------------------------------------- | ------------ | ------------ |  ----------- |  --  |
@@ -1438,9 +1452,7 @@ The Composite ML-KEM design specified in this document, and especially that of t
 | id-MLKEM1024-X448-SHA3-256                    |     1624     |     120      |     1624     |  32  |
 
 
-Non-hybrid ML-KEM is included for reference.
 
-Note that since this specification allows for multiple encodings of the traditional component, small variations in size could be encountered. Implementations MUST NOT perform strict length checking based on the values in this table.
 
 # Samples {#appdx-samples}
 
