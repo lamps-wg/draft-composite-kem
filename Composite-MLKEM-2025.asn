@@ -99,36 +99,36 @@ kema-CompositeKEM {
 
 
 -- TODO: OID to be replaced by IANA
-id-MLKEM768-RSA2048 OBJECT IDENTIFIER ::= {
+id-MLKEM768-RSA2048-HKDF-SHA256 OBJECT IDENTIFIER ::= {
   joint-iso-itu-t(2) country(16) us(840) organization(1) 
   entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 30 }
 
-pk-MLKEM768-RSA2048 PUBLIC-KEY ::= 
+pk-MLKEM768-RSA2048-HKDF-SHA256 PUBLIC-KEY ::= 
   pk-CompositeKEM { 
-    id-MLKEM768-RSA2048, 
+    id-MLKEM768-RSA2048-HKDF-SHA256, 
     CompositeKEMPublicKey }
 
-kema-MLKEM768-RSA2048 KEM-ALGORITHM ::= 
+kema-MLKEM768-RSA2048-HKDF-SHA256 KEM-ALGORITHM ::= 
     kema-CompositeKEM{
-      id-MLKEM768-RSA2048, 
-      pk-MLKEM768-RSA2048 }
+      id-MLKEM768-RSA2048-HKDF-SHA256, 
+      pk-MLKEM768-RSA2048-HKDF-SHA256 }
 
 
 
 -- TODO: OID to be replaced by IANA
-id-MLKEM768-RSA3072 OBJECT IDENTIFIER ::= {
+id-MLKEM768-RSA3072-HKDF-SHA256 OBJECT IDENTIFIER ::= {
   joint-iso-itu-t(2) country(16) us(840) organization(1) 
   entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 31 }
 
 pk-MLKEM768-RSA3072 PUBLIC-KEY ::= 
   pk-CompositeKEM {
-    id-MLKEM768-RSA3072, 
+    id-MLKEM768-RSA3072-HKDF-SHA256, 
     CompositeKEMPublicKey }
 
-kema-MLKEM768-RSA3072 KEM-ALGORITHM ::=
+kema-MLKEM768-RSA3072-HKDF-SHA256 KEM-ALGORITHM ::=
     kema-CompositeKEM{
-      id-MLKEM768-RSA3072, 
-      pk-MLKEM768-RSA3072 }
+      id-MLKEM768-RSA3072-HKDF-SHA256, 
+      pk-MLKEM768-RSA3072-HKDF-SHA256 }
 
 
 
@@ -137,112 +137,131 @@ id-MLKEM768-RSA4096 OBJECT IDENTIFIER ::= {
   joint-iso-itu-t(2) country(16) us(840) organization(1) 
   entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 32 }
 
-pk-MLKEM768-RSA4096 PUBLIC-KEY ::= 
+pk-MLKEM768-RSA4096-HKDF-SHA256 PUBLIC-KEY ::= 
   pk-CompositeKEM {
-    id-MLKEM768-RSA4096, 
+    id-MLKEM768-RSA4096-HKDF-SHA256, 
     CompositeKEMPublicKey }
 
 kema-MLKEM768-RSA4096 KEM-ALGORITHM ::=
     kema-CompositeKEM{
-      id-MLKEM768-RSA4096, 
-      pk-MLKEM768-RSA4096 }
+      id-MLKEM768-RSA4096-HKDF-SHA256, 
+      pk-MLKEM768-RSA4096-HKDF-SHA256 }
+
 
 
 -- TODO: OID to be replaced by IANA
-id-MLKEM768-ECDH-P384 OBJECT IDENTIFIER ::= {
-  joint-iso-itu-t(2) country(16) us(840) organization(1) 
+id-MLKEM768-X25519-SHA3-256 OBJECT IDENTIFIER ::= {
+  joint-iso-itu-t(2) country(16) us(840) organization(1)
   entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 33 }
 
-pk-MLKEM768-ECDH-P384 PUBLIC-KEY ::= 
+pk-MLKEM768-X25519-SHA3-256 PUBLIC-KEY ::= 
   pk-CompositeKEM {
-    id-MLKEM768-ECDH-P384, 
+    id-MLKEM768-X25519-SHA3-256, 
     CompositeKEMPublicKey }
 
-kema-MLKEM768-ECDH-P384 KEM-ALGORITHM ::= 
+kema-MLKEM768-X25519-SHA3-256 KEM-ALGORITHM ::= 
     kema-CompositeKEM{
-      id-MLKEM768-ECDH-P384, 
-      pk-MLKEM768-ECDH-P384 }
+      id-MLKEM768-X25519-SHA3-256, 
+      pk-MLKEM768-X25519-SHA3-256 }
 
 
 -- TODO: OID to be replaced by IANA
-id-MLKEM768-ECDH-brainpoolP256r1 OBJECT IDENTIFIER ::= {
+id-MLKEM768-ECDH-P256-HKDF-SHA256 OBJECT IDENTIFIER ::= {
   joint-iso-itu-t(2) country(16) us(840) organization(1) 
   entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 34 }
 
-pk-MLKEM768-ECDH-brainpoolP256r1 PUBLIC-KEY ::= 
+pk-MLKEM768-ECDH-P256-HKDF-SHA256 PUBLIC-KEY ::= 
   pk-CompositeKEM {
-    id-MLKEM768-ECDH-brainpoolP256r1, 
+    id-MLKEM768-ECDH-P256-HKDF-SHA256, 
     CompositeKEMPublicKey }
 
-kema-MLKEM768-ECDH-brainpoolP256r1 KEM-ALGORITHM ::= 
+kema-MLKEM768-ECDH-P256-HKDF-SHA256 KEM-ALGORITHM ::= 
     kema-CompositeKEM{
-      id-MLKEM768-ECDH-brainpoolP256r1, 
-      pk-MLKEM768-ECDH-brainpoolP256r1 }
+      id-MLKEM768-ECDH-P256-HKDF-SHA256, 
+      pk-MLKEM768-ECDH-P256-HKDF-SHA256 }
+
 
 
 -- TODO: OID to be replaced by IANA
-id-MLKEM768-X25519 OBJECT IDENTIFIER ::= {
-  joint-iso-itu-t(2) country(16) us(840) organization(1)
+id-MLKEM768-ECDH-P384-HKDF-SHA256 OBJECT IDENTIFIER ::= {
+  joint-iso-itu-t(2) country(16) us(840) organization(1) 
   entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 35 }
 
-pk-MLKEM768-X25519 PUBLIC-KEY ::= 
+pk-MLKEM768-ECDH-P384-HKDF-SHA256 PUBLIC-KEY ::= 
   pk-CompositeKEM {
-    id-MLKEM768-X25519, 
+    id-MLKEM768-ECDH-P384-HKDF-SHA256, 
     CompositeKEMPublicKey }
 
-kema-MLKEM768-X25519 KEM-ALGORITHM ::= 
+kema-MLKEM768-ECDH-P384-HKDF-SHA256 KEM-ALGORITHM ::= 
     kema-CompositeKEM{
-      id-MLKEM768-X25519, 
-      pk-MLKEM768-X25519 }
+      id-MLKEM768-ECDH-P384-HKDF-SHA256, 
+      pk-MLKEM768-ECDH-P384-HKDF-SHA256 }
 
 
 
 -- TODO: OID to be replaced by IANA
-id-MLKEM1024-ECDH-P384 OBJECT IDENTIFIER ::= {
-  joint-iso-itu-t(2) country(16) us(840) organization(1)
+id-MLKEM768-ECDH-brainpoolP256r1-HKDF-SHA256 OBJECT IDENTIFIER ::= {
+  joint-iso-itu-t(2) country(16) us(840) organization(1) 
   entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 36 }
 
-pk-MLKEM1024-ECDH-P384 PUBLIC-KEY ::= 
+pk-MLKEM768-ECDH-brainpoolP256r1-HKDF-SHA256 PUBLIC-KEY ::= 
   pk-CompositeKEM {
-    id-MLKEM1024-ECDH-P384, 
+    id-MLKEM768-ECDH-brainpoolP256r1-HKDF-SHA256, 
     CompositeKEMPublicKey }
 
-kema-MLKEM1024-ECDH-P384 KEM-ALGORITHM ::= 
+kema-MLKEM768-ECDH-brainpoolP256r1-HKDF-SHA256 KEM-ALGORITHM ::= 
     kema-CompositeKEM{
-      id-MLKEM1024-ECDH-P384, 
-      pk-MLKEM1024-ECDH-P384 }
+      id-MLKEM768-ECDH-brainpoolP256r1-HKDF-SHA256, 
+      pk-MLKEM768-ECDH-brainpoolP256r1-HKDF-SHA256 }
+
 
 
 -- TODO: OID to be replaced by IANA
-id-MLKEM1024-ECDH-brainpoolP384r1 OBJECT IDENTIFIER ::= {
-  joint-iso-itu-t(2) country(16) us(840) organization(1) 
+id-MLKEM1024-ECDH-P384-HKDF-SHA384 OBJECT IDENTIFIER ::= {
+  joint-iso-itu-t(2) country(16) us(840) organization(1)
   entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 37 }
 
-pk-MLKEM1024-ECDH-brainpoolP384r1 PUBLIC-KEY ::= 
-  pk-CompositeKEM{
-    id-MLKEM1024-ECDH-brainpoolP384r1, 
+pk-MLKEM1024-ECDH-P384-HKDF-SHA384 PUBLIC-KEY ::= 
+  pk-CompositeKEM {
+    id-MLKEM1024-ECDH-P384-HKDF-SHA384, 
     CompositeKEMPublicKey }
 
-kema-MLKEM1024-ECDH-brainpoolP384r1 KEM-ALGORITHM ::= 
+kema-MLKEM1024-ECDH-P384-HKDF-SHA384 KEM-ALGORITHM ::= 
     kema-CompositeKEM{
-      id-MLKEM1024-ECDH-brainpoolP384r1, 
-      pk-MLKEM1024-ECDH-brainpoolP384r1 }
-      
+      id-MLKEM1024-ECDH-P384-HKDF-SHA384, 
+      pk-MLKEM1024-ECDH-P384-HKDF-SHA384 }
+
 
 -- TODO: OID to be replaced by IANA
-id-MLKEM1024-X448 OBJECT IDENTIFIER ::= {
+id-MLKEM1024-ECDH-brainpoolP384r1-HKDF-SHA384 OBJECT IDENTIFIER ::= {
   joint-iso-itu-t(2) country(16) us(840) organization(1) 
   entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 38 }
 
-pk-MLKEM1024-X448 PUBLIC-KEY ::= 
+pk-MLKEM1024-ECDH-brainpoolP384r1-HKDF-SHA384 PUBLIC-KEY ::= 
+  pk-CompositeKEM{
+    id-MLKEM1024-ECDH-brainpoolP384r1-HKDF-SHA384, 
+    CompositeKEMPublicKey }
+
+kema-MLKEM1024-ECDH-brainpoolP384r1-HKDF-SHA384 KEM-ALGORITHM ::= 
+    kema-CompositeKEM{
+      id-MLKEM1024-ECDH-brainpoolP384r1-HKDF-SHA384, 
+      pk-MLKEM1024-ECDH-brainpoolP384r1-HKDF-SHA384 }
+      
+
+-- TODO: OID to be replaced by IANA
+id-MLKEM1024-X448-SHA3-256 OBJECT IDENTIFIER ::= {
+  joint-iso-itu-t(2) country(16) us(840) organization(1) 
+  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 39 }
+
+pk-MLKEM1024-X448-SHA3-256 PUBLIC-KEY ::= 
   pk-CompositeKEM {
-    id-MLKEM1024-X448, 
+    id-MLKEM1024-X448-SHA3-256, 
     CompositeKEMPublicKey }
 
 kema-MLKEM1024-X448 KEM-ALGORITHM ::= 
     kema-CompositeKEM{
-      id-MLKEM1024-X448, 
-      pk-MLKEM1024-X448 }
+      id-MLKEM1024-X448-SHA3-256, 
+      pk-MLKEM1024-X448-SHA3-256 }
 
 
 END
