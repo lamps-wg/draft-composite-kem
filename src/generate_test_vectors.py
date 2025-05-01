@@ -33,8 +33,8 @@ OID_TABLE = {
   # "ECDH-brainpoolP384r1": univ.ObjectIdentifier((1,2,840,10045,2,1)),
   # "id-X25519": univ.ObjectIdentifier((1,3,101,110)),
   # "id-X448": univ.ObjectIdentifier((1,3,101,111)),
-  # "id-alg-ml-kem-768": univ.ObjectIdentifier((2,16,840,1,101,3,4,4,2)),
-  # "id-alg-ml-kem-1024": univ.ObjectIdentifier((2,16,840,1,101,3,4,4,3)),
+  "id-alg-ml-kem-768": univ.ObjectIdentifier((2,16,840,1,101,3,4,4,2)),
+  "id-alg-ml-kem-1024": univ.ObjectIdentifier((2,16,840,1,101,3,4,4,3)),
   "id-MLKEM768-RSA2048-HKDF-SHA256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,30)),
   "id-MLKEM768-RSA3072-HKDF-SHA256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,31)),
   "id-MLKEM768-RSA4096-HKDF-SHA256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,32)),
@@ -45,6 +45,7 @@ OID_TABLE = {
   "id-MLKEM1024-ECDH-P384-HKDF-SHA384": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,37)),
   "id-MLKEM1024-ECDH-brainpoolP384r1-HKDF-SHA384": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,38)),
   "id-MLKEM1024-X448-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,39)),
+  "id-MLKEM1024-ECDH-P521-HKDF-SHA384": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,40)),
 }
 
 
@@ -126,6 +127,30 @@ class ECDHP256KEM(KEM):
                     )
 
   
+# skip some copy&paste'ing by inheriting from P256
+class ECDHP521KEM(ECDHP256KEM):
+  id = "ECDH-P521"
+  oid = univ.ObjectIdentifier((1,2,840,10045))
+
+  def keyGen(self):
+    self.sk = ec.generate_private_key(ec.SECP521R1())
+    self.pk = self.sk.public_key()
+    
+  def encap(self):    
+    esk = ec.generate_private_key(ec.SECP521R1())
+    ss = esk.exchange(ec.ECDH(), self.pk)
+    ct = esk.public_key().public_bytes(
+              encoding=serialization.Encoding.X962,
+              format=serialization.PublicFormat.UncompressedPoint
+            ) 
+    return (ct, ss)
+  
+  def decap(self, ct):
+    if isinstance(ct, bytes):
+      ct = ec.EllipticCurvePublicKey.from_encoded_point(ec.SECP521R1(), ct)
+    return self.sk.exchange(ec.ECDH(), ct)
+  
+
 # skip some copy&paste'ing by inheriting from P256
 class ECDHP384KEM(ECDHP256KEM):
   id = "ECDH-P384"
@@ -578,8 +603,15 @@ class MLKEM1024_X448_SHA3_256(CompositeKEM):
   mlkem = MLKEM1024()
   tradkem = X448KEM()
   kdf = "SHA3-256"
-  
 
+  
+class MLKEM1024_ECDH_P521_HKDF_SHA384(CompositeKEM):
+  id = "id-MLKEM1024-ECDH-P521-HKDF-SHA384"
+  mlkem = MLKEM1024()
+  tradkem = ECDHP521KEM()
+  kdf = "HKDF-SHA384"
+
+  
 
 ### KEM Combiner ###
 
@@ -930,8 +962,8 @@ def main():
   # jsonOutput['tests'].append( doKEM(RSA2048OAEPKEM(), caSK) )
   # jsonOutput['tests'].append( doKEM(RSA3072OAEPKEM(), caSK) )
   # jsonOutput['tests'].append( doKEM(RSA4096OAEPKEM(), caSK) )
-  # jsonOutput['tests'].append( doKEM(MLKEM768(), caSK) )
-  # jsonOutput['tests'].append( doKEM(MLKEM1024(), caSK) )
+  jsonOutput['tests'].append( doKEM(MLKEM768(), caSK) )
+  jsonOutput['tests'].append( doKEM(MLKEM1024(), caSK) )
 
 
   
@@ -946,6 +978,7 @@ def main():
   jsonOutput['tests'].append( doKEM(MLKEM1024_ECDH_P384_HKDF_SHA384(), caSK) )
   jsonOutput['tests'].append( doKEM(MLKEM1024_ECDH_brainpoolP384r1_HKDF_SHA384(), caSK) )
   jsonOutput['tests'].append( doKEM(MLKEM1024_X448_SHA3_256(), caSK) )
+  jsonOutput['tests'].append( doKEM(MLKEM1024_ECDH_P521_HKDF_SHA384(), caSK) )
 
 
   with open('testvectors.json', 'w') as f:
