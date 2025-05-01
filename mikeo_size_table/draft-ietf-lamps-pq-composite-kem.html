@@ -3670,7 +3670,7 @@ END
           <p id="appendix-A-2.1.1">Compressed vs uncompressed EC point.<a href="#appendix-A-2.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-2.2">
-          <p id="appendix-A-2.2.1">The RSA public key <code>(n, e)</code> allows <code>e</code> to vary is size between 3 and <code>n -1</code> <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span>.<a href="#appendix-A-2.2.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-2.2.1">The RSA public key <code>(n, e)</code> allows <code>e</code> to vary is size between 3 and <code>n - 1</code> <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span>.<a href="#appendix-A-2.2.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-2.3">
           <p id="appendix-A-2.3.1"><span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span> allows for RSA private keys to be represented as either <code>(n, d)</code> or as Chinese Remainder Theorem as a quintuple <code>(p, q, dP, dQ, qInv)</code> and a (possibly empty) sequence of triplets <code>(r_i, d_i, t_i)</code>.<a href="#appendix-A-2.3.1" class="pilcrow">¶</a></p>
@@ -3682,8 +3682,12 @@ END
 <p id="appendix-A-3">Note that by contrast, ML-KEM values are always fixed size, so composite values can always be correctly de-serialized based on the size of the ML-KEM component.<a href="#appendix-A-3" class="pilcrow">¶</a></p>
 <p id="appendix-A-4">Implementations MUST NOT perform strict length checking based on the values in this table.<a href="#appendix-A-4" class="pilcrow">¶</a></p>
 <p id="appendix-A-5">Non-hybrid ML-KEM is included for reference.<a href="#appendix-A-5" class="pilcrow">¶</a></p>
+<span id="name-approximate-size-values-of-"></span><div id="tab-size-values">
 <table class="center" id="table-7">
-        <caption><a href="#table-7" class="selfRef">Table 7</a></caption>
+        <caption>
+<a href="#table-7" class="selfRef">Table 7</a>:
+<a href="#name-approximate-size-values-of-" class="selfRef">Approximate size values of composite ML-KEM</a>
+        </caption>
 <thead>
           <tr>
             <th class="text-left" rowspan="1" colspan="1">Algorithm</th>
@@ -3780,6 +3784,7 @@ END
           </tr>
         </tbody>
       </table>
+</div>
 </section>
 </div>
 <div id="appdx-samples">
