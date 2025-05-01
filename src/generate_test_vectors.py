@@ -45,7 +45,20 @@ OID_TABLE = {
   "id-MLKEM1024-ECDH-P384-HKDF-SHA384": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,37)),
   "id-MLKEM1024-ECDH-brainpoolP384r1-HKDF-SHA384": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,38)),
   "id-MLKEM1024-X448-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,39)),
+  "id-MLKEM1024-ECDH-P521-HKDF-SHA384": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,40)),
 }
+
+
+SIZE_TABLE = {}
+
+DOMAIN_TABLE = {}
+
+def genDomainTable():
+  for alg in OID_TABLE:
+    domain = base64.b16encode(encode(OID_TABLE[alg]))
+    DOMAIN_TABLE[alg] = domain
+
+genDomainTable()
 
 class KEM:
   pk = None
@@ -114,6 +127,30 @@ class ECDHP256KEM(KEM):
                     )
 
   
+# skip some copy&paste'ing by inheriting from P256
+class ECDHP521KEM(ECDHP256KEM):
+  id = "ECDH-P521"
+  oid = univ.ObjectIdentifier((1,2,840,10045))
+
+  def keyGen(self):
+    self.sk = ec.generate_private_key(ec.SECP521R1())
+    self.pk = self.sk.public_key()
+    
+  def encap(self):    
+    esk = ec.generate_private_key(ec.SECP521R1())
+    ss = esk.exchange(ec.ECDH(), self.pk)
+    ct = esk.public_key().public_bytes(
+              encoding=serialization.Encoding.X962,
+              format=serialization.PublicFormat.UncompressedPoint
+            ) 
+    return (ct, ss)
+  
+  def decap(self, ct):
+    if isinstance(ct, bytes):
+      ct = ec.EllipticCurvePublicKey.from_encoded_point(ec.SECP521R1(), ct)
+    return self.sk.exchange(ec.ECDH(), ct)
+  
+
 # skip some copy&paste'ing by inheriting from P256
 class ECDHP384KEM(ECDHP256KEM):
   id = "ECDH-P384"
@@ -397,6 +434,10 @@ class CompositeKEM(KEM):
   kdf = "None"
   domSep = ""
 
+  def __init__(self):
+    super().__init__()
+    self.domSep = DOMAIN_TABLE[self.id]
+
   def keyGen(self):
     self.mlkem.keyGen()
     self.tradkem.keyGen()
@@ -447,28 +488,6 @@ class CompositeKEM(KEM):
   def private_key_bytes(self):
     return self.serializePrivateKey()
   
-
-  # def compositeEncode(self, v1, v2):
-  #   """
-  #   (v1, v2) -> v
-  #   """
-  #   assert isinstance(v1, bytes)
-  #   assert isinstance(v2, bytes)
-  #   return len(v1).to_bytes(4, 'big') + v1 + v2
-  
-
-  # def compositeDecode(self, v):
-  #   """
-  #   v -> (v1, v2)
-  #   """
-  #   assert isinstance(v, bytes)
-  #   # first 4 bytes is the length tag of ct1
-  #   v1_len = int.from_bytes(v[0:4], 'big')
-  #   v1 = v[4:4+v1_len]
-  #   v2 = v[4+v1_len:]
-  #   return (v1, v2)
-  
-
   def serializeCiphertext(self, ct1, ct2):
     assert isinstance(ct1, bytes)
     assert isinstance(ct2, bytes)
@@ -518,105 +537,81 @@ class CompositeKEM(KEM):
 
 class MLKEM768_RSA2048_HKDF_SHA256(CompositeKEM):
   id = "id-MLKEM768-RSA2048-HKDF-SHA256"
-  oid = univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,30))
   mlkem = MLKEM768()
   tradkem = RSA2048OAEPKEM()
   kdf = "HKDF-SHA256"
-  domSep = "060B6086480186FA6B5005021E"
-
 
 
 class MLKEM768_RSA3072_HKDF_SHA256(CompositeKEM):
   id = "id-MLKEM768-RSA3072-HKDF-SHA256"
-  oid = univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,31))
   mlkem = MLKEM768()
   tradkem = RSA3072OAEPKEM()
   kdf = "HKDF-SHA256"
-  domSep = "060B6086480186FA6B5005021F"
-
 
 
 class MLKEM768_RSA4096_HKDF_SHA256(CompositeKEM):
   id = "id-MLKEM768-RSA4096-HKDF-SHA256"
-  oid = univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,32))
   mlkem = MLKEM768()
   tradkem = RSA4096OAEPKEM()
   kdf = "HKDF-SHA256"
-  domSep = "060B6086480186FA6B50050220"
-
 
 
 class MLKEM768_X25519_SHA3_256(CompositeKEM):
   id = "id-MLKEM768-X25519-SHA3-256"
-  oid = univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,33))
   mlkem = MLKEM768()
   tradkem = X25519KEM()
   kdf = "SHA3-256"
-  domSep = "060B6086480186FA6B50050221"
-
 
 
 class MLKEM768_ECDH_P256_HKDF_SHA256(CompositeKEM):
   id = "id-MLKEM768-ECDH-P256-HKDF-SHA256"
-  oid = univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,34))
   mlkem = MLKEM768()
   tradkem = ECDHP256KEM()
   kdf = "HKDF-SHA256"
-  domSep = "060B6086480186FA6B50050222"
-
 
 
 class MLKEM768_ECDH_P384_HKDF_SHA256(CompositeKEM):
   id = "id-MLKEM768-ECDH-P384-HKDF-SHA256"
-  oid = univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,35))
   mlkem = MLKEM768()
   tradkem = ECDHP384KEM()
   kdf = "HKDF-SHA256"
-  domSep = "060B6086480186FA6B50050223"
-
 
 
 class MLKEM768_ECDH_brainpoolP256r1_HKDF_SHA256(CompositeKEM):
   id = "id-MLKEM768-ECDH-brainpoolP256r1-HKDF-SHA256"
-  oid = univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,36))
   mlkem = MLKEM768()
   tradkem = ECDHBP256KEM()
   kdf = "HKDF-SHA256"
-  domSep = "060B6086480186FA6B50050224"
-
 
 
 class MLKEM1024_ECDH_P384_HKDF_SHA384(CompositeKEM):
   id = "id-MLKEM1024-ECDH-P384-HKDF-SHA384"
-  oid = univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,37))
   mlkem = MLKEM1024()
   tradkem = ECDHP384KEM()
   kdf = "HKDF-SHA384"
-  domSep = "060B6086480186FA6B50050225"
-
 
 
 class MLKEM1024_ECDH_brainpoolP384r1_HKDF_SHA384(CompositeKEM):
   id = "id-MLKEM1024-ECDH-brainpoolP384r1-HKDF-SHA384"
-  # oid = univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,38))
   mlkem = MLKEM1024()
   tradkem = ECDHBP384KEM()
   kdf = "HKDF-SHA384"
-  domSep = "060B6086480186FA6B50050226"
-
 
 
 class MLKEM1024_X448_SHA3_256(CompositeKEM):
   id = "id-MLKEM1024-X448-SHA3-256"
-  # oid = univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,38))
   mlkem = MLKEM1024()
   tradkem = X448KEM()
   kdf = "SHA3-256"
-  domSep = "060B6086480186FA6B50050227"
 
+  
+class MLKEM1024_ECDH_P521_HKDF_SHA384(CompositeKEM):
+  id = "id-MLKEM1024-ECDH-P521-HKDF-SHA384"
+  mlkem = MLKEM1024()
+  tradkem = ECDHP521KEM()
+  kdf = "HKDF-SHA384"
 
-
-
+  
 
 ### KEM Combiner ###
 
@@ -642,7 +637,7 @@ def kemCombiner(kem, mlkemSS, tradSS, tradCT, tradPK):
     h.update(tradSS)
     h.update(tradCT)
     h.update(tradPK)
-    h.update(bytes.fromhex(kem.domSep))
+    h.update(kem.domSep)
     ss = h.finalize()
     
   elif kem.kdf == "HKDF-SHA384":
@@ -654,8 +649,9 @@ def kemCombiner(kem, mlkemSS, tradSS, tradCT, tradPK):
     h.update(tradSS)
     h.update(tradCT)
     h.update(tradPK)
-    h.update(bytes.fromhex(kem.domSep))
+    h.update(kem.domSep)
     ss = h.finalize()
+    ss = ss[:32]  # truncate to 32 bytes
 
   elif kem.kdf == "SHA3-256":
     # SHA3-256(..)
@@ -664,7 +660,7 @@ def kemCombiner(kem, mlkemSS, tradSS, tradCT, tradPK):
     digest.update(tradSS)
     digest.update(tradCT)
     digest.update(tradPK)
-    digest.update(bytes.fromhex(kem.domSep))
+    digest.update(kem.domSep)
     ss = digest.finalize()
   
   else:
@@ -853,6 +849,14 @@ def signKemCert(caSK, kem):
 
 
 def formatResults(kem, caSK, ct, ss ):
+
+  sizeRow = {}
+  sizeRow['pk'] = len(kem.public_key_bytes())
+  sizeRow['sk'] = len(kem.private_key_bytes())
+  sizeRow['ct'] = len(ct)
+  sizeRow['ss'] = len(ss)
+  SIZE_TABLE[kem.id] = sizeRow
+
   jsonTest = {}
   jsonTest['tcId'] = kem.id
   jsonTest['ek'] = base64.b64encode(kem.public_key_bytes()).decode('ascii')
@@ -894,6 +898,37 @@ def writeDumpasn1Cfg():
       f.write("\n")
 
 
+def writeSizeTable():
+  # In this style:
+  # | Algorithm   | Public key  | Private key |  Ciphertext  |  SS  |
+  # | ----------- | ----------- | ----------- |  ----------- |  --  |
+  # | ML-KEM-768  |    1184     |     64      |     1088     |  32  |
+  # | ML-KEM-1024 |    1568     |     64      |     1568     |  32  |
+
+
+  with open('sizeTable.md', 'w') as f:
+    f.write('| Algorithm                                     |  Public key  |  Private key |  Ciphertext  |  SS  |\n')
+    f.write('| --------------------------------------------- | ------------ | ------------ |  ----------- |  --  |\n')
+
+    for alg in SIZE_TABLE:
+      row = SIZE_TABLE[alg]
+      f.write('| '+ alg.ljust(46, ' ') +'|'+
+                 str(row['pk']).center(14, ' ') +'|'+
+                 str(row['sk']).center(14, ' ') +'|'+
+                 str(row['ct']).center(14, ' ') +'|'+
+                 str(row['ss']).center(6, ' ') +'|\n')
+  
+
+def writeDomainTable():
+  """
+  Writes the table of domain separators to go into the draft.
+  """
+
+  with open('domSepTable.md', 'w') as f:
+    f.write('| Composite Signature Algorithm | Domain Separator (in Hex encoding)|\n')
+
+    for alg in DOMAIN_TABLE:
+      f.write('| ' + alg + " | " + str(DOMAIN_TABLE[alg].decode('ascii')) + " |\n")
 
 
 def doKEM(kem, caSK):
@@ -930,6 +965,7 @@ def main():
   jsonOutput['tests'].append( doKEM(MLKEM768(), caSK) )
   jsonOutput['tests'].append( doKEM(MLKEM1024(), caSK) )
 
+
   
   # Composites
   jsonOutput['tests'].append( doKEM(MLKEM768_RSA2048_HKDF_SHA256(), caSK) )
@@ -942,6 +978,7 @@ def main():
   jsonOutput['tests'].append( doKEM(MLKEM1024_ECDH_P384_HKDF_SHA384(), caSK) )
   jsonOutput['tests'].append( doKEM(MLKEM1024_ECDH_brainpoolP384r1_HKDF_SHA384(), caSK) )
   jsonOutput['tests'].append( doKEM(MLKEM1024_X448_SHA3_256(), caSK) )
+  jsonOutput['tests'].append( doKEM(MLKEM1024_ECDH_P521_HKDF_SHA384(), caSK) )
 
 
   with open('testvectors.json', 'w') as f:
@@ -953,7 +990,8 @@ def main():
                                   replace_whitespace=False,
                                   drop_whitespace=False)))
   writeDumpasn1Cfg()
-
+  writeSizeTable()
+  writeDomainTable()
 
 
 if __name__ == "__main__":

@@ -96,6 +96,12 @@ normative:
         org: ITU-T
       seriesinfo:
         ISO/IEC: 8825-1:2015
+  SEC2:
+    title: "SEC 2: Recommended Elliptic Curve Domain Parameters"
+    date: January 27, 2010
+    author:
+      org: "Certicom Research"
+    target: https://www.secg.org/sec2-v2.pdf
   SP.800-56Ar3:
     title: "Recommendation for Pair-Wise Key-Establishment Schemes Using Discrete Logarithm Cryptography"
     date: April 2018
@@ -275,6 +281,7 @@ Interop-affecting changes:
 * ML-KEM secret keys are now only seeds.
 * Since all ML-KEM keys and ciphertexts are now fixed-length, dropped the length-tagged encoding.
 * Added complete test vectors.
+* Added ML-KEM1024+ECDH-P521 combination.
 
 Editorial changes:
 
@@ -1203,6 +1210,7 @@ EDNOTE: these are prototyping OIDs to be replaced by IANA.
 | id-MLKEM1024-ECDH-P384-HKDF-SHA384 | &lt;CompKEM&gt;.37   | MLKEM1024       | ECDH-P384            | HKDF-SHA384/256 |
 | id-MLKEM1024-ECDH-brainpoolP384r1-HKDF-SHA384  | &lt;CompKEM&gt;.38   | MLKEM1024       | ECDH-brainpoolP384r1 | SHA3-256 |
 | id-MLKEM1024-X448-SHA3-256         | &lt;CompKEM&gt;.39   | MLKEM1024       | X448                 | SHA3-256 |
+| id-MLKEM1024-ECDH-P521-HKDF-SHA384 | &lt;CompKEM&gt;.40   | MLKEM1024       | ECDH-P521            | HKDF-SHA384/256 |
 {: #tab-kem-algs title="Composite ML-KEM key types"}
 
 Note that in alignment with ML-KEM which outputs a 256-bit shared secret key at all security levels, all Composite KEM algorithms output a 256-bit shared secret key.
@@ -1216,18 +1224,18 @@ Full specifications for the referenced component algorithms can be found in {{ap
 
 The KEM combiner used in this document requires a domain separator `Domain` input.  The following table shows the HEX-encoded domain separator for each Composite ML-KEM AlgorithmID; to use it, the value MUST be HEX-decoded and used in binary form. The domain separator is simply the DER encoding of the composite algorithm OID.
 
-| Composite ML-KEM Algorithm| Domain Separator (in Hex encoding)|
-| -----------               | ----------- |
-| id-MLKEM768-RSA2048-HKDF-SHA256       | 060B6086480186FA6B5005021E |
-| id-MLKEM768-RSA3072-HKDF-SHA256       | 060B6086480186FA6B5005021F |
-| id-MLKEM768-RSA4096-HKDF-SHA256       | 060B6086480186FA6B50050220 |
-| id-MLKEM768-X25519-SHA3-256        | 060B6086480186FA6B50050221 |
-| id-MLKEM768-ECDH-P256-HKDF-SHA256     | 060B6086480186FA6B50050222 |
-| id-MLKEM768-ECDH-P384-HKDF-SHA256     | 060B6086480186FA6B50050223 |
+| Composite Signature Algorithm | Domain Separator (in Hex encoding)|
+| id-MLKEM768-RSA2048-HKDF-SHA256 | 060B6086480186FA6B5005021E |
+| id-MLKEM768-RSA3072-HKDF-SHA256 | 060B6086480186FA6B5005021F |
+| id-MLKEM768-RSA4096-HKDF-SHA256 | 060B6086480186FA6B50050220 |
+| id-MLKEM768-X25519-SHA3-256 | 060B6086480186FA6B50050221 |
+| id-MLKEM768-ECDH-P256-HKDF-SHA256 | 060B6086480186FA6B50050222 |
+| id-MLKEM768-ECDH-P384-HKDF-SHA256 | 060B6086480186FA6B50050223 |
 | id-MLKEM768-ECDH-brainpoolP256r1-HKDF-SHA256 | 060B6086480186FA6B50050224 |
-| id-MLKEM1024-ECDH-P384-HKDF-SHA384    | 060B6086480186FA6B50050225 |
+| id-MLKEM1024-ECDH-P384-HKDF-SHA384 | 060B6086480186FA6B50050225 |
 | id-MLKEM1024-ECDH-brainpoolP384r1-HKDF-SHA384 | 060B6086480186FA6B50050226 |
-| id-MLKEM1024-X448-SHA3-256         | 060B6086480186FA6B50050227 |
+| id-MLKEM1024-X448-SHA3-256 | 060B6086480186FA6B50050227 |
+| id-MLKEM1024-ECDH-P521-HKDF-SHA384 | 060B6086480186FA6B50050228 |
 {: #tab-kem-domains title="Composite ML-KEM fixedInfo Domain Separators"}
 
 EDNOTE: these domain separators are based on the prototyping OIDs assigned on the Entrust arc. We will need to ask for IANA early allocation of these OIDs so that we can re-compute the domain separators over the final OIDs.
@@ -1239,7 +1247,6 @@ In generating the list of Composite algorithms, the following general guidance w
 
 * Pair equivalent security levels between
 * NIST-P-384 is CNSA approved [CNSA2.0] for all classification levels.
-* 521 bit curve not widely used.
 * SHA256 and SHA512 generally have better adoption than SHA384.
 
 A single invocation of SHA3 is known to behave as a dual-PRF, and thus is sufficient for use as a KDF, see {{sec-cons-kem-combiner}}, however SHA2 is not so must be wrapped in the HKDF construction.
@@ -1350,6 +1357,11 @@ EDNOTE to IANA: OIDs will need to be replaced in both the ASN.1 module and in {{
 - id-MLKEM1024-X448-SHA3-256
   - Decimal: IANA Assigned
   - Description: id-MLKEM1024-X448-SHA3-256
+  - References: This Document
+
+- id-MLKEM1024-ECDH-P521-HKDF-SHA384
+  - Decimal: IANA Assigned
+  - Description: id-MLKEM1024-ECDH-P521-HKDF-SHA384
   - References: This Document
 
 <!-- End of IANA Considerations section -->
@@ -1469,6 +1481,40 @@ The Composite ML-KEM design specified in this document, and especially that of t
 
 --- back
 
+# Approximate Key and Ciphertext Sizes
+
+Note that the sizes listed below are approximate: these values are measured from the test vectors, but other implementations could produce values where the traditional component has a different size. For example, this could be due to:
+
+* Compressed vs uncompressed EC point.
+* The RSA public key `(n, e)` allows `e` to vary is size between 3 and `n - 1` [RFC8017].
+* [RFC8017] allows for RSA private keys to be represented as either `(n, d)` or as Chinese Remainder Theorem as a quintuple `(p, q, dP, dQ, qInv)` and a (possibly empty) sequence of triplets `(r_i, d_i, t_i)`.
+* When the underlying RSA or EC value is itself DER-encoded, integer values could occaisionally be shorter than expected due to leading zeros being dropped from the encoding.
+
+Note that by contrast, ML-KEM values are always fixed size, so composite values can always be correctly de-serialized based on the size of the ML-KEM component.
+
+Implementations MUST NOT perform strict length checking based on the values in this table.
+
+Non-hybrid ML-KEM is included for reference.
+
+
+| Algorithm                                     |  Public key  |  Private key |  Ciphertext  |  SS  |
+| --------------------------------------------- | ------------ | ------------ |  ----------- |  --  |
+| id-alg-ml-kem-768                             |     1184     |      64      |     1088     |  32  |
+| id-alg-ml-kem-1024                            |     1568     |      64      |     1568     |  32  |
+| id-MLKEM768-RSA2048-HKDF-SHA256               |     1454     |     1281     |     1344     |  32  |
+| id-MLKEM768-RSA3072-HKDF-SHA256               |     1582     |     1857     |     1472     |  32  |
+| id-MLKEM768-RSA4096-HKDF-SHA256               |     1710     |     2437     |     1600     |  32  |
+| id-MLKEM768-X25519-SHA3-256                   |     1216     |      96      |     1120     |  32  |
+| id-MLKEM768-ECDH-P256-HKDF-SHA256             |     1249     |     202      |     1153     |  32  |
+| id-MLKEM768-ECDH-P384-HKDF-SHA256             |     1281     |     249      |     1185     |  32  |
+| id-MLKEM768-ECDH-brainpoolP256r1-HKDF-SHA256  |     1249     |     203      |     1153     |  32  |
+| id-MLKEM1024-ECDH-P384-HKDF-SHA384            |     1665     |     249      |     1665     |  32  |
+| id-MLKEM1024-ECDH-brainpoolP384r1-HKDF-SHA384 |     1665     |     253      |     1665     |  32  |
+| id-MLKEM1024-X448-SHA3-256                    |     1624     |     120      |     1624     |  32  |
+| id-MLKEM1024-ECDH-P521-HKDF-SHA384            |     1701     |     305      |     1701     |  32  |
+{: #tab-size-values title="Approximate size values of composite ML-KEM"}
+
+
 
 # Component Algorithm Reference {#appdx_components}
 
@@ -1486,8 +1532,9 @@ This section provides references to the full specification of the algorithms use
 
 | Elliptic CurveID | OID | Specification |
 | ----------- | ----------- | ----------- |
-| secp256r1 | 1.2.840.10045.3.1.7 | [RFC6090] |
-| secp384r1 | 1.3.132.0.34 | [RFC6090] |
+| secp256r1 | 1.2.840.10045.3.1.7 | [RFC6090], [SEC2] |
+| secp384r1 | 1.3.132.0.34 | [RFC6090], [SEC2] |
+| secp521r1 | 1.3.132.0.35 | [RFC6090], [SEC2] |
 | brainpoolP256r1 | 1.3.36.3.3.2.8.1.1.7 | [RFC5639] |
 | brainpoolP384r1 | 1.3.36.3.3.2.8.1.1.11 | [RFC5639] |
 {: #tab-component-curve-algs title="Elliptic Curves used in Composite Constructions"}
@@ -1578,6 +1625,23 @@ ASN.1:
 
 DER:
   30 10 06 07 2A 86 48 CE 3D 02 01 06 05 2B 81 04 00 22
+~~~
+
+**ECDH NIST-P-521**
+
+~~~
+ASN.1:
+  algorithm AlgorithmIdentifier ::= {
+    algorithm id-ecPublicKey   -- (1.2.840.10045.2.1)
+    parameters ANY ::= {
+      AlgorithmIdentifier ::= {
+        algorithm secp521r1    -- (1.3.132.0.35)
+        }
+      }
+    }
+
+DER:
+  30 10 06 07 2A 86 48 CE 3D 02 01 06 05 2B 81 04 00 23
 ~~~
 
 **ECDH Brainpool-256**
