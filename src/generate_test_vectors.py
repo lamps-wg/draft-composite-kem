@@ -605,7 +605,7 @@ def kemCombiner(kem, mlkemSS, tradSS, tradCT, tradPK):
     h.update(tradSS)
     h.update(tradCT)
     h.update(tradPK)
-    h.update(bytes.fromhex(kem.domSep))
+    h.update(kem.domSep)
     ss = h.finalize()
     
   elif kem.kdf == "HKDF-SHA384":
@@ -617,7 +617,7 @@ def kemCombiner(kem, mlkemSS, tradSS, tradCT, tradPK):
     h.update(tradSS)
     h.update(tradCT)
     h.update(tradPK)
-    h.update(bytes.fromhex(kem.domSep))
+    h.update(kem.domSep)
     ss = h.finalize()
     ss = ss[:32]  # truncate to 32 bytes
 
@@ -628,7 +628,7 @@ def kemCombiner(kem, mlkemSS, tradSS, tradCT, tradPK):
     digest.update(tradSS)
     digest.update(tradCT)
     digest.update(tradPK)
-    digest.update(bytes.fromhex(kem.domSep))
+    digest.update(kem.domSep)
     ss = digest.finalize()
   
   else:
