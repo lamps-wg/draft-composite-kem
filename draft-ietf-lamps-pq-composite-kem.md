@@ -1236,7 +1236,6 @@ The KEM combiner used in this document requires a domain separator `Domain` inpu
 | id-MLKEM1024-ECDH-brainpoolP384r1-HKDF-SHA384 | 060B6086480186FA6B50050226 |
 | id-MLKEM1024-X448-SHA3-256 | 060B6086480186FA6B50050227 |
 | id-MLKEM1024-ECDH-P521-HKDF-SHA384 | 060B6086480186FA6B50050228 |
-
 {: #tab-kem-domains title="Composite ML-KEM fixedInfo Domain Separators"}
 
 EDNOTE: these domain separators are based on the prototyping OIDs assigned on the Entrust arc. We will need to ask for IANA early allocation of these OIDs so that we can re-compute the domain separators over the final OIDs.
