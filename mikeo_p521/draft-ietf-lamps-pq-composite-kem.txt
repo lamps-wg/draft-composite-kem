@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 27 October 2025                                         M. Pala
+Expires: 2 November 2025                                         M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                           25 April 2025
+                                                              1 May 2025
 
 
       Composite ML-KEM for use in X.509 Public Key Infrastructure
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 27 October 2025.
+   This Internet-Draft will expire on 2 November 2025.
 
 Copyright Notice
 
@@ -127,19 +127,20 @@ Table of Contents
    11. References
      11.1.  Normative References
      11.2.  Informative References
-   Appendix A.  Component Algorithm Reference
-   Appendix B.  Fixed Component Algorithm Identifiers
-   Appendix C.  Implementation Considerations
-     C.1.  FIPS Certification
-       C.1.1.  FIPS certification of Combiner Function
-     C.2.  Backwards Compatibility
-     C.3.  Decapsulation Requires the Public Key
-   Appendix D.  Comparison with other Hybrid KEMs
-     D.1.  X-Wing
-     D.2.  ETSI CatKDF
-   Appendix E.  Test Vectors
-   Appendix F.  Intellectual Property Considerations
-   Appendix G.  Contributors and Acknowledgments
+   Appendix A.  Approximate Key and Ciphertext Sizes
+   Appendix B.  Component Algorithm Reference
+   Appendix C.  Fixed Component Algorithm Identifiers
+   Appendix D.  Implementation Considerations
+     D.1.  FIPS Certification
+       D.1.1.  FIPS certification of Combiner Function
+     D.2.  Backwards Compatibility
+     D.3.  Decapsulation Requires the Public Key
+   Appendix E.  Comparison with other Hybrid KEMs
+     E.1.  X-Wing
+     E.2.  ETSI CatKDF
+   Appendix F.  Test Vectors
+   Appendix G.  Intellectual Property Considerations
+   Appendix H.  Contributors and Acknowledgments
    Authors' Addresses
 
 1.  Changes in version -07
@@ -245,7 +246,7 @@ Table of Contents
    Concrete instantiations of composite ML-KEM algorithms are provided
    based on ML-KEM, RSA-OAEP and ECDH.  Backwards compatibility is not
    directly covered in this document, but is the subject of
-   Appendix C.2.
+   Appendix D.2.
 
    Composite ML-KEM is intended for general applicability anywhere that
    key establishment or enveloped content encryption is used within PKIX
@@ -717,7 +718,7 @@ Decap Process:
 4.5.  SerializePublicKey and DeserializePublicKey
 
    Each component KEM public key is serialized according to its
-   respective standard as shown in Appendix A and concatenated together
+   respective standard as shown in Appendix B and concatenated together
    using a fixed 4-byte length field denoting the length in bytes of the
    first component key, as defined below.
 
@@ -773,7 +774,7 @@ Serialization Process:
 
    Deserialization reverses this process, raising an error in the event
    that the input is malformed.  Each component key is deserialized
-   according to their respective standard as shown in Appendix A.
+   according to their respective standard as shown in Appendix B.
 
 Composite-ML-KEM.DeserializePublicKey(bytes) -> pk
 
@@ -1309,7 +1310,7 @@ Deserialization Process:
    are used.
 
    Full specifications for the referenced component algorithms can be
-   found in Appendix A.
+   found in Appendix B.
 
 7.2.  Domain Separators
 
@@ -1840,7 +1841,7 @@ Deserialization Process:
    that ML-KEM implemtation is still experimental, non-validated, non-
    certified, non-hardened implementation.  More details of obtaining
    FIPS certification of a composite algorithm can be found in
-   Appendix C.1.
+   Appendix D.1.
 
 10.2.  KEM Combiner
 
@@ -2414,7 +2415,76 @@ Deserialization Process:
               Hybrid KEM You’ve Been Looking For", 9 January 2024,
               <https://eprint.iacr.org/2024/039.pdf>.
 
-Appendix A.  Component Algorithm Reference
+Appendix A.  Approximate Key and Ciphertext Sizes
+
+   Note that the sizes listed below are approximate: these values are
+   measured from the test vectors, but other implementations could
+   produce values where the traditional component has a different size.
+   For example, this could be due to:
+
+   *  Compressed vs uncompressed EC point.
+
+   *  The RSA public key (n, e) allows e to vary is size between 3 and n
+      - 1 [RFC8017].
+
+   *  [RFC8017] allows for RSA private keys to be represented as either
+      (n, d) or as Chinese Remainder Theorem as a quintuple (p, q, dP,
+      dQ, qInv) and a (possibly empty) sequence of triplets (r_i, d_i,
+      t_i).
+
+   *  When the underlying RSA or EC value is itself DER-encoded, integer
+      values could occaisionally be shorter than expected due to leading
+      zeros being dropped from the encoding.
+
+   Note that by contrast, ML-KEM values are always fixed size, so
+   composite values can always be correctly de-serialized based on the
+   size of the ML-KEM component.
+
+   Implementations MUST NOT perform strict length checking based on the
+   values in this table.
+
+   Non-hybrid ML-KEM is included for reference.
+
+   +=============================+========+=========+============+====+
+   | Algorithm                   | Public | Private | Ciphertext | SS |
+   |                             | key    | key     |            |    |
+   +=============================+========+=========+============+====+
+   | id-alg-ml-kem-768           | 1184   | 64      | 1088       | 32 |
+   +-----------------------------+--------+---------+------------+----+
+   | id-alg-ml-kem-1024          | 1568   | 64      | 1568       | 32 |
+   +-----------------------------+--------+---------+------------+----+
+   | id-MLKEM768-RSA2048-HKDF-   | 1454   | 1281    | 1344       | 32 |
+   | SHA256                      |        |         |            |    |
+   +-----------------------------+--------+---------+------------+----+
+   | id-MLKEM768-RSA3072-HKDF-   | 1582   | 1857    | 1472       | 32 |
+   | SHA256                      |        |         |            |    |
+   +-----------------------------+--------+---------+------------+----+
+   | id-MLKEM768-RSA4096-HKDF-   | 1710   | 2439    | 1600       | 32 |
+   | SHA256                      |        |         |            |    |
+   +-----------------------------+--------+---------+------------+----+
+   | id-MLKEM768-X25519-SHA3-256 | 1216   | 96      | 1120       | 32 |
+   +-----------------------------+--------+---------+------------+----+
+   | id-MLKEM768-ECDH-P256-HKDF- | 1249   | 202     | 1153       | 32 |
+   | SHA256                      |        |         |            |    |
+   +-----------------------------+--------+---------+------------+----+
+   | id-MLKEM768-ECDH-P384-HKDF- | 1281   | 249     | 1185       | 32 |
+   | SHA256                      |        |         |            |    |
+   +-----------------------------+--------+---------+------------+----+
+   | id-MLKEM768-ECDH-           | 1249   | 203     | 1153       | 32 |
+   | brainpoolP256r1-HKDF-SHA256 |        |         |            |    |
+   +-----------------------------+--------+---------+------------+----+
+   | id-MLKEM1024-ECDH-P384-     | 1665   | 249     | 1665       | 32 |
+   | HKDF-SHA384                 |        |         |            |    |
+   +-----------------------------+--------+---------+------------+----+
+   | id-MLKEM1024-ECDH-          | 1665   | 253     | 1665       | 32 |
+   | brainpoolP384r1-HKDF-SHA384 |        |         |            |    |
+   +-----------------------------+--------+---------+------------+----+
+   | id-MLKEM1024-X448-SHA3-256  | 1624   | 120     | 1624       | 32 |
+   +-----------------------------+--------+---------+------------+----+
+
+           Table 6: Approximate size values of composite ML-KEM
+
+Appendix B.  Component Algorithm Reference
 
    This section provides references to the full specification of the
    algorithms used in the composite constructions.
@@ -2436,7 +2506,7 @@ Appendix A.  Component Algorithm Reference
         | id-RSAES-OAEP  | 1.2.840.113549.1.1.7   | [RFC8017]     |
         +----------------+------------------------+---------------+
 
-              Table 6: Component Encryption Algorithms used in
+              Table 7: Component Encryption Algorithms used in
                           Composite Constructions
 
      +==================+=======================+===================+
@@ -2453,7 +2523,7 @@ Appendix A.  Component Algorithm Reference
      | brainpoolP384r1  | 1.3.36.3.3.2.8.1.1.11 | [RFC5639]         |
      +------------------+-----------------------+-------------------+
 
-         Table 7: Elliptic Curves used in Composite Constructions
+         Table 8: Elliptic Curves used in Composite Constructions
 
    +=======================+============================+=============+
    |HashID                 | OID                        |Specification|
@@ -2471,9 +2541,9 @@ Appendix A.  Component Algorithm Reference
    |id-KMAC128             | 2.16.840.1.101.3.4.2.21    |[SP.800-185] |
    +-----------------------+----------------------------+-------------+
 
-         Table 8: Hash algorithms used in Composite Constructions
+         Table 9: Hash algorithms used in Composite Constructions
 
-Appendix B.  Fixed Component Algorithm Identifiers
+Appendix C.  Fixed Component Algorithm Identifiers
 
    The following sections list explicitly the DER encoded
    AlgorithmIdentifier that MUST be used when reconstructing
@@ -2611,9 +2681,9 @@ Appendix B.  Fixed Component Algorithm Identifiers
    DER:
      30 05 06 03 2B 65 6F
 
-Appendix C.  Implementation Considerations
+Appendix D.  Implementation Considerations
 
-C.1.  FIPS Certification
+D.1.  FIPS Certification
 
    For reference, the KEM Combiner used in Composite KEM is:
 
@@ -2664,7 +2734,7 @@ C.1.  FIPS Certification
    construction could be used to create FIPS certified algorithms that
    contain a component algorithm from a different jurisdiction.
 
-C.1.1.  FIPS certification of Combiner Function
+D.1.1.  FIPS certification of Combiner Function
 
    TODO: update this to NIST SP 800-227, once it is published.
 
@@ -2697,7 +2767,7 @@ C.1.1.  FIPS certification of Combiner Function
    The SHA3 options can be certified under [SP.800-56Cr2] One-Step Key
    Derivation Option 1: H(x) = hash(x).
 
-C.2.  Backwards Compatibility
+D.2.  Backwards Compatibility
 
    As noted in the introduction, the post-quantum cryptographic
    migration will face challenges in both ensuring cryptographic
@@ -2723,7 +2793,7 @@ C.2.  Backwards Compatibility
    other standardized and proprietary protocols and applications that
    leverage CMS [RFC5652] encrypted structures.
 
-C.3.  Decapsulation Requires the Public Key
+D.3.  Decapsulation Requires the Public Key
 
    ML-KEM always requires the public key in order to perform various
    steps of the Fujisaki-Okamoto decapsulation [FIPS.203], and for this
@@ -2751,9 +2821,9 @@ C.3.  Decapsulation Requires the Public Key
    in this document in Section 5.2 requires the public key of the
    traditional component to be included.
 
-Appendix D.  Comparison with other Hybrid KEMs
+Appendix E.  Comparison with other Hybrid KEMs
 
-D.1.  X-Wing
+E.1.  X-Wing
 
    This specification borrows extensively from the analysis and KEM
    combiner construction presented in [X-Wing].  In particular, X-Wing
@@ -2774,7 +2844,7 @@ D.1.  X-Wing
    domain separator string in order to ensure that their ciphertexts are
    not inter-compatible.
 
-D.2.  ETSI CatKDF
+E.2.  ETSI CatKDF
 
    [ETSI.TS.103.744] section 8.2 defines CatKDF as:
 
@@ -2799,7 +2869,7 @@ MB shall contain all of the corresponding public keys and ciphertexts.
    with some of the variants in this specification, but not the ones
    that use SHA3.
 
-Appendix E.  Test Vectors
+Appendix F.  Test Vectors
 
    The following test vectors are provided in a format similar to the
    NIST ACVP Known-Answer-Tests (KATs).
@@ -5101,7 +5171,7 @@ Appendix E.  Test Vectors
    ]
    }
 
-Appendix F.  Intellectual Property Considerations
+Appendix G.  Intellectual Property Considerations
 
    The following IPR Disclosure relates to this draft:
 
@@ -5110,7 +5180,7 @@ Appendix F.  Intellectual Property Considerations
    EDNOTE TODO: Check with Max Pala whether this IPR actually applies to
    this draft.
 
-Appendix G.  Contributors and Acknowledgments
+Appendix H.  Contributors and Acknowledgments
 
    This document incorporates contributions and comments from a large
    group of experts.  The Editors would especially like to acknowledge
