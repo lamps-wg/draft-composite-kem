@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 29 October 2025                                         M. Pala
+Expires: 2 November 2025                                         M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                           27 April 2025
+                                                              1 May 2025
 
 
   Composite ML-KEM for use in X.509 Public Key Infrastructure and CMS
@@ -61,7 +61,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 29 October 2025.
+   This Internet-Draft will expire on 2 November 2025.
 
 Copyright Notice
 
@@ -136,7 +136,7 @@ Table of Contents
    12. References
      12.1.  Normative References
      12.2.  Informative References
-   Appendix A.  Key and Ciphertext Sizes
+   Appendix A.  Approximate Key and Ciphertext Sizes
    Appendix B.  Samples
    Appendix C.  Component Algorithm Reference
    Appendix D.  Fixed Component Algorithm Identifiers
@@ -2472,7 +2472,35 @@ Deserialization Process:
               Hybrid KEM You’ve Been Looking For", 9 January 2024,
               <https://eprint.iacr.org/2024/039.pdf>.
 
-Appendix A.  Key and Ciphertext Sizes
+Appendix A.  Approximate Key and Ciphertext Sizes
+
+   Note that the sizes listed below are approximate: these values are
+   measured from the test vectors, but other implementations could
+   produce values where the traditional component has a different size.
+   For example, this could be due to:
+
+   *  Compressed vs uncompressed EC point.
+
+   *  The RSA public key (n, e) allows e to vary is size between 3 and n
+      -1 [RFC8017].
+
+   *  [RFC8017] allows for RSA private keys to be represented as either
+      (n, d) or as Chinese Remainder Theorem as a quintuple (p, q, dP,
+      dQ, qInv) and a (possibly empty) sequence of triplets (r_i, d_i,
+      t_i).
+
+   *  When the underlying RSA or EC value is itself DER-encoded, integer
+      values could occaisionally be shorter than expected due to leading
+      zeros being dropped from the encoding.
+
+   Note that by contrast, ML-KEM values are always fixed size, so
+   composite values can always be correctly de-serialized based on the
+   size of the ML-KEM component.
+
+   Implementations MUST NOT perform strict length checking based on the
+   values in this table.
+
+   Non-hybrid ML-KEM is included for reference.
 
    +=============================+========+=========+============+====+
    | Algorithm                   | Public | Private | Ciphertext | SS |
@@ -2512,13 +2540,6 @@ Appendix A.  Key and Ciphertext Sizes
    +-----------------------------+--------+---------+------------+----+
 
                                  Table 7
-
-   Non-hybrid ML-KEM is included for reference.
-
-   Note that since this specification allows for multiple encodings of
-   the traditional component, small variations in size could be
-   encountered.  Implementations MUST NOT perform strict length checking
-   based on the values in this table.
 
 Appendix B.  Samples
 
