@@ -1425,7 +1425,7 @@ The Composite ML-KEM design specified in this document, and especially that of t
 Note that the sizes listed below are approximate: these values are measured from the test vectors, but other implementations could produce values where the traditional component has a different size. For example, this could be due to:
 
 * Compressed vs uncompressed EC point.
-* The RSA public key `(n, e)` allows `e` to vary is size between 3 and `n -1` [RFC8017].
+* The RSA public key `(n, e)` allows `e` to vary is size between 3 and `n - 1` [RFC8017].
 * [RFC8017] allows for RSA private keys to be represented as either `(n, d)` or as Chinese Remainder Theorem as a quintuple `(p, q, dP, dQ, qInv)` and a (possibly empty) sequence of triplets `(r_i, d_i, t_i)`.
 * When the underlying RSA or EC value is itself DER-encoded, integer values could occaisionally be shorter than expected due to leading zeros being dropped from the encoding.
 
@@ -1450,7 +1450,7 @@ Non-hybrid ML-KEM is included for reference.
 | id-MLKEM1024-ECDH-P384-HKDF-SHA384            |     1665     |     249      |     1665     |  32  |
 | id-MLKEM1024-ECDH-brainpoolP384r1-HKDF-SHA384 |     1665     |     253      |     1665     |  32  |
 | id-MLKEM1024-X448-SHA3-256                    |     1624     |     120      |     1624     |  32  |
-
+{: #tab-size-values title="Approximate size values of composite ML-KEM"}
 
 
 
