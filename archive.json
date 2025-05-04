@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-05-01T02:07:01.349123+00:00",
+  "timestamp": "2025-05-04T02:08:02.293705+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -2210,6 +2210,30 @@
       "updatedAt": "2025-04-30T14:31:07Z",
       "closedAt": "2025-04-30T14:31:07Z",
       "comments": []
+    },
+    {
+      "number": 138,
+      "id": "I_kwDOKRPFO8602Snw",
+      "title": "Did I forget to add the P521 stuff to the ASN.1 mod?",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/138",
+      "state": "CLOSED",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-05-01T15:41:25Z",
+      "updatedAt": "2025-05-01T16:35:25Z",
+      "closedAt": "2025-05-01T16:35:25Z",
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Closed by cc427e13f34b9ba9bcf2",
+          "createdAt": "2025-05-01T16:35:22Z",
+          "updatedAt": "2025-05-01T16:35:22Z"
+        }
+      ]
     }
   ],
   "pulls": [
@@ -5314,13 +5338,13 @@
       "labels": [],
       "body": "Closes #119 \r\nCloses #122 \r\nCloses #114 ",
       "createdAt": "2025-04-27T19:46:47Z",
-      "updatedAt": "2025-04-30T14:25:51Z",
+      "updatedAt": "2025-05-01T15:24:19Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "d390094b8c9f78f9ed9bebf8eedbefd2c5c774ad",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_serialization",
-      "headRefOid": "a438f356ba5d7ba1326a261f125e63e9417a6b15",
+      "headRefOid": "0e76d75f0864b131c6a9e26925385c5cabbb71ff",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
