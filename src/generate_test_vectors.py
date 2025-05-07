@@ -25,14 +25,14 @@ from pyasn1.codec.der.encoder import encode
 
 
 OID_TABLE = {
-  # "id-RSAES-OAEP-2048": univ.ObjectIdentifier((1,2,840,113549,1,1,7)),
-  # "id-RSAES-OAEP-3072": univ.ObjectIdentifier((1,2,840,113549,1,1,7)),
-  # "id-RSAES-OAEP-4096": univ.ObjectIdentifier((1,2,840,113549,1,1,7)),
-  # "ECDH-P256": univ.ObjectIdentifier((1,2,840,10045,2,1)),
-  # "ECDH-P384": univ.ObjectIdentifier((1,2,840,10045,2,1)),
-  # "ECDH-brainpoolP384r1": univ.ObjectIdentifier((1,2,840,10045,2,1)),
-  # "id-X25519": univ.ObjectIdentifier((1,3,101,110)),
-  # "id-X448": univ.ObjectIdentifier((1,3,101,111)),
+  "id-RSAES-OAEP-2048": univ.ObjectIdentifier((1,2,840,113549,1,1,7)),
+  "id-RSAES-OAEP-3072": univ.ObjectIdentifier((1,2,840,113549,1,1,7)),
+  "id-RSAES-OAEP-4096": univ.ObjectIdentifier((1,2,840,113549,1,1,7)),
+  "ECDH-P256": univ.ObjectIdentifier((1,2,840,10045,2,1)),
+  "ECDH-P384": univ.ObjectIdentifier((1,2,840,10045,2,1)),
+  "ECDH-brainpoolP384r1": univ.ObjectIdentifier((1,2,840,10045,2,1)),
+  "id-X25519": univ.ObjectIdentifier((1,3,101,110)),
+  "id-X448": univ.ObjectIdentifier((1,3,101,111)),
   "id-alg-ml-kem-768": univ.ObjectIdentifier((2,16,840,1,101,3,4,4,2)),
   "id-alg-ml-kem-1024": univ.ObjectIdentifier((2,16,840,1,101,3,4,4,3)),
   "id-MLKEM768-RSA2048-HKDF-SHA256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,30)),
@@ -48,17 +48,6 @@ OID_TABLE = {
   "id-MLKEM1024-ECDH-P521-HKDF-SHA384": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,40)),
 }
 
-
-SIZE_TABLE = {}
-
-DOMAIN_TABLE = {}
-
-def genDomainTable():
-  for alg in OID_TABLE:
-    domain = base64.b16encode(encode(OID_TABLE[alg]))
-    DOMAIN_TABLE[alg] = domain
-
-genDomainTable()
 
 class KEM:
   pk = None
@@ -436,7 +425,9 @@ class CompositeKEM(KEM):
 
   def __init__(self):
     super().__init__()
-    self.domSep = DOMAIN_TABLE[self.id]
+    self.domSep = DOMAIN_TABLE[self.id][0]  # the first component is the domain,
+                                            # the second is a boolean controlling whether
+                                            # this renders in the domsep table in the draft.
 
   def keyGen(self):
     self.mlkem.keyGen()
@@ -847,15 +838,73 @@ def signKemCert(caSK, kem):
 
 
 
+# Setup the test vector output
+testVectorOutput = {}
+
+# Create the CA that will sign all KEM certs
+(caCert, caSK) = createCA()
+testVectorOutput['cacert'] = base64.b64encode(caCert.public_bytes(encoding=serialization.Encoding.DER)).decode('ascii')
+testVectorOutput['tests'] = []
+
+SIZE_TABLE = {}
+
+DOMAIN_TABLE = {}
+
+
+
+def genDomainTable():
+  """
+  This is a bit weird; we have to generate it first because
+  this table is used by the composite.sign() to construct Mprime,
+  but also not every supported option should be rendered into
+  the domain separators table in the draft, hence carrying a boolean.
+  By default, everything is False to be included in the table unless
+  turned on by doSig(.., includeInDomainTable=True)."""
+
+  for alg in OID_TABLE:
+    domain = base64.b16encode(encode(OID_TABLE[alg]))
+    DOMAIN_TABLE[alg] = (domain, False)
+
+# run this statically
+genDomainTable()
+
+
+
+def doKEM(kem, caSK, includeInTestVectors=True, includeInDomainTable=True, includeInSizeTable=True):
+  kem.keyGen()
+  (ct, ss) = kem.encap()
+  _ss = kem.decap(ct)
+  assert ss == _ss
+
+  jsonResult = formatResults(kem, caSK, ct, ss)
+
+  if includeInTestVectors:
+    testVectorOutput['tests'].append(jsonResult)
+
+  if includeInDomainTable:
+    DOMAIN_TABLE[kem.id] = (DOMAIN_TABLE[kem.id][0], True)
+
+  if includeInSizeTable:
+    sizeRow = {}
+    sizeRow['pk'] = len(kem.public_key_bytes())
+    sizeRow['sk'] = len(kem.private_key_bytes())
+    sizeRow['ct'] = len(ct)
+    sizeRow['ss'] = len(ss)
+    SIZE_TABLE[kem.id] = sizeRow
+
+
+def writeTestVectors():
+  with open('testvectors.json', 'w') as f:
+    f.write(json.dumps(testVectorOutput, indent=2))
+  
+  with open('testvectors_wrapped.json', 'w') as f:
+    f.write('\n'.join(textwrap.wrap(''.join(json.dumps(testVectorOutput, indent="")), 
+                                  width=68,
+                                  replace_whitespace=False,
+                                  drop_whitespace=False)))
+
 
 def formatResults(kem, caSK, ct, ss ):
-
-  sizeRow = {}
-  sizeRow['pk'] = len(kem.public_key_bytes())
-  sizeRow['sk'] = len(kem.private_key_bytes())
-  sizeRow['ct'] = len(ct)
-  sizeRow['ss'] = len(ss)
-  SIZE_TABLE[kem.id] = sizeRow
 
   jsonTest = {}
   jsonTest['tcId'] = kem.id
@@ -925,70 +974,45 @@ def writeDomainTable():
   """
 
   with open('domSepTable.md', 'w') as f:
-    f.write('| Composite Signature Algorithm | Domain Separator (in Hex encoding)|\n')
+    f.write('| Composite Signature Algorithm                 | Domain Separator (in Hex encoding)|\n')
+    f.write('| ---------------------------------------       | ----------------------------------|\n')
 
     for alg in DOMAIN_TABLE:
-      f.write('| ' + alg + " | " + str(DOMAIN_TABLE[alg].decode('ascii')) + " |\n")
+      if DOMAIN_TABLE[alg][1]:  # boolean controlling rendering in this table.
+        f.write('| ' + alg.ljust(45, ' ') + " | " + str(DOMAIN_TABLE[alg][0].decode('ascii')) + " |\n")
 
 
-def doKEM(kem, caSK):
-  kem.keyGen()
-  (ct, ss) = kem.encap()
-  _ss = kem.decap(ct)
-  assert ss == _ss
-
-  return formatResults(kem, caSK, ct, ss)
 
 
 def main():
 
-  jsonOutput = {}
-
-  
-  # Create the CA that will sign all KEM certs
-
-  (caCert, caSK) = createCA()
-  jsonOutput['cacert'] = base64.b64encode(caCert.public_bytes(encoding=serialization.Encoding.DER)).decode('ascii')
-
-  jsonOutput['tests'] = []
-
-
-
-
   # Single algs - remove these, just for testing
-  # jsonOutput['tests'].append( doKEM(X25519KEM(), caSK) )
-  # jsonOutput['tests'].append( doKEM(ECDHP256KEM(), caSK) )
-  # jsonOutput['tests'].append( doKEM(ECDHP384KEM(), caSK) )
-  # jsonOutput['tests'].append( doKEM(RSA2048OAEPKEM(), caSK) )
-  # jsonOutput['tests'].append( doKEM(RSA3072OAEPKEM(), caSK) )
-  # jsonOutput['tests'].append( doKEM(RSA4096OAEPKEM(), caSK) )
-  jsonOutput['tests'].append( doKEM(MLKEM768(), caSK) )
-  jsonOutput['tests'].append( doKEM(MLKEM1024(), caSK) )
+  # doKEM(X25519KEM(), caSK,      includeInTestVectors=True, includeInDomainTable=False, includeInSizeTable=True )
+  # doKEM(ECDHP256KEM(), caSK,    includeInTestVectors=True, includeInDomainTable=False, includeInSizeTable=True )
+  # doKEM(ECDHP384KEM(), caSK,    includeInTestVectors=True, includeInDomainTable=False, includeInSizeTable=True )
+  # doKEM(RSA2048OAEPKEM(), caSK, includeInTestVectors=True, includeInDomainTable=False, includeInSizeTable=True )
+  # doKEM(RSA3072OAEPKEM(), caSK, includeInTestVectors=True, includeInDomainTable=False, includeInSizeTable=True )
+  # doKEM(RSA4096OAEPKEM(), caSK, includeInTestVectors=True, includeInDomainTable=False, includeInSizeTable=True )
+  doKEM(MLKEM768(), caSK,  includeInTestVectors=True, includeInDomainTable=False, includeInSizeTable=True )
+  doKEM(MLKEM1024(), caSK, includeInTestVectors=True, includeInDomainTable=False, includeInSizeTable=True )
 
 
   
   # Composites
-  jsonOutput['tests'].append( doKEM(MLKEM768_RSA2048_HKDF_SHA256(), caSK) )
-  jsonOutput['tests'].append( doKEM(MLKEM768_RSA3072_HKDF_SHA256(), caSK) )
-  jsonOutput['tests'].append( doKEM(MLKEM768_RSA4096_HKDF_SHA256(), caSK) )
-  jsonOutput['tests'].append( doKEM(MLKEM768_X25519_SHA3_256(), caSK) )
-  jsonOutput['tests'].append( doKEM(MLKEM768_ECDH_P256_HKDF_SHA256(), caSK) )
-  jsonOutput['tests'].append( doKEM(MLKEM768_ECDH_P384_HKDF_SHA256(), caSK) )
-  jsonOutput['tests'].append( doKEM(MLKEM768_ECDH_brainpoolP256r1_HKDF_SHA256(), caSK) )
-  jsonOutput['tests'].append( doKEM(MLKEM1024_ECDH_P384_HKDF_SHA384(), caSK) )
-  jsonOutput['tests'].append( doKEM(MLKEM1024_ECDH_brainpoolP384r1_HKDF_SHA384(), caSK) )
-  jsonOutput['tests'].append( doKEM(MLKEM1024_X448_SHA3_256(), caSK) )
-  jsonOutput['tests'].append( doKEM(MLKEM1024_ECDH_P521_HKDF_SHA384(), caSK) )
+  doKEM(MLKEM768_RSA2048_HKDF_SHA256(), caSK)
+  doKEM(MLKEM768_RSA3072_HKDF_SHA256(), caSK)
+  doKEM(MLKEM768_RSA4096_HKDF_SHA256(), caSK)
+  doKEM(MLKEM768_X25519_SHA3_256(), caSK)
+  doKEM(MLKEM768_ECDH_P256_HKDF_SHA256(), caSK )
+  doKEM(MLKEM768_ECDH_P384_HKDF_SHA256(), caSK )
+  doKEM(MLKEM768_ECDH_brainpoolP256r1_HKDF_SHA256(), caSK )
+  doKEM(MLKEM1024_ECDH_P384_HKDF_SHA384(), caSK )
+  doKEM(MLKEM1024_ECDH_brainpoolP384r1_HKDF_SHA384(), caSK )
+  doKEM(MLKEM1024_X448_SHA3_256(), caSK )
+  doKEM(MLKEM1024_ECDH_P521_HKDF_SHA384(), caSK )
 
 
-  with open('testvectors.json', 'w') as f:
-    f.write(json.dumps(jsonOutput, indent=2))
-  
-  with open('testvectors_wrapped.json', 'w') as f:
-    f.write('\n'.join(textwrap.wrap(''.join(json.dumps(jsonOutput, indent="")), 
-                                  width=68,
-                                  replace_whitespace=False,
-                                  drop_whitespace=False)))
+  writeTestVectors()
   writeDumpasn1Cfg()
   writeSizeTable()
   writeDomainTable()
