@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 2 November 2025                                         M. Pala
+Expires: 8 November 2025                                         M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                              1 May 2025
+                                                              7 May 2025
 
 
       Composite ML-KEM for use in X.509 Public Key Infrastructure
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 2 November 2025.
+   This Internet-Draft will expire on 8 November 2025.
 
 Copyright Notice
 
@@ -2491,10 +2491,10 @@ Appendix A.  Approximate Key and Ciphertext Sizes
    | id-MLKEM768-RSA2048-HKDF-   | 1454   | 1281    | 1344       | 32 |
    | SHA256                      |        |         |            |    |
    +-----------------------------+--------+---------+------------+----+
-   | id-MLKEM768-RSA3072-HKDF-   | 1582   | 1857    | 1472       | 32 |
+   | id-MLKEM768-RSA3072-HKDF-   | 1582   | 1856    | 1472       | 32 |
    | SHA256                      |        |         |            |    |
    +-----------------------------+--------+---------+------------+----+
-   | id-MLKEM768-RSA4096-HKDF-   | 1710   | 2437    | 1600       | 32 |
+   | id-MLKEM768-RSA4096-HKDF-   | 1710   | 2439    | 1600       | 32 |
    | SHA256                      |        |         |            |    |
    +-----------------------------+--------+---------+------------+----+
    | id-MLKEM768-X25519-SHA3-256 | 1216   | 96      | 1120       | 32 |
