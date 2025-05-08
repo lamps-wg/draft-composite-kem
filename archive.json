@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-05-04T02:08:02.293705+00:00",
+  "timestamp": "2025-05-08T02:00:45.009395+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -1932,11 +1932,13 @@
       "state": "OPEN",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
-      "assignees": [],
+      "assignees": [
+        "ounsworth"
+      ],
       "labels": [],
       "body": "We have instances of \"DER encoding\" in the document. Many of them do not make sense anymore since we removed the ASN.1 wrapper around public keys and signatures.\n\nGo through each one and see if it still makes sense.\n\nAlso, the entire section \"Encoding Rules\" probably does not need to exist anymore since we now explicitly lay out the byte encoding of the structure.",
       "createdAt": "2025-03-05T15:47:23Z",
-      "updatedAt": "2025-03-05T15:51:43Z",
+      "updatedAt": "2025-05-07T08:05:42Z",
       "closedAt": null,
       "comments": []
     },
@@ -1972,11 +1974,13 @@
       "state": "OPEN",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
-      "assignees": [],
+      "assignees": [
+        "ounsworth"
+      ],
       "labels": [],
       "body": "From the mailing list:\n\nhttps://mailarchive.ietf.org/arch/msg/spasm/04czobwhAH7Z0iLx00Ow4Y9MaHY/\n\n> have a sequence of octet string representing\n> the private key octet strings as they would appear in the single key\n> PrivateKeyInfo object. \n\nThis is what we intended to do in the IETF 122 drafts, but we missed updating the private key text. The format would be:\n\n> `CompositePrivateKey ::= OCTET STRING`\n> where that OCTET STRING is\n> `len(pqkey) || pqkey || tradkey`\n> and the pqkey, trad key are as they would appear in a single-key PrivateKeyInfo.privateKey or OneAsymmetricKey.privateKey. \n",
       "createdAt": "2025-03-07T14:45:10Z",
-      "updatedAt": "2025-03-07T14:49:14Z",
+      "updatedAt": "2025-05-07T08:06:10Z",
       "closedAt": null,
       "comments": []
     },
@@ -2085,11 +2089,13 @@
       "state": "OPEN",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
-      "assignees": [],
+      "assignees": [
+        "janklaussner"
+      ],
       "labels": [],
       "body": "D.1. FIPS Certification\n\nD.1.1. FIPS certification of Combiner Function\n\nAlso, referencing a specific page number is a bad idea because IGs get updated and page numbers change.\n\n> [SP.800-56Cr2] section 4 \"One-Step Key Derivation\" requires a counter\n   which begins at the 4-byte value 0x00000001.  However, the counter is\n   allowed to be omitted when the hash function is executed only once,\n   as specified on page 159 of the FIPS 140-3 Implementation Guidance\n   [FIPS-140-3-IG].\n\n",
       "createdAt": "2025-04-01T21:12:02Z",
-      "updatedAt": "2025-04-01T22:19:10Z",
+      "updatedAt": "2025-05-07T07:42:26Z",
       "closedAt": null,
       "comments": []
     },
@@ -2151,11 +2157,13 @@
       "state": "OPEN",
       "author": "jiep",
       "authorAssociation": "CONTRIBUTOR",
-      "assignees": [],
+      "assignees": [
+        "janklaussner"
+      ],
       "labels": [],
       "body": "ETSI recently released version 1.2.1 of [ETSI TS 103 744](https://www.etsi.org/deliver/etsi_ts/103700_103799/103744/01.02.01_60/ts_103744v010201p.pdf), which includes new KDFs such as KMAC and HMAC. It also defines different context formatting functions depending on the KDF selected. Namely, concatenate-and-hash-based context formatting function (`cb_f`) for HKDF and HMAC, and concatenate-based context formatting function (`cahb_f`) for KMAC.\n\n<img width=\"453\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/e56b639f-e69d-4abf-8a35-9c5ca9117484\" />\n\n",
       "createdAt": "2025-04-11T08:55:47Z",
-      "updatedAt": "2025-04-11T08:55:47Z",
+      "updatedAt": "2025-05-06T15:03:03Z",
       "closedAt": null,
       "comments": []
     },
@@ -5312,7 +5320,7 @@
       "labels": [],
       "body": "Since we are not encoding as raw bytes, no need for the section on DER encoding rules.\r\n\r\nCloses #117 ",
       "createdAt": "2025-04-27T13:43:17Z",
-      "updatedAt": "2025-04-27T20:34:37Z",
+      "updatedAt": "2025-05-06T09:54:01Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "d390094b8c9f78f9ed9bebf8eedbefd2c5c774ad",
@@ -5324,7 +5332,28 @@
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO86n8YB8",
+          "commit": {
+            "abbreviatedOid": "726a2d2"
+          },
+          "author": "janklaussner",
+          "authorAssociation": "COLLABORATOR",
+          "state": "CHANGES_REQUESTED",
+          "body": "The term DER is used throughout the document, so removing the reference seems not right.",
+          "createdAt": "2025-05-06T09:51:46Z",
+          "updatedAt": "2025-05-06T09:54:01Z",
+          "comments": [
+            {
+              "originalPosition": 24,
+              "body": "Same commant as in -sigs: DER is used in draft, why remove it here?",
+              "createdAt": "2025-05-06T09:51:47Z",
+              "updatedAt": "2025-05-06T09:54:01Z"
+            }
+          ]
+        }
+      ]
     },
     {
       "number": 137,
@@ -5338,7 +5367,7 @@
       "labels": [],
       "body": "Closes #119 \r\nCloses #122 \r\nCloses #114 ",
       "createdAt": "2025-04-27T19:46:47Z",
-      "updatedAt": "2025-05-01T15:24:19Z",
+      "updatedAt": "2025-05-06T10:55:37Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "d390094b8c9f78f9ed9bebf8eedbefd2c5c774ad",
@@ -5350,7 +5379,179 @@
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO86n8wua",
+          "commit": {
+            "abbreviatedOid": "0e76d75"
+          },
+          "author": "janklaussner",
+          "authorAssociation": "COLLABORATOR",
+          "state": "CHANGES_REQUESTED",
+          "body": "Whole section \"SerializePublicKey and DeserializePublicKey\" exists twice plus several copy&paste errors from -sigs draft",
+          "createdAt": "2025-05-06T10:22:06Z",
+          "updatedAt": "2025-05-06T10:55:37Z",
+          "comments": [
+            {
+              "originalPosition": 43,
+              "body": "remove mention of 4-byte length field",
+              "createdAt": "2025-05-06T10:22:06Z",
+              "updatedAt": "2025-05-06T10:55:37Z"
+            },
+            {
+              "originalPosition": 84,
+              "body": "There is no error raised in the algorithm, so also change this section",
+              "createdAt": "2025-05-06T10:24:58Z",
+              "updatedAt": "2025-05-06T10:55:37Z"
+            },
+            {
+              "originalPosition": 175,
+              "body": "This whole section is a duplicate of the previous? ",
+              "createdAt": "2025-05-06T10:32:43Z",
+              "updatedAt": "2025-05-06T10:55:37Z"
+            },
+            {
+              "originalPosition": 236,
+              "body": "mlkemSeed",
+              "createdAt": "2025-05-06T10:35:51Z",
+              "updatedAt": "2025-05-06T10:55:37Z"
+            },
+            {
+              "originalPosition": 250,
+              "body": "mlkemSeed",
+              "createdAt": "2025-05-06T10:36:12Z",
+              "updatedAt": "2025-05-06T10:55:37Z"
+            },
+            {
+              "originalPosition": 262,
+              "body": "Line 944: CompositeSignatureValue -> CompositeCiphertextValue \r\nLine 981: signature -> ciphertext\r\nLine 995: signature -> ciphertext\r\nLine 991: ECDSA -> ECDH",
+              "createdAt": "2025-05-06T10:41:02Z",
+              "updatedAt": "2025-05-06T10:55:37Z"
+            },
+            {
+              "originalPosition": 186,
+              "body": "signature -> KEM",
+              "createdAt": "2025-05-06T10:41:42Z",
+              "updatedAt": "2025-05-06T10:55:37Z"
+            },
+            {
+              "originalPosition": 259,
+              "body": "signature-> ciphertext",
+              "createdAt": "2025-05-06T10:42:52Z",
+              "updatedAt": "2025-05-06T10:55:37Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 139,
+      "id": "PR_kwDOKRPFO86VIle9",
+      "title": "Updates comparison to new ETSI Hybrid KDFs.",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/139",
+      "state": "OPEN",
+      "author": "janklaussner",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Updates reference to ETSI TS 103 744 V1.2.1.\r\nAligns comparison with new KDF options in ETSIs TS. \r\nRemoves KMAC OID since its not used in draft.",
+      "createdAt": "2025-05-06T16:07:56Z",
+      "updatedAt": "2025-05-06T16:07:56Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "cc427e13f34b9ba9bcf28adf3f8955395ce53f68",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "130-update-comparison-with-version-121-of-etsi-catkdf",
+      "headRefOid": "3ed0959fdb462010ee46a5595bbd3fa54b3db390",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
       "reviews": []
+    },
+    {
+      "number": 140,
+      "id": "PR_kwDOKRPFO86VOYdZ",
+      "title": "Merges the two NIST certification sections.",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/140",
+      "state": "OPEN",
+      "author": "janklaussner",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-05-07T07:56:44Z",
+      "updatedAt": "2025-05-07T08:04:42Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "cc427e13f34b9ba9bcf28adf3f8955395ce53f68",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "125-we-currently-have-two-fips-certification-sections----merge-them",
+      "headRefOid": "6c48573ebb946dc45cf5ebeb1c8b97d59e3e0615",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "janklaussner",
+          "authorAssociation": "COLLABORATOR",
+          "body": "The original text said that we do not use the \"HKDF-Extract\" step, which contradicts our HKDF description:\r\nhttps://github.com/lamps-wg/draft-composite-kem/blob/cc427e13f34b9ba9bcf28adf3f8955395ce53f68/draft-ietf-lamps-pq-composite-kem.md?plain=1#L583\r\n\r\nI fixed it to \"we do not need to use the HKDF-Expand step\" and hope this is correct...",
+          "createdAt": "2025-05-07T08:03:45Z",
+          "updatedAt": "2025-05-07T08:03:45Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 141,
+      "id": "PR_kwDOKRPFO86VVxEj",
+      "title": "Auto-including domsep and size table",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/141",
+      "state": "MERGED",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-05-07T21:27:35Z",
+      "updatedAt": "2025-05-07T22:34:48Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "cc427e13f34b9ba9bcf28adf3f8955395ce53f68",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_auto_include_tables",
+      "headRefOid": "8c13a7cb1863073792f8cb6da11829c49d84e8b9",
+      "closedAt": "2025-05-07T21:40:13Z",
+      "mergedAt": "2025-05-07T21:40:13Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "5f61eef54f02d20656f9a9ebce01d7d7fc13b3dd"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO86oSOlC",
+          "commit": {
+            "abbreviatedOid": "8c13a7c"
+          },
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "Just a comment about the RSA 3072 and 4096 keysizes.",
+          "createdAt": "2025-05-07T22:31:38Z",
+          "updatedAt": "2025-05-07T22:34:48Z",
+          "comments": [
+            {
+              "originalPosition": 6,
+              "body": "I'm curious as to why these changed by a couple bytes, but the 2048 one did not/",
+              "createdAt": "2025-05-07T22:31:38Z",
+              "updatedAt": "2025-05-07T22:34:48Z"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
