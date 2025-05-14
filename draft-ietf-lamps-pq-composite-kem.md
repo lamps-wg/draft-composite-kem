@@ -258,11 +258,11 @@ informative:
       org: National Institute of Standards and Technology (NIST)
     date: July 26, 2024
   ETSI.TS.103.744:
-    title: "ETSI TS 103 744 V1.1.1 CYBER; Quantum-safe Hybrid Key Exchanges"
-    target: https://www.etsi.org/deliver/etsi_ts/103700_103799/103744/01.01.01_60/ts_103744v010101p.pdf
+    title: "ETSI TS 103 744 V1.2.1 CYBER-QSC; Quantum-safe Hybrid Key Establishment"
+    target: https://www.etsi.org/deliver/etsi_ts/103700_103799/103744/01.02.01_60/ts_103744v010201p.pdf
     author:
       org: ETSI
-    date: 2020-12
+    date: 2025-03
 
 
 --- abstract
@@ -1531,7 +1531,6 @@ This section provides references to the full specification of the algorithms use
 | id-alg-hkdf-with-sha256 | 1.2.840.113549.1.9.16.3.28 | [RFC8619] |
 | id-alg-hkdf-with-sha384 | 1.2.840.113549.1.9.16.3.29 | [RFC8619] |
 | id-sha3-256 | 2.16.840.1.101.3.4.2.8 | [FIPS.202] |
-| id-KMAC128  | 2.16.840.1.101.3.4.2.21 | [SP.800-185] |
 {: #tab-component-hash title="Hash algorithms used in Composite Constructions"}
 
 
@@ -1772,12 +1771,12 @@ Due to the difference in key generation and security properties, X-Wing and id-M
 
 ## ETSI CatKDF
 
-[ETSI.TS.103.744] section 8.2 defines CatKDF as:
+[ETSI.TS.103.744] section 8.2.3 defines CatKDF as:
 
 ~~~
-1) Form secret = psk || k1 || k 2 || … || k n.
-2) Set f_context = f(context, MA, MB), where f is a context formatting function.
-3) key_material = KDF(secret, label, f_context, length).
+1) Form secret = psk || k1 || k 2.
+2) Set context = f(info, MA, MB), where f is a context formatting function.
+3) key_material = KDF(secret, label, context, length).
 4) Return key_material.
 
 MA shall contain all of the public keys.
@@ -1786,7 +1785,7 @@ MB shall contain all of the corresponding public keys and ciphertexts.
 
 The main difference between the Composite KEM combiner and the ETSI CatKDF combiner is that CatKDF makes the more conservative choice to bind the public keys and ciphertexts of both components, while Composite KEM follows the analysis presented in [X-Wing] that while preserving the security properties of the traditional component requires binding the public key and ciphertext of the traditional component, it is not necessary to do so for ML-KEM thanks to the rejection sampling step of the Fujisaki-Okamoto transform.
 
-Additionally, ETSI CatKDF uses HKDF [RFC5869] as the KDF which aligns with some of the variants in this specification, but not the ones that use SHA3.
+Additionally, ETSI CatKDF can be instantiated with either HMAC [RFC2104], KMAC [SP.800-185] or HKDF [RFC5869] as KDF. Using HKDF aligns with some of the KDF variants in this specification, but not the ones that use SHA3.
 
 
 # Test Vectors {#appdx-samples}
