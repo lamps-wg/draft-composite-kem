@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 8 November 2025                                         M. Pala
+Expires: 15 November 2025                                        M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                              7 May 2025
+                                                             14 May 2025
 
 
       Composite ML-KEM for use in X.509 Public Key Infrastructure
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 8 November 2025.
+   This Internet-Draft will expire on 15 November 2025.
 
 Copyright Notice
 
@@ -2326,11 +2326,11 @@ Deserialization Process:
               CSA_CNSA_2.0_ALGORITHMS_.PDF>.
 
    [ETSI.TS.103.744]
-              ETSI, "ETSI TS 103 744 V1.1.1 CYBER; Quantum-safe Hybrid
-              Key Exchanges", December 2020,
+              ETSI, "ETSI TS 103 744 V1.2.1 CYBER-QSC; Quantum-safe
+              Hybrid Key Establishment", March 2025,
               <https://www.etsi.org/deliver/
-              etsi_ts/103700_103799/103744/01.01.01_60/
-              ts_103744v010101p.pdf>.
+              etsi_ts/103700_103799/103744/01.02.01_60/
+              ts_103744v010201p.pdf>.
 
    [FIPS-140-3-IG]
               National Institute of Standards and Technology (NIST),
@@ -2575,8 +2575,6 @@ Appendix B.  Component Algorithm Reference
    |id-alg-hkdf-with-sha384| 1.2.840.113549.1.9.16.3.29 |[RFC8619]    |
    +-----------------------+----------------------------+-------------+
    |id-sha3-256            | 2.16.840.1.101.3.4.2.8     |[FIPS.202]   |
-   +-----------------------+----------------------------+-------------+
-   |id-KMAC128             | 2.16.840.1.101.3.4.2.21    |[SP.800-185] |
    +-----------------------+----------------------------+-------------+
 
          Table 9: Hash algorithms used in Composite Constructions
@@ -2884,11 +2882,11 @@ E.1.  X-Wing
 
 E.2.  ETSI CatKDF
 
-   [ETSI.TS.103.744] section 8.2 defines CatKDF as:
+   [ETSI.TS.103.744] section 8.2.3 defines CatKDF as:
 
-1) Form secret = psk || k1 || k 2 || … || k n.
-2) Set f_context = f(context, MA, MB), where f is a context formatting function.
-3) key_material = KDF(secret, label, f_context, length).
+1) Form secret = psk || k1 || k 2.
+2) Set context = f(info, MA, MB), where f is a context formatting function.
+3) key_material = KDF(secret, label, context, length).
 4) Return key_material.
 
 MA shall contain all of the public keys.
@@ -2903,9 +2901,10 @@ MB shall contain all of the corresponding public keys and ciphertexts.
    component, it is not necessary to do so for ML-KEM thanks to the
    rejection sampling step of the Fujisaki-Okamoto transform.
 
-   Additionally, ETSI CatKDF uses HKDF [RFC5869] as the KDF which aligns
-   with some of the variants in this specification, but not the ones
-   that use SHA3.
+   Additionally, ETSI CatKDF can be instantiated with either HMAC
+   [RFC2104], KMAC [SP.800-185] or HKDF [RFC5869] as KDF.  Using HKDF
+   aligns with some of the KDF variants in this specification, but not
+   the ones that use SHA3.
 
 Appendix F.  Test Vectors
 
