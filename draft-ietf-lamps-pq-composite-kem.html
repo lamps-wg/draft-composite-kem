@@ -1353,7 +1353,10 @@ svg :is([fill="white"], [fill^="#fff"]) {
                 <p id="section-toc.1-1.15.2.1.1"><a href="#appendix-D.1" class="auto internal xref">D.1</a>.  <a href="#name-fips-certification" class="internal xref">FIPS Certification</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.1.2.1">
-                    <p id="section-toc.1-1.15.2.1.2.1.1"><a href="#appendix-D.1.1" class="auto internal xref">D.1.1</a>.  <a href="#name-fips-certification-of-combi" class="internal xref">FIPS certification of Combiner Function</a></p>
+                    <p id="section-toc.1-1.15.2.1.2.1.1"><a href="#appendix-D.1.1" class="auto internal xref">D.1.1</a>.  <a href="#name-combiner-function" class="internal xref">Combiner Function</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.1.2.2">
+                    <p id="section-toc.1-1.15.2.1.2.2.1"><a href="#appendix-D.1.2" class="auto internal xref">D.1.2</a>.  <a href="#name-mixing-with-non-approved-al" class="internal xref">Mixing with Non-Approved Algorithms</a></p>
 </li>
                 </ul>
 </li>
@@ -4095,43 +4098,51 @@ DER:
         <h3 id="name-fips-certification">
 <a href="#appendix-D.1" class="section-number selfRef">D.1. </a><a href="#name-fips-certification" class="section-name selfRef">FIPS Certification</a>
         </h3>
-<p id="appendix-D.1-1">For reference, the KEM Combiner used in Composite KEM is:<a href="#appendix-D.1-1" class="pilcrow">¶</a></p>
-<p id="appendix-D.1-2"><code>
-ss = KDF(mlkemSS || tradSS || tradCT || tradPK || Domain)
-</code><a href="#appendix-D.1-2" class="pilcrow">¶</a></p>
-<p id="appendix-D.1-3">where KDF is either SHA3 or HKDF-SHA2.<a href="#appendix-D.1-3" class="pilcrow">¶</a></p>
-<p id="appendix-D.1-4">NIST SP 800-227 <span>[<a href="#SP-800-227ipd" class="cite xref">SP-800-227ipd</a>]</span>, which at the time of writing is in its initial public draft period, allows hybrid key combiners of the following form:<a href="#appendix-D.1-4" class="pilcrow">¶</a></p>
-<p id="appendix-D.1-5"><code>
-K ← KDM(S1‖S2‖ · · · ‖St , OtherInput)           (14)
-</code><a href="#appendix-D.1-5" class="pilcrow">¶</a></p>
-<p id="appendix-D.1-6">The key derivation method KDM can take one of two forms, either<a href="#appendix-D.1-6" class="pilcrow">¶</a></p>
-<p id="appendix-D.1-7"><code>
-K ← KDF(Z‖OtherInput)                            (12)
-</code><a href="#appendix-D.1-7" class="pilcrow">¶</a></p>
-<p id="appendix-D.1-8">or<a href="#appendix-D.1-8" class="pilcrow">¶</a></p>
-<p id="appendix-D.1-9"><code>
-K ← Expand(Extract(salt, Z), OtherInput)         (13)
-</code><a href="#appendix-D.1-9" class="pilcrow">¶</a></p>
-<p id="appendix-D.1-10">The Composite KEM variants that use SHA3 as a combiner fit form (12) while the variants that use HKDF-SHA2 fit form (13).<a href="#appendix-D.1-10" class="pilcrow">¶</a></p>
-<p id="appendix-D.1-11">In terms of the order of inputs, Composite KEM places the two shared secret keys <code>mlkemSS || tradSS</code> at the beggining of the KDF input such that all other inputs <code>tradCT || tradPK || Domain</code> can be considered part of <code>OtherInput</code> for the purposes of FIPS certification. <span>[<a href="#SP-800-227ipd" class="cite xref">SP-800-227ipd</a>]</span> adds an important stipulation that was not present in earlier NIST specifications:<a href="#appendix-D.1-11" class="pilcrow">¶</a></p>
-<ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="appendix-D.1-12.1">
-            <p id="appendix-D.1-12.1.1">This publication approves the use of the key combiner (14) for any t &gt; 1, so long as at
-least one shared secret (i.e., S_j for some j) is a shared secret generated from the key-
-establishment methods of SP 800-56A or SP 800-56B, or an approved KEM.<a href="#appendix-D.1-12.1.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-<p id="appendix-D.1-13">This means that although Composite KEM always places the shared secret key from ML-KEM in the first slot, a Composite KEM can be FIPS certified so long as either component is FIPS certified. This is important for several reasons. First, in the early stages of PQC migration, composites allow for a non-FIPS certified ML-KEM implementation to be added to a module that already has a FIPS certified traditional component, and the resulting composite can be FIPS certified. Second, when eventually RSA and Elliptic Curve are no longer FIPS-allowed, the composite can retain its FIPS certified status on the strength of the ML-KEM component. Third, while this is outside the scope of this document, the general composite construction could be used to create FIPS certified algorithms that contain a component algorithm from a different jurisdiction.<a href="#appendix-D.1-13" class="pilcrow">¶</a></p>
-<div id="fips-certification-of-combiner-function">
+<p id="appendix-D.1-1">TODO: update this to NIST SP 800-227, once it is published.<a href="#appendix-D.1-1" class="pilcrow">¶</a></p>
+<div id="combiner-function">
 <section id="appendix-D.1.1">
-          <h4 id="name-fips-certification-of-combi">
-<a href="#appendix-D.1.1" class="section-number selfRef">D.1.1. </a><a href="#name-fips-certification-of-combi" class="section-name selfRef">FIPS certification of Combiner Function</a>
+          <h4 id="name-combiner-function">
+<a href="#appendix-D.1.1" class="section-number selfRef">D.1.1. </a><a href="#name-combiner-function" class="section-name selfRef">Combiner Function</a>
           </h4>
-<p id="appendix-D.1.1-1">TODO: update this to NIST SP 800-227, once it is published.<a href="#appendix-D.1.1-1" class="pilcrow">¶</a></p>
-<p id="appendix-D.1.1-2">One of the primary NIST documents which is relevant for certification of a composite algorithm is NIST SP.800-56Cr2 <span>[<a href="#SP.800-56Cr2" class="cite xref">SP.800-56Cr2</a>]</span> by using the allowed "hybrid" shared secret of the form <code>Z' = Z || T</code>. Compliance is achieved in the following way:<a href="#appendix-D.1.1-2" class="pilcrow">¶</a></p>
-<p id="appendix-D.1.1-3"><span>[<a href="#SP.800-56Cr2" class="cite xref">SP.800-56Cr2</a>]</span> section 4 "One-Step Key Derivation" requires a <code>counter</code> which begins at the 4-byte value 0x00000001. However, the counter is allowed to be omitted when the hash function is executed only once, as specified on page 159 of the FIPS 140-3 Implementation Guidance <span>[<a href="#FIPS-140-3-IG" class="cite xref">FIPS-140-3-IG</a>]</span>.<a href="#appendix-D.1.1-3" class="pilcrow">¶</a></p>
-<p id="appendix-D.1.1-4">The HKDF-SHA2 options can be certified under <span>[<a href="#SP.800-56Cr2" class="cite xref">SP.800-56Cr2</a>]</span> One-Step Key Derivation Option 2: <code>H(x) = HMAC-hash(salt, x)</code> where <code>salt</code> is the empty (0 octet) string, which will internally be mapped to the zero vector <code>0x00..00</code> of the correct input size for the underlying hash function in order to satisfy the requirement in <span>[<a href="#SP.800-56Cr2" class="cite xref">SP.800-56Cr2</a>]</span> that "in the absence of an agreed-upon alternative – the default_salt shall be an all-zero byte string whose bit length equals that specified as the bit length of an input block for the hash function, hash". Note that since the desired shared secret key output length of 256 bits for all security levels aligns with the block size of SHA256, we do not need to use the HKDF-Extract step specified in <span>[<a href="#RFC5869" class="cite xref">RFC5869</a>]</span>, which further simplifies FIPS certification by allowing us to use the One-Step KDF rather than the Two-Step KDF from <span>[<a href="#SP.800-56Cr2" class="cite xref">SP.800-56Cr2</a>]</span>.<a href="#appendix-D.1.1-4" class="pilcrow">¶</a></p>
-<p id="appendix-D.1.1-5">The SHA3 options can be certified under <span>[<a href="#SP.800-56Cr2" class="cite xref">SP.800-56Cr2</a>]</span> One-Step Key Derivation Option 1: <code>H(x) = hash(x)</code>.<a href="#appendix-D.1.1-5" class="pilcrow">¶</a></p>
+<p id="appendix-D.1.1-1">For reference, the KEM Combiner used in Composite KEM is:<a href="#appendix-D.1.1-1" class="pilcrow">¶</a></p>
+<p id="appendix-D.1.1-2"><code>
+ss = KDF(mlkemSS || tradSS || tradCT || tradPK || Domain)
+</code><a href="#appendix-D.1.1-2" class="pilcrow">¶</a></p>
+<p id="appendix-D.1.1-3">where KDF is either SHA3 or HKDF-SHA2.<a href="#appendix-D.1.1-3" class="pilcrow">¶</a></p>
+<p id="appendix-D.1.1-4">NIST SP 800-227 <span>[<a href="#SP-800-227ipd" class="cite xref">SP-800-227ipd</a>]</span>, which at the time of writing is in its initial public draft period, allows hybrid key combiners of the following form:<a href="#appendix-D.1.1-4" class="pilcrow">¶</a></p>
+<p id="appendix-D.1.1-5"><code>
+K ← KDM(S1‖S2‖ · · · ‖St , OtherInput)           (14)
+</code><a href="#appendix-D.1.1-5" class="pilcrow">¶</a></p>
+<p id="appendix-D.1.1-6">The key derivation method KDM can take one of two forms, either<a href="#appendix-D.1.1-6" class="pilcrow">¶</a></p>
+<p id="appendix-D.1.1-7"><code>
+K ← KDF(Z‖OtherInput)                            (12)
+</code><a href="#appendix-D.1.1-7" class="pilcrow">¶</a></p>
+<p id="appendix-D.1.1-8">or<a href="#appendix-D.1.1-8" class="pilcrow">¶</a></p>
+<p id="appendix-D.1.1-9"><code>
+K ← Expand(Extract(salt, Z), OtherInput)         (13)
+</code><a href="#appendix-D.1.1-9" class="pilcrow">¶</a></p>
+<p id="appendix-D.1.1-10">The Composite KEM variants that use SHA3 as a combiner fit form (12) while the variants that use HKDF-SHA2 fit form (13).<a href="#appendix-D.1.1-10" class="pilcrow">¶</a></p>
+<p id="appendix-D.1.1-11">In terms of the order of inputs, Composite KEM places the two shared secret keys <code>mlkemSS || tradSS</code> at the beginning of the KDF input such that all other inputs <code>tradCT || tradPK || Domain</code> can be considered part of <code>OtherInput</code> for the purposes of FIPS certification.<a href="#appendix-D.1.1-11" class="pilcrow">¶</a></p>
+<p id="appendix-D.1.1-12">For detailed steps <span>[<a href="#SP-800-227ipd" class="cite xref">SP-800-227ipd</a>]</span> refers to NIST SP.800-56Cr2 <span>[<a href="#SP.800-56Cr2" class="cite xref">SP.800-56Cr2</a>]</span>. Compliance of the Composite KEM variants is achieved in the following way:<a href="#appendix-D.1.1-12" class="pilcrow">¶</a></p>
+<p id="appendix-D.1.1-13"><span>[<a href="#SP.800-56Cr2" class="cite xref">SP.800-56Cr2</a>]</span> section 4 "One-Step Key Derivation" requires a <code>counter</code> which begins at the 4-byte value 0x00000001. However, the counter is allowed to be omitted when the hash function is executed only once, as specified on page 159 of the FIPS 140-3 Implementation Guidance <span>[<a href="#FIPS-140-3-IG" class="cite xref">FIPS-140-3-IG</a>]</span>.<a href="#appendix-D.1.1-13" class="pilcrow">¶</a></p>
+<p id="appendix-D.1.1-14">The HKDF-SHA2 options can be certified under <span>[<a href="#SP.800-56Cr2" class="cite xref">SP.800-56Cr2</a>]</span> One-Step Key Derivation Option 2: <code>H(x) = HMAC-hash(salt, x)</code> where <code>salt</code> is the empty (0 octet) string, which will internally be mapped to the zero vector <code>0x00..00</code> of the correct input size for the underlying hash function in order to satisfy the requirement in <span>[<a href="#SP.800-56Cr2" class="cite xref">SP.800-56Cr2</a>]</span> that "in the absence of an agreed-upon alternative – the default_salt shall be an all-zero byte string whose bit length equals that specified as the bit length of an input block for the hash function, hash". Note that since the desired shared secret key output length of 256 bits for all security levels aligns with the block size of SHA256, we do not need to use the HKDF-Expand step specified in <span>[<a href="#RFC5869" class="cite xref">RFC5869</a>]</span>, which further simplifies FIPS certification by allowing us to use the One-Step KDF rather than the Two-Step KDF from <span>[<a href="#SP.800-56Cr2" class="cite xref">SP.800-56Cr2</a>]</span>.<a href="#appendix-D.1.1-14" class="pilcrow">¶</a></p>
+<p id="appendix-D.1.1-15">The SHA3 options can be certified under <span>[<a href="#SP.800-56Cr2" class="cite xref">SP.800-56Cr2</a>]</span> One-Step Key Derivation Option 1: <code>H(x) = hash(x)</code>.<a href="#appendix-D.1.1-15" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="mixing-with-non-approved-algorithms">
+<section id="appendix-D.1.2">
+          <h4 id="name-mixing-with-non-approved-al">
+<a href="#appendix-D.1.2" class="section-number selfRef">D.1.2. </a><a href="#name-mixing-with-non-approved-al" class="section-name selfRef">Mixing with Non-Approved Algorithms</a>
+          </h4>
+<p id="appendix-D.1.2-1"><span>[<a href="#SP-800-227ipd" class="cite xref">SP-800-227ipd</a>]</span> adds an important stipulation that was not present in earlier NIST specifications:<a href="#appendix-D.1.2-1" class="pilcrow">¶</a></p>
+<ul class="normal ulEmpty">
+<li class="normal ulEmpty" id="appendix-D.1.2-2.1">
+              <p id="appendix-D.1.2-2.1.1">This publication approves the use of the key combiner (14) for any t &gt; 1, so long as at
+least one shared secret (i.e., S_j for some j) is a shared secret generated from the key-
+establishment methods of SP 800-56A or SP 800-56B, or an approved KEM.<a href="#appendix-D.1.2-2.1.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+<p id="appendix-D.1.2-3">This means that although Composite KEM always places the shared secret key from ML-KEM in the first slot, a Composite KEM can be FIPS certified so long as either component is FIPS certified. This is important for several reasons. First, in the early stages of PQC migration, composites allow for a non-FIPS certified ML-KEM implementation to be added to a module that already has a FIPS certified traditional component, and the resulting composite can be FIPS certified. Second, when eventually RSA and Elliptic Curve are no longer FIPS-allowed, the composite can retain its FIPS certified status on the strength of the ML-KEM component. Third, while this is outside the scope of this document, the general composite construction could be used to create FIPS certified algorithms that contain a component algorithm from a different jurisdiction.<a href="#appendix-D.1.2-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
