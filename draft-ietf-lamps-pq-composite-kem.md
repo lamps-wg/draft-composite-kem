@@ -265,11 +265,11 @@ informative:
       org: National Institute of Standards and Technology (NIST)
     date: July 26, 2024
   ETSI.TS.103.744:
-    title: "ETSI TS 103 744 V1.1.1 CYBER; Quantum-safe Hybrid Key Exchanges"
-    target: https://www.etsi.org/deliver/etsi_ts/103700_103799/103744/01.01.01_60/ts_103744v010101p.pdf
+    title: "ETSI TS 103 744 V1.2.1 CYBER-QSC; Quantum-safe Hybrid Key Establishment"
+    target: https://www.etsi.org/deliver/etsi_ts/103700_103799/103744/01.02.01_60/ts_103744v010201p.pdf
     author:
       org: ETSI
-    date: 2020-12
+    date: 2025-03
 
 
 --- abstract
@@ -288,6 +288,7 @@ Interop-affecting changes:
 * ML-KEM secret keys are now only seeds.
 * Since all ML-KEM keys and ciphertexts are now fixed-length, dropped the length-tagged encoding.
 * Added complete test vectors.
+* Added ML-KEM1024+ECDH-P521 combination.
 
 Editorial changes:
 
@@ -1187,6 +1188,7 @@ EDNOTE: these are prototyping OIDs to be replaced by IANA.
 | id-MLKEM1024-ECDH-P384-HKDF-SHA384 | &lt;CompKEM&gt;.37   | MLKEM1024       | ECDH-P384            | HKDF-SHA384/256 |
 | id-MLKEM1024-ECDH-brainpoolP384r1-HKDF-SHA384  | &lt;CompKEM&gt;.38   | MLKEM1024       | ECDH-brainpoolP384r1 | SHA3-256 |
 | id-MLKEM1024-X448-SHA3-256         | &lt;CompKEM&gt;.39   | MLKEM1024       | X448                 | SHA3-256 |
+| id-MLKEM1024-ECDH-P521-HKDF-SHA384 | &lt;CompKEM&gt;.40   | MLKEM1024       | ECDH-P521            | HKDF-SHA384/256 |
 {: #tab-kem-algs title="Composite ML-KEM key types"}
 
 Note that in alignment with ML-KEM which outputs a 256-bit shared secret key at all security levels, all Composite KEM algorithms output a 256-bit shared secret key.
@@ -1200,18 +1202,12 @@ Full specifications for the referenced component algorithms can be found in {{ap
 
 The KEM combiner used in this document requires a domain separator `Domain` input.  The following table shows the HEX-encoded domain separator for each Composite ML-KEM AlgorithmID; to use it, the value MUST be HEX-decoded and used in binary form. The domain separator is simply the DER encoding of the composite algorithm OID.
 
-| Composite ML-KEM Algorithm| Domain Separator (in Hex encoding)|
-| -----------               | ----------- |
-| id-MLKEM768-RSA2048-HKDF-SHA256       | 060B6086480186FA6B5005021E |
-| id-MLKEM768-RSA3072-HKDF-SHA256       | 060B6086480186FA6B5005021F |
-| id-MLKEM768-RSA4096-HKDF-SHA256       | 060B6086480186FA6B50050220 |
-| id-MLKEM768-X25519-SHA3-256        | 060B6086480186FA6B50050221 |
-| id-MLKEM768-ECDH-P256-HKDF-SHA256     | 060B6086480186FA6B50050222 |
-| id-MLKEM768-ECDH-P384-HKDF-SHA256     | 060B6086480186FA6B50050223 |
-| id-MLKEM768-ECDH-brainpoolP256r1-HKDF-SHA256 | 060B6086480186FA6B50050224 |
-| id-MLKEM1024-ECDH-P384-HKDF-SHA384    | 060B6086480186FA6B50050225 |
-| id-MLKEM1024-ECDH-brainpoolP384r1-HKDF-SHA384 | 060B6086480186FA6B50050226 |
-| id-MLKEM1024-X448-SHA3-256         | 060B6086480186FA6B50050227 |
+<!-- Note to authors, this is not auto-generated on build;
+     you have to manually re-run the python script and
+     commit the results to git.
+     This is mainly to save resources and build time on the github commits. -->
+
+{::include src/domSepTable.md}
 {: #tab-kem-domains title="Composite ML-KEM fixedInfo Domain Separators"}
 
 EDNOTE: these domain separators are based on the prototyping OIDs assigned on the Entrust arc. We will need to ask for IANA early allocation of these OIDs so that we can re-compute the domain separators over the final OIDs.
@@ -1223,7 +1219,6 @@ In generating the list of Composite algorithms, the following general guidance w
 
 * Pair equivalent security levels between
 * NIST-P-384 is CNSA approved [CNSA2.0] for all classification levels.
-* 521 bit curve not widely used.
 * SHA256 and SHA512 generally have better adoption than SHA384.
 
 A single invocation of SHA3 is known to behave as a dual-PRF, and thus is sufficient for use as a KDF, see {{sec-cons-kem-combiner}}, however SHA2 is not so must be wrapped in the HKDF construction.
@@ -1334,6 +1329,11 @@ EDNOTE to IANA: OIDs will need to be replaced in both the ASN.1 module and in {{
 - id-MLKEM1024-X448-SHA3-256
   - Decimal: IANA Assigned
   - Description: id-MLKEM1024-X448-SHA3-256
+  - References: This Document
+
+- id-MLKEM1024-ECDH-P521-HKDF-SHA384
+  - Decimal: IANA Assigned
+  - Description: id-MLKEM1024-ECDH-P521-HKDF-SHA384
   - References: This Document
 
 <!-- End of IANA Considerations section -->
@@ -1453,6 +1453,30 @@ The Composite ML-KEM design specified in this document, and especially that of t
 
 --- back
 
+# Approximate Key and Ciphertext Sizes {#sec-sizetable}
+
+Note that the sizes listed below are approximate: these values are measured from the test vectors, but other implementations could produce values where the traditional component has a different size. For example, this could be due to:
+
+* Compressed vs uncompressed EC point.
+* The RSA public key `(n, e)` allows `e` to vary is size between 3 and `n - 1` [RFC8017].
+* When the underlying RSA or EC value is itself DER-encoded, integer values could occaisionally be shorter than expected due to leading zeros being dropped from the encoding.
+
+Note that by contrast, ML-KEM values are always fixed size, so composite values can always be correctly de-serialized based on the size of the ML-KEM component.
+
+Implementations MUST NOT perform strict length checking based on the values in this table.
+
+Non-hybrid ML-KEM is included for reference.
+
+
+<!-- Note to authors, this is not auto-generated on build;
+     you have to manually re-run the python script and
+     commit the results to git.
+     This is mainly to save resources and build time on the github commits. -->
+
+{::include src/sizeTable.md}
+{: #tab-size-values title="Approximate size values of composite ML-KEM"}
+
+
 
 # Component Algorithm Reference {#appdx_components}
 
@@ -1472,7 +1496,7 @@ This section provides references to the full specification of the algorithms use
 | ----------- | ----------- | ----------- |
 | secp256r1 | 1.2.840.10045.3.1.7 | [RFC6090], [SEC2] |
 | secp384r1 | 1.3.132.0.34 | [RFC6090], [SEC2] |
-| secp521r1 | 1.3.132.0.34 | [RFC6090], [SEC2] |
+| secp521r1 | 1.3.132.0.35 | [RFC6090], [SEC2] |
 | brainpoolP256r1 | 1.3.36.3.3.2.8.1.1.7 | [RFC5639] |
 | brainpoolP384r1 | 1.3.36.3.3.2.8.1.1.11 | [RFC5639] |
 {: #tab-component-curve-algs title="Elliptic Curves used in Composite Constructions"}
@@ -1484,7 +1508,6 @@ This section provides references to the full specification of the algorithms use
 | id-alg-hkdf-with-sha256 | 1.2.840.113549.1.9.16.3.28 | [RFC8619] |
 | id-alg-hkdf-with-sha384 | 1.2.840.113549.1.9.16.3.29 | [RFC8619] |
 | id-sha3-256 | 2.16.840.1.101.3.4.2.8 | [FIPS.202] |
-| id-KMAC128  | 2.16.840.1.101.3.4.2.21 | [SP.800-185] |
 {: #tab-component-hash title="Hash algorithms used in Composite Constructions"}
 
 
@@ -1565,6 +1588,23 @@ DER:
   30 10 06 07 2A 86 48 CE 3D 02 01 06 05 2B 81 04 00 22
 ~~~
 
+**ECDH NIST-P-521**
+
+~~~
+ASN.1:
+  algorithm AlgorithmIdentifier ::= {
+    algorithm id-ecPublicKey   -- (1.2.840.10045.2.1)
+    parameters ANY ::= {
+      AlgorithmIdentifier ::= {
+        algorithm secp521r1    -- (1.3.132.0.35)
+        }
+      }
+    }
+
+DER:
+  30 10 06 07 2A 86 48 CE 3D 02 01 06 05 2B 81 04 00 23
+~~~
+
 **ECDH Brainpool-256**
 
 ~~~
@@ -1630,6 +1670,10 @@ DER:
 
 ## FIPS Certification {#sec-fips}
 
+TODO: update this to NIST SP 800-227, once it is published.
+
+### Combiner Function
+
 For reference, the KEM Combiner used in Composite KEM is:
 
 ```
@@ -1659,26 +1703,25 @@ K ← Expand(Extract(salt, Z), OtherInput)         (13)
 
 The Composite KEM variants that use SHA3 as a combiner fit form (12) while the variants that use HKDF-SHA2 fit form (13).
 
-In terms of the order of inputs, Composite KEM places the two shared secret keys `mlkemSS || tradSS` at the beggining of the KDF input such that all other inputs `tradCT || tradPK || Domain` can be considered part of `OtherInput` for the purposes of FIPS certification. [SP-800-227ipd] adds an important stipulation that was not present in earlier NIST specifications:
+In terms of the order of inputs, Composite KEM places the two shared secret keys `mlkemSS || tradSS` at the beginning of the KDF input such that all other inputs `tradCT || tradPK || Domain` can be considered part of `OtherInput` for the purposes of FIPS certification.
+
+For detailed steps [SP-800-227ipd] refers to NIST SP.800-56Cr2 [SP.800-56Cr2]. Compliance of the Composite KEM variants is achieved in the following way:
+
+[SP.800-56Cr2] section 4 "One-Step Key Derivation" requires a `counter` which begins at the 4-byte value 0x00000001. However, the counter is allowed to be omitted when the hash function is executed only once, as specified on page 159 of the FIPS 140-3 Implementation Guidance [FIPS-140-3-IG].
+
+The HKDF-SHA2 options can be certified under [SP.800-56Cr2] One-Step Key Derivation Option 2: `H(x) = HMAC-hash(salt, x)` where `salt` is the empty (0 octet) string, which will internally be mapped to the zero vector `0x00..00` of the correct input size for the underlying hash function in order to satisfy the requirement in [SP.800-56Cr2] that "in the absence of an agreed-upon alternative – the default_salt shall be an all-zero byte string whose bit length equals that specified as the bit length of an input block for the hash function, hash". Note that since the desired shared secret key output length of 256 bits for all security levels aligns with the block size of SHA256, we do not need to use the HKDF-Expand step specified in [RFC5869], which further simplifies FIPS certification by allowing us to use the One-Step KDF rather than the Two-Step KDF from [SP.800-56Cr2].
+
+The SHA3 options can be certified under [SP.800-56Cr2] One-Step Key Derivation Option 1: `H(x) = hash(x)`.
+
+### Mixing with Non-Approved Algorithms
+
+[SP-800-227ipd] adds an important stipulation that was not present in earlier NIST specifications:
 
 > This publication approves the use of the key combiner (14) for any t > 1, so long as at
 > least one shared secret (i.e., S_j for some j) is a shared secret generated from the key-
 > establishment methods of SP 800-56A or SP 800-56B, or an approved KEM.
 
 This means that although Composite KEM always places the shared secret key from ML-KEM in the first slot, a Composite KEM can be FIPS certified so long as either component is FIPS certified. This is important for several reasons. First, in the early stages of PQC migration, composites allow for a non-FIPS certified ML-KEM implementation to be added to a module that already has a FIPS certified traditional component, and the resulting composite can be FIPS certified. Second, when eventually RSA and Elliptic Curve are no longer FIPS-allowed, the composite can retain its FIPS certified status on the strength of the ML-KEM component. Third, while this is outside the scope of this document, the general composite construction could be used to create FIPS certified algorithms that contain a component algorithm from a different jurisdiction.
-
-
-### FIPS certification of Combiner Function
-
-TODO: update this to NIST SP 800-227, once it is published.
-
-One of the primary NIST documents which is relevant for certification of a composite algorithm is NIST SP.800-56Cr2 [SP.800-56Cr2] by using the allowed "hybrid" shared secret of the form `Z' = Z || T`. Compliance is achieved in the following way:
-
-[SP.800-56Cr2] section 4 "One-Step Key Derivation" requires a `counter` which begins at the 4-byte value 0x00000001. However, the counter is allowed to be omitted when the hash function is executed only once, as specified on page 159 of the FIPS 140-3 Implementation Guidance [FIPS-140-3-IG].
-
-The HKDF-SHA2 options can be certified under [SP.800-56Cr2] One-Step Key Derivation Option 2: `H(x) = HMAC-hash(salt, x)` where `salt` is the empty (0 octet) string, which will internally be mapped to the zero vector `0x00..00` of the correct input size for the underlying hash function in order to satisfy the requirement in [SP.800-56Cr2] that "in the absence of an agreed-upon alternative – the default_salt shall be an all-zero byte string whose bit length equals that specified as the bit length of an input block for the hash function, hash". Note that since the desired shared secret key output length of 256 bits for all security levels aligns with the block size of SHA256, we do not need to use the HKDF-Extract step specified in [RFC5869], which further simplifies FIPS certification by allowing us to use the One-Step KDF rather than the Two-Step KDF from [SP.800-56Cr2].
-
-The SHA3 options can be certified under [SP.800-56Cr2] One-Step Key Derivation Option 1: `H(x) = hash(x)`.
 
 
 ## Backwards Compatibility {#sec-backwards-compat}
@@ -1708,12 +1751,12 @@ Due to the difference in key generation and security properties, X-Wing and id-M
 
 ## ETSI CatKDF
 
-[ETSI.TS.103.744] section 8.2 defines CatKDF as:
+[ETSI.TS.103.744] section 8.2.3 defines CatKDF as:
 
 ~~~
-1) Form secret = psk || k1 || k 2 || … || k n.
-2) Set f_context = f(context, MA, MB), where f is a context formatting function.
-3) key_material = KDF(secret, label, f_context, length).
+1) Form secret = psk || k1 || k 2.
+2) Set context = f(info, MA, MB), where f is a context formatting function.
+3) key_material = KDF(secret, label, context, length).
 4) Return key_material.
 
 MA shall contain all of the public keys.
@@ -1722,7 +1765,7 @@ MB shall contain all of the corresponding public keys and ciphertexts.
 
 The main difference between the Composite KEM combiner and the ETSI CatKDF combiner is that CatKDF makes the more conservative choice to bind the public keys and ciphertexts of both components, while Composite KEM follows the analysis presented in [X-Wing] that while preserving the security properties of the traditional component requires binding the public key and ciphertext of the traditional component, it is not necessary to do so for ML-KEM thanks to the rejection sampling step of the Fujisaki-Okamoto transform.
 
-Additionally, ETSI CatKDF uses HKDF [RFC5869] as the KDF which aligns with some of the variants in this specification, but not the ones that use SHA3.
+Additionally, ETSI CatKDF can be instantiated with either HMAC [RFC2104], KMAC [SP.800-185] or HKDF [RFC5869] as KDF. Using HKDF aligns with some of the KDF variants in this specification, but not the ones that use SHA3.
 
 
 # Test Vectors {#appdx-samples}
