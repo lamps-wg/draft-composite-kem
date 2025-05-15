@@ -520,7 +520,7 @@ Key Generation Process:
     return (pk, sk)
 
 ~~~
-{: #alg-composite-keygen title="Composite KeyGen(pk, sk)"}
+{: #alg-composite-keygen title="Composite KeyGen() -> (pk, sk)"}
 
 
 In order to ensure fresh keys, the key generation functions MUST be executed for both component algorithms. Compliant parties MUST NOT use or import component keys that are used in other contexts, combinations, or by themselves as keys for standalone algorithm use.
@@ -729,9 +729,10 @@ While ML-KEM has a single fixed-size representation for each of public key, priv
 In the event that a composite implementation uses an underlying implementation of the traditional component that requires a different encoding, it is the responsibility of the composite implementation to perform the necessary transcoding. Even with fixed encodings for the traditional component, there may be slight differences in encoded size of the traditional component due to, for example, encoding rules that drop leading zeroes. See {{sec-sizetable}} for further discussion of encoded size of each composite algorithm.
 
 
+
 ### SerializePublicKey and DeserializePublicKey {#sec-serialize-deserialize}
 
-Each component KEM public key is serialized according to its respective standard as shown in {{appdx_components}} and concatenated together using a fixed 4-byte length field denoting the length in bytes of the first component key, as defined below.
+The serialization routine for keys simply concatenates the fixed-length public keys of the component algorithms, as defined below:
 
 ~~~
 Composite-ML-KEM.SerializePublicKey(mlkemPK, tradPK) -> bytes
@@ -754,9 +755,9 @@ Serialization Process:
      output mlkemPK || tradPK
 
 ~~~
-{: #alg-composite-serialize title="SerializePublicKey(mldsaKey, tradKey) -> bytes"}
+{: #alg-composite-serialize title="SerializePublicKey(mlkemKey, tradKey) -> bytes"}
 
-Deserialization reverses this process, raising an error in the event that the input is malformed.  Each component
+Deserialization reverses this process.
 key is deserialized according to their respective standard as shown in {{appdx_components}}.
 
 ~~~
@@ -781,15 +782,15 @@ Output:
 Deserialization Process:
 
   1. Parse each constituent encoded public key.
-       The length of the mldsaKey is known based on the size of
+       The length of the mlkemKey is known based on the size of
        the ML-DSA component key length specified by the Object ID
 
      switch ML-KEM do
         case ML-KEM-768:
-          mldsaPK = bytes[:1184]
+          mlkemPK = bytes[:1184]
           tradPK  = bytes[1184:]
         case ML-KEM-1024:
-          mldsaPK = bytes[:1568]
+          mlkemPK = bytes[:1568]
           tradPK  = bytes[1568:]
 
      Note that while ML-KEM has fixed-length keys, RSA and ECDH
@@ -805,84 +806,9 @@ Deserialization Process:
 
 
 
-### SerializePublicKey and DeserializePublicKey
-
-The serialization routine for keys simply concatenates the fixed-length public keys of the component KEM algorithms, as defined below:
-
-~~~
-Composite-ML-KEM.SerializePublicKey(mlkemKey, tradKey) -> bytes
-
-Explicit Input:
-
-  mlkemKey  The ML-KEM public key, which is bytes.
-
-  tradKey   The traditional public key in the appropriate
-            encoding for the underlying component algorithm.
-
-Output:
-
-  bytes   The encoded composite public key
-
-Serialization Process:
-
-  1. Combine and output the encoded public key
-
-     output mlkemPK || tradPK
-~~~
-{: #alg-composite-serialize-pub-key title="SerializePublicKey(mlkemKey, tradKey) -> bytes"}
-
-
-Deserialization reverses this process, raising an error in the event that the input is malformed.
-
-~~~
-Composite-ML-DSA.DeserializePublicKey(bytes) -> (mlkemKey, tradKey)
-
-Explicit Input:
-
-  bytes   An encoded composite public key
-
-Implicit inputs:
-
-  ML-KEM   A placeholder for the specific ML-KEM algorithm and
-           parameter set to use, for example, could be "ML-KEM-768".
-
-Output:
-
-  mlkemKey  The ML-DSA public key, which is bytes.
-
-  tradKey   The traditional public key in the appropriate
-            encoding for the underlying component algorithm.
-
-Deserialization Process:
-
-  1. Parse each constituent encoded public key.
-       The length of the mlkemKey is known based on the size of
-       the ML-KEM component key length specified by the Object ID
-
-     switch ML-KEM do
-        case ML-KEM-768:
-          mlkemKey = bytes[:1184]
-          tradKey  = bytes[1184:]
-        case MLDSA65:
-          mldsaKey = bytes[:1568]
-          tradKey  = bytes[1568:]
-
-     Note that while ML-KEM has fixed-length keys, RSA and ECDH
-     may not, depending on encoding, so rigorous length-checking is
-     not always possible here.
-
-  2. Output the component public keys
-
-     output (mlkemKey, tradKey)
-~~~
-{: #alg-composite-deserialize-pub-key title="DeserializePublicKey(bytes) -> (mlkemKey, tradKey)"}
-
-
-
-
 ### SerializePrivateKey and DeserializePrivateKey
 
-The serialization routine for keys simply concatenates the fixed-length private keys of the component signature algorithms, as defined below:
+The serialization routine for keys simply concatenates the fixed-length private keys of the component algorithms, as defined below:
 
 ~~~
 Composite-ML-KEM.SerializePrivateKey(mlkemSeed, tradSK) -> bytes
@@ -907,7 +833,7 @@ Serialization Process:
 {: #alg-composite-serialize-priv-key title="SerializePrivateKey(mlkemSeed, tradSK) -> bytes"}
 
 
-Deserialization reverses this process, raising an error in the event that the input is malformed.
+Deserialization reverses this process.
 
 ~~~
 Composite-ML-KEM.DeserializePrivateKey(bytes) -> (mlkemSeed, tradSK)
@@ -929,7 +855,7 @@ Deserialization Process:
        The length of an ML-KEM private key is always a 64 byte seed
        for all parameter sets.
 
-      mldsaSeed = bytes[:64]
+      mlkemSeed = bytes[:64]
       tradSK  = bytes[64:]
 
      Note that while ML-KEM has fixed-length keys (seeds), RSA and ECDH
@@ -938,7 +864,7 @@ Deserialization Process:
 
   2. Output the component private keys
 
-     output (mldsaSeed, tradSK)
+     output (mlkemSeed, tradSK)
 ~~~
 {: #alg-composite-deserialize-priv-key title="DeserializeKey(bytes) -> (mlkemSeed, tradSK)"}
 
@@ -950,7 +876,7 @@ The serialization routine for the CompositeCiphertextValue simply concatenates t
 ML-KEM ciphertext with the ciphertext from the traditional algorithm, as defined below:
 
 ~~~
-Composite-ML-KEM.SerializeCiphertext(mldsaCT, tradCT) -> bytes
+Composite-ML-KEM.SerializeCiphertext(mlkemCT, tradCT) -> bytes
 
 Explicit Inputs:
 
@@ -961,19 +887,19 @@ Explicit Inputs:
 
 Output:
 
-  bytes   The encoded CompositeSignatureValue
+  bytes   The encoded CompositeCiphertextValue
 
 Serialization Process:
 
-  1. Combine and output the encoded composite signature
+  1. Combine and output the encoded composite ciphertext
 
      output mlkemCT || tradCT
 
 ~~~
-{: #alg-composite-serialize-ct title="SerializeCiphertext(mldsaCT, tradCT) -> bytes"}
+{: #alg-composite-serialize-ct title="SerializeCiphertext(mlkemCT, tradCT) -> bytes"}
 
 
-Deserialization reverses this process, raising an error in the event that the input is malformed.
+Deserialization reverses this process.
 
 ~~~
 Composite-ML-KEM.DeserializeCiphertext(bytes) -> (mldkemCT, tradCT)
@@ -998,21 +924,21 @@ Deserialization Process:
 
   1. Parse each constituent encoded ciphertext.
        The length of the mlkemCT is known based on the size of
-       the ML-KEM component signature length specified by the Object ID
+       the ML-KEM component ciphertext length specified by the Object ID
 
      switch ML-KEM do
         case ML-KEM-768:
           mlkemCT = bytes[:1088]
           tradSig  = bytes[1088:]
         case ML-KEM-1024:
-          mldsaSig = bytes[:1568]
+          mlkemSig = bytes[:1568]
           tradSig  = bytes[1568:]
 
      Note that while ML-KEM has fixed-length ciphectexts, RSA and ECDSA
      may not, depending on encoding, so rigorous length-checking is
      not always possible here.
 
-  2. Output the component signature values
+  2. Output the component ciphertext values
 
      output (mlkemCT, tradCT)
 ~~~
