@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-05-08T02:00:45.009395+00:00",
+  "timestamp": "2025-05-15T01:58:46.902109+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -2086,7 +2086,7 @@
       "id": "I_kwDOKRPFO86ws_yA",
       "title": "We currently have two FIPS Certification sections --> Merge them!",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/125",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -2095,8 +2095,8 @@
       "labels": [],
       "body": "D.1. FIPS Certification\n\nD.1.1. FIPS certification of Combiner Function\n\nAlso, referencing a specific page number is a bad idea because IGs get updated and page numbers change.\n\n> [SP.800-56Cr2] section 4 \"One-Step Key Derivation\" requires a counter\n   which begins at the 4-byte value 0x00000001.  However, the counter is\n   allowed to be omitted when the hash function is executed only once,\n   as specified on page 159 of the FIPS 140-3 Implementation Guidance\n   [FIPS-140-3-IG].\n\n",
       "createdAt": "2025-04-01T21:12:02Z",
-      "updatedAt": "2025-05-07T07:42:26Z",
-      "closedAt": null,
+      "updatedAt": "2025-05-14T14:38:00Z",
+      "closedAt": "2025-05-14T14:38:00Z",
       "comments": []
     },
     {
@@ -2154,7 +2154,7 @@
       "id": "I_kwDOKRPFO86yGY8a",
       "title": "Update comparison with version 1.2.1 of ETSI CatKDF",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/130",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "jiep",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -2163,8 +2163,8 @@
       "labels": [],
       "body": "ETSI recently released version 1.2.1 of [ETSI TS 103 744](https://www.etsi.org/deliver/etsi_ts/103700_103799/103744/01.02.01_60/ts_103744v010201p.pdf), which includes new KDFs such as KMAC and HMAC. It also defines different context formatting functions depending on the KDF selected. Namely, concatenate-and-hash-based context formatting function (`cb_f`) for HKDF and HMAC, and concatenate-based context formatting function (`cahb_f`) for KMAC.\n\n<img width=\"453\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/e56b639f-e69d-4abf-8a35-9c5ca9117484\" />\n\n",
       "createdAt": "2025-04-11T08:55:47Z",
-      "updatedAt": "2025-05-06T15:03:03Z",
-      "closedAt": null,
+      "updatedAt": "2025-05-14T14:31:31Z",
+      "closedAt": "2025-05-14T14:31:31Z",
       "comments": []
     },
     {
@@ -2242,6 +2242,22 @@
           "updatedAt": "2025-05-01T16:35:22Z"
         }
       ]
+    },
+    {
+      "number": 142,
+      "id": "I_kwDOKRPFO862ncmj",
+      "title": "BIT STRING or BIT STRING{ BIT STRING }",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/142",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "(copy from -sigs ... the analogous thing is needed in -kems)\n\n\nStephan M\u00fcller points out that if you just read the definitions of \n\n```\nCompositeMLDSAPublicKey ::= BIT STRING\n\nCompositeSignatureValue ::= BIT STRING\n```\n\nin isolation, then you might assume that to place this inside a `SubjectPublicKeyInfo.subjectPublicKey` or `Certificate.signature`, you need to double-wrap this as BIT STRING{ BIT STRING }.\n\nThis is not the case and is explained in Section 5.3 Encoding Rules, but perhaps the section that defines CompositeMLDSAPublicKey and CompositeSignatureValue needs a reference to 5.3?",
+      "createdAt": "2025-05-14T17:20:42Z",
+      "updatedAt": "2025-05-14T17:20:42Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
@@ -5449,50 +5465,68 @@
       "id": "PR_kwDOKRPFO86VIle9",
       "title": "Updates comparison to new ETSI Hybrid KDFs.",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/139",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "janklaussner",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Updates reference to ETSI TS 103 744 V1.2.1.\r\nAligns comparison with new KDF options in ETSIs TS. \r\nRemoves KMAC OID since its not used in draft.",
       "createdAt": "2025-05-06T16:07:56Z",
-      "updatedAt": "2025-05-06T16:07:56Z",
+      "updatedAt": "2025-05-14T14:31:34Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "cc427e13f34b9ba9bcf28adf3f8955395ce53f68",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "130-update-comparison-with-version-121-of-etsi-catkdf",
       "headRefOid": "3ed0959fdb462010ee46a5595bbd3fa54b3db390",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-05-14T14:31:30Z",
+      "mergedAt": "2025-05-14T14:31:30Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "678621b9d1303d7d877db9ca11734259b40ff93e"
+      },
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO86pTdpH",
+          "commit": {
+            "abbreviatedOid": "3ed0959"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-05-14T14:31:20Z",
+          "updatedAt": "2025-05-14T14:31:20Z",
+          "comments": []
+        }
+      ]
     },
     {
       "number": 140,
       "id": "PR_kwDOKRPFO86VOYdZ",
       "title": "Merges the two NIST certification sections.",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/140",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "janklaussner",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2025-05-07T07:56:44Z",
-      "updatedAt": "2025-05-07T08:04:42Z",
+      "updatedAt": "2025-05-14T14:38:03Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "cc427e13f34b9ba9bcf28adf3f8955395ce53f68",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "125-we-currently-have-two-fips-certification-sections----merge-them",
       "headRefOid": "6c48573ebb946dc45cf5ebeb1c8b97d59e3e0615",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-05-14T14:37:59Z",
+      "mergedAt": "2025-05-14T14:37:58Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "65d9c99113f84e4a81757161412d6fc8397af14a"
+      },
       "comments": [
         {
           "author": "janklaussner",
@@ -5502,7 +5536,21 @@
           "updatedAt": "2025-05-07T08:03:45Z"
         }
       ],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO86pTjD4",
+          "commit": {
+            "abbreviatedOid": "6c48573"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-05-14T14:37:41Z",
+          "updatedAt": "2025-05-14T14:37:41Z",
+          "comments": []
+        }
+      ]
     },
     {
       "number": 141,
