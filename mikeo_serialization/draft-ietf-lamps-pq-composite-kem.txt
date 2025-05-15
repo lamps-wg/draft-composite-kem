@@ -91,8 +91,7 @@ Table of Contents
      4.4.  KEM Combiner Function
      4.5.  Serialization
        4.5.1.  SerializePublicKey and DeserializePublicKey
-       4.5.2.  SerializePublicKey and DeserializePublicKey
-       4.5.3.  SerializePrivateKey and DeserializePrivateKey
+       4.5.2.  SerializePrivateKey and DeserializePrivateKey
      4.6.  SerializeCiphertextValue and DeSerializeCiphertextValue
    5.  Composite Key Structures
      5.1.  CompositeKEMPublicKey
@@ -496,7 +495,7 @@ Table of Contents
        sk = (mlkemSK, tradSK)
        return (pk, sk)
 
-                     Figure 1: Composite KeyGen(pk, sk)
+                  Figure 1: Composite KeyGen() -> (pk, sk)
 
    In order to ensure fresh keys, the key generation functions MUST be
    executed for both component algorithms.  Compliant parties MUST NOT
@@ -774,10 +773,8 @@ Decap Process:
 
 4.5.1.  SerializePublicKey and DeserializePublicKey
 
-   Each component KEM public key is serialized according to its
-   respective standard as shown in Appendix B and concatenated together
-   using a fixed 4-byte length field denoting the length in bytes of the
-   first component key, as defined below.
+   The serialization routine for keys simply concatenates the fixed-
+   length public keys of the component algorithms, as defined below:
 
   Composite-ML-KEM.SerializePublicKey(mlkemPK, tradPK) -> bytes
 
@@ -798,11 +795,10 @@ Decap Process:
 
        output mlkemPK || tradPK
 
-         Figure 4: SerializePublicKey(mldsaKey, tradKey) -> bytes
+         Figure 4: SerializePublicKey(mlkemKey, tradKey) -> bytes
 
-   Deserialization reverses this process, raising an error in the event
-   that the input is malformed.  Each component key is deserialized
-   according to their respective standard as shown in Appendix B.
+   Deserialization reverses this process. key is deserialized according
+   to their respective standard as shown in Appendix B.
 
   Composite-ML-KEM.DeserializePublicKey(bytes) -> (mlkemPK, tradPK)
 
@@ -825,15 +821,15 @@ Decap Process:
   Deserialization Process:
 
     1. Parse each constituent encoded public key.
-         The length of the mldsaKey is known based on the size of
+         The length of the mlkemKey is known based on the size of
          the ML-DSA component key length specified by the Object ID
 
        switch ML-KEM do
           case ML-KEM-768:
-            mldsaPK = bytes[:1184]
+            mlkemPK = bytes[:1184]
             tradPK  = bytes[1184:]
           case ML-KEM-1024:
-            mldsaPK = bytes[:1568]
+            mlkemPK = bytes[:1568]
             tradPK  = bytes[1568:]
 
        Note that while ML-KEM has fixed-length keys, RSA and ECDH
@@ -846,82 +842,10 @@ Decap Process:
 
         Figure 5: DeserializePublicKey(bytes) -> (mlkemPK, tradPK)
 
-4.5.2.  SerializePublicKey and DeserializePublicKey
+4.5.2.  SerializePrivateKey and DeserializePrivateKey
 
    The serialization routine for keys simply concatenates the fixed-
-   length public keys of the component KEM algorithms, as defined below:
-
-   Composite-ML-KEM.SerializePublicKey(mlkemKey, tradKey) -> bytes
-
-   Explicit Input:
-
-     mlkemKey  The ML-KEM public key, which is bytes.
-
-     tradKey   The traditional public key in the appropriate
-               encoding for the underlying component algorithm.
-
-   Output:
-
-     bytes   The encoded composite public key
-
-   Serialization Process:
-
-     1. Combine and output the encoded public key
-
-        output mlkemPK || tradPK
-
-          Figure 6: SerializePublicKey(mlkemKey, tradKey) -> bytes
-
-   Deserialization reverses this process, raising an error in the event
-   that the input is malformed.
-
-   Composite-ML-DSA.DeserializePublicKey(bytes) -> (mlkemKey, tradKey)
-
-   Explicit Input:
-
-     bytes   An encoded composite public key
-
-   Implicit inputs:
-
-     ML-KEM   A placeholder for the specific ML-KEM algorithm and
-              parameter set to use, for example, could be "ML-KEM-768".
-
-   Output:
-
-     mlkemKey  The ML-DSA public key, which is bytes.
-
-     tradKey   The traditional public key in the appropriate
-               encoding for the underlying component algorithm.
-
-   Deserialization Process:
-
-     1. Parse each constituent encoded public key.
-          The length of the mlkemKey is known based on the size of
-          the ML-KEM component key length specified by the Object ID
-
-        switch ML-KEM do
-           case ML-KEM-768:
-             mlkemKey = bytes[:1184]
-             tradKey  = bytes[1184:]
-           case MLDSA65:
-             mldsaKey = bytes[:1568]
-             tradKey  = bytes[1568:]
-
-        Note that while ML-KEM has fixed-length keys, RSA and ECDH
-        may not, depending on encoding, so rigorous length-checking is
-        not always possible here.
-
-     2. Output the component public keys
-
-        output (mlkemKey, tradKey)
-
-        Figure 7: DeserializePublicKey(bytes) -> (mlkemKey, tradKey)
-
-4.5.3.  SerializePrivateKey and DeserializePrivateKey
-
-   The serialization routine for keys simply concatenates the fixed-
-   length private keys of the component signature algorithms, as defined
-   below:
+   length private keys of the component algorithms, as defined below:
 
    Composite-ML-KEM.SerializePrivateKey(mlkemSeed, tradSK) -> bytes
 
@@ -942,10 +866,9 @@ Decap Process:
 
         output mlkemSeed || tradKey
 
-         Figure 8: SerializePrivateKey(mlkemSeed, tradSK) -> bytes
+         Figure 6: SerializePrivateKey(mlkemSeed, tradSK) -> bytes
 
-   Deserialization reverses this process, raising an error in the event
-   that the input is malformed.
+   Deserialization reverses this process.
 
  Composite-ML-KEM.DeserializePrivateKey(bytes) -> (mlkemSeed, tradSK)
 
@@ -966,7 +889,7 @@ Decap Process:
         The length of an ML-KEM private key is always a 64 byte seed
         for all parameter sets.
 
-       mldsaSeed = bytes[:64]
+       mlkemSeed = bytes[:64]
        tradSK  = bytes[64:]
 
       Note that while ML-KEM has fixed-length keys (seeds), RSA and ECDH
@@ -975,9 +898,9 @@ Decap Process:
 
    2. Output the component private keys
 
-      output (mldsaSeed, tradSK)
+      output (mlkemSeed, tradSK)
 
-         Figure 9: DeserializeKey(bytes) -> (mlkemSeed, tradSK)
+         Figure 7: DeserializeKey(bytes) -> (mlkemSeed, tradSK)
 
 4.6.  SerializeCiphertextValue and DeSerializeCiphertextValue
 
@@ -985,7 +908,7 @@ Decap Process:
    concatenates the fixed-length ML-KEM ciphertext with the ciphertext
    from the traditional algorithm, as defined below:
 
-   Composite-ML-KEM.SerializeCiphertext(mldsaCT, tradCT) -> bytes
+   Composite-ML-KEM.SerializeCiphertext(mlkemCT, tradCT) -> bytes
 
    Explicit Inputs:
 
@@ -996,60 +919,59 @@ Decap Process:
 
    Output:
 
-     bytes   The encoded CompositeSignatureValue
+     bytes   The encoded CompositeCiphertextValue
 
    Serialization Process:
 
-     1. Combine and output the encoded composite signature
+     1. Combine and output the encoded composite ciphertext
 
         output mlkemCT || tradCT
 
-          Figure 10: SerializeCiphertext(mldsaCT, tradCT) -> bytes
+          Figure 8: SerializeCiphertext(mlkemCT, tradCT) -> bytes
 
-   Deserialization reverses this process, raising an error in the event
-   that the input is malformed.
+   Deserialization reverses this process.
 
- Composite-ML-KEM.DeserializeCiphertext(bytes) -> (mldkemCT, tradCT)
+Composite-ML-KEM.DeserializeCiphertext(bytes) -> (mldkemCT, tradCT)
 
- Explicit Input:
+Explicit Input:
 
-   bytes   An encoded CompositeCiphertextValue
+  bytes   An encoded CompositeCiphertextValue
 
- Implicit inputs:
+Implicit inputs:
 
-   ML-KEM   A placeholder for the specific ML-KEM algorithm and
-            parameter set to use, for example, could be "ML-KEM-768".
+  ML-KEM   A placeholder for the specific ML-KEM algorithm and
+           parameter set to use, for example, could be "ML-KEM-768".
 
- Output:
+Output:
 
-   mlkemCT  The ML-KEM ciphertext, which is bytes.
+  mlkemCT  The ML-KEM ciphertext, which is bytes.
 
-   tradCT   The traditional ciphertext in the appropriate
-             encoding for the underlying component algorithm.
+  tradCT   The traditional ciphertext in the appropriate
+            encoding for the underlying component algorithm.
 
- Deserialization Process:
+Deserialization Process:
 
-   1. Parse each constituent encoded ciphertext.
-        The length of the mlkemCT is known based on the size of
-        the ML-KEM component signature length specified by the Object ID
+  1. Parse each constituent encoded ciphertext.
+       The length of the mlkemCT is known based on the size of
+       the ML-KEM component ciphertext length specified by the Object ID
 
-      switch ML-KEM do
-         case ML-KEM-768:
-           mlkemCT = bytes[:1088]
-           tradSig  = bytes[1088:]
-         case ML-KEM-1024:
-           mldsaSig = bytes[:1568]
-           tradSig  = bytes[1568:]
+     switch ML-KEM do
+        case ML-KEM-768:
+          mlkemCT = bytes[:1088]
+          tradSig  = bytes[1088:]
+        case ML-KEM-1024:
+          mlkemSig = bytes[:1568]
+          tradSig  = bytes[1568:]
 
-      Note that while ML-KEM has fixed-length ciphectexts, RSA and ECDSA
-      may not, depending on encoding, so rigorous length-checking is
-      not always possible here.
+     Note that while ML-KEM has fixed-length ciphectexts, RSA and ECDSA
+     may not, depending on encoding, so rigorous length-checking is
+     not always possible here.
 
-   2. Output the component signature values
+  2. Output the component ciphertext values
 
-      output (mlkemCT, tradCT)
+     output (mlkemCT, tradCT)
 
-     Figure 11: DeserializeCiphertext(bytes) -> (mldkemCT, tradCT)
+     Figure 9: DeserializeCiphertext(bytes) -> (mldkemCT, tradCT)
 
 5.  Composite Key Structures
 
@@ -1880,7 +1802,7 @@ Decap Process:
 
      KDF(mlkemSS || tradSS || tradCT || tradPK || Domain)
 
-                    Figure 12: KEM combiner construction
+                    Figure 10: KEM combiner construction
 
    where:
 
