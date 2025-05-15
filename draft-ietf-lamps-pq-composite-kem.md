@@ -81,6 +81,7 @@ normative:
   RFC5869:
   RFC5958:
   RFC6234:
+  RFC7748:
   RFC8017:
   RFC8174:
   RFC8410:
@@ -96,6 +97,18 @@ normative:
         org: ITU-T
       seriesinfo:
         ISO/IEC: 8825-1:2015
+  SEC1:
+    title: "SEC 1: Elliptic Curve Cryptography"
+    date: May 21, 2009
+    author:
+      org: "Certicom Research"
+    target: https://www.secg.org/sec1-v2.pdf
+  SEC2:
+    title: "SEC 2: Recommended Elliptic Curve Domain Parameters"
+    date: January 27, 2010
+    author:
+      org: "Certicom Research"
+    target: https://www.secg.org/sec2-v2.pdf
   SP.800-56Ar3:
     title: "Recommendation for Pair-Wise Key-Establishment Schemes Using Discrete Logarithm Cryptography"
     date: April 2018
@@ -692,7 +705,7 @@ HKDF-Extract(salt="", IKM=mlkemSS || tradSS || tradCT || tradPK || Domain)
 ```
 
 
-## Serialization
+## Serialization {#sec-serialization}
 
 This section presents routines for serializing and deserializing composite public keys, private keys (seeds), and ciphertext values to bytes via simple concatenation of the underlying encodings of the component algorithms.
 Deserialization is possible because ML-KEM has fixed-length public keys, private keys (seeds), and ciphertext values as shown in the following table.
@@ -705,8 +718,14 @@ Deserialization is possible because ML-KEM has fixed-length public keys, private
 
 When these values are required to be carried in an ASN.1 structure, they are wrapped as described in {{sec-composite-keys}} and {{sec-CompositeCiphertextValue}}.
 
-While ML-KEM has a single fixed-size representation for each of public key, private key, and ciphertext, the traditional component might allow multiple valid encodings; for example an elliptic curve public key, and therefore also ciphertext, might be validly encoded as either compressed or uncompressed [SEC1], or an RSA private key could be encoded in Chinese Remainder Theorem form [RFC8017]. Since a design goal of this specification is to treat the traditional component as a pre-existing black box, no requirements are imposed on a composite implementation as to what encodings should be accepted for the traditional component.
-For this reason, the size of the traditional component is left unspecified and all serialization and deserialization routines are specified in terms of the fixed size of the ML-KEM component and assumes that "the rest" is the traditional component. See further discussion of security implications in {{sec-hybrid-security}}.
+While ML-KEM has a single fixed-size representation for each of public key, private key, and ciphertext, the traditional component might allow multiple valid encodings; for example an elliptic curve public key, and therefore also ciphertext, might be validly encoded as either compressed or uncompressed [SEC1], or an RSA private key could be encoded in Chinese Remainder Theorem form [RFC8017]. In order to obtain interoperability, composite algorithms MUST use the following encodings of the underlying components:
+
+* **ML-KEM**: MUST be encoded as specified in [FIPS203], using a 64-byte seed as the private key.
+* **RSA**: MUST be encoded with the `(n,e)` public key representation as specified in A.1.1 of [RFC8017] and the private key representation as specified in A.1.2 of [RFC8017]. For maximum interoperability, it is RECOMMENDED to use the `(n,d)` private key representation.
+* **ECDH**: MUST be encoded as an `ECPoint` as specified in section 2.2 of [RFC5480], with both compressed and uncompressed keys supported. For maximum interoperability, it is RECOMMENEDED to use uncompressed points.
+* **X25519 and X448**: MUST be encoded as per section 3.1 of [RFC7748] and section 4 of [RFC8410].
+
+In the event that a composite implementation uses an underlying implementation of the traditional component that requires a different encoding, it is the responsibility of the composite implementation to perform the necessary transcoding. Even with fixed encodings for the traditional component, there may be slight differences in encoded size of the traditional component due to, for example, encoding rules that drop leading zeroes. See {{sec-sizetable}} for further discussion of encoded size of each composite algorithm.
 
 
 ### SerializePublicKey and DeserializePublicKey {#sec-serialize-deserialize}
@@ -1152,7 +1171,7 @@ This table summarizes the list of Composite ML-KEM algorithms and lists the OID,
 
 EDNOTE: these are prototyping OIDs to be replaced by IANA.
 
-&lt;CompKEM&gt;.1 is equal to 2.16.840.1.114027.80.5.2.1
+&lt;CompKEM&gt; is equal to 2.16.840.1.114027.80.5.2
 
 ## Composite-ML-KEM Algorithm Identifiers
 
@@ -1443,16 +1462,17 @@ This section provides references to the full specification of the algorithms use
 | ----------- | ----------- | ----------- |
 | id-ML-KEM-768 | 2.16.840.1.101.3.4.4.2 | [FIPS.203] |
 | id-ML-KEM-1024 | 2.16.840.1.101.3.4.4.3 | [FIPS.203] |
-| id-X25519 | 1.3.101.110 | [RFC8410] |
-| id-X448 | 1.3.101.111 | [RFC8410] |
-| id-ecDH | 1.3.132.1.12 | [RFC5480] |
+| id-X25519 | 1.3.101.110 | [RFC7748], [RFC8410] |
+| id-X448 | 1.3.101.111 | [RFC7748], [RFC8410] |
+| id-ecDH | 1.3.132.1.12 | [RFC5480], [SEC1] |
 | id-RSAES-OAEP | 1.2.840.113549.1.1.7 | [RFC8017] |
 {: #tab-component-encr-algs title="Component Encryption Algorithms used in Composite Constructions"}
 
 | Elliptic CurveID | OID | Specification |
 | ----------- | ----------- | ----------- |
-| secp256r1 | 1.2.840.10045.3.1.7 | [RFC6090] |
-| secp384r1 | 1.3.132.0.34 | [RFC6090] |
+| secp256r1 | 1.2.840.10045.3.1.7 | [RFC6090], [SEC2] |
+| secp384r1 | 1.3.132.0.34 | [RFC6090], [SEC2] |
+| secp521r1 | 1.3.132.0.34 | [RFC6090], [SEC2] |
 | brainpoolP256r1 | 1.3.36.3.3.2.8.1.1.7 | [RFC5639] |
 | brainpoolP384r1 | 1.3.36.3.3.2.8.1.1.11 | [RFC5639] |
 {: #tab-component-curve-algs title="Elliptic Curves used in Composite Constructions"}
