@@ -31,51 +31,15 @@ KEM-ALGORITHM
 der OBJECT IDENTIFIER ::=
   {joint-iso-itu-t asn1(1) ber-derived(2) distinguished-encoding(1)}
 
---
--- Composite KEM basic structures
---
-
--- When a CompositeKEMPublicKey is used with an RSA public key, the BIT STRING itself is generated
--- by the concatenation of a raw ML-KEM key according to {{I-D.ietf-lamps-kyber-certificates}} and
--- an RSAPublicKey (which is a DER encoded RSAPublicKey).
-
--- When a CompositeKEMPublicKey is used with an EC public key, the BIT STRING itself is generated
--- by the concatenation of a raw ML-KEM key according to {{I-D.ietf-lamps-kyber-certificates}} and
--- an ECDHPublicKey (which is a DER encoded ECPoint).
-
--- When a CompositeKEMPublicKey is used with an Edwards public key, the BIT STRING itself is generated
--- by the concatenation of a raw ML-KEM key according to {{I-D.ietf-lamps-kyber-certificates}} and
--- a raw Edwards public key according to [RFC8410].
-
-CompositeKEMPublicKey ::= BIT STRING
-
--- When a CompositeKEMPrivateKey is used with an RSA private key, the BIT STRING itself is generated
--- by the concatenation of a raw ML-KEM key according to {{I-D.ietf-lamps-kyber-certificates}} and
--- an RSAPrivateKey (which is a DER encoded RSAPrivateKey).
-
--- When a CompositeKEMPrivateKey is used with an EC private key, the BIT STRING itself is generated
--- by the concatenation of a raw ML-KEM key according to {{I-D.ietf-lamps-kyber-certificates}} and
--- an ECDHPrivateKey (which is a DER encoded ECPoint).
-
--- When a CompositeKEMPrivateKey is used with an Edwards private key, the BIT STRING itself is generated
--- by the concatenation of a raw ML-KEM key according to {{I-D.ietf-lamps-kyber-certificates}} and
--- a raw Edwards private key according to [RFC8410].
-
-CompositeKEMPrivateKey ::= OCTET STRING
-
--- Composite Ciphertext Value is just an OCTET STRING and is a concatenation of the component ciphertext
--- values.
-
-CompositeCiphertextValue ::= OCTET STRING
 
 --
 -- Information Object Classes
 --
 
-pk-CompositeKEM {OBJECT IDENTIFIER:id, PublicKeyType}
+pk-CompositeKEM {OBJECT IDENTIFIER:id}
   PUBLIC-KEY ::= {
     IDENTIFIER id
-    KEY PublicKeyType
+    KEY BIT STRING
     PARAMS ARE absent
     CERT-KEY-USAGE { keyEncipherment }
   }
@@ -85,7 +49,7 @@ kema-CompositeKEM {
     PUBLIC-KEY:publicKeyType }
     KEM-ALGORITHM ::= {
          IDENTIFIER id
-         VALUE CompositeCiphertextValue
+         VALUE OCTET STRING
          PARAMS ARE absent
          PUBLIC-KEYS { publicKeyType }
          SMIME-CAPS { IDENTIFIED BY id }
@@ -105,8 +69,7 @@ id-MLKEM768-RSA2048-HKDF-SHA256 OBJECT IDENTIFIER ::= {
 
 pk-MLKEM768-RSA2048-HKDF-SHA256 PUBLIC-KEY ::= 
   pk-CompositeKEM { 
-    id-MLKEM768-RSA2048-HKDF-SHA256, 
-    CompositeKEMPublicKey }
+    id-MLKEM768-RSA2048-HKDF-SHA256 }
 
 kema-MLKEM768-RSA2048-HKDF-SHA256 KEM-ALGORITHM ::= 
     kema-CompositeKEM{
@@ -122,8 +85,7 @@ id-MLKEM768-RSA3072-HKDF-SHA256 OBJECT IDENTIFIER ::= {
 
 pk-MLKEM768-RSA3072 PUBLIC-KEY ::= 
   pk-CompositeKEM {
-    id-MLKEM768-RSA3072-HKDF-SHA256, 
-    CompositeKEMPublicKey }
+    id-MLKEM768-RSA3072-HKDF-SHA256 }
 
 kema-MLKEM768-RSA3072-HKDF-SHA256 KEM-ALGORITHM ::=
     kema-CompositeKEM{
@@ -139,8 +101,7 @@ id-MLKEM768-RSA4096 OBJECT IDENTIFIER ::= {
 
 pk-MLKEM768-RSA4096-HKDF-SHA256 PUBLIC-KEY ::= 
   pk-CompositeKEM {
-    id-MLKEM768-RSA4096-HKDF-SHA256, 
-    CompositeKEMPublicKey }
+    id-MLKEM768-RSA4096-HKDF-SHA256 }
 
 kema-MLKEM768-RSA4096 KEM-ALGORITHM ::=
     kema-CompositeKEM{
@@ -156,8 +117,7 @@ id-MLKEM768-X25519-SHA3-256 OBJECT IDENTIFIER ::= {
 
 pk-MLKEM768-X25519-SHA3-256 PUBLIC-KEY ::= 
   pk-CompositeKEM {
-    id-MLKEM768-X25519-SHA3-256, 
-    CompositeKEMPublicKey }
+    id-MLKEM768-X25519-SHA3-256 }
 
 kema-MLKEM768-X25519-SHA3-256 KEM-ALGORITHM ::= 
     kema-CompositeKEM{
@@ -172,8 +132,7 @@ id-MLKEM768-ECDH-P256-HKDF-SHA256 OBJECT IDENTIFIER ::= {
 
 pk-MLKEM768-ECDH-P256-HKDF-SHA256 PUBLIC-KEY ::= 
   pk-CompositeKEM {
-    id-MLKEM768-ECDH-P256-HKDF-SHA256, 
-    CompositeKEMPublicKey }
+    id-MLKEM768-ECDH-P256-HKDF-SHA256 }
 
 kema-MLKEM768-ECDH-P256-HKDF-SHA256 KEM-ALGORITHM ::= 
     kema-CompositeKEM{
@@ -189,8 +148,7 @@ id-MLKEM768-ECDH-P384-HKDF-SHA256 OBJECT IDENTIFIER ::= {
 
 pk-MLKEM768-ECDH-P384-HKDF-SHA256 PUBLIC-KEY ::= 
   pk-CompositeKEM {
-    id-MLKEM768-ECDH-P384-HKDF-SHA256, 
-    CompositeKEMPublicKey }
+    id-MLKEM768-ECDH-P384-HKDF-SHA256 }
 
 kema-MLKEM768-ECDH-P384-HKDF-SHA256 KEM-ALGORITHM ::= 
     kema-CompositeKEM{
@@ -206,8 +164,7 @@ id-MLKEM768-ECDH-brainpoolP256r1-HKDF-SHA256 OBJECT IDENTIFIER ::= {
 
 pk-MLKEM768-ECDH-brainpoolP256r1-HKDF-SHA256 PUBLIC-KEY ::= 
   pk-CompositeKEM {
-    id-MLKEM768-ECDH-brainpoolP256r1-HKDF-SHA256, 
-    CompositeKEMPublicKey }
+    id-MLKEM768-ECDH-brainpoolP256r1-HKDF-SHA256 }
 
 kema-MLKEM768-ECDH-brainpoolP256r1-HKDF-SHA256 KEM-ALGORITHM ::= 
     kema-CompositeKEM{
@@ -223,8 +180,7 @@ id-MLKEM1024-ECDH-P384-HKDF-SHA384 OBJECT IDENTIFIER ::= {
 
 pk-MLKEM1024-ECDH-P384-HKDF-SHA384 PUBLIC-KEY ::= 
   pk-CompositeKEM {
-    id-MLKEM1024-ECDH-P384-HKDF-SHA384, 
-    CompositeKEMPublicKey }
+    id-MLKEM1024-ECDH-P384-HKDF-SHA384 }
 
 kema-MLKEM1024-ECDH-P384-HKDF-SHA384 KEM-ALGORITHM ::= 
     kema-CompositeKEM{
@@ -239,8 +195,7 @@ id-MLKEM1024-ECDH-brainpoolP384r1-HKDF-SHA384 OBJECT IDENTIFIER ::= {
 
 pk-MLKEM1024-ECDH-brainpoolP384r1-HKDF-SHA384 PUBLIC-KEY ::= 
   pk-CompositeKEM{
-    id-MLKEM1024-ECDH-brainpoolP384r1-HKDF-SHA384, 
-    CompositeKEMPublicKey }
+    id-MLKEM1024-ECDH-brainpoolP384r1-HKDF-SHA384 }
 
 kema-MLKEM1024-ECDH-brainpoolP384r1-HKDF-SHA384 KEM-ALGORITHM ::= 
     kema-CompositeKEM{
@@ -255,8 +210,7 @@ id-MLKEM1024-X448-SHA3-256 OBJECT IDENTIFIER ::= {
 
 pk-MLKEM1024-X448-SHA3-256 PUBLIC-KEY ::= 
   pk-CompositeKEM {
-    id-MLKEM1024-X448-SHA3-256, 
-    CompositeKEMPublicKey }
+    id-MLKEM1024-X448-SHA3-256 }
 
 kema-MLKEM1024-X448 KEM-ALGORITHM ::= 
     kema-CompositeKEM{
@@ -271,8 +225,7 @@ id-MLKEM1024-ECDH-P521-HKDF-SHA384 OBJECT IDENTIFIER ::= {
 
 pk-MLKEM1024-ECDH-P521-HKDF-SHA384 PUBLIC-KEY ::= 
   pk-CompositeKEM {
-    id-MLKEM1024-ECDH-P521-HKDF-SHA384, 
-    CompositeKEMPublicKey }
+    id-MLKEM1024-ECDH-P521-HKDF-SHA384 }
 
 kema-MLKEM1024-ECDH-P521-HKDF-SHA384 KEM-ALGORITHM ::= 
     kema-CompositeKEM{
