@@ -92,7 +92,7 @@ Table of Contents
    5.  Serialization
      5.1.  SerializePublicKey and DeserializePublicKey
      5.2.  SerializePrivateKey and DeserializePrivateKey
-     5.3.  SerializeCiphertextValue and DeSerializeCiphertextValue
+     5.3.  SerializeCiphertextValue and DeserializeCiphertextValue
    6.  Use within X.509 and PKIX
      6.1.  Encoding to DER
      6.2.  Key Usage Bits
@@ -158,13 +158,10 @@ Table of Contents
       HKDF-SHA2 combiners, and the difference between HKDF(), HKDF-
       Extract(), and HMAC().
 
-   Still to do in a future version:
+   *  Since the serialization is now non-DER, drastically reduced the
+      ASN.1-based text.
 
-   *  [ ] We need PEM samples … hackathon?  OQS friends?  David @ BC?
-      The right format for samples is probably to follow the hackathon
-      ... a Dilithium or ECDSA trust anchor certificate, a composite KEM
-      end entity certificate, and a CMS EnvelopedData sample encrypted
-      for that composite KEM certificate.
+   Still to do in a future version:
 
    *  [ ] Other outstanding github issues: https://github.com/lamps-wg/
       draft-composite-kem/issues
@@ -871,7 +868,7 @@ Deserialization Process:
 
        Figure 7: DeserializeKey(bytes) -> (mlkemSeed, tradKey)
 
-5.3.  SerializeCiphertextValue and DeSerializeCiphertextValue
+5.3.  SerializeCiphertextValue and DeserializeCiphertextValue
 
    The serialization routine for the CompositeCiphertextValue simply
    concatenates the fixed-lengthCompositeKEMPrivateKey ML-KEM ciphertext

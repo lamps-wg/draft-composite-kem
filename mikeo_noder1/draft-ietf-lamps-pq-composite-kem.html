@@ -1223,7 +1223,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
                 <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="auto internal xref">5.2</a>.  <a href="#name-serializeprivatekey-and-des" class="internal xref">SerializePrivateKey and DeserializePrivateKey</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.3">
-                <p id="section-toc.1-1.5.2.3.1"><a href="#section-5.3" class="auto internal xref">5.3</a>.  <a href="#name-serializeciphertextvalue-an" class="internal xref">SerializeCiphertextValue and DeSerializeCiphertextValue</a></p>
+                <p id="section-toc.1-1.5.2.3.1"><a href="#section-5.3" class="auto internal xref">5.3</a>.  <a href="#name-serializeciphertextvalue-an" class="internal xref">SerializeCiphertextValue and DeserializeCiphertextValue</a></p>
 </li>
             </ul>
 </li>
@@ -1405,14 +1405,14 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <li class="normal" id="section-1-4.1">
           <p id="section-1-4.1.1">Added an informative section on the difference between SHA3 and HKDF-SHA2 combiners, and the difference between HKDF(), HKDF-Extract(), and HMAC().<a href="#section-1-4.1.1" class="pilcrow">¶</a></p>
 </li>
+        <li class="normal" id="section-1-4.2">
+          <p id="section-1-4.2.1">Since the serialization is now non-DER, drastically reduced the ASN.1-based text.<a href="#section-1-4.2.1" class="pilcrow">¶</a></p>
+</li>
       </ul>
 <p id="section-1-5">Still to do in a future version:<a href="#section-1-5" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-1-6.1">
-          <p id="section-1-6.1.1"><code>[ ]</code> We need PEM samples … hackathon? OQS friends? David @ BC? The right format for samples is probably to follow the hackathon ... a Dilithium or ECDSA trust anchor certificate, a composite KEM end entity certificate, and a CMS EnvelopedData sample encrypted for that composite KEM certificate.<a href="#section-1-6.1.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="section-1-6.2">
-          <p id="section-1-6.2.1"><code>[ ]</code> Other outstanding github issues: https://github.com/lamps-wg/draft-composite-kem/issues<a href="#section-1-6.2.1" class="pilcrow">¶</a></p>
+          <p id="section-1-6.1.1"><code>[ ]</code> Other outstanding github issues: https://github.com/lamps-wg/draft-composite-kem/issues<a href="#section-1-6.1.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 </section>
@@ -2070,7 +2070,7 @@ Deserialization Process:
 <div id="serializeciphertextvalue-and-deserializeciphertextvalue">
 <section id="section-5.3">
         <h3 id="name-serializeciphertextvalue-an">
-<a href="#section-5.3" class="section-number selfRef">5.3. </a><a href="#name-serializeciphertextvalue-an" class="section-name selfRef">SerializeCiphertextValue and DeSerializeCiphertextValue</a>
+<a href="#section-5.3" class="section-number selfRef">5.3. </a><a href="#name-serializeciphertextvalue-an" class="section-name selfRef">SerializeCiphertextValue and DeserializeCiphertextValue</a>
         </h3>
 <p id="section-5.3-1">The serialization routine for the CompositeCiphertextValue simply concatenates the fixed-lengthCompositeKEMPrivateKey
 ML-KEM ciphertext with the ciphertext from the traditional algorithm, as defined below:<a href="#section-5.3-1" class="pilcrow">¶</a></p>
