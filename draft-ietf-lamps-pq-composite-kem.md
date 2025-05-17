@@ -286,10 +286,10 @@ Interop-affecting changes:
 Editorial changes:
 
 * Added an informative section on the difference between SHA3 and HKDF-SHA2 combiners, and the difference between HKDF(), HKDF-Extract(), and HMAC().
+* Since the serialization is now non-DER, drastically reduced the ASN.1-based text.
 
 Still to do in a future version:
 
-- `[ ]` We need PEM samples … hackathon? OQS friends? David @ BC? The right format for samples is probably to follow the hackathon ... a Dilithium or ECDSA trust anchor certificate, a composite KEM end entity certificate, and a CMS EnvelopedData sample encrypted for that composite KEM certificate.
 - `[ ]` Other outstanding github issues: https://github.com/lamps-wg/draft-composite-kem/issues
 
 
@@ -854,7 +854,7 @@ Deserialization Process:
 
 
 
-## SerializeCiphertextValue and DeSerializeCiphertextValue
+## SerializeCiphertextValue and DeserializeCiphertextValue
 
 The serialization routine for the CompositeCiphertextValue simply concatenates the fixed-lengthCompositeKEMPrivateKey
 ML-KEM ciphertext with the ciphertext from the traditional algorithm, as defined below:
