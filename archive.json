@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-05-15T01:58:46.902109+00:00",
+  "timestamp": "2025-05-18T02:07:40.735918+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -5329,25 +5329,33 @@
       "id": "PR_kwDOKRPFO86UElvF",
       "title": "Remove DER Encoding Rules section",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/136",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Since we are not encoding as raw bytes, no need for the section on DER encoding rules.\r\n\r\nCloses #117 ",
       "createdAt": "2025-04-27T13:43:17Z",
-      "updatedAt": "2025-05-06T09:54:01Z",
+      "updatedAt": "2025-05-17T14:36:42Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "d390094b8c9f78f9ed9bebf8eedbefd2c5c774ad",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_noder",
       "headRefOid": "726a2d266f1d650a0144b19fd97bd5514d096fa7",
-      "closedAt": null,
+      "closedAt": "2025-05-17T14:36:42Z",
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I am going to close this PR and try again in a fresh one.",
+          "createdAt": "2025-05-17T14:36:42Z",
+          "updatedAt": "2025-05-17T14:36:42Z"
+        }
+      ],
       "reviews": [
         {
           "id": "PRR_kwDOKRPFO86n8YB8",
@@ -5383,18 +5391,26 @@
       "labels": [],
       "body": "Closes #119 \r\nCloses #122 \r\nCloses #114 ",
       "createdAt": "2025-04-27T19:46:47Z",
-      "updatedAt": "2025-05-06T10:55:37Z",
+      "updatedAt": "2025-05-15T03:27:41Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
-      "baseRefOid": "d390094b8c9f78f9ed9bebf8eedbefd2c5c774ad",
+      "baseRefOid": "65d9c99113f84e4a81757161412d6fc8397af14a",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_serialization",
-      "headRefOid": "0e76d75f0864b131c6a9e26925385c5cabbb71ff",
+      "headRefOid": "2b2ceacd9008018287b924c7f7ac3429c9438c68",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Ready to merge.",
+          "createdAt": "2025-05-15T03:27:40Z",
+          "updatedAt": "2025-05-15T03:27:40Z"
+        }
+      ],
       "reviews": [
         {
           "id": "PRR_kwDOKRPFO86n8wua",
@@ -5455,6 +5471,26 @@
               "body": "signature-> ciphertext",
               "createdAt": "2025-05-06T10:42:52Z",
               "updatedAt": "2025-05-06T10:55:37Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO86pZv1T",
+          "commit": {
+            "abbreviatedOid": "0e76d75"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-05-15T03:24:59Z",
+          "updatedAt": "2025-05-15T03:24:59Z",
+          "comments": [
+            {
+              "originalPosition": 250,
+              "body": "This is in the deleted duplicate section, ... done now.",
+              "createdAt": "2025-05-15T03:24:59Z",
+              "updatedAt": "2025-05-15T03:24:59Z"
             }
           ]
         }
@@ -5600,6 +5636,32 @@
           ]
         }
       ]
+    },
+    {
+      "number": 143,
+      "id": "PR_kwDOKRPFO86Wkj_X",
+      "title": "Removed all the DER wrapping text",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/143",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Removed duplicate Serialization section.\r\n\r\nSignificantly cut down the sections that deal with DER encoding and ASN.1 structures ... I think we don't need any of that now that we have explicit non-DER serialization routines defined.\r\n\r\nCloses #114 \r\nCloses #117 \r\nCloses #142 \r\n\r\nTODO before merging:\r\n\r\n- [x] Make sure the modified ASN.1 module compiles and matches the ASN.1 in the body.",
+      "createdAt": "2025-05-17T15:24:55Z",
+      "updatedAt": "2025-05-17T15:59:01Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "65d9c99113f84e4a81757161412d6fc8397af14a",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_noder1",
+      "headRefOid": "97f58c2f03693b2299eebfdb6751d1d0902a17ff",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
