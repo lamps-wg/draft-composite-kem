@@ -929,12 +929,12 @@ Deserialization Process:
      switch ML-KEM do
         case ML-KEM-768:
           mlkemCT = bytes[:1088]
-          tradSig  = bytes[1088:]
+          tradCT  = bytes[1088:]
         case ML-KEM-1024:
-          mlkemSig = bytes[:1568]
-          tradSig  = bytes[1568:]
+          mlkemCT= bytes[:1568]
+          tradCT  = bytes[1568:]
 
-     Note that while ML-KEM has fixed-length ciphectexts, RSA and ECDSA
+     Note that while ML-KEM has fixed-length ciphertexts, RSA and ECDH
      may not, depending on encoding, so rigorous length-checking is
      not always possible here.
 
