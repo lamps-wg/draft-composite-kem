@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 16 November 2025                                        M. Pala
+Expires: 21 November 2025                                        M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                             15 May 2025
+                                                             20 May 2025
 
 
       Composite ML-KEM for use in X.509 Public Key Infrastructure
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 16 November 2025.
+   This Internet-Draft will expire on 21 November 2025.
 
 Copyright Notice
 
@@ -958,12 +958,12 @@ Deserialization Process:
      switch ML-KEM do
         case ML-KEM-768:
           mlkemCT = bytes[:1088]
-          tradSig  = bytes[1088:]
+          tradCT  = bytes[1088:]
         case ML-KEM-1024:
-          mlkemSig = bytes[:1568]
-          tradSig  = bytes[1568:]
+          mlkemCT= bytes[:1568]
+          tradCT  = bytes[1568:]
 
-     Note that while ML-KEM has fixed-length ciphectexts, RSA and ECDSA
+     Note that while ML-KEM has fixed-length ciphertexts, RSA and ECDH
      may not, depending on encoding, so rigorous length-checking is
      not always possible here.
 
