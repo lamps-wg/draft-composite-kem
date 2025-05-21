@@ -1500,7 +1500,7 @@ Deserialization Process:
    kema-MLKEM1024-ECDH-P521-HKDF-SHA384 KEM-ALGORITHM ::=
        kema-CompositeKEM{
          id-MLKEM1024-ECDH-P521-HKDF-SHA384,
-         id-MLKEM1024-ECDH-P521-HKDF-SHA384 }
+         pk-MLKEM1024-ECDH-P521-HKDF-SHA384 }
 
    END
 
