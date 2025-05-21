@@ -1217,6 +1217,8 @@ Note that in alignment with ML-KEM which outputs a 256-bit shared secret key at 
 
 For the use of HKDF [RFC5869]: a salt is not provided; i.e. the default salt (all zeroes of length HashLen) will be used. For HKDF-SHA256 the output of 256 bit output is used directly; for HKDF-SHA384/256, HKDF is invoked with SHA384 and then the output is truncated to 256 bits, meaning that only the first 256 bits of output are used.
 
+As the number of algorithms can be daunting to implementers, see {{sec-impl-profile}} for a discussion of choosing a subset to support.
+
 Full specifications for the referenced component algorithms can be found in {{appdx_components}}.
 
 
@@ -1761,6 +1763,25 @@ ML-KEM always requires the public key in order to perform various steps of the F
 
 
 With regard to the traditional algorithms, RSA or Elliptic Curve, in order to achieve the public-key binding property the KEM combiner used to form the Composite ML-KEM, the combiner requires the traditional public key as input to the KDF that derives the output shared secret. Therefore it is required to carry the public key within the respective `OneAsymmetricKey.publicKey` as per the private key encoding given in {{sec-priv-key}}. Implementers who choose to use a different private key encoding than the one specified in this document MUST consider how to provide the component public keys to the decapsulate routine. While some implementations might contain routines to computationally derive the public key from the private key, it is not guaranteed that all implementations will support this; for this reason the interoperable composite private key format given in this document in {{sec-priv-key}} requires the public key of the traditional component to be included.
+
+
+## Profiling down the number of options {#sec-impl-profile}
+
+One immediately daunting aspect of this specification is the number of composite algorithm combinations.
+Each option has been specified because there is a community that has a direct application for it; typically because the traditional component is already deployed in a change-managed environment, or because that specific traditional component is required for regulatory reasons.
+
+However, this large number of combinations leads either to fracturing of the ecosystem into non-interoperable sub-groups when different communities choose non-overlapping subsets to support, or on the other hand it leads to spreading development resources too thin when trying to support all options.
+
+This specification does not list any particular composite algorithm as mandatory-to-implement, however organizations that operate within specific application domains are encouraged to define profiles that select a small number of composites appropriate for that application domain.
+For applications that do not have any regulatory requirements or legacy implementations to consider, it is RECOMMENDED to focus implemtation effort on:
+
+    id-MLKEM768-X25519-SHA3-256
+    id-MLKEM768-ECDH-P256-HKDF-SHA256
+
+In applications that only allow NIST PQC Level 5, it is RECOMMENDED to focus implemtation effort on:
+
+    id-MLKEM1024-ECDH-P384-HKDF-SHA384
+
 
 <!-- End of Implementation Considerations section -->
 
