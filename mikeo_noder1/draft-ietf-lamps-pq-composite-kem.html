@@ -2201,7 +2201,7 @@ the post-quantum algorithms do not and therefore the overall composite algorithm
 pk-CompositeKEM {OBJECT IDENTIFIER:id}
   PUBLIC-KEY ::= {
     IDENTIFIER id
-    KEY PublicKeyType
+    KEY BIT STRING
     PARAMS ARE absent
     CERT-KEY-USAGE { keyEncipherment }
   }

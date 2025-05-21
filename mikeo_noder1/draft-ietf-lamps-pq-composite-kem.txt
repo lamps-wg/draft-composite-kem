@@ -994,7 +994,7 @@ Deserialization Process:
    pk-CompositeKEM {OBJECT IDENTIFIER:id}
      PUBLIC-KEY ::= {
        IDENTIFIER id
-       KEY PublicKeyType
+       KEY BIT STRING
        PARAMS ARE absent
        CERT-KEY-USAGE { keyEncipherment }
      }
