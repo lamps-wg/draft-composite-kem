@@ -856,7 +856,7 @@ Deserialization Process:
 
 ## SerializeCiphertextValue and DeserializeCiphertextValue
 
-The serialization routine for the CompositeCiphertextValue simply concatenates the fixed-lengthCompositeKEMPrivateKey
+The serialization routine for the CompositeCiphertextValue simply concatenates the fixed-length
 ML-KEM ciphertext with the ciphertext from the traditional algorithm, as defined below:
 
 ~~~
@@ -935,12 +935,12 @@ Deserialization Process:
 
 The following sections provide processing logic and the necessary ASN.1 modules necessary to use composite ML-KEM within X.509 and PKIX protocols.
 
-While composite ML-KEM keys and ciphertexts MAY to used raw, the following sections provide conventions for using them within X.509 and other PKIX protocols, including defining ASN.1-based wrappers for the binary composite values such that these structures can be used as a drop-in replacement for existing public key and ciphertext fields such as those found in PKCS#10 [RFC2986], CMP [RFC4210], X.509 [RFC5280], CMS [RFC5652].
+While composite ML-KEM keys and ciphertexts MAY be used raw, the following sections provide conventions for using them within X.509 and other PKIX protocols, including defining ASN.1-based wrappers for the binary composite values, such that these structures can be used as a drop-in replacement for existing public key and ciphertext fields such as those found in PKCS#10 [RFC2986], CMP [RFC4210], X.509 [RFC5280], CMS [RFC5652].
 
 
 ## Encoding to DER {#sec-encoding-to-der}
 
-The serialization routines presented in {{sec-serialization}} produce raw binary values. When these values are required to be carried within a DER-endeded message format such as an X.509's `subjectPublicKey BIT STRING` [RFC5280] or a CMS `KEMRecipientInfo.kemct OCTET STRING` [RFC9629], then the composite value MUST be wrapped into a DER BIT STRING or OCTET STRING in the obvious ways:
+The serialization routines presented in {{sec-serialization}} produce raw binary values. When these values are required to be carried within a DER-encoded message format such as an X.509's `subjectPublicKey BIT STRING` [RFC5280] or a CMS `KEMRecipientInfo.kemct OCTET STRING` [RFC9629], then the composite value MUST be wrapped into a DER BIT STRING or OCTET STRING in the obvious ways:
 
 When an OCTET STRING is required, the DER encoding of the composite data value SHALL be used directly.
 
@@ -968,7 +968,7 @@ The following ASN.1 Information Object Class is defined to allow for compact def
 pk-CompositeKEM {OBJECT IDENTIFIER:id}
   PUBLIC-KEY ::= {
     IDENTIFIER id
-    KEY PublicKeyType
+    KEY BIT STRING
     PARAMS ARE absent
     CERT-KEY-USAGE { keyEncipherment }
   }
