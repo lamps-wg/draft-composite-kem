@@ -30,7 +30,7 @@
     intervaltree 3.1.0
     Jinja2 3.1.6
     lxml 5.3.0
-    platformdirs 4.3.7
+    platformdirs 4.3.8
     pycountry 24.6.1
     PyYAML 6.0.2
     requests 2.32.3
@@ -1058,7 +1058,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Ounsworth, et al.</td>
-<td class="center">Expires 18 November 2025</td>
+<td class="center">Expires 22 November 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1071,12 +1071,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-lamps-pq-composite-kem-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-05-17" class="published">17 May 2025</time>
+<time datetime="2025-05-21" class="published">21 May 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-11-18">18 November 2025</time></dd>
+<dd class="expires"><time datetime="2025-11-22">22 November 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1142,7 +1142,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 18 November 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 22 November 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -2072,7 +2072,7 @@ Deserialization Process:
         <h3 id="name-serializeciphertextvalue-an">
 <a href="#section-5.3" class="section-number selfRef">5.3. </a><a href="#name-serializeciphertextvalue-an" class="section-name selfRef">SerializeCiphertextValue and DeserializeCiphertextValue</a>
         </h3>
-<p id="section-5.3-1">The serialization routine for the CompositeCiphertextValue simply concatenates the fixed-lengthCompositeKEMPrivateKey
+<p id="section-5.3-1">The serialization routine for the CompositeCiphertextValue simply concatenates the fixed-length
 ML-KEM ciphertext with the ciphertext from the traditional algorithm, as defined below:<a href="#section-5.3-1" class="pilcrow">¶</a></p>
 <span id="name-serializeciphertextmldsact-"></span><div id="alg-composite-serialize-ct">
 <figure id="figure-8">
@@ -2163,13 +2163,13 @@ Deserialization Process:
 <a href="#section-6" class="section-number selfRef">6. </a><a href="#name-use-within-x509-and-pkix" class="section-name selfRef">Use within X.509 and PKIX</a>
       </h2>
 <p id="section-6-1">The following sections provide processing logic and the necessary ASN.1 modules necessary to use composite ML-KEM within X.509 and PKIX protocols.<a href="#section-6-1" class="pilcrow">¶</a></p>
-<p id="section-6-2">While composite ML-KEM keys and ciphertexts MAY to used raw, the following sections provide conventions for using them within X.509 and other PKIX protocols, including defining ASN.1-based wrappers for the binary composite values such that these structures can be used as a drop-in replacement for existing public key and ciphertext fields such as those found in PKCS#10 <span>[<a href="#RFC2986" class="cite xref">RFC2986</a>]</span>, CMP <span>[<a href="#RFC4210" class="cite xref">RFC4210</a>]</span>, X.509 <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>, CMS <span>[<a href="#RFC5652" class="cite xref">RFC5652</a>]</span>.<a href="#section-6-2" class="pilcrow">¶</a></p>
+<p id="section-6-2">While composite ML-KEM keys and ciphertexts MAY be used raw, the following sections provide conventions for using them within X.509 and other PKIX protocols, including defining ASN.1-based wrappers for the binary composite values, such that these structures can be used as a drop-in replacement for existing public key and ciphertext fields such as those found in PKCS#10 <span>[<a href="#RFC2986" class="cite xref">RFC2986</a>]</span>, CMP <span>[<a href="#RFC4210" class="cite xref">RFC4210</a>]</span>, X.509 <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>, CMS <span>[<a href="#RFC5652" class="cite xref">RFC5652</a>]</span>.<a href="#section-6-2" class="pilcrow">¶</a></p>
 <div id="sec-encoding-to-der">
 <section id="section-6.1">
         <h3 id="name-encoding-to-der">
 <a href="#section-6.1" class="section-number selfRef">6.1. </a><a href="#name-encoding-to-der" class="section-name selfRef">Encoding to DER</a>
         </h3>
-<p id="section-6.1-1">The serialization routines presented in <a href="#sec-serialization" class="auto internal xref">Section 5</a> produce raw binary values. When these values are required to be carried within a DER-endeded message format such as an X.509's <code>subjectPublicKey BIT STRING</code> <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> or a CMS <code>KEMRecipientInfo.kemct OCTET STRING</code> <span>[<a href="#RFC9629" class="cite xref">RFC9629</a>]</span>, then the composite value MUST be wrapped into a DER BIT STRING or OCTET STRING in the obvious ways:<a href="#section-6.1-1" class="pilcrow">¶</a></p>
+<p id="section-6.1-1">The serialization routines presented in <a href="#sec-serialization" class="auto internal xref">Section 5</a> produce raw binary values. When these values are required to be carried within a DER-encoded message format such as an X.509's <code>subjectPublicKey BIT STRING</code> <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> or a CMS <code>KEMRecipientInfo.kemct OCTET STRING</code> <span>[<a href="#RFC9629" class="cite xref">RFC9629</a>]</span>, then the composite value MUST be wrapped into a DER BIT STRING or OCTET STRING in the obvious ways:<a href="#section-6.1-1" class="pilcrow">¶</a></p>
 <p id="section-6.1-2">When an OCTET STRING is required, the DER encoding of the composite data value SHALL be used directly.<a href="#section-6.1-2" class="pilcrow">¶</a></p>
 <p id="section-6.1-3">When a BIT STRING is required, the octets of the composite data value SHALL be used as the bits of the bit string, with the most significant bit of the first octet becoming the first bit, and so on, ending with the least significant bit of the last octet becoming the last bit of the bit string.<a href="#section-6.1-3" class="pilcrow">¶</a></p>
 </section>

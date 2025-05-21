@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 18 November 2025                                        M. Pala
+Expires: 22 November 2025                                        M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                             17 May 2025
+                                                             21 May 2025
 
 
       Composite ML-KEM for use in X.509 Public Key Infrastructure
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 18 November 2025.
+   This Internet-Draft will expire on 22 November 2025.
 
 Copyright Notice
 
@@ -871,8 +871,8 @@ Deserialization Process:
 5.3.  SerializeCiphertextValue and DeserializeCiphertextValue
 
    The serialization routine for the CompositeCiphertextValue simply
-   concatenates the fixed-lengthCompositeKEMPrivateKey ML-KEM ciphertext
-   with the ciphertext from the traditional algorithm, as defined below:
+   concatenates the fixed-length ML-KEM ciphertext with the ciphertext
+   from the traditional algorithm, as defined below:
 
    Composite-ML-KEM.SerializeCiphertext(mldsaCT, tradCT) -> bytes
 
@@ -946,19 +946,19 @@ Deserialization Process:
    ASN.1 modules necessary to use composite ML-KEM within X.509 and PKIX
    protocols.
 
-   While composite ML-KEM keys and ciphertexts MAY to used raw, the
+   While composite ML-KEM keys and ciphertexts MAY be used raw, the
    following sections provide conventions for using them within X.509
    and other PKIX protocols, including defining ASN.1-based wrappers for
-   the binary composite values such that these structures can be used as
-   a drop-in replacement for existing public key and ciphertext fields
-   such as those found in PKCS#10 [RFC2986], CMP [RFC4210], X.509
+   the binary composite values, such that these structures can be used
+   as a drop-in replacement for existing public key and ciphertext
+   fields such as those found in PKCS#10 [RFC2986], CMP [RFC4210], X.509
    [RFC5280], CMS [RFC5652].
 
 6.1.  Encoding to DER
 
    The serialization routines presented in Section 5 produce raw binary
    values.  When these values are required to be carried within a DER-
-   endeded message format such as an X.509's subjectPublicKey BIT STRING
+   encoded message format such as an X.509's subjectPublicKey BIT STRING
    [RFC5280] or a CMS KEMRecipientInfo.kemct OCTET STRING [RFC9629],
    then the composite value MUST be wrapped into a DER BIT STRING or
    OCTET STRING in the obvious ways:
