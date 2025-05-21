@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 15 November 2025                                        M. Pala
+Expires: 22 November 2025                                        M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                             14 May 2025
+                                                             21 May 2025
 
 
       Composite ML-KEM for use in X.509 Public Key Infrastructure
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 15 November 2025.
+   This Internet-Draft will expire on 22 November 2025.
 
 Copyright Notice
 
@@ -136,6 +136,7 @@ Table of Contents
        D.1.2.  Mixing with Non-Approved Algorithms
      D.2.  Backwards Compatibility
      D.3.  Decapsulation Requires the Public Key
+     D.4.  Profiling down the number of options
    Appendix E.  Comparison with other Hybrid KEMs
      E.1.  X-Wing
      E.2.  ETSI CatKDF
@@ -1309,6 +1310,9 @@ Deserialization Process:
    SHA384/256, HKDF is invoked with SHA384 and then the output is
    truncated to 256 bits, meaning that only the first 256 bits of output
    are used.
+
+   As the number of algorithms can be daunting to implementers, see
+   Appendix D.4 for a discussion of choosing a subset to support.
 
    Full specifications for the referenced component algorithms can be
    found in Appendix B.
@@ -2859,6 +2863,37 @@ D.3.  Decapsulation Requires the Public Key
    for this reason the interoperable composite private key format given
    in this document in Section 5.2 requires the public key of the
    traditional component to be included.
+
+D.4.  Profiling down the number of options
+
+   One immediately daunting aspect of this specification is the number
+   of composite algorithm combinations.  Each option has been specified
+   because there is a community that has a direct application for it;
+   typically because the traditional component is already deployed in a
+   change-managed environment, or because that specific traditional
+   component is required for regulatory reasons.
+
+   However, this large number of combinations leads either to fracturing
+   of the ecosystem into non-interoperable sub-groups when different
+   communities choose non-overlapping subsets to support, or on the
+   other hand it leads to spreading development resources too thin when
+   trying to support all options.
+
+   This specification does not list any particular composite algorithm
+   as mandatory-to-implement, however organizations that operate within
+   specific application domains are encouraged to define profiles that
+   select a small number of composites appropriate for that application
+   domain.  For applications that do not have any regulatory
+   requirements or legacy implementations to consider, it is RECOMMENDED
+   to focus implemtation effort on:
+
+   id-MLKEM768-X25519-SHA3-256
+   id-MLKEM768-ECDH-P256-HKDF-SHA256
+
+   In applications that only allow NIST PQC Level 5, it is RECOMMENDED
+   to focus implemtation effort on:
+
+   id-MLKEM1024-ECDH-P384-HKDF-SHA384
 
 Appendix E.  Comparison with other Hybrid KEMs
 
