@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 21 November 2025                                        M. Pala
+Expires: 24 November 2025                                        M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                             20 May 2025
+                                                             23 May 2025
 
 
       Composite ML-KEM for use in X.509 Public Key Infrastructure
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 21 November 2025.
+   This Internet-Draft will expire on 24 November 2025.
 
 Copyright Notice
 
@@ -751,8 +751,7 @@ Decap Process:
 
    *  *RSA*: MUST be encoded with the (n,e) public key representation as
       specified in A.1.1 of [RFC8017] and the private key representation
-      as specified in A.1.2 of [RFC8017].  For maximum interoperability,
-      it is RECOMMENDED to use the (n,d) private key representation.
+      as specified in A.1.2 of [RFC8017].
 
    *  *ECDH*: MUST be encoded as an ECPoint as specified in section 2.2
       of [RFC5480], with both compressed and uncompressed keys
