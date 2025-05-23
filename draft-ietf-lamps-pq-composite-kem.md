@@ -289,6 +289,7 @@ Interop-affecting changes:
 * Since all ML-KEM keys and ciphertexts are now fixed-length, dropped the length-tagged encoding.
 * Added complete test vectors.
 * Added ML-KEM1024+ECDH-P521 combination.
+* Updated prototype OIDs so these don't conflict with the previous versions
 
 Editorial changes:
 
@@ -1052,17 +1053,17 @@ EDNOTE: these are prototyping OIDs to be replaced by IANA.
 
 | Composite ML-KEM Algorithm         | OID                  | First Algorithm | Second Algorithm     | KDF      |
 |---------                           | -----------------    | ----------      | ----------           | -------- |
-| id-MLKEM768-RSA2048-HKDF-SHA256    | &lt;CompKEM&gt;.30   | MLKEM768        | RSA-OAEP 2048        | HKDF-SHA256 |
-| id-MLKEM768-RSA3072-HKDF-SHA256    | &lt;CompKEM&gt;.31   | MLKEM768        | RSA-OAEP 3072        | HKDF-SHA256 |
-| id-MLKEM768-RSA4096-HKDF-SHA256    | &lt;CompKEM&gt;.32   | MLKEM768        | RSA-OAEP 4096        | HKDF-SHA256 |
-| id-MLKEM768-X25519-SHA3-256        | &lt;CompKEM&gt;.33   | MLKEM768        | X25519               | SHA3-256 |
-| id-MLKEM768-ECDH-P256-HKDF-SHA256  | &lt;CompKEM&gt;.34   | MLKEM768        | ECDH-P256            | HKDF-SHA256 |
-| id-MLKEM768-ECDH-P384-HKDF-SHA256  | &lt;CompKEM&gt;.35   | MLKEM768        | ECDH-P384            | HKDF-SHA256 |
-| id-MLKEM768-ECDH-brainpoolP256r1-HKDF-SHA256   | &lt;CompKEM&gt;.36   | MLKEM768        | ECDH-brainpoolp256r1 | HKDF-SHA256 |
-| id-MLKEM1024-ECDH-P384-HKDF-SHA384 | &lt;CompKEM&gt;.37   | MLKEM1024       | ECDH-P384            | HKDF-SHA384/256 |
-| id-MLKEM1024-ECDH-brainpoolP384r1-HKDF-SHA384  | &lt;CompKEM&gt;.38   | MLKEM1024       | ECDH-brainpoolP384r1 | SHA3-256 |
-| id-MLKEM1024-X448-SHA3-256         | &lt;CompKEM&gt;.39   | MLKEM1024       | X448                 | SHA3-256 |
-| id-MLKEM1024-ECDH-P521-HKDF-SHA384 | &lt;CompKEM&gt;.40   | MLKEM1024       | ECDH-P521            | HKDF-SHA384/256 |
+| id-MLKEM768-RSA2048-HKDF-SHA256    | &lt;CompKEM&gt;.50   | MLKEM768        | RSA-OAEP 2048        | HKDF-SHA256 |
+| id-MLKEM768-RSA3072-HKDF-SHA256    | &lt;CompKEM&gt;.51   | MLKEM768        | RSA-OAEP 3072        | HKDF-SHA256 |
+| id-MLKEM768-RSA4096-HKDF-SHA256    | &lt;CompKEM&gt;.52   | MLKEM768        | RSA-OAEP 4096        | HKDF-SHA256 |
+| id-MLKEM768-X25519-SHA3-256        | &lt;CompKEM&gt;.53   | MLKEM768        | X25519               | SHA3-256 |
+| id-MLKEM768-ECDH-P256-HKDF-SHA256  | &lt;CompKEM&gt;.54   | MLKEM768        | ECDH-P256            | HKDF-SHA256 |
+| id-MLKEM768-ECDH-P384-HKDF-SHA256  | &lt;CompKEM&gt;.55   | MLKEM768        | ECDH-P384            | HKDF-SHA256 |
+| id-MLKEM768-ECDH-brainpoolP256r1-HKDF-SHA256   | &lt;CompKEM&gt;.56   | MLKEM768        | ECDH-brainpoolp256r1 | HKDF-SHA256 |
+| id-MLKEM1024-ECDH-P384-HKDF-SHA384 | &lt;CompKEM&gt;.57   | MLKEM1024       | ECDH-P384            | HKDF-SHA384/256 |
+| id-MLKEM1024-ECDH-brainpoolP384r1-HKDF-SHA384  | &lt;CompKEM&gt;.58   | MLKEM1024       | ECDH-brainpoolP384r1 | SHA3-256 |
+| id-MLKEM1024-X448-SHA3-256         | &lt;CompKEM&gt;.59   | MLKEM1024       | X448                 | SHA3-256 |
+| id-MLKEM1024-ECDH-P521-HKDF-SHA384 | &lt;CompKEM&gt;.60   | MLKEM1024       | ECDH-P521            | HKDF-SHA384/256 |
 {: #tab-kem-algs title="Composite ML-KEM key types"}
 
 Note that in alignment with ML-KEM which outputs a 256-bit shared secret key at all security levels, all Composite KEM algorithms output a 256-bit shared secret key.
