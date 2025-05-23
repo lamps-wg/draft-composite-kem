@@ -153,6 +153,9 @@ Table of Contents
 
    *  Added ML-KEM1024+ECDH-P521 combination.
 
+   *  Updated prototype OIDs so these don't conflict with the previous
+      versions
+
    Editorial changes:
 
    *  Added an informative section on the difference between SHA3 and
@@ -1103,39 +1106,39 @@ Deserialization Process:
    |Composite ML-KEM        |OID         |First    |Second         |KDF       |
    |Algorithm               |            |Algorithm|Algorithm      |          |
    +========================+============+=========+===============+==========+
-   |id-MLKEM768-RSA2048-    |<CompKEM>.30|MLKEM768 |RSA-OAEP 2048  |HKDF-     |
+   |id-MLKEM768-RSA2048-    |<CompKEM>.50|MLKEM768 |RSA-OAEP 2048  |HKDF-     |
    |HKDF-SHA256             |            |         |               |SHA256    |
    +------------------------+------------+---------+---------------+----------+
-   |id-MLKEM768-RSA3072-    |<CompKEM>.31|MLKEM768 |RSA-OAEP 3072  |HKDF-     |
+   |id-MLKEM768-RSA3072-    |<CompKEM>.51|MLKEM768 |RSA-OAEP 3072  |HKDF-     |
    |HKDF-SHA256             |            |         |               |SHA256    |
    +------------------------+------------+---------+---------------+----------+
-   |id-MLKEM768-RSA4096-    |<CompKEM>.32|MLKEM768 |RSA-OAEP 4096  |HKDF-     |
+   |id-MLKEM768-RSA4096-    |<CompKEM>.52|MLKEM768 |RSA-OAEP 4096  |HKDF-     |
    |HKDF-SHA256             |            |         |               |SHA256    |
    +------------------------+------------+---------+---------------+----------+
-   |id-                     |<CompKEM>.33|MLKEM768 |X25519         |SHA3-256  |
+   |id-                     |<CompKEM>.53|MLKEM768 |X25519         |SHA3-256  |
    |MLKEM768-X25519-SHA3-256|            |         |               |          |
    +------------------------+------------+---------+---------------+----------+
-   |id-MLKEM768-ECDH-P256-  |<CompKEM>.34|MLKEM768 |ECDH-P256      |HKDF-     |
+   |id-MLKEM768-ECDH-P256-  |<CompKEM>.54|MLKEM768 |ECDH-P256      |HKDF-     |
    |HKDF-SHA256             |            |         |               |SHA256    |
    +------------------------+------------+---------+---------------+----------+
-   |id-MLKEM768-ECDH-P384-  |<CompKEM>.35|MLKEM768 |ECDH-P384      |HKDF-     |
+   |id-MLKEM768-ECDH-P384-  |<CompKEM>.55|MLKEM768 |ECDH-P384      |HKDF-     |
    |HKDF-SHA256             |            |         |               |SHA256    |
    +------------------------+------------+---------+---------------+----------+
-   |id-MLKEM768-ECDH-       |<CompKEM>.36|MLKEM768 |ECDH-          |HKDF-     |
+   |id-MLKEM768-ECDH-       |<CompKEM>.56|MLKEM768 |ECDH-          |HKDF-     |
    |brainpoolP256r1-HKDF-   |            |         |brainpoolp256r1|SHA256    |
    |SHA256                  |            |         |               |          |
    +------------------------+------------+---------+---------------+----------+
-   |id-MLKEM1024-ECDH-P384- |<CompKEM>.37|MLKEM1024|ECDH-P384      |HKDF-     |
+   |id-MLKEM1024-ECDH-P384- |<CompKEM>.57|MLKEM1024|ECDH-P384      |HKDF-     |
    |HKDF-SHA384             |            |         |               |SHA384/256|
    +------------------------+------------+---------+---------------+----------+
-   |id-MLKEM1024-ECDH-      |<CompKEM>.38|MLKEM1024|ECDH-          |SHA3-256  |
+   |id-MLKEM1024-ECDH-      |<CompKEM>.58|MLKEM1024|ECDH-          |SHA3-256  |
    |brainpoolP384r1-HKDF-   |            |         |brainpoolP384r1|          |
    |SHA384                  |            |         |               |          |
    +------------------------+------------+---------+---------------+----------+
-   |id-                     |<CompKEM>.39|MLKEM1024|X448           |SHA3-256  |
+   |id-                     |<CompKEM>.59|MLKEM1024|X448           |SHA3-256  |
    |MLKEM1024-X448-SHA3-256 |            |         |               |          |
    +------------------------+------------+---------+---------------+----------+
-   |id-MLKEM1024-ECDH-P521- |<CompKEM>.40|MLKEM1024|ECDH-P521      |HKDF-     |
+   |id-MLKEM1024-ECDH-P521- |<CompKEM>.60|MLKEM1024|ECDH-P521      |HKDF-     |
    |HKDF-SHA384             |            |         |               |SHA384/256|
    +------------------------+------------+---------+---------------+----------+
 
