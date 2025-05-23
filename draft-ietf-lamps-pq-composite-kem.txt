@@ -282,6 +282,18 @@ Table of Contents
    with shared secrets established via public key cryptographic
    operations.
 
+   Notation: The algorithm descriptions use python-like syntax.  The
+   following symbols deserve special mention:
+
+   *  || represents concatenation of two byte arrays.
+
+   *  [:] represents byte array slicing.
+
+   *  (a, b) represents a pair of values a and b.  Typically this
+      indicates that a function returns multiple values; the exact
+      conveyance mechanism -- tuple, struct, output parameters, etc --
+      is left to the implementer.
+
 2.2.  Composite Design Philosophy
 
    [I-D.ietf-pquip-pqt-hybrid-terminology] defines composites as:
@@ -490,8 +502,8 @@ Table of Contents
 
      3. Output the composite public and private keys
 
-       pk = (mlkemPK, tradPK)
-       sk = (mlkemSK, tradSK)
+       pk = mlkemPK || tradPK
+       sk = mlkemSK || tradSK
        return (pk, sk)
 
                   Figure 1: Composite KeyGen() -> (pk, sk)
