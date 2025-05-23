@@ -821,7 +821,7 @@ Decap Process:
 
     1. Parse each constituent encoded public key.
          The length of the mlkemKey is known based on the size of
-         the ML-DSA component key length specified by the Object ID
+         the ML-KEM component key length specified by the Object ID
 
        switch ML-KEM do
           case ML-KEM-768:
