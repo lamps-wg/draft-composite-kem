@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 24 November 2025                                        M. Pala
+Expires: 25 November 2025                                        M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                             23 May 2025
+                                                             24 May 2025
 
 
       Composite ML-KEM for use in X.509 Public Key Infrastructure
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 24 November 2025.
+   This Internet-Draft will expire on 25 November 2025.
 
 Copyright Notice
 
@@ -89,39 +89,39 @@ Table of Contents
      4.2.  Encapsulation
      4.3.  Decapsulation
      4.4.  KEM Combiner Function
-     4.5.  Serialization
-       4.5.1.  SerializePublicKey and DeserializePublicKey
-       4.5.2.  SerializePrivateKey and DeserializePrivateKey
-     4.6.  SerializeCiphertextValue and DeserializeCiphertextValue
-   5.  Use within X.509 and PKIX
-     5.1.  Encoding to DER
-     5.2.  Key Usage Bits
-     5.3.  ASN.1 Definitions
-   6.  Algorithm Identifiers
-     6.1.  Composite-ML-KEM Algorithm Identifiers
-     6.2.  Domain Separators
-     6.3.  Rationale for choices
-     6.4.  RSA-OAEP Parameters
-   7.  ASN.1 Module
-   8.  IANA Considerations
-     8.1.  Object Identifier Allocations
-       8.1.1.  Module Registration - SMI Security for PKIX Module
+   5.  Serialization
+     5.1.  SerializePublicKey and DeserializePublicKey
+     5.2.  SerializePrivateKey and DeserializePrivateKey
+     5.3.  SerializeCiphertextValue and DeserializeCiphertextValue
+   6.  Use within X.509 and PKIX
+     6.1.  Encoding to DER
+     6.2.  Key Usage Bits
+     6.3.  ASN.1 Definitions
+   7.  Algorithm Identifiers
+     7.1.  Composite-ML-KEM Algorithm Identifiers
+     7.2.  Domain Separators
+     7.3.  Rationale for choices
+     7.4.  RSA-OAEP Parameters
+   8.  ASN.1 Module
+   9.  IANA Considerations
+     9.1.  Object Identifier Allocations
+       9.1.1.  Module Registration - SMI Security for PKIX Module
                Identifier
-       8.1.2.  Object Identifier Registrations - SMI Security for PKIX
+       9.1.2.  Object Identifier Registrations - SMI Security for PKIX
                Algorithms
-   9.  Security Considerations
-     9.1.  Why Hybrids?
-     9.2.  KEM Combiner
-       9.2.1.  Security of the hybrid scheme
-       9.2.2.  Second pre-image resistance of component KEMs
-       9.2.3.  SHA3 vs HKDF-SHA2
-       9.2.4.  Generifying this construction
-     9.3.  Key Reuse
-     9.4.  Decapsulation failure
-     9.5.  Policy for Deprecated and Acceptable Algorithms
-   10. References
-     10.1.  Normative References
-     10.2.  Informative References
+   10. Security Considerations
+     10.1.  Why Hybrids?
+     10.2.  KEM Combiner
+       10.2.1.  Security of the hybrid scheme
+       10.2.2.  Second pre-image resistance of component KEMs
+       10.2.3.  SHA3 vs HKDF-SHA2
+       10.2.4.  Generifying this construction
+     10.3.  Key Reuse
+     10.4.  Decapsulation failure
+     10.5.  Policy for Deprecated and Acceptable Algorithms
+   11. References
+     11.1.  Normative References
+     11.2.  Informative References
    Appendix A.  Approximate Key and Ciphertext Sizes
    Appendix B.  Component Algorithm Reference
    Appendix C.  Fixed Component Algorithm Identifiers
@@ -406,7 +406,7 @@ Table of Contents
    so there is no need to also utilize the component domain separators.
 
    The value of ss_len as well as the RSA-OAEP parameters used within
-   this specification can be found in Section 6.4.
+   this specification can be found in Section 7.4.
 
    Decap(sk, ct) -> ss is accomplished in the analogous way.
 
@@ -465,7 +465,7 @@ Table of Contents
    In order to maintain security properties of the composite,
    applications that use composite keys MUST always perform fresh key
    generations of both component keys and MUST NOT reuse existing key
-   material.  See Section 9.3 for a discussion.
+   material.  See Section 10.3 for a discussion.
 
    To generate a new keypair for Composite schemes, the KeyGen() -> (pk,
    sk) function is used.  The KeyGen() function calls the two key
@@ -599,7 +599,7 @@ Encap Process:
 
    The specific values for KDF are defined per Composite ML-KEM
    algorithm in Table 2 and the specific values for Domain are defined
-   per Composite ML-KEM algorithm in Section 6.
+   per Composite ML-KEM algorithm in Section 7.
 
 4.3.  Decapsulation
 
@@ -729,7 +729,7 @@ Decap Process:
    Domain) = HMAC-Hash(salt="", IKM=mlkemSS || tradSS || tradCT ||
    tradPK || Domain)
 
-4.5.  Serialization
+5.  Serialization
 
    This section presents routines for serializing and deserializing
    composite public keys, private keys (seeds), and ciphertext values to
@@ -749,7 +749,7 @@ Decap Process:
                   Table 1: ML-KEM Key and Ciphertext Sizes
 
    When these values are required to be carried in an ASN.1 structure,
-   they are wrapped as described in Section 5.1.
+   they are wrapped as described in Section 6.1.
 
    While ML-KEM has a single fixed-size representation for each of
    public key, private key, and ciphertext, the traditional component
@@ -784,7 +784,7 @@ Decap Process:
    that drop leading zeroes.  See Appendix A for further discussion of
    encoded size of each composite algorithm.
 
-4.5.1.  SerializePublicKey and DeserializePublicKey
+5.1.  SerializePublicKey and DeserializePublicKey
 
    The serialization routine for keys simply concatenates the fixed-
    length public keys of the component algorithms, as defined below:
@@ -855,7 +855,7 @@ Decap Process:
 
         Figure 5: DeserializePublicKey(bytes) -> (mlkemPK, tradPK)
 
-4.5.2.  SerializePrivateKey and DeserializePrivateKey
+5.2.  SerializePrivateKey and DeserializePrivateKey
 
    The serialization routine for keys simply concatenates the fixed-
    length private keys of the component algorithms, as defined below:
@@ -915,7 +915,7 @@ Decap Process:
 
          Figure 7: DeserializeKey(bytes) -> (mlkemSeed, tradSK)
 
-4.6.  SerializeCiphertextValue and DeserializeCiphertextValue
+5.3.  SerializeCiphertextValue and DeserializeCiphertextValue
 
    The serialization routine for the CompositeCiphertextValue simply
    concatenates the fixed-length ML-KEM ciphertext with the ciphertext
@@ -986,7 +986,7 @@ Deserialization Process:
 
      Figure 9: DeserializeCiphertext(bytes) -> (mldkemCT, tradCT)
 
-5.  Use within X.509 and PKIX
+6.  Use within X.509 and PKIX
 
    The following sections provide processing logic and the necessary
    ASN.1 modules necessary to use composite ML-KEM within X.509 and PKIX
@@ -1000,14 +1000,14 @@ Deserialization Process:
    fields such as those found in PKCS#10 [RFC2986], CMP [RFC4210], X.509
    [RFC5280], CMS [RFC5652].
 
-5.1.  Encoding to DER
+6.1.  Encoding to DER
 
-   The serialization routines presented in Section 4.5 produce raw
-   binary values.  When these values are required to be carried within a
-   DER-encoded message format such as an X.509's subjectPublicKey BIT
-   STRING [RFC5280] or a CMS KEMRecipientInfo.kemct OCTET STRING
-   [RFC9629], then the composite value MUST be wrapped into a DER BIT
-   STRING or OCTET STRING in the obvious ways:
+   The serialization routines presented in Section 5 produce raw binary
+   values.  When these values are required to be carried within a DER-
+   encoded message format such as an X.509's subjectPublicKey BIT STRING
+   [RFC5280] or a CMS KEMRecipientInfo.kemct OCTET STRING [RFC9629],
+   then the composite value MUST be wrapped into a DER BIT STRING or
+   OCTET STRING in the obvious ways:
 
    When an OCTET STRING is required, the DER encoding of the composite
    data value SHALL be used directly.
@@ -1018,7 +1018,7 @@ Deserialization Process:
    ending with the least significant bit of the last octet becoming the
    last bit of the bit string.
 
-5.2.  Key Usage Bits
+6.2.  Key Usage Bits
 
    When any Composite ML-KEM AlgorithmIdentifier appears in the
    SubjectPublicKeyInfo field of an X.509 certificate [RFC5280], the key
@@ -1031,7 +1031,7 @@ Deserialization Process:
    encryption, the post-quantum algorithms do not and therefore the
    overall composite algorithm does not.
 
-5.3.  ASN.1 Definitions
+6.3.  ASN.1 Definitions
 
    The following ASN.1 Information Object Class is defined to allow for
    compact definitions of each composite algorithm, leading to a smaller
@@ -1046,7 +1046,7 @@ Deserialization Process:
      }
 
    The full set of key types defined by this specification can be found
-   in the ASN.1 Module in Section 7.
+   in the ASN.1 Module in Section 8.
 
    The ASN.1 algorithm object for a Composite ML-KEM is:
 
@@ -1087,32 +1087,32 @@ Deserialization Process:
    structure (version 1 of which is also known as PrivateKeyInfo)
    [RFC5958], the privateKeyAlgorithm field SHALL be set to the
    corresponding composite algorithm identifier defined according to
-   Section 6 and its parameters field MUST be absent.  The privateKey
+   Section 7 and its parameters field MUST be absent.  The privateKey
    field SHALL contain the OCTET STRING reperesentation of the
-   serialized composite private key as per Section 4.5.2.  The publicKey
+   serialized composite private key as per Section 5.2.  The publicKey
    field remains OPTIONAL.
 
    Some applications may need to reconstruct the OneAsymmetricKey
-   objects corresponding to each component private key.  Section 6 and
+   objects corresponding to each component private key.  Section 7 and
    Appendix B provide the necessary mapping between composite and their
    component algorithms for doing this reconstruction.
 
    Component keys of a CompositeKEMPrivateKey MUST NOT be used in any
    other type of key or as a standalone key.  For more details on the
-   security considerations around key reuse, see Section 9.3.
+   security considerations around key reuse, see Section 10.3.
 
-6.  Algorithm Identifiers
+7.  Algorithm Identifiers
 
    This table summarizes the list of Composite ML-KEM algorithms and
    lists the OID, two component algorithms, and the KDF to be used
    within combiner function.  Domain separator values are defined below
-   in Section 6.2.
+   in Section 7.2.
 
    EDNOTE: these are prototyping OIDs to be replaced by IANA.
 
    <CompKEM> is equal to 2.16.840.1.114027.80.5.2
 
-6.1.  Composite-ML-KEM Algorithm Identifiers
+7.1.  Composite-ML-KEM Algorithm Identifiers
 
    +========================+============+=========+===============+==========+
    |Composite ML-KEM        |OID         |First    |Second         |KDF       |
@@ -1173,7 +1173,7 @@ Deserialization Process:
    Full specifications for the referenced component algorithms can be
    found in Appendix B.
 
-6.2.  Domain Separators
+7.2.  Domain Separators
 
    The KEM combiner used in this document requires a domain separator
    Domain input.  The following table shows the HEX-encoded domain
@@ -1224,7 +1224,7 @@ Deserialization Process:
    allocation of these OIDs so that we can re-compute the domain
    separators over the final OIDs.
 
-6.3.  Rationale for choices
+7.3.  Rationale for choices
 
    In generating the list of Composite algorithms, the following general
    guidance was used, however, during development of this specification
@@ -1239,8 +1239,8 @@ Deserialization Process:
    *  SHA256 and SHA512 generally have better adoption than SHA384.
 
    A single invocation of SHA3 is known to behave as a dual-PRF, and
-   thus is sufficient for use as a KDF, see Section 9.2, however SHA2 is
-   not so must be wrapped in the HKDF construction.
+   thus is sufficient for use as a KDF, see Section 10.2, however SHA2
+   is not so must be wrapped in the HKDF construction.
 
    The lower security levels (i.e. ML-KEM768) are provided with HKDF-
    SHA2 as the KDF in order to facilitate implementations that do not
@@ -1258,7 +1258,7 @@ Deserialization Process:
    property for a KDF to provide 128 bits of security, as allowed in
    Table 3 of [SP.800-57pt1r5].
 
-6.4.  RSA-OAEP Parameters
+7.4.  RSA-OAEP Parameters
 
    Use of RSA-OAEP [RFC8017] within id-MLKEM768-RSA2048-HKDF-SHA256, id-
    MLKEM768-RSA3072-HKDF-SHA256, and id-MLKEM768-RSA4096-HKDF-SHA256
@@ -1313,7 +1313,7 @@ Deserialization Process:
    implementations could choose to pre-compute and hard-code the mask
    length.
 
-7.  ASN.1 Module
+8.  ASN.1 Module
 
    <CODE STARTS>
 
@@ -1555,14 +1555,14 @@ Deserialization Process:
 
    <CODE ENDS>
 
-8.  IANA Considerations
+9.  IANA Considerations
 
-8.1.  Object Identifier Allocations
+9.1.  Object Identifier Allocations
 
    EDNOTE to IANA: OIDs will need to be replaced in both the ASN.1
    module and in Table 2.
 
-8.1.1.  Module Registration - SMI Security for PKIX Module Identifier
+9.1.1.  Module Registration - SMI Security for PKIX Module Identifier
 
    *  Decimal: IANA Assigned - *Replace TBDMOD*
 
@@ -1570,7 +1570,7 @@ Deserialization Process:
 
    *  References: This Document
 
-8.1.2.  Object Identifier Registrations - SMI Security for PKIX
+9.1.2.  Object Identifier Registrations - SMI Security for PKIX
         Algorithms
 
    *  id-MLKEM768-RSA2048-HKDF-SHA256
@@ -1661,9 +1661,9 @@ Deserialization Process:
 
       -  References: This Document
 
-9.  Security Considerations
+10.  Security Considerations
 
-9.1.  Why Hybrids?
+10.1.  Why Hybrids?
 
    In broad terms, a PQ/T Hybrid can be used either to provide dual-
    algorithm security or to provide migration flexibility.  Let's
@@ -1692,7 +1692,7 @@ Deserialization Process:
    FIPS certification of a composite algorithm can be found in
    Appendix D.1.
 
-9.2.  KEM Combiner
+10.2.  KEM Combiner
 
    The following KEM combiner construction is as follows is used by both
    Composite-ML-KEM.Encap() and Composite-ML-KEM.Decap() and is split
@@ -1720,12 +1720,12 @@ Deserialization Process:
       curve or RSA).
 
    *  Domain is the DER encoded value of the object identifier of the
-      Composite ML-KEM algorithm as listed in Section 6.2.
+      Composite ML-KEM algorithm as listed in Section 7.2.
 
    *  || represents concatenation.
 
    Each registered Composite ML-KEM algorithm specifies the choice of
-   KDF and Domain to be used in Section 6 and Section 6.2 below.  Given
+   KDF and Domain to be used in Section 7 and Section 7.2 below.  Given
    that each Composite ML-KEM algorithm fully specifies the component
    algorithms, including for example the size of the RSA modulus, all
    inputs to the KEM combiner are fixed-size and thus do not require
@@ -1771,7 +1771,7 @@ Deserialization Process:
    manipulation of only one input is not sufficient to trivially produce
    collisions.
 
-9.2.1.  Security of the hybrid scheme
+10.2.1.  Security of the hybrid scheme
 
    Informally, a Composite ML-KEM algorithm is secure if the combiner
    (HKDF-SHA2 or SHA3) is secure, and either ML-KEM is secure or the
@@ -1805,7 +1805,7 @@ Deserialization Process:
    different KEMs and a more cautious approach would bind the public key
    and ciphertext of the first KEM as well.
 
-9.2.2.  Second pre-image resistance of component KEMs
+10.2.2.  Second pre-image resistance of component KEMs
 
    The notion of a second pre-image resistant KEM is defined in [X-Wing]
    being the property that it is computationally difficult to find two
@@ -1838,7 +1838,7 @@ Deserialization Process:
    that c != c' will yield a unique ciphertext, and thus restoring
    second pre-image resistance to the overall Composite ML-KEM.
 
-9.2.3.  SHA3 vs HKDF-SHA2
+10.2.3.  SHA3 vs HKDF-SHA2
 
    In order to achieve the desired security property that the Composite
    ML-KEM is IND-CCA2 whenever at least one of the component KEMs is,
@@ -1857,7 +1857,7 @@ Deserialization Process:
    constructions MUST use SHA2 within an HMAC construction such as HKDF-
    SHA2 [GHP18].
 
-9.2.4.  Generifying this construction
+10.2.4.  Generifying this construction
 
    It should be clear that the security analysis of the presented KEM
    combiner construction relies heavily on the specific choices of
@@ -1865,7 +1865,7 @@ Deserialization Process:
    SHOULD NOT by applied to any other combination of ciphers without
    performing the appropriate security analysis.
 
-9.3.  Key Reuse
+10.3.  Key Reuse
 
    When using single-algorithm cryptography, the best practice is to
    always generate fresh keying material for each purpose, for example
@@ -1906,7 +1906,7 @@ Deserialization Process:
    RECOMMENDED that CAs performing revocation checks on a composite key
    should also check both component keys independently.
 
-9.4.  Decapsulation failure
+10.4.  Decapsulation failure
 
    Provided all inputs are well-formed, the key establishment procedure
    of ML-KEM will never explicitly fail.  Specifically, the ML-
@@ -1938,7 +1938,7 @@ Deserialization Process:
    In the case of ML-KEM decapsulation failure, Composite ML-KEM MUST
    preserve the same behaviour and return a well-formed output.
 
-9.5.  Policy for Deprecated and Acceptable Algorithms
+10.5.  Policy for Deprecated and Acceptable Algorithms
 
    Traditionally, a public key or certificate contains a single
    cryptographic algorithm.  If and when an algorithm becomes deprecated
@@ -1961,15 +1961,15 @@ Deserialization Process:
 
    The Composite ML-KEM design specified in this document, and
    especially that of the KEM combiner specified in this document, and
-   discussed in Section 9.2, means that the overall Composite ML-KEM
+   discussed in Section 10.2, means that the overall Composite ML-KEM
    algorithm should be considered to have the security strength of the
    strongest of its component algorithms; i.e. as long as one component
    algorithm remains strong, then the overall composite algorithm
    remains strong.
 
-10.  References
+11.  References
 
-10.1.  Normative References
+11.1.  Normative References
 
    [FIPS.180-4]
               National Institute of Standards and Technology (NIST),
@@ -2126,7 +2126,7 @@ Deserialization Process:
               Encoding Rules (CER) and Distinguished Encoding Rules
               (DER)", ISO/IEC 8825-1:2015, November 2015.
 
-10.2.  Informative References
+11.2.  Informative References
 
    [ANSSI2024]
               French Cybersecurity Agency (ANSSI), Federal Office for
@@ -2663,7 +2663,7 @@ D.3.  Decapsulation Requires the Public Key
    public key.  Moveover, the KEM combiner as specified in Section 4.4
    requires the public key of the traditional component in order to
    achieve the public-key binding property and ciphertext collision
-   resistance as described in Section 9.2.
+   resistance as described in Section 10.2.
 
    The mechanism by which an application transmits the public keys is
    out of scope of this specification, but it MAY be accomplished by
