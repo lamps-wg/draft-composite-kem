@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-05-22T02:01:12.178418+00:00",
+  "timestamp": "2025-05-25T02:10:19.635383+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -57,6 +57,11 @@
       "name": "Post-WGLC",
       "description": null,
       "color": "aaaaaa"
+    },
+    {
+      "name": "cleanup",
+      "description": "",
+      "color": "1D76DB"
     }
   ],
   "issues": [
@@ -1903,7 +1908,7 @@
       "id": "I_kwDOKRPFO86sXDr4",
       "title": "Add reference to component algorithm section in serialization methods to make it clear how the individual component keys should be encoded.",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/114",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "johngray-dev",
       "authorAssociation": "COLLABORATOR",
       "assignees": [
@@ -1912,8 +1917,8 @@
       "labels": [],
       "body": "Add reference to component algorithm section in serialization methods to make it clear how the individual component keys should be encoded.\n\n",
       "createdAt": "2025-03-03T16:31:35Z",
-      "updatedAt": "2025-04-27T13:20:53Z",
-      "closedAt": null,
+      "updatedAt": "2025-05-23T14:22:39Z",
+      "closedAt": "2025-05-23T14:22:39Z",
       "comments": [
         {
           "author": "ounsworth",
@@ -1921,6 +1926,13 @@
           "body": "@johngray-dev  I'll assign this one to you because I'm not fully sure what you have in mind.",
           "createdAt": "2025-04-27T13:20:52Z",
           "updatedAt": "2025-04-27T13:20:52Z"
+        },
+        {
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "body": "This one is resolved by https://github.com/lamps-wg/draft-composite-kem/pull/137  which now specifies how the component algorithms (both traditional and ML-KEM) are encoded.",
+          "createdAt": "2025-05-22T19:12:55Z",
+          "updatedAt": "2025-05-22T19:12:55Z"
         }
       ]
     },
@@ -1929,7 +1941,7 @@
       "id": "I_kwDOKRPFO86st39_",
       "title": "Clean up \"DER encoding\" sentences",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/117",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -1938,8 +1950,8 @@
       "labels": [],
       "body": "We have instances of \"DER encoding\" in the document. Many of them do not make sense anymore since we removed the ASN.1 wrapper around public keys and signatures.\n\nGo through each one and see if it still makes sense.\n\nAlso, the entire section \"Encoding Rules\" probably does not need to exist anymore since we now explicitly lay out the byte encoding of the structure.",
       "createdAt": "2025-03-05T15:47:23Z",
-      "updatedAt": "2025-05-07T08:05:42Z",
-      "closedAt": null,
+      "updatedAt": "2025-05-23T14:22:39Z",
+      "closedAt": "2025-05-23T14:22:39Z",
       "comments": []
     },
     {
@@ -1971,7 +1983,7 @@
       "id": "I_kwDOKRPFO86tCyn0",
       "title": "Composite private key encoding",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/119",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -1980,8 +1992,8 @@
       "labels": [],
       "body": "From the mailing list:\n\nhttps://mailarchive.ietf.org/arch/msg/spasm/04czobwhAH7Z0iLx00Ow4Y9MaHY/\n\n> have a sequence of octet string representing\n> the private key octet strings as they would appear in the single key\n> PrivateKeyInfo object. \n\nThis is what we intended to do in the IETF 122 drafts, but we missed updating the private key text. The format would be:\n\n> `CompositePrivateKey ::= OCTET STRING`\n> where that OCTET STRING is\n> `len(pqkey) || pqkey || tradkey`\n> and the pqkey, trad key are as they would appear in a single-key PrivateKeyInfo.privateKey or OneAsymmetricKey.privateKey. \n",
       "createdAt": "2025-03-07T14:45:10Z",
-      "updatedAt": "2025-05-07T08:06:10Z",
-      "closedAt": null,
+      "updatedAt": "2025-05-23T15:16:50Z",
+      "closedAt": "2025-05-23T15:16:50Z",
       "comments": []
     },
     {
@@ -1993,10 +2005,12 @@
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "cleanup"
+      ],
       "body": "Go through the two documents side-by-side and look for wording differences.",
       "createdAt": "2025-03-18T06:23:23Z",
-      "updatedAt": "2025-03-18T06:23:23Z",
+      "updatedAt": "2025-05-25T01:30:46Z",
       "closedAt": null,
       "comments": []
     },
@@ -2029,7 +2043,7 @@
       "id": "I_kwDOKRPFO86vZEMK",
       "title": "We probably need to say something about compressed vs uncompressed points",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/122",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -2038,8 +2052,8 @@
       "labels": [],
       "body": "I think the right thing is to allow anything that is in use today.\n\nSuggested text for the \"Promoting ECDH to a KEM\" section\n\n> In order to support maximum interoperability with already deployed code bases, producers MAY emit elliptic curve public keys (including KEM ciphertexts, which are EC public keys) as either compressed or uncompressed points. Parsers SHOULD accept either compressed or uncompressed EC public keys.\n\nNote: the same will apply to -sigs.",
       "createdAt": "2025-03-24T09:24:18Z",
-      "updatedAt": "2025-04-30T14:25:22Z",
-      "closedAt": null,
+      "updatedAt": "2025-05-23T15:16:51Z",
+      "closedAt": "2025-05-23T15:16:51Z",
       "comments": [
         {
           "author": "ounsworth",
@@ -2138,15 +2152,17 @@
       "id": "I_kwDOKRPFO86xvq8b",
       "title": "Proposals for changes in chapters 2-5, mainly concerning the serialization aspect",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/129",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "PiotrPopis",
       "authorAssociation": "NONE",
-      "assignees": [],
+      "assignees": [
+        "ounsworth"
+      ],
       "labels": [],
       "body": "The latest version has changed SEQUENCE to byte concatenation, hence in the case of BIT STRING you have to additionally convert to bytes. It should be noted that BIT STRING applies only to the public key of the traditional RSA-OAEP and ECDH algorithms, because the remaining elements of composite structures are encoded as bytes:\n\n![Image](https://github.com/user-attachments/assets/e0c93f05-5412-41c7-8f46-431226614f66)\n\nThe detailed proposal of changes is as follows:\n1.\tSection 2\n> Traditional cryptographic algorithms such as RSA-OAEP, ECDH and their elliptic curve variants are vulnerable to\n> quantum attacks. \n\nTraditional cryptographic algorithms such as RSA-OAEP, DH and their elliptic curve variants are vulnerable to quantum attacks. \n\nJustification: editorial.  \n\n2.\tSection 3\n> *  KeyGen() -> (pk, sk): A probabilistic key generation algorithm,\n>      which generates a public key pk and a secret key sk.\\\n \n*  KeyGen() -> (pk, sk): A probabilistic key generation algorithm,\n      which generates a public key pk and a secret key sk.\n\nJustification: editorial.  \n\n3.\tSection 3\n> We also borrow the following algorithms from [RFC9180], which deal\n>   with encoding and decoding of KEM public key values.\n \nWe also borrow the following algorithms from [RFC9180], which deal\nwith encoding and decoding of KEM public key values and KEM private key values, \nincluding [SECG] to define the conversion function.\n\nJustification: the conversion function must be defined.  \n\n4.\tSection 3\n> *  DeserializePublicKey(bytes) -> pk: Parse a byte string to recover\n>     a public key pk.  This function can fail if the input byte string\n>     is malformed.\n\n  *  DeserializePublicKey(bytes) -> pk: Parse a byte string to recover\n      a public key pk.  This function can fail if the input byte string\n      is malformed.\n\n   *  SerializePrivateKey(sk) -> bytes: Produce a byte string encoding\n      the private key sk.\n\n   *  DeserializePrivateKey(bytes) -> sk: Parse a byte string to recover\n      a private key sk.  This function can fail if the input byte string\n      is malformed.\n\nJustification:  also adding serialization/deserialization of private keys\n5.\tSection 3\n> deseralize\n\ndeserialize\n\n> CompositeCiphertextValue\n\nCompositeCipherTextValue  \n\nJustification: for consistency with the other parts of the document; also applies to occurrences in other places\n\n> SerializeCiphertextValue\nSerializeCipherTextValue  \n\nJustification: for consistency with the other parts of the document; also applies to occurrences in other places.  \n\n6.\tSection 4.1\n> 2. Check for component key gen failure \n\n> \"ML-KEM-65\"\n\n2. Check for component key generation failure \n\n\"ML-KEM-768\"\n\nJustification: editorial.  \n\n> (\u2026) for example, could be \"ML-KEM-768\"\n\n(\u2026) for example \"ML-KEM-768\"\n\nJustification: for consistency with the other parts of the document; also applies to Section 4.2, 4.3, 4.4 and 4.6.  \n\n7.\tSection 4.2\n> (mlkemCT, mlkemSS) = MLKEM.Encaps(mlkemPK) \n\n(mlkemCT, mlkemSS) = ML-KEM.Encaps(mlkemPK)\n\nJustification: editorial.  \n\n8.\tSection 4.3\n> mlkemSS = MLKEM.Decaps(mlkemSK, mlkemCT) \n\nmlkemSS = ML-KEM.Decaps(mlkemSK, mlkemCT)\n\nJustification: editorial.  \n\n9.\tSection 4.4\n> 4.4.  SerializePublicKey and DeserializePublicKey\n>\n> Each component KEM public key is serialized according to its respective\n> standard as shown in Appendix B and concatenated together using a fixed\n> 4-byte length field denoting the length in bytes of the first component\n> key, as defined below. \n\n4.4.  SerializePublicKey and DeserializePublicKey\n\nEach component KEM public key is serialized according to its\n   respective standard as shown in Appendix B and concatenated together\n   using a fixed 4-byte length field denoting the length in bytes of the\n   first component key, as defined below.\nIn the case of DHKEM, serialization and deserialization of the public keys is performed according to the Section 7.1.1 [RFC9180], which is repeated here for convenience.\nFor P-256 and P-384 the SerializePublicKey() function of the KEM performs the uncompressed Elliptic-Curve-Point-to-Octet-String conversion according to [[SECG](https://www.rfc-editor.org/rfc/rfc9180.html#SECG)]. DeserializePublicKey() performs the uncompressed Octet-String-to-Elliptic-Curve-Point conversion.\nFor X25519 and X448, the SerializePublicKey() and DeserializePublicKey() functions are the identity function, since these curves already use fixed-length byte strings for public keys.\n\nIn the case of ML-KEM the SerializePublicKey() and DeserializePublicKey() functions are the identity function, since according to the Section 3 [I-D.ietf-lamps-kyber-certificates] ML-KEM-PublicKey is coded as OCTED STRING so no additional encoding of the ML-KEM public key value is applied.\n\nIn the case of RSA-OAEP tbd.\n\nJustification: you need to indicate how the conversion is performed.  \n\n10.\tSection 4.4\n>  3. Calculate the length encoding of the mlkemEncodedPK \n>\n> If (mlkemEncodedPK.length) > 2^32\n>         then output \"message too long\" and stop.\n>\n>     encodedLength = IntegerToBytes(mlkemEncodedPK.length, 4)\n\n  3. Calculate the length of the mlkemPK \n\nIf (mlkemPK.length) > 2^32\n         then output \"message too long\" and stop.\n\n     encodedLength = IntegerToBytes(mlkemPK.length, 4)\n\nApplications MAY verify the mlkemPK length according to the Table 1:\n\nIf (mlkemPK.length) \u2260 1184 (ML-KEM-768) or (mlkemPK.length) \u2260 1568 (ML-KEM-1024) \n      then output \"wrong length of mlkem PK\" and stop.\n\n11.\tSection 4.4\n>  1. Validate the length of the the input byte string\n\n1.\tValidate the length of the input byte string\n\n12.\tSection 4.4\n>  (\u2026) as shown in the component algorithm appendix.\n\n  (\u2026) as shown in the component algorithm in Appendix B.\n\n13.\tSection 4.5\n>  The same serialization and deserialization process as described in\n>   Section 4.4 should be used to serialize and deserialize the private\n>   keys.  The only difference is that pk is the private key, and the\n>   output is the concatenation of the mlkem and traditional private keys\n>   for serialization, or the mlkem and traditional private keys for\n>   deserialization.\n\nIn the case of DHKEM, serialization and deserialization of the private keys is performed according to the Section 7.1.2 [RFC9180], which is repeated here for convenience.\nFor P-256 and P-384, the SerializePrivateKey() function of the KEM performs the Field-Element-to-Octet-String conversion according to [SECG]. If the private key is an integer outside the range [0, order-1], where order is the order of the curve being used, the private key MUST be reduced to its representative in [0, order-1] before being serialized. DeserializePrivateKey() performs the Octet-String-to-Field-Element conversion according to [SECG].\nFor X25519 and X448, private keys are identical to their byte string representation, so little processing has to be done. The SerializePrivateKey() function MUST clamp its output and the DeserializePrivateKey() function MUST clamp its input, where clamping refers to the bitwise operations performed on k in the decodeScalar25519() and decodeScalar448() functions defined in Section 5 of [RFC7748].\n\nIn the case of ML-KEM the SerializePrivateKey() and DeserializePrivateKey() functions are the identity function, since according to the Section 3 [I-D.ietf-lamps-kyber-certificates] ML-KEM-PrivateKey is coded as OCTED STRING so no additional encoding of the ML-KEM private key value is applied.\n\nIn the case of RSA-OAEP tbd.\n\nExcept for the above the same serialization and deserialization process as described in Section 4.4 should be used to serialize and deserialize the private keys.\n\n14.\tSection 4.6\n>  4.6.  SerializeCiphertextValue and DeSerializeCiphertextValue\n>\n>   Each Ciphertext component of CompositeCiphertextValue is serialized\n>   according to their respective standard as shown in Appendix B and\n>   concatenated together using a fixed 4-byte length field denoting the\n>   length in bytes of the first component signature, as shown below.\n>   For the Traditional component, the CipherText is the encrypted value\n>   'enc' as described in Section 3.1 or Section 3.2 depending on the\n>   chosen component algorithm.\n>\n> Composite-ML-DSA.SerializeCiphertextValue(CompositeCiphertextValue) ->\n> bytes\n>\n> Explicit Input:\n>\n>  CompositeCiphertextValue    The Composite CipherText Value obtained from Composite-ML-KEM.Encap(pk)\n\n4.6.  SerializeCipherTextValue and DeSerializeCipherTextValue\n\nThe ML-KEM ciphertext, as well as the RSA-OAEP algorithm ciphertext are encoded as OCTET STRING hence no serialization (conversion to byte string) is needed and formally we use the identity function for serialization and deserialization. However, the DHKEM algorithm ciphertext (Section 3.2) is the sender's ephemeral public key, encoded as BIT STRING in the case of ECDH hence it must be serialized according to the Section 4.4. Note a raw Edwards public key according to [RFC8410] contains the byte stream so serialization is not needed in that case and formally we use the identity function for serialization and deserialization X25519 and X448 public key (see Section 4.4).  \n\nTaking the above into account each Ciphertext component of CompositeCiphertTextValue is serialized according to their respective standard as shown in Appendix B and concatenated together using a fixed 4-byte length field denoting the length in bytes of the first component signature, as shown below.\nFor the Traditional component, the CipherText is the encrypted value 'enc' as described in Section 3.1 or Section 3.2 depending on the chosen component algorithm.\n\nComposite-ML-KEM.SerializeCipherTextValue(CompositeCipherTextValue) -> bytes\n\nExplicit Input:\n\n  CompositeCipherTextValue    The Composite CipherText Value obtained from Composite-ML-KEM.Encap(pk)\n\nJustification: clarification of serialization aspects and replacement of DSA with KEM.\n  \n15.\tSection 4.6\n>  Serialization Process:\n>\n>  1. Separate the cipher texts\n>\n>     (mldkemct, tradkemct) = CompositeCiphertextValue\n>\n>  2. Serialize each of the constituent cipher texts\n> The component cipher texts are serialized according to their\n> respective standard as shown in the component algorithm appendix.  For\n> the tradkemEncodedCT the ciphertext is the encrypted output as defined in\n> 'Promotion of RSA-OAEP into a KEM' or 'Promotion of ECDH into a KEM'.\n>\n>     mlkemEncodedCt = ML-KEM.SerializeCiphertext(mlkemct)\n>     tradkemEncodedCT = Trad.SerializeCiphertext(tradkemct)\n>\n>  3. Calculate the length encoding of the mlkemEncodedCt\n>\n>     If (mlkemEncodedCt.length) > 2^32\n>         then output \"message too long\" and stop.\n>\n>     encodedLength = IntegerToBytes(mlkemEncodedCt.length, 4)\n>\n>  4. Combine and output the encoded composite ciphertext\n>\n>     bytes = encodedLength || mlkemEncodedCt || tradkemEncodedCT\n>     output bytes\n>\n>                         Figure 6: Composite\n>          SerializeCiphertextValue(CompositeCiphertextValue)\n\nSerialization Process:\n\n  1. Separate the cipher texts\n\n     (mlkemCT, tradCT) = CompositeCipherTextValue\n\n  2. Serialize each of the constituent cipher texts\n       The component cipher texts are serialized according to their respective standard\n       as shown in the component algorithm in Appendix B.  For the tradkemEncodedCT the\n       ciphertext is the encrypted output as defined in 'Promotion of RSA-OAEP into a KEM'\n       or 'Promotion of ECDH into a KEM'(i.e. sender\u2019s ephemeral public key).\n\n     mlkemEncodedCT = ML-KEM.SerializeCiphertext(mlkemCT)\n     tradkemEncodedCT = Trad.SerializeCiphertext(tradCT)\n\n  3. Calculate the length encoding of the mlkemEncodedCT\n\n     If (mlkemEncodedCT.length) > 2^32\n         then output \"message too long\" and stop.\n\n     encodedLength = IntegerToBytes(mlkemEncodedCt.length, 4)\n\nApplications MAY verify the mlkemCT length according to the Table 1:\nIf (mlkemCT.length) \u2260 1088 (ML-KEM-768) or (mlkemCT.length) \u2260 1568 (ML-KEM-1024)\n         then output \"wrong length of mlkem CT\" and stop.\n\n\n  4. Combine and output the encoded composite ciphertext\n       bytes = encodedLength || mlkemEncodedCT || tradkemEncodedCT\n     output bytes\n\n                         Figure 6: Composite\n          SerializeCipherTextValue(CompositeCipherTextValue)\n\n16.\tSection 4.6\n>  Output:\n>\n>  CompositeCiphertextValue  The CompositeCiphertextValue\n>\n> Deserialization Process:\n>\n>  1. Validate the length of the the input byte string\n\nOutput:\n\n  CompositeCipherTextValue  The CompositeCipherTextValue\n\nDeserialization Process:\n\n  1. Validate the length of the input byte string\n\n17.\tSection 4.6\n>  3. Deserialize the constituent cipher text values\n>\n>     mlkemCt = ML-KEM.DeserializeCiphertext(mlkemEncodedCt)\n>     tradkemCt = Trad.DeserializeCiphertext(tradkemEncodedCt)\n>\n>  4. If either ML-KEM.DeserializeCiphertext() or\n>     Trad.DeserializeCiphertext() return an error,\n>     then this process must return an error.\n>\n>      if NOT mlkemCt or NOT tradkemCt:\n>        output \"Deserialization error\"\n>\n>  5. Output the CompositeCiphertextValue\n>\n>     output (mlkemCt, tradkemCt)\n\n3. Deserialize the constituent cipher text values\n\n     mlkemCT = ML-KEM.DeserializeCiphertext(mlkemEncodedCT)\n     tradCT = Trad.DeserializeCiphertext(tradkemEncodedCT)\n\n  4. If either ML-KEM.DeserializeCiphertext() or\n     Trad.DeserializeCiphertext() return an error,\n     then this process must return an error.\n\n      if NOT mlkemCT or NOT tradCT:\n        output \"Deserialization error\"\n\n  5. Output the CompositeCipherTextValue\n\n     output (mlkemCT, tradCT)\n\n18.\tSection 4.7\n>  propertly \n\nproperly\n\n19.\tSection 4.7\n>  The following table shows the fixed length values in bytes\n> for the public, private and cipher text sizes for ML-KEM which can be\n> used to deserialzie the components. \n\nThe following table shows the fixed and possible length values in bytes for the public, private and cipher text sizes for ML-KEM which can be used to deserialize the components.\n\n20.\tSection 5\n\nI have a problem interpreting this entire Section. Since the latest version of the document has changed the SEQUENCE of two elements to a concatenation of two byte elements, adding the length in bytes of the first element (related to the ML-KEM algorithm), it seems that such a \"serialized\" form will be used in other ASN structures, e.g. in X.509 certificates. However, in this chapter, e.g. CompositeKEMPublicKey appears, which element has not appeared anywhere before. Wouldn't it be more reasonable to introduce CompositeSerializeKEMPublicKey, which would be defined as an OCTET STRING, but without additional conversions when used in the SubjectPublicKeyInfo.subjectPublicKey field, similarly to [draft-kyber-certificates]?",
       "createdAt": "2025-04-09T08:51:22Z",
-      "updatedAt": "2025-05-21T14:53:13Z",
-      "closedAt": null,
+      "updatedAt": "2025-05-25T01:30:32Z",
+      "closedAt": "2025-05-25T01:30:32Z",
       "comments": [
         {
           "author": "ounsworth",
@@ -2175,6 +2191,27 @@
           "body": "@PiotrPopis \n\nDiscussed with authors ... we have made a few decisions on how to handle encodings of the underlying traditional components:\n\n1. We should directly reference only RFCs for the underlying components, and only indirectly reference the [SEC#] standards.\n1. Any RSA or ECC encoding that is allowed by a PKIX RFC should still be allowed in composite, but we should RECOMMEND the most common one. In effect, we decided that one of the primary design goals of composite is to be a stepping-stone to deploy ML-DSA / ML-KEM quickly on top of existing RSA or ECC deployments, and so it is unacceptable to have, for example, an embedded RSA implementation that cannot be changed that produces private keys in the CRT format, and you cannot use this with Composite. (Note: one exception to this is RSA-PKCS#1v1.5 encryption which we know is still very common, but is already disallowed by NIST). To this effect, we are ok to leave in the risk of two composite implementations being incompatible because they cannot parse each other's traditional component.\n\nWe have changes to make his clearer another PR #137 for KEMs and https://github.com/lamps-wg/draft-composite-sigs/pull/154 for SIGS, and those links to other github issues with the relevant discussion.\n\n\nHere is the proposed new text that we feel strikes the right balance between being clear and precise, but also still allowing any existing encoding to continue being used.\n\nhttps://github.com/lamps-wg/draft-composite-kem/pull/137/files#diff-7b3ea5108ab106290ae79a3c40838aba0cf1228868deb9863aabd5b3acab21eeR722\n\nSo my question is: while this is different than what you propose, can you live with this?",
           "createdAt": "2025-05-21T14:47:35Z",
           "updatedAt": "2025-05-21T14:53:12Z"
+        },
+        {
+          "author": "PiotrPopis",
+          "authorAssociation": "NONE",
+          "body": "1. _We should directly reference only RFCs for the underlying components, and only indirectly reference the [SEC#] standards._ \nOK \n\n2. _Any RSA or ECC encoding that is allowed by a PKIX RFC should still be allowed in composite, but we should RECOMMEND the most common one._ \nI understand that this is about the new content in the Serialization {#sec-serialization} chapter, regarding component encodings: ML-KEM, RSA, ECDH and X25519/X448, and in my opinion it is OK. \n\n3. (\u2026) _To this effect, we are ok to leave in the risk of two composite implementations being incompatible because they cannot parse each other's traditional component._ \nIt seems that these new provisions regarding encodings of the underlying components are precise enough that the risk of lack of interoperability is at an acceptably low level. \n\n4. I understand that references to Appendix B have been abandoned in the context of specifying serialization (version 06, e.g. the first sentence in chapter 4.4 _Each component KEM public key is serialized according to its respective standard as shown in Appendix B_ (...)), \nwhich is a good solution in my opinion; and now serialization (conversion to byte form) is left without indicating specific functions (e.g. chapter 7.1 RFC 9180), and only the method of encoding keys and ciphertext is specified quite precisely.\n\n5. If I understand this new approach correctly, then - for example - when we use RSA as a traditional component and according to CompositeKEMPublicKey {#sec-composite-pub-keys} Section: \n      CompositeKEMPublicKey ::= BIT STRING \nIn the X.509 certificate, in the SubjectPublicKeyInfo field (encoded as BIT STRING) we place the concatenation: the ML-KEM public key saved as a **byte stream** and the RSA public key as a **bit stream**. \nIf the above is OK, maybe such an example should be added to the document?\n",
+          "createdAt": "2025-05-22T10:43:47Z",
+          "updatedAt": "2025-05-22T10:43:47Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@PiotrPopis I am happy that you agree with this approach.\n\nAbout your (5.):\nIn a PR that we merged this week, we have removed the definition of \n\n    CompositeKEMPublicKey ::= BIT STRING\n\nbecause in fact now we can make the draft simpler. Instead we only have the direct byte encodings, and we have re-organized existing text into a \"Use in X.509\" section that tells you how to put these bytes into a DER BIT STRING or OCTET STRING.\n\nhttps://lamps-wg.github.io/draft-composite-kem/draft-ietf-lamps-pq-composite-kem.html#name-use-within-x509-and-pkix\n\nAre you also happy with this? There are complete test vectors included in the draft now. Do you think it needs further examples?",
+          "createdAt": "2025-05-24T22:05:29Z",
+          "updatedAt": "2025-05-24T22:06:27Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I believe that all comments 10 - 20 have either already been caught and fixed in other pull requests, or they no longer apply because we have re-written the relevant section. So I believe everything is addressed.",
+          "createdAt": "2025-05-25T01:28:58Z",
+          "updatedAt": "2025-05-25T01:28:58Z"
         }
       ]
     },
@@ -2277,14 +2314,52 @@
       "id": "I_kwDOKRPFO862ncmj",
       "title": "BIT STRING or BIT STRING{ BIT STRING }",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/142",
+      "state": "CLOSED",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [
+        "ounsworth"
+      ],
+      "labels": [],
+      "body": "(copy from -sigs ... the analogous thing is needed in -kems)\n\n\nStephan M\u00fcller points out that if you just read the definitions of \n\n```\nCompositeMLDSAPublicKey ::= BIT STRING\n\nCompositeSignatureValue ::= BIT STRING\n```\n\nin isolation, then you might assume that to place this inside a `SubjectPublicKeyInfo.subjectPublicKey` or `Certificate.signature`, you need to double-wrap this as BIT STRING{ BIT STRING }.\n\nThis is not the case and is explained in Section 5.3 Encoding Rules, but perhaps the section that defines CompositeMLDSAPublicKey and CompositeSignatureValue needs a reference to 5.3?",
+      "createdAt": "2025-05-14T17:20:42Z",
+      "updatedAt": "2025-05-23T14:22:40Z",
+      "closedAt": "2025-05-23T14:22:40Z",
+      "comments": []
+    },
+    {
+      "number": 146,
+      "id": "I_kwDOKRPFO8632HD-",
+      "title": "Roll new -07 OIDs",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/146",
+      "state": "CLOSED",
+      "author": "johngray-dev",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [
+        "johngray-dev"
+      ],
+      "labels": [],
+      "body": "The following prototype OIDs were assigned in the Entrust Registry:\n\nVersion -07 Composite ML-KEM\n2.16.840.1.114027.80.5.2.50   entrust-Algorithm-ExplicitComposite-KEM.id-MLKEM768-RSA2048-HKDF-SHA256\n2.16.840.1.114027.80.5.2.51   entrust-Algorithm-ExplicitComposite-KEM.id-MLKEM768-RSA3072-HKDF-SHA256\n2.16.840.1.114027.80.5.2.52   entrust-Algorithm-ExplicitComposite-KEM.id-MLKEM768-RSA4096-HKDF-SHA256\n2.16.840.1.114027.80.5.2.53   entrust-Algorithm-ExplicitComposite-KEM.id-MLKEM768-X25519-SHA3-256\n2.16.840.1.114027.80.5.2.54   entrust-Algorithm-ExplicitComposite-KEM.id-MLKEM768-ECDH-P256-HKDF-SHA256\n2.16.840.1.114027.80.5.2.55   entrust-Algorithm-ExplicitComposite-KEM.id-MLKEM768-ECDH-P384-HKDF-SHA256\n2.16.840.1.114027.80.5.2.56   entrust-Algorithm-ExplicitComposite-KEM.id-MLKEM768-ECDH-brainpoolP256r1-HKDF-SHA256\n2.16.840.1.114027.80.5.2.57   entrust-Algorithm-ExplicitComposite-KEM.id-MLKEM1024-ECDH-P384-HKDF-SHA384\n2.16.840.1.114027.80.5.2.58   entrust-Algorithm-ExplicitComposite-KEM.id-MLKEM1024-ECDH-brainpoolP384r1-HKDF-SHA256\n2.16.840.1.114027.80.5.2.59   entrust-Algorithm-ExplicitComposite-KEM.id-MLKEM1024-X448-SHA3-256\n2.16.840.1.114027.80.5.2.60   entrust-Algorithm-ExplicitComposite-KEM.id-MLKEM1024-ECDH-P521-HKDF-SHA384\n\nThese need to be updated in the Draft.",
+      "createdAt": "2025-05-22T19:56:32Z",
+      "updatedAt": "2025-05-23T22:17:57Z",
+      "closedAt": "2025-05-23T22:17:57Z",
+      "comments": []
+    },
+    {
+      "number": 148,
+      "id": "I_kwDOKRPFO864Hczr",
+      "title": "Run a spell-check",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/148",
       "state": "OPEN",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [],
-      "body": "(copy from -sigs ... the analogous thing is needed in -kems)\n\n\nStephan M\u00fcller points out that if you just read the definitions of \n\n```\nCompositeMLDSAPublicKey ::= BIT STRING\n\nCompositeSignatureValue ::= BIT STRING\n```\n\nin isolation, then you might assume that to place this inside a `SubjectPublicKeyInfo.subjectPublicKey` or `Certificate.signature`, you need to double-wrap this as BIT STRING{ BIT STRING }.\n\nThis is not the case and is explained in Section 5.3 Encoding Rules, but perhaps the section that defines CompositeMLDSAPublicKey and CompositeSignatureValue needs a reference to 5.3?",
-      "createdAt": "2025-05-14T17:20:42Z",
-      "updatedAt": "2025-05-14T17:20:42Z",
+      "labels": [
+        "cleanup"
+      ],
+      "body": "",
+      "createdAt": "2025-05-25T01:24:26Z",
+      "updatedAt": "2025-05-25T01:30:54Z",
       "closedAt": null,
       "comments": []
     }
@@ -5197,7 +5272,7 @@
       "labels": [],
       "body": "",
       "createdAt": "2025-03-03T16:58:56Z",
-      "updatedAt": "2025-03-03T18:21:19Z",
+      "updatedAt": "2025-05-22T19:25:06Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "f631b3f5d650317c19898c996e116a48703f5f11",
@@ -5225,7 +5300,7 @@
       "labels": [],
       "body": "",
       "createdAt": "2025-03-03T18:02:45Z",
-      "updatedAt": "2025-03-03T18:03:29Z",
+      "updatedAt": "2025-05-22T19:18:29Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "f631b3f5d650317c19898c996e116a48703f5f11",
@@ -5413,24 +5488,26 @@
       "id": "PR_kwDOKRPFO86UFL7Q",
       "title": "Tweaks to serialization sections",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/137",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Closes #119 \r\nCloses #122 \r\nCloses #114 ",
       "createdAt": "2025-04-27T19:46:47Z",
-      "updatedAt": "2025-05-20T11:38:33Z",
+      "updatedAt": "2025-05-23T15:16:50Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
-      "baseRefOid": "65d9c99113f84e4a81757161412d6fc8397af14a",
+      "baseRefOid": "72fb1bc909eaca86e466a63d46ed3c1323fb045e",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_serialization",
-      "headRefOid": "1d258eb7a03ef8826e81de0c5188af30161cc8f4",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "caa6c1210635ea3836f2b5859d0286a397dbe7af",
+      "closedAt": "2025-05-23T15:16:49Z",
+      "mergedAt": "2025-05-23T15:16:49Z",
+      "mergedBy": "janklaussner",
+      "mergeCommit": {
+        "oid": "352e0c1eef220bb6abfe00872904e12802913366"
+      },
       "comments": [
         {
           "author": "ounsworth",
@@ -5535,6 +5612,66 @@
           "createdAt": "2025-05-20T11:38:33Z",
           "updatedAt": "2025-05-20T11:38:33Z",
           "comments": []
+        },
+        {
+          "id": "PRR_kwDOKRPFO86qmymj",
+          "commit": {
+            "abbreviatedOid": "1d258eb"
+          },
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-05-22T19:01:41Z",
+          "updatedAt": "2025-05-22T19:01:41Z",
+          "comments": [
+            {
+              "originalPosition": 166,
+              "body": "Same comment as in Signatures - The RSA private key format in 8017 section A.1.2 contains the fields for the CRT co-efficients and other data.  They are not optional values, but you could pass ZERO values for the integer fields if you don't want to use them.  ",
+              "createdAt": "2025-05-22T19:01:41Z",
+              "updatedAt": "2025-05-22T19:01:41Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO86qmz5-",
+          "commit": {
+            "abbreviatedOid": "1d258eb"
+          },
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-05-22T19:04:10Z",
+          "updatedAt": "2025-05-22T19:04:10Z",
+          "comments": [
+            {
+              "originalPosition": 238,
+              "body": "This should be ML-KEM",
+              "createdAt": "2025-05-22T19:04:10Z",
+              "updatedAt": "2025-05-22T19:04:10Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO86qvpcc",
+          "commit": {
+            "abbreviatedOid": "1d258eb"
+          },
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-05-23T14:24:03Z",
+          "updatedAt": "2025-05-23T14:24:03Z",
+          "comments": [
+            {
+              "originalPosition": 166,
+              "body": "Like in Sigs, we will remove the line:  For maximum interoperability, it is RECOMMENDED to use the `(n,d)` private key representation.",
+              "createdAt": "2025-05-23T14:24:03Z",
+              "updatedAt": "2025-05-23T14:24:03Z"
+            }
+          ]
         }
       ]
     },
@@ -5684,24 +5821,26 @@
       "id": "PR_kwDOKRPFO86Wkj_X",
       "title": "Removed all the DER wrapping text",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/143",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Sister PR in Sigs:\r\n\r\n* https://github.com/lamps-wg/draft-composite-sigs/pull/164\r\n\r\nRemoved duplicate Serialization section.\r\n\r\nSignificantly cut down the sections that deal with DER encoding and ASN.1 structures ... I think we don't need any of that now that we have explicit non-DER serialization routines defined.\r\n\r\nCloses #114 \r\nCloses #117 \r\nCloses #142 \r\n\r\nTODO before merging:\r\n\r\n- [x] Make sure the modified ASN.1 module compiles and matches the ASN.1 in the body.",
       "createdAt": "2025-05-17T15:24:55Z",
-      "updatedAt": "2025-05-21T08:23:18Z",
+      "updatedAt": "2025-05-23T14:22:38Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "65d9c99113f84e4a81757161412d6fc8397af14a",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_noder1",
       "headRefOid": "8d524a6bbea6b5485780b25c9e11b47190e8ea45",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-05-23T14:22:38Z",
+      "mergedAt": "2025-05-23T14:22:38Z",
+      "mergedBy": "johngray-dev",
+      "mergeCommit": {
+        "oid": "72fb1bc909eaca86e466a63d46ed3c1323fb045e"
+      },
       "comments": [],
       "reviews": [
         {
@@ -5715,6 +5854,39 @@
           "body": "I fixed some smaller spelling and ASN.1 errors, now it looks sound for me.\r\nI wonder though if we could get rid of all the individual pk-* definitions for each combination. In the end we only pass through the object identifier id and fix the key usage. But right now I can not wrap my head around how exactly it would look like....",
           "createdAt": "2025-05-21T08:23:18Z",
           "updatedAt": "2025-05-21T08:23:18Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOKRPFO86qmv24",
+          "commit": {
+            "abbreviatedOid": "8d524a6"
+          },
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-05-22T18:57:11Z",
+          "updatedAt": "2025-05-22T18:57:11Z",
+          "comments": [
+            {
+              "originalPosition": 220,
+              "body": "Should we remove the CMS comment (Same comment as I had for signatures).",
+              "createdAt": "2025-05-22T18:57:11Z",
+              "updatedAt": "2025-05-22T18:57:11Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO86qmxNk",
+          "commit": {
+            "abbreviatedOid": "8d524a6"
+          },
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-05-22T18:59:02Z",
+          "updatedAt": "2025-05-22T18:59:02Z",
           "comments": []
         }
       ]
@@ -5766,26 +5938,92 @@
       "id": "PR_kwDOKRPFO86W-6J0",
       "title": "Incorporating Piotr's feedback from #129",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/145",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "This is based on top of #137, so merge that first before reviewing this.\r\n\r\nSo far, I'm up to Piotr's comment \"9.\"",
       "createdAt": "2025-05-21T02:55:49Z",
-      "updatedAt": "2025-05-21T06:23:11Z",
+      "updatedAt": "2025-05-25T01:30:06Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
-      "baseRefOid": "65d9c99113f84e4a81757161412d6fc8397af14a",
+      "baseRefOid": "352e0c1eef220bb6abfe00872904e12802913366",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_129",
-      "headRefOid": "85084b99eb89fe1e58fe88688fd2ea1dc757e2af",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "0d0095670f64dba6fdc1d3b121ccccf3dbf0e85f",
+      "closedAt": "2025-05-25T01:30:03Z",
+      "mergedAt": "2025-05-25T01:30:03Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "b3247a22d6a0fbffda2a77e8b7d6a96c8f777882"
+      },
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO86qmu4t",
+          "commit": {
+            "abbreviatedOid": "85084b9"
+          },
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "Looks ready to merge.",
+          "createdAt": "2025-05-22T18:55:22Z",
+          "updatedAt": "2025-05-22T18:55:22Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 147,
+      "id": "PR_kwDOKRPFO86Xb8Bb",
+      "title": "146 jg new oids",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/147",
+      "state": "MERGED",
+      "author": "johngray-dev",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Added new prototype OIDS in Markdown, ASN.1 and reference implementation\r\ncloses #146 ",
+      "createdAt": "2025-05-23T19:05:15Z",
+      "updatedAt": "2025-05-23T22:17:56Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "352e0c1eef220bb6abfe00872904e12802913366",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "146_jg_newOIDs",
+      "headRefOid": "dae4e6b75d434bf5c4168a870faf137e1857f938",
+      "closedAt": "2025-05-23T22:17:56Z",
+      "mergedAt": "2025-05-23T22:17:56Z",
+      "mergedBy": "johngray-dev",
+      "mergeCommit": {
+        "oid": "7f6f4681601e904c2fe3baee197fbb3027d7dd90"
+      },
+      "comments": [
+        {
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "body": "closes #146 ",
+          "createdAt": "2025-05-23T19:06:47Z",
+          "updatedAt": "2025-05-23T19:06:47Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO86q0PwJ",
+          "commit": {
+            "abbreviatedOid": "dae4e6b"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "LGTM",
+          "createdAt": "2025-05-23T22:17:10Z",
+          "updatedAt": "2025-05-23T22:17:10Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
