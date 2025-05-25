@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 25 November 2025                                        M. Pala
+Expires: 26 November 2025                                        M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                             24 May 2025
+                                                             25 May 2025
 
 
       Composite ML-KEM for use in X.509 Public Key Infrastructure
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 25 November 2025.
+   This Internet-Draft will expire on 26 November 2025.
 
 Copyright Notice
 
@@ -92,7 +92,7 @@ Table of Contents
    5.  Serialization
      5.1.  SerializePublicKey and DeserializePublicKey
      5.2.  SerializePrivateKey and DeserializePrivateKey
-     5.3.  SerializeCiphertextValue and DeserializeCiphertextValue
+     5.3.  SerializeCiphertext and DeserializeCiphertext
    6.  Use within X.509 and PKIX
      6.1.  Encoding to DER
      6.2.  Key Usage Bits
@@ -173,15 +173,15 @@ Table of Contents
 2.  Introduction
 
    The advent of quantum computing poses a significant threat to current
-   cryptographic systems.  Traditional cryptographic algorithms such as
-   RSA-OAEP, ECDH and their elliptic curve variants are vulnerable to
-   quantum attacks.  During the transition to post-quantum cryptography
-   (PQC), there is considerable uncertainty regarding the robustness of
-   both existing and new cryptographic algorithms.  While we can no
-   longer fully trust traditional cryptography, we also cannot
-   immediately place complete trust in post-quantum replacements until
-   they have undergone extensive scrutiny and real-world testing to
-   uncover and rectify potential implementation flaws.
+   cryptographic systems.  Traditional cryptographic key establishment
+   algorithms such as RSA-OAEP and ECDH are vulnerable to quantum
+   attacks.  During the transition to post-quantum cryptography (PQC),
+   there is considerable uncertainty regarding the robustness of both
+   existing and new cryptographic algorithms.  While we can no longer
+   fully trust traditional cryptography, we also cannot immediately
+   place complete trust in post-quantum replacements until they have
+   undergone extensive scrutiny and real-world testing to uncover and
+   rectify potential implementation flaws.
 
    Unlike previous migrations between cryptographic algorithms, the
    decision of when to migrate and which algorithms to adopt is far from
@@ -328,7 +328,7 @@ Table of Contents
    primitive that consists of three algorithms:
 
    *  KeyGen() -> (pk, sk): A probabilistic key generation algorithm,
-      which generates a public key pk and a secret key sk.\
+      which generates a public key pk and a secret key sk.
 
    *  Encap(pk) -> (ss, ct): A probabilistic encapsulation algorithm,
       which takes as input a public key pk and outputs a ciphertext ct
@@ -341,25 +341,30 @@ Table of Contents
       this document uses Decap() to conform to [RFC9180], but [FIPS.203]
       uses Decaps().
 
-   We also borrow the following algorithms from [RFC9180], which deal
-   with encoding and decoding of KEM public key values.
+   We define the following algorithms which are used to serialize and
+   deserialize component values.  These algorithms are inspired by
+   similar algorithms in [RFC9180].
 
    *  SerializePublicKey(pk) -> bytes: Produce a byte string encoding
-      the public key pk.
+      the component public keys.
 
-   *  DeserializePublicKey(bytes) -> pk: Parse a byte string to recover
-      a public key pk.  This function can fail if the input byte string
-      is malformed.
+   *  DeserializePublicKey(bytes) -> (mlkemPK, tradPK): Parse a byte
+      string to recover the component public keys.
 
-   We define the following algorithms which are used to serialize and
-   deseralize the CompositeCiphertextValue
+   *  SerializeCiphertext(mlkemCT, tradCT) -> bytes: Produce a byte
+      string encoding the component ciphertexts.
 
-   *  SerializeCiphertextValue(CompositeCiphertextValue) -> bytes:
-      Produce a byte string encoding the CompositeCiphertextValue.
+   *  DeserializeCiphertext(bytes) -> (mlkemCT, tradCT): Parse a byte
+      string to recover the component ciphertexts.
 
-   *  DeserializeCipherTextValue(bytes) -> pk: Parse a byte string to
-      recover a CompositeCiphertextValue.  This function can fail if the
-      input byte string is malformed.
+   *  SerializePrivateKey(mlkemSeed, tradSK) -> bytes: Produce a byte
+      string encoding the component private keys.
+
+   *  DeserializePrivateKey(bytes) -> (mlkemSeed, tradSK): Parse a byte
+      string to recover the component private keys.
+
+   Full definitions of serialization and deserialization algorithms can
+   be found in Section 5.
 
    The KEM interface defined above differs from both traditional key
    transport mechanism (for example for use with KeyTransRecipientInfo
@@ -476,40 +481,40 @@ Table of Contents
 
    The following process is used to generate composite keypair values:
 
-   KeyGen() -> (pk, sk)
+  KeyGen() -> (pk, sk)
 
-   Explicit Inputs:
-        None
+  Explicit Inputs:
+       None
 
-   Implicit Input:
-     ML-KEM     A placeholder for the specific ML-KEM algorithm and
-                parameter set to use, for example, could be "ML-KEM-65".
+  Implicit Input:
+    ML-KEM     A placeholder for the specific ML-KEM algorithm and
+               parameter set to use, for example, could be "ML-KEM-768".
 
-     Trad       A placeholder for the specific traditional algorithm and
-                parameter set to use, for example "RSA-OAEP"
-                or "X25519".
+    Trad       A placeholder for the specific traditional algorithm and
+               parameter set to use, for example "RSA-OAEP"
+               or "X25519".
 
-   Output:
-     (pk, sk)  The composite keypair.
+  Output:
+    (pk, sk)  The composite keypair.
 
-   Key Generation Process:
+  Key Generation Process:
 
-     1. Generate component keys
+    1. Generate component keys
 
-       (mlkemPK, mlkemSK) = ML-KEM.KeyGen()
-       (tradPK, tradSK)   = Trad.KeyGen()
+      (mlkemPK, mlkemSK) = ML-KEM.KeyGen()
+      (tradPK, tradSK)   = Trad.KeyGen()
 
-     2. Check for component key gen failure
-       if NOT (mlkemPK, mlkemSK) or NOT (tradPK, tradSK):
-         output "Key generation error"
+    2. Check for component key gen failure
+      if NOT (mlkemPK, mlkemSK) or NOT (tradPK, tradSK):
+        output "Key generation error"
 
-     3. Output the composite public and private keys
+    3. Output the composite public and private keys
 
-       pk = mlkemPK || tradPK
-       sk = mlkemSK || tradSK
-       return (pk, sk)
+      pk = mlkemPK || tradPK
+      sk = mlkemSK || tradSK
+      return (pk, sk)
 
-                  Figure 1: Composite KeyGen() -> (pk, sk)
+                 Figure 1: Composite KeyGen() -> (pk, sk)
 
    In order to ensure fresh keys, the key generation functions MUST be
    executed for both component algorithms.  Compliant parties MUST NOT
@@ -541,7 +546,7 @@ Explicit Input:
 Implicit inputs:
 
   ML-KEM   A placeholder for the specific ML-KEM algorithm and
-           parameter set to use, for example, could be "ML-KEM-768".
+           parameter set to use, for example "ML-KEM-768".
 
   Trad     A placeholder for the specific ML-KEM algorithm and
            parameter set to use, for example "RSA-OAEP"
@@ -569,7 +574,7 @@ Encap Process:
   2.  Perform the respective component Encap operations according to
       their algorithm specifications.
 
-      (mlkemCT, mlkemSS) = MLKEM.Encaps(mlkemPK)
+      (mlkemCT, mlkemSS) = ML-KEM.Encaps(mlkemPK)
       (tradCT, tradSS) = TradKEM.Encap(tradPK)
 
   3. If either ML-KEM.Encaps() or TradKEM.Encap() return an error,
@@ -915,7 +920,7 @@ Decap Process:
 
          Figure 7: DeserializeKey(bytes) -> (mlkemSeed, tradSK)
 
-5.3.  SerializeCiphertextValue and DeserializeCiphertextValue
+5.3.  SerializeCiphertext and DeserializeCiphertext
 
    The serialization routine for the CompositeCiphertextValue simply
    concatenates the fixed-length ML-KEM ciphertext with the ciphertext
