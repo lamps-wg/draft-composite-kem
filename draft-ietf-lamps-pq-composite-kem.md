@@ -303,7 +303,7 @@ Still to do in a future version:
 
 # Introduction {#sec-intro}
 
-The advent of quantum computing poses a significant threat to current cryptographic systems. Traditional cryptographic algorithms such as RSA-OAEP, ECDH and their elliptic curve variants are vulnerable to quantum attacks. During the transition to post-quantum cryptography (PQC), there is considerable uncertainty regarding the robustness of both existing and new cryptographic algorithms. While we can no longer fully trust traditional cryptography, we also cannot immediately place complete trust in post-quantum replacements until they have undergone extensive scrutiny and real-world testing to uncover and rectify potential implementation flaws.
+The advent of quantum computing poses a significant threat to current cryptographic systems. Traditional cryptographic key establishment algorithms such as RSA-OAEP and ECDH are vulnerable to quantum attacks. During the transition to post-quantum cryptography (PQC), there is considerable uncertainty regarding the robustness of both existing and new cryptographic algorithms. While we can no longer fully trust traditional cryptography, we also cannot immediately place complete trust in post-quantum replacements until they have undergone extensive scrutiny and real-world testing to uncover and rectify potential implementation flaws.
 
 Unlike previous migrations between cryptographic algorithms, the decision of when to migrate and which algorithms to adopt is far from straightforward. Even after the migration period, it may be advantageous for an entity's cryptographic identity to incorporate multiple public-key algorithms to enhance security.
 
@@ -398,7 +398,7 @@ Composite keys, as defined here, follow this definition and should be regarded a
 We borrow here the definition of a key encapsulation mechanism (KEM) from {{I-D.ietf-tls-hybrid-design}}, in which a KEM is a cryptographic primitive that consists of three algorithms:
 
    *  `KeyGen() -> (pk, sk)`: A probabilistic key generation algorithm,
-      which generates a public key `pk` and a secret key `sk`.\
+      which generates a public key `pk` and a secret key `sk`.
 
    *  `Encap(pk) -> (ss, ct)`: A probabilistic encapsulation algorithm,
       which takes as input a public key `pk` and outputs a ciphertext `ct`
@@ -411,17 +411,23 @@ We borrow here the definition of a key encapsulation mechanism (KEM) from {{I-D.
       Note: this document uses `Decap()` to conform to {{RFC9180}},
       but [FIPS.203] uses `Decaps()`.
 
-We also borrow the following algorithms from {{RFC9180}}, which deal with encoding and decoding of KEM public key values.
 
-   *  `SerializePublicKey(pk) -> bytes`: Produce a byte string encoding the public key pk.
+We define the following algorithms which are used to serialize and deserialize component values. These algorithms are inspired by similar algorithms in {{RFC9180}}.
 
-   *  `DeserializePublicKey(bytes) -> pk`: Parse a byte string to recover a public key pk. This function can fail if the input byte string is malformed.
 
-We define the following algorithms which are used to serialize and deseralize the CompositeCiphertextValue
+   *  `SerializePublicKey(pk) -> bytes`: Produce a byte string encoding the component public keys.
 
-   *  `SerializeCiphertextValue(CompositeCiphertextValue) -> bytes`: Produce a byte string encoding the CompositeCiphertextValue.
+   *  `DeserializePublicKey(bytes) -> (mlkemPK, tradPK)`: Parse a byte string to recover the component public keys.
 
-   *  `DeserializeCipherTextValue(bytes) -> pk`: Parse a byte string to recover a CompositeCiphertextValue. This function can fail if the input byte string is malformed.
+   *  `SerializeCiphertext(mlkemCT, tradCT) -> bytes`: Produce a byte string encoding the component ciphertexts.
+
+   *  `DeserializeCiphertext(bytes) -> (mlkemCT, tradCT)`: Parse a byte string to recover the component ciphertexts.
+
+   * `SerializePrivateKey(mlkemSeed, tradSK) -> bytes`: Produce a byte string encoding the component private keys.
+
+   * `DeserializePrivateKey(bytes) -> (mlkemSeed, tradSK)`: Parse a byte string to recover the component private keys.
+
+Full definitions of serialization and deserialization algorithms can be found in {{sec-serialization}}.
 
 The KEM interface defined above differs from both traditional key transport mechanism (for example for use with KeyTransRecipientInfo defined in {{RFC5652}}), and key agreement (for example for use with KeyAgreeRecipientInfo defined in {{RFC5652}}).
 
@@ -509,7 +515,7 @@ Explicit Inputs:
 
 Implicit Input:
   ML-KEM     A placeholder for the specific ML-KEM algorithm and
-             parameter set to use, for example, could be "ML-KEM-65".
+             parameter set to use, for example, could be "ML-KEM-768".
 
   Trad       A placeholder for the specific traditional algorithm and
              parameter set to use, for example "RSA-OAEP"
@@ -558,7 +564,7 @@ Explicit Input:
 Implicit inputs:
 
   ML-KEM   A placeholder for the specific ML-KEM algorithm and
-           parameter set to use, for example, could be "ML-KEM-768".
+           parameter set to use, for example "ML-KEM-768".
 
   Trad     A placeholder for the specific ML-KEM algorithm and
            parameter set to use, for example "RSA-OAEP"
@@ -586,7 +592,7 @@ Encap Process:
   2.  Perform the respective component Encap operations according to
       their algorithm specifications.
 
-      (mlkemCT, mlkemSS) = MLKEM.Encaps(mlkemPK)
+      (mlkemCT, mlkemSS) = ML-KEM.Encaps(mlkemPK)
       (tradCT, tradSS) = TradKEM.Encap(tradPK)
 
   3. If either ML-KEM.Encaps() or TradKEM.Encap() return an error,
@@ -886,7 +892,8 @@ Deserialization Process:
 
 
 
-## SerializeCiphertextValue and DeserializeCiphertextValue
+
+## SerializeCiphertext and DeserializeCiphertext
 
 The serialization routine for the CompositeCiphertextValue simply concatenates the fixed-length
 ML-KEM ciphertext with the ciphertext from the traditional algorithm, as defined below:
