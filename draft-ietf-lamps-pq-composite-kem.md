@@ -733,6 +733,8 @@ HKDF-Extract(salt="", IKM=mlkemSS || tradSS || tradCT || tradPK || Domain)
 # Serialization {#sec-serialization}
 
 This section presents routines for serializing and deserializing composite public keys, private keys (seeds), and ciphertext values to bytes via simple concatenation of the underlying encodings of the component algorithms.
+The functions defined in this section are considered internal implementation detail and are referenced from within the public API definitions in {{sec-composite-mlkem}}}.
+
 Deserialization is possible because ML-KEM has fixed-length public keys, private keys (seeds), and ciphertext values as shown in the following table.
 
 | Algorithm   | Public Key  | Private Key |  Ciphertext  |
