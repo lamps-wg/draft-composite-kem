@@ -415,13 +415,13 @@ We borrow here the definition of a key encapsulation mechanism (KEM) from {{I-D.
 We define the following algorithms which are used to serialize and deserialize component values. These algorithms are inspired by similar algorithms in {{RFC9180}}.
 
 
-   *  `SerializePublicKey(pk) -> bytes`: Produce a byte string encoding the component public keys.
+   * `SerializePublicKey(mlkemPK, tradPK) -> bytes`: Produce a byte string encoding the component public keys.
 
-   *  `DeserializePublicKey(bytes) -> (mlkemPK, tradPK)`: Parse a byte string to recover the component public keys.
+   * `DeserializePublicKey(bytes) -> (mlkemPK, tradPK)`: Parse a byte string to recover the component public keys.
 
-   *  `SerializeCiphertext(mlkemCT, tradCT) -> bytes`: Produce a byte string encoding the component ciphertexts.
+   * `SerializeCiphertext(mlkemCT, tradCT) -> bytes`: Produce a byte string encoding the component ciphertexts.
 
-   *  `DeserializeCiphertext(bytes) -> (mlkemCT, tradCT)`: Parse a byte string to recover the component ciphertexts.
+   * `DeserializeCiphertext(bytes) -> (mlkemCT, tradCT)`: Parse a byte string to recover the component ciphertexts.
 
    * `SerializePrivateKey(mlkemSeed, tradSK) -> bytes`: Produce a byte string encoding the component private keys.
 
@@ -493,11 +493,13 @@ This construction applies for all variants of elliptic curve Diffie-Hellman used
 
 The simplifications from the DHKEM definition in [RFC9180] is that since the ciphertext and receiver's public key are included explicitly in the Composite ML-KEM combiner, there is no need to construct the `kem_context` object, and since a domain separator is included explicitly in the Composite ML-KEM combiner there is no need to perform the labeled steps of `ExtractAndExpand()`.
 
+Note that here, `SerializePublicKey()` and `DeserializePublicKey()` refer to the underlying encoding of the DH primitive, and not to the composite serialization functions defined in {{sec-serialization}}.
+
 
 
 # Composite ML-KEM Functions {#sec-composite-mlkem}
 
-This section describes the composite ML-KEM functions needed to instantiate the KEM API in {{sec-kems}}.
+This section describes the composite ML-KEM functions needed to instantiate the public KEM API in {{sec-kems}}.
 
 ## Key Generation
 
