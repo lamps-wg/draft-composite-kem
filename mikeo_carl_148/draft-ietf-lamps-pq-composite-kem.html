@@ -1897,7 +1897,8 @@ HKDF-Extract(salt="", IKM=mlkemSS || tradSS || tradCT || tradPK || Domain)
 <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-serialization" class="section-name selfRef">Serialization</a>
       </h2>
 <p id="section-5-1">This section presents routines for serializing and deserializing composite public keys, private keys (seeds), and ciphertext values to bytes via simple concatenation of the underlying encodings of the component algorithms.
-Deserialization is possible because ML-KEM has fixed-length public keys, private keys (seeds), and ciphertext values as shown in the following table.<a href="#section-5-1" class="pilcrow">¶</a></p>
+The functions defined in this section are considered internal implementation detail and are referenced from within the public API definitions in <a href="#sec-composite-mlkem" class="auto internal xref">Section 4</a>}.<a href="#section-5-1" class="pilcrow">¶</a></p>
+<p id="section-5-2">Deserialization is possible because ML-KEM has fixed-length public keys, private keys (seeds), and ciphertext values as shown in the following table.<a href="#section-5-2" class="pilcrow">¶</a></p>
 <span id="name-ml-kem-key-and-ciphertext-s"></span><div id="tab-mlkem-sizes">
 <table class="center" id="table-1">
         <caption>
@@ -1928,23 +1929,23 @@ Deserialization is possible because ML-KEM has fixed-length public keys, private
         </tbody>
       </table>
 </div>
-<p id="section-5-3">When these values are required to be carried in an ASN.1 structure, they are wrapped as described in <a href="#sec-encoding-to-der" class="auto internal xref">Section 6.1</a>.<a href="#section-5-3" class="pilcrow">¶</a></p>
-<p id="section-5-4">While ML-KEM has a single fixed-size representation for each of public key, private key, and ciphertext, the traditional component might allow multiple valid encodings; for example an elliptic curve public key, and therefore also ciphertext, might be validly encoded as either compressed or uncompressed <span>[<a href="#SEC1" class="cite xref">SEC1</a>]</span>, or an RSA private key could be encoded in Chinese Remainder Theorem form <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span>. In order to obtain interoperability, composite algorithms MUST use the following encodings of the underlying components:<a href="#section-5-4" class="pilcrow">¶</a></p>
+<p id="section-5-4">When these values are required to be carried in an ASN.1 structure, they are wrapped as described in <a href="#sec-encoding-to-der" class="auto internal xref">Section 6.1</a>.<a href="#section-5-4" class="pilcrow">¶</a></p>
+<p id="section-5-5">While ML-KEM has a single fixed-size representation for each of public key, private key, and ciphertext, the traditional component might allow multiple valid encodings; for example an elliptic curve public key, and therefore also ciphertext, might be validly encoded as either compressed or uncompressed <span>[<a href="#SEC1" class="cite xref">SEC1</a>]</span>, or an RSA private key could be encoded in Chinese Remainder Theorem form <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span>. In order to obtain interoperability, composite algorithms MUST use the following encodings of the underlying components:<a href="#section-5-5" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-5-5.1">
-          <p id="section-5-5.1.1"><strong>ML-KEM</strong>: MUST be encoded as specified in [FIPS203], using a 64-byte seed as the private key.<a href="#section-5-5.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-5-6.1">
+          <p id="section-5-6.1.1"><strong>ML-KEM</strong>: MUST be encoded as specified in [FIPS203], using a 64-byte seed as the private key.<a href="#section-5-6.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-5-5.2">
-          <p id="section-5-5.2.1"><strong>RSA</strong>: MUST be encoded with the <code>(n,e)</code> public key representation as specified in A.1.1 of <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span> and the private key representation as specified in A.1.2 of <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span>.<a href="#section-5-5.2.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-5-6.2">
+          <p id="section-5-6.2.1"><strong>RSA</strong>: MUST be encoded with the <code>(n,e)</code> public key representation as specified in A.1.1 of <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span> and the private key representation as specified in A.1.2 of <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span>.<a href="#section-5-6.2.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-5-5.3">
-          <p id="section-5-5.3.1"><strong>ECDH</strong>: MUST be encoded as an <code>ECPoint</code> as specified in section 2.2 of <span>[<a href="#RFC5480" class="cite xref">RFC5480</a>]</span>, with both compressed and uncompressed keys supported. For maximum interoperability, it is RECOMMENEDED to use uncompressed points.<a href="#section-5-5.3.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-5-6.3">
+          <p id="section-5-6.3.1"><strong>ECDH</strong>: MUST be encoded as an <code>ECPoint</code> as specified in section 2.2 of <span>[<a href="#RFC5480" class="cite xref">RFC5480</a>]</span>, with both compressed and uncompressed keys supported. For maximum interoperability, it is RECOMMENEDED to use uncompressed points.<a href="#section-5-6.3.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-5-5.4">
-          <p id="section-5-5.4.1"><strong>X25519 and X448</strong>: MUST be encoded as per section 3.1 of <span>[<a href="#RFC7748" class="cite xref">RFC7748</a>]</span> and section 4 of <span>[<a href="#RFC8410" class="cite xref">RFC8410</a>]</span>.<a href="#section-5-5.4.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-5-6.4">
+          <p id="section-5-6.4.1"><strong>X25519 and X448</strong>: MUST be encoded as per section 3.1 of <span>[<a href="#RFC7748" class="cite xref">RFC7748</a>]</span> and section 4 of <span>[<a href="#RFC8410" class="cite xref">RFC8410</a>]</span>.<a href="#section-5-6.4.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-5-6">In the event that a composite implementation uses an underlying implementation of the traditional component that requires a different encoding, it is the responsibility of the composite implementation to perform the necessary transcoding. Even with fixed encodings for the traditional component, there may be slight differences in encoded size of the traditional component due to, for example, encoding rules that drop leading zeroes. See <a href="#sec-sizetable" class="auto internal xref">Appendix A</a> for further discussion of encoded size of each composite algorithm.<a href="#section-5-6" class="pilcrow">¶</a></p>
+<p id="section-5-7">In the event that a composite implementation uses an underlying implementation of the traditional component that requires a different encoding, it is the responsibility of the composite implementation to perform the necessary transcoding. Even with fixed encodings for the traditional component, there may be slight differences in encoded size of the traditional component due to, for example, encoding rules that drop leading zeroes. See <a href="#sec-sizetable" class="auto internal xref">Appendix A</a> for further discussion of encoded size of each composite algorithm.<a href="#section-5-7" class="pilcrow">¶</a></p>
 <div id="sec-serialize-deserialize">
 <section id="section-5.1">
         <h3 id="name-serializepublickey-and-dese">
