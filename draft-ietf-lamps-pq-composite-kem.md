@@ -745,8 +745,8 @@ While ML-KEM has a single fixed-size representation for each of public key, priv
 
 * **ML-KEM**: MUST be encoded as specified in [FIPS203], using a 64-byte seed as the private key.
 * **RSA**: MUST be encoded with the `(n,e)` public key representation as specified in A.1.1 of [RFC8017] and the private key representation as specified in A.1.2 of [RFC8017].
-* **ECDH**: MUST be encoded as an `ECPoint` as specified in section 2.2 of [RFC5480], with both compressed and uncompressed keys supported. For maximum interoperability, it is RECOMMENEDED to use uncompressed points.
-* **X25519 and X448**: MUST be encoded as per section 3.1 of [RFC7748] and section 4 of [RFC8410].
+* **ECDH**: public key MUST be encoded as an `ECPoint` as specified in section 2.2 of [RFC5480], with both compressed and uncompressed keys supported. For maximum interoperability, it is RECOMMENEDED to use uncompressed points.
+* **X25519 and X448**: MUST be encoded as per section 3.1 of [RFC7748].
 
 In the event that a composite implementation uses an underlying implementation of the traditional component that requires a different encoding, it is the responsibility of the composite implementation to perform the necessary transcoding. Even with fixed encodings for the traditional component, there may be slight differences in encoded size of the traditional component due to, for example, encoding rules that drop leading zeroes. See {{sec-sizetable}} for further discussion of encoded size of each composite algorithm.
 
@@ -777,7 +777,7 @@ Serialization Process:
      output mlkemPK || tradPK
 
 ~~~
-{: #alg-composite-serialize title="SerializePublicKey(mlkemKey, tradKey) -> bytes"}
+{: #alg-composite-serialize title="SerializePublicKey(mlkemPK, tradPK) -> bytes"}
 
 Deserialization reverses this process.
 key is deserialized according to their respective standard as shown in {{appdx_components}}.
@@ -804,7 +804,7 @@ Output:
 Deserialization Process:
 
   1. Parse each constituent encoded public key.
-       The length of the mlkemKey is known based on the size of
+       The length of the mlkemPK is known based on the size of
        the ML-KEM component key length specified by the Object ID
 
      switch ML-KEM do
@@ -850,7 +850,7 @@ Serialization Process:
 
   1. Combine and output the encoded private key
 
-     output mlkemSeed || tradKey
+     output mlkemSeed || tradSK
 ~~~
 {: #alg-composite-serialize-priv-key title="SerializePrivateKey(mlkemSeed, tradSK) -> bytes"}
 
