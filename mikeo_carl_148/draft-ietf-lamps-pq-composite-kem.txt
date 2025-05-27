@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 27 November 2025                                        M. Pala
+Expires: 28 November 2025                                        M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                             26 May 2025
+                                                             27 May 2025
 
 
       Composite ML-KEM for use in X.509 Public Key Infrastructure
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 27 November 2025.
+   This Internet-Draft will expire on 28 November 2025.
 
 Copyright Notice
 
@@ -2400,7 +2400,7 @@ Appendix B.  Component Algorithm Reference
    +=======================+============================+=============+
    |id-sha256              | 2.16.840.1.101.3.4.2.1     |[RFC6234]    |
    +-----------------------+----------------------------+-------------+
-   |id-sha512              | 2.16.840.1..101.3.4.2.3    |[RFC6234]    |
+   |id-sha512              | 2.16.840.1.101.3.4.2.3     |[RFC6234]    |
    +-----------------------+----------------------------+-------------+
    |id-alg-hkdf-with-sha256| 1.2.840.113549.1.9.16.3.28 |[RFC8619]    |
    +-----------------------+----------------------------+-------------+
