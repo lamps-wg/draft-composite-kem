@@ -1400,7 +1400,7 @@ This section provides references to the full specification of the algorithms use
 | HashID | OID | Specification |
 | ----------- | ----------- | ----------- |
 | id-sha256 | 2.16.840.1.101.3.4.2.1 | [RFC6234] |
-| id-sha512 | 2.16.840.1..101.3.4.2.3 | [RFC6234] |
+| id-sha512 | 2.16.840.1.101.3.4.2.3 | [RFC6234] |
 | id-alg-hkdf-with-sha256 | 1.2.840.113549.1.9.16.3.28 | [RFC8619] |
 | id-alg-hkdf-with-sha384 | 1.2.840.113549.1.9.16.3.29 | [RFC8619] |
 | id-sha3-256 | 2.16.840.1.101.3.4.2.8 | [FIPS.202] |
