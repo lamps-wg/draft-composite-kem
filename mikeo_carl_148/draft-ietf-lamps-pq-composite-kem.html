@@ -1501,6 +1501,9 @@ The algorithm descriptions use python-like syntax. The following symbols deserve
           <li class="normal" id="section-2.1-10.3">
             <p id="section-2.1-10.3.1"><code>(a, b)</code> represents a pair of values <code>a</code> and <code>b</code>. Typically this indicates that a function returns multiple values; the exact conveyance mechanism -- tuple, struct, output parameters, etc -- is left to the implementer.<a href="#section-2.1-10.3.1" class="pilcrow">¶</a></p>
 </li>
+          <li class="normal" id="section-2.1-10.4">
+            <p id="section-2.1-10.4.1"><code>(a, _)</code>: represents a pair of values where one -- the second one in this case -- is ignored.<a href="#section-2.1-10.4.1" class="pilcrow">¶</a></p>
+</li>
         </ul>
 </section>
 </div>
@@ -1534,17 +1537,21 @@ The algorithm descriptions use python-like syntax. The following symbols deserve
 which generates a public key <code>pk</code> and a secret key <code>sk</code>.<a href="#section-3-2.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-3-2.2">
-          <p id="section-3-2.2.1"><code>Encap(pk) -&gt; (ss, ct)</code>: A probabilistic encapsulation algorithm,
-which takes as input a public key <code>pk</code> and outputs a ciphertext <code>ct</code>
-and shared secret ss. Note: this document uses <code>Encap()</code> to conform to <span>[<a href="#RFC9180" class="cite xref">RFC9180</a>]</span>,
-but <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span> uses <code>Encaps()</code>.<a href="#section-3-2.2.1" class="pilcrow">¶</a></p>
+          <p id="section-3-2.2.1"><code>KeyGen(seed) -&gt; (pk, sk)</code>: A deterministic key generation algorithm
+  which generates a public key pk and a secret key sk from a seed.<a href="#section-3-2.2.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-3-2.3">
-          <p id="section-3-2.3.1"><code>Decap(sk, ct) -&gt; ss</code>: A decapsulation algorithm, which takes as
+          <p id="section-3-2.3.1"><code>Encap(pk) -&gt; (ss, ct)</code>: A probabilistic encapsulation algorithm,
+which takes as input a public key <code>pk</code> and outputs a ciphertext <code>ct</code>
+and shared secret ss. Note: this document uses <code>Encap()</code> to conform to <span>[<a href="#RFC9180" class="cite xref">RFC9180</a>]</span>,
+but <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span> uses <code>Encaps()</code>.<a href="#section-3-2.3.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-3-2.4">
+          <p id="section-3-2.4.1"><code>Decap(sk, ct) -&gt; ss</code>: A decapsulation algorithm, which takes as
 input a secret key <code>sk</code> and ciphertext <code>ct</code> and outputs a shared
 secret <code>ss</code>, or in some cases a distinguished error value.
 Note: this document uses <code>Decap()</code> to conform to <span>[<a href="#RFC9180" class="cite xref">RFC9180</a>]</span>,
-but <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span> uses <code>Decaps()</code>.<a href="#section-3-2.3.1" class="pilcrow">¶</a></p>
+but <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span> uses <code>Decaps()</code>.<a href="#section-3-2.4.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <p id="section-3-3">We define the following algorithms which are used to serialize and deserialize component values. These algorithms are inspired by similar algorithms in <span>[<a href="#RFC9180" class="cite xref">RFC9180</a>]</span>.<a href="#section-3-3" class="pilcrow">¶</a></p>
@@ -1674,7 +1681,7 @@ Key Generation Process:
   1. Generate component keys
 
     mlkemSeed = Random(32)
-    mlkemPK = ML-KEM.KeyGen(mlkemSeed)
+    (mlkemPK, _) = ML-KEM.KeyGen(mlkemSeed)
     (tradPK, tradSK) = Trad.KeyGen()
 
   2. Check for component key gen failure
@@ -1832,7 +1839,7 @@ Decap Process:
       their algorithm specifications.
 
       mlkemSS = MLKEM.Decaps(mlkemSK, mlkemCT)
-      tradSS  = TradKEM.Decap(tradSK, tradCT)
+      (_, tradSS)  = TradKEM.Decap(tradSK, tradCT)
 
   4. If either ML-KEM.Decaps() or TradKEM.Decap() return an error,
      then this process must return an error.
