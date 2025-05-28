@@ -1937,10 +1937,10 @@ Deserialization is possible because ML-KEM has fixed-length public keys, private
           <p id="section-5-5.2.1"><strong>RSA</strong>: MUST be encoded with the <code>(n,e)</code> public key representation as specified in A.1.1 of <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span> and the private key representation as specified in A.1.2 of <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span>.<a href="#section-5-5.2.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-5-5.3">
-          <p id="section-5-5.3.1"><strong>ECDH</strong>: MUST be encoded as an <code>ECPoint</code> as specified in section 2.2 of <span>[<a href="#RFC5480" class="cite xref">RFC5480</a>]</span>, with both compressed and uncompressed keys supported. For maximum interoperability, it is RECOMMENEDED to use uncompressed points.<a href="#section-5-5.3.1" class="pilcrow">¶</a></p>
+          <p id="section-5-5.3.1"><strong>ECDH</strong>: public key MUST be encoded as an <code>ECPoint</code> as specified in section 2.2 of <span>[<a href="#RFC5480" class="cite xref">RFC5480</a>]</span>, with both compressed and uncompressed keys supported. For maximum interoperability, it is RECOMMENEDED to use uncompressed points.<a href="#section-5-5.3.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-5-5.4">
-          <p id="section-5-5.4.1"><strong>X25519 and X448</strong>: MUST be encoded as per section 3.1 of <span>[<a href="#RFC7748" class="cite xref">RFC7748</a>]</span> and section 4 of <span>[<a href="#RFC8410" class="cite xref">RFC8410</a>]</span>.<a href="#section-5-5.4.1" class="pilcrow">¶</a></p>
+          <p id="section-5-5.4.1"><strong>X25519 and X448</strong>: MUST be encoded as per section 3.1 of <span>[<a href="#RFC7748" class="cite xref">RFC7748</a>]</span>.<a href="#section-5-5.4.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <p id="section-5-6">In the event that a composite implementation uses an underlying implementation of the traditional component that requires a different encoding, it is the responsibility of the composite implementation to perform the necessary transcoding. Even with fixed encodings for the traditional component, there may be slight differences in encoded size of the traditional component due to, for example, encoding rules that drop leading zeroes. See <a href="#sec-sizetable" class="auto internal xref">Appendix A</a> for further discussion of encoded size of each composite algorithm.<a href="#section-5-6" class="pilcrow">¶</a></p>
@@ -1950,7 +1950,7 @@ Deserialization is possible because ML-KEM has fixed-length public keys, private
 <a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-serializepublickey-and-dese" class="section-name selfRef">SerializePublicKey and DeserializePublicKey</a>
         </h3>
 <p id="section-5.1-1">The serialization routine for keys simply concatenates the fixed-length public keys of the component algorithms, as defined below:<a href="#section-5.1-1" class="pilcrow">¶</a></p>
-<span id="name-serializepublickeymlkemkey-"></span><div id="alg-composite-serialize">
+<span id="name-serializepublickeymlkempk-t"></span><div id="alg-composite-serialize">
 <figure id="figure-4">
           <div class="alignLeft art-text artwork" id="section-5.1-2.1">
 <pre>
@@ -1976,7 +1976,7 @@ Serialization Process:
 </pre>
 </div>
 <figcaption><a href="#figure-4" class="selfRef">Figure 4</a>:
-<a href="#name-serializepublickeymlkemkey-" class="selfRef">SerializePublicKey(mlkemKey, tradKey) -&gt; bytes</a>
+<a href="#name-serializepublickeymlkempk-t" class="selfRef">SerializePublicKey(mlkemPK, tradPK) -&gt; bytes</a>
           </figcaption></figure>
 </div>
 <p id="section-5.1-3">Deserialization reverses this process.
@@ -2006,7 +2006,7 @@ Output:
 Deserialization Process:
 
   1. Parse each constituent encoded public key.
-       The length of the mlkemKey is known based on the size of
+       The length of the mlkemPK is known based on the size of
        the ML-KEM component key length specified by the Object ID
 
      switch ML-KEM do
@@ -2059,7 +2059,7 @@ Serialization Process:
 
   1. Combine and output the encoded private key
 
-     output mlkemSeed || tradKey
+     output mlkemSeed || tradSK
 </pre>
 </div>
 <figcaption><a href="#figure-6" class="selfRef">Figure 6</a>:
@@ -2263,7 +2263,7 @@ kema-CompositeKEM {
         }
 </pre><a href="#section-6.3-5" class="pilcrow">¶</a>
 </div>
-<p id="section-6.3-6">Use cases that require an interoperable encoding for composite private keys will often need to place a <code>CompositeKEMPrivateKey</code> inside a <code>OneAsymmetricKey</code> structure defined in <span>[<a href="#RFC5958" class="cite xref">RFC5958</a>]</span>, such as when private keys are carried in PKCS #12 <span>[<a href="#RFC7292" class="cite xref">RFC7292</a>]</span>, CMP <span>[<a href="#RFC4210" class="cite xref">RFC4210</a>]</span> or CRMF <span>[<a href="#RFC4211" class="cite xref">RFC4211</a>]</span>. The definition of <code>OneAsymmetricKey</code> is copied here for convenience:<a href="#section-6.3-6" class="pilcrow">¶</a></p>
+<p id="section-6.3-6">Use cases that require an interoperable encoding for composite private keys will often need to place a composite private key inside a <code>OneAsymmetricKey</code> structure defined in <span>[<a href="#RFC5958" class="cite xref">RFC5958</a>]</span>, such as when private keys are carried in PKCS #12 <span>[<a href="#RFC7292" class="cite xref">RFC7292</a>]</span>, CMP <span>[<a href="#RFC4210" class="cite xref">RFC4210</a>]</span> or CRMF <span>[<a href="#RFC4211" class="cite xref">RFC4211</a>]</span>. The definition of <code>OneAsymmetricKey</code> is copied here for convenience:<a href="#section-6.3-6" class="pilcrow">¶</a></p>
 <div class="lang-ASN.1 sourcecode" id="section-6.3-7">
 <pre>
  OneAsymmetricKey ::= SEQUENCE {
@@ -2283,9 +2283,9 @@ kema-CompositeKEM {
                         -- the key.
 </pre><a href="#section-6.3-7" class="pilcrow">¶</a>
 </div>
-<p id="section-6.3-8">When a composite private key is conveyed inside a OneAsymmetricKey structure (version 1 of which is also known as PrivateKeyInfo) <span>[<a href="#RFC5958" class="cite xref">RFC5958</a>]</span>, the privateKeyAlgorithm field SHALL be set to the corresponding composite algorithm identifier defined according to <a href="#sec-alg-ids" class="auto internal xref">Section 7</a> and its parameters field MUST be absent.  The <code>privateKey</code> field SHALL contain the OCTET STRING reperesentation of the serialized composite private key as per <a href="#sec-serialize-privkey" class="auto internal xref">Section 5.2</a>. The <code>publicKey</code> field remains OPTIONAL.<a href="#section-6.3-8" class="pilcrow">¶</a></p>
+<p id="section-6.3-8">When a composite private key is conveyed inside a OneAsymmetricKey structure (version 1 of which is also known as PrivateKeyInfo) <span>[<a href="#RFC5958" class="cite xref">RFC5958</a>]</span>, the privateKeyAlgorithm field SHALL be set to the corresponding composite algorithm identifier defined according to <a href="#sec-alg-ids" class="auto internal xref">Section 7</a> and its parameters field MUST be absent.  The <code>privateKey</code> field SHALL contain the OCTET STRING representation of the serialized composite private key as per <a href="#sec-serialize-privkey" class="auto internal xref">Section 5.2</a>. The <code>publicKey</code> field remains OPTIONAL.<a href="#section-6.3-8" class="pilcrow">¶</a></p>
 <p id="section-6.3-9">Some applications may need to reconstruct the <code>OneAsymmetricKey</code> objects corresponding to each component private key. <a href="#sec-alg-ids" class="auto internal xref">Section 7</a> and <a href="#appdx_components" class="auto internal xref">Appendix B</a> provide the necessary mapping between composite and their component algorithms for doing this reconstruction.<a href="#section-6.3-9" class="pilcrow">¶</a></p>
-<p id="section-6.3-10">Component keys of a CompositeKEMPrivateKey MUST NOT be used in any other type of key or as a standalone key. For more details on the security considerations around key reuse, see <a href="#sec-cons-key-reuse" class="auto internal xref">Section 10.3</a>.<a href="#section-6.3-10" class="pilcrow">¶</a></p>
+<p id="section-6.3-10">Component keys of a composite private key MUST NOT be used in any other type of key or as a standalone key. For more details on the security considerations around key reuse, see <a href="#sec-cons-key-reuse" class="auto internal xref">Section 10.3</a>.<a href="#section-6.3-10" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>

@@ -772,13 +772,13 @@ Decap Process:
       specified in A.1.1 of [RFC8017] and the private key representation
       as specified in A.1.2 of [RFC8017].
 
-   *  *ECDH*: MUST be encoded as an ECPoint as specified in section 2.2
-      of [RFC5480], with both compressed and uncompressed keys
-      supported.  For maximum interoperability, it is RECOMMENEDED to
-      use uncompressed points.
+   *  *ECDH*: public key MUST be encoded as an ECPoint as specified in
+      section 2.2 of [RFC5480], with both compressed and uncompressed
+      keys supported.  For maximum interoperability, it is RECOMMENEDED
+      to use uncompressed points.
 
-   *  *X25519 and X448*: MUST be encoded as per section 3.1 of [RFC7748]
-      and section 4 of [RFC8410].
+   *  *X25519 and X448*: MUST be encoded as per section 3.1 of
+      [RFC7748].
 
    In the event that a composite implementation uses an underlying
    implementation of the traditional component that requires a different
@@ -813,7 +813,7 @@ Decap Process:
 
        output mlkemPK || tradPK
 
-         Figure 4: SerializePublicKey(mlkemKey, tradKey) -> bytes
+          Figure 4: SerializePublicKey(mlkemPK, tradPK) -> bytes
 
    Deserialization reverses this process. key is deserialized according
    to their respective standard as shown in Appendix B.
@@ -839,7 +839,7 @@ Decap Process:
   Deserialization Process:
 
     1. Parse each constituent encoded public key.
-         The length of the mlkemKey is known based on the size of
+         The length of the mlkemPK is known based on the size of
          the ML-KEM component key length specified by the Object ID
 
        switch ML-KEM do
@@ -882,7 +882,7 @@ Decap Process:
 
      1. Combine and output the encoded private key
 
-        output mlkemSeed || tradKey
+        output mlkemSeed || tradSK
 
          Figure 6: SerializePrivateKey(mlkemSeed, tradSK) -> bytes
 
@@ -1066,7 +1066,7 @@ Deserialization Process:
            }
 
    Use cases that require an interoperable encoding for composite
-   private keys will often need to place a CompositeKEMPrivateKey inside
+   private keys will often need to place a composite private key inside
    a OneAsymmetricKey structure defined in [RFC5958], such as when
    private keys are carried in PKCS #12 [RFC7292], CMP [RFC4210] or CRMF
    [RFC4211].  The definition of OneAsymmetricKey is copied here for
@@ -1093,16 +1093,16 @@ Deserialization Process:
    [RFC5958], the privateKeyAlgorithm field SHALL be set to the
    corresponding composite algorithm identifier defined according to
    Section 7 and its parameters field MUST be absent.  The privateKey
-   field SHALL contain the OCTET STRING reperesentation of the
-   serialized composite private key as per Section 5.2.  The publicKey
-   field remains OPTIONAL.
+   field SHALL contain the OCTET STRING representation of the serialized
+   composite private key as per Section 5.2.  The publicKey field
+   remains OPTIONAL.
 
    Some applications may need to reconstruct the OneAsymmetricKey
    objects corresponding to each component private key.  Section 7 and
    Appendix B provide the necessary mapping between composite and their
    component algorithms for doing this reconstruction.
 
-   Component keys of a CompositeKEMPrivateKey MUST NOT be used in any
+   Component keys of a composite private key MUST NOT be used in any
    other type of key or as a standalone key.  For more details on the
    security considerations around key reuse, see Section 10.3.
 
