@@ -379,6 +379,7 @@ The algorithm descriptions use python-like syntax. The following symbols deserve
 
  * `(a, b)` represents a pair of values `a` and `b`. Typically this indicates that a function returns multiple values; the exact conveyance mechanism -- tuple, struct, output parameters, etc -- is left to the implementer.
 
+ * `(a, _)`: represents a pair of values where one -- the second one in this case -- is ignored.
 
 
 ## Composite Design Philosophy
@@ -399,6 +400,9 @@ We borrow here the definition of a key encapsulation mechanism (KEM) from {{I-D.
 
    *  `KeyGen() -> (pk, sk)`: A probabilistic key generation algorithm,
       which generates a public key `pk` and a secret key `sk`.
+
+  * `KeyGen(seed) -> (pk, sk)`: A deterministic key generation algorithm
+      which generates a public key pk and a secret key sk from a seed.
 
    *  `Encap(pk) -> (ss, ct)`: A probabilistic encapsulation algorithm,
       which takes as input a public key `pk` and outputs a ciphertext `ct`
@@ -531,7 +535,7 @@ Key Generation Process:
   1. Generate component keys
 
     mlkemSeed = Random(32)
-    mlkemPK = ML-KEM.KeyGen(mlkemSeed)
+    (mlkemPK, _) = ML-KEM.KeyGen(mlkemSeed)
     (tradPK, tradSK) = Trad.KeyGen()
 
   2. Check for component key gen failure
@@ -673,7 +677,7 @@ Decap Process:
       their algorithm specifications.
 
       mlkemSS = MLKEM.Decaps(mlkemSK, mlkemCT)
-      tradSS  = TradKEM.Decap(tradSK, tradCT)
+      (_, tradSS)  = TradKEM.Decap(tradSK, tradCT)
 
   4. If either ML-KEM.Decaps() or TradKEM.Decap() return an error,
      then this process must return an error.
