@@ -906,6 +906,12 @@ ML-KEM ciphertext with the ciphertext from the traditional algorithm, as defined
 ~~~
 Composite-ML-KEM.SerializeCiphertext(mlkemCT, tradCT) -> bytes
 
+Explicit Inputs:
+
+  mlkemCT  The ML-KEM ciphertext, which is bytes.
+
+  tradCT   The traditional ciphertext in the appropriate
+           encoding for the underlying component algorithm.
 
 Output:
 
