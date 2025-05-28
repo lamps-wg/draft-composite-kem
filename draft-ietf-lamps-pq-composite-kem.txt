@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 26 November 2025                                        M. Pala
+Expires: 29 November 2025                                        M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                             25 May 2025
+                                                             28 May 2025
 
 
       Composite ML-KEM for use in X.509 Public Key Infrastructure
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 26 November 2025.
+   This Internet-Draft will expire on 29 November 2025.
 
 Copyright Notice
 
@@ -5413,7 +5413,9 @@ Appendix H.  Contributors and Acknowledgments
 
    Serge Mister (Entrust), Ali Noman (Entrust), Peter C.  (UK NCSC),
    Sophie Schmieg (Google), Deirdre Connolly (SandboxAQ), Falko Strenzke
-   (MTG AG), Dan van Geest (Crypto Next), Piotr Popis (Enigma), and
+   (MTG AG), Dan van Geest (Crypto Next), Piotr Popis (Enigma), Jean-
+   Pierre Fiset (Crypto4A), Felipe Ventura (Entrust), 陳志華 (Abel C.  H.
+   Chen, Chunghwa Telecom), 林邦曄 (Austin Lin, Chunghwa Telecom), and
    Douglas Stebila (University of Waterloo).
 
    Thanks to Giacomo Pope (github.com/GiacomoPope) whose ML-DSA and ML-
