@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 28 November 2025                                        M. Pala
+Expires: 29 November 2025                                        M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                             27 May 2025
+                                                             28 May 2025
 
 
       Composite ML-KEM for use in X.509 Public Key Infrastructure
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 28 November 2025.
+   This Internet-Draft will expire on 29 November 2025.
 
 Copyright Notice
 
@@ -937,6 +937,12 @@ Decap Process:
 
    Composite-ML-KEM.SerializeCiphertext(mlkemCT, tradCT) -> bytes
 
+   Explicit Inputs:
+
+     mlkemCT  The ML-KEM ciphertext, which is bytes.
+
+     tradCT   The traditional ciphertext in the appropriate
+              encoding for the underlying component algorithm.
 
    Output:
 
