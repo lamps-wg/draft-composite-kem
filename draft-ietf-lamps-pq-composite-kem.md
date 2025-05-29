@@ -733,6 +733,8 @@ HKDF-Extract(salt="", IKM=mlkemSS || tradSS || tradCT || tradPK
    # section 2.2 of [RFC5869].
 ~~~
 
+Implementation note: a combined HKDF() which performs both HKDF-Extract and HKDF-Expand even with the correct output length and empty `info` param is not equivalent to
+HKDF-Extract() since an extra iteration of HMAC will be performed.
 
 # Serialization {#sec-serialization}
 
