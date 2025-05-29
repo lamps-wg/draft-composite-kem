@@ -290,6 +290,7 @@ Interop-affecting changes:
 * Added complete test vectors.
 * Added ML-KEM1024+ECDH-P521 combination.
 * Updated prototype OIDs so these don't conflict with the previous versions
+* Removed the "Use in CMS" section so that we can get this document across the finish line, and defer CMS-related debates to a separate document.
 
 Editorial changes:
 
