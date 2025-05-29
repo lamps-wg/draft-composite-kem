@@ -746,8 +746,8 @@ While ML-KEM has a single fixed-size representation for each of public key, priv
 
 * **ML-KEM**: MUST be encoded as specified in [FIPS203], using a 64-byte seed as the private key.
 * **RSA**: MUST be encoded with the `(n,e)` public key representation as specified in A.1.1 of [RFC8017] and the private key representation as specified in A.1.2 of [RFC8017].
-* **ECDH**: MUST be encoded as an `ECPoint` as specified in section 2.2 of [RFC5480], with both compressed and uncompressed keys supported. For maximum interoperability, it is RECOMMENEDED to use uncompressed points.
-* **X25519 and X448**: MUST be encoded as per section 3.1 of [RFC7748] and section 4 of [RFC8410].
+* **ECDH**: public key MUST be encoded as an `ECPoint` as specified in section 2.2 of [RFC5480], with both compressed and uncompressed keys supported. For maximum interoperability, it is RECOMMENEDED to use uncompressed points.
+* **X25519 and X448**: MUST be encoded as per section 3.1 of [RFC7748].
 
 In the event that a composite implementation uses an underlying implementation of the traditional component that requires a different encoding, it is the responsibility of the composite implementation to perform the necessary transcoding. Even with fixed encodings for the traditional component, there may be slight differences in encoded size of the traditional component due to, for example, encoding rules that drop leading zeroes. See {{sec-sizetable}} for further discussion of encoded size of each composite algorithm.
 
@@ -778,7 +778,7 @@ Serialization Process:
      output mlkemPK || tradPK
 
 ~~~
-{: #alg-composite-serialize title="SerializePublicKey(mlkemKey, tradKey) -> bytes"}
+{: #alg-composite-serialize title="SerializePublicKey(mlkemPK, tradPK) -> bytes"}
 
 Deserialization reverses this process.
 key is deserialized according to their respective standard as shown in {{appdx_components}}.
@@ -805,7 +805,7 @@ Output:
 Deserialization Process:
 
   1. Parse each constituent encoded public key.
-       The length of the mlkemKey is known based on the size of
+       The length of the mlkemPK is known based on the size of
        the ML-KEM component key length specified by the Object ID
 
      switch ML-KEM do
@@ -851,7 +851,7 @@ Serialization Process:
 
   1. Combine and output the encoded private key
 
-     output mlkemSeed || tradKey
+     output mlkemSeed || tradSK
 ~~~
 {: #alg-composite-serialize-priv-key title="SerializePrivateKey(mlkemSeed, tradSK) -> bytes"}
 
@@ -1033,7 +1033,7 @@ kema-CompositeKEM {
         }
 ~~~
 
-Use cases that require an interoperable encoding for composite private keys will often need to place a `CompositeKEMPrivateKey` inside a `OneAsymmetricKey` structure defined in [RFC5958], such as when private keys are carried in PKCS #12 [RFC7292], CMP [RFC4210] or CRMF [RFC4211]. The definition of `OneAsymmetricKey` is copied here for convenience:
+Use cases that require an interoperable encoding for composite private keys will often need to place a composite private key inside a `OneAsymmetricKey` structure defined in [RFC5958], such as when private keys are carried in PKCS #12 [RFC7292], CMP [RFC4210] or CRMF [RFC4211]. The definition of `OneAsymmetricKey` is copied here for convenience:
 
 ~~~ ASN.1
  OneAsymmetricKey ::= SEQUENCE {
@@ -1054,11 +1054,11 @@ Use cases that require an interoperable encoding for composite private keys will
 ~~~
 {: artwork-name="RFC5958-OneAsymmetricKey-asn.1-structure"}
 
-When a composite private key is conveyed inside a OneAsymmetricKey structure (version 1 of which is also known as PrivateKeyInfo) [RFC5958], the privateKeyAlgorithm field SHALL be set to the corresponding composite algorithm identifier defined according to {{sec-alg-ids}} and its parameters field MUST be absent.  The `privateKey` field SHALL contain the OCTET STRING reperesentation of the serialized composite private key as per {{sec-serialize-privkey}}. The `publicKey` field remains OPTIONAL.
+When a composite private key is conveyed inside a OneAsymmetricKey structure (version 1 of which is also known as PrivateKeyInfo) [RFC5958], the privateKeyAlgorithm field SHALL be set to the corresponding composite algorithm identifier defined according to {{sec-alg-ids}} and its parameters field MUST be absent.  The `privateKey` field SHALL contain the OCTET STRING representation of the serialized composite private key as per {{sec-serialize-privkey}}. The `publicKey` field remains OPTIONAL.
 
 Some applications may need to reconstruct the `OneAsymmetricKey` objects corresponding to each component private key. {{sec-alg-ids}} and {{appdx_components}} provide the necessary mapping between composite and their component algorithms for doing this reconstruction.
 
-Component keys of a CompositeKEMPrivateKey MUST NOT be used in any other type of key or as a standalone key. For more details on the security considerations around key reuse, see {{sec-cons-key-reuse}}.
+Component keys of a composite private key MUST NOT be used in any other type of key or as a standalone key. For more details on the security considerations around key reuse, see {{sec-cons-key-reuse}}.
 
 
 
@@ -1734,8 +1734,8 @@ EDNOTE TODO: Check with Max Pala whether this IPR actually applies to this draft
 
 This document incorporates contributions and comments from a large group of experts. The Editors would especially like to acknowledge the expertise and tireless dedication of the following people, who attended many long meetings and generated millions of bytes of electronic mail and VOIP traffic over the past year in pursuit of this document:
 
-Serge Mister (Entrust), Ali Noman (Entrust), Peter C. (UK NCSC), Sophie Schmieg (Google), Deirdre Connolly (SandboxAQ), Falko Strenzke (MTG AG), Dan van Geest (Crypto Next), Piotr Popis (Enigma), and
-Douglas Stebila (University of Waterloo).
+Serge Mister (Entrust), Ali Noman (Entrust), Peter C. (UK NCSC), Sophie Schmieg (Google), Deirdre Connolly (SandboxAQ), Falko Strenzke (MTG AG), Dan van Geest (Crypto Next), Piotr Popis (Enigma), Jean-Pierre Fiset (Crypto4A), Felipe Ventura (Entrust), 陳志華 (Abel C. H. Chen, Chunghwa Telecom),
+林邦曄 (Austin Lin, Chunghwa Telecom), and Douglas Stebila (University of Waterloo).
 
 Thanks to Giacomo Pope (github.com/GiacomoPope) whose ML-DSA and ML-KEM implementation was used to generate the test vectors.
 
