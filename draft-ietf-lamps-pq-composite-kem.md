@@ -706,27 +706,32 @@ As noted in the Encapsulation and Decapsulation proceedures above, this specific
 KEM combiner constructions, one with SHA3 and one with HKDF-SHA2.
 
 
-```
+~~~
 if KDF is "SHA3-256"
   ss = SHA3-256(mlkemSS || tradSS || tradCT || tradPK || Domain)
+
 else if KDF is "HKDF"
-  ss = HKDF-Extract(salt="", IKM=mlkemSS || tradSS || tradCT || tradPK || Domain)
-    # Note: salt is the empty string (0 octets), which will internally be mapped
-    # to the zero vector `0x00..00` of the correct input size for the underlying
-    # hash function as per [RFC5869].
+  ss = HKDF-Extract(salt="", IKM=mlkemSS || tradSS || tradCT
+                                         || tradPK || Domain)
+    # Note: salt is the empty string (0 octets), which will
+    # internally be mapped to the zero vector `0x00..00` of
+    # the correct input size for the underlying hash function
+    # as per section 2.2 of [RFC5869].
+~~~
 
-```
+Within this specification, "HKDF" means only the "HKDF-Extract" step; the "HKDF-Expand" step is always omitted when computing a composite KEM combiner.
 
-Implementation note: many cryptographic libraries provide only a combined interface for HKDF and do not
-expose HKDF-Extract() and HKDF-Expand() separately.
-Note that HKDF() even with the correct output length and empty `info` param is not equivalent to
-HKDF-Extract() since an extra iteration of HMAC will be performed.
-If HKDF-Extract() is not exposed, then it can be implemented directly with the HMAC primitive as:
+Since HKDF-Extract is simply a wrapper around HMAC, the above invocation of HKDF-Extract can be un-rolled into an invocation of HMAC as follows:
 
-```
-HKDF-Extract(salt="", IKM=mlkemSS || tradSS || tradCT || tradPK || Domain)
-   = HMAC-Hash(salt="", IKM=mlkemSS || tradSS || tradCT || tradPK || Domain)
-```
+~~~
+HKDF-Extract(salt="", IKM=mlkemSS || tradSS || tradCT || tradPK
+                                                      || Domain)
+   = HMAC-Hash(salt={0}, IKM=mlkemSS || tradSS || tradCT
+                                              || tradPK || Domain)
+
+   # where "{0}" is the string of HashLen zeros according to
+   # section 2.2 of [RFC5869].
+~~~
 
 
 # Serialization {#sec-serialization}
@@ -1574,30 +1579,30 @@ TODO: update this to NIST SP 800-227, once it is published.
 
 For reference, the KEM Combiner used in Composite KEM is:
 
-```
+~~~
 ss = KDF(mlkemSS || tradSS || tradCT || tradPK || Domain)
-```
+~~~
 
 where KDF is either SHA3 or HKDF-SHA2.
 
 
 NIST SP 800-227 [SP-800-227ipd], which at the time of writing is in its initial public draft period, allows hybrid key combiners of the following form:
 
-```
+~~~
 K ← KDM(S1‖S2‖ · · · ‖St , OtherInput)           (14)
-```
+~~~
 
 The key derivation method KDM can take one of two forms, either
 
-```
+~~~
 K ← KDF(Z‖OtherInput)                            (12)
-```
+~~~
 
 or
 
-```
+~~~
 K ← Expand(Extract(salt, Z), OtherInput)         (13)
-```
+~~~
 
 The Composite KEM variants that use SHA3 as a combiner fit form (12) while the variants that use HKDF-SHA2 fit form (13).
 
