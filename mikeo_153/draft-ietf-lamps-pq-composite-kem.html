@@ -1898,6 +1898,8 @@ HKDF-Extract(salt="", IKM=mlkemSS || tradSS || tradCT || tradPK
    # section 2.2 of [RFC5869].
 </pre><a href="#section-4.4-5" class="pilcrow">¶</a>
 </div>
+<p id="section-4.4-6">Implementation note: a combined HKDF() which performs both HKDF-Extract and HKDF-Expand even with the correct output length and empty <code>info</code> param is not equivalent to
+HKDF-Extract() since an extra iteration of HMAC will be performed.<a href="#section-4.4-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
