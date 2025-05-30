@@ -1726,8 +1726,6 @@ The following IPR Disclosure relates to this draft:
 
 https://datatracker.ietf.org/ipr/3588/
 
-EDNOTE TODO: Check with Max Pala whether this IPR actually applies to this draft.
-
 
 
 # Contributors and Acknowledgments
