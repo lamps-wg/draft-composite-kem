@@ -301,6 +301,9 @@ Table of Contents
       conveyance mechanism -- tuple, struct, output parameters, etc --
       is left to the implementer.
 
+   *  (a, _): represents a pair of values where one -- the second one in
+      this case -- is ignored.
+
 2.2.  Composite Design Philosophy
 
    [I-D.ietf-pquip-pqt-hybrid-terminology] defines composites as:
@@ -334,6 +337,9 @@ Table of Contents
    *  KeyGen() -> (pk, sk): A probabilistic key generation algorithm,
       which generates a public key pk and a secret key sk.
 
+   *  KeyGen(seed) -> (pk, sk): A deterministic key generation algorithm
+      which generates a public key pk and a secret key sk from a seed.
+
    *  Encap(pk) -> (ss, ct): A probabilistic encapsulation algorithm,
       which takes as input a public key pk and outputs a ciphertext ct
       and shared secret ss.  Note: this document uses Encap() to conform
@@ -349,8 +355,8 @@ Table of Contents
    deserialize component values.  These algorithms are inspired by
    similar algorithms in [RFC9180].
 
-   *  SerializePublicKey(pk) -> bytes: Produce a byte string encoding
-      the component public keys.
+   *  SerializePublicKey(mlkemPK, tradPK) -> bytes: Produce a byte
+      string encoding the component public keys.
 
    *  DeserializePublicKey(bytes) -> (mlkemPK, tradPK): Parse a byte
       string to recover the component public keys.
@@ -464,10 +470,14 @@ Table of Contents
    included explicitly in the Composite ML-KEM combiner there is no need
    to perform the labeled steps of ExtractAndExpand().
 
+   Note that here, SerializePublicKey() and DeserializePublicKey() refer
+   to the underlying encoding of the DH primitive, and not to the
+   composite serialization functions defined in Section 5.
+
 4.  Composite ML-KEM Functions
 
    This section describes the composite ML-KEM functions needed to
-   instantiate the KEM API in Section 3.
+   instantiate the public KEM API in Section 3.
 
 4.1.  Key Generation
 
@@ -478,47 +488,48 @@ Table of Contents
 
    To generate a new keypair for Composite schemes, the KeyGen() -> (pk,
    sk) function is used.  The KeyGen() function calls the two key
-   generation functions of the component algorithms for the Composite
-   keypair in no particular order.  Multi-process or multi-threaded
-   applications might choose to execute the key generation functions in
-   parallel for better key generation performance.
+   generation functions of the component algorithms independently.
+   Multi-process or multi-threaded applications might choose to execute
+   the key generation functions in parallel for better key generation
+   performance.
 
    The following process is used to generate composite keypair values:
 
-  KeyGen() -> (pk, sk)
+   KeyGen() -> (pk, sk)
 
-  Explicit Inputs:
-       None
+   Explicit Inputs:
+        None
 
-  Implicit Input:
-    ML-KEM     A placeholder for the specific ML-KEM algorithm and
-               parameter set to use, for example, could be "ML-KEM-768".
+   Implicit Input:
+     ML-KEM     The underlying ML-KEM algorithm and
+                parameter set, for example, could be "ML-KEM-768".
 
-    Trad       A placeholder for the specific traditional algorithm and
-               parameter set to use, for example "RSA-OAEP"
-               or "X25519".
+     Trad       The underlying traditional algorithm and
+                parameter, for example "RSA-OAEP"
+                or "X25519".
 
-  Output:
-    (pk, sk)  The composite keypair.
+   Output:
+     (pk, sk)  The composite keypair.
 
-  Key Generation Process:
+   Key Generation Process:
 
-    1. Generate component keys
+     1. Generate component keys
 
-      (mlkemPK, mlkemSK) = ML-KEM.KeyGen()
-      (tradPK, tradSK)   = Trad.KeyGen()
+       mlkemSeed = Random(32)
+       (mlkemPK, _) = ML-KEM.KeyGen(mlkemSeed)
+       (tradPK, tradSK) = Trad.KeyGen()
 
-    2. Check for component key gen failure
-      if NOT (mlkemPK, mlkemSK) or NOT (tradPK, tradSK):
-        output "Key generation error"
+     2. Check for component key gen failure
+       if NOT (mlkemPK, mlkemSK) or NOT (tradPK, tradSK):
+         output "Key generation error"
 
-    3. Output the composite public and private keys
+     3. Output the composite public and private keys
 
-      pk = mlkemPK || tradPK
-      sk = mlkemSK || tradSK
-      return (pk, sk)
+       pk = Composite-ML-KEM.SerializePublicKey(mlkemPK, tradPK)
+       sk = Composite-ML-KEM.SerializePrivateKey(mlkemSeed, tradSK)
+       return (pk, sk)
 
-                 Figure 1: Composite KeyGen() -> (pk, sk)
+                  Figure 1: Composite KeyGen() -> (pk, sk)
 
    In order to ensure fresh keys, the key generation functions MUST be
    executed for both component algorithms.  Compliant parties MUST NOT
@@ -549,11 +560,11 @@ Explicit Input:
 
 Implicit inputs:
 
-  ML-KEM   A placeholder for the specific ML-KEM algorithm and
-           parameter set to use, for example "ML-KEM-768".
+  ML-KEM   The underlying ML-KEM algorithm and
+           parameter set, for example "ML-KEM-768".
 
-  Trad     A placeholder for the specific ML-KEM algorithm and
-           parameter set to use, for example "RSA-OAEP"
+  Trad     The underlying ML-KEM algorithm and
+           parameter set, for example "RSA-OAEP"
            or "X25519".
 
   KDF      The KDF specified for the given Composite ML-KEM algorithm.
@@ -589,7 +600,7 @@ Encap Process:
 
   4. Encode the ciphertext
 
-      ct = mlkemCT || tradCT
+      ct = Composite-ML-KEM.SerializeCiphertext(mlkemCT, tradCT)
 
   5. Combine the KEM secrets and additional context to yield the composite shared secret
       if KDF is "SHA3-256"
@@ -631,11 +642,11 @@ Explicit Input:
 
 Implicit inputs:
 
-  ML-KEM   A placeholder for the specific ML-KEM algorithm and
-           parameter set to use, for example, could be "ML-KEM-768".
+  ML-KEM   The underlying ML-KEM algorithm and
+           parameter set, for example, could be "ML-KEM-768".
 
-  Trad     A placeholder for the specific traditional algorithm and
-           parameter set to use, for example "RSA-OAEP"
+  Trad     The underlying traditional algorithm and
+           parameter set, for example "RSA-OAEP"
            or "X25519".
 
   KDF      The KDF specified for the given Composite ML-KEM algorithm.
@@ -663,7 +674,7 @@ Decap Process:
       their algorithm specifications.
 
       mlkemSS = MLKEM.Decaps(mlkemSK, mlkemCT)
-      tradSS  = TradKEM.Decap(tradSK, tradCT)
+      (_, tradSS)  = TradKEM.Decap(tradSK, tradCT)
 
   4. If either ML-KEM.Decaps() or TradKEM.Decap() return an error,
      then this process must return an error.
@@ -743,9 +754,13 @@ Decap Process:
    This section presents routines for serializing and deserializing
    composite public keys, private keys (seeds), and ciphertext values to
    bytes via simple concatenation of the underlying encodings of the
-   component algorithms.  Deserialization is possible because ML-KEM has
-   fixed-length public keys, private keys (seeds), and ciphertext values
-   as shown in the following table.
+   component algorithms.  The functions defined in this section are
+   considered internal implementation detail and are referenced from
+   within the public API definitions in Section 4}.
+
+   Deserialization is possible because ML-KEM has fixed-length public
+   keys, private keys (seeds), and ciphertext values as shown in the
+   following table.
 
           +=============+============+=============+============+
           | Algorithm   | Public Key | Private Key | Ciphertext |
@@ -830,8 +845,8 @@ Decap Process:
 
   Implicit inputs:
 
-    ML-KEM   A placeholder for the specific ML-KEM algorithm and
-             parameter set to use, for example, could be "ML-KEM-768".
+    ML-KEM   The underlying ML-KEM algorithm and
+             parameter, for example, could be "ML-KEM-768".
 
   Output:
 
@@ -961,8 +976,8 @@ Explicit Input:
 
 Implicit inputs:
 
-  ML-KEM   A placeholder for the specific ML-KEM algorithm and
-           parameter set to use, for example, could be "ML-KEM-768".
+  ML-KEM   The underlying ML-KEM algorithm and
+           parameter, for example, could be "ML-KEM-768".
 
 Output:
 
@@ -2401,7 +2416,7 @@ Appendix B.  Component Algorithm Reference
    +=======================+============================+=============+
    |id-sha256              | 2.16.840.1.101.3.4.2.1     |[RFC6234]    |
    +-----------------------+----------------------------+-------------+
-   |id-sha512              | 2.16.840.1..101.3.4.2.3    |[RFC6234]    |
+   |id-sha512              | 2.16.840.1.101.3.4.2.3     |[RFC6234]    |
    +-----------------------+----------------------------+-------------+
    |id-alg-hkdf-with-sha256| 1.2.840.113549.1.9.16.3.28 |[RFC8619]    |
    +-----------------------+----------------------------+-------------+
