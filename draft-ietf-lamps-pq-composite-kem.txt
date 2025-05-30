@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 30 November 2025                                        M. Pala
+Expires: 1 December 2025                                         M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                             29 May 2025
+                                                             30 May 2025
 
 
       Composite ML-KEM for use in X.509 Public Key Infrastructure
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 30 November 2025.
+   This Internet-Draft will expire on 1 December 2025.
 
 Copyright Notice
 
@@ -5402,9 +5402,6 @@ Appendix G.  Intellectual Property Considerations
    The following IPR Disclosure relates to this draft:
 
    https://datatracker.ietf.org/ipr/3588/
-
-   EDNOTE TODO: Check with Max Pala whether this IPR actually applies to
-   this draft.
 
 Appendix H.  Contributors and Acknowledgments
 
