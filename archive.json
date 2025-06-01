@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-05-29T02:02:01.201906+00:00",
+  "timestamp": "2025-06-01T02:26:59.137556+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -2152,7 +2152,7 @@
       "id": "I_kwDOKRPFO86xvq8b",
       "title": "Proposals for changes in chapters 2-5, mainly concerning the serialization aspect",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/129",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "PiotrPopis",
       "authorAssociation": "NONE",
       "assignees": [
@@ -2161,8 +2161,8 @@
       "labels": [],
       "body": "The latest version has changed SEQUENCE to byte concatenation, hence in the case of BIT STRING you have to additionally convert to bytes. It should be noted that BIT STRING applies only to the public key of the traditional RSA-OAEP and ECDH algorithms, because the remaining elements of composite structures are encoded as bytes:\n\n![Image](https://github.com/user-attachments/assets/e0c93f05-5412-41c7-8f46-431226614f66)\n\nThe detailed proposal of changes is as follows:\n1.\tSection 2\n> Traditional cryptographic algorithms such as RSA-OAEP, ECDH and their elliptic curve variants are vulnerable to\n> quantum attacks. \n\nTraditional cryptographic algorithms such as RSA-OAEP, DH and their elliptic curve variants are vulnerable to quantum attacks. \n\nJustification: editorial.  \n\n2.\tSection 3\n> *  KeyGen() -> (pk, sk): A probabilistic key generation algorithm,\n>      which generates a public key pk and a secret key sk.\\\n \n*  KeyGen() -> (pk, sk): A probabilistic key generation algorithm,\n      which generates a public key pk and a secret key sk.\n\nJustification: editorial.  \n\n3.\tSection 3\n> We also borrow the following algorithms from [RFC9180], which deal\n>   with encoding and decoding of KEM public key values.\n \nWe also borrow the following algorithms from [RFC9180], which deal\nwith encoding and decoding of KEM public key values and KEM private key values, \nincluding [SECG] to define the conversion function.\n\nJustification: the conversion function must be defined.  \n\n4.\tSection 3\n> *  DeserializePublicKey(bytes) -> pk: Parse a byte string to recover\n>     a public key pk.  This function can fail if the input byte string\n>     is malformed.\n\n  *  DeserializePublicKey(bytes) -> pk: Parse a byte string to recover\n      a public key pk.  This function can fail if the input byte string\n      is malformed.\n\n   *  SerializePrivateKey(sk) -> bytes: Produce a byte string encoding\n      the private key sk.\n\n   *  DeserializePrivateKey(bytes) -> sk: Parse a byte string to recover\n      a private key sk.  This function can fail if the input byte string\n      is malformed.\n\nJustification:  also adding serialization/deserialization of private keys\n5.\tSection 3\n> deseralize\n\ndeserialize\n\n> CompositeCiphertextValue\n\nCompositeCipherTextValue  \n\nJustification: for consistency with the other parts of the document; also applies to occurrences in other places\n\n> SerializeCiphertextValue\nSerializeCipherTextValue  \n\nJustification: for consistency with the other parts of the document; also applies to occurrences in other places.  \n\n6.\tSection 4.1\n> 2. Check for component key gen failure \n\n> \"ML-KEM-65\"\n\n2. Check for component key generation failure \n\n\"ML-KEM-768\"\n\nJustification: editorial.  \n\n> (\u2026) for example, could be \"ML-KEM-768\"\n\n(\u2026) for example \"ML-KEM-768\"\n\nJustification: for consistency with the other parts of the document; also applies to Section 4.2, 4.3, 4.4 and 4.6.  \n\n7.\tSection 4.2\n> (mlkemCT, mlkemSS) = MLKEM.Encaps(mlkemPK) \n\n(mlkemCT, mlkemSS) = ML-KEM.Encaps(mlkemPK)\n\nJustification: editorial.  \n\n8.\tSection 4.3\n> mlkemSS = MLKEM.Decaps(mlkemSK, mlkemCT) \n\nmlkemSS = ML-KEM.Decaps(mlkemSK, mlkemCT)\n\nJustification: editorial.  \n\n9.\tSection 4.4\n> 4.4.  SerializePublicKey and DeserializePublicKey\n>\n> Each component KEM public key is serialized according to its respective\n> standard as shown in Appendix B and concatenated together using a fixed\n> 4-byte length field denoting the length in bytes of the first component\n> key, as defined below. \n\n4.4.  SerializePublicKey and DeserializePublicKey\n\nEach component KEM public key is serialized according to its\n   respective standard as shown in Appendix B and concatenated together\n   using a fixed 4-byte length field denoting the length in bytes of the\n   first component key, as defined below.\nIn the case of DHKEM, serialization and deserialization of the public keys is performed according to the Section 7.1.1 [RFC9180], which is repeated here for convenience.\nFor P-256 and P-384 the SerializePublicKey() function of the KEM performs the uncompressed Elliptic-Curve-Point-to-Octet-String conversion according to [[SECG](https://www.rfc-editor.org/rfc/rfc9180.html#SECG)]. DeserializePublicKey() performs the uncompressed Octet-String-to-Elliptic-Curve-Point conversion.\nFor X25519 and X448, the SerializePublicKey() and DeserializePublicKey() functions are the identity function, since these curves already use fixed-length byte strings for public keys.\n\nIn the case of ML-KEM the SerializePublicKey() and DeserializePublicKey() functions are the identity function, since according to the Section 3 [I-D.ietf-lamps-kyber-certificates] ML-KEM-PublicKey is coded as OCTED STRING so no additional encoding of the ML-KEM public key value is applied.\n\nIn the case of RSA-OAEP tbd.\n\nJustification: you need to indicate how the conversion is performed.  \n\n10.\tSection 4.4\n>  3. Calculate the length encoding of the mlkemEncodedPK \n>\n> If (mlkemEncodedPK.length) > 2^32\n>         then output \"message too long\" and stop.\n>\n>     encodedLength = IntegerToBytes(mlkemEncodedPK.length, 4)\n\n  3. Calculate the length of the mlkemPK \n\nIf (mlkemPK.length) > 2^32\n         then output \"message too long\" and stop.\n\n     encodedLength = IntegerToBytes(mlkemPK.length, 4)\n\nApplications MAY verify the mlkemPK length according to the Table 1:\n\nIf (mlkemPK.length) \u2260 1184 (ML-KEM-768) or (mlkemPK.length) \u2260 1568 (ML-KEM-1024) \n      then output \"wrong length of mlkem PK\" and stop.\n\n11.\tSection 4.4\n>  1. Validate the length of the the input byte string\n\n1.\tValidate the length of the input byte string\n\n12.\tSection 4.4\n>  (\u2026) as shown in the component algorithm appendix.\n\n  (\u2026) as shown in the component algorithm in Appendix B.\n\n13.\tSection 4.5\n>  The same serialization and deserialization process as described in\n>   Section 4.4 should be used to serialize and deserialize the private\n>   keys.  The only difference is that pk is the private key, and the\n>   output is the concatenation of the mlkem and traditional private keys\n>   for serialization, or the mlkem and traditional private keys for\n>   deserialization.\n\nIn the case of DHKEM, serialization and deserialization of the private keys is performed according to the Section 7.1.2 [RFC9180], which is repeated here for convenience.\nFor P-256 and P-384, the SerializePrivateKey() function of the KEM performs the Field-Element-to-Octet-String conversion according to [SECG]. If the private key is an integer outside the range [0, order-1], where order is the order of the curve being used, the private key MUST be reduced to its representative in [0, order-1] before being serialized. DeserializePrivateKey() performs the Octet-String-to-Field-Element conversion according to [SECG].\nFor X25519 and X448, private keys are identical to their byte string representation, so little processing has to be done. The SerializePrivateKey() function MUST clamp its output and the DeserializePrivateKey() function MUST clamp its input, where clamping refers to the bitwise operations performed on k in the decodeScalar25519() and decodeScalar448() functions defined in Section 5 of [RFC7748].\n\nIn the case of ML-KEM the SerializePrivateKey() and DeserializePrivateKey() functions are the identity function, since according to the Section 3 [I-D.ietf-lamps-kyber-certificates] ML-KEM-PrivateKey is coded as OCTED STRING so no additional encoding of the ML-KEM private key value is applied.\n\nIn the case of RSA-OAEP tbd.\n\nExcept for the above the same serialization and deserialization process as described in Section 4.4 should be used to serialize and deserialize the private keys.\n\n14.\tSection 4.6\n>  4.6.  SerializeCiphertextValue and DeSerializeCiphertextValue\n>\n>   Each Ciphertext component of CompositeCiphertextValue is serialized\n>   according to their respective standard as shown in Appendix B and\n>   concatenated together using a fixed 4-byte length field denoting the\n>   length in bytes of the first component signature, as shown below.\n>   For the Traditional component, the CipherText is the encrypted value\n>   'enc' as described in Section 3.1 or Section 3.2 depending on the\n>   chosen component algorithm.\n>\n> Composite-ML-DSA.SerializeCiphertextValue(CompositeCiphertextValue) ->\n> bytes\n>\n> Explicit Input:\n>\n>  CompositeCiphertextValue    The Composite CipherText Value obtained from Composite-ML-KEM.Encap(pk)\n\n4.6.  SerializeCipherTextValue and DeSerializeCipherTextValue\n\nThe ML-KEM ciphertext, as well as the RSA-OAEP algorithm ciphertext are encoded as OCTET STRING hence no serialization (conversion to byte string) is needed and formally we use the identity function for serialization and deserialization. However, the DHKEM algorithm ciphertext (Section 3.2) is the sender's ephemeral public key, encoded as BIT STRING in the case of ECDH hence it must be serialized according to the Section 4.4. Note a raw Edwards public key according to [RFC8410] contains the byte stream so serialization is not needed in that case and formally we use the identity function for serialization and deserialization X25519 and X448 public key (see Section 4.4).  \n\nTaking the above into account each Ciphertext component of CompositeCiphertTextValue is serialized according to their respective standard as shown in Appendix B and concatenated together using a fixed 4-byte length field denoting the length in bytes of the first component signature, as shown below.\nFor the Traditional component, the CipherText is the encrypted value 'enc' as described in Section 3.1 or Section 3.2 depending on the chosen component algorithm.\n\nComposite-ML-KEM.SerializeCipherTextValue(CompositeCipherTextValue) -> bytes\n\nExplicit Input:\n\n  CompositeCipherTextValue    The Composite CipherText Value obtained from Composite-ML-KEM.Encap(pk)\n\nJustification: clarification of serialization aspects and replacement of DSA with KEM.\n  \n15.\tSection 4.6\n>  Serialization Process:\n>\n>  1. Separate the cipher texts\n>\n>     (mldkemct, tradkemct) = CompositeCiphertextValue\n>\n>  2. Serialize each of the constituent cipher texts\n> The component cipher texts are serialized according to their\n> respective standard as shown in the component algorithm appendix.  For\n> the tradkemEncodedCT the ciphertext is the encrypted output as defined in\n> 'Promotion of RSA-OAEP into a KEM' or 'Promotion of ECDH into a KEM'.\n>\n>     mlkemEncodedCt = ML-KEM.SerializeCiphertext(mlkemct)\n>     tradkemEncodedCT = Trad.SerializeCiphertext(tradkemct)\n>\n>  3. Calculate the length encoding of the mlkemEncodedCt\n>\n>     If (mlkemEncodedCt.length) > 2^32\n>         then output \"message too long\" and stop.\n>\n>     encodedLength = IntegerToBytes(mlkemEncodedCt.length, 4)\n>\n>  4. Combine and output the encoded composite ciphertext\n>\n>     bytes = encodedLength || mlkemEncodedCt || tradkemEncodedCT\n>     output bytes\n>\n>                         Figure 6: Composite\n>          SerializeCiphertextValue(CompositeCiphertextValue)\n\nSerialization Process:\n\n  1. Separate the cipher texts\n\n     (mlkemCT, tradCT) = CompositeCipherTextValue\n\n  2. Serialize each of the constituent cipher texts\n       The component cipher texts are serialized according to their respective standard\n       as shown in the component algorithm in Appendix B.  For the tradkemEncodedCT the\n       ciphertext is the encrypted output as defined in 'Promotion of RSA-OAEP into a KEM'\n       or 'Promotion of ECDH into a KEM'(i.e. sender\u2019s ephemeral public key).\n\n     mlkemEncodedCT = ML-KEM.SerializeCiphertext(mlkemCT)\n     tradkemEncodedCT = Trad.SerializeCiphertext(tradCT)\n\n  3. Calculate the length encoding of the mlkemEncodedCT\n\n     If (mlkemEncodedCT.length) > 2^32\n         then output \"message too long\" and stop.\n\n     encodedLength = IntegerToBytes(mlkemEncodedCt.length, 4)\n\nApplications MAY verify the mlkemCT length according to the Table 1:\nIf (mlkemCT.length) \u2260 1088 (ML-KEM-768) or (mlkemCT.length) \u2260 1568 (ML-KEM-1024)\n         then output \"wrong length of mlkem CT\" and stop.\n\n\n  4. Combine and output the encoded composite ciphertext\n       bytes = encodedLength || mlkemEncodedCT || tradkemEncodedCT\n     output bytes\n\n                         Figure 6: Composite\n          SerializeCipherTextValue(CompositeCipherTextValue)\n\n16.\tSection 4.6\n>  Output:\n>\n>  CompositeCiphertextValue  The CompositeCiphertextValue\n>\n> Deserialization Process:\n>\n>  1. Validate the length of the the input byte string\n\nOutput:\n\n  CompositeCipherTextValue  The CompositeCipherTextValue\n\nDeserialization Process:\n\n  1. Validate the length of the input byte string\n\n17.\tSection 4.6\n>  3. Deserialize the constituent cipher text values\n>\n>     mlkemCt = ML-KEM.DeserializeCiphertext(mlkemEncodedCt)\n>     tradkemCt = Trad.DeserializeCiphertext(tradkemEncodedCt)\n>\n>  4. If either ML-KEM.DeserializeCiphertext() or\n>     Trad.DeserializeCiphertext() return an error,\n>     then this process must return an error.\n>\n>      if NOT mlkemCt or NOT tradkemCt:\n>        output \"Deserialization error\"\n>\n>  5. Output the CompositeCiphertextValue\n>\n>     output (mlkemCt, tradkemCt)\n\n3. Deserialize the constituent cipher text values\n\n     mlkemCT = ML-KEM.DeserializeCiphertext(mlkemEncodedCT)\n     tradCT = Trad.DeserializeCiphertext(tradkemEncodedCT)\n\n  4. If either ML-KEM.DeserializeCiphertext() or\n     Trad.DeserializeCiphertext() return an error,\n     then this process must return an error.\n\n      if NOT mlkemCT or NOT tradCT:\n        output \"Deserialization error\"\n\n  5. Output the CompositeCipherTextValue\n\n     output (mlkemCT, tradCT)\n\n18.\tSection 4.7\n>  propertly \n\nproperly\n\n19.\tSection 4.7\n>  The following table shows the fixed length values in bytes\n> for the public, private and cipher text sizes for ML-KEM which can be\n> used to deserialzie the components. \n\nThe following table shows the fixed and possible length values in bytes for the public, private and cipher text sizes for ML-KEM which can be used to deserialize the components.\n\n20.\tSection 5\n\nI have a problem interpreting this entire Section. Since the latest version of the document has changed the SEQUENCE of two elements to a concatenation of two byte elements, adding the length in bytes of the first element (related to the ML-KEM algorithm), it seems that such a \"serialized\" form will be used in other ASN structures, e.g. in X.509 certificates. However, in this chapter, e.g. CompositeKEMPublicKey appears, which element has not appeared anywhere before. Wouldn't it be more reasonable to introduce CompositeSerializeKEMPublicKey, which would be defined as an OCTET STRING, but without additional conversions when used in the SubjectPublicKeyInfo.subjectPublicKey field, similarly to [draft-kyber-certificates]?",
       "createdAt": "2025-04-09T08:51:22Z",
-      "updatedAt": "2025-05-28T19:43:38Z",
-      "closedAt": null,
+      "updatedAt": "2025-05-29T17:27:27Z",
+      "closedAt": "2025-05-29T17:27:27Z",
       "comments": [
         {
           "author": "ounsworth",
@@ -2265,9 +2265,9 @@
         {
           "author": "PiotrPopis",
           "authorAssociation": "NONE",
-          "body": "@ounsworth @janklaussner \nI have a problem with the provisions concerning KEM Combiner and I ask the authors for a comment or possible changes.\n\n1. As for chapter D.1.1, in my opinion it is OK, in the sense that it contains provisions consistent with SP-800-227ipd.\n\n2. At the same time, equation 13 of 227 is repeated in D.1.1, but in chapter 4.4 (and thus also in 4.2 and 4.3) the \"Expand\" function is omitted when KDF is HKDF.\n\n3. In chapter 4.4 it is mentioned that _many cryptographic libraries provide only a combined interface for HKDF and do not expose HKDF-Extract() and HKDF-Expand() separately_, but this remark should not mean that HKDF-Expand() can be omitted at all?\n\n4. In chapter 4.4 there is a mention of the info parameter, which (I think) according to version 07 should be a zero-length string according to chapter 2.3 of RFC 5869 (the wording \"empty\"), at the same time in chapter 1 \"Chamges in version 07\" there is no mention of the change of the info parameter (at most there is a mention of **editorial changes** regarding HKDF), and yet in version 06 it was supposed to be the sequence CMSORIforKEMOtherInfo. \n \n5. In my opinion, in chapter 4 the notation consistent with equation 13 should be used and the values \u200b\u200bof the info parameter should be specified. Am I right?",
+          "body": "@ounsworth @janklaussner \nI have a problem with the provisions concerning KEM Combiner and I ask the authors for a comment or possible changes.\n\n1. As for chapter D.1.1, in my opinion it is OK, in the sense that it contains provisions consistent with SP-800-227ipd.\n\n2. At the same time, equation 13 of 227 is repeated in D.1.1, but in chapter 4.4 (and thus also in 4.2 and 4.3) the \"Expand\" function is omitted when KDF is HKDF.\n\n3. In chapter 4.4 it is mentioned that _many cryptographic libraries provide only a combined interface for HKDF and do not expose HKDF-Extract() and HKDF-Expand() separately_, but this remark should not mean that HKDF-Expand() can be omitted at all?\n\n4. In chapter 4.4 there is a mention of the info parameter, which (I think) according to version 07 should be a zero-length string according to chapter 2.3 of RFC 5869 (the wording \"empty\"). \n \n5. In my opinion, in chapter 4 the notation consistent with equation 13 should be used and the values \u200b\u200bof the info parameter should be specified. Am I right?",
           "createdAt": "2025-05-28T10:12:50Z",
-          "updatedAt": "2025-05-28T10:12:50Z"
+          "updatedAt": "2025-05-29T05:18:41Z"
         },
         {
           "author": "johngray-dev",
@@ -2275,6 +2275,13 @@
           "body": "Re-opening - looks like Piotr has asked more questions just a few hours before we reviewed the changes.  ",
           "createdAt": "2025-05-28T19:43:19Z",
           "updatedAt": "2025-05-28T19:43:19Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Thanks for pointing that out John!\nFor easier tracking, I am splitting Piotr's most recent comments into its own Issue #153 so that I can re-close this one.",
+          "createdAt": "2025-05-29T17:27:24Z",
+          "updatedAt": "2025-05-29T17:27:24Z"
         }
       ]
     },
@@ -2443,6 +2450,94 @@
       "updatedAt": "2025-05-25T15:41:35Z",
       "closedAt": null,
       "comments": []
+    },
+    {
+      "number": 152,
+      "id": "I_kwDOKRPFO864vLQl",
+      "title": "Lack of specification of the wrap algorithm (CEK key encryption) and KDF function at the \"Composite KEM\" level",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/152",
+      "state": "OPEN",
+      "author": "PiotrPopis",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [
+        "Post-WGLC"
+      ],
+      "body": "In version 07 as of May 29 there is no chapter \"Use in CMS\", which was in version 06, however chapter 1 \"Changes in version 07\" does not contain information about removing the chapter considering CMS.\n\nIf the authors decide to remove \"CMS\", similarly to \"Composite signs\", I strongly encourage you to leave it, or at least leave table 5 \"Mandatory-to-implement pairings for CMS KDF and WRAP\". The lack of specification of these algorithms in practice makes it impossible to start implementation, even when the \"Composite KEM\" document is published as an RFC.\n\nI understand that the LAMPS rules require the creation of separate documents for CMS structures, however the lack of indications of these algorithms in the standard will be equivalent to waiting with the implementation until the second standard appears.\nMore: although in version 07 there is a reference to KEMRecipientInfo [RFC9629] in a few places, there is no clear indication that \"Composite KEM\" are to be implemented within the \"id-ori 3\" sequence, which assumption - I believe - has not changed.\n\nTo sum up: I recommend leaving the \"Use in CMS\" chapter, including in particular table 5, which - of course - must be supplemented with ML-KEM1024+ECDH-P521 combination. This also applies to \"Composite signs\", because the lack of appropriate clarifications in SignedData has hindered implementation work in my company, and probably in others as well.\nI think this is a good place and a good moment for representatives of other companies to also comment on the omission of CMS-related clarifications.\n",
+      "createdAt": "2025-05-29T06:49:47Z",
+      "updatedAt": "2025-05-30T14:07:11Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@PiotrPopis We are under pressure from multiple sources to get the RFC for the basic composite algorithms within X.509 published ASAP.\n\nThe reason why we have removed this section is because the authors don't have the bandwidth to address the comments you have submitted about CMS. We have decided to get the basic algorithms + Usage in X.509 into WGLC, and then we can come back to spend time on the Usage in CMS. In other words; we do not want to delay the algorithm publication -- which groups like CA/B Forum are waiting for -- while we debate the details of CMS.",
+          "createdAt": "2025-05-29T17:22:12Z",
+          "updatedAt": "2025-05-29T17:23:16Z"
+        },
+        {
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Agreed.  As soon as we get composite KEM and composite Signatures to WGLC we will come back to work on the CMS equivalents.   Mike already ripped out the CMS sections and put them into a separate markdown file which we will work on to make the CMS draft.  If all goes well, maybe it will turn out that the CMS drafts are published at the same time, or shortly after the main composite drafts.  ",
+          "createdAt": "2025-05-30T14:07:10Z",
+          "updatedAt": "2025-05-30T14:07:10Z"
+        }
+      ]
+    },
+    {
+      "number": 153,
+      "id": "I_kwDOKRPFO8641W-a",
+      "title": "PiotrPopis comments on KDF",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/153",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "In #129 @PiotrPopis submitted the following. I am splitting this into its own Issue for easier tracking.\n\n\n@ounsworth @janklaussner\nI have a problem with the provisions concerning KEM Combiner and I ask the authors for a comment or possible changes.\n\nAs for chapter D.1.1, in my opinion it is OK, in the sense that it contains provisions consistent with SP-800-227ipd.\n\nAt the same time, equation 13 of 227 is repeated in D.1.1, but in chapter 4.4 (and thus also in 4.2 and 4.3) the \"Expand\" function is omitted when KDF is HKDF.\n\nIn chapter 4.4 it is mentioned that many cryptographic libraries provide only a combined interface for HKDF and do not expose HKDF-Extract() and HKDF-Expand() separately, but this remark should not mean that HKDF-Expand() can be omitted at all?\n\nIn chapter 4.4 there is a mention of the info parameter, which (I think) according to version 07 should be a zero-length string according to chapter 2.3 of RFC 5869 (the wording \"empty\").\n\nIn my opinion, in chapter 4 the notation consistent with equation 13 should be used and the values \u200b\u200bof the info parameter should be specified. Am I right?",
+      "createdAt": "2025-05-29T17:26:42Z",
+      "updatedAt": "2025-05-29T18:02:49Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Hi @PiotrPopis,\n\nThank you again for the careful review.\n\nI don't know that I fully understand your comments, but I believe that some of this is already addressed in D.1.1 by the paragraph beginning with \n\n> The HKDF-SHA2 options can be certified under...\n\nDo you agree?",
+          "createdAt": "2025-05-29T17:41:17Z",
+          "updatedAt": "2025-05-29T17:41:17Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@PiotrPopis\n\nI have attempted to clarify the wording of section 4.4 in this PR. Could you please review?\n\n#154\n\nAbout this comment:\n\n> In my opinion, in chapter 4 the notation consistent with equation 13 should be used and the values \u200b\u200bof the info parameter should be specified. Am I right?\n\nI disagree.\nThe conflict is because, [RFC5869] uses different notation from NIST [SP-800-227ipd]. Since we are writing a document that will be published in the IETF's RFC series, it is appropriate to use the notation consistent with other RFCs. The NIST notation is used exclusively within the D.1 FIPS Certification section. I believe this is all correct.",
+          "createdAt": "2025-05-29T18:02:47Z",
+          "updatedAt": "2025-05-29T18:02:47Z"
+        }
+      ]
+    },
+    {
+      "number": 155,
+      "id": "I_kwDOKRPFO8648ghT",
+      "title": "X25519 and X448 encoding",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/155",
+      "state": "OPEN",
+      "author": "PiotrPopis",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "Section 5 \"Serialization\"\n\n> X25519 and X448: MUST be encoded as per section 3.1 of [RFC7748].\n\nX25519 and X448: public and private keys MUST be encoded as per section 5 of [RFC7748].\n\nJustification: editorial change.",
+      "createdAt": "2025-05-30T10:48:20Z",
+      "updatedAt": "2025-05-30T15:18:12Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Note: we should check if we need to make the same change for Ed25519 / Ed448 in -sigs.",
+          "createdAt": "2025-05-30T15:18:11Z",
+          "updatedAt": "2025-05-30T15:18:11Z"
+        }
+      ]
     }
   ],
   "pulls": [
@@ -6111,24 +6206,26 @@
       "id": "PR_kwDOKRPFO86XqVPR",
       "title": "Addressing Carl's feedback",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/150",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Relates to https://github.com/lamps-wg/draft-composite-sigs/issues/148 in -sigs",
       "createdAt": "2025-05-26T16:13:37Z",
-      "updatedAt": "2025-05-28T20:09:38Z",
+      "updatedAt": "2025-05-30T15:19:27Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "b3247a22d6a0fbffda2a77e8b7d6a96c8f777882",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_carl_148",
       "headRefOid": "5823a7830ee85093117a97f9d02ca11e47ff4b61",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-05-30T15:19:24Z",
+      "mergedAt": "2025-05-30T15:19:24Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "806a5d5cb7c990f05511751dccf096ba07b5cd35"
+      },
       "comments": [
         {
           "author": "ounsworth",
@@ -6225,6 +6322,61 @@
           "body": "",
           "createdAt": "2025-05-27T21:36:39Z",
           "updatedAt": "2025-05-27T21:36:39Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 154,
+      "id": "PR_kwDOKRPFO86YKaOX",
+      "title": "Clarified notation around KDFs",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/154",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Closes #153 ",
+      "createdAt": "2025-05-29T18:02:24Z",
+      "updatedAt": "2025-05-30T19:10:41Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "d4740120d3e6c9f2427839a2ac7e5a2e819f997d",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_153",
+      "headRefOid": "2019cb126b63b263adcf3b9853b1495298546a9f",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "PiotrPopis",
+          "authorAssociation": "NONE",
+          "body": "@ounsworth \r\n1. The latest fix for KDF=HKDF clarifies a number of concerns raised in issue #153, \u200b\u200bi.e. the sentence: \r\n_Within this specification, \"HKDF\" means only the \"HKDF-Extract\" step; the \"HKDF-Expand\" step is always omitted when computing a composite KEM combiner._\r\n\r\n2.  My previous comments were rather aimed at other changes, namely to clarify that HKDF should have the following form and parameters:\r\n(...)\r\nelse if KDF is \"HKDF\"\r\nss = Expand(HKDF-Extract(salt=\"\", IKM=mlkemSS || tradSS || tradCT\r\n|| tradPK || Domain), info, L)\r\n- Note: salt is the empty string (0 octets), which will\r\n- internally be mapped to the zero vector `0x00..00` of\r\n- the correct input size for the underlying hash function\r\n- as per section 2.2 of [RFC5869];\r\n- info is a zero-length string and\r\n- L is 32 (256 bits).\r\nwhich would be consistent with the provisions of section D.1.1:\r\n(...) _The Composite KEM variants that use SHA3 as a combiner fit form (12) while the variants that use HKDF-SHA2 fit form (13)._\r\nNow I see that my previous comment was not understood - I should probably point out the above sentence from D.1.1.\r\n\r\n3. What now?\r\nThe sentence from D.1.1. must be changed, but I recommend to maintain compliance with NIST SP 800-227. Since NIST approves both one-step key derivation and two-step key derivation, let's not modify the \"two-step\" version, which will be considered as non-compliance, and let's introduce only the \"one-step\" version with three hash functions: SHA256, SHA3-256 and SHA384/256 to KEM Combiner.\r\n\r\nHowever, such an approach, although rather compliant with NIST 227, requires modification of section 10.2.3 \"SHA3 vs HKDF-SHA2\", in particular the last paragraph:\r\n_SHA3 is known to have all of the necessary dual-PRF properties [X-Wing], but SHA2 does not and therefore all SHA2-based constructions MUST use SHA2 within an HMAC construction such as HKDF-SHA2 [GHP18]._\r\nOf course, a change in this section must also be made if the authors decide to leave only the Extract() function, and not the entire Expand(Extract()).\r\n\r\nMy recommendation:\r\n- NIST 227 compliance is a MUST;\r\n- \"dual-PRF properies\" is of lesser importance to me, as long as NIST accepts it.",
+          "createdAt": "2025-05-30T09:27:27Z",
+          "updatedAt": "2025-05-30T09:27:27Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Hi @PiotrPopis \r\n\r\nI still do not understand your comment.\r\nWe are never using the \"two-step\" construction from SP 56Cr2 / 227. We are only using \"One-step\"; we either use it in the form\r\n\r\n    SHA3(x)\r\n\r\nwhich is SP 800-56Cr2 section 4.1 Option 1, and (12) in SP 800-227.\r\n\r\nOr else we are doing \r\n\r\n    HKDF-Expand(salt, x) = HMAC(salt, x)\r\n\r\nwhich is SP 800-56Cr2 section 4.1 Option 2, and still (12) in SP 800-227. **This is still a one-step KDF as per NIST**.\r\n\r\nI though this was already clearly stated in D.1.1:\r\n\r\n> The HKDF-SHA2 options can be certified under [[SP.800-56Cr2](https://lamps-wg.github.io/draft-composite-kem/draft-ietf-lamps-pq-composite-kem.html#SP.800-56Cr2)] One-Step Key Derivation Option 2 ...\r\n\r\n... Oh I see the problem. That paragraph is in conflict with a sentence higher up in D.1.1:\r\n\r\n> The Composite KEM variants that use SHA3 as a combiner fit form (12) while the variants that use HKDF-SHA2 fit form (13).\r\n\r\nOk, yes, that sentence is incorrect. there is definitely some clean-up work to do here on D.1.1. Probably I should delete formula (13) since in the end we don't use it.",
+          "createdAt": "2025-05-30T15:34:22Z",
+          "updatedAt": "2025-05-30T15:37:09Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO86rzD2A",
+          "commit": {
+            "abbreviatedOid": "2019cb1"
+          },
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "Seems very clear to me.   ",
+          "createdAt": "2025-05-30T19:10:41Z",
+          "updatedAt": "2025-05-30T19:10:41Z",
           "comments": []
         }
       ]
