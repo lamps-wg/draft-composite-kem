@@ -296,6 +296,7 @@ Editorial changes:
 
 * Added an informative section on the difference between SHA3 and HKDF-SHA2 combiners, and the difference between HKDF(), HKDF-Extract(), and HMAC().
 * Since the serialization is now non-DER, drastically reduced the ASN.1-based text.
+* Changed `HKDF-SHA384` to `HKDF-SHA512`. Since SHA-384 is a truncated version of SHA-512, and we are further truncating it to 256 bits, these are binary-compatible, might as well list the parent algorithm for clarity.
 
 Still to do in a future version:
 
@@ -1090,15 +1091,15 @@ EDNOTE: these are prototyping OIDs to be replaced by IANA.
 | id-MLKEM768-ECDH-P256-HKDF-SHA256  | &lt;CompKEM&gt;.54   | MLKEM768        | ECDH-P256            | HKDF-SHA256 |
 | id-MLKEM768-ECDH-P384-HKDF-SHA256  | &lt;CompKEM&gt;.55   | MLKEM768        | ECDH-P384            | HKDF-SHA256 |
 | id-MLKEM768-ECDH-brainpoolP256r1-HKDF-SHA256   | &lt;CompKEM&gt;.56   | MLKEM768        | ECDH-brainpoolp256r1 | HKDF-SHA256 |
-| id-MLKEM1024-ECDH-P384-HKDF-SHA384 | &lt;CompKEM&gt;.57   | MLKEM1024       | ECDH-P384            | HKDF-SHA384/256 |
-| id-MLKEM1024-ECDH-brainpoolP384r1-HKDF-SHA384  | &lt;CompKEM&gt;.58   | MLKEM1024       | ECDH-brainpoolP384r1 | SHA3-256 |
+| id-MLKEM1024-ECDH-P384-HKDF-SHA512 | &lt;CompKEM&gt;.57   | MLKEM1024       | ECDH-P384            | HKDF-SHA512/256 |
+| id-MLKEM1024-ECDH-brainpoolP384r1-HKDF-SHA512  | &lt;CompKEM&gt;.58   | MLKEM1024       | ECDH-brainpoolP384r1 | SHA3-256 |
 | id-MLKEM1024-X448-SHA3-256         | &lt;CompKEM&gt;.59   | MLKEM1024       | X448                 | SHA3-256 |
-| id-MLKEM1024-ECDH-P521-HKDF-SHA384 | &lt;CompKEM&gt;.60   | MLKEM1024       | ECDH-P521            | HKDF-SHA384/256 |
+| id-MLKEM1024-ECDH-P521-HKDF-SHA512 | &lt;CompKEM&gt;.60   | MLKEM1024       | ECDH-P521            | HKDF-SHA512/256 |
 {: #tab-kem-algs title="Composite ML-KEM key types"}
 
 Note that in alignment with ML-KEM which outputs a 256-bit shared secret key at all security levels, all Composite KEM algorithms output a 256-bit shared secret key.
 
-For the use of HKDF [RFC5869]: a salt is not provided; i.e. the default salt (all zeroes of length HashLen) will be used. For HKDF-SHA256 the output of 256 bit output is used directly; for HKDF-SHA384/256, HKDF is invoked with SHA384 and then the output is truncated to 256 bits, meaning that only the first 256 bits of output are used.
+For the use of HKDF [RFC5869]: a salt is not provided; i.e. the default salt (all zeroes of length HashLen) will be used. For HKDF-SHA256 the output of 256 bit output is used directly; for HKDF-SHA512/256, HKDF is invoked with SHA512 and then the output is truncated to 256 bits, meaning that only the first 256 bits of output are used; while this may seem like an odd and non-standard choice, it maintains the internal collision-resistance of the hash function at the required security level while outputting the required 256-bit shared secret.
 
 As the number of algorithms can be daunting to implementers, see {{sec-impl-profile}} for a discussion of choosing a subset to support.
 
@@ -1126,11 +1127,10 @@ In generating the list of Composite algorithms, the following general guidance w
 
 * Pair equivalent security levels between
 * NIST-P-384 is CNSA approved [CNSA2.0] for all classification levels.
-* SHA256 and SHA512 generally have better adoption than SHA384.
 
 A single invocation of SHA3 is known to behave as a dual-PRF, and thus is sufficient for use as a KDF, see {{sec-cons-kem-combiner}}, however SHA2 is not so must be wrapped in the HKDF construction.
 
-The lower security levels (i.e. ML-KEM768) are provided with HKDF-SHA2 as the KDF in order to facilitate implementations that do not have easy access to SHA3 outside of the ML-KEM function. Higher security levels (i.e. ML-KEM1024) are paired with SHA3 for computational efficiency except for one variant paired with HKDF-SHA384 for compliance with [CNSA2.0], and the Edwards Curve (X25519 and X448) combinations are paired with SHA3 for compatibility with other similar specifications.
+The lower security levels (i.e. ML-KEM768) are provided with HKDF-SHA2 as the KDF in order to facilitate implementations that do not have easy access to SHA3 outside of the ML-KEM function. Higher security levels (i.e. ML-KEM1024) are paired with SHA3 for computational efficiency except for one variant paired with HKDF-SHA512 for compliance with [CNSA2.0], and the Edwards Curve (X25519 and X448) combinations are paired with SHA3 for compatibility with other similar specifications.
 
 While it may seem odd to use 256-bit hash functions at all security levels, this aligns with ML-KEM which produces a 256-bit shared secret key at all security levels. SHA-256 and SHA3-256 both have >= 256 bits of (2nd) pre-image resistance, which is the required property for a KDF to provide 128 bits of security, as allowed in Table 3 of {{SP.800-57pt1r5}}.
 
@@ -1223,14 +1223,14 @@ EDNOTE to IANA: OIDs will need to be replaced in both the ASN.1 module and in {{
   - Description: id-MLKEM768-X25519-SHA3-256
   - References: This Document
 
-- id-MLKEM1024-ECDH-P384-HKDF-SHA384
+- id-MLKEM1024-ECDH-P384-HKDF-SHA512
   - Decimal: IANA Assigned
-  - Description: id-MLKEM1024-ECDH-P384-HKDF-SHA384
+  - Description: id-MLKEM1024-ECDH-P384-HKDF-SHA512
   - References: This Document
 
-- id-MLKEM1024-ECDH-brainpoolP384r1-HKDF-SHA384
+- id-MLKEM1024-ECDH-brainpoolP384r1-HKDF-SHA512
   - Decimal: IANA Assigned
-  - Description: id-MLKEM1024-ECDH-brainpoolP384r1-HKDF-SHA384
+  - Description: id-MLKEM1024-ECDH-brainpoolP384r1-HKDF-SHA512
   - References: This Document
 
 - id-MLKEM1024-X448-SHA3-256
@@ -1238,9 +1238,9 @@ EDNOTE to IANA: OIDs will need to be replaced in both the ASN.1 module and in {{
   - Description: id-MLKEM1024-X448-SHA3-256
   - References: This Document
 
-- id-MLKEM1024-ECDH-P521-HKDF-SHA384
+- id-MLKEM1024-ECDH-P521-HKDF-SHA512
   - Decimal: IANA Assigned
-  - Description: id-MLKEM1024-ECDH-P521-HKDF-SHA384
+  - Description: id-MLKEM1024-ECDH-P521-HKDF-SHA512
   - References: This Document
 
 <!-- End of IANA Considerations section -->
@@ -1412,8 +1412,6 @@ This section provides references to the full specification of the algorithms use
 | ----------- | ----------- | ----------- |
 | id-sha256 | 2.16.840.1.101.3.4.2.1 | [RFC6234] |
 | id-sha512 | 2.16.840.1.101.3.4.2.3 | [RFC6234] |
-| id-alg-hkdf-with-sha256 | 1.2.840.113549.1.9.16.3.28 | [RFC8619] |
-| id-alg-hkdf-with-sha384 | 1.2.840.113549.1.9.16.3.29 | [RFC8619] |
 | id-sha3-256 | 2.16.840.1.101.3.4.2.8 | [FIPS.202] |
 {: #tab-component-hash title="Hash algorithms used in Composite Constructions"}
 
@@ -1664,7 +1662,7 @@ For applications that do not have any regulatory requirements or legacy implemen
 
 In applications that only allow NIST PQC Level 5, it is RECOMMENDED to focus implemtation effort on:
 
-    id-MLKEM1024-ECDH-P384-HKDF-SHA384
+    id-MLKEM1024-ECDH-P384-HKDF-SHA512
 
 
 <!-- End of Implementation Considerations section -->
