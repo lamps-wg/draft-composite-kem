@@ -1122,7 +1122,7 @@ EDNOTE: these domain separators are based on the prototyping OIDs assigned on th
 
 ## Rationale for choices
 
-In generating the list of Composite algorithms, the idea was to provide composite algorithms at various security levels. The choice of traditional algorithm pairing prioritizes choosing commonly-deployed algorithm rather than trying for exact security level matching since anyway there is no academic consensus on how to directly compare pre-quantum and post-quantum security levels.
+In generating the list of Composite algorithms, the idea was to provide composite algorithms at various security levels. Rather than trying for exact security level matching, the choice of traditional algorithm pairing prioritizes choosing commonly-deployed algorithms since there is no academic consensus on how to directly compare pre-quantum and post-quantum security levels.
 
 A single invocation of SHA3 is known to behave as a dual-PRF, and thus is sufficient for use as a KDF, see {{sec-cons-kem-combiner}}, however SHA2 is not so must be wrapped in the HKDF construction.
 
