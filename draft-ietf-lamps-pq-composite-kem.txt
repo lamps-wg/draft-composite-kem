@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 1 December 2025                                         M. Pala
+Expires: 4 December 2025                                         M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                             30 May 2025
+                                                             2 June 2025
 
 
       Composite ML-KEM for use in X.509 Public Key Infrastructure
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 1 December 2025.
+   This Internet-Draft will expire on 4 December 2025.
 
 Copyright Notice
 
@@ -796,8 +796,7 @@ Decap Process:
       keys supported.  For maximum interoperability, it is RECOMMENEDED
       to use uncompressed points.
 
-   *  *X25519 and X448*: MUST be encoded as per section 3.1 of
-      [RFC7748].
+   *  *X25519 and X448*: MUST be encoded as per section 5 of [RFC7748].
 
    In the event that a composite implementation uses an underlying
    implementation of the traditional component that requires a different
