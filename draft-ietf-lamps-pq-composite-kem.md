@@ -1170,12 +1170,13 @@ EDNOTE: these domain separators are based on the prototyping OIDs assigned on th
 
 In generating the list of Composite algorithms, the following general guidance was used, however, during development of this specification several algorithms were added by direct request even though they do not fit this guidance.
 
-* Pair equivalent security levels between
+* Pair equivalent security levels between component algorithms.
 * NIST-P-384 is CNSA approved [CNSA2.0] for all classification levels.
 
 A single invocation of SHA3 is known to behave as a dual-PRF, and thus is sufficient for use as a KDF, see {{sec-cons-kem-combiner}}, however SHA2 is not so must be wrapped in the HMAC construction.
 
 Composite algorithms that use either RSA or ECDH as the traditional component are paired with HMAC-SHA2 as the KDF in order to facilitate implementations that do not have easy access to SHA3 outside of the ML-KEM function. Composite algorithms using Edwards curves (X25519 and X448) are paired with SHA3 for computational efficiency and for compatibility with other similar specifications.
+
 
 While it may seem odd to use 256-bit outputs at all security levels, this aligns with ML-KEM which produces a 256-bit shared secret key at all security levels. SHA-256 and SHA3-256 both have >= 256 bits of (2nd) pre-image resistance, which is the required property for a KDF to provide 128 bits of security, as allowed in Table 3 of {{SP.800-57pt1r5}}. Composite algorithms at higher security levels use a larger hash function in order to preserve internal collision resistance of the hash function at a comparable strength to the underlying component algorithms up to the point where truncation to a 256-bit output is performed.
 
