@@ -42,7 +42,7 @@ OID_TABLE = {
   "id-MLKEM768-ECDH-P256-HMAC-SHA256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,54)),
   "id-MLKEM768-ECDH-P384-HMAC-SHA256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,55)),
   "id-MLKEM768-ECDH-brainpoolP256r1-HMAC-SHA256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,56)),
-  "id-MLKEM1024-ECDH-P384-HMAC-SHA384": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,57)),
+  "id-MLKEM1024-ECDH-P384-HMAC-SHA512": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,57)),
   "id-MLKEM1024-ECDH-brainpoolP384r1-HMAC-SHA512": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,58)),
   "id-MLKEM1024-X448-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,59)),
   "id-MLKEM1024-ECDH-P521-HMAC-SHA512": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,60)),
@@ -640,7 +640,7 @@ def kemCombiner(kem, mlkemSS, tradSS, tradCT, tradPK):
     h.update(kem.domSep)
     ss = h.finalize()
     
-  elif kem.kdf == "HKDF-SHA512":
+  elif kem.kdf == "HMAC-SHA512":
      # ss = HMAC-{Hash}(salt={0}, IKM=mlkemSS || tradSS || tradCT
      #                                        || tradPK || Domain)
     emptyStr = "".encode('ascii')
@@ -1015,7 +1015,7 @@ def main():
   doKEM(MLKEM768_ECDH_P256_HMAC_SHA256(), caSK )
   doKEM(MLKEM768_ECDH_P384_HMAC_SHA256(), caSK )
   doKEM(MLKEM768_ECDH_brainpoolP256r1_HMAC_SHA256(), caSK )
-  doKEM(MLKEM1024_ECDH_P384_HMAC_SHA384(), caSK )
+  doKEM(MLKEM1024_ECDH_P384_HMAC_SHA512(), caSK )
   doKEM(MLKEM1024_ECDH_brainpoolP384r1_HMAC_SHA512(), caSK )
   doKEM(MLKEM1024_X448_SHA3_256(), caSK )
   doKEM(MLKEM1024_ECDH_P521_HMAC_SHA512(), caSK )
