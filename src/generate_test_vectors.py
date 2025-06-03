@@ -42,10 +42,10 @@ OID_TABLE = {
   "id-MLKEM768-ECDH-P256-HMAC-SHA256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,54)),
   "id-MLKEM768-ECDH-P384-HMAC-SHA256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,55)),
   "id-MLKEM768-ECDH-brainpoolP256r1-HMAC-SHA256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,56)),
-  "id-MLKEM1024-ECDH-P384-HMAC-SHA384": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,57)),
-  "id-MLKEM1024-ECDH-brainpoolP384r1-HMAC-SHA384": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,58)),
+  "id-MLKEM1024-ECDH-P384-HMAC-SHA512": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,57)),
+  "id-MLKEM1024-ECDH-brainpoolP384r1-HMAC-SHA512": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,58)),
   "id-MLKEM1024-X448-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,59)),
-  "id-MLKEM1024-ECDH-P521-HMAC-SHA384": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,60)),
+  "id-MLKEM1024-ECDH-P521-HMAC-SHA512": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,60)),
 }
 
 
@@ -574,19 +574,19 @@ class MLKEM768_ECDH_brainpoolP256r1_HMAC_SHA256(CompositeKEM):
   tradkem = ECDHBP256KEM()
   kdf = "HMAC-SHA256"
 
-
-class MLKEM1024_ECDH_P384_HMAC_SHA384(CompositeKEM):
-  id = "id-MLKEM1024-ECDH-P384-HMAC-SHA384"
+  
+class MLKEM1024_ECDH_P384_HMAC_SHA512(CompositeKEM):
+  id = "id-MLKEM1024-ECDH-P384-HMAC-SHA512"
   mlkem = MLKEM1024()
   tradkem = ECDHP384KEM()
-  kdf = "HMAC-SHA384"
+  kdf = "HMAC-SHA512"
 
 
-class MLKEM1024_ECDH_brainpoolP384r1_HMAC_SHA384(CompositeKEM):
-  id = "id-MLKEM1024-ECDH-brainpoolP384r1-HMAC-SHA384"
+class MLKEM1024_ECDH_brainpoolP384r1_HMAC_SHA512(CompositeKEM):
+  id = "id-MLKEM1024-ECDH-brainpoolP384r1-HMAC-SHA512"
   mlkem = MLKEM1024()
   tradkem = ECDHBP384KEM()
-  kdf = "HMAC-SHA384"
+  kdf = "HMAC-SHA512"
 
 
 class MLKEM1024_X448_SHA3_256(CompositeKEM):
@@ -596,12 +596,11 @@ class MLKEM1024_X448_SHA3_256(CompositeKEM):
   kdf = "SHA3-256"
 
   
-class MLKEM1024_ECDH_P521_HMAC_SHA384(CompositeKEM):
-  id = "id-MLKEM1024-ECDH-P521-HMAC-SHA384"
+class MLKEM1024_ECDH_P521_HMAC_SHA512(CompositeKEM):
+  id = "id-MLKEM1024-ECDH-P521-HMAC-SHA512"
   mlkem = MLKEM1024()
   tradkem = ECDHP521KEM()
-  kdf = "HMAC-SHA384"
-
+  kdf = "HMAC-SHA512"
   
 
 ### KEM Combiner ###
@@ -641,11 +640,11 @@ def kemCombiner(kem, mlkemSS, tradSS, tradCT, tradPK):
     h.update(kem.domSep)
     ss = h.finalize()
     
-  elif kem.kdf == "HMAC-SHA384":
+  elif kem.kdf == "HMAC-SHA512":
      # ss = HMAC-{Hash}(salt={0}, IKM=mlkemSS || tradSS || tradCT
      #                                        || tradPK || Domain)
     emptyStr = "".encode('ascii')
-    h = hmac.HMAC(key=emptyStr, algorithm=hashes.SHA384())
+    h = hmac.HMAC(key=emptyStr, algorithm=hashes.SHA512())
     h.update(mlkemSS)
     h.update(tradSS)
     h.update(tradCT)
@@ -1016,10 +1015,10 @@ def main():
   doKEM(MLKEM768_ECDH_P256_HMAC_SHA256(), caSK )
   doKEM(MLKEM768_ECDH_P384_HMAC_SHA256(), caSK )
   doKEM(MLKEM768_ECDH_brainpoolP256r1_HMAC_SHA256(), caSK )
-  doKEM(MLKEM1024_ECDH_P384_HMAC_SHA384(), caSK )
-  doKEM(MLKEM1024_ECDH_brainpoolP384r1_HMAC_SHA384(), caSK )
+  doKEM(MLKEM1024_ECDH_P384_HMAC_SHA512(), caSK )
+  doKEM(MLKEM1024_ECDH_brainpoolP384r1_HMAC_SHA512(), caSK )
   doKEM(MLKEM1024_X448_SHA3_256(), caSK )
-  doKEM(MLKEM1024_ECDH_P521_HMAC_SHA384(), caSK )
+  doKEM(MLKEM1024_ECDH_P521_HMAC_SHA512(), caSK )
 
 
   writeTestVectors()

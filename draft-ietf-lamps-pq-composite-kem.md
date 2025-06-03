@@ -297,6 +297,7 @@ Editorial changes:
 * Since we are only using the first step of HKDF, which is HKDF-Extract() and not HKDF-Expand(), it was decided that it's clearer to systematically rename this to "HMAC Combiner".
 * Added an informative section on the difference between SHA3 and HMAC-SHA2 combiners, and the difference between HKDF(), HKDF-Extract(), and HMAC().
 * Since the serialization is now non-DER, drastically reduced the ASN.1-based text.
+* Changed `HKDF-SHA384` to `HKDF-SHA512`. Since SHA-384 is a truncated version of SHA-512, and we are further truncating it to 256 bits, these are binary-compatible, might as well list the parent algorithm for clarity.
 
 Still to do in a future version:
 
@@ -1105,7 +1106,7 @@ EDNOTE: these are prototyping OIDs to be replaced by IANA.
 | id-MLKEM768-ECDH-P256-HMAC-SHA256  | &lt;CompKEM&gt;.54   | MLKEM768        | ECDH-P256            | HMAC-SHA256 |
 | id-MLKEM768-ECDH-P384-HMAC-SHA256  | &lt;CompKEM&gt;.55   | MLKEM768        | ECDH-P384            | HMAC-SHA256 |
 | id-MLKEM768-ECDH-brainpoolP256r1-HMAC-SHA256   | &lt;CompKEM&gt;.56   | MLKEM768        | ECDH-brainpoolp256r1 | HMAC-SHA256 |
-| id-MLKEM1024-ECDH-P384-HMAC-SHA384 | &lt;CompKEM&gt;.57   | MLKEM1024       | ECDH-P384            | HMAC-SHA384/256 |
+| id-MLKEM1024-ECDH-P384-HMAC-SHA384 | &lt;CompKEM&gt;.57   | MLKEM1024       | ECDH-P384            | HMAC-SHA384 |
 | id-MLKEM1024-ECDH-brainpoolP384r1-HMAC-SHA384  | &lt;CompKEM&gt;.58   | MLKEM1024       | ECDH-brainpoolP384r1 | HMAC-SHA384 |
 | id-MLKEM1024-X448-SHA3-256         | &lt;CompKEM&gt;.59   | MLKEM1024       | X448                 | SHA3-256 |
 | id-MLKEM1024-ECDH-P521-HMAC-SHA384 | &lt;CompKEM&gt;.60   | MLKEM1024       | ECDH-P521            | HMAC-SHA384 |
@@ -1139,7 +1140,6 @@ In generating the list of Composite algorithms, the following general guidance w
 
 * Pair equivalent security levels between
 * NIST-P-384 is CNSA approved [CNSA2.0] for all classification levels.
-* SHA256 and SHA512 generally have better adoption than SHA384.
 
 A single invocation of SHA3 is known to behave as a dual-PRF, and thus is sufficient for use as a KDF, see {{sec-cons-kem-combiner}}, however SHA2 is not so must be wrapped in the HMAC construction.
 
@@ -1236,14 +1236,14 @@ EDNOTE to IANA: OIDs will need to be replaced in both the ASN.1 module and in {{
   - Description: id-MLKEM768-X25519-SHA3-256
   - References: This Document
 
-- id-MLKEM1024-ECDH-P384-HMAC-SHA384
+- id-MLKEM1024-ECDH-P384-HMAC-SHA512
   - Decimal: IANA Assigned
-  - Description: id-MLKEM1024-ECDH-P384-HMAC-SHA384
+  - Description: id-MLKEM1024-ECDH-P384-HMAC-SHA512
   - References: This Document
 
-- id-MLKEM1024-ECDH-brainpoolP384r1-HMAC-SHA384
+- id-MLKEM1024-ECDH-brainpoolP384r1-HMAC-SHA512
   - Decimal: IANA Assigned
-  - Description: id-MLKEM1024-ECDH-brainpoolP384r1-HMAC-SHA384
+  - Description: id-MLKEM1024-ECDH-brainpoolP384r1-HMAC-SHA512
   - References: This Document
 
 - id-MLKEM1024-X448-SHA3-256
@@ -1251,9 +1251,9 @@ EDNOTE to IANA: OIDs will need to be replaced in both the ASN.1 module and in {{
   - Description: id-MLKEM1024-X448-SHA3-256
   - References: This Document
 
-- id-MLKEM1024-ECDH-P521-HMAC-SHA384
+- id-MLKEM1024-ECDH-P521-HMAC-SHA512
   - Decimal: IANA Assigned
-  - Description: id-MLKEM1024-ECDH-P521-HMAC-SHA384
+  - Description: id-MLKEM1024-ECDH-P521-HMAC-SHA512
   - References: This Document
 
 <!-- End of IANA Considerations section -->
@@ -1425,8 +1425,6 @@ This section provides references to the full specification of the algorithms use
 | ----------- | ----------- | ----------- |
 | id-sha256 | 2.16.840.1.101.3.4.2.1 | [RFC6234] |
 | id-sha512 | 2.16.840.1.101.3.4.2.3 | [RFC6234] |
-| id-alg-hkdf-with-sha256 | 1.2.840.113549.1.9.16.3.28 | [RFC8619] |
-| id-alg-hkdf-with-sha384 | 1.2.840.113549.1.9.16.3.29 | [RFC8619] |
 | id-sha3-256 | 2.16.840.1.101.3.4.2.8 | [FIPS.202] |
 {: #tab-component-hash title="Hash algorithms used in Composite Constructions"}
 
@@ -1677,7 +1675,7 @@ For applications that do not have any regulatory requirements or legacy implemen
 
 In applications that only allow NIST PQC Level 5, it is RECOMMENDED to focus implemtation effort on:
 
-    id-MLKEM1024-ECDH-P384-HMAC-SHA384
+    id-MLKEM1024-ECDH-P384-HMAC-SHA512
 
 
 <!-- End of Implementation Considerations section -->
@@ -1754,7 +1752,7 @@ https://datatracker.ietf.org/ipr/3588/
 
 This document incorporates contributions and comments from a large group of experts. The Editors would especially like to acknowledge the expertise and tireless dedication of the following people, who attended many long meetings and generated millions of bytes of electronic mail and VOIP traffic over the past year in pursuit of this document:
 
-Serge Mister (Entrust), Ali Noman (Entrust), Peter C. (UK NCSC), Sophie Schmieg (Google), Deirdre Connolly (SandboxAQ), Falko Strenzke (MTG AG), Dan van Geest (Crypto Next), Piotr Popis (Enigma), Jean-Pierre Fiset (Crypto4A), Felipe Ventura (Entrust), 陳志華 (Abel C. H. Chen, Chunghwa Telecom),
+Serge Mister (Entrust), Felipe Ventura (Entrust), Richard Kettlewell (Entrust), Ali Noman (Entrust), Peter C. (UK NCSC), Sophie Schmieg (Google), Deirdre Connolly (SandboxAQ), Falko Strenzke (MTG AG), Dan van Geest (Crypto Next), Piotr Popis (Enigma), Jean-Pierre Fiset (Crypto4A), 陳志華 (Abel C. H. Chen, Chunghwa Telecom),
 林邦曄 (Austin Lin, Chunghwa Telecom), and Douglas Stebila (University of Waterloo).
 
 Thanks to Giacomo Pope (github.com/GiacomoPope) whose ML-DSA and ML-KEM implementation was used to generate the test vectors.
