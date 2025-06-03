@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-06-01T02:26:59.137556+00:00",
+  "timestamp": "2025-06-03T02:03:59.670084+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -2520,15 +2520,15 @@
       "id": "I_kwDOKRPFO8648ghT",
       "title": "X25519 and X448 encoding",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/155",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "PiotrPopis",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "Section 5 \"Serialization\"\n\n> X25519 and X448: MUST be encoded as per section 3.1 of [RFC7748].\n\nX25519 and X448: public and private keys MUST be encoded as per section 5 of [RFC7748].\n\nJustification: editorial change.",
       "createdAt": "2025-05-30T10:48:20Z",
-      "updatedAt": "2025-05-30T15:18:12Z",
-      "closedAt": null,
+      "updatedAt": "2025-06-02T19:16:23Z",
+      "closedAt": "2025-06-02T19:16:22Z",
       "comments": [
         {
           "author": "ounsworth",
@@ -2536,8 +2536,47 @@
           "body": "Note: we should check if we need to make the same change for Ed25519 / Ed448 in -sigs.",
           "createdAt": "2025-05-30T15:18:11Z",
           "updatedAt": "2025-05-30T15:18:11Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Closed in [23df6bd](https://github.com/lamps-wg/draft-composite-kem/commit/23df6bd47221eb37f9cab54b4c274a7ee3f70c49)",
+          "createdAt": "2025-06-02T19:16:22Z",
+          "updatedAt": "2025-06-02T19:16:22Z"
         }
       ]
+    },
+    {
+      "number": 156,
+      "id": "I_kwDOKRPFO865cKfP",
+      "title": "Mike Jenkins comment about the CNSA reference",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/156",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "See:\n\nhttps://github.com/lamps-wg/draft-composite-sigs/issues/183",
+      "createdAt": "2025-06-02T18:18:39Z",
+      "updatedAt": "2025-06-02T18:18:39Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 158,
+      "id": "I_kwDOKRPFO865cZzX",
+      "title": "HKDF-SHA384 vs SHA512",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/158",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Richard Kettlewell pointed out:\n\n> Mike Ounsworth John Gray I notice in https://github.com/lamps-wg/draft-composite-kem/blob/main/draft-ietf-lamps-pq-composite-kem.md that you use HKDF-SHA384-Extract truncated to 256 bits - given SHA384 is secretly a truncated SHA512 anyway is there a reason you chose that rather than HKDF-SHA512-Extract with truncated output? Not really asking for any changes, just wondering about motivation.\n\n- [ ] Make sure Richard is in the acknowledgements of both drafts",
+      "createdAt": "2025-06-02T18:38:40Z",
+      "updatedAt": "2025-06-02T18:38:40Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
@@ -6338,7 +6377,7 @@
       "labels": [],
       "body": "Closes #153 ",
       "createdAt": "2025-05-29T18:02:24Z",
-      "updatedAt": "2025-05-30T19:10:41Z",
+      "updatedAt": "2025-06-02T10:31:31Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "d4740120d3e6c9f2427839a2ac7e5a2e819f997d",
@@ -6363,6 +6402,13 @@
           "body": "Hi @PiotrPopis \r\n\r\nI still do not understand your comment.\r\nWe are never using the \"two-step\" construction from SP 56Cr2 / 227. We are only using \"One-step\"; we either use it in the form\r\n\r\n    SHA3(x)\r\n\r\nwhich is SP 800-56Cr2 section 4.1 Option 1, and (12) in SP 800-227.\r\n\r\nOr else we are doing \r\n\r\n    HKDF-Expand(salt, x) = HMAC(salt, x)\r\n\r\nwhich is SP 800-56Cr2 section 4.1 Option 2, and still (12) in SP 800-227. **This is still a one-step KDF as per NIST**.\r\n\r\nI though this was already clearly stated in D.1.1:\r\n\r\n> The HKDF-SHA2 options can be certified under [[SP.800-56Cr2](https://lamps-wg.github.io/draft-composite-kem/draft-ietf-lamps-pq-composite-kem.html#SP.800-56Cr2)] One-Step Key Derivation Option 2 ...\r\n\r\n... Oh I see the problem. That paragraph is in conflict with a sentence higher up in D.1.1:\r\n\r\n> The Composite KEM variants that use SHA3 as a combiner fit form (12) while the variants that use HKDF-SHA2 fit form (13).\r\n\r\nOk, yes, that sentence is incorrect. there is definitely some clean-up work to do here on D.1.1. Probably I should delete formula (13) since in the end we don't use it.",
           "createdAt": "2025-05-30T15:34:22Z",
           "updatedAt": "2025-05-30T15:37:09Z"
+        },
+        {
+          "author": "PiotrPopis",
+          "authorAssociation": "NONE",
+          "body": "@ounsworth \r\nIt is now clear to me that KEM Combiner should always use one-step key derivation according to equation (12) of NIST 227.\r\nIn the case of SHA3 it will be option 1 according to chapter 4.1 of NIST SP 800-56C rev. 2, while in the case of SHA2 it will be option 2 according to 800-56Cr2.\r\n\r\nWe agreed that the previous provisions were ambiguous in this matter, and I was additionally confused by the reference to HKDF compliant with RFC5869.\r\n\r\nFor me (and probably many others reading the document) HKDF is a function described in RFC 5859. Therefore, when I see the phrase _if KDF is \"HKDF\"_, I expect the familiar function from RFC 5859. Instead, I read that it is just Extract(), which is basically an HMAC with a fixed key of zeros.\r\n\r\nI suggest - in addition to changes in D.1.1 - abandoning the reference to HKDF, and instead write directly that in the case of SHA2 we use the HMAC function (FIPS198, RFC 2104) as KDF with the key K being a string of HashLen zeros.\r\n\r\nI confirm that the document indicates that it is only \"partial\" HKDF (limited only to the Extract() function), but the reader still has doubts about the \"full\" version of HKDF - see e.g. section 7.1, where there is a clear suggestion of \"full\" HKDF: _For the use of HKDF [RFC5869]: a salt is not provided; i.e. the default salt (all zeroes of length HashLen) will be used. For HKDF-SHA256 the output of 256 bit output is used directly; for HKDF-SHA384/256, HKDF is invoked with SHA384 and then the output is truncated to 256 bits, meaning that only the first 256 bits of output are used._\r\n\r\nHowever, if the authors decided to leave the current provisions regarding HKDF, I recommend clarifying the following in chapter 7.1:\r\nFor the use of HKDF [RFC5869] (**reduced to just the Extract() function**): a salt is not provided; i.e. the default salt (all zeroes of length HashLen) will be used. For HKDF-SHA256 the output of 256 bit output is used directly; for HKDF-SHA384/256, HKDF is invoked with SHA384 and then the output is truncated to 256 bits, meaning that only the first 256 bits of output are used.\r\n\r\nAdditionally: I withdraw my comment regarding the modification of section 10.2.3.",
+          "createdAt": "2025-06-02T10:31:31Z",
+          "updatedAt": "2025-06-02T10:31:31Z"
         }
       ],
       "reviews": [
@@ -6378,6 +6424,113 @@
           "createdAt": "2025-05-30T19:10:41Z",
           "updatedAt": "2025-05-30T19:10:41Z",
           "comments": []
+        }
+      ]
+    },
+    {
+      "number": 157,
+      "id": "PR_kwDOKRPFO86Yrnwe",
+      "title": "Remove mention of CNSA",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/157",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Closes #156 ",
+      "createdAt": "2025-06-02T18:33:41Z",
+      "updatedAt": "2025-06-02T21:50:58Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "806a5d5cb7c990f05511751dccf096ba07b5cd35",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_cnsa",
+      "headRefOid": "2b4f5b562858d335230279e88d3ddc945b409271",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO86sQopb",
+          "commit": {
+            "abbreviatedOid": "2b4f5b5"
+          },
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-06-02T21:50:58Z",
+          "updatedAt": "2025-06-02T21:50:58Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 159,
+      "id": "PR_kwDOKRPFO86Yr--s",
+      "title": "Changed SHA384 to SHA512",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/159",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Closes #158",
+      "createdAt": "2025-06-02T19:12:53Z",
+      "updatedAt": "2025-06-02T22:01:16Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "806a5d5cb7c990f05511751dccf096ba07b5cd35",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_sha384",
+      "headRefOid": "0969698487d6b7fbee8fb5715408a89e75118e7e",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO86sQnIJ",
+          "commit": {
+            "abbreviatedOid": "0969698"
+          },
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-06-02T21:47:03Z",
+          "updatedAt": "2025-06-02T21:47:03Z",
+          "comments": [
+            {
+              "originalPosition": 15,
+              "body": "Is this correct.  Should it be HKDF-SHA512 instead of SHA3-256 in the KDF column?",
+              "createdAt": "2025-06-02T21:47:03Z",
+              "updatedAt": "2025-06-02T21:47:03Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO86sQs6X",
+          "commit": {
+            "abbreviatedOid": "0969698"
+          },
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-06-02T22:01:16Z",
+          "updatedAt": "2025-06-02T22:01:16Z",
+          "comments": [
+            {
+              "originalPosition": 15,
+              "body": "This Paragraph:\r\n\r\n> The lower security levels (i.e. ML-KEM768) are provided with HKDF-SHA2 as the KDF in order to facilitate implementations that do not have easy access to SHA3 outside of the ML-KEM function. Higher security levels (i.e. ML-KEM1024) are paired with SHA3 for computational efficiency except for one variant paired with HKDF-SHA384 in order to leave open the possibility of compliance with [CNSA2.0], and the Edwards Curve (X25519 and X448) combinations are paired with SHA3 for compatibility with other similar specifications.\r\n\r\nSeems to indicate This one:  id-MLKEM1024-ECDH-P384-HKDF-SHA384  but it was changed to id-MLKEM1024-ECDH-P384-HKDF-SHA512 by this change.   \r\n\r\nI'm still confused by the last line, the name.  If KDF is indeed SHA3-256 for line 1095\r\n\r\n| id-MLKEM1024-ECDH-brainpoolP384r1-HKDF-SHA512  | &lt;CompKEM&gt;.58   | MLKEM1024       | ECDH-brainpoolP384r1 | SHA3-256 |\r\n\r\nShouldn't it be called:  id-MLKEM1024-ECDH-brainpoolP384r1-SHA3-256  ?",
+              "createdAt": "2025-06-02T22:01:16Z",
+              "updatedAt": "2025-06-02T22:01:17Z"
+            }
+          ]
         }
       ]
     }
