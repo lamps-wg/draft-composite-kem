@@ -29,12 +29,12 @@
     google-i18n-address 3.1.1
     intervaltree 3.1.0
     Jinja2 3.1.6
-    lxml 5.3.0
+    lxml 5.3.1
     platformdirs 4.3.8
     pycountry 24.6.1
     PyYAML 6.0.2
     requests 2.32.3
-    setuptools 70.3.0
+    setuptools 80.9.0
     wcwidth 0.2.13
 -->
 <link href="draft-ietf-lamps-pq-composite-kem.xml" rel="alternate" type="application/rfc+xml">
@@ -1058,7 +1058,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Ounsworth, et al.</td>
-<td class="center">Expires 4 December 2025</td>
+<td class="center">Expires 5 December 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1071,12 +1071,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-lamps-pq-composite-kem-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-06-02" class="published">2 June 2025</time>
+<time datetime="2025-06-03" class="published">3 June 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-12-04">4 December 2025</time></dd>
+<dd class="expires"><time datetime="2025-12-05">5 December 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1142,7 +1142,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 4 December 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 5 December 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -2492,21 +2492,10 @@ kema-CompositeKEM {
         <h3 id="name-rationale-for-choices">
 <a href="#section-7.3" class="section-number selfRef">7.3. </a><a href="#name-rationale-for-choices" class="section-name selfRef">Rationale for choices</a>
         </h3>
-<p id="section-7.3-1">In generating the list of Composite algorithms, the following general guidance was used, however, during development of this specification several algorithms were added by direct request even though they do not fit this guidance.<a href="#section-7.3-1" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-7.3-2.1">
-            <p id="section-7.3-2.1.1">Pair equivalent security levels between<a href="#section-7.3-2.1.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-7.3-2.2">
-            <p id="section-7.3-2.2.1">NIST-P-384 is CNSA approved <span>[<a href="#CNSA2.0" class="cite xref">CNSA2.0</a>]</span> for all classification levels.<a href="#section-7.3-2.2.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-7.3-2.3">
-            <p id="section-7.3-2.3.1">SHA256 and SHA512 generally have better adoption than SHA384.<a href="#section-7.3-2.3.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-<p id="section-7.3-3">A single invocation of SHA3 is known to behave as a dual-PRF, and thus is sufficient for use as a KDF, see <a href="#sec-cons-kem-combiner" class="auto internal xref">Section 10.2</a>, however SHA2 is not so must be wrapped in the HKDF construction.<a href="#section-7.3-3" class="pilcrow">¶</a></p>
-<p id="section-7.3-4">The lower security levels (i.e. ML-KEM768) are provided with HKDF-SHA2 as the KDF in order to facilitate implementations that do not have easy access to SHA3 outside of the ML-KEM function. Higher security levels (i.e. ML-KEM1024) are paired with SHA3 for computational efficiency except for one variant paired with HKDF-SHA384 for compliance with <span>[<a href="#CNSA2.0" class="cite xref">CNSA2.0</a>]</span>, and the Edwards Curve (X25519 and X448) combinations are paired with SHA3 for compatibility with other similar specifications.<a href="#section-7.3-4" class="pilcrow">¶</a></p>
-<p id="section-7.3-5">While it may seem odd to use 256-bit hash functions at all security levels, this aligns with ML-KEM which produces a 256-bit shared secret key at all security levels. SHA-256 and SHA3-256 both have &gt;= 256 bits of (2nd) pre-image resistance, which is the required property for a KDF to provide 128 bits of security, as allowed in Table 3 of <span>[<a href="#SP.800-57pt1r5" class="cite xref">SP.800-57pt1r5</a>]</span>.<a href="#section-7.3-5" class="pilcrow">¶</a></p>
+<p id="section-7.3-1">In generating the list of Composite algorithms, the idea was to provide composite algorithms at various security levels. Rather than trying for exact security level matching, the choice of traditional algorithm pairing prioritizes choosing commonly-deployed algorithms since there is no academic consensus on how to directly compare pre-quantum and post-quantum security levels.<a href="#section-7.3-1" class="pilcrow">¶</a></p>
+<p id="section-7.3-2">A single invocation of SHA3 is known to behave as a dual-PRF, and thus is sufficient for use as a KDF, see <a href="#sec-cons-kem-combiner" class="auto internal xref">Section 10.2</a>, however SHA2 is not so must be wrapped in the HKDF construction.<a href="#section-7.3-2" class="pilcrow">¶</a></p>
+<p id="section-7.3-3">The lower security levels (i.e. ML-KEM768) are provided with HKDF-SHA2 as the KDF in order to facilitate implementations that do not have easy access to SHA3 outside of the ML-KEM function. Higher security levels (i.e. ML-KEM1024) are paired with SHA3 for computational efficiency except for one variant paired with HKDF-SHA384 in order to leave open the possibility of compliance with <span>[<a href="#CNSA2.0" class="cite xref">CNSA2.0</a>]</span>, and the Edwards Curve (X25519 and X448) combinations are paired with SHA3 for compatibility with other similar specifications.<a href="#section-7.3-3" class="pilcrow">¶</a></p>
+<p id="section-7.3-4">While it may seem odd to use 256-bit hash functions at all security levels, this aligns with ML-KEM which produces a 256-bit shared secret key at all security levels. SHA-256 and SHA3-256 both have &gt;= 256 bits of (2nd) pre-image resistance, which is the required property for a KDF to provide 128 bits of security, as allowed in Table 3 of <span>[<a href="#SP.800-57pt1r5" class="cite xref">SP.800-57pt1r5</a>]</span>.<a href="#section-7.3-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sect-rsaoaep-params">
