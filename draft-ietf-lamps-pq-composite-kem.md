@@ -381,6 +381,7 @@ The algorithm descriptions use python-like syntax. The following symbols deserve
 
  * `(a, b)` represents a pair of values `a` and `b`. Typically this indicates that a function returns multiple values; the exact conveyance mechanism -- tuple, struct, output parameters, etc -- is left to the implementer.
 
+ * `(a, _)`: represents a pair of values where one -- the second one in this case -- is ignored.
 
 
 ## Composite Design Philosophy
@@ -402,6 +403,9 @@ We borrow here the definition of a key encapsulation mechanism (KEM) from {{I-D.
    *  `KeyGen() -> (pk, sk)`: A probabilistic key generation algorithm,
       which generates a public key `pk` and a secret key `sk`.
 
+  * `KeyGen(seed) -> (pk, sk)`: A deterministic key generation algorithm
+      which generates a public key pk and a secret key sk from a seed.
+
    *  `Encap(pk) -> (ss, ct)`: A probabilistic encapsulation algorithm,
       which takes as input a public key `pk` and outputs a ciphertext `ct`
       and shared secret ss. Note: this document uses `Encap()` to conform to {{?RFC9180}},
@@ -417,13 +421,13 @@ We borrow here the definition of a key encapsulation mechanism (KEM) from {{I-D.
 We define the following algorithms which are used to serialize and deserialize component values. These algorithms are inspired by similar algorithms in {{RFC9180}}.
 
 
-   *  `SerializePublicKey(pk) -> bytes`: Produce a byte string encoding the component public keys.
+   * `SerializePublicKey(mlkemPK, tradPK) -> bytes`: Produce a byte string encoding the component public keys.
 
-   *  `DeserializePublicKey(bytes) -> (mlkemPK, tradPK)`: Parse a byte string to recover the component public keys.
+   * `DeserializePublicKey(bytes) -> (mlkemPK, tradPK)`: Parse a byte string to recover the component public keys.
 
-   *  `SerializeCiphertext(mlkemCT, tradCT) -> bytes`: Produce a byte string encoding the component ciphertexts.
+   * `SerializeCiphertext(mlkemCT, tradCT) -> bytes`: Produce a byte string encoding the component ciphertexts.
 
-   *  `DeserializeCiphertext(bytes) -> (mlkemCT, tradCT)`: Parse a byte string to recover the component ciphertexts.
+   * `DeserializeCiphertext(bytes) -> (mlkemCT, tradCT)`: Parse a byte string to recover the component ciphertexts.
 
    * `SerializePrivateKey(mlkemSeed, tradSK) -> bytes`: Produce a byte string encoding the component private keys.
 
@@ -495,17 +499,19 @@ This construction applies for all variants of elliptic curve Diffie-Hellman used
 
 The simplifications from the DHKEM definition in [RFC9180] is that since the ciphertext and receiver's public key are included explicitly in the Composite ML-KEM combiner, there is no need to construct the `kem_context` object, and since a domain separator is included explicitly in the Composite ML-KEM combiner there is no need to perform the labeled steps of `ExtractAndExpand()`.
 
+Note that here, `SerializePublicKey()` and `DeserializePublicKey()` refer to the underlying encoding of the DH primitive, and not to the composite serialization functions defined in {{sec-serialization}}.
+
 
 
 # Composite ML-KEM Functions {#sec-composite-mlkem}
 
-This section describes the composite ML-KEM functions needed to instantiate the KEM API in {{sec-kems}}.
+This section describes the composite ML-KEM functions needed to instantiate the public KEM API in {{sec-kems}}.
 
 ## Key Generation
 
 In order to maintain security properties of the composite, applications that use composite keys MUST always perform fresh key generations of both component keys and MUST NOT reuse existing key material. See {{sec-cons-key-reuse}} for a discussion.
 
-To generate a new keypair for Composite schemes, the `KeyGen() -> (pk, sk)` function is used. The KeyGen() function calls the two key generation functions of the component algorithms for the Composite keypair in no particular order. Multi-process or multi-threaded applications might choose to execute the key generation functions in parallel for better key generation performance.
+To generate a new keypair for Composite schemes, the `KeyGen() -> (pk, sk)` function is used. The KeyGen() function calls the two key generation functions of the component algorithms independently. Multi-process or multi-threaded applications might choose to execute the key generation functions in parallel for better key generation performance.
 
 The following process is used to generate composite keypair values:
 
@@ -516,11 +522,11 @@ Explicit Inputs:
      None
 
 Implicit Input:
-  ML-KEM     A placeholder for the specific ML-KEM algorithm and
-             parameter set to use, for example, could be "ML-KEM-768".
+  ML-KEM     The underlying ML-KEM algorithm and
+             parameter set, for example, could be "ML-KEM-768".
 
-  Trad       A placeholder for the specific traditional algorithm and
-             parameter set to use, for example "RSA-OAEP"
+  Trad       The underlying traditional algorithm and
+             parameter, for example "RSA-OAEP"
              or "X25519".
 
 Output:
@@ -530,8 +536,9 @@ Key Generation Process:
 
   1. Generate component keys
 
-    (mlkemPK, mlkemSK) = ML-KEM.KeyGen()
-    (tradPK, tradSK)   = Trad.KeyGen()
+    mlkemSeed = Random(32)
+    (mlkemPK, _) = ML-KEM.KeyGen(mlkemSeed)
+    (tradPK, tradSK) = Trad.KeyGen()
 
   2. Check for component key gen failure
     if NOT (mlkemPK, mlkemSK) or NOT (tradPK, tradSK):
@@ -565,11 +572,11 @@ Explicit Input:
 
 Implicit inputs:
 
-  ML-KEM   A placeholder for the specific ML-KEM algorithm and
-           parameter set to use, for example "ML-KEM-768".
+  ML-KEM   The underlying ML-KEM algorithm and
+           parameter set, for example "ML-KEM-768".
 
-  Trad     A placeholder for the specific ML-KEM algorithm and
-           parameter set to use, for example "RSA-OAEP"
+  Trad     The underlying ML-KEM algorithm and
+           parameter set, for example "RSA-OAEP"
            or "X25519".
 
   KDF      The KDF specified for the given Composite ML-KEM algorithm.
@@ -636,11 +643,11 @@ Explicit Input:
 
 Implicit inputs:
 
-  ML-KEM   A placeholder for the specific ML-KEM algorithm and
-           parameter set to use, for example, could be "ML-KEM-768".
+  ML-KEM   The underlying ML-KEM algorithm and
+           parameter set, for example, could be "ML-KEM-768".
 
-  Trad     A placeholder for the specific traditional algorithm and
-           parameter set to use, for example "RSA-OAEP"
+  Trad     The underlying traditional algorithm and
+           parameter set, for example "RSA-OAEP"
            or "X25519".
 
   KDF      The KDF specified for the given Composite ML-KEM algorithm.
@@ -668,7 +675,7 @@ Decap Process:
       their algorithm specifications.
 
       mlkemSS = MLKEM.Decaps(mlkemSK, mlkemCT)
-      tradSS  = TradKEM.Decap(tradSK, tradCT)
+      (_, tradSS)  = TradKEM.Decap(tradSK, tradCT)
 
   4. If either ML-KEM.Decaps() or TradKEM.Decap() return an error,
      then this process must return an error.
@@ -747,6 +754,8 @@ Implementation note: The HMAC-based combiner here is exactly the "HKDF-Extract" 
 # Serialization {#sec-serialization}
 
 This section presents routines for serializing and deserializing composite public keys, private keys (seeds), and ciphertext values to bytes via simple concatenation of the underlying encodings of the component algorithms.
+The functions defined in this section are considered internal implementation detail and are referenced from within the public API definitions in {{sec-composite-mlkem}}}.
+
 Deserialization is possible because ML-KEM has fixed-length public keys, private keys (seeds), and ciphertext values as shown in the following table.
 
 | Algorithm   | Public Key  | Private Key |  Ciphertext  |
@@ -762,7 +771,7 @@ While ML-KEM has a single fixed-size representation for each of public key, priv
 * **ML-KEM**: MUST be encoded as specified in [FIPS203], using a 64-byte seed as the private key.
 * **RSA**: MUST be encoded with the `(n,e)` public key representation as specified in A.1.1 of [RFC8017] and the private key representation as specified in A.1.2 of [RFC8017].
 * **ECDH**: public key MUST be encoded as an `ECPoint` as specified in section 2.2 of [RFC5480], with both compressed and uncompressed keys supported. For maximum interoperability, it is RECOMMENEDED to use uncompressed points.
-* **X25519 and X448**: MUST be encoded as per section 3.1 of [RFC7748].
+* **X25519 and X448**: MUST be encoded as per section 5 of [RFC7748].
 
 In the event that a composite implementation uses an underlying implementation of the traditional component that requires a different encoding, it is the responsibility of the composite implementation to perform the necessary transcoding. Even with fixed encodings for the traditional component, there may be slight differences in encoded size of the traditional component due to, for example, encoding rules that drop leading zeroes. See {{sec-sizetable}} for further discussion of encoded size of each composite algorithm.
 
@@ -807,8 +816,8 @@ Explicit Input:
 
 Implicit inputs:
 
-  ML-KEM   A placeholder for the specific ML-KEM algorithm and
-           parameter set to use, for example, could be "ML-KEM-768".
+  ML-KEM   The underlying ML-KEM algorithm and
+           parameter, for example, could be "ML-KEM-768".
 
 Output:
 
@@ -949,8 +958,8 @@ Explicit Input:
 
 Implicit inputs:
 
-  ML-KEM   A placeholder for the specific ML-KEM algorithm and
-           parameter set to use, for example, could be "ML-KEM-768".
+  ML-KEM   The underlying ML-KEM algorithm and
+           parameter, for example, could be "ML-KEM-768".
 
 Output:
 
@@ -1415,7 +1424,7 @@ This section provides references to the full specification of the algorithms use
 | HashID | OID | Specification |
 | ----------- | ----------- | ----------- |
 | id-sha256 | 2.16.840.1.101.3.4.2.1 | [RFC6234] |
-| id-sha512 | 2.16.840.1..101.3.4.2.3 | [RFC6234] |
+| id-sha512 | 2.16.840.1.101.3.4.2.3 | [RFC6234] |
 | id-alg-hkdf-with-sha256 | 1.2.840.113549.1.9.16.3.28 | [RFC8619] |
 | id-alg-hkdf-with-sha384 | 1.2.840.113549.1.9.16.3.29 | [RFC8619] |
 | id-sha3-256 | 2.16.840.1.101.3.4.2.8 | [FIPS.202] |
@@ -1738,8 +1747,6 @@ https://github.com/lamps-wg/draft-composite-kem/tree/main/src
 The following IPR Disclosure relates to this draft:
 
 https://datatracker.ietf.org/ipr/3588/
-
-EDNOTE TODO: Check with Max Pala whether this IPR actually applies to this draft.
 
 
 
