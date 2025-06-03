@@ -1316,7 +1316,7 @@ Deserialization Process:
    several algorithms were added by direct request even though they do
    not fit this guidance.
 
-   *  Pair equivalent security levels between
+   *  Pair equivalent security levels between component algorithms.
 
    *  NIST-P-384 is CNSA approved [CNSA2.0] for all classification
       levels.
