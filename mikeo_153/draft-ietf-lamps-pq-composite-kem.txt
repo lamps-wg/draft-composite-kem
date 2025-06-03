@@ -502,14 +502,16 @@ Table of Contents
    the key generation functions in parallel for better key generation
    performance.
 
-   The following process is used to generate composite keypair values:
+   The following describes how to instantiate a KeyGen() function for a
+   given composite algorithm reperesented by <OID>.
 
-   KeyGen() -> (pk, sk)
+   Composite-ML-KEM<OID.KeyGen() -> (pk, sk)
 
    Explicit Inputs:
         None
 
-   Implicit Input:
+   Implicit Inputs mapped from <OID>:
+
      ML-KEM     The underlying ML-KEM algorithm and
                 parameter set, for example, could be "ML-KEM-768".
 
@@ -560,14 +562,17 @@ Table of Contents
    ML-KEM can be used as a direct drop-in replacement anywhere that ML-
    KEM is used.
 
- Composite-ML-KEM.Encap(pk) -> (ss, ct)
+   The following describes how to instantiate a Encap(pk) function for a
+   given composite algorithm reperesented by <OID>.
+
+ Composite-ML-KEM<OID>.Encap(pk) -> (ss, ct)
 
  Explicit Input:
 
    pk          Composite public key consisting of encryption public keys
                for each component.
 
- Implicit inputs:
+ Implicit inputs mapped from <OID>:
 
    ML-KEM   The underlying ML-KEM algorithm and
             parameter set, for example "ML-KEM-768".
@@ -636,16 +641,19 @@ Table of Contents
    this way, Composite ML-KEM can be used as a direct drop-in
    replacement anywhere that ML-KEM is used.
 
-Composite-ML-KEM.Decap(sk, ct) -> ss
+   The following describes how to instantiate a Decap(sk, ct) function
+   for a given composite algorithm reperesented by <OID>.
 
-Explicit Input:
+Composite-ML-KEM<OID>.Decap(sk, ct) -> ss
+
+Explicit inputs
 
   sk    Composite private key consisting of decryption private keys for
         each component.
 
   ct      The ciphertext, a byte string.
 
-Implicit inputs:
+Implicit inputs mapped from <OID>:
 
   ML-KEM   The underlying ML-KEM algorithm and
            parameter set, for example, could be "ML-KEM-768".
@@ -727,47 +735,50 @@ Decap Process:
    this specification defines two KEM combiner constructions, one with
    SHA3 and one with HMAC-SHA2.
 
-  KemCombiner(mlkemSS, tradSS, tradCT, tradPK, Domain) -> ss
+   The following describes how to instantiate a KemCombiner(..) function
+   for a given composite algorithm reperesented by <OID>.
 
-  Explicit Input:
+Composite-ML-KEM<OID>.KemCombiner(mlkemSS, tradSS, tradCT, tradPK, Domain) -> ss
 
-    The list of input values to be combined.
+Explicit inputs:
 
-  Implicit inputs:
+  The list of input values to be combined.
 
-    KDF      The KDF specified for the given Composite ML-KEM algorithm.
-             In particular, for the KEM combiner it only matters
-             whether this as a SHA3 function, which can be used
-             as a KDF directly, or a SHA2 function which requires
-             an HMAC construction.
+Implicit inputs mapped from <OID>:
 
-  Output:
+  KDF      The KDF specified for the given Composite ML-KEM algorithm.
+           In particular, for the KEM combiner it only matters
+           whether this as a SHA3 function, which can be used
+           as a KDF directly, or a SHA2 function which requires
+           an HMAC construction.
 
-    ss      The shared secret key, a 256-bit key suitable for use with
-            symmetric cryptographic algorithms.
+Output:
+
+  ss      The shared secret key, a 256-bit key suitable for use with
+          symmetric cryptographic algorithms.
 
 
-  Process:
+Process:
 
-    if KDF is "SHA3-256":
-      ss = SHA3-256(mlkemSS || tradSS || tradCT || tradPK || Domain)
+  if KDF is "SHA3-256":
+    ss = SHA3-256(mlkemSS || tradSS || tradCT || tradPK || Domain)
 
-    else if KDF is "HMAC-{Hash}":
+  else if KDF is "HMAC-{Hash}":
 
-      ss = HMAC-{Hash}(salt={0}, IKM=mlkemSS || tradSS || tradCT
-                                             || tradPK || Domain)
-      ss = truncate(ss, 256)
-          # Where "{0}" is the string of HashLen zeros according to
-          # section 2.2 of [RFC5869].
+    ss = HMAC-{Hash}(salt={0}, IKM=mlkemSS || tradSS || tradCT
+                                           || tradPK || Domain)
+    ss = truncate(ss, 256)
+        # Where "{0}" is the string of HashLen zeros according to
+        # section 2.2 of [RFC5869].
 
-          # Where "{Hash} is the underlying hash function used
-          # for the given composite algorithm.
+        # Where "{Hash} is the underlying hash function used
+        # for the given composite algorithm.
 
-          # Since Composite KEM always outputs a 256-bit shared secret,
-          # the output is always truncated to 256 bits, regardless
-          # of underlying hash function.
+        # Since Composite KEM always outputs a 256-bit shared secret,
+        # the output is always truncated to 256 bits, regardless
+        # of underlying hash function.
 
-    return ss
+  return ss
 
    Implementation note: The HMAC-based combiner here is exactly the
    "HKDF-Extract" step from [RFC5869] with an empty salt.
@@ -844,16 +855,21 @@ Decap Process:
 
   Composite-ML-KEM.SerializePublicKey(mlkemPK, tradPK) -> bytes
 
-  Explicit Input:
+  Explicit inputs:
 
     mlkemPK  The ML-KEM public key, which is bytes.
 
     tradPK   The traditional public key in the appropriate
              bytes-like encoding for the underlying component algorithm.
 
+  Implicit inputs:
+
+    None
+
   Output:
 
     bytes   The encoded composite public key
+
 
   Serialization Process:
 
@@ -866,13 +882,17 @@ Decap Process:
    Deserialization reverses this process. key is deserialized according
    to their respective standard as shown in Appendix B.
 
-  Composite-ML-KEM.DeserializePublicKey(bytes) -> (mlkemPK, tradPK)
+   The following describes how to instantiate a
+   DeserializePublicKey(bytes) function for a given composite algorithm
+   reperesented by <OID>.
 
-  Explicit Input:
+  Composite-ML-KEM<OID>.DeserializePublicKey(bytes) -> (mlkemPK, tradPK)
+
+  Explicit inputs:
 
     bytes   An encoded public key
 
-  Implicit inputs:
+  Implicit inputs mapped from <OID>:
 
     ML-KEM   The underlying ML-KEM algorithm and
              parameter, for example, could be "ML-KEM-768".
@@ -883,6 +903,7 @@ Decap Process:
 
     tradPK   The traditional public key in the appropriate
              bytes-like encoding for the underlying component algorithm.
+
 
   Deserialization Process:
 
@@ -915,12 +936,16 @@ Decap Process:
 
    Composite-ML-KEM.SerializePrivateKey(mlkemSeed, tradSK) -> bytes
 
-   Explicit Input:
+   Explicit inputs:
 
      mlkemSeed  The ML-KEM private key, which is the bytes of the seed.
 
      tradSK     The traditional private key in the appropriate
                 encoding for the underlying component algorithm.
+
+   Implicit inputs:
+
+     None
 
    Output:
 
@@ -936,37 +961,42 @@ Decap Process:
 
    Deserialization reverses this process.
 
- Composite-ML-KEM.DeserializePrivateKey(bytes) -> (mlkemSeed, tradSK)
+Composite-ML-KEM<OID>.DeserializePrivateKey(bytes) -> (mlkemSeed, tradSK)
 
- Explicit Input:
+Explicit inputs:
 
-   bytes   An encoded composite private key
+  bytes   An encoded composite private key
 
- Output:
+Implicit inputs:
 
-   mlkemSeed  The ML-KEM private key, which is the bytes of the seed.
+  That an ML-KEM private key is 64 bytes for all parameter sets.
 
-   tradSK    The traditional private key in the appropriate
-              encoding for the underlying component algorithm.
+Output:
 
- Deserialization Process:
+  mlkemSeed  The ML-KEM private key, which is the bytes of the seed.
 
-   1. Parse each constituent encoded key.
-        The length of an ML-KEM private key is always a 64 byte seed
-        for all parameter sets.
+  tradSK    The traditional private key in the appropriate
+             encoding for the underlying component algorithm.
 
-       mlkemSeed = bytes[:64]
-       tradSK  = bytes[64:]
 
-      Note that while ML-KEM has fixed-length keys (seeds), RSA and ECDH
-      may not, depending on encoding, so rigorous length-checking
-      of the overall composite key is not always possible.
+Deserialization Process:
 
-   2. Output the component private keys
+  1. Parse each constituent encoded key.
+       The length of an ML-KEM private key is always a 64 byte seed
+       for all parameter sets.
 
-      output (mlkemSeed, tradSK)
+      mlkemSeed = bytes[:64]
+      tradSK  = bytes[64:]
 
-         Figure 7: DeserializeKey(bytes) -> (mlkemSeed, tradSK)
+     Note that while ML-KEM has fixed-length keys (seeds), RSA and ECDH
+     may not, depending on encoding, so rigorous length-checking
+     of the overall composite key is not always possible.
+
+  2. Output the component private keys
+
+     output (mlkemSeed, tradSK)
+
+        Figure 7: DeserializeKey(bytes) -> (mlkemSeed, tradSK)
 
 5.3.  SerializeCiphertext and DeserializeCiphertext
 
@@ -976,16 +1006,21 @@ Decap Process:
 
    Composite-ML-KEM.SerializeCiphertext(mlkemCT, tradCT) -> bytes
 
-   Explicit Inputs:
+   Explicit inputs:
 
      mlkemCT  The ML-KEM ciphertext, which is bytes.
 
      tradCT   The traditional ciphertext in the appropriate
               encoding for the underlying component algorithm.
 
+   Implicit inputs:
+
+     None
+
    Output:
 
      bytes   The encoded CompositeCiphertextValue
+
 
    Serialization Process:
 
@@ -997,13 +1032,17 @@ Decap Process:
 
    Deserialization reverses this process.
 
-Composite-ML-KEM.DeserializeCiphertext(bytes) -> (mldkemCT, tradCT)
+   The following describes how to instantiate a
+   DeserializeCiphertext(bytes) function for a given composite algorithm
+   reperesented by <OID>.
 
-Explicit Input:
+Composite-ML-KEM<OID>.DeserializeCiphertext(bytes) -> (mldkemCT, tradCT)
+
+Explicit inputs:
 
   bytes   An encoded CompositeCiphertextValue
 
-Implicit inputs:
+Implicit inputs mapped from <OID>:
 
   ML-KEM   The underlying ML-KEM algorithm and
            parameter, for example, could be "ML-KEM-768".
@@ -1014,6 +1053,7 @@ Output:
 
   tradCT   The traditional ciphertext in the appropriate
            encoding for the underlying component algorithm.
+
 
 Deserialization Process:
 
