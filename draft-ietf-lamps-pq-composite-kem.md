@@ -73,7 +73,8 @@ author:
 
 
 normative:
-  RFC2119:
+  RFC2104:
+  #RFC2119: -- does not need to be explicit; added by bcp14 boilerplate
   RFC4055:
   RFC5280:
   RFC5480:
@@ -83,7 +84,7 @@ normative:
   RFC6234:
   RFC7748:
   RFC8017:
-  RFC8174:
+  #RFC8174: -- does not need to be explicit; added by bcp14 boilerplateu
   RFC8410:
   RFC8411:
   RFC8619:
@@ -94,68 +95,68 @@ normative:
       title: "Information technology - ASN.1 encoding Rules: Specification of Basic Encoding Rules (BER), Canonical Encoding Rules (CER) and Distinguished Encoding Rules (DER)"
       date: November 2015
       author:
-        org: ITU-T
+        - org: ITU-T
       seriesinfo:
         ISO/IEC: 8825-1:2015
   SEC1:
     title: "SEC 1: Elliptic Curve Cryptography"
     date: May 21, 2009
     author:
-      org: "Certicom Research"
+      - org: "Certicom Research"
     target: https://www.secg.org/sec1-v2.pdf
   SEC2:
     title: "SEC 2: Recommended Elliptic Curve Domain Parameters"
     date: January 27, 2010
     author:
-      org: "Certicom Research"
+      - org: "Certicom Research"
     target: https://www.secg.org/sec2-v2.pdf
   SP.800-56Ar3:
     title: "Recommendation for Pair-Wise Key-Establishment Schemes Using Discrete Logarithm Cryptography"
     date: April 2018
     author:
-      org: "National Institute of Standards and Technology (NIST)"
+      - org: "National Institute of Standards and Technology (NIST)"
     target: https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-56Ar3.pdf
   SP.800-56Cr2:
     title: "Recommendation for Key-Derivation Methods in Key-Establishment Schemes"
     date: August 2020
     author:
-      org: "National Institute of Standards and Technology (NIST)"
+      - org: "National Institute of Standards and Technology (NIST)"
     target: https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-56Cr2.pdf
   SP.800-57pt1r5:
     title: "Recommendation for Key Management: Part 1 – General"
     date: May 2020
     author:
-      org: "National Institute of Standards and Technology (NIST)"
+      - org: "National Institute of Standards and Technology (NIST)"
     target: https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-57pt1r5.pdf
   SP.800-185:
     title: "SHA-3 Derived Functions: cSHAKE, KMAC, TupleHash, and ParallelHash"
     date: December 2016
     author:
-      org: "National Institute of Standards and Technology (NIST)"
+      - org: "National Institute of Standards and Technology (NIST)"
     target: https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-185.pdf
   FIPS.180-4:
     title: "FIPS Publication 180-4: Secure Hash Standard"
     date: August 2015
     author:
-      org: National Institute of Standards and Technology (NIST)
+      - org: National Institute of Standards and Technology (NIST)
     target: https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf
   FIPS.202:
     title: "SHA-3 Standard: Permutation-Based Hash and Extendable-Output Functions"
     date: August 2015
     author:
-      org: National Institute of Standards and Technology (NIST)
+      - org: National Institute of Standards and Technology (NIST)
     target: https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.202.pdf
   FIPS.203:
     title: "Module-Lattice-based Key-Encapsulation Mechanism Standard"
     date: August 13, 2024
     author:
-      org: "National Institute of Standards and Technology (NIST)"
+      - org: "National Institute of Standards and Technology (NIST)"
     target: https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.203.pdf
   FIPS.204:
     title: "Module-Lattice-Based Digital Signature Standard"
     date: August 13, 2024
     author:
-      org: "National Institute of Standards and Technology (NIST)"
+      - org: "National Institute of Standards and Technology (NIST)"
     target: https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.204.pdf
 
 informative:
@@ -223,7 +224,7 @@ informative:
         name: Elaine Barke
       - ins: A. Roginksy
         name: Allan Reginsky
-    org: National Institute of Standards and Technology (NIST)
+      - org: National Institute of Standards and Technology (NIST)
   SP-800-227ipd:
     title: "Recommendations for Key-Encapsulation Mechanisms (Initial Public Draft)"
     target: https://csrc.nist.gov/pubs/sp/800/227/ipd
@@ -235,40 +236,41 @@ informative:
       - name: Angela Robinson
       - name: Hamilton Silberg
       - name: Noah Waller
-    org: National Institute of Standards and Technology (NIST)
+      - org: National Institute of Standards and Technology (NIST)
   GHP18:
     title: KEM Combiners
     author:
-      name: Federico Giacon
-      name: Felix Heuer
-      name: Bertram Poettering
+      - name: Federico Giacon
+      - name: Felix Heuer
+      - name: Bertram Poettering
     date: 2018
     target: https://eprint.iacr.org/2018/024
   Aviram22:
     title: "Practical (Post-Quantum) Key Combiners from One-Wayness and Applications to TLS"
     author:
-      name: Nimrod Aviram
-      name: Benjamin Dowling
-      name: Ilan Komargodski
-      name: Kenneth G. Paterson
-      name: Eyal Ronen
-      name: Eylon Yogev
+      - name: Nimrod Aviram
+      - name: Benjamin Dowling
+      - name: Ilan Komargodski
+      - name: Kenneth G. Paterson
+      - name: Eyal Ronen
+      - name: Eylon Yogev
     target: https://eprint.iacr.org/2022/065
   CNSA2.0:
     title: "Commercial National Security Algorithm Suite 2.0"
-    org: National Security Agency
+    author:
+     - org: National Security Agency
     target: https://media.defense.gov/2022/Sep/07/2003071834/-1/-1/0/CSA_CNSA_2.0_ALGORITHMS_.PDF
   FIPS-140-3-IG:
     title: Implementation Guidance for FIPS 140-3 and the Cryptographic Module Validation Program
     target: https://csrc.nist.gov/csrc/media/Projects/cryptographic-module-validation-program/documents/fips%20140-3/FIPS%20140-3%20IG.pdf
     author:
-      org: National Institute of Standards and Technology (NIST)
+      - org: National Institute of Standards and Technology (NIST)
     date: July 26, 2024
   ETSI.TS.103.744:
     title: "ETSI TS 103 744 V1.2.1 CYBER-QSC; Quantum-safe Hybrid Key Establishment"
     target: https://www.etsi.org/deliver/etsi_ts/103700_103799/103744/01.02.01_60/ts_103744v010201p.pdf
     author:
-      org: ETSI
+      - org: ETSI
     date: 2025-03
 
 
@@ -782,7 +784,7 @@ When these values are required to be carried in an ASN.1 structure, they are wra
 
 While ML-KEM has a single fixed-size representation for each of public key, private key, and ciphertext, the traditional component might allow multiple valid encodings; for example an elliptic curve public key, and therefore also ciphertext, might be validly encoded as either compressed or uncompressed [SEC1], or an RSA private key could be encoded in Chinese Remainder Theorem form [RFC8017]. In order to obtain interoperability, composite algorithms MUST use the following encodings of the underlying components:
 
-* **ML-KEM**: MUST be encoded as specified in [FIPS203], using a 64-byte seed as the private key.
+* **ML-KEM**: MUST be encoded as specified in [FIPS.203], using a 64-byte seed as the private key.
 * **RSA**: MUST be encoded with the `(n,e)` public key representation as specified in A.1.1 of [RFC8017] and the private key representation as specified in A.1.2 of [RFC8017].
 * **ECDH**: public key MUST be encoded as an `ECPoint` as specified in section 2.2 of [RFC5480], with both compressed and uncompressed keys supported. For maximum interoperability, it is RECOMMENEDED to use uncompressed points.
 * **X25519 and X448**: MUST be encoded as per section 5 of [RFC7748].
@@ -1330,7 +1332,7 @@ where:
 
 Each registered Composite ML-KEM algorithm specifies the choice of `KDF` and `Domain` to be used in {{sec-alg-ids}} and {{sec-domsep-values}} below. Given that each Composite ML-KEM algorithm fully specifies the component algorithms, including for example the size of the RSA modulus, all inputs to the KEM combiner are fixed-size and thus do not require length-prefixing. The `CompositeKEM.Decap()` specified in {{sect-composite-decaps}} adds further error handling to protect the KEM combiner from malicious inputs.
 
-The primary security property of the KEM combiner is that it preserves IND-CCA2 of the overall Composite ML-KEM so long as at least one component is IND-CCA2 {X-Wing} [GHP18]. Additionally, we also need to consider the case where one of the component algorithms is completely broken; that the private key is known to an attacker, or worse that the public key, private key, and ciphertext are manipulated by the attacker. In this case, we rely on the construction of the KEM combiner to ensure that the value of the other shared secret cannot be leaked or the combined shared secret predicted via manipulation of the broken algorithm. The following sections continue this discussion.
+The primary security property of the KEM combiner is that it preserves IND-CCA2 of the overall Composite ML-KEM so long as at least one component is IND-CCA2 {{X-Wing}} [GHP18]. Additionally, we also need to consider the case where one of the component algorithms is completely broken; that the private key is known to an attacker, or worse that the public key, private key, and ciphertext are manipulated by the attacker. In this case, we rely on the construction of the KEM combiner to ensure that the value of the other shared secret cannot be leaked or the combined shared secret predicted via manipulation of the broken algorithm. The following sections continue this discussion.
 
 Note that length-tagging of the inputs to the KDF is not required:
 
