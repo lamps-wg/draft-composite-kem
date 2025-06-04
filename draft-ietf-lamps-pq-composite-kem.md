@@ -446,6 +446,7 @@ This specification uses the Post-Quantum KEM ML-KEM as specified in [FIPS.203] a
 ## Promotion of RSA-OAEP into a KEM {#sec-RSAOAEPKEM}
 
 The RSA Optimal Asymmetric Encryption Padding (OAEP), as defined in section 7.1 of [RFC8017] is a public key encryption algorithm used to transport key material from a sender to a receiver. It is promoted into a KEM by having the sender generate a random 256 bit secret and encrypt it.
+Acceptable public key encodings for `pkR` are described in {{sec-serialization}}.
 
 Note that, at least at the time of writing, the algorithm `RSAOAEPKEM` is not defined as a standalone algorithm within PKIX standards and it does not have an assigned algorithm OID, so it cannot be used directly with CMS KEMRecipientInfo [RFC9629]; it is merely a building block for the composite algorithm.
 
@@ -499,11 +500,10 @@ DHKEM.Decap(skR, enc):
 This construction applies for all variants of elliptic curve Diffie-Hellman used in this specification: ECDH, X25519, and X448.
 
 For ECDH, `DH()` yields the value `Z` as described in section 5.7.1.2 of [SP.800-56Ar3].
-`SerializePublicKey()` and `DeserializePublicKey()` are the uncompressed Elliptic-Curve-Point-to-Octet-String and Octet-String-to-Elliptic-Curve-Point conversions
-defined in [SEC1] sections 2.3.3 and 2.3.4 respectively.
+Acceptable public key encodings for `enc` and `pkE` are described in {{sec-serialization}}.
 
 For X25519 and X448, `DH()` yields the value `K` as described in section 6 of [RFC7748].
-`SerializePublicKey()` and `DeserializePublicKey()` are the identity functions, since these curves already use fixed-length byte strings for public keys.
+Acceptable public key encodings for `enc` and `pkE` are described in {{sec-serialization}}.
 
 The simplifications from the DHKEM definition in [RFC9180] is that since the ciphertext and receiver's public key are included explicitly in the Composite ML-KEM combiner, there is no need to construct the `kem_context` object, and since a domain separator is included explicitly in the Composite ML-KEM combiner there is no need to perform the labeled steps of `ExtractAndExpand()`.
 
