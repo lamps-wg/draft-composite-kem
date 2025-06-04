@@ -1977,7 +1977,7 @@ The functions defined in this section are considered internal implementation det
 <p id="section-5-5">While ML-KEM has a single fixed-size representation for each of public key, private key, and ciphertext, the traditional component might allow multiple valid encodings; for example an elliptic curve public key, and therefore also ciphertext, might be validly encoded as either compressed or uncompressed <span>[<a href="#SEC1" class="cite xref">SEC1</a>]</span>, or an RSA private key could be encoded in Chinese Remainder Theorem form <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span>. In order to obtain interoperability, composite algorithms MUST use the following encodings of the underlying components:<a href="#section-5-5" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-5-6.1">
-          <p id="section-5-6.1.1"><strong>ML-KEM</strong>: MUST be encoded as specified in [FIPS203], using a 64-byte seed as the private key.<a href="#section-5-6.1.1" class="pilcrow">¶</a></p>
+          <p id="section-5-6.1.1"><strong>ML-KEM</strong>: MUST be encoded as specified in <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span>, using a 64-byte seed as the private key.<a href="#section-5-6.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-5-6.2">
           <p id="section-5-6.2.1"><strong>RSA</strong>: MUST be encoded with the <code>(n,e)</code> public key representation as specified in A.1.1 of <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span> and the private key representation as specified in A.1.2 of <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span>.<a href="#section-5-6.2.1" class="pilcrow">¶</a></p>
@@ -3123,7 +3123,7 @@ END
 </li>
         </ul>
 <p id="section-10.2-5">Each registered Composite ML-KEM algorithm specifies the choice of <code>KDF</code> and <code>Domain</code> to be used in <a href="#sec-alg-ids" class="auto internal xref">Section 7</a> and <a href="#sec-domsep-values" class="auto internal xref">Section 7.2</a> below. Given that each Composite ML-KEM algorithm fully specifies the component algorithms, including for example the size of the RSA modulus, all inputs to the KEM combiner are fixed-size and thus do not require length-prefixing. The <code>CompositeKEM.Decap()</code> specified in <a href="#sect-composite-decaps" class="auto internal xref">Section 4.3</a> adds further error handling to protect the KEM combiner from malicious inputs.<a href="#section-10.2-5" class="pilcrow">¶</a></p>
-<p id="section-10.2-6">The primary security property of the KEM combiner is that it preserves IND-CCA2 of the overall Composite ML-KEM so long as at least one component is IND-CCA2 {X-Wing} <span>[<a href="#GHP18" class="cite xref">GHP18</a>]</span>. Additionally, we also need to consider the case where one of the component algorithms is completely broken; that the private key is known to an attacker, or worse that the public key, private key, and ciphertext are manipulated by the attacker. In this case, we rely on the construction of the KEM combiner to ensure that the value of the other shared secret cannot be leaked or the combined shared secret predicted via manipulation of the broken algorithm. The following sections continue this discussion.<a href="#section-10.2-6" class="pilcrow">¶</a></p>
+<p id="section-10.2-6">The primary security property of the KEM combiner is that it preserves IND-CCA2 of the overall Composite ML-KEM so long as at least one component is IND-CCA2 <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span> <span>[<a href="#GHP18" class="cite xref">GHP18</a>]</span>. Additionally, we also need to consider the case where one of the component algorithms is completely broken; that the private key is known to an attacker, or worse that the public key, private key, and ciphertext are manipulated by the attacker. In this case, we rely on the construction of the KEM combiner to ensure that the value of the other shared secret cannot be leaked or the combined shared secret predicted via manipulation of the broken algorithm. The following sections continue this discussion.<a href="#section-10.2-6" class="pilcrow">¶</a></p>
 <p id="section-10.2-7">Note that length-tagging of the inputs to the KDF is not required:<a href="#section-10.2-7" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-10.2-8.1">
@@ -3280,6 +3280,10 @@ In the case of a composite with RSA-OAEP the <code>tradSS</code> is controlled b
         <dd>
 <span class="refAuthor">Turner, S.</span>, <span class="refAuthor">Kampanakis, P.</span>, <span class="refAuthor">Massimo, J.</span>, and <span class="refAuthor">B. Westerbaan</span>, <span class="refTitle">"Internet X.509 Public Key Infrastructure - Algorithm Identifiers for the Module-Lattice-Based Key-Encapsulation Mechanism (ML-KEM)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-lamps-kyber-certificates-06</span>, <time datetime="2024-11-04" class="refDate">4 November 2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-lamps-kyber-certificates-06">https://datatracker.ietf.org/doc/html/draft-ietf-lamps-kyber-certificates-06</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="RFC2104">[RFC2104]</dt>
+        <dd>
+<span class="refAuthor">Krawczyk, H.</span>, <span class="refAuthor">Bellare, M.</span>, and <span class="refAuthor">R. Canetti</span>, <span class="refTitle">"HMAC: Keyed-Hashing for Message Authentication"</span>, <span class="seriesInfo">RFC 2104</span>, <span class="seriesInfo">DOI 10.17487/RFC2104</span>, <time datetime="1997-02" class="refDate">February 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc2104">https://www.rfc-editor.org/info/rfc2104</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC2119">[RFC2119]</dt>
         <dd>
 <span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc2119">https://www.rfc-editor.org/info/rfc2119</a>&gt;</span>. </dd>
@@ -3383,7 +3387,7 @@ In the case of a composite with RSA-OAEP the <code>tradSS</code> is controlled b
 <dd class="break"></dd>
 <dt id="Aviram22">[Aviram22]</dt>
         <dd>
-<span class="refAuthor">Yogev, E.</span>, <span class="refTitle">"Practical (Post-Quantum) Key Combiners from One-Wayness and Applications to TLS"</span>, <span>n.d.</span>, <span>&lt;<a href="https://eprint.iacr.org/2022/065">https://eprint.iacr.org/2022/065</a>&gt;</span>. </dd>
+<span class="refAuthor">Aviram, N.</span>, <span class="refAuthor">Dowling, B.</span>, <span class="refAuthor">Komargodski, I.</span>, <span class="refAuthor">Paterson, K. G.</span>, <span class="refAuthor">Ronen, E.</span>, and <span class="refAuthor">E. Yogev</span>, <span class="refTitle">"Practical (Post-Quantum) Key Combiners from One-Wayness and Applications to TLS"</span>, <span>n.d.</span>, <span>&lt;<a href="https://eprint.iacr.org/2022/065">https://eprint.iacr.org/2022/065</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="BSI2021">[BSI2021]</dt>
         <dd>
@@ -3391,7 +3395,7 @@ In the case of a composite with RSA-OAEP the <code>tradSS</code> is controlled b
 <dd class="break"></dd>
 <dt id="CNSA2.0">[CNSA2.0]</dt>
         <dd>
-<span class="refTitle">"Commercial National Security Algorithm Suite 2.0"</span>, <span>n.d.</span>, <span>&lt;<a href="https://media.defense.gov/2022/Sep/07/2003071834/-1/-1/0/CSA_CNSA_2.0_ALGORITHMS_.PDF">https://media.defense.gov/2022/Sep/07/2003071834/-1/-1/0/CSA_CNSA_2.0_ALGORITHMS_.PDF</a>&gt;</span>. </dd>
+<span class="refAuthor">National Security Agency</span>, <span class="refTitle">"Commercial National Security Algorithm Suite 2.0"</span>, <span>n.d.</span>, <span>&lt;<a href="https://media.defense.gov/2022/Sep/07/2003071834/-1/-1/0/CSA_CNSA_2.0_ALGORITHMS_.PDF">https://media.defense.gov/2022/Sep/07/2003071834/-1/-1/0/CSA_CNSA_2.0_ALGORITHMS_.PDF</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="ETSI.TS.103.744">[ETSI.TS.103.744]</dt>
         <dd>
@@ -3403,7 +3407,7 @@ In the case of a composite with RSA-OAEP the <code>tradSS</code> is controlled b
 <dd class="break"></dd>
 <dt id="GHP18">[GHP18]</dt>
         <dd>
-<span class="refAuthor">Poettering, B.</span>, <span class="refTitle">"KEM Combiners"</span>, <time datetime="2018" class="refDate">2018</time>, <span>&lt;<a href="https://eprint.iacr.org/2018/024">https://eprint.iacr.org/2018/024</a>&gt;</span>. </dd>
+<span class="refAuthor">Giacon, F.</span>, <span class="refAuthor">Heuer, F.</span>, and <span class="refAuthor">B. Poettering</span>, <span class="refTitle">"KEM Combiners"</span>, <time datetime="2018" class="refDate">2018</time>, <span>&lt;<a href="https://eprint.iacr.org/2018/024">https://eprint.iacr.org/2018/024</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.ietf-lamps-cms-kyber">[I-D.ietf-lamps-cms-kyber]</dt>
         <dd>
@@ -3475,11 +3479,11 @@ In the case of a composite with RSA-OAEP the <code>tradSS</code> is controlled b
 <dd class="break"></dd>
 <dt id="SP-800-227ipd">[SP-800-227ipd]</dt>
         <dd>
-<span class="refAuthor">Alagic, G.</span>, <span class="refAuthor">Barker, E.</span>, <span class="refAuthor">Chen, L.</span>, <span class="refAuthor">Moody, D.</span>, <span class="refAuthor">Robinson, A.</span>, <span class="refAuthor">Silberg, H.</span>, and <span class="refAuthor">N. Waller</span>, <span class="refTitle">"Recommendations for Key-Encapsulation Mechanisms (Initial Public Draft)"</span>, <span>n.d.</span>, <span>&lt;<a href="https://csrc.nist.gov/pubs/sp/800/227/ipd">https://csrc.nist.gov/pubs/sp/800/227/ipd</a>&gt;</span>. </dd>
+<span class="refAuthor">Alagic, G.</span>, <span class="refAuthor">Barker, E.</span>, <span class="refAuthor">Chen, L.</span>, <span class="refAuthor">Moody, D.</span>, <span class="refAuthor">Robinson, A.</span>, <span class="refAuthor">Silberg, H.</span>, <span class="refAuthor">Waller, N.</span>, and <span class="refAuthor">National Institute of Standards and Technology (NIST)</span>, <span class="refTitle">"Recommendations for Key-Encapsulation Mechanisms (Initial Public Draft)"</span>, <span>n.d.</span>, <span>&lt;<a href="https://csrc.nist.gov/pubs/sp/800/227/ipd">https://csrc.nist.gov/pubs/sp/800/227/ipd</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="SP800-131Ar2">[SP800-131Ar2]</dt>
         <dd>
-<span class="refAuthor">Barker, E.</span> and <span class="refAuthor">A. Roginksy</span>, <span class="refTitle">"Transitioning the Use of Cryptographic Algorithms and Key Lengths"</span>, <span>n.d.</span>, <span>&lt;<a href="https://nvlpubs.nist.gov/nistpubs/specialpublications/nist.sp.800-131ar2.pdf">https://nvlpubs.nist.gov/nistpubs/specialpublications/nist.sp.800-131ar2.pdf</a>&gt;</span>. </dd>
+<span class="refAuthor">Barker, E.</span>, <span class="refAuthor">Roginksy, A.</span>, and <span class="refAuthor">National Institute of Standards and Technology (NIST)</span>, <span class="refTitle">"Transitioning the Use of Cryptographic Algorithms and Key Lengths"</span>, <span>n.d.</span>, <span>&lt;<a href="https://nvlpubs.nist.gov/nistpubs/specialpublications/nist.sp.800-131ar2.pdf">https://nvlpubs.nist.gov/nistpubs/specialpublications/nist.sp.800-131ar2.pdf</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="X-Wing">[X-Wing]</dt>
       <dd>
@@ -4077,7 +4081,7 @@ MB shall contain all of the corresponding public keys and ciphertexts.
 </pre><a href="#appendix-E.2-2" class="pilcrow">¶</a>
 </div>
 <p id="appendix-E.2-3">The main difference between the Composite KEM combiner and the ETSI CatKDF combiner is that CatKDF makes the more conservative choice to bind the public keys and ciphertexts of both components, while Composite KEM follows the analysis presented in <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span> that while preserving the security properties of the traditional component requires binding the public key and ciphertext of the traditional component, it is not necessary to do so for ML-KEM thanks to the rejection sampling step of the Fujisaki-Okamoto transform.<a href="#appendix-E.2-3" class="pilcrow">¶</a></p>
-<p id="appendix-E.2-4">Additionally, ETSI CatKDF can be instantiated with either HMAC [RFC2104], KMAC <span>[<a href="#SP.800-185" class="cite xref">SP.800-185</a>]</span> or HKDF <span>[<a href="#RFC5869" class="cite xref">RFC5869</a>]</span> as KDF. Using HMAC aligns with some of the KDF variants in this specification, but not the ones that use SHA3.<a href="#appendix-E.2-4" class="pilcrow">¶</a></p>
+<p id="appendix-E.2-4">Additionally, ETSI CatKDF can be instantiated with either HMAC <span>[<a href="#RFC2104" class="cite xref">RFC2104</a>]</span>, KMAC <span>[<a href="#SP.800-185" class="cite xref">SP.800-185</a>]</span> or HKDF <span>[<a href="#RFC5869" class="cite xref">RFC5869</a>]</span> as KDF. Using HMAC aligns with some of the KDF variants in this specification, but not the ones that use SHA3.<a href="#appendix-E.2-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>

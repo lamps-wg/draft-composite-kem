@@ -834,7 +834,7 @@ Process:
    order to obtain interoperability, composite algorithms MUST use the
    following encodings of the underlying components:
 
-   *  *ML-KEM*: MUST be encoded as specified in [FIPS203], using a
+   *  *ML-KEM*: MUST be encoded as specified in [FIPS.203], using a
       64-byte seed as the private key.
 
    *  *RSA*: MUST be encoded with the (n,e) public key representation as
@@ -1829,7 +1829,7 @@ Deserialization Process:
 
    The primary security property of the KEM combiner is that it
    preserves IND-CCA2 of the overall Composite ML-KEM so long as at
-   least one component is IND-CCA2 {X-Wing} [GHP18].  Additionally, we
+   least one component is IND-CCA2 [X-Wing] [GHP18].  Additionally, we
    also need to consider the case where one of the component algorithms
    is completely broken; that the private key is known to an attacker,
    or worse that the public key, private key, and ciphertext are
@@ -2104,6 +2104,11 @@ Deserialization Process:
               November 2024, <https://datatracker.ietf.org/doc/html/
               draft-ietf-lamps-kyber-certificates-06>.
 
+   [RFC2104]  Krawczyk, H., Bellare, M., and R. Canetti, "HMAC: Keyed-
+              Hashing for Message Authentication", RFC 2104,
+              DOI 10.17487/RFC2104, February 1997,
+              <https://www.rfc-editor.org/info/rfc2104>.
+
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
@@ -2231,8 +2236,9 @@ Deserialization Process:
               n.d., <https://cyber.gouv.fr/sites/default/files/document/
               Quantum_Key_Distribution_Position_Paper.pdf>.
 
-   [Aviram22] Yogev, E., "Practical (Post-Quantum) Key Combiners from
-              One-Wayness and Applications to TLS", n.d.,
+   [Aviram22] Aviram, N., Dowling, B., Komargodski, I., Paterson, K. G.,
+              Ronen, E., and E. Yogev, "Practical (Post-Quantum) Key
+              Combiners from One-Wayness and Applications to TLS", n.d.,
               <https://eprint.iacr.org/2022/065>.
 
    [BSI2021]  Federal Office for Information Security (BSI), "Quantum-
@@ -2241,7 +2247,8 @@ Deserialization Process:
               <https://www.bsi.bund.de/SharedDocs/Downloads/EN/BSI/
               Publications/Brochure/quantum-safe-cryptography.pdf>.
 
-   [CNSA2.0]  "Commercial National Security Algorithm Suite 2.0", n.d.,
+   [CNSA2.0]  National Security Agency, "Commercial National Security
+              Algorithm Suite 2.0", n.d.,
               <https://media.defense.gov/2022/Sep/07/2003071834/-1/-1/0/
               CSA_CNSA_2.0_ALGORITHMS_.PDF>.
 
@@ -2260,8 +2267,8 @@ Deserialization Process:
               module-validation-program/documents/fips%20140-3/
               FIPS%20140-3%20IG.pdf>.
 
-   [GHP18]    Poettering, B., "KEM Combiners", 2018,
-              <https://eprint.iacr.org/2018/024>.
+   [GHP18]    Giacon, F., Heuer, F., and B. Poettering, "KEM Combiners",
+              2018, <https://eprint.iacr.org/2018/024>.
 
    [I-D.ietf-lamps-cms-kyber]
               Prat, J., Ounsworth, M., and D. Van Geest, "Use of ML-KEM
@@ -2355,12 +2362,14 @@ Deserialization Process:
 
    [SP-800-227ipd]
               Alagic, G., Barker, E., Chen, L., Moody, D., Robinson, A.,
-              Silberg, H., and N. Waller, "Recommendations for Key-
+              Silberg, H., Waller, N., and National Institute of
+              Standards and Technology (NIST), "Recommendations for Key-
               Encapsulation Mechanisms (Initial Public Draft)", n.d.,
               <https://csrc.nist.gov/pubs/sp/800/227/ipd>.
 
    [SP800-131Ar2]
-              Barker, E. and A. Roginksy, "Transitioning the Use of
+              Barker, E., Roginksy, A., and National Institute of
+              Standards and Technology (NIST), "Transitioning the Use of
               Cryptographic Algorithms and Key Lengths", n.d.,
               <https://nvlpubs.nist.gov/nistpubs/specialpublications/
               nist.sp.800-131ar2.pdf>.
