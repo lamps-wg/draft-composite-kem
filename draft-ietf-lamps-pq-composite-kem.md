@@ -276,7 +276,7 @@ informative:
 
 --- abstract
 
-This document defines combinations of ML-KEM [FIPS.203] in hybrid with traditional algorithms RSA-OAEP, ECDH, X25519, and X448. These combinations are tailored to meet security best practices and regulatory requirements. Composite ML-KEM is applicable in any application that uses X.509 or PKIX data structures that accept ML-KEM, but where the operator wants extra protection against breaks or catastrophic bugs in ML-KEM.
+This document defines combinations of ML-KEM [FIPS.203] in hybrid with traditional algorithms RSA-OAEP, ECDH, X25519, and X448. These combinations are tailored to meet security best practices and regulatory guidelines. Composite ML-KEM is applicable in any application that uses X.509 or PKIX data structures that accept ML-KEM, but where the operator wants extra protection against breaks or catastrophic bugs in ML-KEM.
 
 <!-- End of Abstract -->
 
@@ -303,39 +303,23 @@ Editorial changes:
 
 Still to do in a future version:
 
-- `[ ]` Other outstanding github issues: https://github.com/lamps-wg/draft-composite-kem/issues
+- Nothing. Authors believe this version to be complete.
 
 
 # Introduction {#sec-intro}
 
-The advent of quantum computing poses a significant threat to current cryptographic systems. Traditional cryptographic key establishment algorithms such as RSA-OAEP and ECDH are vulnerable to quantum attacks. During the transition to post-quantum cryptography (PQC), there is considerable uncertainty regarding the robustness of both existing and new cryptographic algorithms. While we can no longer fully trust traditional cryptography, we also cannot immediately place complete trust in post-quantum replacements until they have undergone extensive scrutiny and real-world testing to uncover and rectify potential implementation flaws.
+The advent of quantum computing poses a significant threat to current cryptographic systems. Traditional cryptographic key establishment algorithms such as RSA-OAEP, Diffie-Hellman and its elliptic curve variants are vulnerable to quantum attacks. During the transition to post-quantum cryptography (PQC), there is considerable uncertainty regarding the robustness of both existing and new cryptographic algorithms. While we can no longer fully trust traditional cryptography, we also cannot immediately place complete trust in post-quantum replacements until they have undergone extensive scrutiny and real-world testing to uncover and rectify both algorithmic weaknesses as well as implementation flaws across all the new implementations.
 
-Unlike previous migrations between cryptographic algorithms, the decision of when to migrate and which algorithms to adopt is far from straightforward. Even after the migration period, it may be advantageous for an entity's cryptographic identity to incorporate multiple public-key algorithms to enhance security.
+Unlike previous migrations between cryptographic algorithms, the decision of when to migrate and which algorithms to adopt is far from straightforward.
+For instance, the aggressive migration timelines may require deploying PQC algorithms before their implementations have been fully hardened or certified, and dual-algorithm data protection may be desirable over a longer time period to hedge against CVEs and other implementation flaws in the new implementations.
 
 Cautious implementers may opt to combine cryptographic algorithms in such a way that an attacker would need to break all of them simultaneously to compromise the protected data. These mechanisms are referred to as Post-Quantum/Traditional (PQ/T) Hybrids {{I-D.ietf-pquip-pqt-hybrid-terminology}}.
 
 Certain jurisdictions are already recommending or mandating that PQC lattice schemes be used exclusively within a PQ/T hybrid framework. The use of Composite scheme provides a straightforward implementation of hybrid solutions compatible with (and advocated by) some governments and cybersecurity agencies [BSI2021].
 
-In addition, [BSI2021] specifically references the composite specification as a concrete example of hybrid X.509 certificates.
+This document defines a specific instantiation of the PQ/T Hybrid paradigm called "composite" where multiple cryptographic algorithms are combined to form a single key encapsulation mechanism (KEM) presenting a single public key and ciphertext such that it can be treated as a single atomic algorithm at the protocol level; a property referred to as "protocol backwards compatibility" since it can be applied to protocols that are not explicitly hybrid-aware Composite algorithms address algorithm strength uncertainty because the composite algorithm remains strong so long as one of its components remains strong. Concrete instantiations of composite ML-KEM algorithms are provided based on ML-KEM, RSA-OAEP and ECDH. Backwards compatibility in the sence of upgraded systems continuing to inter-operate with legacy systems is not directly covered in this document, but is the subject of {{sec-backwards-compat}}.
 
-A more recent example is [ANSSI2024], a document co-authored by French Cybersecurity Agency (ANSSI),
-Federal Office for Information Security (BSI), Netherlands National Communications Security Agency (NLNCSA), and
-Swedish National Communications Security Authority, Swedish Armed Forces which makes the following statement:
-
-> “In light of the urgent need to stop relying only on quantum-vulnerable public-key cryptography for key establishment, the clear priority should therefore be the migration to post-quantum cryptography in hybrid solutions”
-
-This specification represents the straightforward implementation of the hybrid solutions called for by European cyber security agencies.
-
-PQ/T Hybrid cryptography can, in general, provide solutions to two migration problems:
-
-- Algorithm strength uncertainty: During the transition period, some post-quantum signature and encryption algorithms will not be fully trusted, while also the trust in legacy public key algorithms will start to erode.  A relying party may learn some time after deployment that a public key algorithm has become untrustworthy, but in the interim, they may not know which algorithm an adversary has compromised.
-- Ease-of-migration: During the transition period, systems will require mechanisms that allow for staged migrations from fully classical to fully post-quantum-aware cryptography.
-
-This document defines a specific instantiation of the PQ/T Hybrid paradigm called "composite" where multiple cryptographic algorithms are combined to form a single key encapsulation mechanism (KEM) key and ciphertext such that they can be treated as a single atomic algorithm at the protocol level. Composite algorithms address algorithm strength uncertainty because the composite algorithm remains strong so long as one of its components remains strong. Concrete instantiations of composite ML-KEM algorithms are provided based on ML-KEM, RSA-OAEP and ECDH. Backwards compatibility is not directly covered in this document, but is the subject of {{sec-backwards-compat}}.
-
-Composite ML-KEM is intended for general applicability anywhere that key establishment or enveloped content encryption is used within PKIX protocols.
-
-
+Composite ML-KEM is applicable in any PKIX-related application that would otherwise use ML-KEM.
 
 
 ## Conventions and Terminology {#sec-terminology}
@@ -353,6 +337,12 @@ In addition, the following terms are used in this document:
           loosely, but not precisely, aligns with the
           definitions of "cryptographic algorithm" and
           "cryptographic scheme" given in {{I-D.ietf-pquip-pqt-hybrid-terminology}}.
+
+**CLIENT**:
+          Any software that is making use of a cryptographic key.
+          This includes a signer, verifier, encrypter, decrypter.
+          This is not meant to imply any sort of client-server
+          relationship between the communicating parties.
 
 **COMBINER:**
   A combiner specifies how multiple shared secrets are combined into
@@ -395,9 +385,9 @@ The algorithm descriptions use python-like syntax. The following symbols deserve
 >      incorporates multiple component cryptographic elements of the same
 >      type in a multi-algorithm scheme.
 
-Composite keys, as defined here, follow this definition and should be regarded as a single key that performs a single cryptographic operation such as key generation, signing, verifying, encapsulating, or decapsulating -- using its internal sequence of component keys as if they form a single key. This generally means that the complexity of combining algorithms can and should be handled by the cryptographic library or cryptographic module, and the single composite public key, private key, ciphertext and signature can be carried in existing fields in protocols such as PKCS#10 {{RFC2986}}, CMP {{RFC4210}}, X.509 {{RFC5280}}, CMS {{RFC5652}}, and the Trust Anchor Format [RFC5914]. In this way, composites achieve "protocol backwards-compatibility" in that they will drop cleanly into any protocol that accepts an analogous single-algorithm cryptographic scheme without requiring any modification of the protocol to handle multiple algorithms.
+Composite algorithms, as defined in this specification, follow this definition and should be regarded as a single key that performs a single cryptographic operation typical of a key establishment mechanism such as key generation, encapsulating, or decapsulating -- using its internal sequence of component keys as if they form a single key. This generally means that the complexity of combining algorithms can and should be handled by the cryptographic library or cryptographic module, and the single composite public key, private key, and ciphertext can be carried in existing fields in protocols such as PKCS#10 {{RFC2986}}, CMP {{RFC4210}}, X.509 {{RFC5280}}, CMS {{RFC5652}}, and the Trust Anchor Format [RFC5914]. In this way, composites achieve "protocol backwards-compatibility" in that they will drop cleanly into any protocol that accepts an analogous single-algorithm cryptographic scheme without requiring any modification of the protocol to handle multiple algorithms.
 
-
+Discussion of the specific choices of algorithm pairings can be found in {{sec-rationale}}.
 
 # Overview of the Composite ML-KEM Scheme {#sec-kems}
 
@@ -1175,7 +1165,7 @@ The KEM combiner used in this document requires a domain separator `Domain` inpu
 EDNOTE: these domain separators are based on the prototyping OIDs assigned on the Entrust arc. We will need to ask for IANA early allocation of these OIDs so that we can re-compute the domain separators over the final OIDs.
 
 
-## Rationale for choices
+## Rationale for choices {#sec-rationale}
 
 In generating the list of Composite algorithms, the following general guidance was used, however, during development of this specification several algorithms were added by direct request even though they do not fit this guidance.
 
