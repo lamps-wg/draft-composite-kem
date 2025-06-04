@@ -73,6 +73,7 @@ author:
 
 
 normative:
+  RFC2104:
   RFC2119:
   RFC4055:
   RFC5280:
@@ -775,7 +776,7 @@ When these values are required to be carried in an ASN.1 structure, they are wra
 
 While ML-KEM has a single fixed-size representation for each of public key, private key, and ciphertext, the traditional component might allow multiple valid encodings; for example an elliptic curve public key, and therefore also ciphertext, might be validly encoded as either compressed or uncompressed [SEC1], or an RSA private key could be encoded in Chinese Remainder Theorem form [RFC8017]. In order to obtain interoperability, composite algorithms MUST use the following encodings of the underlying components:
 
-* **ML-KEM**: MUST be encoded as specified in [FIPS203], using a 64-byte seed as the private key.
+* **ML-KEM**: MUST be encoded as specified in [FIPS.203], using a 64-byte seed as the private key.
 * **RSA**: MUST be encoded with the `(n,e)` public key representation as specified in A.1.1 of [RFC8017] and the private key representation as specified in A.1.2 of [RFC8017].
 * **ECDH**: public key MUST be encoded as an `ECPoint` as specified in section 2.2 of [RFC5480], with both compressed and uncompressed keys supported. For maximum interoperability, it is RECOMMENEDED to use uncompressed points.
 * **X25519 and X448**: MUST be encoded as per section 5 of [RFC7748].
