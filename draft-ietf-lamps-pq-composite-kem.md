@@ -1147,10 +1147,10 @@ EDNOTE: these are prototyping OIDs to be replaced by IANA.
 | id-MLKEM768-ECDH-P256-HMAC-SHA256  | &lt;CompKEM&gt;.54   | MLKEM768        | ECDH-P256            | HMAC-SHA256 |
 | id-MLKEM768-ECDH-P384-HMAC-SHA256  | &lt;CompKEM&gt;.55   | MLKEM768        | ECDH-P384            | HMAC-SHA256 |
 | id-MLKEM768-ECDH-brainpoolP256r1-HMAC-SHA256   | &lt;CompKEM&gt;.56   | MLKEM768        | ECDH-brainpoolp256r1 | HMAC-SHA256 |
-| id-MLKEM1024-ECDH-P384-HMAC-SHA384 | &lt;CompKEM&gt;.57   | MLKEM1024       | ECDH-P384            | HMAC-SHA384 |
-| id-MLKEM1024-ECDH-brainpoolP384r1-HMAC-SHA384  | &lt;CompKEM&gt;.58   | MLKEM1024       | ECDH-brainpoolP384r1 | HMAC-SHA384 |
+| id-MLKEM1024-ECDH-P384-HMAC-SHA512 | &lt;CompKEM&gt;.57   | MLKEM1024       | ECDH-P384            | HMAC-SHA512 |
+| id-MLKEM1024-ECDH-brainpoolP384r1-HMAC-SHA512  | &lt;CompKEM&gt;.58   | MLKEM1024       | ECDH-brainpoolP384r1 | HMAC-SHA512 |
 | id-MLKEM1024-X448-SHA3-256         | &lt;CompKEM&gt;.59   | MLKEM1024       | X448                 | SHA3-256 |
-| id-MLKEM1024-ECDH-P521-HMAC-SHA384 | &lt;CompKEM&gt;.60   | MLKEM1024       | ECDH-P521            | HMAC-SHA384 |
+| id-MLKEM1024-ECDH-P521-HMAC-SHA512 | &lt;CompKEM&gt;.60   | MLKEM1024       | ECDH-P521            | HMAC-SHA512 |
 {: #tab-kem-algs title="Composite ML-KEM key types"}
 
 Note that in alignment with ML-KEM, Composite KEM algorithms output a 256-bit shared secret key at all security levels.
