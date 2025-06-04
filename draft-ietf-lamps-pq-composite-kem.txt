@@ -1243,17 +1243,17 @@ Deserialization Process:
    |SHA256                  |            |         |               |        |
    +------------------------+------------+---------+---------------+--------+
    |id-MLKEM1024-ECDH-P384- |<CompKEM>.57|MLKEM1024|ECDH-P384      |HMAC-   |
-   |HMAC-SHA384             |            |         |               |SHA384  |
+   |HMAC-SHA512             |            |         |               |SHA512  |
    +------------------------+------------+---------+---------------+--------+
    |id-MLKEM1024-ECDH-      |<CompKEM>.58|MLKEM1024|ECDH-          |HMAC-   |
-   |brainpoolP384r1-HMAC-   |            |         |brainpoolP384r1|SHA384  |
-   |SHA384                  |            |         |               |        |
+   |brainpoolP384r1-HMAC-   |            |         |brainpoolP384r1|SHA512  |
+   |SHA512                  |            |         |               |        |
    +------------------------+------------+---------+---------------+--------+
    |id-                     |<CompKEM>.59|MLKEM1024|X448           |SHA3-256|
    |MLKEM1024-X448-SHA3-256 |            |         |               |        |
    +------------------------+------------+---------+---------------+--------+
    |id-MLKEM1024-ECDH-P521- |<CompKEM>.60|MLKEM1024|ECDH-P521      |HMAC-   |
-   |HMAC-SHA384             |            |         |               |SHA384  |
+   |HMAC-SHA512             |            |         |               |SHA512  |
    +------------------------+------------+---------+---------------+--------+
 
                     Table 2: Composite ML-KEM key types
