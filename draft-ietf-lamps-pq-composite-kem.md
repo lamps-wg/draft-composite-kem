@@ -498,6 +498,13 @@ DHKEM.Decap(skR, enc):
 
 This construction applies for all variants of elliptic curve Diffie-Hellman used in this specification: ECDH, X25519, and X448.
 
+For ECDH, `DH()` yields the value `Z` as described in section 5.7.1.2 of [SP.800-56Ar3].
+`SerializePublicKey()` and `DeserializePublicKey()` are the uncompressed Elliptic-Curve-Point-to-Octet-String and Octet-String-to-Elliptic-Curve-Point conversions
+defined in [SEC1] sections 2.3.3 and 2.3.4 respectively.
+
+For X25519 and X448, `DH()` yields the value `K` as described in section 6 of [RFC7748].
+`SerializePublicKey()` and `DeserializePublicKey()` are the identity functions, since these curves already use fixed-length byte strings for public keys.
+
 The simplifications from the DHKEM definition in [RFC9180] is that since the ciphertext and receiver's public key are included explicitly in the Composite ML-KEM combiner, there is no need to construct the `kem_context` object, and since a domain separator is included explicitly in the Composite ML-KEM combiner there is no need to perform the labeled steps of `ExtractAndExpand()`.
 
 Note that here, `SerializePublicKey()` and `DeserializePublicKey()` refer to the underlying encoding of the DH primitive, and not to the composite serialization functions defined in {{sec-serialization}}.
