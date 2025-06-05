@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-06-03T02:03:59.670084+00:00",
+  "timestamp": "2025-06-05T02:02:53.533991+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -2443,11 +2443,12 @@
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [
+        "Post-WGLC",
         "cleanup"
       ],
-      "body": "As part of WGLC, the link at the top of the Test Vectors section should be locked to a specific commit, and should also probably be moved to be a proper Informative reference.\n\nMight as well leave this until we're pretty sure that we're done tweaking the reference implementation code.",
+      "body": "As part of WGLC, the link at the top of the Test Vectors section should be locked to a specific commit, and should also probably be moved to be a proper Informative reference.\n\nMight as well leave this until we're pretty sure that we're done tweaking the reference implementation code, which probably means leaving it fairly late in the WGLC.",
       "createdAt": "2025-05-25T15:41:35Z",
-      "updatedAt": "2025-05-25T15:41:35Z",
+      "updatedAt": "2025-06-03T18:57:35Z",
       "closedAt": null,
       "comments": []
     },
@@ -2489,15 +2490,15 @@
       "id": "I_kwDOKRPFO8641W-a",
       "title": "PiotrPopis comments on KDF",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/153",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "In #129 @PiotrPopis submitted the following. I am splitting this into its own Issue for easier tracking.\n\n\n@ounsworth @janklaussner\nI have a problem with the provisions concerning KEM Combiner and I ask the authors for a comment or possible changes.\n\nAs for chapter D.1.1, in my opinion it is OK, in the sense that it contains provisions consistent with SP-800-227ipd.\n\nAt the same time, equation 13 of 227 is repeated in D.1.1, but in chapter 4.4 (and thus also in 4.2 and 4.3) the \"Expand\" function is omitted when KDF is HKDF.\n\nIn chapter 4.4 it is mentioned that many cryptographic libraries provide only a combined interface for HKDF and do not expose HKDF-Extract() and HKDF-Expand() separately, but this remark should not mean that HKDF-Expand() can be omitted at all?\n\nIn chapter 4.4 there is a mention of the info parameter, which (I think) according to version 07 should be a zero-length string according to chapter 2.3 of RFC 5869 (the wording \"empty\").\n\nIn my opinion, in chapter 4 the notation consistent with equation 13 should be used and the values \u200b\u200bof the info parameter should be specified. Am I right?",
       "createdAt": "2025-05-29T17:26:42Z",
-      "updatedAt": "2025-05-29T18:02:49Z",
-      "closedAt": null,
+      "updatedAt": "2025-06-03T21:56:03Z",
+      "closedAt": "2025-06-03T21:56:03Z",
       "comments": [
         {
           "author": "ounsworth",
@@ -2512,6 +2513,13 @@
           "body": "@PiotrPopis\n\nI have attempted to clarify the wording of section 4.4 in this PR. Could you please review?\n\n#154\n\nAbout this comment:\n\n> In my opinion, in chapter 4 the notation consistent with equation 13 should be used and the values \u200b\u200bof the info parameter should be specified. Am I right?\n\nI disagree.\nThe conflict is because, [RFC5869] uses different notation from NIST [SP-800-227ipd]. Since we are writing a document that will be published in the IETF's RFC series, it is appropriate to use the notation consistent with other RFCs. The NIST notation is used exclusively within the D.1 FIPS Certification section. I believe this is all correct.",
           "createdAt": "2025-05-29T18:02:47Z",
           "updatedAt": "2025-05-29T18:02:47Z"
+        },
+        {
+          "author": "optnfast",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "(I was going to start a new issue but this one really covers the same material.)\n\n\n> The Composite KEM variants that use SHA3 as a combiner fit form (12) while the variants that use HKDF-SHA2 fit form (13).\n\nThis line is incorrect. The HKDF variants do not fit form (13) because they do not include the Expand step.\n\nI think the HKDF versions remain FIPSable, but not via the extract-and-expand paradigm. Instead, they can be glossed as SP800-56Cr2 _one-step_ key derivation (s4.1), with H(x) = HMAC-hash(salt, x), the default salt value, and no counter field.\n\nThe permission to drop the counter field is https://csrc.nist.gov/CSRC/media/Projects/cryptographic-module-validation-program/documents/fips%20140-3/FIPS%20140-3%20IG.pdf appendix D.P; the FIPS section should reference this as justification (it took me a while to find it again!)\n\nPersonally I would drop the HKDF-Extract notation and just reference HMAC directly throughout, but that doesn't change the meaning or the compliance argument.\n",
+          "createdAt": "2025-06-03T09:20:00Z",
+          "updatedAt": "2025-06-03T09:20:49Z"
         }
       ]
     },
@@ -2551,15 +2559,15 @@
       "id": "I_kwDOKRPFO865cKfP",
       "title": "Mike Jenkins comment about the CNSA reference",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/156",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "See:\n\nhttps://github.com/lamps-wg/draft-composite-sigs/issues/183",
       "createdAt": "2025-06-02T18:18:39Z",
-      "updatedAt": "2025-06-02T18:18:39Z",
-      "closedAt": null,
+      "updatedAt": "2025-06-03T21:12:29Z",
+      "closedAt": "2025-06-03T21:12:29Z",
       "comments": []
     },
     {
@@ -2567,15 +2575,53 @@
       "id": "I_kwDOKRPFO865cZzX",
       "title": "HKDF-SHA384 vs SHA512",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/158",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
-      "body": "Richard Kettlewell pointed out:\n\n> Mike Ounsworth John Gray I notice in https://github.com/lamps-wg/draft-composite-kem/blob/main/draft-ietf-lamps-pq-composite-kem.md that you use HKDF-SHA384-Extract truncated to 256 bits - given SHA384 is secretly a truncated SHA512 anyway is there a reason you chose that rather than HKDF-SHA512-Extract with truncated output? Not really asking for any changes, just wondering about motivation.\n\n- [ ] Make sure Richard is in the acknowledgements of both drafts",
+      "body": "Richard Kettlewell pointed out:\n\n> Mike Ounsworth John Gray I notice in https://github.com/lamps-wg/draft-composite-kem/blob/main/draft-ietf-lamps-pq-composite-kem.md that you use HKDF-SHA384-Extract truncated to 256 bits - given SHA384 is secretly a truncated SHA512 anyway is there a reason you chose that rather than HKDF-SHA512-Extract with truncated output? Not really asking for any changes, just wondering about motivation.\n\n- [x] Make sure Richard is in the acknowledgements of both drafts",
       "createdAt": "2025-06-02T18:38:40Z",
-      "updatedAt": "2025-06-02T18:38:40Z",
-      "closedAt": null,
+      "updatedAt": "2025-06-04T16:41:19Z",
+      "closedAt": "2025-06-04T16:41:19Z",
+      "comments": [
+        {
+          "author": "optnfast",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Ta!",
+          "createdAt": "2025-06-03T09:08:47Z",
+          "updatedAt": "2025-06-03T09:08:47Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Somehow in all the cross-branch merges, we lost the change.",
+          "createdAt": "2025-06-04T14:32:03Z",
+          "updatedAt": "2025-06-04T14:32:03Z"
+        },
+        {
+          "author": "optnfast",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "NB the editorial note currently found in git HEAD:\n\n>Since SHA-384 is a truncated version of SHA-512, and we are further truncating it to 256 bits, these are binary-compatible \n\n...is wrong - a moment with `sha512sum` and `sha384sum` should convince you. They share the same padding rule and compression function, but have different initial hash values.\n\nI'd still choose SHA-512, personally, but it's not a hill I'd die on.\n",
+          "createdAt": "2025-06-04T14:41:51Z",
+          "updatedAt": "2025-06-04T14:41:51Z"
+        }
+      ]
+    },
+    {
+      "number": 160,
+      "id": "I_kwDOKRPFO865mN4_",
+      "title": "Add a \"Implicit inputs mapped from <OID>\"",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/160",
+      "state": "CLOSED",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "and change the algorithm defns to\n\n    Composite-ML-KEM<OID>\n\nRelates to https://github.com/lamps-wg/draft-composite-sigs/issues/185",
+      "createdAt": "2025-06-03T12:40:51Z",
+      "updatedAt": "2025-06-03T21:56:04Z",
+      "closedAt": "2025-06-03T21:56:04Z",
       "comments": []
     }
   ],
@@ -6370,24 +6416,26 @@
       "id": "PR_kwDOKRPFO86YKaOX",
       "title": "Clarified notation around KDFs",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/154",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
-      "body": "Closes #153 ",
+      "body": "Closes #153 \r\nCloses #160 ",
       "createdAt": "2025-05-29T18:02:24Z",
-      "updatedAt": "2025-06-02T10:31:31Z",
+      "updatedAt": "2025-06-03T21:56:03Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
-      "baseRefOid": "d4740120d3e6c9f2427839a2ac7e5a2e819f997d",
+      "baseRefOid": "50b140eef7837a2f2a50262692a06c96683e5c2c",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_153",
-      "headRefOid": "2019cb126b63b263adcf3b9853b1495298546a9f",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "02059cd84823d0a0a291107d1c7ecca9ce9a0212",
+      "closedAt": "2025-06-03T21:56:03Z",
+      "mergedAt": "2025-06-03T21:56:03Z",
+      "mergedBy": "johngray-dev",
+      "mergeCommit": {
+        "oid": "6099a2151ad341899ce0715ecd658bce1a49ad13"
+      },
       "comments": [
         {
           "author": "PiotrPopis",
@@ -6409,6 +6457,20 @@
           "body": "@ounsworth \r\nIt is now clear to me that KEM Combiner should always use one-step key derivation according to equation (12) of NIST 227.\r\nIn the case of SHA3 it will be option 1 according to chapter 4.1 of NIST SP 800-56C rev. 2, while in the case of SHA2 it will be option 2 according to 800-56Cr2.\r\n\r\nWe agreed that the previous provisions were ambiguous in this matter, and I was additionally confused by the reference to HKDF compliant with RFC5869.\r\n\r\nFor me (and probably many others reading the document) HKDF is a function described in RFC 5859. Therefore, when I see the phrase _if KDF is \"HKDF\"_, I expect the familiar function from RFC 5859. Instead, I read that it is just Extract(), which is basically an HMAC with a fixed key of zeros.\r\n\r\nI suggest - in addition to changes in D.1.1 - abandoning the reference to HKDF, and instead write directly that in the case of SHA2 we use the HMAC function (FIPS198, RFC 2104) as KDF with the key K being a string of HashLen zeros.\r\n\r\nI confirm that the document indicates that it is only \"partial\" HKDF (limited only to the Extract() function), but the reader still has doubts about the \"full\" version of HKDF - see e.g. section 7.1, where there is a clear suggestion of \"full\" HKDF: _For the use of HKDF [RFC5869]: a salt is not provided; i.e. the default salt (all zeroes of length HashLen) will be used. For HKDF-SHA256 the output of 256 bit output is used directly; for HKDF-SHA384/256, HKDF is invoked with SHA384 and then the output is truncated to 256 bits, meaning that only the first 256 bits of output are used._\r\n\r\nHowever, if the authors decided to leave the current provisions regarding HKDF, I recommend clarifying the following in chapter 7.1:\r\nFor the use of HKDF [RFC5869] (**reduced to just the Extract() function**): a salt is not provided; i.e. the default salt (all zeroes of length HashLen) will be used. For HKDF-SHA256 the output of 256 bit output is used directly; for HKDF-SHA384/256, HKDF is invoked with SHA384 and then the output is truncated to 256 bits, meaning that only the first 256 bits of output are used.\r\n\r\nAdditionally: I withdraw my comment regarding the modification of section 10.2.3.",
           "createdAt": "2025-06-02T10:31:31Z",
           "updatedAt": "2025-06-02T10:31:31Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Closes #160 ",
+          "createdAt": "2025-06-03T15:47:19Z",
+          "updatedAt": "2025-06-03T15:47:19Z"
+        },
+        {
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I think this also Closes #158 ",
+          "createdAt": "2025-06-03T21:39:10Z",
+          "updatedAt": "2025-06-03T21:39:10Z"
         }
       ],
       "reviews": [
@@ -6424,6 +6486,45 @@
           "createdAt": "2025-05-30T19:10:41Z",
           "updatedAt": "2025-05-30T19:10:41Z",
           "comments": []
+        },
+        {
+          "id": "PRR_kwDOKRPFO86scwnd",
+          "commit": {
+            "abbreviatedOid": "af38b55"
+          },
+          "author": "carl-wallace",
+          "authorAssociation": "NONE",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-06-03T16:09:01Z",
+          "updatedAt": "2025-06-03T16:09:01Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOKRPFO86sczTY",
+          "commit": {
+            "abbreviatedOid": "af38b55"
+          },
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-06-03T16:12:06Z",
+          "updatedAt": "2025-06-03T16:12:06Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOKRPFO86sgOLU",
+          "commit": {
+            "abbreviatedOid": "af38b55"
+          },
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-06-03T21:08:36Z",
+          "updatedAt": "2025-06-03T21:08:36Z",
+          "comments": []
         }
       ]
     },
@@ -6432,24 +6533,26 @@
       "id": "PR_kwDOKRPFO86Yrnwe",
       "title": "Remove mention of CNSA",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/157",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Closes #156 ",
       "createdAt": "2025-06-02T18:33:41Z",
-      "updatedAt": "2025-06-02T21:50:58Z",
+      "updatedAt": "2025-06-03T21:12:28Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "806a5d5cb7c990f05511751dccf096ba07b5cd35",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_cnsa",
       "headRefOid": "2b4f5b562858d335230279e88d3ddc945b409271",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-06-03T21:12:28Z",
+      "mergedAt": "2025-06-03T21:12:28Z",
+      "mergedBy": "johngray-dev",
+      "mergeCommit": {
+        "oid": "50b140eef7837a2f2a50262692a06c96683e5c2c"
+      },
       "comments": [],
       "reviews": [
         {
@@ -6464,6 +6567,32 @@
           "createdAt": "2025-06-02T21:50:58Z",
           "updatedAt": "2025-06-02T21:50:58Z",
           "comments": []
+        },
+        {
+          "id": "PRR_kwDOKRPFO86sYq9S",
+          "commit": {
+            "abbreviatedOid": "2b4f5b5"
+          },
+          "author": "janklaussner",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-06-03T12:35:29Z",
+          "updatedAt": "2025-06-03T12:35:29Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOKRPFO86sgPok",
+          "commit": {
+            "abbreviatedOid": "2b4f5b5"
+          },
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-06-03T21:11:46Z",
+          "updatedAt": "2025-06-03T21:11:46Z",
+          "comments": []
         }
       ]
     },
@@ -6472,25 +6601,35 @@
       "id": "PR_kwDOKRPFO86Yr--s",
       "title": "Changed SHA384 to SHA512",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/159",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Closes #158",
       "createdAt": "2025-06-02T19:12:53Z",
-      "updatedAt": "2025-06-02T22:01:16Z",
+      "updatedAt": "2025-06-03T12:40:09Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
-      "baseRefName": "main",
-      "baseRefOid": "806a5d5cb7c990f05511751dccf096ba07b5cd35",
+      "baseRefName": "mikeo_153",
+      "baseRefOid": "97160456bf372879d3d8b6f1c43c7198d4f8d892",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_sha384",
-      "headRefOid": "0969698487d6b7fbee8fb5715408a89e75118e7e",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
-      "comments": [],
+      "headRefOid": "4ee75a042d21fe84873bb7c2a2f4e2b71f9d6630",
+      "closedAt": "2025-06-03T12:04:32Z",
+      "mergedAt": "2025-06-03T12:04:32Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "0bc40b4ef4e53f025015c1411bd1d1cc9f142b54"
+      },
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I am changing the merge target: I am merging into the branch for #154 rather than Main.",
+          "createdAt": "2025-06-03T11:43:51Z",
+          "updatedAt": "2025-06-03T11:43:51Z"
+        }
+      ],
       "reviews": [
         {
           "id": "PRR_kwDOKRPFO86sQnIJ",
@@ -6531,8 +6670,198 @@
               "updatedAt": "2025-06-02T22:01:17Z"
             }
           ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO86sUP2H",
+          "commit": {
+            "abbreviatedOid": "0969698"
+          },
+          "author": "PiotrPopis",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-06-03T07:08:35Z",
+          "updatedAt": "2025-06-03T07:08:35Z",
+          "comments": [
+            {
+              "originalPosition": 15,
+              "body": "I understood Richard Kettlewell's comment to mean that only the KDF column in table 2 (section 7.1) needs to be corrected, where HKDF-SHA384/256 should be replaced by HKDF-SHA512/256. This is de facto an editorial change, but it introduces compatibility of hash function names with FIPS 180-4, especially sections 6.5 and 6.7.",
+              "createdAt": "2025-06-03T07:08:35Z",
+              "updatedAt": "2025-06-03T07:08:35Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO86sXSB2",
+          "commit": {
+            "abbreviatedOid": "0969698"
+          },
+          "author": "optnfast",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-06-03T10:50:25Z",
+          "updatedAt": "2025-06-03T10:50:26Z",
+          "comments": [
+            {
+              "originalPosition": 15,
+              "body": "I think we still need some notation clarity.\r\n\r\nMy understanding (and hope l-) was that the goal was HKDF-Extract-SHA512, truncated to 256 bits. Since HDKF-Extract is just HMAC with a fixed key, we might write this:\r\n\r\n`  (HMAC-SHA-512(0,Z))/256`\r\n\r\nThe current notation (HKDF-SHA512/256) however risks confusion with using SHA512/256 (FIPS 180-4 s5.3.6 & s6.7) as the hash. We might write this:\r\n\r\n`  HMAC-(SHA-512/256)(0,Z)`\r\n\r\nThis is _not the same thing_: with SHA512/256 the inner hash of the HMAC is truncated, and both hashes use different initial hash values.\r\n\r\nIt could also risk confusion with the FIPS 180-4 s7 permission to just truncate hashes without changing IHVs etc.\r\n\r\nOther notes:\r\n\r\n* SHA512/256 is referenced by SP800-56Cr2, so I think it would still be acceptable in a FIPS environment\r\n* I suspect SHA512/256 is not commonly implemented. It's an easy lift but really, who wants to?\r\n* SHA384 has different initial hash values again.",
+              "createdAt": "2025-06-03T10:50:26Z",
+              "updatedAt": "2025-06-03T10:51:22Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO86sX59u",
+          "commit": {
+            "abbreviatedOid": "0969698"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-06-03T11:38:26Z",
+          "updatedAt": "2025-06-03T11:38:27Z",
+          "comments": [
+            {
+              "originalPosition": 15,
+              "body": "Good point. I will remove the \"HMAC-SHA512/256\" notation and instead put \"HMAC-SHA512\" in the table, and also add an explicit \"truncate(ss, 256)\" to the KemCombiner function definition.",
+              "createdAt": "2025-06-03T11:38:26Z",
+              "updatedAt": "2025-06-03T11:38:27Z"
+            }
+          ]
         }
       ]
+    },
+    {
+      "number": 161,
+      "id": "PR_kwDOKRPFO86Y46EK",
+      "title": "Spell check and xml2rfc warnings",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/161",
+      "state": "MERGED",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Relates to #148 \r\nRelates to #128 ",
+      "createdAt": "2025-06-03T19:34:54Z",
+      "updatedAt": "2025-06-04T16:22:26Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "23df6bd47221eb37f9cab54b4c274a7ee3f70c49",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_spellcheck_warnings",
+      "headRefOid": "26ec60433dd873b8930290cd3a51cbdf7fdecb89",
+      "closedAt": "2025-06-04T16:22:20Z",
+      "mergedAt": "2025-06-04T16:22:20Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "def1a52a7045919cc3fc44c8a43074e85a8092f9"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO86sgesX",
+          "commit": {
+            "abbreviatedOid": "26ec604"
+          },
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-06-03T21:41:45Z",
+          "updatedAt": "2025-06-03T21:41:45Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 162,
+      "id": "PR_kwDOKRPFO86ZCrRP",
+      "title": "Direct spec references for ECDH KEM components",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/162",
+      "state": "MERGED",
+      "author": "optnfast",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-06-04T14:56:01Z",
+      "updatedAt": "2025-06-04T16:21:53Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "6099a2151ad341899ce0715ecd658bce1a49ad13",
+      "headRepository": "optnfast/draft-composite-kem",
+      "headRefName": "localize-references",
+      "headRefOid": "7928f8f2662029d5cae7b26e1850934044ec1d84",
+      "closedAt": "2025-06-04T16:21:53Z",
+      "mergedAt": "2025-06-04T16:21:53Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "cbb9169d356c209382e635fab12a5a22fa8b0b5b"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 163,
+      "id": "PR_kwDOKRPFO86ZCshj",
+      "title": "Fix a couple of broken external references",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/163",
+      "state": "CLOSED",
+      "author": "optnfast",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-06-04T14:57:58Z",
+      "updatedAt": "2025-06-04T14:58:54Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "6099a2151ad341899ce0715ecd658bce1a49ad13",
+      "headRepository": "optnfast/draft-composite-kem",
+      "headRefName": "fixrefs",
+      "headRefOid": "e453cf0e8c936c04c1fefdca7171335d96d6ac9a",
+      "closedAt": "2025-06-04T14:58:54Z",
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "optnfast",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "In fact I see Mike beat me to it, closing.",
+          "createdAt": "2025-06-04T14:58:54Z",
+          "updatedAt": "2025-06-04T14:58:54Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 164,
+      "id": "PR_kwDOKRPFO86ZFXqS",
+      "title": "-sigs and -kems alignment",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/164",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-06-04T19:58:13Z",
+      "updatedAt": "2025-06-05T01:39:53Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "2ea84ed772f98723d4d0be5fbe07f85266dbd5bc",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_sig_kem_alignment",
+      "headRefOid": "fb57fe4e2b1b5ad9282a016ecd0116d07b2a7997",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
