@@ -173,7 +173,6 @@ informative:
   RFC7296:
   RFC8446:
   RFC8551:
-  I-D.draft-ietf-tls-hybrid-design-04:
   I-D.draft-ietf-pquip-pqt-hybrid-terminology-04:
   I-D.draft-ietf-lamps-cms-kyber-05:
   X-Wing:
@@ -391,17 +390,16 @@ Discussion of the specific choices of algorithm pairings can be found in {{sec-r
 
 # Overview of the Composite ML-KEM Scheme {#sec-kems}
 
-We borrow here the definition of a key encapsulation mechanism (KEM) from {{I-D.ietf-tls-hybrid-design}}, in which a KEM is a cryptographic primitive that consists of three algorithms:
+Composite ML-KEM is a Post-Quantum / Traditional hybrid Key Encapsulation Mechanism (KEM) which combines ML-KEM as specified in [FIPS.203] and {{I-D.ietf-lamps-kyber-certificates}} with one of RSA-OAEP defined in [RFC8017], the Elliptic Curve Diffie-Hellman key agreement schemes ECDH defined in section 5.7.1.2 of [SP.800-56Ar3], and X25519 / X448 defined in [RFC8410]. A KEM combiner function is used to combine the two component shared secrets into a single shared secret.
+
+Composite Key Encapsulation Mechanisms are defined as cryptographic primitives that consist of three algorithms. These definitions are borrowed from {{RFC9180}}.
 
    *  `KeyGen() -> (pk, sk)`: A probabilistic key generation algorithm,
-      which generates a public key `pk` and a secret key `sk`.
-
-  * `KeyGen(seed) -> (pk, sk)`: A deterministic key generation algorithm
-      which generates a public key pk and a secret key sk from a seed.
+      which generates a public key `pk` and a secret key `sk`. Some cryptographic modules may also expose a `KeyGen(seed) -> (pk, sk)`, which generates `pk` and `sk` deterministically from a seed. This specification assumes a seed-based keygen for ML-KEM.
 
    *  `Encap(pk) -> (ss, ct)`: A probabilistic encapsulation algorithm,
       which takes as input a public key `pk` and outputs a ciphertext `ct`
-      and shared secret ss. Note: this document uses `Encap()` to conform to {{?RFC9180}},
+      and shared secret `ss`. Note: this document uses `Encap()` to conform to {{?RFC9180}},
       but [FIPS.203] uses `Encaps()`.
 
    *  `Decap(sk, ct) -> ss`: A decapsulation algorithm, which takes as
@@ -411,28 +409,26 @@ We borrow here the definition of a key encapsulation mechanism (KEM) from {{I-D.
       but [FIPS.203] uses `Decaps()`.
 
 
-We define the following algorithms which are used to serialize and deserialize component values. These algorithms are inspired by similar algorithms in {{RFC9180}}.
+The KEM interface defined above differs from both traditional key transport mechanism (for example for use with KeyTransRecipientInfo defined in {{RFC5652}}), and key agreement (for example for use with KeyAgreeRecipientInfo defined in {{RFC5652}}) and thus Composite KEM MUST be used with KEMRecipientInfo defined in {{RFC9629}}, however full conventions for use of Composite ML-KEM within the Cryptographic Message Syntax will be included in a separate specification.
 
+The KEM interface was chosen as the interface for a composite key establishment because it allows for arbitrary combinations of component algorithm types since both key transport and key agreement mechanisms can be promoted into KEMs as described in {{sec-RSAOAEPKEM}} and {{sec-DHKEM}} below.
 
-   * `SerializePublicKey(mlkemPK, tradPK) -> bytes`: Produce a byte string encoding the component public keys.
+The following algorithms are defined for serializing and deserializing component values. These algorithms are inspired by similar algorithms in {{RFC9180}}.
+
+   * `SerializePublicKey(mlkemPK, tradPK) -> bytes`: Produce a byte string encoding of the component public keys.
 
    * `DeserializePublicKey(bytes) -> (mlkemPK, tradPK)`: Parse a byte string to recover the component public keys.
 
-   * `SerializeCiphertext(mlkemCT, tradCT) -> bytes`: Produce a byte string encoding the component ciphertexts.
+   * `SerializeCiphertext(mlkemCT, tradCT) -> bytes`: Produce a byte string encoding of the component ciphertexts.
 
    * `DeserializeCiphertext(bytes) -> (mlkemCT, tradCT)`: Parse a byte string to recover the component ciphertexts.
 
-   * `SerializePrivateKey(mlkemSeed, tradSK) -> bytes`: Produce a byte string encoding the component private keys.
+   * `SerializePrivateKey(mlkemSeed, tradSK) -> bytes`: Produce a byte string encoding of the component private keys.
 
    * `DeserializePrivateKey(bytes) -> (mlkemSeed, tradSK)`: Parse a byte string to recover the component private keys.
 
 Full definitions of serialization and deserialization algorithms can be found in {{sec-serialization}}.
 
-The KEM interface defined above differs from both traditional key transport mechanism (for example for use with KeyTransRecipientInfo defined in {{RFC5652}}), and key agreement (for example for use with KeyAgreeRecipientInfo defined in {{RFC5652}}).
-
-The KEM interface was chosen as the interface for a composite key establishment because it allows for arbitrary combinations of component algorithm types since both key transport and key agreement mechanisms can be promoted into KEMs as described in {{sec-RSAOAEPKEM}} and {{sec-DHKEM}} below.
-
-This specification uses the Post-Quantum KEM ML-KEM as specified in [FIPS.203] and {{I-D.ietf-lamps-kyber-certificates}}. For Traditional KEMs, this document uses the RSA-OAEP algorithm defined in [RFC8017], the Elliptic Curve Diffie-Hellman key agreement schemes ECDH defined in section 5.7.1.2 of [SP.800-56Ar3], and X25519 / X448 which are defined in [RFC8410]. A combiner function is used to combine the two component shared secrets into a single shared secret.
 
 
 ## Promotion of RSA-OAEP into a KEM {#sec-RSAOAEPKEM}
