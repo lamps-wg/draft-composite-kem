@@ -1176,15 +1176,15 @@ Process:
 
    The following sections provide processing logic and the necessary
    ASN.1 modules necessary to use composite ML-KEM within X.509 and PKIX
-   protocols.
+   protocols.  Use within the Cryptographic Message Syntax (CMS) will be
+   covered in a separate specification.
 
-   While composite ML-KEM keys and ciphertexts MAY be used raw, the
+   While composite ML-DSA keys and signature values MAY be used raw, the
    following sections provide conventions for using them within X.509
-   and other PKIX protocols, including defining ASN.1-based wrappers for
-   the binary composite values, such that these structures can be used
-   as a drop-in replacement for existing public key and ciphertext
-   fields such as those found in PKCS#10 [RFC2986], CMP [RFC4210], X.509
-   [RFC5280], CMS [RFC5652].
+   and other PKIX protocols such that Composite ML-DSA can be used as a
+   drop-in replacement for existing digital signature algorithms in
+   PKCS#10 [RFC2986], CMP [RFC4210], X.509 [RFC5280], and related
+   protocols.
 
 6.1.  Encoding to DER
 
@@ -1193,10 +1193,7 @@ Process:
    encoded message format such as an X.509's subjectPublicKey BIT STRING
    [RFC5280] or a CMS KEMRecipientInfo.kemct OCTET STRING [RFC9629],
    then the composite value MUST be wrapped into a DER BIT STRING or
-   OCTET STRING in the obvious ways:
-
-   When an OCTET STRING is required, the DER encoding of the composite
-   data value SHALL be used directly.
+   OCTET STRING in the obvious ways.
 
    When a BIT STRING is required, the octets of the composite data value
    SHALL be used as the bits of the bit string, with the most
@@ -1204,24 +1201,36 @@ Process:
    ending with the least significant bit of the last octet becoming the
    last bit of the bit string.
 
+   When an OCTET STRING is required, the DER encoding of the composite
+   data value SHALL be used directly.
+
 6.2.  Key Usage Bits
 
-   When any Composite ML-KEM AlgorithmIdentifier appears in the
-   SubjectPublicKeyInfo field of an X.509 certificate [RFC5280], the key
-   usage certificate extension MUST only contain
+   When any Composite ML-KEM Object Identifier appears within the
+   SubjectPublicKeyInfo.AlgorithmIdentifier field of an X.509
+   certificate [RFC5280], the key usage certificate extension MUST only
+   contain:
 
    keyEncipherment
 
    Composite ML-KEM keys MUST NOT be used in a "dual usage" mode because
    even if the traditional component key supports both signing and
    encryption, the post-quantum algorithms do not and therefore the
-   overall composite algorithm does not.
+   overall composite algorithm does not.  Implementations MUST NOT use
+   one component of the composite for the purposes of digital signature
+   and the other component for the purposes of encryption or key
+   establishment.
 
 6.3.  ASN.1 Definitions
 
-   The following ASN.1 Information Object Class is defined to allow for
-   compact definitions of each composite algorithm, leading to a smaller
-   overall ASN.1 module.
+   Composite ML-KEM uses a substantially non-ASN.1 based encoding, as
+   specified in Section 5.  However, as as composite algorithms will be
+   used within ASN.1-based X.509 and PKIX protocols, some conventions
+   for ASN.1 wrapping are necessary.
+
+   The following ASN.1 Information Object Classes are defined to allow
+   for compact definitions of each composite algorithm, leading to a
+   smaller overall ASN.1 module.
 
    pk-CompositeKEM {OBJECT IDENTIFIER:id}
      PUBLIC-KEY ::= {
@@ -1230,11 +1239,6 @@ Process:
        PARAMS ARE absent
        CERT-KEY-USAGE { keyEncipherment }
      }
-
-   The full set of key types defined by this specification can be found
-   in the ASN.1 Module in Section 8.
-
-   The ASN.1 algorithm object for a Composite ML-KEM is:
 
    kema-CompositeKEM {
      OBJECT IDENTIFIER:id,
@@ -1245,6 +1249,23 @@ Process:
             PARAMS ARE absent
             PUBLIC-KEYS { publicKeyType }
            }
+
+      Figure 10: ASN.1 Object Information Classes for Composite ML-DSA
+
+   As an example, the public key and KEM algorithm types associated with
+   id-MLKEM768-ECDH-P256-HMAC-SHA256 are defined as:
+
+   pk-MLKEM768-ECDH-P256-HMAC-SHA256 PUBLIC-KEY ::=
+     pk-CompositeKEM {
+       id-MLKEM768-ECDH-P256-HMAC-SHA256 }
+
+   kema-MLKEM768-ECDH-P256-HMAC-SHA256 KEM-ALGORITHM ::=
+       kema-CompositeKEM{
+         id-MLKEM768-ECDH-P256-HMAC-SHA256,
+         pk-MLKEM768-ECDH-P256-HMAC-SHA256 }
+
+   The full set of key types defined by this specification can be found
+   in the ASN.1 Module in Section 8.
 
    Use cases that require an interoperable encoding for composite
    private keys will often need to place a composite private key inside
@@ -1269,19 +1290,24 @@ Process:
                            -- algorithm identifier dictates the format of
                            -- the key.
 
+            Figure 11: OneAsymmetricKey as defined in [RFC5958]
+
    When a composite private key is conveyed inside a OneAsymmetricKey
    structure (version 1 of which is also known as PrivateKeyInfo)
    [RFC5958], the privateKeyAlgorithm field SHALL be set to the
    corresponding composite algorithm identifier defined according to
    Section 7 and its parameters field MUST be absent.  The privateKey
-   field SHALL contain the OCTET STRING representation of the serialized
-   composite private key as per Section 5.2.  The publicKey field
-   remains OPTIONAL.
+   field SHALL contain the OCTET STRING reperesentation of the
+   serialized composite private key as per Section 5.2.  The publicKey
+   field remains OPTIONAL.  If the publicKey field is present, it MUST
+   be a composite public key as per Section 5.1.
 
-   Some applications may need to reconstruct the OneAsymmetricKey
-   objects corresponding to each component private key.  Section 7 and
-   Appendix B provide the necessary mapping between composite and their
-   component algorithms for doing this reconstruction.
+   Some applications might need to reconstruct the SubjectPublicKeyInfo
+   or OneAsymmetricKey objects corresponding to each component key
+   individually, for example if this is required for invoking the
+   underlying primitive.  Section 7 provides the necessary mapping
+   between composite and their component algorithms for doing this
+   reconstruction.
 
    Component keys of a composite private key MUST NOT be used in any
    other type of key or as a standalone key.  For more details on the
@@ -1880,7 +1906,7 @@ Process:
 
      KDF(mlkemSS || tradSS || tradCT || tradPK || Domain)
 
-                    Figure 10: KEM combiner construction
+                    Figure 12: KEM combiner construction
 
    where:
 
