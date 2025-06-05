@@ -583,7 +583,7 @@ The following describes how to instantiate a `Encap(pk)` function for a given co
 ~~~
 Composite-ML-KEM<OID>.Encap(pk) -> (ss, ct)
 
-Explicit Input:
+Explicit Inputs:
 
   pk      Composite public key consisting of encryption public keys
           for each component.
@@ -775,8 +775,8 @@ Implementation note: The HMAC-based combiner here is exactly the "HKDF-Extract" 
 
 # Serialization {#sec-serialization}
 
-This section presents routines for serializing and deserializing composite public keys, private keys (seeds), and ciphertext values to bytes via simple concatenation of the underlying encodings of the component algorithms.
-The functions defined in this section are considered internal implementation detail and are referenced from within the public API definitions in {{sec-composite-mlkem}}}.
+This section presents routines for serializing and deserializing composite public keys, private keys, and ciphertext values to bytes via simple concatenation of the underlying encodings of the component algorithms.
+The functions defined in this section are considered internal implementation detail and are referenced from within the public API definitions in {{sec-composite-mlkem}}.
 
 Deserialization is possible because ML-KEM has fixed-length public keys, private keys (seeds), and ciphertext values as shown in the following table.
 
@@ -786,7 +786,7 @@ Deserialization is possible because ML-KEM has fixed-length public keys, private
 | ML-KEM-1024 |    1568     |     64      |     1568     |
 {: #tab-mlkem-sizes title="ML-KEM Key and Ciphertext Sizes"}
 
-When these values are required to be carried in an ASN.1 structure, they are wrapped as described in {{sec-encoding-to-der}}.
+For all serialization routines below, when these values are required to be carried in an ASN.1 structure, they are wrapped as described in {{sec-encoding-to-der}}.
 
 While ML-KEM has a single fixed-size representation for each of public key, private key, and ciphertext, the traditional component might allow multiple valid encodings; for example an elliptic curve public key, and therefore also ciphertext, might be validly encoded as either compressed or uncompressed [SEC1], or an RSA private key could be encoded in Chinese Remainder Theorem form [RFC8017]. In order to obtain interoperability, composite algorithms MUST use the following encodings of the underlying components:
 
@@ -795,23 +795,24 @@ While ML-KEM has a single fixed-size representation for each of public key, priv
 * **ECDH**: public key MUST be encoded as an `ECPoint` as specified in section 2.2 of [RFC5480], with both compressed and uncompressed keys supported. For maximum interoperability, it is RECOMMENEDED to use uncompressed points.
 * **X25519 and X448**: MUST be encoded as per section 5 of [RFC7748].
 
-In the event that a composite implementation uses an underlying implementation of the traditional component that requires a different encoding, it is the responsibility of the composite implementation to perform the necessary transcoding. Even with fixed encodings for the traditional component, there may be slight differences in encoded size of the traditional component due to, for example, encoding rules that drop leading zeroes. See {{sec-sizetable}} for further discussion of encoded size of each composite algorithm.
+Even with fixed encodings for the traditional component, there may be slight differences in size of the endoded value due to, for example, encoding rules that drop leading zeroes. See {{sec-sizetable}} for further discussion of encoded size of each composite algorithm.
 
+The deserialization routines described below do not check for well-formedness of the cryptographic material they are recovering. It is assumed that underlying cryptographic primitives will catch malformed values and raise an appropriate error.
 
 
 ## SerializePublicKey and DeserializePublicKey {#sec-serialize-deserialize}
 
-The serialization routine for keys simply concatenates the fixed-length public keys of the component algorithms, as defined below:
+The serialization routine for keys simply concatenates the public keys of the component algorithms, as defined below:
 
 ~~~
 Composite-ML-KEM.SerializePublicKey(mlkemPK, tradPK) -> bytes
 
 Explicit inputs:
 
-  mlkemPK  The ML-KEM public key, which is bytes.
+  mlkemPK The ML-KEM public key, which is bytes.
 
-  tradPK   The traditional public key in the appropriate
-           bytes-like encoding for the underlying component algorithm.
+  tradPK  The traditional public key in the appropriate
+          encoding for the underlying component algorithm.
 
 Implicit inputs:
 
@@ -819,7 +820,7 @@ Implicit inputs:
 
 Output:
 
-  bytes   The encoded composite public key
+  bytes   The encoded composite public key.
 
 
 Serialization Process:
@@ -831,8 +832,7 @@ Serialization Process:
 ~~~
 {: #alg-composite-serialize title="SerializePublicKey(mlkemPK, tradPK) -> bytes"}
 
-Deserialization reverses this process.
-key is deserialized according to their respective standard as shown in {{appdx_components}}.
+Deserialization reverses this process. Each component key is deserialized according to their respective specification as shown in {{appdx_components}}.
 
 The following describes how to instantiate a `DeserializePublicKey(bytes)` function for a given composite algorithm reperesented by `<OID>`.
 
@@ -841,7 +841,7 @@ Composite-ML-KEM<OID>.DeserializePublicKey(bytes) -> (mlkemPK, tradPK)
 
 Explicit inputs:
 
-  bytes   An encoded public key
+  bytes   An encoded composite public key.
 
 Implicit inputs mapped from <OID>:
 
@@ -853,14 +853,14 @@ Output:
   mlkemPK  The ML-KEM public key, which is bytes.
 
   tradPK   The traditional public key in the appropriate
-           bytes-like encoding for the underlying component algorithm.
+           encoding for the underlying component algorithm.
 
 
 Deserialization Process:
 
   1. Parse each constituent encoded public key.
        The length of the mlkemPK is known based on the size of
-       the ML-KEM component key length specified by the Object ID
+       the ML-KEM component key length specified by the Object ID.
 
      switch ML-KEM do
         case ML-KEM-768:
@@ -885,7 +885,7 @@ Deserialization Process:
 
 ## SerializePrivateKey and DeserializePrivateKey {#sec-serialize-privkey}
 
-The serialization routine for keys simply concatenates the fixed-length private keys of the component algorithms, as defined below:
+The serialization routine for keys simply concatenates the private keys of the component algorithms, as defined below:
 
 ~~~
 Composite-ML-KEM.SerializePrivateKey(mlkemSeed, tradSK) -> bytes
@@ -903,25 +903,27 @@ Implicit inputs:
 
 Output:
 
-  bytes   The encoded composite private key
+  bytes   The encoded composite private key.
 
 Serialization Process:
 
-  1. Combine and output the encoded private key
+  1. Combine and output the encoded private key.
 
      output mlkemSeed || tradSK
 ~~~
 {: #alg-composite-serialize-priv-key title="SerializePrivateKey(mlkemSeed, tradSK) -> bytes"}
 
 
-Deserialization reverses this process.
+Deserialization reverses this process. Each component key is deserialized according to their respective specification as shown in {{appdx_components}}.
+
+The following describes how to instantiate a `DeserializePrivateKey(bytes)` function. Since ML-KEM private keys are 64 bytes for all paramater sets, this function does not need to be parametrized.
 
 ~~~
-Composite-ML-KEM<OID>.DeserializePrivateKey(bytes) -> (mlkemSeed, tradSK)
+Composite-ML-KEM.DeserializePrivateKey(bytes) -> (mlkemSeed, tradSK)
 
 Explicit inputs:
 
-  bytes   An encoded composite private key
+  bytes   An encoded composite private key.
 
 Implicit inputs:
 
@@ -938,13 +940,13 @@ Output:
 Deserialization Process:
 
   1. Parse each constituent encoded key.
-       The length of an ML-KEM private key is always a 64 byte seed
-       for all parameter sets.
+     The length of an ML-KEM private key is always a 64 byte seed
+     for all parameter sets.
 
-      mlkemSeed = bytes[:64]
-      tradSK  = bytes[64:]
+     mlkemSeed = bytes[:64]
+     tradSK  = bytes[64:]
 
-     Note that while ML-KEM has fixed-length keys (seeds), RSA and ECDH
+     Note that while ML-KEM has fixed-length keys, RSA and ECDH
      may not, depending on encoding, so rigorous length-checking
      of the overall composite key is not always possible.
 
@@ -978,7 +980,7 @@ Implicit inputs:
 
 Output:
 
-  bytes   The encoded composite ciphertext value
+  bytes   The encoded composite ciphertext value.
 
 
 Serialization Process:
@@ -991,13 +993,13 @@ Serialization Process:
 {: #alg-composite-serialize-ct title="SerializeCiphertext(mlkemCT, tradCT) -> bytes"}
 
 
-Deserialization reverses this process.
-
+Deserialization reverses this process, raising an error in the event that the input is malformed.  Each component signature is deserialized according to their respective specification as shown in {{appdx_components}}.
 
 The following describes how to instantiate a `DeserializeCiphertext(bytes)` function for a given composite algorithm reperesented by `<OID>`.
 
 ~~~
-Composite-ML-KEM<OID>.DeserializeCiphertext(bytes) -> (mldkemCT, tradCT)
+Composite-ML-KEM<OID>.DeserializeCiphertext(bytes)
+                                                -> (mldkemCT, tradCT)
 
 Explicit inputs:
 
@@ -1019,8 +1021,8 @@ Output:
 Deserialization Process:
 
   1. Parse each constituent encoded ciphertext.
-       The length of the mlkemCT is known based on the size of
-       the ML-KEM component ciphertext length specified by the Object ID
+     The length of the mlkemCT is known based on the size of
+     the ML-KEM component ciphertext length specified by the Object ID.
 
      switch ML-KEM do
         case ML-KEM-768:
@@ -1809,7 +1811,8 @@ Ali Noman (Entrust),
 Peter C. (UK NCSC),
 Sophie Schmieg (Google),
 Deirdre Connolly (SandboxAQ),
-Chris Wood (Apple),
+Chris A. Wood (Apple),
+Christopher D. Wood (Apple),
 Bas Westerbaan (Cloudflare),
 Falko Strenzke (MTG AG),
 Dan van Geest (Crypto Next),
