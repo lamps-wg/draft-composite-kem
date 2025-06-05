@@ -1794,7 +1794,7 @@ Peter C. (UK NCSC),
 Sophie Schmieg (Google),
 Deirdre Connolly (SandboxAQ),
 Chris Wood (Apple),
-Christopher Wood (Apple,)
+Christopher Wood (Apple),
 Bas Westerbaan (Cloudflare),
 Falko Strenzke (MTG AG),
 Dan van Geest (Crypto Next),
