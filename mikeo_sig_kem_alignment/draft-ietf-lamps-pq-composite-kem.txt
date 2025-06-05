@@ -394,16 +394,20 @@ Table of Contents
 
    The RSA Optimal Asymmetric Encryption Padding (OAEP), as defined in
    section 7.1 of [RFC8017] is a public key encryption algorithm used to
-   transport key material from a sender to a receiver.  It is promoted
-   into a KEM by having the sender generate a random 256 bit secret and
-   encrypt it.  Acceptable public key encodings for pkR are described in
-   Section 5.
+   transport key material from a sender to a receiver.  A "key
+   transport" type algorithm has the following API:
 
-   Note that, at least at the time of writing, the algorithm RSAOAEPKEM
-   is not defined as a standalone algorithm within PKIX standards and it
-   does not have an assigned algorithm OID, so it cannot be used
-   directly with CMS KEMRecipientInfo [RFC9629]; it is merely a building
-   block for the composite algorithm.
+   *  Encrypt(pk, ss) -> ct: Take an existing shared secret ss and
+      encrypt it for pk.
+
+   *  Decrypt(sk, ct) -> ss: Decrypt the ciphertext ct to recover ss.
+
+   Note the difference between the API of RSA.Encrypt(pk, ss) -> ct and
+   KEM.Encap(pk) -> (ss, ct) presented above.  For this reason, RSA-OAEP
+   cannot be directly combined with ML-KEM.  Fortunately, a key
+   transport mechanism such as RSA-OAEP can be easily promoted into a
+   KEM by having the sender generate a random 256 bit shared secret and
+   encrypt it.
 
    RSAOAEPKEM.Encap(pkR):
      shared_secret = SecureRandom(ss_len)
@@ -411,50 +415,74 @@ Table of Contents
 
      return shared_secret, enc
 
+   Acceptable public key encodings for pkR are described in Section 5.
+
    Note that the OAEP label L is left to its default value, which is the
    empty string as per [RFC8017].  The shared secret output by the
    overall Composite ML-KEM already binds a composite domain separator,
-   so there is no need to also utilize the component domain separators.
+   so there is no need to also use the component domain separators.
 
-   The value of ss_len as well as the RSA-OAEP parameters used within
-   this specification can be found in Section 7.4.
+   The value of ss_len as well as concrete values for all the RSA-OAEP
+   parameters used within this specification can be found in
+   Section 7.4.
 
-   Decap(sk, ct) -> ss is accomplished in the analogous way.
+   Decap(sk, ct) -> ss is accomplished by direct use of OAEP Decrypt.
 
    RSAOAEPKEM.Decap(skR, enc):
      shared_secret = RSAES-OAEP-DECRYPT(skR, enc)
 
      return shared_secret
 
-3.2.  Promotion of ECDH into a KEM
+   A quick note on the choice of RSA-OAEP as the supported RSA
+   encryption primitive.  RSA-KEM [RFC5990] is cryptographically robust
+   and is more straightforward to work with, but it has fairly limited
+   adoption and therefore is of limited value as a PQ migration
+   mechanism.  Also, while RSA-PKCS#1v1.5 [RFC8017] is still widely
+   used, it is hard to make secure and no longer FIPS-approved as of the
+   end of 2023 [SP800-131Ar2], so it is of limited forwards value.  This
+   leaves RSA-OAEP [RFC8017] as the remaining choice.  See Section 7.3
+   for further discussion of algorithm choices.
 
-   An elliptic curve Diffie-Hellman key agreement is promoted into a KEM
-   Encap(pk) -> (ss, ct) using a simplified version of the DHKEM
-   definition from [RFC9180]; simplified to remove the context-binding
-   labels since the shared secret output by the overall Composite ML-KEM
-   already binds a composite domain separator, so there is no need to
-   also utilize labels within DHKEM.
-
-   Note that, at least at the time of writing, the algorithm DHKEM is
-   not defined as a standalone algorithm within PKIX standards and it
+   Note that, at least at the time of writing, the algorithm RSAOAEPKEM
+   is not defined as a standalone algorithm within PKIX standards and it
    does not have an assigned algorithm OID, so it cannot be used
    directly with CMS KEMRecipientInfo [RFC9629]; it is merely a building
    block for the composite algorithm.
 
-   DHKEM.Encap(pkR):
-     skE, pkE = GenerateKeyPair()
-     shared_secret = DH(skE, pkR)
-     enc = SerializePublicKey(pkE)
+3.2.  Promotion of ECDH into a KEM
 
-     return shared_secret, enc
+   The elliptic curve Diffie-Hellman algorithm identified by the OID id-
+   ecDH as defined in [RFC5480] and [SEC1] is a key agreement algorithm
+   requiring both parties to contribute an asymmetric keypair to the
+   derivation of the shared secret.  A "key agreement" type algorithm
+   has the following API:
+
+   *  DH(skX, pkY) -> ss: Each party combines their secret key skX with
+      the other party's public key pkY.
+
+   Note the difference between the API of DH(skX, pkY) -> ss and
+   KEM.Encap(pk) -> (ss, ct) presented above.  For this reason, a
+   Diffie-Hellman key exchange cannot be directly combined with ML-KEM.
+   Fortunately, a Diffie-Hellman key agreement can be easily promoted
+   into a KEM Encap(pk) -> (ss, ct) by having the sender generate an
+   ephemeral keypair for themself and sending their public key as the
+   ciphertext ct.  Composite ML-KEM uses a simplified version of the
+   DHKEM definition from [RFC9180]:
+
+   DHKEM.Encap(pkR):
+     (skE, pkE) = GenerateKeyPair()
+     ss = DH(skE, pkR)
+     ct = SerializePublicKey(pkE)
+
+     return ss, ct
 
    Decap(sk, ct) -> ss is accomplished in the analogous way.
 
-   DHKEM.Decap(skR, enc):
-     pkE = DeserializePublicKey(enc)
-     shared_secret = DH(skR, pkE)
+   DHKEM.Decap(skR, ct):
+     pkE = DeserializePublicKey(ct)
+     ss = DH(skR, pkE)
 
-     return shared_secret
+     return ss
 
    This construction applies for all variants of elliptic curve Diffie-
    Hellman used in this specification: ECDH, X25519, and X448.
@@ -467,21 +495,37 @@ Table of Contents
    6 of [RFC7748].  Acceptable public key encodings for enc and pkE are
    described in Section 5.
 
-   The simplifications from the DHKEM definition in [RFC9180] is that
-   since the ciphertext and receiver's public key are included
-   explicitly in the Composite ML-KEM combiner, there is no need to
-   construct the kem_context object, and since a domain separator is
-   included explicitly in the Composite ML-KEM combiner there is no need
-   to perform the labeled steps of ExtractAndExpand().
+   The promotion of DH to a KEM is similar to the DHKEM functions in
+   [RFC9180], but it is simplified in the following ways:
+
+   1.  Notation has been aligned to the notation used in this
+       specification.
+
+   2.  Since a domain separator is included explicitly in the Composite
+       ML-KEM combiner, there is no need to perform the labeled steps of
+       ExtractAndExpand().
+
+   3.  Since the ciphertext and receiver's public key are included
+       explicitly in the Composite ML-KEM combiner, there is no need to
+       construct the kem_context object.
 
    Note that here, SerializePublicKey() and DeserializePublicKey() refer
    to the underlying encoding of the DH primitive, and not to the
-   composite serialization functions defined in Section 5.
+   composite serialization functions defined in Section 5.  Acceptable
+   serializations for the underlying DH primitives are described in
+   Section 5.
+
+   Note that, at least at the time of writing, the algorithm DHKEM is
+   not defined as a standalone algorithm within PKIX standards and it
+   does not have an assigned algorithm OID, so it cannot be used
+   directly with CMS KEMRecipientInfo [RFC9629]; it is merely a building
+   block for the composite algorithm.
 
 4.  Composite ML-KEM Functions
 
    This section describes the composite ML-KEM functions needed to
-   instantiate the public KEM API in Section 3.
+   instantiate the public API of a Key Encapsulation Mechanism as
+   defined in Section 3.
 
 4.1.  Key Generation
 
@@ -1344,24 +1388,26 @@ Deserialization Process:
    MLKEM768-RSA3072-HMAC-SHA256, and id-MLKEM768-RSA4096-HMAC-SHA256
    requires additional specification.
 
-   First, a quick note on the choice of RSA-OAEP as the supported RSA
-   encryption primitive.  RSA-KEM [RFC5990] is more straightforward to
-   work with, but it has fairly limited adoption and therefore is of
-   limited backwards compatibility value.  Also, while RSA-PKCS#1v1.5
-   [RFC8017] is still everywhere, but hard to make secure and no longer
-   FIPS-approved as of the end of 2023 [SP800-131Ar2], so it is of
-   limited forwards value.  This leaves RSA-OAEP [RFC8017] as the
-   remaining choice.
+   A quick note on the choice of RSA-OAEP as the supported RSA
+   encryption primitive.  RSA-KEM [RFC5990] is cryptographically robust
+   and is more straightforward to work with, but it has fairly limited
+   adoption and therefore is of limited value as a PQ migration
+   mechanism.  Also, while RSA-PKCS#1v1.5 [RFC8017] is still widely
+   used, it is hard to make secure and no longer FIPS-approved as of the
+   end of 2023 [SP800-131Ar2], so it is of limited forwards value.  This
+   leaves RSA-OAEP [RFC8017] as the remaining choice.  See Section 7.3
+   for further discussion of algorithm choices.
 
-   The RSA component keys MUST be generated at the 2048-bit and 3072-bit
-   security levels respectively.
+   The RSA component keys MUST be generated at the 2048-bit, 3072-bit,
+   4096-bit key sizes levels respectively (up to small differences such
+   as dropping leading zeros); intermediate sizes are not acceptable
 
    As with the other Composite ML-KEM algorithms, when id-
    MLKEM768-RSA2048-HMAC-SHA256, id-MLKEM768-RSA3072-HMAC-SHA256, or id-
-   MLKEM-RSA4096 is used in an AlgorithmIdentifier, the parameters MUST
-   be absent.  The RSA-OAEP SHALL be instantiated with the following
-   hard-coded parameters which are the same for the 2048, 3072 and 4096
-   bit security levels.
+   MLKEM-RSA4096 FIXME!! is used in an AlgorithmIdentifier, the
+   parameters MUST be absent.  The RSA-OAEP SHALL be instantiated with
+   the following hard-coded parameters which are the same for the 2048,
+   3072 and 4096 bit security levels.
 
                +===================+======================+
                | RSAES-OAEP-params | Value                |
