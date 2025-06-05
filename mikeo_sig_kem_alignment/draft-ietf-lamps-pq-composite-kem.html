@@ -1527,55 +1527,51 @@ The algorithm descriptions use python-like syntax. The following symbols deserve
       <h2 id="name-overview-of-the-composite-m">
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-overview-of-the-composite-m" class="section-name selfRef">Overview of the Composite ML-KEM Scheme</a>
       </h2>
-<p id="section-3-1">We borrow here the definition of a key encapsulation mechanism (KEM) from <span>[<a href="#I-D.ietf-tls-hybrid-design" class="cite xref">I-D.ietf-tls-hybrid-design</a>]</span>, in which a KEM is a cryptographic primitive that consists of three algorithms:<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-1">Composite ML-KEM is a Post-Quantum / Traditional hybrid Key Encapsulation Mechanism (KEM) which combines ML-KEM as specified in <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span> and <span>[<a href="#I-D.ietf-lamps-kyber-certificates" class="cite xref">I-D.ietf-lamps-kyber-certificates</a>]</span> with one of RSA-OAEP defined in <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span>, the Elliptic Curve Diffie-Hellman key agreement schemes ECDH defined in section 5.7.1.2 of <span>[<a href="#SP.800-56Ar3" class="cite xref">SP.800-56Ar3</a>]</span>, and X25519 / X448 defined in <span>[<a href="#RFC8410" class="cite xref">RFC8410</a>]</span>. A KEM combiner function is used to combine the two component shared secrets into a single shared secret.<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-2">Composite Key Encapsulation Mechanisms are defined as cryptographic primitives that consist of three algorithms. These definitions are borrowed from <span>[<a href="#RFC9180" class="cite xref">RFC9180</a>]</span>.<a href="#section-3-2" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-3-2.1">
-          <p id="section-3-2.1.1"><code>KeyGen() -&gt; (pk, sk)</code>: A probabilistic key generation algorithm,
-which generates a public key <code>pk</code> and a secret key <code>sk</code>.<a href="#section-3-2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-3-3.1">
+          <p id="section-3-3.1.1"><code>KeyGen() -&gt; (pk, sk)</code>: A probabilistic key generation algorithm,
+which generates a public key <code>pk</code> and a secret key <code>sk</code>. Some cryptographic modules may also expose a <code>KeyGen(seed) -&gt; (pk, sk)</code>, which generates <code>pk</code> and <code>sk</code> deterministically from a seed. This specification assumes a seed-based keygen for ML-KEM.<a href="#section-3-3.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-3-2.2">
-          <p id="section-3-2.2.1"><code>KeyGen(seed) -&gt; (pk, sk)</code>: A deterministic key generation algorithm
-  which generates a public key pk and a secret key sk from a seed.<a href="#section-3-2.2.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="section-3-2.3">
-          <p id="section-3-2.3.1"><code>Encap(pk) -&gt; (ss, ct)</code>: A probabilistic encapsulation algorithm,
+        <li class="normal" id="section-3-3.2">
+          <p id="section-3-3.2.1"><code>Encap(pk) -&gt; (ss, ct)</code>: A probabilistic encapsulation algorithm,
 which takes as input a public key <code>pk</code> and outputs a ciphertext <code>ct</code>
-and shared secret ss. Note: this document uses <code>Encap()</code> to conform to <span>[<a href="#RFC9180" class="cite xref">RFC9180</a>]</span>,
-but <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span> uses <code>Encaps()</code>.<a href="#section-3-2.3.1" class="pilcrow">¶</a></p>
+and shared secret <code>ss</code>. Note: this document uses <code>Encap()</code> to conform to <span>[<a href="#RFC9180" class="cite xref">RFC9180</a>]</span>,
+but <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span> uses <code>Encaps()</code>.<a href="#section-3-3.2.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-3-2.4">
-          <p id="section-3-2.4.1"><code>Decap(sk, ct) -&gt; ss</code>: A decapsulation algorithm, which takes as
+        <li class="normal" id="section-3-3.3">
+          <p id="section-3-3.3.1"><code>Decap(sk, ct) -&gt; ss</code>: A decapsulation algorithm, which takes as
 input a secret key <code>sk</code> and ciphertext <code>ct</code> and outputs a shared
 secret <code>ss</code>, or in some cases a distinguished error value.
 Note: this document uses <code>Decap()</code> to conform to <span>[<a href="#RFC9180" class="cite xref">RFC9180</a>]</span>,
-but <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span> uses <code>Decaps()</code>.<a href="#section-3-2.4.1" class="pilcrow">¶</a></p>
+but <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span> uses <code>Decaps()</code>.<a href="#section-3-3.3.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-3-3">We define the following algorithms which are used to serialize and deserialize component values. These algorithms are inspired by similar algorithms in <span>[<a href="#RFC9180" class="cite xref">RFC9180</a>]</span>.<a href="#section-3-3" class="pilcrow">¶</a></p>
+<p id="section-3-4">The KEM interface defined above differs from both traditional key transport mechanism (for example for use with KeyTransRecipientInfo defined in <span>[<a href="#RFC5652" class="cite xref">RFC5652</a>]</span>), and key agreement (for example for use with KeyAgreeRecipientInfo defined in <span>[<a href="#RFC5652" class="cite xref">RFC5652</a>]</span>) and thus Composite KEM MUST be used with KEMRecipientInfo defined in <span>[<a href="#RFC9629" class="cite xref">RFC9629</a>]</span>, however full conventions for use of Composite ML-KEM within the Cryptographic Message Syntax will be included in a separate specification.<a href="#section-3-4" class="pilcrow">¶</a></p>
+<p id="section-3-5">The KEM interface was chosen as the interface for a composite key establishment because it allows for arbitrary combinations of component algorithm types since both key transport and key agreement mechanisms can be promoted into KEMs as described in <a href="#sec-RSAOAEPKEM" class="auto internal xref">Section 3.1</a> and <a href="#sec-DHKEM" class="auto internal xref">Section 3.2</a> below.<a href="#section-3-5" class="pilcrow">¶</a></p>
+<p id="section-3-6">The following algorithms are defined for serializing and deserializing component values. These algorithms are inspired by similar algorithms in <span>[<a href="#RFC9180" class="cite xref">RFC9180</a>]</span>.<a href="#section-3-6" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-3-4.1">
-          <p id="section-3-4.1.1"><code>SerializePublicKey(mlkemPK, tradPK) -&gt; bytes</code>: Produce a byte string encoding the component public keys.<a href="#section-3-4.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-3-7.1">
+          <p id="section-3-7.1.1"><code>SerializePublicKey(mlkemPK, tradPK) -&gt; bytes</code>: Produce a byte string encoding of the component public keys.<a href="#section-3-7.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-3-4.2">
-          <p id="section-3-4.2.1"><code>DeserializePublicKey(bytes) -&gt; (mlkemPK, tradPK)</code>: Parse a byte string to recover the component public keys.<a href="#section-3-4.2.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-3-7.2">
+          <p id="section-3-7.2.1"><code>DeserializePublicKey(bytes) -&gt; (mlkemPK, tradPK)</code>: Parse a byte string to recover the component public keys.<a href="#section-3-7.2.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-3-4.3">
-          <p id="section-3-4.3.1"><code>SerializeCiphertext(mlkemCT, tradCT) -&gt; bytes</code>: Produce a byte string encoding the component ciphertexts.<a href="#section-3-4.3.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-3-7.3">
+          <p id="section-3-7.3.1"><code>SerializeCiphertext(mlkemCT, tradCT) -&gt; bytes</code>: Produce a byte string encoding of the component ciphertexts.<a href="#section-3-7.3.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-3-4.4">
-          <p id="section-3-4.4.1"><code>DeserializeCiphertext(bytes) -&gt; (mlkemCT, tradCT)</code>: Parse a byte string to recover the component ciphertexts.<a href="#section-3-4.4.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-3-7.4">
+          <p id="section-3-7.4.1"><code>DeserializeCiphertext(bytes) -&gt; (mlkemCT, tradCT)</code>: Parse a byte string to recover the component ciphertexts.<a href="#section-3-7.4.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-3-4.5">
-          <p id="section-3-4.5.1"><code>SerializePrivateKey(mlkemSeed, tradSK) -&gt; bytes</code>: Produce a byte string encoding the component private keys.<a href="#section-3-4.5.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-3-7.5">
+          <p id="section-3-7.5.1"><code>SerializePrivateKey(mlkemSeed, tradSK) -&gt; bytes</code>: Produce a byte string encoding of the component private keys.<a href="#section-3-7.5.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-3-4.6">
-          <p id="section-3-4.6.1"><code>DeserializePrivateKey(bytes) -&gt; (mlkemSeed, tradSK)</code>: Parse a byte string to recover the component private keys.<a href="#section-3-4.6.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-3-7.6">
+          <p id="section-3-7.6.1"><code>DeserializePrivateKey(bytes) -&gt; (mlkemSeed, tradSK)</code>: Parse a byte string to recover the component private keys.<a href="#section-3-7.6.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-3-5">Full definitions of serialization and deserialization algorithms can be found in <a href="#sec-serialization" class="auto internal xref">Section 5</a>.<a href="#section-3-5" class="pilcrow">¶</a></p>
-<p id="section-3-6">The KEM interface defined above differs from both traditional key transport mechanism (for example for use with KeyTransRecipientInfo defined in <span>[<a href="#RFC5652" class="cite xref">RFC5652</a>]</span>), and key agreement (for example for use with KeyAgreeRecipientInfo defined in <span>[<a href="#RFC5652" class="cite xref">RFC5652</a>]</span>).<a href="#section-3-6" class="pilcrow">¶</a></p>
-<p id="section-3-7">The KEM interface was chosen as the interface for a composite key establishment because it allows for arbitrary combinations of component algorithm types since both key transport and key agreement mechanisms can be promoted into KEMs as described in <a href="#sec-RSAOAEPKEM" class="auto internal xref">Section 3.1</a> and <a href="#sec-DHKEM" class="auto internal xref">Section 3.2</a> below.<a href="#section-3-7" class="pilcrow">¶</a></p>
-<p id="section-3-8">This specification uses the Post-Quantum KEM ML-KEM as specified in <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span> and <span>[<a href="#I-D.ietf-lamps-kyber-certificates" class="cite xref">I-D.ietf-lamps-kyber-certificates</a>]</span>. For Traditional KEMs, this document uses the RSA-OAEP algorithm defined in <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span>, the Elliptic Curve Diffie-Hellman key agreement schemes ECDH defined in section 5.7.1.2 of <span>[<a href="#SP.800-56Ar3" class="cite xref">SP.800-56Ar3</a>]</span>, and X25519 / X448 which are defined in <span>[<a href="#RFC8410" class="cite xref">RFC8410</a>]</span>. A combiner function is used to combine the two component shared secrets into a single shared secret.<a href="#section-3-8" class="pilcrow">¶</a></p>
+<p id="section-3-8">Full definitions of serialization and deserialization algorithms can be found in <a href="#sec-serialization" class="auto internal xref">Section 5</a>.<a href="#section-3-8" class="pilcrow">¶</a></p>
 <div id="sec-RSAOAEPKEM">
 <section id="section-3.1">
         <h3 id="name-promotion-of-rsa-oaep-into-">
@@ -3404,10 +3400,6 @@ In the case of a composite with RSA-OAEP the <code>tradSS</code> is controlled b
 <dt id="I-D.ietf-pquip-pqt-hybrid-terminology">[I-D.ietf-pquip-pqt-hybrid-terminology]</dt>
         <dd>
 <span class="refAuthor">D, F.</span>, <span class="refAuthor">P, M.</span>, and <span class="refAuthor">B. Hale</span>, <span class="refTitle">"Terminology for Post-Quantum Traditional Hybrid Schemes"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-pquip-pqt-hybrid-terminology-04</span>, <time datetime="2024-09-10" class="refDate">10 September 2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-pquip-pqt-hybrid-terminology-04">https://datatracker.ietf.org/doc/html/draft-ietf-pquip-pqt-hybrid-terminology-04</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="I-D.ietf-tls-hybrid-design">[I-D.ietf-tls-hybrid-design]</dt>
-        <dd>
-<span class="refAuthor">Stebila, D.</span>, <span class="refAuthor">Fluhrer, S.</span>, and <span class="refAuthor">S. Gueron</span>, <span class="refTitle">"Hybrid key exchange in TLS 1.3"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-tls-hybrid-design-04</span>, <time datetime="2022-01-11" class="refDate">11 January 2022</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-tls-hybrid-design-04">https://datatracker.ietf.org/doc/html/draft-ietf-tls-hybrid-design-04</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC2986">[RFC2986]</dt>
         <dd>
