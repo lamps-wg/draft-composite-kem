@@ -1683,6 +1683,12 @@ The SHA3 options can be certified under [SP.800-56Cr2] One-Step Key Derivation O
 
 This means that although Composite KEM always places the shared secret key from ML-KEM in the first slot, a Composite KEM can be FIPS certified so long as either component is FIPS certified. This is important for several reasons. First, in the early stages of PQC migration, composites allow for a non-FIPS certified ML-KEM implementation to be added to a module that already has a FIPS certified traditional component, and the resulting composite can be FIPS certified. Second, when eventually RSA and Elliptic Curve are no longer FIPS-allowed, the composite can retain its FIPS certified status on the strength of the ML-KEM component. Third, while this is outside the scope of this document, the general composite construction could be used to create FIPS certified algorithms that contain a component algorithm from a different jurisdiction.
 
+### Approval Status of DHKEM
+
+As noted above, [SP-800-227ipd] permits the key combiner inputs to be either shared secrets generated from [SP.800-56Ar3] key establishment mehtods, or by approved KEMs.
+[SP.800-56Ar3] describes the `Z` value in its definition of ECDH as a shared secret so it is acceptable by this definition.
+
+However this does not imply that DHKEM is an approved KEM in isolation, i.e. when not used as part of this composite KEM.
 
 ## Backwards Compatibility {#sec-backwards-compat}
 
