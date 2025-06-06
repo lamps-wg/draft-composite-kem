@@ -1266,13 +1266,17 @@ Note: The mask length, according to [RFC8017], is `k - hLen - 1`, where `k` is t
 
 EDNOTE to IANA: OIDs will need to be replaced in both the ASN.1 module and in {{tab-kem-algs}}.
 
-###  Module Registration - SMI Security for PKIX Module Identifier
+###  Module Registration
+
+The following is to be regisetered in "SMI Security for PKIX Module Identifier":
 
 -  Decimal: IANA Assigned - **Replace TBDMOD**
 -  Description: Composite-KEM-2023 - id-mod-composite-kems
 -  References: This Document
 
-###  Object Identifier Registrations - SMI Security for PKIX Algorithms
+###  Object Identifier Registrations
+
+The following is to be registered in "SMI Security for PKIX Algorithms":
 
 - id-MLKEM768-RSA2048-HMAC-SHA256
   - Decimal: IANA Assigned
