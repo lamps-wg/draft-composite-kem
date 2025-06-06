@@ -116,25 +116,25 @@ Table of Contents
      10.3.  Key Reuse
      10.4.  Decapsulation failure
      10.5.  Policy for Deprecated and Acceptable Algorithms
-   11. References
-     11.1.  Normative References
-     11.2.  Informative References
+   11. Implementation Considerations
+     11.1.  FIPS Certification
+       11.1.1.  Combiner Function
+       11.1.2.  Mixing with Non-Approved Algorithms
+     11.2.  Backwards Compatibility
+     11.3.  Profiling down the number of options
+     11.4.  Decapsulation Requires the Public Key
+   12. References
+     12.1.  Normative References
+     12.2.  Informative References
    Appendix A.  Approximate Key and Ciphertext Sizes
    Appendix B.  Component Algorithm Reference
    Appendix C.  Fixed Component Algorithm Identifiers
-   Appendix D.  Implementation Considerations
-     D.1.  FIPS Certification
-       D.1.1.  Combiner Function
-       D.1.2.  Mixing with Non-Approved Algorithms
-     D.2.  Backwards Compatibility
-     D.3.  Decapsulation Requires the Public Key
-     D.4.  Profiling down the number of options
-   Appendix E.  Comparison with other Hybrid KEMs
-     E.1.  X-Wing
-     E.2.  ETSI CatKDF
-   Appendix F.  Test Vectors
-   Appendix G.  Intellectual Property Considerations
-   Appendix H.  Contributors and Acknowledgments
+   Appendix D.  Comparison with other Hybrid KEMs
+     D.1.  X-Wing
+     D.2.  ETSI CatKDF
+   Appendix E.  Test Vectors
+   Appendix F.  Intellectual Property Considerations
+   Appendix G.  Contributors and Acknowledgments
    Authors' Addresses
 
 1.  Changes in version -07
@@ -215,7 +215,7 @@ Table of Contents
    lattice schemes be used exclusively within a PQ/T hybrid framework.
    The use of a composite scheme provides a straightforward
    implementation of hybrid solutions compatible with (and advocated by)
-   some governments and cybersecurity agencies [BSI2021].
+   some governments and cybersecurity agencies [BSI2021], [ANSSI2024].
 
    This specification defines a specific instantiation of the PQ/T
    Hybrid paradigm called "composite" where multiple cryptographic
@@ -230,7 +230,7 @@ Table of Contents
    KEM algorithms are provided based on ML-KEM, RSA-OAEP and ECDH.
    Backwards compatibility in the sence of upgraded systems continuing
    to inter-operate with legacy systems is not directly covered in this
-   specification, but is the subject of Appendix D.2.
+   specification, but is the subject of Section 11.2.
 
    Composite ML-KEM is applicable in any PKIX-related application that
    would otherwise use ML-KEM.
@@ -1389,7 +1389,7 @@ Process:
    found in Appendix B.
 
    As the number of algorithms can be daunting to implementers, see
-   Appendix D.4 for a discussion of choosing a subset to support.
+   Section 11.3 for a discussion of choosing a subset to support.
 
 7.1.  Domain Separator Values
 
@@ -1936,7 +1936,7 @@ Process:
    later attacks even if that ML-KEM implemtation is still an
    experimental, non-validated, non-certified, non-hardened
    implementation.  More details of obtaining FIPS certification of a
-   composite algorithm can be found in Appendix D.1.
+   composite algorithm can be found in Section 11.1.
 
 10.2.  KEM Combiner
 
@@ -2172,9 +2172,176 @@ Process:
    Materials that show implementations of deprecated algorithms still
    present and being used.
 
-11.  References
+11.  Implementation Considerations
 
-11.1.  Normative References
+11.1.  FIPS Certification
+
+   The following sections give guidance to implementers wishing to FIPS-
+   certify a composite implentation.
+
+   This guidance is not authoritative and has not been endorsed by NIST.
+
+11.1.1.  Combiner Function
+
+   For reference, the KEM combiner used in Composite ML-KEM is:
+
+   ss = KDF(mlkemSS || tradSS || tradCT || tradPK || Domain)
+
+   where KDF is either SHA3 or HMAC-SHA2.
+
+   NIST SP 800-227 [SP-800-227ipd], which at the time of writing is in
+   its initial public draft period, allows hybrid key combiners of the
+   following form:
+
+   K ← KDM(S1‖S2‖ · · · ‖St , OtherInput)           (14)
+
+   The key derivation method KDM can take one of two forms, either
+
+   K ← KDF(Z‖OtherInput)                            (12)
+
+   or
+
+   K ← Expand(Extract(salt, Z), OtherInput)         (13)
+
+   In terms of the order of inputs, Composite ML-KEM places the two
+   shared secret keys mlkemSS || tradSS at the beginning of the KDF
+   input such that all other inputs tradCT || tradPK || Domain can be
+   considered part of OtherInput for the purposes of FIPS certification.
+
+   For detailed steps [SP-800-227ipd] refers to NIST SP.800-56Cr2
+   [SP.800-56Cr2].  Compliance of the Composite ML-KEM variants is
+   achieved in the following way:
+
+   [SP.800-56Cr2] section 4 "One-Step Key Derivation" requires a counter
+   which begins at the 4-byte value 0x00000001.  However, the counter is
+   allowed to be omitted when the hash function is executed only once,
+   as specified on page 159 of the FIPS 140-3 Implementation Guidance
+   [FIPS-140-3-IG].
+
+   The HMAC-SHA2 options can be certified under [SP.800-56Cr2] One-Step
+   Key Derivation Option 2: H(x) = HMAC-hash(salt, x) where salt is the
+   empty (0 octet) string, which will internally be mapped to the zero
+   vector 0x00..00 of the correct input size for the underlying hash
+   function in order to satisfy the requirement in [SP.800-56Cr2] that
+   "in the absence of an agreed-upon alternative – the default_salt
+   shall be an all-zero byte string whose bit length equals that
+   specified as the bit length of an input block for the hash function,
+   hash".  Note that since the desired shared secret key output length
+   of 256 bits for all security levels aligns with the block size of
+   SHA256 or can be accomplished by truncating SHA-512, we do not need
+   to use the HKDF-Expand step specified in [RFC5869], which further
+   simplifies FIPS certification by allowing us to use the One-Step
+   HMAC-based KDF rather than the Two-Step KDF from [SP.800-56Cr2].
+
+   The SHA3 options can be certified under [SP.800-56Cr2] One-Step Key
+   Derivation Option 1: H(x) = hash(x).
+
+11.1.2.  Mixing with Non-Approved Algorithms
+
+   [SP-800-227ipd] adds an important stipulation that was not present in
+   earlier NIST specifications:
+
+      This publication approves the use of the key combiner (14) for any
+      t > 1, so long as at least one shared secret (i.e., S_j for some
+      j) is a shared secret generated from the key- establishment
+      methods of SP 800-56A or SP 800-56B, or an approved KEM.
+
+   This means that although Composite ML-KEM always places the shared
+   secret key from ML-KEM in the first slot, a Composite ML-KEM can be
+   FIPS certified so long as either component is FIPS certified.  This
+   is important for several reasons.  First, in the early stages of PQC
+   migration, composites allow for a non-FIPS certified ML-KEM
+   implementation to be added to a module that already has a FIPS
+   certified traditional component, and the resulting composite can be
+   FIPS certified.  Second, when eventually RSA and Elliptic Curve are
+   no longer FIPS-allowed, the composite can retain its FIPS certified
+   status on the strength of the ML-KEM component.  Third, while this is
+   outside the scope of this specification, the general composite
+   construction could be used to create FIPS certified algorithms that
+   contain a component algorithm from a different jurisdiction.
+
+11.2.  Backwards Compatibility
+
+   As noted in the introduction, the post-quantum cryptographic
+   migration will face challenges in both ensuring cryptographic
+   strength against adversaries of unknown capabilities, as well as
+   providing ease of migration.  The composite mechanisms defined in
+   this specification primarily address cryptographic strength, however
+   this section contains notes on how backwards compatibility may be
+   obtained.
+
+   The term "ease of migration" is used here to mean that existing
+   systems can be gracefully transitioned to the new technology without
+   requiring large service disruptions or expensive upgrades.  The term
+   "backwards compatibility" is used here to mean something more
+   specific; that existing systems as they are deployed today can inter-
+   operate with the upgraded systems of the future.
+
+   These migration and interoperability concerns need to be thought
+   about in the context of various types of protocols that make use of
+   X.509 and PKIX with relation to key establishment and content
+   encryption, from online negotiated protocols such as TLS 1.3
+   [RFC8446] and IKEv2 [RFC7296], to non-negotiated asynchronous
+   protocols such as S/MIME signed email [RFC8551], as well as myriad
+   other standardized and proprietary protocols and applications that
+   leverage CMS [RFC5652] encrypted structures.
+
+11.3.  Profiling down the number of options
+
+   One immediately daunting aspect of this specification is the number
+   of composite algorithm combinations.  Each option has been specified
+   because there is a community that has a direct application for it;
+   typically because the traditional component is already deployed in a
+   change-managed environment, or because that specific traditional
+   component is required for regulatory reasons.
+
+   However, this large number of combinations leads either to fracturing
+   of the ecosystem into non-interoperable sub-groups when different
+   communities choose non-overlapping subsets to support, or on the
+   other hand it leads to spreading development resources too thin when
+   trying to support all options.
+
+   This specification does not list any particular composite algorithm
+   as mandatory-to-implement, however organizations that operate within
+   specific application domains are encouraged to define profiles that
+   select a small number of composites appropriate for that application
+   domain.  For applications that do not have any regulatory
+   requirements or legacy implementations to consider, it is RECOMMENDED
+   to focus implemtation effort on:
+
+   id-MLKEM768-X25519-SHA3-256
+   id-MLKEM768-ECDH-P256-HMAC-SHA256
+
+   In applications that only allow NIST PQC Level 5, it is RECOMMENDED
+   to focus implemtation effort on:
+
+   id-MLKEM1024-ECDH-P384-HMAC-SHA512
+
+11.4.  Decapsulation Requires the Public Key
+
+   ML-KEM always requires the public key in order to perform various
+   steps of the Fujisaki-Okamoto decapsulation [FIPS.203], and for this
+   reason the private key encoding specified in FIPS 203 includes the
+   public key.  Moveover, the KEM combiner as specified in Section 4.4
+   requires the public key of the traditional component in order to
+   achieve the public-key binding property and ciphertext collision
+   resistance as described in Section 10.2.
+
+   The mechanism by which an application transmits the public keys is
+   out of scope of this specification, but it MAY be accomplished by
+   placing a serialized composite public key into the optional
+   OneAsymmetricKey.publicKey field of the private key object.
+
+   Implementers who choose to use a different private key encoding than
+   the one specified in this document MUST consider how to provide the
+   component public keys to the decapsulate routine.  While some
+   implementations might contain routines to computationally derive the
+   public key from the private key, it is not guaranteed that all
+   implementations will support this.
+
+12.  References
+
+12.1.  Normative References
 
    [FIPS.180-4]
               National Institute of Standards and Technology (NIST),
@@ -2199,22 +2366,6 @@ Process:
               2024, <https://nvlpubs.nist.gov/nistpubs/FIPS/
               NIST.FIPS.204.pdf>.
 
-   [I-D.ietf-lamps-cms-sha3-hash]
-              Housley, R., "Use of the SHA3 One-way Hash Functions in
-              the Cryptographic Message Syntax (CMS)", Work in Progress,
-              Internet-Draft, draft-ietf-lamps-cms-sha3-hash-04, 16 May
-              2024, <https://datatracker.ietf.org/doc/html/draft-ietf-
-              lamps-cms-sha3-hash-04>.
-
-   [I-D.ietf-lamps-kyber-certificates]
-              Turner, S., Kampanakis, P., Massimo, J., and B.
-              Westerbaan, "Internet X.509 Public Key Infrastructure -
-              Algorithm Identifiers for the Module-Lattice-Based Key-
-              Encapsulation Mechanism (ML-KEM)", Work in Progress,
-              Internet-Draft, draft-ietf-lamps-kyber-certificates-06, 4
-              November 2024, <https://datatracker.ietf.org/doc/html/
-              draft-ietf-lamps-kyber-certificates-06>.
-
    [RFC2104]  Krawczyk, H., Bellare, M., and R. Canetti, "HMAC: Keyed-
               Hashing for Message Authentication", RFC 2104,
               DOI 10.17487/RFC2104, February 1997,
@@ -2224,13 +2375,6 @@ Process:
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
-
-   [RFC4055]  Schaad, J., Kaliski, B., and R. Housley, "Additional
-              Algorithms and Identifiers for RSA Cryptography for use in
-              the Internet X.509 Public Key Infrastructure Certificate
-              and Certificate Revocation List (CRL) Profile", RFC 4055,
-              DOI 10.17487/RFC4055, June 2005,
-              <https://www.rfc-editor.org/info/rfc4055>.
 
    [RFC5280]  Cooper, D., Santesson, S., Farrell, S., Boeyen, S.,
               Housley, R., and W. Polk, "Internet X.509 Public Key
@@ -2285,11 +2429,6 @@ Process:
               RFC 8411, DOI 10.17487/RFC8411, August 2018,
               <https://www.rfc-editor.org/info/rfc8411>.
 
-   [RFC8619]  Housley, R., "Algorithm Identifiers for the HMAC-based
-              Extract-and-Expand Key Derivation Function (HKDF)",
-              RFC 8619, DOI 10.17487/RFC8619, June 2019,
-              <https://www.rfc-editor.org/info/rfc8619>.
-
    [RFC9629]  Housley, R., Gray, J., and T. Okubo, "Using Key
               Encapsulation Mechanism (KEM) Algorithms in the
               Cryptographic Message Syntax (CMS)", RFC 9629,
@@ -2336,7 +2475,7 @@ Process:
               Encoding Rules (CER) and Distinguished Encoding Rules
               (DER)", ISO/IEC 8825-1:2015, November 2015.
 
-11.2.  Informative References
+12.2.  Informative References
 
    [ANSSI2024]
               French Cybersecurity Agency (ANSSI), Federal Office for
@@ -2381,19 +2520,21 @@ Process:
    [GHP18]    Giacon, F., Heuer, F., and B. Poettering, "KEM Combiners",
               2018, <https://eprint.iacr.org/2018/024>.
 
-   [I-D.ietf-lamps-cms-kyber]
-              Prat, J., Ounsworth, M., and D. Van Geest, "Use of ML-KEM
-              in the Cryptographic Message Syntax (CMS)", Work in
-              Progress, Internet-Draft, draft-ietf-lamps-cms-kyber-05,
-              15 October 2024, <https://datatracker.ietf.org/doc/html/
-              draft-ietf-lamps-cms-kyber-05>.
+   [I-D.ietf-lamps-kyber-certificates]
+              Turner, S., Kampanakis, P., Massimo, J., and B.
+              Westerbaan, "Internet X.509 Public Key Infrastructure -
+              Algorithm Identifiers for the Module-Lattice-Based Key-
+              Encapsulation Mechanism (ML-KEM)", Work in Progress,
+              Internet-Draft, draft-ietf-lamps-kyber-certificates-10, 16
+              April 2025, <https://datatracker.ietf.org/doc/html/draft-
+              ietf-lamps-kyber-certificates-10>.
 
    [I-D.ietf-pquip-pqt-hybrid-terminology]
               D, F., P, M., and B. Hale, "Terminology for Post-Quantum
               Traditional Hybrid Schemes", Work in Progress, Internet-
-              Draft, draft-ietf-pquip-pqt-hybrid-terminology-04, 10
-              September 2024, <https://datatracker.ietf.org/doc/html/
-              draft-ietf-pquip-pqt-hybrid-terminology-04>.
+              Draft, draft-ietf-pquip-pqt-hybrid-terminology-06, 10
+              January 2025, <https://datatracker.ietf.org/doc/html/
+              draft-ietf-pquip-pqt-hybrid-terminology-06>.
 
    [RFC2986]  Nystrom, M. and B. Kaliski, "PKCS #10: Certification
               Request Syntax Specification Version 1.7", RFC 2986,
@@ -2410,16 +2551,6 @@ Process:
               Certificate Request Message Format (CRMF)", RFC 4211,
               DOI 10.17487/RFC4211, September 2005,
               <https://www.rfc-editor.org/info/rfc4211>.
-
-   [RFC4262]  Santesson, S., "X.509 Certificate Extension for Secure/
-              Multipurpose Internet Mail Extensions (S/MIME)
-              Capabilities", RFC 4262, DOI 10.17487/RFC4262, December
-              2005, <https://www.rfc-editor.org/info/rfc4262>.
-
-   [RFC5083]  Housley, R., "Cryptographic Message Syntax (CMS)
-              Authenticated-Enveloped-Data Content Type", RFC 5083,
-              DOI 10.17487/RFC5083, November 2007,
-              <https://www.rfc-editor.org/info/rfc5083>.
 
    [RFC5639]  Lochter, M. and J. Merkle, "Elliptic Curve Cryptography
               (ECC) Brainpool Standard Curves and Curve Generation",
@@ -2747,176 +2878,9 @@ Appendix C.  Fixed Component Algorithm Identifiers
    DER:
      30 05 06 03 2B 65 6F
 
-Appendix D.  Implementation Considerations
+Appendix D.  Comparison with other Hybrid KEMs
 
-D.1.  FIPS Certification
-
-   The following sections give guidance to implementers wishing to FIPS-
-   certify a composite implentation.
-
-   This guidance is not authoritative and has not been endorsed by NIST.
-
-D.1.1.  Combiner Function
-
-   For reference, the KEM combiner used in Composite ML-KEM is:
-
-   ss = KDF(mlkemSS || tradSS || tradCT || tradPK || Domain)
-
-   where KDF is either SHA3 or HMAC-SHA2.
-
-   NIST SP 800-227 [SP-800-227ipd], which at the time of writing is in
-   its initial public draft period, allows hybrid key combiners of the
-   following form:
-
-   K ← KDM(S1‖S2‖ · · · ‖St , OtherInput)           (14)
-
-   The key derivation method KDM can take one of two forms, either
-
-   K ← KDF(Z‖OtherInput)                            (12)
-
-   or
-
-   K ← Expand(Extract(salt, Z), OtherInput)         (13)
-
-   In terms of the order of inputs, Composite ML-KEM places the two
-   shared secret keys mlkemSS || tradSS at the beginning of the KDF
-   input such that all other inputs tradCT || tradPK || Domain can be
-   considered part of OtherInput for the purposes of FIPS certification.
-
-   For detailed steps [SP-800-227ipd] refers to NIST SP.800-56Cr2
-   [SP.800-56Cr2].  Compliance of the Composite ML-KEM variants is
-   achieved in the following way:
-
-   [SP.800-56Cr2] section 4 "One-Step Key Derivation" requires a counter
-   which begins at the 4-byte value 0x00000001.  However, the counter is
-   allowed to be omitted when the hash function is executed only once,
-   as specified on page 159 of the FIPS 140-3 Implementation Guidance
-   [FIPS-140-3-IG].
-
-   The HMAC-SHA2 options can be certified under [SP.800-56Cr2] One-Step
-   Key Derivation Option 2: H(x) = HMAC-hash(salt, x) where salt is the
-   empty (0 octet) string, which will internally be mapped to the zero
-   vector 0x00..00 of the correct input size for the underlying hash
-   function in order to satisfy the requirement in [SP.800-56Cr2] that
-   "in the absence of an agreed-upon alternative – the default_salt
-   shall be an all-zero byte string whose bit length equals that
-   specified as the bit length of an input block for the hash function,
-   hash".  Note that since the desired shared secret key output length
-   of 256 bits for all security levels aligns with the block size of
-   SHA256 or can be accomplished by truncating SHA-512, we do not need
-   to use the HKDF-Expand step specified in [RFC5869], which further
-   simplifies FIPS certification by allowing us to use the One-Step
-   HMAC-based KDF rather than the Two-Step KDF from [SP.800-56Cr2].
-
-   The SHA3 options can be certified under [SP.800-56Cr2] One-Step Key
-   Derivation Option 1: H(x) = hash(x).
-
-D.1.2.  Mixing with Non-Approved Algorithms
-
-   [SP-800-227ipd] adds an important stipulation that was not present in
-   earlier NIST specifications:
-
-      This publication approves the use of the key combiner (14) for any
-      t > 1, so long as at least one shared secret (i.e., S_j for some
-      j) is a shared secret generated from the key- establishment
-      methods of SP 800-56A or SP 800-56B, or an approved KEM.
-
-   This means that although Composite ML-KEM always places the shared
-   secret key from ML-KEM in the first slot, a Composite ML-KEM can be
-   FIPS certified so long as either component is FIPS certified.  This
-   is important for several reasons.  First, in the early stages of PQC
-   migration, composites allow for a non-FIPS certified ML-KEM
-   implementation to be added to a module that already has a FIPS
-   certified traditional component, and the resulting composite can be
-   FIPS certified.  Second, when eventually RSA and Elliptic Curve are
-   no longer FIPS-allowed, the composite can retain its FIPS certified
-   status on the strength of the ML-KEM component.  Third, while this is
-   outside the scope of this specification, the general composite
-   construction could be used to create FIPS certified algorithms that
-   contain a component algorithm from a different jurisdiction.
-
-D.2.  Backwards Compatibility
-
-   As noted in the introduction, the post-quantum cryptographic
-   migration will face challenges in both ensuring cryptographic
-   strength against adversaries of unknown capabilities, as well as
-   providing ease of migration.  The composite mechanisms defined in
-   this specification primarily address cryptographic strength, however
-   this section contains notes on how backwards compatibility may be
-   obtained.
-
-   The term "ease of migration" is used here to mean that existing
-   systems can be gracefully transitioned to the new technology without
-   requiring large service disruptions or expensive upgrades.  The term
-   "backwards compatibility" is used here to mean something more
-   specific; that existing systems as they are deployed today can inter-
-   operate with the upgraded systems of the future.
-
-   These migration and interoperability concerns need to be thought
-   about in the context of various types of protocols that make use of
-   X.509 and PKIX with relation to key establishment and content
-   encryption, from online negotiated protocols such as TLS 1.3
-   [RFC8446] and IKEv2 [RFC7296], to non-negotiated asynchronous
-   protocols such as S/MIME signed email [RFC8551], as well as myriad
-   other standardized and proprietary protocols and applications that
-   leverage CMS [RFC5652] encrypted structures.
-
-D.3.  Decapsulation Requires the Public Key
-
-   ML-KEM always requires the public key in order to perform various
-   steps of the Fujisaki-Okamoto decapsulation [FIPS.203], and for this
-   reason the private key encoding specified in FIPS 203 includes the
-   public key.  Moveover, the KEM combiner as specified in Section 4.4
-   requires the public key of the traditional component in order to
-   achieve the public-key binding property and ciphertext collision
-   resistance as described in Section 10.2.
-
-   The mechanism by which an application transmits the public keys is
-   out of scope of this specification, but it MAY be accomplished by
-   placing a serialized composite public key into the optional
-   OneAsymmetricKey.publicKey field of the private key object.
-
-   Implementers who choose to use a different private key encoding than
-   the one specified in this document MUST consider how to provide the
-   component public keys to the decapsulate routine.  While some
-   implementations might contain routines to computationally derive the
-   public key from the private key, it is not guaranteed that all
-   implementations will support this.
-
-D.4.  Profiling down the number of options
-
-   One immediately daunting aspect of this specification is the number
-   of composite algorithm combinations.  Each option has been specified
-   because there is a community that has a direct application for it;
-   typically because the traditional component is already deployed in a
-   change-managed environment, or because that specific traditional
-   component is required for regulatory reasons.
-
-   However, this large number of combinations leads either to fracturing
-   of the ecosystem into non-interoperable sub-groups when different
-   communities choose non-overlapping subsets to support, or on the
-   other hand it leads to spreading development resources too thin when
-   trying to support all options.
-
-   This specification does not list any particular composite algorithm
-   as mandatory-to-implement, however organizations that operate within
-   specific application domains are encouraged to define profiles that
-   select a small number of composites appropriate for that application
-   domain.  For applications that do not have any regulatory
-   requirements or legacy implementations to consider, it is RECOMMENDED
-   to focus implemtation effort on:
-
-   id-MLKEM768-X25519-SHA3-256
-   id-MLKEM768-ECDH-P256-HMAC-SHA256
-
-   In applications that only allow NIST PQC Level 5, it is RECOMMENDED
-   to focus implemtation effort on:
-
-   id-MLKEM1024-ECDH-P384-HMAC-SHA512
-
-Appendix E.  Comparison with other Hybrid KEMs
-
-E.1.  X-Wing
+D.1.  X-Wing
 
    This specification borrows extensively from the analysis and KEM
    combiner construction presented in [X-Wing].  In particular, X-Wing
@@ -2937,7 +2901,7 @@ E.1.  X-Wing
    domain separator string in order to ensure that their ciphertexts are
    not inter-compatible.
 
-E.2.  ETSI CatKDF
+D.2.  ETSI CatKDF
 
    [ETSI.TS.103.744] section 8.2.3 defines CatKDF as:
 
@@ -2963,7 +2927,7 @@ MB shall contain all of the corresponding public keys and ciphertexts.
    aligns with some of the KDF variants in this specification, but not
    the ones that use SHA3.
 
-Appendix F.  Test Vectors
+Appendix E.  Test Vectors
 
    The following test vectors are provided in a format similar to the
    NIST ACVP Known-Answer-Tests (KATs).
@@ -5866,13 +5830,13 @@ Appendix F.  Test Vectors
    ]
    }
 
-Appendix G.  Intellectual Property Considerations
+Appendix F.  Intellectual Property Considerations
 
    The following IPR Disclosure relates to this draft:
 
    https://datatracker.ietf.org/ipr/3588/
 
-Appendix H.  Contributors and Acknowledgments
+Appendix G.  Contributors and Acknowledgments
 
    This document incorporates contributions and comments from a large
    group of experts.  The Editors would especially like to acknowledge
