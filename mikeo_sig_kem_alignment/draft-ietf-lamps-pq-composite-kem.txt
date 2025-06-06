@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 7 December 2025                                         M. Pala
+Expires: 8 December 2025                                         M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                             5 June 2025
+                                                             6 June 2025
 
 
       Composite ML-KEM for use in X.509 Public Key Infrastructure
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 7 December 2025.
+   This Internet-Draft will expire on 8 December 2025.
 
 Copyright Notice
 
@@ -98,10 +98,9 @@ Table of Contents
      6.2.  Key Usage Bits
      6.3.  ASN.1 Definitions
    7.  Algorithm Identifiers
-     7.1.  Composite-ML-KEM Algorithm Identifiers
-     7.2.  Domain Separators
-     7.3.  Rationale for choices
-     7.4.  RSA-OAEP Parameters
+     7.1.  Domain Separator Values
+     7.2.  Rationale for choices
+     7.3.  RSA-OAEP Parameters
    8.  ASN.1 Module
    9.  IANA Considerations
      9.1.  Object Identifier Allocations
@@ -324,7 +323,7 @@ Table of Contents
    the protocol to handle multiple algorithms.
 
    Discussion of the specific choices of algorithm pairings can be found
-   in Section 7.3.
+   in Section 7.2.
 
 3.  Overview of the Composite ML-KEM Scheme
 
@@ -431,7 +430,7 @@ Table of Contents
 
    The value of ss_len as well as concrete values for all the RSA-OAEP
    parameters used within this specification can be found in
-   Section 7.4.
+   Section 7.3.
 
    Decap(sk, ct) -> ss is accomplished by direct use of OAEP Decrypt.
 
@@ -447,7 +446,7 @@ Table of Contents
    mechanism.  Also, while RSA-PKCS#1v1.5 [RFC8017] is still widely
    used, it is hard to make secure and no longer FIPS-approved as of the
    end of 2023 [SP800-131Ar2], so it is of limited forwards value.  This
-   leaves RSA-OAEP [RFC8017] as the remaining choice.  See Section 7.3
+   leaves RSA-OAEP [RFC8017] as the remaining choice.  See Section 7.2
    for further discussion of algorithm choices.
 
    Note that, at least at the time of writing, the algorithm RSAOAEPKEM
@@ -1315,75 +1314,98 @@ Process:
 
 7.  Algorithm Identifiers
 
-   This table summarizes the list of Composite ML-KEM algorithms and
-   lists the OID, two component algorithms, and the KDF to be used
-   within combiner function.  Domain separator values are defined below
-   in Section 7.2.
+   This table summarizes the OID and the component algorithms for each
+   Composite ML-KEM algorithm.
 
    EDNOTE: these are prototyping OIDs to be replaced by IANA.
 
    <CompKEM> is equal to 2.16.840.1.114027.80.5.2
 
-7.1.  Composite-ML-KEM Algorithm Identifiers
-
-   +========================+============+=========+===============+========+
-   |Composite ML-KEM        |OID         |First    |Second         |KDF     |
-   |Algorithm               |            |Algorithm|Algorithm      |        |
-   +========================+============+=========+===============+========+
-   |id-MLKEM768-RSA2048-    |<CompKEM>.50|MLKEM768 |RSA-OAEP 2048  |HMAC-   |
-   |HMAC-SHA256             |            |         |               |SHA256  |
-   +------------------------+------------+---------+---------------+--------+
-   |id-MLKEM768-RSA3072-    |<CompKEM>.51|MLKEM768 |RSA-OAEP 3072  |HMAC-   |
-   |HMAC-SHA256             |            |         |               |SHA256  |
-   +------------------------+------------+---------+---------------+--------+
-   |id-MLKEM768-RSA4096-    |<CompKEM>.52|MLKEM768 |RSA-OAEP 4096  |HMAC-   |
-   |HMAC-SHA256             |            |         |               |SHA256  |
-   +------------------------+------------+---------+---------------+--------+
-   |id-                     |<CompKEM>.53|MLKEM768 |X25519         |SHA3-256|
-   |MLKEM768-X25519-SHA3-256|            |         |               |        |
-   +------------------------+------------+---------+---------------+--------+
-   |id-MLKEM768-ECDH-P256-  |<CompKEM>.54|MLKEM768 |ECDH-P256      |HMAC-   |
-   |HMAC-SHA256             |            |         |               |SHA256  |
-   +------------------------+------------+---------+---------------+--------+
-   |id-MLKEM768-ECDH-P384-  |<CompKEM>.55|MLKEM768 |ECDH-P384      |HMAC-   |
-   |HMAC-SHA256             |            |         |               |SHA256  |
-   +------------------------+------------+---------+---------------+--------+
-   |id-MLKEM768-ECDH-       |<CompKEM>.56|MLKEM768 |ECDH-          |HMAC-   |
-   |brainpoolP256r1-HMAC-   |            |         |brainpoolp256r1|SHA256  |
-   |SHA256                  |            |         |               |        |
-   +------------------------+------------+---------+---------------+--------+
-   |id-MLKEM1024-ECDH-P384- |<CompKEM>.57|MLKEM1024|ECDH-P384      |HMAC-   |
-   |HMAC-SHA512             |            |         |               |SHA512  |
-   +------------------------+------------+---------+---------------+--------+
-   |id-MLKEM1024-ECDH-      |<CompKEM>.58|MLKEM1024|ECDH-          |HMAC-   |
-   |brainpoolP384r1-HMAC-   |            |         |brainpoolP384r1|SHA512  |
-   |SHA512                  |            |         |               |        |
-   +------------------------+------------+---------+---------------+--------+
-   |id-                     |<CompKEM>.59|MLKEM1024|X448           |SHA3-256|
-   |MLKEM1024-X448-SHA3-256 |            |         |               |        |
-   +------------------------+------------+---------+---------------+--------+
-   |id-MLKEM1024-ECDH-P521- |<CompKEM>.60|MLKEM1024|ECDH-P521      |HMAC-   |
-   |HMAC-SHA512             |            |         |               |SHA512  |
-   +------------------------+------------+---------+---------------+--------+
+   +========================+============+====+===============+========+
+   |Composite ML-KEM        |OID         |ML- |Trad           |KDF     |
+   |Algorithm               |            |KEM |               |        |
+   +========================+============+====+===============+========+
+   |id-MLKEM768-RSA2048-    |<CompKEM>.50|ML-K|RSA-OAEP 2048  |HMAC-   |
+   |HMAC-SHA256             |            |EM- |               |SHA256  |
+   |                        |            |768 |               |        |
+   +------------------------+------------+----+---------------+--------+
+   |id-MLKEM768-RSA3072-    |<CompKEM>.51|ML-K|RSA-OAEP 3072  |HMAC-   |
+   |HMAC-SHA256             |            |EM- |               |SHA256  |
+   |                        |            |768 |               |        |
+   +------------------------+------------+----+---------------+--------+
+   |id-MLKEM768-RSA4096-    |<CompKEM>.52|ML-K|RSA-OAEP 4096  |HMAC-   |
+   |HMAC-SHA256             |            |EM- |               |SHA256  |
+   |                        |            |768 |               |        |
+   +------------------------+------------+----+---------------+--------+
+   |id-                     |<CompKEM>.53|ML-K|X25519         |SHA3-256|
+   |MLKEM768-X25519-SHA3-256|            |EM- |               |        |
+   |                        |            |768 |               |        |
+   +------------------------+------------+----+---------------+--------+
+   |id-MLKEM768-ECDH-P256-  |<CompKEM>.54|ML-K|ECDH with      |HMAC-   |
+   |HMAC-SHA256             |            |EM- |secp256r1      |SHA256  |
+   |                        |            |768 |               |        |
+   +------------------------+------------+----+---------------+--------+
+   |id-MLKEM768-ECDH-P384-  |<CompKEM>.55|ML-K|ECDH with      |HMAC-   |
+   |HMAC-SHA256             |            |EM- |secp384r1      |SHA256  |
+   |                        |            |768 |               |        |
+   +------------------------+------------+----+---------------+--------+
+   |id-MLKEM768-ECDH-       |<CompKEM>.56|ML-K|ECDH with      |HMAC-   |
+   |brainpoolP256r1-HMAC-   |            |EM- |brainpoolp256r1|SHA256  |
+   |SHA256                  |            |768 |               |        |
+   +------------------------+------------+----+---------------+--------+
+   |id-MLKEM1024-ECDH-P384- |<CompKEM>.57|ML-K|ECDH with      |HMAC-   |
+   |HMAC-SHA512             |            |EM- |secp384r1      |SHA512  |
+   |                        |            |1024|               |        |
+   +------------------------+------------+----+---------------+--------+
+   |id-MLKEM1024-ECDH-      |<CompKEM>.58|ML-K|ECDH with      |HMAC-   |
+   |brainpoolP384r1-HMAC-   |            |EM- |brainpoolP384r1|SHA512  |
+   |SHA512                  |            |1024|               |        |
+   +------------------------+------------+----+---------------+--------+
+   |id-                     |<CompKEM>.59|ML-K|X448           |SHA3-256|
+   |MLKEM1024-X448-SHA3-256 |            |EM- |               |        |
+   |                        |            |1024|               |        |
+   +------------------------+------------+----+---------------+--------+
+   |id-MLKEM1024-ECDH-P521- |<CompKEM>.60|ML-K|ECDH with      |HMAC-   |
+   |HMAC-SHA512             |            |EM- |secp521r1      |SHA512  |
+   |                        |            |1024|               |        |
+   +------------------------+------------+----+---------------+--------+
 
                     Table 2: Composite ML-KEM key types
 
-   Note that in alignment with ML-KEM, Composite KEM algorithms output a
-   256-bit shared secret key at all security levels.
+   In alignment with ML-KEM [FIPS.203], Composite KEM algorithms output
+   a 256-bit shared secret key at all security levels, truncating is
+   necessary as described in Section 4.4.
 
-   As the number of algorithms can be daunting to implementers, see
-   Appendix D.4 for a discussion of choosing a subset to support.
+   The KDFs were chosen to roughly match the security level of the
+   stronger component.  In the case of X25519 and X448 SHA3-256 is used
+   to match the construction in [X-Wing].
 
    Full specifications for the referenced component algorithms can be
    found in Appendix B.
 
-7.2.  Domain Separators
+   As the number of algorithms can be daunting to implementers, see
+   Appendix D.4 for a discussion of choosing a subset to support.
+
+7.1.  Domain Separator Values
 
    The KEM combiner used in this specification requires a domain
    separator Domain input.  The following table shows the HEX-encoded
    domain separator for each Composite ML-KEM AlgorithmID; to use it,
    the value MUST be HEX-decoded and used in binary form.  The domain
    separator is simply the DER encoding of the composite algorithm OID.
+
+   Each Composite ML-KEM algorithm has a unique domain separator value
+   which is used in constructing the KEM combiner in (Section 4.4).
+   This helps protect against a different algorithm arriving at the same
+   shared secret even if all inputs are the same; for example id-
+   MLKEM768-X25519-SHA3-256 and X-Wing [X-Wing] have identical component
+   algorithms and KEM combiners but since they have different security
+   properties, they use different domain separators in order to make
+   them incompatible by design.
+
+   The domain separator is simply the DER encoding of the OID.  The
+   following table shows the HEX-encoded domain separator value for each
+   Composite ML-KEM algorithm.
 
       +===============================+============================+
       | Composite Signature Algorithm | Domain Separator (in Hex   |
@@ -1428,7 +1450,7 @@ Process:
    allocation of these OIDs so that we can re-compute the domain
    separators over the final OIDs.
 
-7.3.  Rationale for choices
+7.2.  Rationale for choices
 
    In generating the list of composite algorithms, the following general
    guidance was used, however, during development of this specification
@@ -1462,7 +1484,7 @@ Process:
    underlying component algorithms up to the point where truncation to a
    256-bit output is performed.
 
-7.4.  RSA-OAEP Parameters
+7.3.  RSA-OAEP Parameters
 
    Use of RSA-OAEP [RFC8017] within id-MLKEM768-RSA2048-HMAC-SHA256, id-
    MLKEM768-RSA3072-HMAC-SHA256, and id-MLKEM768-RSA4096-HMAC-SHA256
@@ -1475,7 +1497,7 @@ Process:
    mechanism.  Also, while RSA-PKCS#1v1.5 [RFC8017] is still widely
    used, it is hard to make secure and no longer FIPS-approved as of the
    end of 2023 [SP800-131Ar2], so it is of limited forwards value.  This
-   leaves RSA-OAEP [RFC8017] as the remaining choice.  See Section 7.3
+   leaves RSA-OAEP [RFC8017] as the remaining choice.  See Section 7.2
    for further discussion of algorithm choices.
 
    The RSA component keys MUST be generated at the 2048-bit, 3072-bit,
@@ -1926,12 +1948,12 @@ Process:
       curve or RSA).
 
    *  Domain is the DER encoded value of the object identifier of the
-      Composite ML-KEM algorithm as listed in Section 7.2.
+      Composite ML-KEM algorithm as listed in Section 7.1.
 
    *  || represents concatenation.
 
    Each registered Composite ML-KEM algorithm specifies the choice of
-   KDF and Domain to be used in Section 7 and Section 7.2 below.  Given
+   KDF and Domain to be used in Section 7 and Section 7.1 below.  Given
    that each Composite ML-KEM algorithm fully specifies the component
    algorithms, including for example the size of the RSA modulus, all
    inputs to the KEM combiner are fixed-size and thus do not require
