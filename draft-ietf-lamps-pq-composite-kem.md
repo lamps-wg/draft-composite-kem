@@ -1150,39 +1150,45 @@ Component keys of a composite private key MUST NOT be used in any other type of 
 
 # Algorithm Identifiers {#sec-alg-ids}
 
-This table summarizes the list of Composite ML-KEM algorithms and lists the OID, two component algorithms, and the KDF to be used within combiner function. Domain separator values are defined below in {{sec-domsep-values}}.
+This table summarizes the OID and the component algorithms for each Composite ML-KEM algorithm.
 
 EDNOTE: these are prototyping OIDs to be replaced by IANA.
 
 &lt;CompKEM&gt; is equal to 2.16.840.1.114027.80.5.2
 
-## Composite-ML-KEM Algorithm Identifiers
-
-| Composite ML-KEM Algorithm         | OID                  | First Algorithm | Second Algorithm     | KDF      |
+| Composite ML-KEM Algorithm         | OID                  | ML-KEM | Trad     | KDF      |
 |---------                           | -----------------    | ----------      | ----------           | -------- |
-| id-MLKEM768-RSA2048-HMAC-SHA256    | &lt;CompKEM&gt;.50   | MLKEM768        | RSA-OAEP 2048        | HMAC-SHA256 |
-| id-MLKEM768-RSA3072-HMAC-SHA256    | &lt;CompKEM&gt;.51   | MLKEM768        | RSA-OAEP 3072        | HMAC-SHA256 |
-| id-MLKEM768-RSA4096-HMAC-SHA256    | &lt;CompKEM&gt;.52   | MLKEM768        | RSA-OAEP 4096        | HMAC-SHA256 |
-| id-MLKEM768-X25519-SHA3-256        | &lt;CompKEM&gt;.53   | MLKEM768        | X25519               | SHA3-256 |
-| id-MLKEM768-ECDH-P256-HMAC-SHA256  | &lt;CompKEM&gt;.54   | MLKEM768        | ECDH-P256            | HMAC-SHA256 |
-| id-MLKEM768-ECDH-P384-HMAC-SHA256  | &lt;CompKEM&gt;.55   | MLKEM768        | ECDH-P384            | HMAC-SHA256 |
-| id-MLKEM768-ECDH-brainpoolP256r1-HMAC-SHA256   | &lt;CompKEM&gt;.56   | MLKEM768        | ECDH-brainpoolp256r1 | HMAC-SHA256 |
-| id-MLKEM1024-ECDH-P384-HMAC-SHA512 | &lt;CompKEM&gt;.57   | MLKEM1024       | ECDH-P384            | HMAC-SHA512 |
-| id-MLKEM1024-ECDH-brainpoolP384r1-HMAC-SHA512  | &lt;CompKEM&gt;.58   | MLKEM1024       | ECDH-brainpoolP384r1 | HMAC-SHA512 |
-| id-MLKEM1024-X448-SHA3-256         | &lt;CompKEM&gt;.59   | MLKEM1024       | X448                 | SHA3-256 |
-| id-MLKEM1024-ECDH-P521-HMAC-SHA512 | &lt;CompKEM&gt;.60   | MLKEM1024       | ECDH-P521            | HMAC-SHA512 |
+| id-MLKEM768-RSA2048-HMAC-SHA256    | &lt;CompKEM&gt;.50   | ML-KEM-768        | RSA-OAEP 2048        | HMAC-SHA256 |
+| id-MLKEM768-RSA3072-HMAC-SHA256    | &lt;CompKEM&gt;.51   | ML-KEM-768        | RSA-OAEP 3072        | HMAC-SHA256 |
+| id-MLKEM768-RSA4096-HMAC-SHA256    | &lt;CompKEM&gt;.52   | ML-KEM-768        | RSA-OAEP 4096        | HMAC-SHA256 |
+| id-MLKEM768-X25519-SHA3-256        | &lt;CompKEM&gt;.53   | ML-KEM-768        | X25519               | SHA3-256 |
+| id-MLKEM768-ECDH-P256-HMAC-SHA256  | &lt;CompKEM&gt;.54   | ML-KEM-768        | ECDH with secp256r1            | HMAC-SHA256 |
+| id-MLKEM768-ECDH-P384-HMAC-SHA256  | &lt;CompKEM&gt;.55   | ML-KEM-768        | ECDH with secp384r1            | HMAC-SHA256 |
+| id-MLKEM768-ECDH-brainpoolP256r1-HMAC-SHA256   | &lt;CompKEM&gt;.56   | ML-KEM-768        | ECDH with brainpoolp256r1 | HMAC-SHA256 |
+| id-MLKEM1024-ECDH-P384-HMAC-SHA512 | &lt;CompKEM&gt;.57   | ML-KEM-1024       | ECDH with secp384r1            | HMAC-SHA512 |
+| id-MLKEM1024-ECDH-brainpoolP384r1-HMAC-SHA512  | &lt;CompKEM&gt;.58   | ML-KEM-1024       | ECDH with brainpoolP384r1 | HMAC-SHA512 |
+| id-MLKEM1024-X448-SHA3-256         | &lt;CompKEM&gt;.59   | ML-KEM-1024       | X448                 | SHA3-256 |
+| id-MLKEM1024-ECDH-P521-HMAC-SHA512 | &lt;CompKEM&gt;.60   | ML-KEM-1024       | ECDH with secp521r1            | HMAC-SHA512 |
 {: #tab-kem-algs title="Composite ML-KEM key types"}
 
-Note that in alignment with ML-KEM, Composite KEM algorithms output a 256-bit shared secret key at all security levels.
+In alignment with ML-KEM [FIPS.203], Composite KEM algorithms output a 256-bit shared secret key at all security levels, truncating is necessary as described in {{sec-kem-combiner}}.
 
-As the number of algorithms can be daunting to implementers, see {{sec-impl-profile}} for a discussion of choosing a subset to support.
+The KDFs were chosen to roughly match the security level of the stronger component. In the case of X25519 and X448 SHA3-256 is used to match the construction in {{X-Wing}}.
 
 Full specifications for the referenced component algorithms can be found in {{appdx_components}}.
 
+As the number of algorithms can be daunting to implementers, see {{sec-impl-profile}} for a discussion of choosing a subset to support.
 
-## Domain Separators {#sec-domsep-values}
+
+## Domain Separator Values {#sec-domsep-values}
 
 The KEM combiner used in this specification requires a domain separator `Domain` input.  The following table shows the HEX-encoded domain separator for each Composite ML-KEM AlgorithmID; to use it, the value MUST be HEX-decoded and used in binary form. The domain separator is simply the DER encoding of the composite algorithm OID.
+
+
+Each Composite ML-KEM algorithm has a unique domain separator value which is used in constructing the KEM combiner in ({{sec-kem-combiner}}). This helps protect against a different algorithm arriving at the same shared secret even if all inputs are the same; for example `id-MLKEM768-X25519-SHA3-256` and X-Wing {{X-Wing}} have identical component algorithms and KEM combiners but since they have different security properties, they use different domain separators in order to make them incompatible by design.
+
+The domain separator is simply the DER encoding of the OID. The following table shows the HEX-encoded domain separator value for each Composite ML-KEM algorithm.
+
 
 <!-- Note to authors, this is not auto-generated on build;
      you have to manually re-run the python script and
