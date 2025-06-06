@@ -1471,7 +1471,7 @@ Process:
    performance charactaristics.
 
    The main design consideration in choosing pairings is to prioritize
-   providing pairings of each ML-DSA security level with commonly-
+   providing pairings of each ML-KEM security level with commonly-
    deployed traditional algorithms.  This supports the design goal of
    using composites as a stepping stone to efficiently deploy post-
    quantum on top of existing hardeneded and certified traditional
