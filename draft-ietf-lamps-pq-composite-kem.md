@@ -338,12 +338,6 @@ In addition, the following terms are used in this specification:
           definitions of "cryptographic algorithm" and
           "cryptographic scheme" given in {{I-D.ietf-pquip-pqt-hybrid-terminology}}.
 
-**CLIENT**:
-          Any software that is making use of a cryptographic key.
-          This includes a signer, verifier, encrypter, decrypter.
-          This is not meant to imply any sort of client-server
-          relationship between the communicating parties.
-
 **COMBINER**:
   A combiner specifies how multiple shared secrets are combined into
   a single shared secret.
@@ -1349,32 +1343,22 @@ In broad terms, a PQ/T Hybrid can be used either to provide dual-algorithm secur
 
 Dual-algorithm security. The general idea is that the data is proctected by two algorithms such that an attacker would need to break both in order to compromise the data. As with most of cryptography, this property is easy to state in general terms, but becomes more complicated when expressed in formalisms. The following sections go into more detail here.
 
-Migration flexibility. Some PQ/T hybrids exist to provide a sort of "OR" mode where the client can choose to use one algorithm or the other or both. The intention is that the PQ/T hybrid mechanism builds in backwards compatibility to allow legacy and upgraded clients to co-exist and communicate. The composite algorithms presented in this specification do not provide this since they operate in a strict "AND" mode, but they do provide codebase migration flexibility. Consider that an organization has today a mature, validated, certified, hardened implementation of RSA or ECC. Composites allow them to add to this an ML-KEM implementation which immediately starts providing benefits against harvest-now-decrypt-later attacks even if that ML-KEM implemtation is still experimental, non-validated, non-certified, non-hardened implementation. More details of obtaining FIPS certification of a composite algorithm can be found in {{sec-fips}}.
+Migration flexibility. Some PQ/T hybrids exist to provide a sort of "OR" mode where the application can choose to use one algorithm or the other or both. The intention is that the PQ/T hybrid mechanism builds in backwards compatibility to allow legacy and upgraded applications to co-exist and communicate. The composite algorithms presented in this specification do not provide this since they operate in a strict "AND" mode. They do, however, provide codebase migration flexibility. Consider that an organization has today a mature, validated, certified, hardened implementation of RSA or ECC; composites allow them to add an ML-KEM implementation which immediately starts providing benefits against harvest-now-decrypt-later attacks even if that ML-KEM implemtation is still an experimental, non-validated, non-certified, non-hardened implementation. More details of obtaining FIPS certification of a composite algorithm can be found in {{sec-fips}}.
 
 ## KEM Combiner {#sec-cons-kem-combiner}
 
-The following KEM combiner construction is as follows is used by both `Composite-ML-KEM.Encap()` and `Composite-ML-KEM.Decap()` and is split out here for easier analysis.
+The KEM combiner from {{sec-kem-combiner}} is reproduced here for reference.
 
 ~~~
   KDF(mlkemSS || tradSS || tradCT || tradPK || Domain)
 ~~~
 {: #code-generic-kem-combiner title="KEM combiner construction"}
 
-where:
 
-* `KDF(message)` represents a key derivation function suitable to the chosen KEMs according to {{tab-kem-algs}}. All KDFs produce a 256-bit shared secret key, which matches ML-KEM.
-* `mlkemSS` is the shared secret key from the ML-KEM component.
-* `tradSS` is the shared secret from the traditional component (elliptic curve or RSA).
-* `tradCT` is the ciphertext from the traditional component (elliptic curve or RSA).
-* `tradPK` is the public key of the traditional component (elliptic curve or RSA).
-* `Domain` is the DER encoded value of the object identifier of the Composite ML-KEM algorithm as listed in {{sec-domsep-values}}.
-* `||` represents concatenation.
+The primary security property of the KEM combiner is that it preserves IND-CCA2 of the overall Composite ML-KEM so long as at least one component is IND-CCA2 {{X-Wing}} [GHP18]. Additionally, we also need to consider the case where one of the component algorithms is completely broken; that the private key is known to an attacker, or worse that the public key, private key, and ciphertext are manipulated by the attacker. In this case, we rely on the construction of the KEM combiner to ensure that the value of the other shared secret cannot be leaked or the combined shared secret predicted via manipulation of the broken algorithm.
 
-Each registered Composite ML-KEM algorithm specifies the choice of `KDF` and `Domain` to be used in {{sec-alg-ids}} and {{sec-domsep-values}} below. Given that each Composite ML-KEM algorithm fully specifies the component algorithms, including for example the size of the RSA modulus, all inputs to the KEM combiner are fixed-size and thus do not require length-prefixing. The `Composite-ML-KEM.Decap()` specified in {{sect-composite-decaps}} adds further error handling to protect the KEM combiner from malicious inputs.
 
-The primary security property of the KEM combiner is that it preserves IND-CCA2 of the overall Composite ML-KEM so long as at least one component is IND-CCA2 {{X-Wing}} [GHP18]. Additionally, we also need to consider the case where one of the component algorithms is completely broken; that the private key is known to an attacker, or worse that the public key, private key, and ciphertext are manipulated by the attacker. In this case, we rely on the construction of the KEM combiner to ensure that the value of the other shared secret cannot be leaked or the combined shared secret predicted via manipulation of the broken algorithm. The following sections continue this discussion.
-
-Note that length-tagging of the inputs to the KDF is not required:
+Each registered Composite ML-KEM algorithm specifies the choice of `KDF` and `Domain` -- see {{sec-alg-ids}} and {{sec-domsep-values}}. Given that each Composite ML-KEM algorithm fully specifies the component algorithms, including for example the size of the RSA modulus, all inputs to the KEM combiner are fixed-size and thus do not require length-prefixing.
 
 * `mlkemSS` is always 32 bytes.
 * `tradSS` in the case of ECDH this is derived by the decapsulator and therefore the length is not controlled by the attacker, however in the case of RSA-OAEP this value is directly chosen by the sender and both the length and content could be freely chosen by an attacker.
@@ -1382,10 +1366,8 @@ Note that length-tagging of the inputs to the KDF is not required:
 * `tradPK` is the public key of the traditional component (elliptic curve or RSA) and therefore fixed-length.
 * `Domain` is a fixed value specified in this document.
 
-In the case of a composite with ECDH, all inputs to the KDF are fixed-length.
-In the case of a composite with RSA-OAEP the `tradSS` is controlled by the attacker but this still does not require length tagging because, unless there is a weakness in the KDF, length-manipulation of only one input is not sufficient to trivially produce collisions.
 
-### Security of the hybrid scheme {#sec-hybrid-security}
+### IND-CCA Security of the hybrid scheme {#sec-hybrid-security}
 
 Informally, a Composite ML-KEM algorithm is secure if the combiner (HMAC-SHA2 or SHA3) is secure, and either ML-KEM is secure or the traditional component (RSA-OAEP, ECDH, or X25519) is secure.
 
@@ -1400,7 +1382,7 @@ The composite combiner cannot be assumed to be secure when used with different K
 
 ### Second pre-image resistance of component KEMs {#sec-cons-ct-collision}
 
-The notion of a second pre-image resistant KEM is defined in [X-Wing] being the property that it is computationally difficult to find two different ciphertexts `c != c'` that will decapsulate to the same shared secret under the same public key. For the purposes of a hybrid KEM combiner, this property means that given two composite ciphertexts `(c1, c2)` and `(c1', c2')`, we must obtain a unique overall shared secret so long as either `c1 != c1'` or `c2 != c2'` -- i.e. the overall Composite ML-KEM is second pre-image resistant, and therefore secure so long as one of the component KEMs is secure.
+The notion of a "ciphertext second pre-image resistant KEM" is defined in [X-Wing] as being the property that it is computationally difficult to find two different ciphertexts `c != c'` that will decapsulate to the same shared secret under the same public key. For the purposes of a hybrid KEM combiner, this property means that given two composite ciphertexts `(c1, c2)` and `(c1', c2')`, we must obtain a unique overall shared secret so long as either `c1 != c1'` or `c2 != c2'` -- i.e. the overall Composite ML-KEM is ciphertext second pre-image resistant, and therefore secure so long as one of the component KEMs is secure.
 
 In [X-Wing] it is proven that ML-KEM is a second pre-image resistant KEM and therefore the ML-KEM ciphertext can safely be omitted from the KEM combiner. Note that this makes a fundamental assumption on ML-KEM remaining ciphertext second pre-image resistant, and therefore this formulation of KEM combiner does not fully protect against implementation errors in the ML-KEM component -- particularly around the ciphertext check step of the Fujisaki-Okamoto transform -- which could trivially lead to second ciphertext pre-image attacks that break the IND-CCA2 security of the ML-KEM component and of the overall Composite ML-KEM. This could be more fully mitigated by binding the ML-KEM ciphertext in the combiner, but a design decision was made to settle for protection against algorithmic attacks and not implementation attacks against ML-KEM in order to increase performance.
 
@@ -1418,16 +1400,16 @@ It should be clear that the security analysis of the presented KEM combiner cons
 
 ## Key Reuse {#sec-cons-key-reuse}
 
-When using single-algorithm cryptography, the best practice is to always generate fresh keying material for each purpose, for example when renewing a certificate, or obtaining both a TLS and S/MIME certificate for the same device, however in practice key reuse in such scenarios is not always catastrophic to security and therefore often tolerated. With composite keys we have a much stricter security requirement. However this reasoning does not hold in the PQ / Traditional hybrid setting.
+When using single-algorithm cryptography, the best practice is to always generate fresh keying material for each purpose, for example when renewing a certificate, or obtaining both a TLS and S/MIME certificate for the same device. However, in practice key reuse in such scenarios is not always catastrophic to security and therefore often tolerated. However this reasoning does not hold in the PQ / Traditional hybrid setting.
 
-Within the broader context of PQ / Traditional hybrids, we need to consider new attack surfaces that arise due to the hybrid constructions and did not exist in single-algorithm contexts. One of these is key reuse where the component keys within a hybrid are also used by themselves within a single-algorithm context. For example, it might be tempting for an operator to take already-deployed RSA keys and add an ML-KEM key to them to form a hybrid. Within a hybrid signature context this leads to a class of attacks referred to as "stripping attacks" where one component signature can be extracted and presented as a single-algorithm signature. Hybrid KEMs using a concatenation-style KEM combiner, as is done in this specification, do not have the analogous attack surface because even if an attacker is able to extract and decrypt one of the component ciphertexts, this will yield a different shared secret than the overall shared secret derived from the composite, so any subsequent symmetric cryptographic operations will fail. However there is still a risk of key reuse which relates to certificate revocation, as well as general key reuse security issues.
+Within the broader context of PQ / Traditional hybrids, we need to consider new attack surfaces that arise due to the hybrid constructions and did not exist in single-algorithm contexts. One of these is key reuse where the component keys within a hybrid are also used by themselves within a single-algorithm context. For example, it might be tempting for an operator to take already-deployed RSA keys and add an ML-KEM key to them to form a hybrid. Within a hybrid signature context this leads to a class of attacks referred to as "stripping attacks" where one component signature can be extracted and presented as a single-algorithm signature. Hybrid KEMs using a concatenation-style KEM combiner, as is done in this specification, do not have the analogous attack surface because even if an attacker is able to extract and decrypt one of the component ciphertexts, this will yield a different shared secret than the overall shared secret derived from the composite, so any subsequent symmetric cryptographic operations will fail.
 
-Upon receiving a new certificate enrollment request, many certification authorities will check if the requested public key has been previously revoked due to key compromise. Often a CA will perform this check by using the public key hash. Therefore, even if both components of a composite have been previously revoked, the CA may only check the hash of the combined composite key and not find the revocations. Therefore, it is RECOMMENDED to avoid key reuse and always generate fresh component keys for a new composite. It is also RECOMMENDED that CAs performing revocation checks on a composite key should also check both component keys independently.
+In addition, there is a further implication to key reuse regarding certificate revocation. Upon receiving a new certificate enrolment request, many certification authorities will check if the requested public key has been previously revoked due to key compromise. Often a CA will perform this check by using the public key hash. Therefore, if one, or even both, components of a composite have been previously revoked, the CA may only check the hash of the combined composite key and not find the revocations. Therefore, because the possibility of key reuse exists even though forbidden in this specification, CAs performing revocation checks on a composite key SHOULD also check both component keys independently to verify that the component keys have not been revoked.
 
 
 ## Decapsulation failure
 
-Provided all inputs are well-formed, the key establishment procedure of ML-KEM will never explicitly fail. Specifically, the ML-KEM.Encaps and ML-KEM.Decaps algorithms from [FIPS.203] will always output a value with the same data type as a shared secret key, and will never output an error or failure symbol. However, it is possible (though extremely unlikely) that the process will fail in the sense that ML-KEM.Encaps and ML-KEM.Decaps will produce different outputs, even though both of them are behaving honestly and no adversarial interference is present. In this case, the sender and recipient clearly did not succeed in producing a shared secret key. This event is called a decapsulation failure. Estimates for the decapsulation failure probability (or rate) for each of the ML-KEM parameter sets are provided in Table 1  of [FIPS.203] and reproduced here in {{tab-mlkem-failure-rate}}.
+Provided all inputs are well-formed, the key establishment procedure of ML-KEM will never explicitly fail. Specifically, the `ML-KEM.Encaps()` and `ML-KEM.Decaps()` algorithms from [FIPS.203] will always output a value with the same data type as a shared secret key, and will never output an error or failure symbol. However, it is possible (though extremely unlikely) that the process will fail in the sense that `ML-KEM.Encaps()` and `ML-KEM.Decaps()` will produce different outputs, even though both of them are behaving honestly and no adversarial interference is present. This is due to the lattice arithmetic for decapsulation with the secret key having hit an unrecoverable degenerate case that could not have been predicted by the encapsulator without knowledge of the secret key. In this case, the sender and recipient clearly did not succeed in producing a shared secret key. This event is called a decapsulation failure. Estimates for the decapsulation failure probability (or rate) for each of the ML-KEM parameter sets are provided in Table 1  of [FIPS.203] and reproduced here in {{tab-mlkem-failure-rate}}.
 
 
 | Parameter set     | Decapsulation failure rate  |
@@ -1437,18 +1419,14 @@ Provided all inputs are well-formed, the key establishment procedure of ML-KEM w
 | ML-KEM-1024       | 2^(-174)                    |
 {: #tab-mlkem-failure-rate title="ML-KEM decapsulation failure rates"}
 
-In the case of ML-KEM decapsulation failure, Composite ML-KEM MUST preserve the same behaviour and return a well-formed output.
+In the case of ML-KEM decapsulation failure, Composite ML-KEM MUST preserve the same behaviour and return a well-formed output shared secret.
 
 
 ## Policy for Deprecated and Acceptable Algorithms
 
-Traditionally, a public key or certificate contains a single cryptographic algorithm. If and when an algorithm becomes deprecated (for example, RSA-512, or SHA1), the path to deprecating it and removing it from operational environments is, at least is principle, straightforward.
+Traditionally, a public key or certificate contains a single cryptographic algorithm. If and when an algorithm becomes deprecated (for example, RSA-512, or SHA1), the path to deprecating it through policy and removing it from operational environments is, at least is principle, straightforward.
 
-In the composite model this is less obvious since implementers may decide that certain cryptographic algorithms have complementary security properties and are acceptable in combination even though one or both algorithms are deprecated for individual use. As such, a single composite public key or certificate may contain a mixture of deprecated and non-deprecated algorithms.
-
-Since composite algorithms are registered independently of their component algorithms, their deprecation can be handled independently from that of their component algorithms. For example a cryptographic policy might continue to allow `id-MLKEM512-ECDH-P256` even after ECDH-P256 is deprecated.
-
-The Composite ML-KEM design specified in this document, and especially that of the KEM combiner specified in this document, and discussed in {{sec-cons-kem-combiner}}, means that the overall Composite ML-KEM algorithm should be considered to have the security strength of the strongest of its component algorithms; i.e. as long as one component algorithm remains strong, then the overall composite algorithm remains strong.
+In the composite model this is less obvious since a PQ/T hybrid is expected to still be considered valid after the traditional component is deprecated for individual use. As such, a single composite public key or certificate may contain a mixture of deprecated and non-deprecated algorithms. In general this should be managable through policy by removing OIDs for the standalone component algorithms while still allowing OIDs for composite algorithms. However, complications may arise when the composite implementation needs to invoke the cryptographic module for a deprecated component algorithm. In particular, this could lead to complex Cryptographic Bills of Materials that show implementations of deprecated algorithms still present and being used.
 
 
 <!-- End of Security Considerations section -->
