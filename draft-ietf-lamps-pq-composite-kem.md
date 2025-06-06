@@ -75,7 +75,6 @@ author:
 normative:
   RFC2104:
   #RFC2119: -- does not need to be explicit; added by bcp14 boilerplate
-  RFC4055:
   RFC5280:
   RFC5480:
   RFC5652:
@@ -87,10 +86,7 @@ normative:
   #RFC8174: -- does not need to be explicit; added by bcp14 boilerplateu
   RFC8410:
   RFC8411:
-  RFC8619:
   RFC9629:
-  I-D.draft-ietf-lamps-cms-sha3-hash-04:
-  I-D.draft-ietf-lamps-kyber-certificates-06:
   X.690:
       title: "Information technology - ASN.1 encoding Rules: Specification of Basic Encoding Rules (BER), Canonical Encoding Rules (CER) and Distinguished Encoding Rules (DER)"
       date: November 2015
@@ -163,8 +159,6 @@ informative:
   RFC2986:
   RFC4210:
   RFC4211:
-  RFC4262:
-  RFC5083:
   RFC5639:
   RFC5914:
   RFC5990:
@@ -173,8 +167,8 @@ informative:
   RFC7296:
   RFC8446:
   RFC8551:
-  I-D.draft-ietf-pquip-pqt-hybrid-terminology-04:
-  I-D.draft-ietf-lamps-cms-kyber-05:
+  I-D.draft-ietf-pquip-pqt-hybrid-terminology-06:
+  I-D.draft-ietf-lamps-kyber-certificates-10:
   X-Wing:
     title: "X-Wing The Hybrid KEM You’ve Been Looking For"
     date: 2024-01-09
@@ -315,7 +309,7 @@ For instance, the aggressive migration timelines may require deploying PQC algor
 
 Cautious implementers may opt to combine cryptographic algorithms in such a way that an attacker would need to break all of them simultaneously to compromise the protected data. These mechanisms are referred to as Post-Quantum/Traditional (PQ/T) Hybrids {{I-D.ietf-pquip-pqt-hybrid-terminology}}.
 
-Certain jurisdictions are already recommending or mandating that PQC lattice schemes be used exclusively within a PQ/T hybrid framework. The use of a composite scheme provides a straightforward implementation of hybrid solutions compatible with (and advocated by) some governments and cybersecurity agencies [BSI2021].
+Certain jurisdictions are already recommending or mandating that PQC lattice schemes be used exclusively within a PQ/T hybrid framework. The use of a composite scheme provides a straightforward implementation of hybrid solutions compatible with (and advocated by) some governments and cybersecurity agencies [BSI2021], [ANSSI2024].
 
 This specification defines a specific instantiation of the PQ/T Hybrid paradigm called "composite" where multiple cryptographic algorithms are combined to form a single key encapsulation mechanism (KEM) presenting a single public key and ciphertext such that it can be treated as a single atomic algorithm at the protocol level; a property referred to as "protocol backwards compatibility" since it can be applied to protocols that are not explicitly hybrid-aware. composite algorithms address algorithm strength uncertainty because the composite algorithm remains strong so long as one of its components remains strong. Concrete instantiations of composite ML-KEM algorithms are provided based on ML-KEM, RSA-OAEP and ECDH. Backwards compatibility in the sence of upgraded systems continuing to inter-operate with legacy systems is not directly covered in this specification, but is the subject of {{sec-backwards-compat}}.
 
@@ -1431,6 +1425,110 @@ In the composite model this is less obvious since a PQ/T hybrid is expected to s
 
 <!-- End of Security Considerations section -->
 
+
+
+
+# Implementation Considerations {#sec-in-pract}
+
+## FIPS Certification {#sec-fips}
+
+The following sections give guidance to implementers wishing to FIPS-certify a composite implentation.
+
+This guidance is not authoritative and has not been endorsed by NIST.
+
+### Combiner Function
+
+For reference, the KEM combiner used in Composite ML-KEM is:
+
+~~~
+ss = KDF(mlkemSS || tradSS || tradCT || tradPK || Domain)
+~~~
+
+where KDF is either SHA3 or HMAC-SHA2.
+
+
+NIST SP 800-227 [SP-800-227ipd], which at the time of writing is in its initial public draft period, allows hybrid key combiners of the following form:
+
+~~~
+K ← KDM(S1‖S2‖ · · · ‖St , OtherInput)           (14)
+~~~
+
+The key derivation method KDM can take one of two forms, either
+
+~~~
+K ← KDF(Z‖OtherInput)                            (12)
+~~~
+
+or
+
+~~~
+K ← Expand(Extract(salt, Z), OtherInput)         (13)
+~~~
+
+In terms of the order of inputs, Composite ML-KEM places the two shared secret keys `mlkemSS || tradSS` at the beginning of the KDF input such that all other inputs `tradCT || tradPK || Domain` can be considered part of `OtherInput` for the purposes of FIPS certification.
+
+For detailed steps [SP-800-227ipd] refers to NIST SP.800-56Cr2 [SP.800-56Cr2]. Compliance of the Composite ML-KEM variants is achieved in the following way:
+
+[SP.800-56Cr2] section 4 "One-Step Key Derivation" requires a `counter` which begins at the 4-byte value 0x00000001. However, the counter is allowed to be omitted when the hash function is executed only once, as specified on page 159 of the FIPS 140-3 Implementation Guidance [FIPS-140-3-IG].
+
+The HMAC-SHA2 options can be certified under [SP.800-56Cr2] One-Step Key Derivation Option 2: `H(x) = HMAC-hash(salt, x)` where `salt` is the empty (0 octet) string, which will internally be mapped to the zero vector `0x00..00` of the correct input size for the underlying hash function in order to satisfy the requirement in [SP.800-56Cr2] that "in the absence of an agreed-upon alternative – the default_salt shall be an all-zero byte string whose bit length equals that specified as the bit length of an input block for the hash function, hash". Note that since the desired shared secret key output length of 256 bits for all security levels aligns with the block size of SHA256 or can be accomplished by truncating SHA-512, we do not need to use the HKDF-Expand step specified in [RFC5869], which further simplifies FIPS certification by allowing us to use the One-Step HMAC-based KDF rather than the Two-Step KDF from [SP.800-56Cr2].
+
+The SHA3 options can be certified under [SP.800-56Cr2] One-Step Key Derivation Option 1: `H(x) = hash(x)`.
+
+### Mixing with Non-Approved Algorithms
+
+[SP-800-227ipd] adds an important stipulation that was not present in earlier NIST specifications:
+
+> This publication approves the use of the key combiner (14) for any t > 1, so long as at
+> least one shared secret (i.e., S_j for some j) is a shared secret generated from the key-
+> establishment methods of SP 800-56A or SP 800-56B, or an approved KEM.
+
+This means that although Composite ML-KEM always places the shared secret key from ML-KEM in the first slot, a Composite ML-KEM can be FIPS certified so long as either component is FIPS certified. This is important for several reasons. First, in the early stages of PQC migration, composites allow for a non-FIPS certified ML-KEM implementation to be added to a module that already has a FIPS certified traditional component, and the resulting composite can be FIPS certified. Second, when eventually RSA and Elliptic Curve are no longer FIPS-allowed, the composite can retain its FIPS certified status on the strength of the ML-KEM component. Third, while this is outside the scope of this specification, the general composite construction could be used to create FIPS certified algorithms that contain a component algorithm from a different jurisdiction.
+
+
+## Backwards Compatibility {#sec-backwards-compat}
+
+As noted in the introduction, the post-quantum cryptographic migration will face challenges in both ensuring cryptographic strength against adversaries of unknown capabilities, as well as providing ease of migration. The composite mechanisms defined in this specification primarily address cryptographic strength, however this section contains notes on how backwards compatibility may be obtained.
+
+The term "ease of migration" is used here to mean that existing systems can be gracefully transitioned to the new technology without requiring large service disruptions or expensive upgrades. The term "backwards compatibility" is used here to mean something more specific; that existing systems as they are deployed today can inter-operate with the upgraded systems of the future.
+
+These migration and interoperability concerns need to be thought about in the context of various types of protocols that make use of X.509 and PKIX with relation to key establishment and content encryption, from online negotiated protocols such as TLS 1.3 [RFC8446] and IKEv2 [RFC7296], to non-negotiated asynchronous protocols such as S/MIME signed email [RFC8551], as well as myriad other standardized and proprietary protocols and applications that leverage CMS [RFC5652] encrypted structures.
+
+
+
+## Profiling down the number of options {#sec-impl-profile}
+
+One immediately daunting aspect of this specification is the number of composite algorithm combinations.
+Each option has been specified because there is a community that has a direct application for it; typically because the traditional component is already deployed in a change-managed environment, or because that specific traditional component is required for regulatory reasons.
+
+However, this large number of combinations leads either to fracturing of the ecosystem into non-interoperable sub-groups when different communities choose non-overlapping subsets to support, or on the other hand it leads to spreading development resources too thin when trying to support all options.
+
+This specification does not list any particular composite algorithm as mandatory-to-implement, however organizations that operate within specific application domains are encouraged to define profiles that select a small number of composites appropriate for that application domain.
+For applications that do not have any regulatory requirements or legacy implementations to consider, it is RECOMMENDED to focus implemtation effort on:
+
+    id-MLKEM768-X25519-SHA3-256
+    id-MLKEM768-ECDH-P256-HMAC-SHA256
+
+In applications that only allow NIST PQC Level 5, it is RECOMMENDED to focus implemtation effort on:
+
+    id-MLKEM1024-ECDH-P384-HMAC-SHA512
+
+
+
+
+## Decapsulation Requires the Public Key {#impl-cons-decaps-pubkey}
+
+ML-KEM always requires the public key in order to perform various steps of the Fujisaki-Okamoto decapsulation [FIPS.203], and for this reason the private key encoding specified in FIPS 203 includes the public key. Moveover, the KEM combiner as specified in {{sec-kem-combiner}} requires the public key of the traditional component in order to achieve the public-key binding property and ciphertext collision resistance as described in {{sec-cons-kem-combiner}}.
+
+The mechanism by which an application transmits the public keys is out of scope of this specification, but it MAY be accomplished by placing a serialized composite public key into the optional `OneAsymmetricKey.publicKey` field of the private key object.
+
+Implementers who choose to use a different private key encoding than the one specified in this document MUST consider how to provide the component public keys to the decapsulate routine. While some implementations might contain routines to computationally derive the public key from the private key, it is not guaranteed that all implementations will support this.
+
+
+
+<!-- End of Implementation Considerations section -->
+
+
 --- back
 
 # Approximate Key and Ciphertext Sizes {#sec-sizetable}
@@ -1641,104 +1739,6 @@ DER:
   30 05 06 03 2B 65 6F
 ~~~
 
-
-
-
-# Implementation Considerations {#sec-in-pract}
-
-## FIPS Certification {#sec-fips}
-
-The following sections give guidance to implementers wishing to FIPS-certify a composite implentation.
-
-This guidance is not authoritative and has not been endorsed by NIST.
-
-### Combiner Function
-
-For reference, the KEM combiner used in Composite ML-KEM is:
-
-~~~
-ss = KDF(mlkemSS || tradSS || tradCT || tradPK || Domain)
-~~~
-
-where KDF is either SHA3 or HMAC-SHA2.
-
-
-NIST SP 800-227 [SP-800-227ipd], which at the time of writing is in its initial public draft period, allows hybrid key combiners of the following form:
-
-~~~
-K ← KDM(S1‖S2‖ · · · ‖St , OtherInput)           (14)
-~~~
-
-The key derivation method KDM can take one of two forms, either
-
-~~~
-K ← KDF(Z‖OtherInput)                            (12)
-~~~
-
-or
-
-~~~
-K ← Expand(Extract(salt, Z), OtherInput)         (13)
-~~~
-
-In terms of the order of inputs, Composite ML-KEM places the two shared secret keys `mlkemSS || tradSS` at the beginning of the KDF input such that all other inputs `tradCT || tradPK || Domain` can be considered part of `OtherInput` for the purposes of FIPS certification.
-
-For detailed steps [SP-800-227ipd] refers to NIST SP.800-56Cr2 [SP.800-56Cr2]. Compliance of the Composite ML-KEM variants is achieved in the following way:
-
-[SP.800-56Cr2] section 4 "One-Step Key Derivation" requires a `counter` which begins at the 4-byte value 0x00000001. However, the counter is allowed to be omitted when the hash function is executed only once, as specified on page 159 of the FIPS 140-3 Implementation Guidance [FIPS-140-3-IG].
-
-The HMAC-SHA2 options can be certified under [SP.800-56Cr2] One-Step Key Derivation Option 2: `H(x) = HMAC-hash(salt, x)` where `salt` is the empty (0 octet) string, which will internally be mapped to the zero vector `0x00..00` of the correct input size for the underlying hash function in order to satisfy the requirement in [SP.800-56Cr2] that "in the absence of an agreed-upon alternative – the default_salt shall be an all-zero byte string whose bit length equals that specified as the bit length of an input block for the hash function, hash". Note that since the desired shared secret key output length of 256 bits for all security levels aligns with the block size of SHA256 or can be accomplished by truncating SHA-512, we do not need to use the HKDF-Expand step specified in [RFC5869], which further simplifies FIPS certification by allowing us to use the One-Step HMAC-based KDF rather than the Two-Step KDF from [SP.800-56Cr2].
-
-The SHA3 options can be certified under [SP.800-56Cr2] One-Step Key Derivation Option 1: `H(x) = hash(x)`.
-
-### Mixing with Non-Approved Algorithms
-
-[SP-800-227ipd] adds an important stipulation that was not present in earlier NIST specifications:
-
-> This publication approves the use of the key combiner (14) for any t > 1, so long as at
-> least one shared secret (i.e., S_j for some j) is a shared secret generated from the key-
-> establishment methods of SP 800-56A or SP 800-56B, or an approved KEM.
-
-This means that although Composite ML-KEM always places the shared secret key from ML-KEM in the first slot, a Composite ML-KEM can be FIPS certified so long as either component is FIPS certified. This is important for several reasons. First, in the early stages of PQC migration, composites allow for a non-FIPS certified ML-KEM implementation to be added to a module that already has a FIPS certified traditional component, and the resulting composite can be FIPS certified. Second, when eventually RSA and Elliptic Curve are no longer FIPS-allowed, the composite can retain its FIPS certified status on the strength of the ML-KEM component. Third, while this is outside the scope of this specification, the general composite construction could be used to create FIPS certified algorithms that contain a component algorithm from a different jurisdiction.
-
-
-## Backwards Compatibility {#sec-backwards-compat}
-
-As noted in the introduction, the post-quantum cryptographic migration will face challenges in both ensuring cryptographic strength against adversaries of unknown capabilities, as well as providing ease of migration. The composite mechanisms defined in this specification primarily address cryptographic strength, however this section contains notes on how backwards compatibility may be obtained.
-
-The term "ease of migration" is used here to mean that existing systems can be gracefully transitioned to the new technology without requiring large service disruptions or expensive upgrades. The term "backwards compatibility" is used here to mean something more specific; that existing systems as they are deployed today can inter-operate with the upgraded systems of the future.
-
-These migration and interoperability concerns need to be thought about in the context of various types of protocols that make use of X.509 and PKIX with relation to key establishment and content encryption, from online negotiated protocols such as TLS 1.3 [RFC8446] and IKEv2 [RFC7296], to non-negotiated asynchronous protocols such as S/MIME signed email [RFC8551], as well as myriad other standardized and proprietary protocols and applications that leverage CMS [RFC5652] encrypted structures.
-
-## Decapsulation Requires the Public Key {#impl-cons-decaps-pubkey}
-
-ML-KEM always requires the public key in order to perform various steps of the Fujisaki-Okamoto decapsulation [FIPS.203], and for this reason the private key encoding specified in FIPS 203 includes the public key. Moveover, the KEM combiner as specified in {{sec-kem-combiner}} requires the public key of the traditional component in order to achieve the public-key binding property and ciphertext collision resistance as described in {{sec-cons-kem-combiner}}.
-
-The mechanism by which an application transmits the public keys is out of scope of this specification, but it MAY be accomplished by placing a serialized composite public key into the optional `OneAsymmetricKey.publicKey` field of the private key object.
-
-Implementers who choose to use a different private key encoding than the one specified in this document MUST consider how to provide the component public keys to the decapsulate routine. While some implementations might contain routines to computationally derive the public key from the private key, it is not guaranteed that all implementations will support this.
-
-
-
-## Profiling down the number of options {#sec-impl-profile}
-
-One immediately daunting aspect of this specification is the number of composite algorithm combinations.
-Each option has been specified because there is a community that has a direct application for it; typically because the traditional component is already deployed in a change-managed environment, or because that specific traditional component is required for regulatory reasons.
-
-However, this large number of combinations leads either to fracturing of the ecosystem into non-interoperable sub-groups when different communities choose non-overlapping subsets to support, or on the other hand it leads to spreading development resources too thin when trying to support all options.
-
-This specification does not list any particular composite algorithm as mandatory-to-implement, however organizations that operate within specific application domains are encouraged to define profiles that select a small number of composites appropriate for that application domain.
-For applications that do not have any regulatory requirements or legacy implementations to consider, it is RECOMMENDED to focus implemtation effort on:
-
-    id-MLKEM768-X25519-SHA3-256
-    id-MLKEM768-ECDH-P256-HMAC-SHA256
-
-In applications that only allow NIST PQC Level 5, it is RECOMMENDED to focus implemtation effort on:
-
-    id-MLKEM1024-ECDH-P384-HMAC-SHA512
-
-
-<!-- End of Implementation Considerations section -->
 
 # Comparison with other Hybrid KEMs
 
