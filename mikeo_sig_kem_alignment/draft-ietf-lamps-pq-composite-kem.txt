@@ -1504,52 +1504,39 @@ Process:
 
 7.3.  RSA-OAEP Parameters
 
-   Use of RSA-OAEP [RFC8017] requires additional specification.
+   Use of RSA-OAEP [RFC8017] requires additional parameters to be
+   specified.
 
-   A quick note on the choice of RSA-OAEP as the supported RSA
-   encryption primitive.  RSA-KEM [RFC5990] is cryptographically robust
-   and is more straightforward to work with, but it has fairly limited
-   adoption and therefore is of limited value as a PQ migration
-   mechanism.  Also, while RSA-PKCS#1v1.5 [RFC8017] is still widely
-   used, it is hard to make secure and no longer FIPS-approved as of the
-   end of 2023 [SP800-131Ar2], so it is of limited forwards value.  This
-   leaves RSA-OAEP [RFC8017] as the remaining choice.  See Section 7.2
-   for further discussion of algorithm choices.
+   The RSA component keys MUST be generated at the specified 2048-bit,
+   3072-bit, 4096-bit key sizes respectively (up to small differences
+   such as dropping leading zeros); intermediate sizes are not
+   acceptable.
 
-   The RSA component keys MUST be generated at the 2048-bit, 3072-bit,
-   4096-bit key sizes levels respectively (up to small differences such
-   as dropping leading zeros); intermediate sizes are not acceptable
+   As with the other Composite ML-KEM algorithms, AlgorithmIdentifier
+   parameters MUST be absent.  The RSA-OAEP primitive SHALL be
+   instantiated with the following hard-coded parameters which are the
+   same for the 2048, 3072 and 4096 bit security levels since the
+   objective is to carry and output a 256-bit shared secret at all
+   security levels.
 
-   As with the other Composite ML-KEM algorithms, when a Composite ML-
-   KEM algorithm using RSA-OAEP as the traditional component is used in
-   an AlgorithmIdentifier, the AlgorithmIdentifier parameters MUST be
-   absent.  The RSA-OAEP primitive SHALL be instantiated with the
-   following hard-coded parameters which are the same for the 2048, 3072
-   and 4096 bit security levels.
+             +=============================+=================+
+             | RSAES-OAEP-params           | Value           |
+             +=============================+=================+
+             | hashAlgorithm               | id-sha256       |
+             +-----------------------------+-----------------+
+             | MaskGenAlgorithm.algorithm  | id-mgf1         |
+             +-----------------------------+-----------------+
+             | maskGenAlgorithm.parameters | id-sha256       |
+             +-----------------------------+-----------------+
+             | pSourceAlgorithm            | pSpecifiedEmpty |
+             +-----------------------------+-----------------+
+             | ss_len                      | 256 bits        |
+             +-----------------------------+-----------------+
 
-               +===================+======================+
-               | RSAES-OAEP-params | Value                |
-               +===================+======================+
-               | hashAlgorithm     | id-sha256            |
-               +-------------------+----------------------+
-               | maskGenAlgorithm  | mgf1SHA256Identifier |
-               +-------------------+----------------------+
-               | pSourceAlgorithm  | pSpecifiedEmpty      |
-               +-------------------+----------------------+
-               | ss_len            | 256 bits             |
-               +-------------------+----------------------+
+                        Table 4: RSA-OAEP Parameters
 
-                       Table 4: RSA-OAEP Parameters
-
-   where:
-
-   *  id-sha256 is defined in [RFC8017].
-
-   *  mgf1SHA256Identifier is defined in [RFC4055], which refers to the
-      MFG1 function defined in [RFC8017] appendix B.2.1.
-
-   *  pSpecifiedEmpty is defined in [RFC8017] to indicate that the empty
-      string is used for the label.
+   Full specifications for the referenced algorithms can be found in
+   Appendix B.
 
    Note: The mask length, according to [RFC8017], is k - hLen - 1, where
    k is the size of the RSA modulus.  Since the choice of hash function

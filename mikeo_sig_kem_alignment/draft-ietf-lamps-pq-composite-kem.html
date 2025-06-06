@@ -2608,10 +2608,9 @@ kema-MLKEM768-ECDH-P256-HMAC-SHA256 KEM-ALGORITHM ::=
         <h3 id="name-rsa-oaep-parameters">
 <a href="#section-7.3" class="section-number selfRef">7.3. </a><a href="#name-rsa-oaep-parameters" class="section-name selfRef">RSA-OAEP Parameters</a>
         </h3>
-<p id="section-7.3-1">Use of RSA-OAEP <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span> requires additional specification.<a href="#section-7.3-1" class="pilcrow">¶</a></p>
-<p id="section-7.3-2">A quick note on the choice of RSA-OAEP as the supported RSA encryption primitive. RSA-KEM <span>[<a href="#RFC5990" class="cite xref">RFC5990</a>]</span> is cryptographically robust and is more straightforward to work with, but it has fairly limited adoption and therefore is of limited value as a PQ migration mechanism. Also, while RSA-PKCS#1v1.5 <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span> is still widely used, it is hard to make secure and no longer FIPS-approved as of the end of 2023 <span>[<a href="#SP800-131Ar2" class="cite xref">SP800-131Ar2</a>]</span>, so it is of limited forwards value. This leaves RSA-OAEP <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span> as the remaining choice. See <a href="#sec-rationale" class="auto internal xref">Section 7.2</a> for further discussion of algorithm choices.<a href="#section-7.3-2" class="pilcrow">¶</a></p>
-<p id="section-7.3-3">The RSA component keys MUST be generated at the 2048-bit, 3072-bit, 4096-bit key sizes levels respectively (up to small differences such as dropping leading zeros); intermediate sizes are not acceptable<a href="#section-7.3-3" class="pilcrow">¶</a></p>
-<p id="section-7.3-4">As with the other Composite ML-KEM algorithms, when a Composite ML-KEM algorithm using RSA-OAEP as the traditional component is used in an AlgorithmIdentifier, the AlgorithmIdentifier parameters MUST be absent. The RSA-OAEP primitive SHALL be instantiated with the following hard-coded parameters which are the same for the 2048, 3072 and 4096 bit security levels.<a href="#section-7.3-4" class="pilcrow">¶</a></p>
+<p id="section-7.3-1">Use of RSA-OAEP <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span> requires additional parameters to be specified.<a href="#section-7.3-1" class="pilcrow">¶</a></p>
+<p id="section-7.3-2">The RSA component keys MUST be generated at the specified 2048-bit, 3072-bit, 4096-bit key sizes respectively (up to small differences such as dropping leading zeros); intermediate sizes are not acceptable.<a href="#section-7.3-2" class="pilcrow">¶</a></p>
+<p id="section-7.3-3">As with the other Composite ML-KEM algorithms, AlgorithmIdentifier parameters MUST be absent. The RSA-OAEP primitive SHALL be instantiated with the following hard-coded parameters which are the same for the 2048, 3072 and 4096 bit security levels since the objective is to carry and output a 256-bit shared secret at all security levels.<a href="#section-7.3-3" class="pilcrow">¶</a></p>
 <span id="name-rsa-oaep-parameters-2"></span><div id="rsa-oaep-params">
 <table class="center" id="table-4">
           <caption>
@@ -2630,8 +2629,12 @@ kema-MLKEM768-ECDH-P256-HMAC-SHA256 KEM-ALGORITHM ::=
               <td class="text-left" rowspan="1" colspan="1">id-sha256</td>
             </tr>
             <tr>
-              <td class="text-left" rowspan="1" colspan="1">maskGenAlgorithm</td>
-              <td class="text-left" rowspan="1" colspan="1">mgf1SHA256Identifier</td>
+              <td class="text-left" rowspan="1" colspan="1">MaskGenAlgorithm.algorithm</td>
+              <td class="text-left" rowspan="1" colspan="1">id-mgf1</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">maskGenAlgorithm.parameters</td>
+              <td class="text-left" rowspan="1" colspan="1">id-sha256</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">pSourceAlgorithm</td>
@@ -2644,19 +2647,8 @@ kema-MLKEM768-ECDH-P256-HMAC-SHA256 KEM-ALGORITHM ::=
           </tbody>
         </table>
 </div>
-<p id="section-7.3-6">where:<a href="#section-7.3-6" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-7.3-7.1">
-            <p id="section-7.3-7.1.1"><code>id-sha256</code> is defined in <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span>.<a href="#section-7.3-7.1.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-7.3-7.2">
-            <p id="section-7.3-7.2.1"><code>mgf1SHA256Identifier</code> is defined in <span>[<a href="#RFC4055" class="cite xref">RFC4055</a>]</span>, which refers to the MFG1 function defined in <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span> appendix B.2.1.<a href="#section-7.3-7.2.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-7.3-7.3">
-            <p id="section-7.3-7.3.1"><code>pSpecifiedEmpty</code> is defined in <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span> to indicate that the empty string is used for the label.<a href="#section-7.3-7.3.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-<p id="section-7.3-8">Note: The mask length, according to <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span>, is <code>k - hLen - 1</code>, where <code>k</code> is the size of the RSA modulus. Since the choice of hash function and the RSA key size is fixed for each composite algorithm, implementations could choose to pre-compute and hard-code the mask length.<a href="#section-7.3-8" class="pilcrow">¶</a></p>
+<p id="section-7.3-5">Full specifications for the referenced algorithms can be found in <a href="#appdx_components" class="auto internal xref">Appendix B</a>.<a href="#section-7.3-5" class="pilcrow">¶</a></p>
+<p id="section-7.3-6">Note: The mask length, according to <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span>, is <code>k - hLen - 1</code>, where <code>k</code> is the size of the RSA modulus. Since the choice of hash function and the RSA key size is fixed for each composite algorithm, implementations could choose to pre-compute and hard-code the mask length.<a href="#section-7.3-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
