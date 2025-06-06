@@ -289,6 +289,7 @@ Interop-affecting changes:
 * ML-KEM secret keys are now only seeds.
 * Since all ML-KEM keys and ciphertexts are now fixed-length, dropped the length-tagged encoding.
 * Added complete test vectors.
+* Added ML-KEM1024 + RSA3072 combination.
 * Added ML-KEM1024+ECDH-P521 combination.
 * Updated prototype OIDs so these don't conflict with the previous versions
 * Removed the "Use in CMS" section so that we can get this document across the finish line, and defer CMS-related debates to a separate document.
@@ -343,9 +344,16 @@ In addition, the following terms are used in this specification:
           This is not meant to imply any sort of client-server
           relationship between the communicating parties.
 
-**COMBINER:**
+**COMBINER**:
   A combiner specifies how multiple shared secrets are combined into
   a single shared secret.
+
+**COMPONENT / PRIMITIVE**:
+  The words "component" or "primitive" are used interchangeably
+  to refer to a cryptographic algorithm that is used internally
+  within a composite algorithm. For example this could be an
+  asymmetric algorithm such as "ML-KEM-768" or "RSA-OAEP", or a KDF such
+  as "HMAC-SHA256".
 
 **DER:**
   Distinguished Encoding Rules as defined in [X.690].
@@ -1165,6 +1173,7 @@ EDNOTE: these are prototyping OIDs to be replaced by IANA.
 | id-MLKEM768-ECDH-P256-HMAC-SHA256  | &lt;CompKEM&gt;.54   | ML-KEM-768        | ECDH with secp256r1            | HMAC-SHA256 |
 | id-MLKEM768-ECDH-P384-HMAC-SHA256  | &lt;CompKEM&gt;.55   | ML-KEM-768        | ECDH with secp384r1            | HMAC-SHA256 |
 | id-MLKEM768-ECDH-brainpoolP256r1-HMAC-SHA256   | &lt;CompKEM&gt;.56   | ML-KEM-768        | ECDH with brainpoolp256r1 | HMAC-SHA256 |
+| id-MLKEM1024-RSA3072-HMAC-SHA512   | &lt;CompKEM&gt;.61   | ML-KEM-1024       | RSA-OAEP 3072        | HMAC-SHA512 |
 | id-MLKEM1024-ECDH-P384-HMAC-SHA512 | &lt;CompKEM&gt;.57   | ML-KEM-1024       | ECDH with secp384r1            | HMAC-SHA512 |
 | id-MLKEM1024-ECDH-brainpoolP384r1-HMAC-SHA512  | &lt;CompKEM&gt;.58   | ML-KEM-1024       | ECDH with brainpoolP384r1 | HMAC-SHA512 |
 | id-MLKEM1024-X448-SHA3-256         | &lt;CompKEM&gt;.59   | ML-KEM-1024       | X448                 | SHA3-256 |
@@ -1217,13 +1226,13 @@ While it may seem odd to use 256-bit outputs at all security levels, this aligns
 
 ## RSA-OAEP Parameters {#sect-rsaoaep-params}
 
-Use of RSA-OAEP [RFC8017] within `id-MLKEM768-RSA2048-HMAC-SHA256`, `id-MLKEM768-RSA3072-HMAC-SHA256`, and `id-MLKEM768-RSA4096-HMAC-SHA256` requires additional specification.
+Use of RSA-OAEP [RFC8017] requires additional specification.
 
 A quick note on the choice of RSA-OAEP as the supported RSA encryption primitive. RSA-KEM [RFC5990] is cryptographically robust and is more straightforward to work with, but it has fairly limited adoption and therefore is of limited value as a PQ migration mechanism. Also, while RSA-PKCS#1v1.5 [RFC8017] is still widely used, it is hard to make secure and no longer FIPS-approved as of the end of 2023 [SP800-131Ar2], so it is of limited forwards value. This leaves RSA-OAEP [RFC8017] as the remaining choice. See {{sec-rationale}} for further discussion of algorithm choices.
 
 The RSA component keys MUST be generated at the 2048-bit, 3072-bit, 4096-bit key sizes levels respectively (up to small differences such as dropping leading zeros); intermediate sizes are not acceptable
 
-As with the other Composite ML-KEM algorithms, when `id-MLKEM768-RSA2048-HMAC-SHA256`, `id-MLKEM768-RSA3072-HMAC-SHA256`, or `id-MLKEM-RSA4096` FIXME!! is used in an AlgorithmIdentifier, the parameters MUST be absent. The RSA-OAEP SHALL be instantiated with the following hard-coded parameters which are the same for the 2048, 3072 and 4096 bit security levels.
+As with the other Composite ML-KEM algorithms, when a Composite ML-KEM algorithm using RSA-OAEP as the traditional component is used in an AlgorithmIdentifier, the AlgorithmIdentifier parameters MUST be absent. The RSA-OAEP primitive SHALL be instantiated with the following hard-coded parameters which are the same for the 2048, 3072 and 4096 bit security levels.
 
 | RSAES-OAEP-params           | Value                       |
 | ----------------------      | ---------------             |
@@ -1302,6 +1311,11 @@ EDNOTE to IANA: OIDs will need to be replaced in both the ASN.1 module and in {{
 - id-MLKEM768-X25519-SHA3-256
   - Decimal: IANA Assigned
   - Description: id-MLKEM768-X25519-SHA3-256
+  - References: This Document
+
+- id-MLKEM1024-RSA3072-HMAC-SHA512
+  - Decimal: IANA Assigned
+  - Description: id-MLKEM1024-RSA3072-HMAC-SHA512
   - References: This Document
 
 - id-MLKEM1024-ECDH-P384-HMAC-SHA512

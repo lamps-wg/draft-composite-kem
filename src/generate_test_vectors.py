@@ -42,6 +42,7 @@ OID_TABLE = {
   "id-MLKEM768-ECDH-P256-HMAC-SHA256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,54)),
   "id-MLKEM768-ECDH-P384-HMAC-SHA256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,55)),
   "id-MLKEM768-ECDH-brainpoolP256r1-HMAC-SHA256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,56)),
+  "id-MLKEM1024-RSA3072-HMAC-SHA512": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,61)),
   "id-MLKEM1024-ECDH-P384-HMAC-SHA512": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,57)),
   "id-MLKEM1024-ECDH-brainpoolP384r1-HMAC-SHA512": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,58)),
   "id-MLKEM1024-X448-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,59)),
@@ -574,6 +575,13 @@ class MLKEM768_ECDH_brainpoolP256r1_HMAC_SHA256(CompositeKEM):
   tradkem = ECDHBP256KEM()
   kdf = "HMAC-SHA256"
 
+
+class MLKEM1024_RSA3072_HMAC_SHA512(CompositeKEM):
+  id = "id-MLKEM1024-RSA3072-HMAC-SHA512"
+  mlkem = MLKEM1024()
+  tradkem = RSA3072OAEPKEM()
+  kdf = "HMAC-SHA512"
+
   
 class MLKEM1024_ECDH_P384_HMAC_SHA512(CompositeKEM):
   id = "id-MLKEM1024-ECDH-P384-HMAC-SHA512"
@@ -983,7 +991,7 @@ def writeDomainTable():
   """
 
   with open('domSepTable.md', 'w') as f:
-    f.write('| Composite Signature Algorithm                 | Domain Separator (in Hex encoding)|\n')
+    f.write('| Composite KEM Algorithm                 | Domain Separator (in Hex encoding)|\n')
     f.write('| ---------------------------------------       | ----------------------------------|\n')
 
     for alg in DOMAIN_TABLE:
@@ -1015,6 +1023,7 @@ def main():
   doKEM(MLKEM768_ECDH_P256_HMAC_SHA256(), caSK )
   doKEM(MLKEM768_ECDH_P384_HMAC_SHA256(), caSK )
   doKEM(MLKEM768_ECDH_brainpoolP256r1_HMAC_SHA256(), caSK )
+  doKEM(MLKEM1024_RSA3072_HMAC_SHA512(), caSK)
   doKEM(MLKEM1024_ECDH_P384_HMAC_SHA512(), caSK )
   doKEM(MLKEM1024_ECDH_brainpoolP384r1_HMAC_SHA512(), caSK )
   doKEM(MLKEM1024_X448_SHA3_256(), caSK )
