@@ -1058,7 +1058,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Ounsworth, et al.</td>
-<td class="center">Expires 6 December 2025</td>
+<td class="center">Expires 9 December 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1071,12 +1071,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-lamps-pq-composite-kem-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-06-04" class="published">4 June 2025</time>
+<time datetime="2025-06-07" class="published">7 June 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-12-06">6 December 2025</time></dd>
+<dd class="expires"><time datetime="2025-12-09">9 December 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1142,7 +1142,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 6 December 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 9 December 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1342,6 +1342,9 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.1.2.2">
                     <p id="section-toc.1-1.15.2.1.2.2.1"><a href="#appendix-D.1.2" class="auto internal xref">D.1.2</a>.  <a href="#name-mixing-with-non-approved-al" class="internal xref">Mixing with Non-Approved Algorithms</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.1.2.3">
+                    <p id="section-toc.1-1.15.2.1.2.3.1"><a href="#appendix-D.1.3" class="auto internal xref">D.1.3</a>.  <a href="#name-approval-status-of-dhkem" class="internal xref">Approval Status of DHKEM</a></p>
 </li>
                 </ul>
 </li>
@@ -3999,6 +4002,16 @@ establishment methods of SP 800-56A or SP 800-56B, or an approved KEM.<a href="#
 </li>
           </ul>
 <p id="appendix-D.1.2-3">This means that although Composite KEM always places the shared secret key from ML-KEM in the first slot, a Composite KEM can be FIPS certified so long as either component is FIPS certified. This is important for several reasons. First, in the early stages of PQC migration, composites allow for a non-FIPS certified ML-KEM implementation to be added to a module that already has a FIPS certified traditional component, and the resulting composite can be FIPS certified. Second, when eventually RSA and Elliptic Curve are no longer FIPS-allowed, the composite can retain its FIPS certified status on the strength of the ML-KEM component. Third, while this is outside the scope of this document, the general composite construction could be used to create FIPS certified algorithms that contain a component algorithm from a different jurisdiction.<a href="#appendix-D.1.2-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="approval-status-of-dhkem">
+<section id="appendix-D.1.3">
+          <h4 id="name-approval-status-of-dhkem">
+<a href="#appendix-D.1.3" class="section-number selfRef">D.1.3. </a><a href="#name-approval-status-of-dhkem" class="section-name selfRef">Approval Status of DHKEM</a>
+          </h4>
+<p id="appendix-D.1.3-1">As noted above, <span>[<a href="#SP-800-227ipd" class="cite xref">SP-800-227ipd</a>]</span> permits the key combiner inputs to be either shared secrets generated from <span>[<a href="#SP.800-56Ar3" class="cite xref">SP.800-56Ar3</a>]</span> key establishment mehtods, or by approved KEMs.
+<span>[<a href="#SP.800-56Ar3" class="cite xref">SP.800-56Ar3</a>]</span> describes the <code>Z</code> value in its definition of ECDH as a shared secret so it is acceptable by this definition.<a href="#appendix-D.1.3-1" class="pilcrow">¶</a></p>
+<p id="appendix-D.1.3-2">However this does not imply that DHKEM is an approved KEM in isolation, i.e. when not used as part of this composite KEM.<a href="#appendix-D.1.3-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>

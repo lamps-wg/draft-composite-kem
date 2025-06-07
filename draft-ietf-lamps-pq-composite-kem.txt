@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 6 December 2025                                         M. Pala
+Expires: 9 December 2025                                         M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                             4 June 2025
+                                                             7 June 2025
 
 
       Composite ML-KEM for use in X.509 Public Key Infrastructure
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 6 December 2025.
+   This Internet-Draft will expire on 9 December 2025.
 
 Copyright Notice
 
@@ -129,6 +129,7 @@ Table of Contents
      D.1.  FIPS Certification
        D.1.1.  Combiner Function
        D.1.2.  Mixing with Non-Approved Algorithms
+       D.1.3.  Approval Status of DHKEM
      D.2.  Backwards Compatibility
      D.3.  Decapsulation Requires the Public Key
      D.4.  Profiling down the number of options
@@ -2727,6 +2728,17 @@ D.1.2.  Mixing with Non-Approved Algorithms
    outside the scope of this document, the general composite
    construction could be used to create FIPS certified algorithms that
    contain a component algorithm from a different jurisdiction.
+
+D.1.3.  Approval Status of DHKEM
+
+   As noted above, [SP-800-227ipd] permits the key combiner inputs to be
+   either shared secrets generated from [SP.800-56Ar3] key establishment
+   mehtods, or by approved KEMs.  [SP.800-56Ar3] describes the Z value
+   in its definition of ECDH as a shared secret so it is acceptable by
+   this definition.
+
+   However this does not imply that DHKEM is an approved KEM in
+   isolation, i.e. when not used as part of this composite KEM.
 
 D.2.  Backwards Compatibility
 
