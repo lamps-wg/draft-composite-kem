@@ -1058,7 +1058,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Ounsworth, et al.</td>
-<td class="center">Expires 8 December 2025</td>
+<td class="center">Expires 9 December 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1071,12 +1071,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-lamps-pq-composite-kem-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-06-06" class="published">6 June 2025</time>
+<time datetime="2025-06-07" class="published">7 June 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-12-08">8 December 2025</time></dd>
+<dd class="expires"><time datetime="2025-12-09">9 December 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1142,7 +1142,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 8 December 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 9 December 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1318,7 +1318,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
                     <p id="section-toc.1-1.11.2.1.2.1.1"><a href="#section-11.1.1" class="auto internal xref">11.1.1</a>.  <a href="#name-combiner-function" class="internal xref">Combiner Function</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.1.2.2">
-                    <p id="section-toc.1-1.11.2.1.2.2.1"><a href="#section-11.1.2" class="auto internal xref">11.1.2</a>.  <a href="#name-mixing-with-non-approved-al" class="internal xref">Mixing with Non-Approved Algorithms</a></p>
+                    <p id="section-toc.1-1.11.2.1.2.2.1"><a href="#section-11.1.2" class="auto internal xref">11.1.2</a>.  <a href="#name-order-of-kdf-inputs-with-no" class="internal xref">Order of KDF inputs with Non-Approved Algorithms</a></p>
 </li>
                 </ul>
 </li>
@@ -1467,8 +1467,8 @@ In addition, the following terms are used in this specification:<a href="#sectio
           definitions of "cryptographic algorithm" and
           "cryptographic scheme" given in <span>[<a href="#I-D.ietf-pquip-pqt-hybrid-terminology" class="cite xref">I-D.ietf-pquip-pqt-hybrid-terminology</a>]</span>.<a href="#section-2.1-3" class="pilcrow">¶</a></p>
 <p id="section-2.1-4"><strong>COMBINER</strong>:
-  A combiner specifies how multiple shared secrets are combined into
-  a single shared secret.<a href="#section-2.1-4" class="pilcrow">¶</a></p>
+  A combiner specifies how multiple shared secret keyss are combined
+  into a single shared secret key.<a href="#section-2.1-4" class="pilcrow">¶</a></p>
 <p id="section-2.1-5"><strong>COMPONENT / PRIMITIVE</strong>:
   The words "component" or "primitive" are used interchangeably
   to refer to a cryptographic algorithm that is used internally
@@ -1531,7 +1531,7 @@ The algorithm descriptions use python-like syntax. The following symbols deserve
       <h2 id="name-overview-of-the-composite-m">
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-overview-of-the-composite-m" class="section-name selfRef">Overview of the Composite ML-KEM Scheme</a>
       </h2>
-<p id="section-3-1">Composite ML-KEM is a Post-Quantum / Traditional hybrid Key Encapsulation Mechanism (KEM) which combines ML-KEM as specified in <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span> and <span>[<a href="#I-D.ietf-lamps-kyber-certificates" class="cite xref">I-D.ietf-lamps-kyber-certificates</a>]</span> with one of RSA-OAEP defined in <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span>, the Elliptic Curve Diffie-Hellman key agreement schemes ECDH defined in section 5.7.1.2 of <span>[<a href="#SP.800-56Ar3" class="cite xref">SP.800-56Ar3</a>]</span>, and X25519 / X448 defined in <span>[<a href="#RFC8410" class="cite xref">RFC8410</a>]</span>. A KEM combiner function is used to combine the two component shared secrets into a single shared secret.<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-1">Composite ML-KEM is a Post-Quantum / Traditional hybrid Key Encapsulation Mechanism (KEM) which combines ML-KEM as specified in <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span> and <span>[<a href="#I-D.ietf-lamps-kyber-certificates" class="cite xref">I-D.ietf-lamps-kyber-certificates</a>]</span> with one of RSA-OAEP defined in <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span>, the Elliptic Curve Diffie-Hellman key agreement schemes ECDH defined in section 5.7.1.2 of <span>[<a href="#SP.800-56Ar3" class="cite xref">SP.800-56Ar3</a>]</span>, and X25519 / X448 defined in <span>[<a href="#RFC8410" class="cite xref">RFC8410</a>]</span>. A KEM combiner function is used to combine the two component shared secret keyss into a single shared secret key.<a href="#section-3-1" class="pilcrow">¶</a></p>
 <p id="section-3-2">Composite Key Encapsulation Mechanisms are defined as cryptographic primitives that consist of three algorithms. These definitions are borrowed from <span>[<a href="#RFC9180" class="cite xref">RFC9180</a>]</span>.<a href="#section-3-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3-3.1">
@@ -1541,7 +1541,7 @@ which generates a public key <code>pk</code> and a secret key <code>sk</code>. S
         <li class="normal" id="section-3-3.2">
           <p id="section-3-3.2.1"><code>Encap(pk) -&gt; (ss, ct)</code>: A probabilistic encapsulation algorithm,
 which takes as input a public key <code>pk</code> and outputs a ciphertext <code>ct</code>
-and shared secret <code>ss</code>. Note: this specification uses <code>Encap()</code> to conform to <span>[<a href="#RFC9180" class="cite xref">RFC9180</a>]</span>,
+and shared secret key <code>ss</code>. Note: this specification uses <code>Encap()</code> to conform to <span>[<a href="#RFC9180" class="cite xref">RFC9180</a>]</span>,
 but <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span> uses <code>Encaps()</code>.<a href="#section-3-3.2.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-3-3.3">
@@ -1584,13 +1584,13 @@ but <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span> uses <code
 <p id="section-3.1-1">The RSA Optimal Asymmetric Encryption Padding (OAEP), as defined in section 7.1 of <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span> is a public key encryption algorithm used to transport key material from a sender to a receiver. A "key transport" type algorithm has the following API:<a href="#section-3.1-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.1-2.1">
-            <p id="section-3.1-2.1.1"><code>Encrypt(pk, ss) -&gt; ct</code>: Take an existing shared secret <code>ss</code> and encrypt it for <code>pk</code>.<a href="#section-3.1-2.1.1" class="pilcrow">¶</a></p>
+            <p id="section-3.1-2.1.1"><code>Encrypt(pk, ss) -&gt; ct</code>: Take an existing shared secret key <code>ss</code> and encrypt it for <code>pk</code>.<a href="#section-3.1-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.1-2.2">
             <p id="section-3.1-2.2.1"><code>Decrypt(sk, ct) -&gt; ss</code>: Decrypt the ciphertext <code>ct</code> to recover <code>ss</code>.<a href="#section-3.1-2.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-3.1-3">Note the difference between the API of <code>RSA.Encrypt(pk, ss) -&gt; ct</code> and <code>KEM.Encap(pk) -&gt; (ss, ct)</code> presented above. For this reason, RSA-OAEP cannot be directly combined with ML-KEM. Fortunately, a key transport mechanism such as RSA-OAEP can be easily promoted into a KEM by having the sender generate a random 256 bit shared secret and encrypt it.<a href="#section-3.1-3" class="pilcrow">¶</a></p>
+<p id="section-3.1-3">Note the difference between the API of <code>RSA.Encrypt(pk, ss) -&gt; ct</code> and <code>KEM.Encap(pk) -&gt; (ss, ct)</code> presented above. For this reason, RSA-OAEP cannot be directly combined with ML-KEM. Fortunately, a key transport mechanism such as RSA-OAEP can be easily promoted into a KEM by having the sender generate a random 256 bit shared secret key and encrypt it.<a href="#section-3.1-3" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-3.1-4">
 <pre>
 RSAOAEPKEM.Encap(pkR):
@@ -1601,7 +1601,7 @@ RSAOAEPKEM.Encap(pkR):
 </pre><a href="#section-3.1-4" class="pilcrow">¶</a>
 </div>
 <p id="section-3.1-5">Acceptable public key encodings for <code>pkR</code> are described in <a href="#sec-serialization" class="auto internal xref">Section 5</a>.<a href="#section-3.1-5" class="pilcrow">¶</a></p>
-<p id="section-3.1-6">Note that the OAEP label <code>L</code> is left to its default value, which is the empty string as per <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span>. The shared secret output by the overall Composite ML-KEM already binds a composite domain separator, so there is no need to also use the component domain separators.<a href="#section-3.1-6" class="pilcrow">¶</a></p>
+<p id="section-3.1-6">Note that the OAEP label <code>L</code> is left to its default value, which is the empty string as per <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span>. The shared secret key output by the overall Composite ML-KEM already binds a composite domain separator, so there is no need to also use the component domain separators.<a href="#section-3.1-6" class="pilcrow">¶</a></p>
 <p id="section-3.1-7">The value of <code>ss_len</code> as well as concrete values for all the RSA-OAEP parameters used within this specification can be found in <a href="#sect-rsaoaep-params" class="auto internal xref">Section 7.3</a>.<a href="#section-3.1-7" class="pilcrow">¶</a></p>
 <p id="section-3.1-8"><code>Decap(sk, ct) -&gt; ss</code> is accomplished by direct use of OAEP Decrypt.<a href="#section-3.1-8" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-3.1-9">
@@ -1621,7 +1621,7 @@ RSAOAEPKEM.Decap(skR, enc):
         <h3 id="name-promotion-of-ecdh-into-a-ke">
 <a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-promotion-of-ecdh-into-a-ke" class="section-name selfRef">Promotion of ECDH into a KEM</a>
         </h3>
-<p id="section-3.2-1">The elliptic curve Diffie-Hellman algorithm identified by the OID <code>id-ecDH</code> as defined in <span>[<a href="#RFC5480" class="cite xref">RFC5480</a>]</span> and <span>[<a href="#SEC1" class="cite xref">SEC1</a>]</span> is a key agreement algorithm requiring both parties to contribute an asymmetric keypair to the derivation of the shared secret. A "key agreement" type algorithm has the following API:<a href="#section-3.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.2-1">The elliptic curve Diffie-Hellman algorithm identified by the OID <code>id-ecDH</code> as defined in <span>[<a href="#RFC5480" class="cite xref">RFC5480</a>]</span> and <span>[<a href="#SEC1" class="cite xref">SEC1</a>]</span> is a key agreement algorithm requiring both parties to contribute an asymmetric keypair to the derivation of the shared secret key. A "key agreement" type algorithm has the following API:<a href="#section-3.2-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.2-2.1">
             <p id="section-3.2-2.1.1"><code>DH(skX, pkY) -&gt; ss</code>: Each party combines their secret key <code>skX</code> with the other party's public key <code>pkY</code>.<a href="#section-3.2-2.1.1" class="pilcrow">¶</a></p>
@@ -1677,7 +1677,7 @@ Acceptable public key encodings for <code>enc</code> and <code>pkE</code> are de
 <a href="#section-4" class="section-number selfRef">4. </a><a href="#name-composite-ml-kem-functions" class="section-name selfRef">Composite ML-KEM Functions</a>
       </h2>
 <p id="section-4-1">This section describes the composite ML-KEM functions needed to instantiate the public API of a Key Encapsulation Mechanism as defined in <a href="#sec-kems" class="auto internal xref">Section 3</a>.<a href="#section-4-1" class="pilcrow">¶</a></p>
-<div id="key-generation">
+<div id="sec-keygen">
 <section id="section-4.1">
         <h3 id="name-key-generation">
 <a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-key-generation" class="section-name selfRef">Key Generation</a>
@@ -1799,7 +1799,7 @@ Encap Process:
       ct = SerializeCiphertext(mlkemCT, tradCT)
 
   5. Combine the KEM secrets and additional context to yield the
-     composite shared secret
+     composite shared secret key.
 
         ss = KemCombiner&lt;KDF&gt;(mlkemSS, tradSS, tradCT, tradPK, Domain)
 
@@ -1876,11 +1876,11 @@ Decap Process:
         output "Encapsulation error"
 
   4. Combine the KEM secrets and additional context to yield the
-     composite shared secret.
+     composite shared secret key.
 
       ss = KemCombiner&lt;KDF&gt;(mlkemSS, tradSS, tradCT, tradPK, Domain)
 
-  5. Output composite shared secret key
+  5. Output composite shared secret key.
 
      return ss
 </pre>
@@ -1939,9 +1939,9 @@ Process:
         # Where "{Hash} is the underlying hash function used
         # for the given composite algorithm.
 
-        # Since Composite ML-KEM always outputs a 256-bit shared secret,
-        # the output is always truncated to 256 bits, regardless
-        # of underlying hash function.
+        # Since Composite ML-KEM always outputs a 256-bit shared
+        # secret key, the output is always truncated to 256 bits,
+        # regardless of underlying hash function.
 
   return ss
 </pre><a href="#section-4.4-3" class="pilcrow">¶</a>
@@ -2518,7 +2518,7 @@ kema-MLKEM768-ECDH-P256-HMAC-SHA256 KEM-ALGORITHM ::=
 <a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-domain-separator-values" class="section-name selfRef">Domain Separator Values</a>
         </h3>
 <p id="section-7.1-1">The KEM combiner used in this specification requires a domain separator <code>Domain</code> input.  The following table shows the HEX-encoded domain separator for each Composite ML-KEM AlgorithmID; to use it, the value MUST be HEX-decoded and used in binary form. The domain separator is simply the DER encoding of the composite algorithm OID.<a href="#section-7.1-1" class="pilcrow">¶</a></p>
-<p id="section-7.1-2">Each Composite ML-KEM algorithm has a unique domain separator value which is used in constructing the KEM combiner in (<a href="#sec-kem-combiner" class="auto internal xref">Section 4.4</a>). This helps protect against a different algorithm arriving at the same shared secret even if all inputs are the same; for example <code>id-MLKEM768-X25519-SHA3-256</code> and X-Wing <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span> have identical component algorithms and KEM combiners but since they have different security properties, they use different domain separators in order to make them incompatible by design.<a href="#section-7.1-2" class="pilcrow">¶</a></p>
+<p id="section-7.1-2">Each Composite ML-KEM algorithm has a unique domain separator value which is used in constructing the KEM combiner in (<a href="#sec-kem-combiner" class="auto internal xref">Section 4.4</a>). This helps protect against a different algorithm arriving at the same shared secret key even if all inputs are the same; for example <code>id-MLKEM768-X25519-SHA3-256</code> and X-Wing <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span> have identical component algorithms and KEM combiners but since they have different security properties, they use different domain separators in order to make them incompatible by design.<a href="#section-7.1-2" class="pilcrow">¶</a></p>
 <p id="section-7.1-3">The domain separator is simply the DER encoding of the OID. The following table shows the HEX-encoded domain separator value for each Composite ML-KEM algorithm.<a href="#section-7.1-3" class="pilcrow">¶</a></p>
 <span id="name-composite-ml-kem-fixedinfo-"></span><div id="tab-kem-domains">
 <table class="center" id="table-3">
@@ -2605,7 +2605,7 @@ kema-MLKEM768-ECDH-P256-HMAC-SHA256 KEM-ALGORITHM ::=
         </h3>
 <p id="section-7.3-1">Use of RSA-OAEP <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span> requires additional parameters to be specified.<a href="#section-7.3-1" class="pilcrow">¶</a></p>
 <p id="section-7.3-2">The RSA component keys MUST be generated at the specified 2048-bit, 3072-bit, 4096-bit key sizes respectively (up to small differences such as dropping leading zeros); intermediate sizes are not acceptable.<a href="#section-7.3-2" class="pilcrow">¶</a></p>
-<p id="section-7.3-3">As with the other Composite ML-KEM algorithms, AlgorithmIdentifier parameters MUST be absent. The RSA-OAEP primitive SHALL be instantiated with the following hard-coded parameters which are the same for the 2048, 3072 and 4096 bit security levels since the objective is to carry and output a 256-bit shared secret at all security levels.<a href="#section-7.3-3" class="pilcrow">¶</a></p>
+<p id="section-7.3-3">As with the other Composite ML-KEM algorithms, AlgorithmIdentifier parameters MUST be absent. The RSA-OAEP primitive SHALL be instantiated with the following hard-coded parameters which are the same for the 2048, 3072 and 4096 bit security levels since the objective is to carry and output a 256-bit shared secret key at all security levels.<a href="#section-7.3-3" class="pilcrow">¶</a></p>
 <span id="name-rsa-oaep-parameters-2"></span><div id="rsa-oaep-params">
 <table class="center" id="table-4">
           <caption>
@@ -3152,7 +3152,7 @@ END
 <a href="#name-kem-combiner-construction" class="selfRef">KEM combiner construction</a>
           </figcaption></figure>
 </div>
-<p id="section-10.2-3">The primary security property of the KEM combiner is that it preserves IND-CCA2 of the overall Composite ML-KEM so long as at least one component is IND-CCA2 <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span> <span>[<a href="#GHP18" class="cite xref">GHP18</a>]</span>. Additionally, we also need to consider the case where one of the component algorithms is completely broken; that the private key is known to an attacker, or worse that the public key, private key, and ciphertext are manipulated by the attacker. In this case, we rely on the construction of the KEM combiner to ensure that the value of the other shared secret cannot be leaked or the combined shared secret predicted via manipulation of the broken algorithm.<a href="#section-10.2-3" class="pilcrow">¶</a></p>
+<p id="section-10.2-3">The primary security property of the KEM combiner is that it preserves IND-CCA2 of the overall Composite ML-KEM so long as at least one component is IND-CCA2 <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span> <span>[<a href="#GHP18" class="cite xref">GHP18</a>]</span>. Additionally, we also need to consider the case where one of the component algorithms is completely broken; that the private key is known to an attacker, or worse that the public key, private key, and ciphertext are manipulated by the attacker. In this case, we rely on the construction of the KEM combiner to ensure that the value of the other shared secret key cannot be leaked or the combined shared secret key predicted via manipulation of the broken algorithm.<a href="#section-10.2-3" class="pilcrow">¶</a></p>
 <p id="section-10.2-4">Each registered Composite ML-KEM algorithm specifies the choice of <code>KDF</code> and <code>Domain</code> -- see <a href="#sec-alg-ids" class="auto internal xref">Section 7</a> and <a href="#sec-domsep-values" class="auto internal xref">Section 7.1</a>. Given that each Composite ML-KEM algorithm fully specifies the component algorithms, including for example the size of the RSA modulus, all inputs to the KEM combiner are fixed-size and thus do not require length-prefixing.<a href="#section-10.2-4" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-10.2-5.1">
@@ -3188,7 +3188,7 @@ END
           <h4 id="name-second-pre-image-resistance">
 <a href="#section-10.2.2" class="section-number selfRef">10.2.2. </a><a href="#name-second-pre-image-resistance" class="section-name selfRef">Second pre-image resistance of component KEMs</a>
           </h4>
-<p id="section-10.2.2-1">The notion of a "ciphertext second pre-image resistant KEM" is defined in <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span> as being the property that it is computationally difficult to find two different ciphertexts <code>c != c'</code> that will decapsulate to the same shared secret under the same public key. For the purposes of a hybrid KEM combiner, this property means that given two composite ciphertexts <code>(c1, c2)</code> and <code>(c1', c2')</code>, we must obtain a unique overall shared secret so long as either <code>c1 != c1'</code> or <code>c2 != c2'</code> -- i.e. the overall Composite ML-KEM is ciphertext second pre-image resistant, and therefore secure so long as one of the component KEMs is secure.<a href="#section-10.2.2-1" class="pilcrow">¶</a></p>
+<p id="section-10.2.2-1">The notion of a "ciphertext second pre-image resistant KEM" is defined in <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span> as being the property that it is computationally difficult to find two different ciphertexts <code>c != c'</code> that will decapsulate to the same shared secret key under the same public key. For the purposes of a hybrid KEM combiner, this property means that given two composite ciphertexts <code>(c1, c2)</code> and <code>(c1', c2')</code>, we must obtain a unique overall shared secret key so long as either <code>c1 != c1'</code> or <code>c2 != c2'</code> -- i.e. the overall Composite ML-KEM is ciphertext second pre-image resistant, and therefore secure so long as one of the component KEMs is secure.<a href="#section-10.2.2-1" class="pilcrow">¶</a></p>
 <p id="section-10.2.2-2">In <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span> it is proven that ML-KEM is a second pre-image resistant KEM and therefore the ML-KEM ciphertext can safely be omitted from the KEM combiner. Note that this makes a fundamental assumption on ML-KEM remaining ciphertext second pre-image resistant, and therefore this formulation of KEM combiner does not fully protect against implementation errors in the ML-KEM component -- particularly around the ciphertext check step of the Fujisaki-Okamoto transform -- which could trivially lead to second ciphertext pre-image attacks that break the IND-CCA2 security of the ML-KEM component and of the overall Composite ML-KEM. This could be more fully mitigated by binding the ML-KEM ciphertext in the combiner, but a design decision was made to settle for protection against algorithmic attacks and not implementation attacks against ML-KEM in order to increase performance.<a href="#section-10.2.2-2" class="pilcrow">¶</a></p>
 <p id="section-10.2.2-3">However, since neither RSA-OAEP nor ECDH guarantee second pre-image resistance at all, even in a correct implementation, these ciphertexts are bound to the key derivation in order to guarantee that <code>c != c'</code> will yield a unique ciphertext, and thus restoring second pre-image resistance to the overall Composite ML-KEM.<a href="#section-10.2.2-3" class="pilcrow">¶</a></p>
 </section>
@@ -3198,7 +3198,7 @@ END
           <h4 id="name-sha3-vs-hmac-sha2">
 <a href="#section-10.2.3" class="section-number selfRef">10.2.3. </a><a href="#name-sha3-vs-hmac-sha2" class="section-name selfRef">SHA3 vs HMAC-SHA2</a>
           </h4>
-<p id="section-10.2.3-1">In order to achieve the desired security property that the Composite ML-KEM is IND-CCA2 whenever at least one of the component KEMs is, the KDF used in the KEM combiner needs to possess collision and second pre-image resistance with respect to each of its inputs independently; a property sometimes called "dual-PRF" <span>[<a href="#Aviram22" class="cite xref">Aviram22</a>]</span>. Collision and second-pre-image resistance protects against compromise of one component algorithm from resulting in the ability to construct multiple different ciphertexts which result in the same shared secret. Pre-image resistance protects against compromise of one component algorithm being used to attack and learn the value of the other shared secret.<a href="#section-10.2.3-1" class="pilcrow">¶</a></p>
+<p id="section-10.2.3-1">In order to achieve the desired security property that the Composite ML-KEM is IND-CCA2 whenever at least one of the component KEMs is, the KDF used in the KEM combiner needs to possess collision and second pre-image resistance with respect to each of its inputs independently; a property sometimes called "dual-PRF" <span>[<a href="#Aviram22" class="cite xref">Aviram22</a>]</span>. Collision and second-pre-image resistance protects against compromise of one component algorithm from resulting in the ability to construct multiple different ciphertexts which result in the same shared secret key. Pre-image resistance protects against compromise of one component algorithm being used to attack and learn the value of the other shared secret key.<a href="#section-10.2.3-1" class="pilcrow">¶</a></p>
 <p id="section-10.2.3-2">SHA3 is known to have all of the necessary dual-PRF properties <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span>, but SHA2 does not and therefore all SHA2-based constructions MUST use SHA2 within an HMAC construction such as HKDF-Extract upon which the composite HMAC combiner is based <span>[<a href="#GHP18" class="cite xref">GHP18</a>]</span>.<a href="#section-10.2.3-2" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -3218,7 +3218,7 @@ END
 <a href="#section-10.3" class="section-number selfRef">10.3. </a><a href="#name-key-reuse" class="section-name selfRef">Key Reuse</a>
         </h3>
 <p id="section-10.3-1">When using single-algorithm cryptography, the best practice is to always generate fresh keying material for each purpose, for example when renewing a certificate, or obtaining both a TLS and S/MIME certificate for the same device. However, in practice key reuse in such scenarios is not always catastrophic to security and therefore often tolerated. However this reasoning does not hold in the PQ / Traditional hybrid setting.<a href="#section-10.3-1" class="pilcrow">¶</a></p>
-<p id="section-10.3-2">Within the broader context of PQ / Traditional hybrids, we need to consider new attack surfaces that arise due to the hybrid constructions and did not exist in single-algorithm contexts. One of these is key reuse where the component keys within a hybrid are also used by themselves within a single-algorithm context. For example, it might be tempting for an operator to take already-deployed RSA keys and add an ML-KEM key to them to form a hybrid. Within a hybrid signature context this leads to a class of attacks referred to as "stripping attacks" where one component signature can be extracted and presented as a single-algorithm signature. Hybrid KEMs using a concatenation-style KEM combiner, as is done in this specification, do not have the analogous attack surface because even if an attacker is able to extract and decrypt one of the component ciphertexts, this will yield a different shared secret than the overall shared secret derived from the composite, so any subsequent symmetric cryptographic operations will fail.<a href="#section-10.3-2" class="pilcrow">¶</a></p>
+<p id="section-10.3-2">Within the broader context of PQ / Traditional hybrids, we need to consider new attack surfaces that arise due to the hybrid constructions and did not exist in single-algorithm contexts. One of these is key reuse where the component keys within a hybrid are also used by themselves within a single-algorithm context. For example, it might be tempting for an operator to take already-deployed RSA keys and add an ML-KEM key to them to form a hybrid. Within a hybrid signature context this leads to a class of attacks referred to as "stripping attacks" where one component signature can be extracted and presented as a single-algorithm signature. Hybrid KEMs using a concatenation-style KEM combiner, as is done in this specification, do not have the analogous attack surface because even if an attacker is able to extract and decrypt one of the component ciphertexts, this will yield a different shared secret key than the overall shared secret key derived from the composite, so any subsequent symmetric cryptographic operations will fail.<a href="#section-10.3-2" class="pilcrow">¶</a></p>
 <p id="section-10.3-3">In addition, there is a further implication to key reuse regarding certificate revocation. Upon receiving a new certificate enrolment request, many certification authorities will check if the requested public key has been previously revoked due to key compromise. Often a CA will perform this check by using the public key hash. Therefore, if one, or even both, components of a composite have been previously revoked, the CA may only check the hash of the combined composite key and not find the revocations. Therefore, because the possibility of key reuse exists even though forbidden in this specification, CAs performing revocation checks on a composite key SHOULD also check both component keys independently to verify that the component keys have not been revoked.<a href="#section-10.3-3" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -3256,7 +3256,7 @@ END
           </tbody>
         </table>
 </div>
-<p id="section-10.4-3">In the case of ML-KEM decapsulation failure, Composite ML-KEM MUST preserve the same behaviour and return a well-formed output shared secret.<a href="#section-10.4-3" class="pilcrow">¶</a></p>
+<p id="section-10.4-3">In the case of ML-KEM decapsulation failure, Composite ML-KEM MUST preserve the same behaviour and return a well-formed output shared secret key.<a href="#section-10.4-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="policy-for-deprecated-and-acceptable-algorithms">
@@ -3282,6 +3282,10 @@ END
         </h3>
 <p id="section-11.1-1">The following sections give guidance to implementers wishing to FIPS-certify a composite implentation.<a href="#section-11.1-1" class="pilcrow">¶</a></p>
 <p id="section-11.1-2">This guidance is not authoritative and has not been endorsed by NIST.<a href="#section-11.1-2" class="pilcrow">¶</a></p>
+<p id="section-11.1-3">Implementers seeking FIPS certification of a composite KEM algorithm where only one of the component algorithms has been FIPS-validated or FIPS-approved should credit the FIPS-validated component algorithm with full security strength, the non-FIPS-validated component algorithm with zero security, and the overall composite should be considered at least as strong and thus FIPS-approved.<a href="#section-11.1-3" class="pilcrow">¶</a></p>
+<p id="section-11.1-4">The composite algorithm has been designed to treat the underlying primitives as "black-box implementations" and not impose any additional requirements on them that could require an existing implementation of an underlying primitive to run in a mode different from the one under which it was certified. For example, the <code>KeyGen</code> defined in <a href="#sec-keygen" class="auto internal xref">Section 4.1</a> invokes <code>ML-KEM.KeyGen(seed)</code> which might not be available in a cryptographic module running in FIPS-mode, but <a href="#sec-keygen" class="auto internal xref">Section 4.1</a> is only a suggested implementation and the composite KeyGen MAY be implemented using a different available interface for ML-KEM.KeyGen.<a href="#section-11.1-4" class="pilcrow">¶</a></p>
+<p id="section-11.1-5">The authors wish to note that composite algorithms provide a design pattern to provide utility in future situations that require care to remain FIPS-compliant, such as future cryptographic migrations as well as bridging across jurisdictions with non-intersecting cryptographic requirements.<a href="#section-11.1-5" class="pilcrow">¶</a></p>
+<p id="section-11.1-6">The following sections go into further detail on specific issues that relate to FIPS certification.<a href="#section-11.1-6" class="pilcrow">¶</a></p>
 <div id="combiner-function">
 <section id="section-11.1.1">
           <h4 id="name-combiner-function">
@@ -3300,29 +3304,23 @@ ss = KDF(mlkemSS || tradSS || tradCT || tradPK || Domain)
 K ← KDM(S1‖S2‖ · · · ‖St , OtherInput)           (14)
 </pre><a href="#section-11.1.1-5" class="pilcrow">¶</a>
 </div>
-<p id="section-11.1.1-6">The key derivation method KDM can take one of two forms, either<a href="#section-11.1.1-6" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-11.1.1-7">
-<pre>
-K ← KDF(Z‖OtherInput)                            (12)
-</pre><a href="#section-11.1.1-7" class="pilcrow">¶</a>
-</div>
-<p id="section-11.1.1-8">or<a href="#section-11.1.1-8" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-11.1.1-9">
-<pre>
-K ← Expand(Extract(salt, Z), OtherInput)         (13)
-</pre><a href="#section-11.1.1-9" class="pilcrow">¶</a>
-</div>
-<p id="section-11.1.1-10">In terms of the order of inputs, Composite ML-KEM places the two shared secret keys <code>mlkemSS || tradSS</code> at the beginning of the KDF input such that all other inputs <code>tradCT || tradPK || Domain</code> can be considered part of <code>OtherInput</code> for the purposes of FIPS certification.<a href="#section-11.1.1-10" class="pilcrow">¶</a></p>
-<p id="section-11.1.1-11">For detailed steps <span>[<a href="#SP-800-227ipd" class="cite xref">SP-800-227ipd</a>]</span> refers to NIST SP.800-56Cr2 <span>[<a href="#SP.800-56Cr2" class="cite xref">SP.800-56Cr2</a>]</span>. Compliance of the Composite ML-KEM variants is achieved in the following way:<a href="#section-11.1.1-11" class="pilcrow">¶</a></p>
+<p id="section-11.1.1-6">Composite ML-KEM maps cleanly into this since it places the two shared secret keys <code>mlkemSS || tradSS</code> at the beginning of the KDF input such that all other inputs <code>tradCT || tradPK || Domain</code> can be considered part of <code>OtherInput</code> for the purposes of FIPS certification.<a href="#section-11.1.1-6" class="pilcrow">¶</a></p>
+<p id="section-11.1.1-7">For the detailed steps of the Key Derivation Mechanism KDM, <span>[<a href="#SP-800-227ipd" class="cite xref">SP-800-227ipd</a>]</span> refers to <span>[<a href="#SP.800-56Cr2" class="cite xref">SP.800-56Cr2</a>]</span>.<a href="#section-11.1.1-7" class="pilcrow">¶</a></p>
+<p id="section-11.1.1-8">Compliance of the Composite ML-KEM variants is achieved in the following way:<a href="#section-11.1.1-8" class="pilcrow">¶</a></p>
+<p id="section-11.1.1-9">The Composite ML-KEM algorithms using HMAC-SHA2 can be certified under <span>[<a href="#SP.800-56Cr2" class="cite xref">SP.800-56Cr2</a>]</span> One-Step Key Derivation Option 2: <code>H(x) = HMAC-hash(salt, x)</code> where <code>salt</code> is the empty (0 octet) string, which will internally be mapped to the zero vector <code>0x00..00</code> of the correct input size for the underlying hash function. This satisfies the requirement in <span>[<a href="#SP.800-56Cr2" class="cite xref">SP.800-56Cr2</a>]</span>:<a href="#section-11.1.1-9" class="pilcrow">¶</a></p>
+<ul class="normal ulEmpty">
+<li class="normal ulEmpty" id="section-11.1.1-10.1">
+              <p id="section-11.1.1-10.1.1">"in the absence of an agreed-upon alternative – the default_salt shall be an all-zero byte string whose bit length equals that specified as the bit length of an input block for the hash function, hash"<a href="#section-11.1.1-10.1.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+<p id="section-11.1.1-11">The Composite ML-KEM algorithms using SHA3 can be certified under <span>[<a href="#SP.800-56Cr2" class="cite xref">SP.800-56Cr2</a>]</span> One-Step Key Derivation Option 1: <code>H(x) = hash(x)</code>.<a href="#section-11.1.1-11" class="pilcrow">¶</a></p>
 <p id="section-11.1.1-12"><span>[<a href="#SP.800-56Cr2" class="cite xref">SP.800-56Cr2</a>]</span> section 4 "One-Step Key Derivation" requires a <code>counter</code> which begins at the 4-byte value 0x00000001. However, the counter is allowed to be omitted when the hash function is executed only once, as specified on page 159 of the FIPS 140-3 Implementation Guidance <span>[<a href="#FIPS-140-3-IG" class="cite xref">FIPS-140-3-IG</a>]</span>.<a href="#section-11.1.1-12" class="pilcrow">¶</a></p>
-<p id="section-11.1.1-13">The HMAC-SHA2 options can be certified under <span>[<a href="#SP.800-56Cr2" class="cite xref">SP.800-56Cr2</a>]</span> One-Step Key Derivation Option 2: <code>H(x) = HMAC-hash(salt, x)</code> where <code>salt</code> is the empty (0 octet) string, which will internally be mapped to the zero vector <code>0x00..00</code> of the correct input size for the underlying hash function in order to satisfy the requirement in <span>[<a href="#SP.800-56Cr2" class="cite xref">SP.800-56Cr2</a>]</span> that "in the absence of an agreed-upon alternative – the default_salt shall be an all-zero byte string whose bit length equals that specified as the bit length of an input block for the hash function, hash". Note that since the desired shared secret key output length of 256 bits for all security levels aligns with the block size of SHA256 or can be accomplished by truncating SHA-512, we do not need to use the HKDF-Expand step specified in <span>[<a href="#RFC5869" class="cite xref">RFC5869</a>]</span>, which further simplifies FIPS certification by allowing us to use the One-Step HMAC-based KDF rather than the Two-Step KDF from <span>[<a href="#SP.800-56Cr2" class="cite xref">SP.800-56Cr2</a>]</span>.<a href="#section-11.1.1-13" class="pilcrow">¶</a></p>
-<p id="section-11.1.1-14">The SHA3 options can be certified under <span>[<a href="#SP.800-56Cr2" class="cite xref">SP.800-56Cr2</a>]</span> One-Step Key Derivation Option 1: <code>H(x) = hash(x)</code>.<a href="#section-11.1.1-14" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="mixing-with-non-approved-algorithms">
+<div id="order-of-kdf-inputs-with-non-approved-algorithms">
 <section id="section-11.1.2">
-          <h4 id="name-mixing-with-non-approved-al">
-<a href="#section-11.1.2" class="section-number selfRef">11.1.2. </a><a href="#name-mixing-with-non-approved-al" class="section-name selfRef">Mixing with Non-Approved Algorithms</a>
+          <h4 id="name-order-of-kdf-inputs-with-no">
+<a href="#section-11.1.2" class="section-number selfRef">11.1.2. </a><a href="#name-order-of-kdf-inputs-with-no" class="section-name selfRef">Order of KDF inputs with Non-Approved Algorithms</a>
           </h4>
 <p id="section-11.1.2-1"><span>[<a href="#SP-800-227ipd" class="cite xref">SP-800-227ipd</a>]</span> adds an important stipulation that was not present in earlier NIST specifications:<a href="#section-11.1.2-1" class="pilcrow">¶</a></p>
 <ul class="normal ulEmpty">
@@ -3332,7 +3330,8 @@ least one shared secret (i.e., S_j for some j) is a shared secret generated from
 establishment methods of SP 800-56A or SP 800-56B, or an approved KEM.<a href="#section-11.1.2-2.1.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-11.1.2-3">This means that although Composite ML-KEM always places the shared secret key from ML-KEM in the first slot, a Composite ML-KEM can be FIPS certified so long as either component is FIPS certified. This is important for several reasons. First, in the early stages of PQC migration, composites allow for a non-FIPS certified ML-KEM implementation to be added to a module that already has a FIPS certified traditional component, and the resulting composite can be FIPS certified. Second, when eventually RSA and Elliptic Curve are no longer FIPS-allowed, the composite can retain its FIPS certified status on the strength of the ML-KEM component. Third, while this is outside the scope of this specification, the general composite construction could be used to create FIPS certified algorithms that contain a component algorithm from a different jurisdiction.<a href="#section-11.1.2-3" class="pilcrow">¶</a></p>
+<p id="section-11.1.2-3">This means that although Composite ML-KEM always places the shared secret key from ML-KEM in the first slot, a Composite ML-KEM can be FIPS certified so long as either component is FIPS certified. This is important for several reasons. First, in the early stages of PQC migration, composites allow for a non-FIPS certified ML-KEM implementation to be added to a module that already has a FIPS certified traditional component, and the resulting composite can be FIPS certified. Second, when eventually RSA and Elliptic Curve are no longer FIPS-allowed, the composite can retain its FIPS certified status on the strength of the ML-KEM component. Third, while this is outside the scope of this specification, the general composite construction could be used to create FIPS certified algorithms that contain a component algorithm from a different jurisdiction. Third, a composite where both components are FIPS-certified could allow an implementer to patch one component algorithm while awaiting re-certification while continuing to use the overall composite in FIPS mode.<a href="#section-11.1.2-3" class="pilcrow">¶</a></p>
+<p id="section-11.1.2-4">At the time of writing, <span>[<a href="#SP-800-227ipd" class="cite xref">SP-800-227ipd</a>]</span> is in its public draft period and not yet in force. A Composite ML-KEM implementation using a FIPS-certified traditional component and a non-FIPS certified ML-KEM is not believed to be certifiable under <span>[<a href="#SP.800-56Cr2" class="cite xref">SP.800-56Cr2</a>]</span> since this requires the shared secret key from the certified algorithm to be in the first slot.<a href="#section-11.1.2-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -3342,9 +3341,8 @@ establishment methods of SP 800-56A or SP 800-56B, or an approved KEM.<a href="#
         <h3 id="name-backwards-compatibility">
 <a href="#section-11.2" class="section-number selfRef">11.2. </a><a href="#name-backwards-compatibility" class="section-name selfRef">Backwards Compatibility</a>
         </h3>
-<p id="section-11.2-1">As noted in the introduction, the post-quantum cryptographic migration will face challenges in both ensuring cryptographic strength against adversaries of unknown capabilities, as well as providing ease of migration. The composite mechanisms defined in this specification primarily address cryptographic strength, however this section contains notes on how backwards compatibility may be obtained.<a href="#section-11.2-1" class="pilcrow">¶</a></p>
-<p id="section-11.2-2">The term "ease of migration" is used here to mean that existing systems can be gracefully transitioned to the new technology without requiring large service disruptions or expensive upgrades. The term "backwards compatibility" is used here to mean something more specific; that existing systems as they are deployed today can inter-operate with the upgraded systems of the future.<a href="#section-11.2-2" class="pilcrow">¶</a></p>
-<p id="section-11.2-3">These migration and interoperability concerns need to be thought about in the context of various types of protocols that make use of X.509 and PKIX with relation to key establishment and content encryption, from online negotiated protocols such as TLS 1.3 <span>[<a href="#RFC8446" class="cite xref">RFC8446</a>]</span> and IKEv2 <span>[<a href="#RFC7296" class="cite xref">RFC7296</a>]</span>, to non-negotiated asynchronous protocols such as S/MIME signed email <span>[<a href="#RFC8551" class="cite xref">RFC8551</a>]</span>, as well as myriad other standardized and proprietary protocols and applications that leverage CMS <span>[<a href="#RFC5652" class="cite xref">RFC5652</a>]</span> encrypted structures.<a href="#section-11.2-3" class="pilcrow">¶</a></p>
+<p id="section-11.2-1">The term "backwards compatibility" is used here to mean that existing systems as they are deployed today can interoperate with the upgraded systems of the future.  This draft explicitly does not provide backwards compatibility, only upgraded systems will understand the OIDs defined in this specification.<a href="#section-11.2-1" class="pilcrow">¶</a></p>
+<p id="section-11.2-2">These migration and interoperability concerns need to be thought about in the context of various types of protocols that make use of X.509 and PKIX with relation to key establishment and content encryption, from online negotiated protocols such as TLS 1.3 <span>[<a href="#RFC8446" class="cite xref">RFC8446</a>]</span> and IKEv2 <span>[<a href="#RFC7296" class="cite xref">RFC7296</a>]</span>, to non-negotiated asynchronous protocols such as S/MIME signed email <span>[<a href="#RFC8551" class="cite xref">RFC8551</a>]</span>, as well as myriad other standardized and proprietary protocols and applications that leverage CMS <span>[<a href="#RFC5652" class="cite xref">RFC5652</a>]</span> encrypted structures.<a href="#section-11.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-impl-profile">
@@ -3352,7 +3350,7 @@ establishment methods of SP 800-56A or SP 800-56B, or an approved KEM.<a href="#
         <h3 id="name-profiling-down-the-number-o">
 <a href="#section-11.3" class="section-number selfRef">11.3. </a><a href="#name-profiling-down-the-number-o" class="section-name selfRef">Profiling down the number of options</a>
         </h3>
-<p id="section-11.3-1">One immediately daunting aspect of this specification is the number of composite algorithm combinations.
+<p id="section-11.3-1">One daunting aspect of this specification is the number of composite algorithm combinations.
 Each option has been specified because there is a community that has a direct application for it; typically because the traditional component is already deployed in a change-managed environment, or because that specific traditional component is required for regulatory reasons.<a href="#section-11.3-1" class="pilcrow">¶</a></p>
 <p id="section-11.3-2">However, this large number of combinations leads either to fracturing of the ecosystem into non-interoperable sub-groups when different communities choose non-overlapping subsets to support, or on the other hand it leads to spreading development resources too thin when trying to support all options.<a href="#section-11.3-2" class="pilcrow">¶</a></p>
 <p id="section-11.3-3">This specification does not list any particular composite algorithm as mandatory-to-implement, however organizations that operate within specific application domains are encouraged to define profiles that select a small number of composites appropriate for that application domain.
