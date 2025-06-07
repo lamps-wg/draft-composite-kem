@@ -2636,10 +2636,10 @@ Table of Contents
 
 Appendix A.  Approximate Key and Ciphertext Sizes
 
-   Note that the sizes listed below are approximate: these values are
-   measured from the test vectors, but other implementations could
-   produce values where the traditional component has a different size.
-   For example, this could be due to:
+   The sizes listed below are approximate: these values are measured
+   from the test vectors, however, several factors could cause
+   fluctuations in the size of the traditional component.  For example,
+   this could be due to:
 
    *  Compressed vs uncompressed EC point.
 
@@ -2650,12 +2650,14 @@ Appendix A.  Approximate Key and Ciphertext Sizes
       values could occaisionally be shorter than expected due to leading
       zeros being dropped from the encoding.
 
-   Note that by contrast, ML-KEM values are always fixed size, so
-   composite values can always be correctly de-serialized based on the
-   size of the ML-KEM component.
+   By contrast, ML-KEM values are always fixed size, so composite values
+   can always be correctly de-serialized based on the size of the ML-KEM
+   component.
 
    Implementations MUST NOT perform strict length checking based on the
-   values in this table.
+   values in this table except for ML-KEM + X25519 or X448; since these
+   algorithms produce fixed-size outputs, the values in the table below
+   for these variants MAY be treated as constants.
 
    Non-hybrid ML-KEM is included for reference.
 
@@ -2764,11 +2766,11 @@ Appendix C.  Fixed Component Algorithm Identifiers
 
    The following sections list explicitly the DER encoded
    AlgorithmIdentifier that MUST be used when reconstructing
-   SubjectPublicKeyInfo objects for each component public key, which may
-   be required for example if cryptographic library requires the public
-   key in this form in order to process each component algorithm.  The
-   public key BIT STRING should be taken directly from the respective
-   component of the Composite ML-KEM public key.
+   SubjectPublicKeyInfo objects for each component algorithm type, which
+   may be required for example if cryptographic library requires the
+   public key in this form in order to process each component algorithm.
+   The public key BIT STRING should be taken directly from the
+   respective component of the Composite ML-KEM public key.
 
    *ML-KEM-768*
 
@@ -2910,10 +2912,11 @@ D.1.  X-Wing
    additional binding properies.  However, using a derived value as the
    seed for ML-KEM.KeyGen_internal() is, at time of writing, explicitely
    disallowed by [FIPS.203] which makes it impossible to create a FIPS-
-   compliant implentation of X-Wing KeyGen / private key import.  For
-   this reason, this specification keeps the key generatation for both
-   components separate so that implementers are free to use an existing
-   certified hardware or software module for one or both components.
+   compliant implentation of X-Wing's KeyGen or private key import
+   functionality.  For this reason, this specification keeps the key
+   generatation for both components separate and only loosely-specified
+   so that implementers are free to use an existing certified hardware
+   or software module for one or both components.
 
    Due to the difference in key generation and security properties,
    X-Wing and id-MLKEM768-X25519-SHA3-256 have been registered as
@@ -2945,7 +2948,8 @@ MB shall contain all of the corresponding public keys and ciphertexts.
    Additionally, ETSI CatKDF can be instantiated with either HMAC
    [RFC2104], KMAC [SP.800-185] or HKDF [RFC5869] as KDF.  Using HMAC
    aligns with some of the KDF variants in this specification, but not
-   the ones that use SHA3.
+   the ones that use SHA3 which do not have an equivalent construction
+   of CatKDF.
 
 Appendix E.  Test Vectors
 
@@ -2953,8 +2957,9 @@ Appendix E.  Test Vectors
    NIST ACVP Known-Answer-Tests (KATs).
 
    The structure is that a global cacert is provided which is used to
-   sign each KEM certificate.  Within each test case there are the
-   following values:
+   sign each KEM certificate.
+
+   Within each test case there are the following values:
 
    *  tcId the name of the algorithm.
 
@@ -2977,15 +2982,17 @@ Appendix E.  Test Vectors
    1.  Load the public key ek or certificate x5c and perform an
        encapsulation for it.
 
-   2.  Load the decapsulation private key dk and the ciphertext c and
-       ensure that the same shared secret key k can be derived.
+   2.  Load the decapsulation private key dk or dk_pkcs8 and the
+       ciphertext c and ensure that the same shared secret key k can be
+       derived.
 
-   Test vectors are provided for each underlying component in isolation
-   for the purposes of debugging.
+   Test vectors are provided for each underlying ML-KEM algorithm in
+   isolation for the purposes of debugging.
 
-   Due to the length of the test vectors, you may prefer to retrieve
-   them from GitHub.  The reference implementation that generated them
-   is also available:
+   Due to the length of the test vectors, some readers will prefer to
+   retrieve the non-word-wrapped copy from GitHub.  The reference
+   implementation written in pthon that generated them is also
+   available.
 
    https://github.com/lamps-wg/draft-composite-kem/tree/main/src
 
@@ -5859,31 +5866,31 @@ Appendix F.  Intellectual Property Considerations
 Appendix G.  Contributors and Acknowledgments
 
    This document incorporates contributions and comments from a large
-   group of experts.  The Editors would especially like to acknowledge
+   group of experts.  The editors would especially like to acknowledge
    the expertise and tireless dedication of the following people, who
    attended many long meetings and generated millions of bytes of
-   electronic mail and VOIP traffic over the past year in pursuit of
-   this document:
+   electronic mail and VOIP traffic over the past six years in pursuit
+   of this document:
 
    Serge Mister (Entrust), Felipe Ventura (Entrust), Richard Kettlewell
-   (Entrust), Ali Noman (Entrust), Peter C.  (UK NCSC), Sophie Schmieg
-   (Google), Deirdre Connolly (SandboxAQ), Chris A.  Wood (Apple),
-   Christopher D.  Wood (Apple), Bas Westerbaan (Cloudflare), Falko
-   Strenzke (MTG AG), Dan van Geest (Crypto Next), Piotr Popis (Enigma),
-   Jean-Pierre Fiset (Crypto4A), 陳志華 (Abel C.  H.  Chen, Chunghwa
-   Telecom), 林邦曄 (Austin Lin, Chunghwa Telecom) and Douglas Stebila
-   (University of Waterloo).
+   (Entrust), Ali Noman (Entrust), Peter C.  (UK NCSC), Tim Hollebeek
+   (Digicert), Sophie Schmieg (Google), Deirdre Connolly (SandboxAQ),
+   Chris A.  Wood (Apple), Bas Westerbaan (Cloudflare), Falko Strenzke
+   (MTG AG), Dan van Geest (Crypto Next), Piotr Popis (Enigma), Jean-
+   Pierre Fiset (Crypto4A), 陳志華 (Abel C.  H.  Chen, Chunghwa Telecom),
+   林邦曄 (Austin Lin, Chunghwa Telecom) and Douglas Stebila (University of
+   Waterloo).
 
    Thanks to Giacomo Pope (github.com/GiacomoPope) whose ML-DSA and ML-
-   KEM implementation was used to generate the test vectors.
+   KEM implementations were used to generate the test vectors.
 
-   We are grateful to all, including any contributors who may have been
-   inadvertently omitted from this list.
+   We are grateful to all who have given feedback over the years,
+   formally or informally, on mailing lists or in person, including any
+   contributors who may have been inadvertently omitted from this list.
 
-   This document borrows text from similar documents, including those
-   referenced below.  Thanks go to the authors of those documents.
-   "Copying always makes things easier and less error prone" -
-   [RFC8411].
+   Finally, we wish to thank the authors of all the referenced documents
+   upon which this specification was built.  "Copying always makes
+   things easier and less error prone" - [RFC8411].
 
 Authors' Addresses
 
