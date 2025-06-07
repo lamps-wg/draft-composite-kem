@@ -1930,7 +1930,7 @@ Process:
 
   else if KDF is "HMAC-{Hash}":
 
-    ss = HMAC-{Hash}(salt={0}, IKM=mlkemSS || tradSS || tradCT
+    ss = HMAC-{Hash}(key={0}, text=mlkemSS || tradSS || tradCT
                                            || tradPK || Domain)
     ss = truncate(ss, 256)
         # Where "{0}" is the string of HashLen zeros according to
