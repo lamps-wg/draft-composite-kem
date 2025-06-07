@@ -1,4 +1,4 @@
-| Composite Signature Algorithm                 | Domain Separator (in Hex encoding)|
+| Composite KEM Algorithm                 | Domain Separator (in Hex encoding)|
 | ---------------------------------------       | ----------------------------------|
 | id-MLKEM768-RSA2048-HMAC-SHA256               | 060B6086480186FA6B50050232 |
 | id-MLKEM768-RSA3072-HMAC-SHA256               | 060B6086480186FA6B50050233 |
@@ -7,6 +7,7 @@
 | id-MLKEM768-ECDH-P256-HMAC-SHA256             | 060B6086480186FA6B50050236 |
 | id-MLKEM768-ECDH-P384-HMAC-SHA256             | 060B6086480186FA6B50050237 |
 | id-MLKEM768-ECDH-brainpoolP256r1-HMAC-SHA256  | 060B6086480186FA6B50050238 |
+| id-MLKEM1024-RSA3072-HMAC-SHA512              | 060B6086480186FA6B5005023D |
 | id-MLKEM1024-ECDH-P384-HMAC-SHA512            | 060B6086480186FA6B50050239 |
 | id-MLKEM1024-ECDH-brainpoolP384r1-HMAC-SHA512 | 060B6086480186FA6B5005023A |
 | id-MLKEM1024-X448-SHA3-256                    | 060B6086480186FA6B5005023B |
