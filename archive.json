@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-06-05T02:02:53.533991+00:00",
+  "timestamp": "2025-06-08T02:18:14.944753+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -2623,6 +2623,30 @@
       "updatedAt": "2025-06-03T21:56:04Z",
       "closedAt": "2025-06-03T21:56:04Z",
       "comments": []
+    },
+    {
+      "number": 166,
+      "id": "I_kwDOKRPFO866VRAU",
+      "title": "HMAC-Hash Combiner Confusion",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/166",
+      "state": "OPEN",
+      "author": "danvangeest",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Section 4.4 (of the github version) specifies the following steps when the KEM Combiner is HMAC-{Hash}\n\n```\n    ss = HMAC-{Hash}(salt={0}, IKM=mlkemSS || tradSS || tradCT\n                                           || tradPK || Domain)\n    ss = truncate(ss, 256)\n```\n\nKMAC doesn't take salt and IKM parameters, these parameters are used by HKDF-Extract.  Since you're calling the combiner HMAC-{Hash}, use the associated parameter names (key and text):\n\n```\n    ss = HMAC-{Hash}(key={0}, text=mlkemSS || tradSS || tradCT\n                                           || tradPK || Domain)\n    ss = truncate(ss, 256)\n```\n",
+      "createdAt": "2025-06-07T00:04:48Z",
+      "updatedAt": "2025-06-07T00:49:38Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Yup, that's right. Good catch.",
+          "createdAt": "2025-06-07T00:49:37Z",
+          "updatedAt": "2025-06-07T00:49:37Z"
+        }
+      ]
     }
   ],
   "pulls": [
@@ -6849,18 +6873,54 @@
       "labels": [],
       "body": "",
       "createdAt": "2025-06-04T19:58:13Z",
-      "updatedAt": "2025-06-05T01:39:53Z",
+      "updatedAt": "2025-06-07T00:51:11Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "2ea84ed772f98723d4d0be5fbe07f85266dbd5bc",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_sig_kem_alignment",
-      "headRefOid": "fb57fe4e2b1b5ad9282a016ecd0116d07b2a7997",
+      "headRefOid": "3ed7487f77bf5194dcd877de1776049fa97b2196",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 165,
+      "id": "PR_kwDOKRPFO86ZLNnr",
+      "title": "Clarify FIPS-140 approval situation around DHKEM",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/165",
+      "state": "MERGED",
+      "author": "optnfast",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-06-05T10:29:22Z",
+      "updatedAt": "2025-06-07T00:48:23Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "2ea84ed772f98723d4d0be5fbe07f85266dbd5bc",
+      "headRepository": "optnfast/draft-composite-kem",
+      "headRefName": "fips-nuances",
+      "headRefOid": "832776435d6559e81ae6e486f94a425d4048dd1b",
+      "closedAt": "2025-06-07T00:48:23Z",
+      "mergedAt": "2025-06-07T00:48:23Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "a23cd0165c32e0870c973f64085e804d92b5db0a"
+      },
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Good clarification.",
+          "createdAt": "2025-06-07T00:48:19Z",
+          "updatedAt": "2025-06-07T00:48:19Z"
+        }
+      ],
       "reviews": []
     }
   ]
