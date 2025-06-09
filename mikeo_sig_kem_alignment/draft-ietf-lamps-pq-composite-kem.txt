@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 9 December 2025                                         M. Pala
+Expires: 11 December 2025                                        M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                             7 June 2025
+                                                             9 June 2025
 
 
       Composite ML-KEM for use in X.509 Public Key Infrastructure
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 9 December 2025.
+   This Internet-Draft will expire on 11 December 2025.
 
 Copyright Notice
 
@@ -2076,6 +2076,12 @@ Table of Contents
    performing the appropriate security analysis.
 
 10.3.  Key Reuse
+
+   While conformance with this specification requires that both
+   components of a componite key MUST be freshly generated, the
+   designers are aware that some implementers may be forced to break
+   this rule due to operational constrainst.  This section documents the
+   implications of doing so.
 
    When using single-algorithm cryptography, the best practice is to
    always generate fresh keying material for each purpose, for example
