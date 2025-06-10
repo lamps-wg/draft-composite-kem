@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-06-08T02:18:14.944753+00:00",
+  "timestamp": "2025-06-10T02:05:49.675950+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -2645,6 +2645,46 @@
           "body": "Yup, that's right. Good catch.",
           "createdAt": "2025-06-07T00:49:37Z",
           "updatedAt": "2025-06-07T00:49:37Z"
+        }
+      ]
+    },
+    {
+      "number": 167,
+      "id": "I_kwDOKRPFO866iJ0r",
+      "title": "Key reuse inconsistency",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/167",
+      "state": "OPEN",
+      "author": "danvangeest",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Sections 4.1 and 6.3 have MUST and MUST NOT terminology around key reuse.  Section 10.3 uses RECOMMENDED.\n\nThese need to be consistent.  Probably by changing 4.1 and 6.3 to use SHOULD / SHOULD NOT.",
+      "createdAt": "2025-06-09T08:00:29Z",
+      "updatedAt": "2025-06-09T08:00:29Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 168,
+      "id": "I_kwDOKRPFO866iUCd",
+      "title": "trailing curly cracket",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/168",
+      "state": "OPEN",
+      "author": "danvangeest",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "First paragraph of section 5: `within the public API definitions in Section 4}.`  Get rid of that extra `}`",
+      "createdAt": "2025-06-09T08:18:22Z",
+      "updatedAt": "2025-06-09T17:51:09Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Thanks Dan.\n\nI already caught this on my top-to-bottom pass in #164 .\n\nI appreciate the careful review, but maybe it's a better use of your time to hold off reviewing until we get that big PR merged?",
+          "createdAt": "2025-06-09T17:50:37Z",
+          "updatedAt": "2025-06-09T17:50:47Z"
         }
       ]
     }
@@ -6871,15 +6911,15 @@
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
-      "body": "",
+      "body": "Closes #166 \r\nCloses #168 ",
       "createdAt": "2025-06-04T19:58:13Z",
-      "updatedAt": "2025-06-07T00:51:11Z",
+      "updatedAt": "2025-06-09T17:51:24Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "2ea84ed772f98723d4d0be5fbe07f85266dbd5bc",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_sig_kem_alignment",
-      "headRefOid": "3ed7487f77bf5194dcd877de1776049fa97b2196",
+      "headRefOid": "50e82ec450d0e11501149f25ccdc05c98ae62081",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
