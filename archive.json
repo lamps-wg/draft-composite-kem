@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-06-10T02:05:49.675950+00:00",
+  "timestamp": "2025-06-12T02:03:19.404469+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -2687,6 +2687,22 @@
           "updatedAt": "2025-06-09T17:50:47Z"
         }
       ]
+    },
+    {
+      "number": 169,
+      "id": "I_kwDOKRPFO866_aBd",
+      "title": "Add Message Combiner Example",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/169",
+      "state": "OPEN",
+      "author": "johngray-dev",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Similar to what we did for Signatures with the Message format examples, we will add a section for a KEM Combiner examples.  For example:\n\n## Example of MLKEM768-ECDH-P384-HMAC-SHA256\n\n~~~\nCombiner Function:\nss = KDF(mlkemSS || tradSS || tradCT || tradPK || Domain)\n\nComponents of the Combiner:\nmlkemSS: <bytes of mlkemSS>\ntradSS: <bytes of tradSS>\ntradCT: <bytes of tradCT>\ntradPK: <bytes of tradPK>\nDomain:  <bytes of Domain>\n\nInput to KDF:  mlkemSS || tradSS || tradCT || tradPK || Domain\n\nss:  <bytes of shared secret>\n~~~\n\n## Example of MLKEM768-X25519-SHA3-256\n\n~~~\nCombiner Function:\nss = KDF(mlkemSS || tradSS || tradCT || tradPK || Domain)\n\nmlkemSS: <bytes of mlkemSS>\ntradSS: <bytes of tradSS>\ntradCT: <bytes of tradCT>\ntradPK: <bytes of tradPK>\nDomain:  <bytes of Domain>\n~~~",
+      "createdAt": "2025-06-11T15:04:21Z",
+      "updatedAt": "2025-06-11T17:10:16Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
@@ -6913,13 +6929,13 @@
       "labels": [],
       "body": "Closes #166 \r\nCloses #168 ",
       "createdAt": "2025-06-04T19:58:13Z",
-      "updatedAt": "2025-06-09T17:51:24Z",
+      "updatedAt": "2025-06-10T18:11:59Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "2ea84ed772f98723d4d0be5fbe07f85266dbd5bc",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_sig_kem_alignment",
-      "headRefOid": "50e82ec450d0e11501149f25ccdc05c98ae62081",
+      "headRefOid": "3cf4ad7ee391c41ea72c8d9f665cf54580819ee8",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
