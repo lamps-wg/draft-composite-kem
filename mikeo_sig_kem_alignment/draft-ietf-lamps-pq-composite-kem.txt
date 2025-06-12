@@ -816,7 +816,7 @@ Table of Contents
    and one with HMAC-SHA2.
 
    The following describes how to instantiate a KemCombiner() function
-   for a given key derivation function reperesented by <KDF>.
+   for a given key derivation function represented by <KDF>.
 
   KemCombiner<KDF>(mlkemSS, tradSS, tradCT, tradPK, Domain) -> ss
 
