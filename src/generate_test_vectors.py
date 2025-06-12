@@ -633,7 +633,11 @@ class MLKEM1024_ECDH_P521_HMAC_SHA512(CompositeKEM):
         # of underlying hash function.
 
 """
-def kemCombiner(kem, mlkemSS, tradSS, tradCT, tradPK, output=False, file_handle=None):
+def kemCombiner(kem, mlkemSS, tradSS, tradCT, tradPK ):
+  """
+  Computes the message representative M'.
+  """
+
   ss = None
 
   if kem.kdf == "HMAC-SHA256":
@@ -674,25 +678,8 @@ def kemCombiner(kem, mlkemSS, tradSS, tradCT, tradPK, output=False, file_handle=
   else:
     raise Exception("KEM combiner \""+str(kem.kdf)+"\" not recognized.")
     
-  if (output):
-      if file_handle is None:
-         print("No data written to the file")
-
-      else: 
-         file_handle.write("# Inputs\n")
-         file_handle.write("\nInput to KDF: mlkemSS || tradSS || tradCT || tradPK || Domain\n")         
-         file_handle.write("\nmlkemSS: " + mlkemSS.hex())
-         file_handle.write("\ntradSS:  " + tradSS.hex())
-         file_handle.write("\ntradCT:  " + tradCT.hex())
-         file_handle.write("\ntradPK:  " + tradPK.hex())
-         file_handle.write("\nDomain:  " + kem.domSep.hex())
-         file_handle.write("\n\nCombined KDF Input: " + mlkemSS.hex() + tradSS.hex() + tradCT.hex() + tradPK.hex() + kem.domSep.hex())
-         file_handle.write("\n\n# Outputs")
-         file_handle.write("\n\nKDF Function: " + kem.kdf)
-         file_handle.write("\nss Output: " + ss.hex())
-  
-
   return ss
+  
 
 
 
@@ -1014,27 +1001,39 @@ def writeDomainTable():
 
         
 
-def writeKEMCombiner(kem,filename):
+def writeKEMCombinerExample(kem, filename):
   """
   Writes the Message format examples section for the draft
   """
 
-  with open(filename, 'w') as f:
-    f.write("Example of " + kem.id + " Combiner function output.\n\n")
-    doKEMCombiner(kem,f)
-    f.close()
+  f = open(filename, 'w')
+
+  f.write("Example of " + kem.id + " Combiner function output.\n\n")
+
+  kem.keyGen()
+  (mlkemCT, mlkemSS) = kem.mlkem.encap()
+  (tradCT, tradSS) = kem.tradkem.encap()
+  tradPK = kem.tradkem.public_key_bytes()
+
+  ss = kemCombiner(kem, mlkemSS, tradSS, tradCT, tradPK)
 
 
-def doKEMCombiner(kem, file_handle=None):
+  wrap_width = 70
 
-    kem.keyGen()
-    
-    (ct1, ss1) = kem.mlkem.encap()
-    (ct2, ss2) = kem.tradkem.encap()
-
-    ss = kemCombiner(kem, ss1, ss2, ct2, kem.tradkem.public_key_bytes(),True,file_handle)
-
-    return (ss)  
+  f.write("# Inputs\n")      
+  f.write( "\n".join(textwrap.wrap("mlkemSS: " + mlkemSS.hex(), width=wrap_width)) +"\n\n" )
+  f.write( "\n".join(textwrap.wrap("tradSS:  " + tradSS.hex(), width=wrap_width)) +"\n\n" )
+  f.write( "\n".join(textwrap.wrap("tradCT:  " + tradCT.hex(), width=wrap_width)) +"\n\n" )
+  f.write( "\n".join(textwrap.wrap("tradPK:  " + tradPK.hex(), width=wrap_width)) +"\n\n" )
+  f.write( "\n".join(textwrap.wrap("Domain:  " + kem.domSep.hex(), width=wrap_width)) +"\n\n" )
+  f.write("\n")
+  f.write("# Combined KDF Input:\n")
+  f.write("#  mlkemSS || tradSS || tradCT || tradPK || Domain\n\n")
+  f.write( "\n".join(textwrap.wrap("Combined KDF Input: " + mlkemSS.hex() + tradSS.hex() + tradCT.hex() + tradPK.hex() + kem.domSep.hex(), width=wrap_width)) +"\n" )
+  f.write("\n\n# Outputs\n")
+  f.write("# ss = " + kem.kdf + "(Combined KDF Input)\n\n")
+  f.write( "\n".join(textwrap.wrap("ss: " + ss.hex(), width=wrap_width)) +"\n" )
+  
 
 
 
@@ -1072,9 +1071,10 @@ def main():
   writeDumpasn1Cfg()
   writeSizeTable()
   writeDomainTable()
-  writeKEMCombiner(MLKEM768_X25519_SHA3_256(),"kemCombiner_MLKEM768_X25519_SHA3_256.md")
-  writeKEMCombiner(MLKEM768_ECDH_P256_HMAC_SHA256(),"kemCombiner_MLKEM768_ECDH_P256_HMAC-SHA256.md")
-  writeKEMCombiner(MLKEM1024_ECDH_P384_HMAC_SHA512(),"kemCombiner_MLKEM1024_ECDH_P384_HMAC_SHA512.md")
+
+  writeKEMCombinerExample(MLKEM768_X25519_SHA3_256(),"kemCombiner_MLKEM768_X25519_SHA3_256.md")
+  writeKEMCombinerExample(MLKEM768_ECDH_P256_HMAC_SHA256(),"kemCombiner_MLKEM768_ECDH_P256_HMAC-SHA256.md")
+  writeKEMCombinerExample(MLKEM1024_ECDH_P384_HMAC_SHA512(),"kemCombiner_MLKEM1024_ECDH_P384_HMAC_SHA512.md")
 
 
 if __name__ == "__main__":
