@@ -333,7 +333,7 @@ In addition, the following terms are used in this specification:
           "cryptographic scheme" given in {{I-D.ietf-pquip-pqt-hybrid-terminology}}.
 
 **COMBINER**:
-  A combiner specifies how multiple shared secret key are combined
+  A combiner specifies how multiple shared secret keys are combined
   into a single shared secret key.
 
 **COMPONENT / PRIMITIVE**:
