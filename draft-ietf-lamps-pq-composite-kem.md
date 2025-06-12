@@ -720,7 +720,7 @@ In order to properly achieve its security properties, the KEM combiner requires 
 
 As noted in the Encapsulation and Decapsulation proceedures above, the KEM combiner is parametrized by the choice of underlying KDF. This specificacion provides two combiner constructions, one with SHA3 and one with HMAC-SHA2.
 
-The following describes how to instantiate a `KemCombiner()` function for a given key derivation function reperesented by `<KDF>`.
+The following describes how to instantiate a `KemCombiner()` function for a given key derivation function represented by `<KDF>`.
 
 ~~~
 KemCombiner<KDF>(mlkemSS, tradSS, tradCT, tradPK, Domain) -> ss
