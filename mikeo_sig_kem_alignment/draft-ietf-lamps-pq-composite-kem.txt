@@ -178,6 +178,9 @@ Table of Contents
       these are binary-compatible, might as well list the parent
       algorithm for clarity.
 
+   *  Added a new section "KEM Combiner Examples" that show all the
+      intermediate values of the KEM Combiner.
+
    Still to do in a future version:
 
    *  Nothing.  Authors believe this version to be complete.
