@@ -333,7 +333,7 @@ In addition, the following terms are used in this specification:
           "cryptographic scheme" given in {{I-D.ietf-pquip-pqt-hybrid-terminology}}.
 
 **COMBINER**:
-  A combiner specifies how multiple shared secret keyss are combined
+  A combiner specifies how multiple shared secret key are combined
   into a single shared secret key.
 
 **COMPONENT / PRIMITIVE**:
@@ -1434,7 +1434,7 @@ In the composite model this is less obvious since a PQ/T hybrid is expected to s
 
 ## FIPS Certification {#sec-fips}
 
-The following sections give guidance to implementers wishing to FIPS-certify a composite implentation.
+The following sections give guidance to implementers wishing to FIPS-certify a composite implementation.
 
 This guidance is not authoritative and has not been endorsed by NIST.
 
@@ -1745,7 +1745,7 @@ DER:
 
 ## X-Wing
 
-This specification borrows extensively from the analysis and KEM combiner construction presented in [X-Wing]. In particular, X-Wing and id-MLKEM768-X25519-SHA3-256 are largely interchangeable. The one difference is that X-Wing uses a combined KeyGen function to generate the two component private keys from the same seed, which gives some additional binding properies. However, using a derived value as the seed for `ML-KEM.KeyGen_internal()` is, at time of writing, explicitely disallowed by [FIPS.203] which makes it impossible to create a FIPS-compliant implentation of X-Wing's KeyGen  or private key import functionality. For this reason, this specification keeps the key generatation for both components separate and only loosely-specified so that implementers are free to use an existing certified hardware or software module for one or both components.
+This specification borrows extensively from the analysis and KEM combiner construction presented in [X-Wing]. In particular, X-Wing and id-MLKEM768-X25519-SHA3-256 are largely interchangeable. The one difference is that X-Wing uses a combined KeyGen function to generate the two component private keys from the same seed, which gives some additional binding properies. However, using a derived value as the seed for `ML-KEM.KeyGen_internal()` is, at time of writing, explicitely disallowed by [FIPS.203] which makes it impossible to create a FIPS-compliant implementation of X-Wing's KeyGen  or private key import functionality. For this reason, this specification keeps the key generatation for both components separate and only loosely-specified so that implementers are free to use an existing certified hardware or software module for one or both components.
 
 Due to the difference in key generation and security properties, X-Wing and id-MLKEM768-X25519-SHA3-256 have been registered as separate algorithms with separate OIDs, and they use a different domain separator string in order to ensure that their ciphertexts are not inter-compatible.
 
