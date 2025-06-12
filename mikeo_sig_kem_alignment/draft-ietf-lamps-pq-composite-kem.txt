@@ -257,7 +257,7 @@ Table of Contents
    "cryptographic algorithm" and "cryptographic scheme" given in
    [I-D.ietf-pquip-pqt-hybrid-terminology].
 
-   *COMBINER*: A combiner specifies how multiple shared secret keyss are
+   *COMBINER*: A combiner specifies how multiple shared secret key are
    combined into a single shared secret key.
 
    *COMPONENT / PRIMITIVE*: The words "component" or "primitive" are
@@ -2183,7 +2183,7 @@ Table of Contents
 11.1.  FIPS Certification
 
    The following sections give guidance to implementers wishing to FIPS-
-   certify a composite implentation.
+   certify a composite implementation.
 
    This guidance is not authoritative and has not been endorsed by NIST.
 
@@ -2918,7 +2918,7 @@ D.1.  X-Wing
    additional binding properies.  However, using a derived value as the
    seed for ML-KEM.KeyGen_internal() is, at time of writing, explicitely
    disallowed by [FIPS.203] which makes it impossible to create a FIPS-
-   compliant implentation of X-Wing's KeyGen or private key import
+   compliant implementation of X-Wing's KeyGen or private key import
    functionality.  For this reason, this specification keeps the key
    generatation for both components separate and only loosely-specified
    so that implementers are free to use an existing certified hardware
