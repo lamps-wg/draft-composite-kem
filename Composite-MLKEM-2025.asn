@@ -27,11 +27,6 @@ KEM-ALGORITHM
 -- Object Identifiers
 --
 
--- Defined in ITU-T X.690
-der OBJECT IDENTIFIER ::=
-  {joint-iso-itu-t asn1(1) ber-derived(2) distinguished-encoding(1)}
-
-
 --
 -- Information Object Classes
 --
@@ -83,7 +78,7 @@ id-MLKEM768-RSA3072-HMAC-SHA256 OBJECT IDENTIFIER ::= {
   joint-iso-itu-t(2) country(16) us(840) organization(1) 
   entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 51 }
 
-pk-MLKEM768-RSA3072 PUBLIC-KEY ::= 
+pk-MLKEM768-RSA3072-HMAC-SHA256 PUBLIC-KEY ::= 
   pk-CompositeKEM {
     id-MLKEM768-RSA3072-HMAC-SHA256 }
 
@@ -103,7 +98,7 @@ pk-MLKEM768-RSA4096-HMAC-SHA256 PUBLIC-KEY ::=
   pk-CompositeKEM {
     id-MLKEM768-RSA4096-HMAC-SHA256 }
 
-kema-MLKEM768-RSA4096 KEM-ALGORITHM ::=
+kema-MLKEM768-RSA4096-HMAC-SHA256 KEM-ALGORITHM ::=
     kema-CompositeKEM{
       id-MLKEM768-RSA4096-HMAC-SHA256, 
       pk-MLKEM768-RSA4096-HMAC-SHA256 }
@@ -171,6 +166,20 @@ kema-MLKEM768-ECDH-brainpoolP256r1-HMAC-SHA256 KEM-ALGORITHM ::=
       id-MLKEM768-ECDH-brainpoolP256r1-HMAC-SHA256, 
       pk-MLKEM768-ECDH-brainpoolP256r1-HMAC-SHA256 }
 
+
+-- TODO: OID to be replaced by IANA
+id-MLKEM1024-RSA3072-HMAC-SHA512 OBJECT IDENTIFIER ::= {
+  joint-iso-itu-t(2) country(16) us(840) organization(1) 
+  entrust(114027) algorithm(80) explicitcomposite(5) kem(2) 61 }
+
+pk-MLKEM1024-RSA3072-HMAC-SHA512 PUBLIC-KEY ::= 
+  pk-CompositeKEM {
+    id-MLKEM1024-RSA3072-HMAC-SHA512 }
+
+kema-MLKEM1024-RSA3072-HMAC-SHA512 KEM-ALGORITHM ::=
+    kema-CompositeKEM{
+      id-MLKEM1024-RSA3072-HMAC-SHA512,
+      pk-MLKEM1024-RSA3072-HMAC-SHA512 }
 
 
 -- TODO: OID to be replaced by IANA
