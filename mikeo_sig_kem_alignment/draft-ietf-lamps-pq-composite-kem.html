@@ -1365,16 +1365,19 @@ svg :is([fill="white"], [fill^="#fff"]) {
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.17">
-            <p id="section-toc.1-1.17.1"><a href="#appendix-E" class="auto internal xref">Appendix E</a>.  <a href="#name-test-vectors" class="internal xref">Test Vectors</a></p>
+            <p id="section-toc.1-1.17.1"><a href="#appendix-E" class="auto internal xref">Appendix E</a>.  <a href="#name-kem-combiner-examples" class="internal xref">KEM Combiner Examples</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.18">
-            <p id="section-toc.1-1.18.1"><a href="#appendix-F" class="auto internal xref">Appendix F</a>.  <a href="#name-intellectual-property-consi" class="internal xref">Intellectual Property Considerations</a></p>
+            <p id="section-toc.1-1.18.1"><a href="#appendix-F" class="auto internal xref">Appendix F</a>.  <a href="#name-test-vectors" class="internal xref">Test Vectors</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.19">
-            <p id="section-toc.1-1.19.1"><a href="#appendix-G" class="auto internal xref">Appendix G</a>.  <a href="#name-contributors-and-acknowledg" class="internal xref">Contributors and Acknowledgments</a></p>
+            <p id="section-toc.1-1.19.1"><a href="#appendix-G" class="auto internal xref">Appendix G</a>.  <a href="#name-intellectual-property-consi" class="internal xref">Intellectual Property Considerations</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.20">
-            <p id="section-toc.1-1.20.1"><a href="#appendix-H" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
+            <p id="section-toc.1-1.20.1"><a href="#appendix-H" class="auto internal xref">Appendix H</a>.  <a href="#name-contributors-and-acknowledg" class="internal xref">Contributors and Acknowledgments</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.21">
+            <p id="section-toc.1-1.21.1"><a href="#appendix-I" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
 </li>
         </ul>
 </nav>
@@ -4089,51 +4092,145 @@ MB shall contain all of the corresponding public keys and ciphertexts.
 </div>
 </section>
 </div>
-<div id="appdx-samples">
+<div id="kem-combiner-examples">
 <section id="appendix-E">
-      <h2 id="name-test-vectors">
-<a href="#appendix-E" class="section-number selfRef">Appendix E. </a><a href="#name-test-vectors" class="section-name selfRef">Test Vectors</a>
+      <h2 id="name-kem-combiner-examples">
+<a href="#appendix-E" class="section-number selfRef">Appendix E. </a><a href="#name-kem-combiner-examples" class="section-name selfRef">KEM Combiner Examples</a>
       </h2>
-<p id="appendix-E-1">The following test vectors are provided in a format similar to the NIST ACVP Known-Answer-Tests (KATs).<a href="#appendix-E-1" class="pilcrow">¶</a></p>
-<p id="appendix-E-2">The structure is that a global <code>cacert</code> is provided which is used to sign each KEM certificate.<a href="#appendix-E-2" class="pilcrow">¶</a></p>
-<p id="appendix-E-3">Within each test case there are the following values:<a href="#appendix-E-3" class="pilcrow">¶</a></p>
+<p id="appendix-E-1">The following 3 examples show the how the KEM Combiner is used to construct the data that is passed to the KDF function to produce the composite KEM <code>ss</code>.  See <a href="#sec-kem-combiner" class="auto internal xref">Section 4.4</a> for additional information.<a href="#appendix-E-1" class="pilcrow">¶</a></p>
+<p id="appendix-E-2">Each example shows example inputs for each component of the KEM combiner function.  Note that values are shown hex-encoded for display purposes only, they are actually raw binary values.<a href="#appendix-E-2" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="appendix-E-4.1">
-          <p id="appendix-E-4.1.1"><code>tcId</code> the name of the algorithm.<a href="#appendix-E-4.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="appendix-E-3.1">
+          <p id="appendix-E-3.1.1"><code>mlkemSS</code> is the shared secret produced by the ML-KEM encapsulate or decapsulate function which is always 32 bytes.<a href="#appendix-E-3.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="appendix-E-4.2">
-          <p id="appendix-E-4.2.1"><code>ek</code> the encapsulation public key.<a href="#appendix-E-4.2.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="appendix-E-3.2">
+          <p id="appendix-E-3.2.1"><code>tradSS</code> is the shared secret produce by the traditional algorithm.<a href="#appendix-E-3.2.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="appendix-E-4.3">
-          <p id="appendix-E-4.3.1"><code>x5c</code> the X.509 certificate of the encapsulation key, signed by the cacert.<a href="#appendix-E-4.3.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="appendix-E-3.3">
+          <p id="appendix-E-3.3.1"><code>tradCT</code> is either an elliptic curve public key or an RSA-OAEP ciphertext depending on the algorithm chosen.<a href="#appendix-E-3.3.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="appendix-E-4.4">
-          <p id="appendix-E-4.4.1"><code>dk</code> the raw decapsulation private key.<a href="#appendix-E-4.4.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="appendix-E-3.4">
+          <p id="appendix-E-3.4.1"><code>tradPK</code> is the public key of the traditional component (elliptic curve or RSA) and therefore fixed-length.<a href="#appendix-E-3.4.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="appendix-E-4.5">
-          <p id="appendix-E-4.5.1"><code>dk_pkcs8</code> the decapsulation private key in a PKCS#8 object.<a href="#appendix-E-4.5.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="appendix-E-4.6">
-          <p id="appendix-E-4.6.1"><code>c</code> the ciphertext.<a href="#appendix-E-4.6.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="appendix-E-4.7">
-          <p id="appendix-E-4.7.1"><code>k</code> the derived shared secret key.<a href="#appendix-E-4.7.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="appendix-E-3.5">
+          <p id="appendix-E-3.5.1"><code>Domain</code> is the specific domain separator for this composite algorithm.  See <a href="#sec-domsep-values" class="auto internal xref">Section 7.1</a><a href="#appendix-E-3.5.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="appendix-E-5">Implementers should be able to perform the following tests using the test vectors below:<a href="#appendix-E-5" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="normal type-1" id="appendix-E-6">
-<li id="appendix-E-6.1">
-          <p id="appendix-E-6.1.1">Load the public key <code>ek</code> or certificate <code>x5c</code> and perform an encapsulation for it.<a href="#appendix-E-6.1.1" class="pilcrow">¶</a></p>
+<p id="appendix-E-4">Next, the <code>Combined KDF Input</code> to the KDF is given, which is simply the concatenation of the above values.<a href="#appendix-E-4" class="pilcrow">¶</a></p>
+<p id="appendix-E-5">Finally, the KDF Function and the <code>ss</code> Output is given, which was generated by applying the KDF to the <code>Combined KDF Input</code><a href="#appendix-E-5" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-E-6">
+<pre>
+Example of id-MLKEM768-ECDH-P256-HMAC-SHA256 Combiner function output.
+
+# Inputs
+
+Input to KDF: mlkemSS || tradSS || tradCT || tradPK || Domain
+
+mlkemSS: 9d34b26a19d550768cd2c643341465c118987271e042346c6f31acd551c40099
+tradSS:  99f4baca84cc4c02216aad19b7d70298fa52f658431d8062520a9f2a654ed968
+tradCT:  044ac4ff2c151995d7dedc47852b3a5a50eb573d77e62ff763ef36476efaf670f5b220fe675a4bdf84857be67b4ab1f26d743ec0542a13045b232858b07e3b0574
+tradPK:  04ab5031cf683a361abe8936e3f6b49535890c9d07f42001ff0f8afef1d59b3075700f8f9060b67652fd33517e5926102bd3dd5258a753d852eff2f2f287ea2dc0
+Domain:  060b6086480186fa6b50050236
+
+Combined KDF Input: 9d34b26a19d550768cd2c643341465c118987271e042346c6f31acd551c4009999f4baca84cc4c02216aad19b7d70298fa52f658431d8062520a9f2a654ed968044ac4ff2c151995d7dedc47852b3a5a50eb573d77e62ff763ef36476efaf670f5b220fe675a4bdf84857be67b4ab1f26d743ec0542a13045b232858b07e3b057404ab5031cf683a361abe8936e3f6b49535890c9d07f42001ff0f8afef1d59b3075700f8f9060b67652fd33517e5926102bd3dd5258a753d852eff2f2f287ea2dc0060b6086480186fa6b50050236
+
+# Outputs
+
+KDF Function: HMAC-SHA256
+ss Output: 2f64e8ecafacdfdac4c596b017c6c0fe127c09289b184cb963c88cd85d2e3d29
+</pre><a href="#appendix-E-6" class="pilcrow">¶</a>
+</div>
+<div class="alignLeft art-text artwork" id="appendix-E-7">
+<pre>
+Example of id-MLKEM768-X25519-SHA3-256 Combiner function output.
+
+# Inputs
+
+Input to KDF: mlkemSS || tradSS || tradCT || tradPK || Domain
+
+mlkemSS: daa05f44afaf52fd019e183ae721e443f3b6362afb8100ef40e9e4f43b1b53a2
+tradSS:  14ddc689a3edf309c3a0a4e3a9b43ee3910421beb948faac859685f6cf7dbe06
+tradCT:  281fb286a64d6e7837cacf4db6196569b4ecfb724d52f91a7dd870cd3723bf17
+tradPK:  b219688e98dd378c93a55248c3705d2a60a31b2a5da571da9ce40fd07d95d952
+Domain:  060b6086480186fa6b50050235
+
+Combined KDF Input: daa05f44afaf52fd019e183ae721e443f3b6362afb8100ef40e9e4f43b1b53a214ddc689a3edf309c3a0a4e3a9b43ee3910421beb948faac859685f6cf7dbe06281fb286a64d6e7837cacf4db6196569b4ecfb724d52f91a7dd870cd3723bf17b219688e98dd378c93a55248c3705d2a60a31b2a5da571da9ce40fd07d95d952060b6086480186fa6b50050235
+
+# Outputs
+
+KDF Function: SHA3-256
+ss Output: e15ad040fa15305f383b1dd4cd870cf848f6036250eb17fddd1cdff5a89d5c98
+</pre><a href="#appendix-E-7" class="pilcrow">¶</a>
+</div>
+<div class="alignLeft art-text artwork" id="appendix-E-8">
+<pre>
+Example of id-MLKEM1024-ECDH-P384-HMAC-SHA512 Combiner function output.
+
+# Inputs
+
+Input to KDF: mlkemSS || tradSS || tradCT || tradPK || Domain
+
+mlkemSS: fc97ab5ce9cfdfaac2c56d09be6f270904a436012da19bcf4ede1b30d85166df
+tradSS:  d1e71637ac90e1b4a2db5ce969ca7c7407382a81140c314fe803332d48e274efb87e05af5551def27dcc9e88bdf32bcb
+tradCT:  04d6bc762fc89a6f03232b53d335ea08916c00c6dae89a19eba43f910c12f12dfa4ec6735fd6560e63e6c8e034e168c76ccd24ded0435696fddccd2180bc15b8f854591245d69cf561adf25faff5a7a84be75c5c4ae2e9a996f44b1d1f3bcb78bf
+tradPK:  04dd0e0186f197b7c2314ed1f4f0434d46facabbd1c00027440bc3a150f85be9a6b01c9b4470665f28fb39af99e23321633fbc7454da884c5b4ea1c505545bc6b7d563512eae64ae7d917beac45ecf467b46bc5064e2dce915d6e8e4b0c0c7bea2
+Domain:  060b6086480186fa6b50050239
+
+Combined KDF Input: fc97ab5ce9cfdfaac2c56d09be6f270904a436012da19bcf4ede1b30d85166dfd1e71637ac90e1b4a2db5ce969ca7c7407382a81140c314fe803332d48e274efb87e05af5551def27dcc9e88bdf32bcb04d6bc762fc89a6f03232b53d335ea08916c00c6dae89a19eba43f910c12f12dfa4ec6735fd6560e63e6c8e034e168c76ccd24ded0435696fddccd2180bc15b8f854591245d69cf561adf25faff5a7a84be75c5c4ae2e9a996f44b1d1f3bcb78bf04dd0e0186f197b7c2314ed1f4f0434d46facabbd1c00027440bc3a150f85be9a6b01c9b4470665f28fb39af99e23321633fbc7454da884c5b4ea1c505545bc6b7d563512eae64ae7d917beac45ecf467b46bc5064e2dce915d6e8e4b0c0c7bea2060b6086480186fa6b50050239
+
+# Outputs
+
+KDF Function: HMAC-SHA512
+ss Output: 1d136f532f1ae760c64d25d0a99ea64709d953af4352e8944b1767e6c5770b02
+</pre><a href="#appendix-E-8" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="appdx-samples">
+<section id="appendix-F">
+      <h2 id="name-test-vectors">
+<a href="#appendix-F" class="section-number selfRef">Appendix F. </a><a href="#name-test-vectors" class="section-name selfRef">Test Vectors</a>
+      </h2>
+<p id="appendix-F-1">The following test vectors are provided in a format similar to the NIST ACVP Known-Answer-Tests (KATs).<a href="#appendix-F-1" class="pilcrow">¶</a></p>
+<p id="appendix-F-2">The structure is that a global <code>cacert</code> is provided which is used to sign each KEM certificate.<a href="#appendix-F-2" class="pilcrow">¶</a></p>
+<p id="appendix-F-3">Within each test case there are the following values:<a href="#appendix-F-3" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-F-4.1">
+          <p id="appendix-F-4.1.1"><code>tcId</code> the name of the algorithm.<a href="#appendix-F-4.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li id="appendix-E-6.2">
-          <p id="appendix-E-6.2.1">Load the decapsulation private key <code>dk</code> or <code>dk_pkcs8</code> and the ciphertext <code>c</code> and ensure that the same shared secret key <code>k</code> can be derived.<a href="#appendix-E-6.2.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="appendix-F-4.2">
+          <p id="appendix-F-4.2.1"><code>ek</code> the encapsulation public key.<a href="#appendix-F-4.2.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-F-4.3">
+          <p id="appendix-F-4.3.1"><code>x5c</code> the X.509 certificate of the encapsulation key, signed by the cacert.<a href="#appendix-F-4.3.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-F-4.4">
+          <p id="appendix-F-4.4.1"><code>dk</code> the raw decapsulation private key.<a href="#appendix-F-4.4.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-F-4.5">
+          <p id="appendix-F-4.5.1"><code>dk_pkcs8</code> the decapsulation private key in a PKCS#8 object.<a href="#appendix-F-4.5.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-F-4.6">
+          <p id="appendix-F-4.6.1"><code>c</code> the ciphertext.<a href="#appendix-F-4.6.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-F-4.7">
+          <p id="appendix-F-4.7.1"><code>k</code> the derived shared secret key.<a href="#appendix-F-4.7.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="appendix-F-5">Implementers should be able to perform the following tests using the test vectors below:<a href="#appendix-F-5" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="appendix-F-6">
+<li id="appendix-F-6.1">
+          <p id="appendix-F-6.1.1">Load the public key <code>ek</code> or certificate <code>x5c</code> and perform an encapsulation for it.<a href="#appendix-F-6.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li id="appendix-F-6.2">
+          <p id="appendix-F-6.2.1">Load the decapsulation private key <code>dk</code> or <code>dk_pkcs8</code> and the ciphertext <code>c</code> and ensure that the same shared secret key <code>k</code> can be derived.<a href="#appendix-F-6.2.1" class="pilcrow">¶</a></p>
 </li>
       </ol>
-<p id="appendix-E-7">Test vectors are provided for each underlying ML-KEM algorithm in isolation for the purposes of debugging.<a href="#appendix-E-7" class="pilcrow">¶</a></p>
-<p id="appendix-E-8">Due to the length of the test vectors, some readers will prefer to retrieve the non-word-wrapped copy from GitHub. The reference implementation written in pthon that generated them is also available.<a href="#appendix-E-8" class="pilcrow">¶</a></p>
-<p id="appendix-E-9">https://github.com/lamps-wg/draft-composite-kem/tree/main/src<a href="#appendix-E-9" class="pilcrow">¶</a></p>
-<p id="appendix-E-10">TODO: lock this to a specific commit.<a href="#appendix-E-10" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="appendix-E-11">
+<p id="appendix-F-7">Test vectors are provided for each underlying ML-KEM algorithm in isolation for the purposes of debugging.<a href="#appendix-F-7" class="pilcrow">¶</a></p>
+<p id="appendix-F-8">Due to the length of the test vectors, some readers will prefer to retrieve the non-word-wrapped copy from GitHub. The reference implementation written in pthon that generated them is also available.<a href="#appendix-F-8" class="pilcrow">¶</a></p>
+<p id="appendix-F-9">https://github.com/lamps-wg/draft-composite-kem/tree/main/src<a href="#appendix-F-9" class="pilcrow">¶</a></p>
+<p id="appendix-F-10">TODO: lock this to a specific commit.<a href="#appendix-F-10" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-F-11">
 <pre>
 {
 "cacert": "MIIVpzCCCKSgAwIBAgIUGw3gh264Y5BJjPLXgsWhtOEVYaMwCwYJYIZ
@@ -6993,26 +7090,26 @@ mcI6CML6Alu5tIjVN9+CJHjC",
 }
 ]
 }
-</pre><a href="#appendix-E-11" class="pilcrow">¶</a>
+</pre><a href="#appendix-F-11" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
 <div id="intellectual-property-considerations">
-<section id="appendix-F">
+<section id="appendix-G">
       <h2 id="name-intellectual-property-consi">
-<a href="#appendix-F" class="section-number selfRef">Appendix F. </a><a href="#name-intellectual-property-consi" class="section-name selfRef">Intellectual Property Considerations</a>
+<a href="#appendix-G" class="section-number selfRef">Appendix G. </a><a href="#name-intellectual-property-consi" class="section-name selfRef">Intellectual Property Considerations</a>
       </h2>
-<p id="appendix-F-1">The following IPR Disclosure relates to this draft:<a href="#appendix-F-1" class="pilcrow">¶</a></p>
-<p id="appendix-F-2">https://datatracker.ietf.org/ipr/3588/<a href="#appendix-F-2" class="pilcrow">¶</a></p>
+<p id="appendix-G-1">The following IPR Disclosure relates to this draft:<a href="#appendix-G-1" class="pilcrow">¶</a></p>
+<p id="appendix-G-2">https://datatracker.ietf.org/ipr/3588/<a href="#appendix-G-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="contributors-and-acknowledgments">
-<section id="appendix-G">
+<section id="appendix-H">
       <h2 id="name-contributors-and-acknowledg">
-<a href="#appendix-G" class="section-number selfRef">Appendix G. </a><a href="#name-contributors-and-acknowledg" class="section-name selfRef">Contributors and Acknowledgments</a>
+<a href="#appendix-H" class="section-number selfRef">Appendix H. </a><a href="#name-contributors-and-acknowledg" class="section-name selfRef">Contributors and Acknowledgments</a>
       </h2>
-<p id="appendix-G-1">This document incorporates contributions and comments from a large group of experts. The editors would especially like to acknowledge the expertise and tireless dedication of the following people, who attended many long meetings and generated millions of bytes of electronic mail and VOIP traffic over the past six years in pursuit of this document:<a href="#appendix-G-1" class="pilcrow">¶</a></p>
-<p id="appendix-G-2">Serge Mister (Entrust),
+<p id="appendix-H-1">This document incorporates contributions and comments from a large group of experts. The editors would especially like to acknowledge the expertise and tireless dedication of the following people, who attended many long meetings and generated millions of bytes of electronic mail and VOIP traffic over the past six years in pursuit of this document:<a href="#appendix-H-1" class="pilcrow">¶</a></p>
+<p id="appendix-H-2">Serge Mister (Entrust),
 Felipe Ventura (Entrust),
 Richard Kettlewell (Entrust),
 Ali Noman (Entrust),
@@ -7028,14 +7125,14 @@ Piotr Popis (Enigma),
 Jean-Pierre Fiset (Crypto4A),
 陳志華 (Abel C. H. Chen, Chunghwa Telecom),
 林邦曄 (Austin Lin, Chunghwa Telecom) and
-Douglas Stebila (University of Waterloo).<a href="#appendix-G-2" class="pilcrow">¶</a></p>
-<p id="appendix-G-3">Thanks to Giacomo Pope (github.com/GiacomoPope) whose ML-DSA and ML-KEM implementations were used to generate the test vectors.<a href="#appendix-G-3" class="pilcrow">¶</a></p>
-<p id="appendix-G-4">We are grateful to all who have given feedback over the years, formally or informally, on mailing lists or in person, including any contributors who may have been inadvertently omitted from this list.<a href="#appendix-G-4" class="pilcrow">¶</a></p>
-<p id="appendix-G-5">Finally, we wish to thank the authors of all the referenced documents upon which this specification was built. "Copying always makes things easier and less error prone" - <span>[<a href="#RFC8411" class="cite xref">RFC8411</a>]</span>.<a href="#appendix-G-5" class="pilcrow">¶</a></p>
+Douglas Stebila (University of Waterloo).<a href="#appendix-H-2" class="pilcrow">¶</a></p>
+<p id="appendix-H-3">Thanks to Giacomo Pope (github.com/GiacomoPope) whose ML-DSA and ML-KEM implementations were used to generate the test vectors.<a href="#appendix-H-3" class="pilcrow">¶</a></p>
+<p id="appendix-H-4">We are grateful to all who have given feedback over the years, formally or informally, on mailing lists or in person, including any contributors who may have been inadvertently omitted from this list.<a href="#appendix-H-4" class="pilcrow">¶</a></p>
+<p id="appendix-H-5">Finally, we wish to thank the authors of all the referenced documents upon which this specification was built. "Copying always makes things easier and less error prone" - <span>[<a href="#RFC8411" class="cite xref">RFC8411</a>]</span>.<a href="#appendix-H-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="authors-addresses">
-<section id="appendix-H">
+<section id="appendix-I">
       <h2 id="name-authors-addresses">
 <a href="#name-authors-addresses" class="section-name selfRef">Authors' Addresses</a>
       </h2>
