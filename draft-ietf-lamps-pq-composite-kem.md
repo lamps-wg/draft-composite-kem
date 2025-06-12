@@ -294,6 +294,7 @@ Editorial changes:
 * Added an informative section on the difference between SHA3 and HMAC-SHA2 combiners, and the difference between HKDF(), HKDF-Extract(), and HMAC().
 * Since the serialization is now non-DER, drastically reduced the ASN.1-based text.
 * Changed `HKDF-SHA384` to `HKDF-SHA512`. Since SHA-384 is a truncated version of SHA-512, and we are further truncating it to 256 bits, these are binary-compatible, might as well list the parent algorithm for clarity.
+* Added a new section "KEM Combiner Examples" that show all the intermediate values of the KEM Combiner.
 
 Still to do in a future version:
 
