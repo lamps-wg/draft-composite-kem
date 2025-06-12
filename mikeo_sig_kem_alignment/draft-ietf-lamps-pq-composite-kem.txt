@@ -612,7 +612,7 @@ Table of Contents
    possible that the underlying cryptographic module does not expose a
    ML-KEM.KeyGen(seed) that accepts an externally-generated seed, and
    instead an alternate keygen interface must be used.  Note however
-   that cryptographic modules that do not support seed-based ML-DSA key
+   that cryptographic modules that do not support seed-based ML-KEM key
    generation will be incapable of importing or exporting composite keys
    in the standard format since the private key serialization routines
    defined in Section 5.2 only support ML-KEM keys as seeds.
@@ -1180,12 +1180,11 @@ Table of Contents
    protocols.  Use within the Cryptographic Message Syntax (CMS) will be
    covered in a separate specification.
 
-   While composite ML-DSA keys and signature values MAY be used raw, the
-   following sections provide conventions for using them within X.509
-   and other PKIX protocols such that Composite ML-DSA can be used as a
-   drop-in replacement for existing digital signature algorithms in
-   PKCS#10 [RFC2986], CMP [RFC4210], X.509 [RFC5280], and related
-   protocols.
+   While composite ML-KEM keys and ciphertext values MAY be used raw,
+   the following sections provide conventions for using them within
+   X.509 and other PKIX protocols such that Composite ML-KEM can be used
+   as a drop-in replacement for KEM algorithms in PKCS#10 [RFC2986], CMP
+   [RFC4210], X.509 [RFC5280], and related protocols.
 
 6.1.  Encoding to DER
 
@@ -1251,7 +1250,7 @@ Table of Contents
             PUBLIC-KEYS { publicKeyType }
            }
 
-      Figure 10: ASN.1 Object Information Classes for Composite ML-DSA
+      Figure 10: ASN.1 Object Information Classes for Composite ML-KEM
 
    As an example, the public key and KEM algorithm types associated with
    id-MLKEM768-ECDH-P256-HMAC-SHA256 are defined as:
@@ -1477,7 +1476,7 @@ Table of Contents
    against quantum attackers.
 
    SHA2 is prioritized over SHA3 in order to facilitate implementations
-   that do not have easy access to SHA3 outside of the ML-DSA module.
+   that do not have easy access to SHA3 outside of the ML-KEM module.
    However SHA3 is used with X25519 and X448 SHA3-256 to match the
    construction in [X-Wing].  This also provides a slight efficiency
    gain for the X25519 and X448 based composites since a single
