@@ -1,0 +1,18 @@
+Example of id-MLKEM768-X25519-SHA3-256 Combiner function output.
+
+# Inputs
+
+Input to KDF: mlkemSS || tradSS || tradCT || tradPK || Domain
+
+mlkemSS: daa05f44afaf52fd019e183ae721e443f3b6362afb8100ef40e9e4f43b1b53a2
+tradSS:  14ddc689a3edf309c3a0a4e3a9b43ee3910421beb948faac859685f6cf7dbe06
+tradCT:  281fb286a64d6e7837cacf4db6196569b4ecfb724d52f91a7dd870cd3723bf17
+tradPK:  b219688e98dd378c93a55248c3705d2a60a31b2a5da571da9ce40fd07d95d952
+Domain:  060b6086480186fa6b50050235
+
+Combined KDF Input: daa05f44afaf52fd019e183ae721e443f3b6362afb8100ef40e9e4f43b1b53a214ddc689a3edf309c3a0a4e3a9b43ee3910421beb948faac859685f6cf7dbe06281fb286a64d6e7837cacf4db6196569b4ecfb724d52f91a7dd870cd3723bf17b219688e98dd378c93a55248c3705d2a60a31b2a5da571da9ce40fd07d95d952060b6086480186fa6b50050235
+
+# Outputs
+
+KDF Function: SHA3-256
+ss Output: e15ad040fa15305f383b1dd4cd870cf848f6036250eb17fddd1cdff5a89d5c98
