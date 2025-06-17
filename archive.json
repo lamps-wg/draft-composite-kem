@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-06-15T02:20:08.012662+00:00",
+  "timestamp": "2025-06-17T02:05:17.633248+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -6980,6 +6980,76 @@
         }
       ],
       "reviews": []
+    },
+    {
+      "number": 170,
+      "id": "PR_kwDOKRPFO86asSJu",
+      "title": "Fixes and alignments",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/170",
+      "state": "MERGED",
+      "author": "janklaussner",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "* refer to all EC algorithms as DH, because ECDH in most case excludes X25519 and X448\r\n* adds secp256r1 to fixed algorithms identifiers",
+      "createdAt": "2025-06-16T10:47:07Z",
+      "updatedAt": "2025-06-16T16:41:28Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "b9af933c93148f0014a329f3b514904433bb1c2a",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "janklaussner-patch-1",
+      "headRefOid": "a293237e144463f492f495355fbadd07caaf8104",
+      "closedAt": "2025-06-16T15:31:09Z",
+      "mergedAt": "2025-06-16T15:31:09Z",
+      "mergedBy": "johngray-dev",
+      "mergeCommit": {
+        "oid": "3bc22de64711da43a505fbd4015e738d34929319"
+      },
+      "comments": [
+        {
+          "author": "janklaussner",
+          "authorAssociation": "COLLABORATOR",
+          "body": "One thing I like to crosscheck: \r\nhttps://github.com/lamps-wg/draft-composite-kem/blob/b9af933c93148f0014a329f3b514904433bb1c2a/draft-ietf-lamps-pq-composite-kem.md?plain=1#L694\r\nI removed the tuple return in this PR because I am not aware that TradKEM.Decap() returns something else than tradSS.\r\n",
+          "createdAt": "2025-06-16T10:51:48Z",
+          "updatedAt": "2025-06-16T10:51:48Z"
+        },
+        {
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Thanks for these changes Jan.  They look good.  I agree we shouldn't have to return a tuple from the decaps function when it returns a single ss.  That may have been left over from our attempt to make things more generic a few weeks ago.  ",
+          "createdAt": "2025-06-16T14:46:32Z",
+          "updatedAt": "2025-06-16T14:46:32Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO86uyZ8d",
+          "commit": {
+            "abbreviatedOid": "a293237"
+          },
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-06-16T14:46:50Z",
+          "updatedAt": "2025-06-16T14:46:50Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOKRPFO86uzAg6",
+          "commit": {
+            "abbreviatedOid": "a293237"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "Changes look good. Thanks for the careful review.",
+          "createdAt": "2025-06-16T15:29:39Z",
+          "updatedAt": "2025-06-16T15:29:39Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
