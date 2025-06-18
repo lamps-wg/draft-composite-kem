@@ -1824,7 +1824,7 @@ Within each test case there are the following values:
 Implementers should be able to perform the following tests using the test vectors below:
 
 1. Load the public key `ek` or certificate `x5c` and perform an encapsulation for it.
-2. Load the decapsulation private key `dk` or `dk_pkcs8` and the ciphertext `c` and ensure that the same shared secret key `k` can be derived.
+2. Load the decapsulation private key `dk` or `dk_pkcs8` and the ciphertext c and perform a `Decaps` operation to ensure that the same shared secret key `k` is derived.
 
 Test vectors are provided for each underlying ML-KEM algorithm in isolation for the purposes of debugging.
 
