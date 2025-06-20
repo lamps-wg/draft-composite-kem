@@ -1058,7 +1058,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Ounsworth, et al.</td>
-<td class="center">Expires 21 December 2025</td>
+<td class="center">Expires 22 December 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1071,12 +1071,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-lamps-pq-composite-kem-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-06-19" class="published">19 June 2025</time>
+<time datetime="2025-06-20" class="published">20 June 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-12-21">21 December 2025</time></dd>
+<dd class="expires"><time datetime="2025-12-22">22 December 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1142,7 +1142,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 21 December 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 22 December 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1537,7 +1537,7 @@ The algorithm descriptions use python-like syntax. The following symbols deserve
       <h2 id="name-overview-of-the-composite-m">
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-overview-of-the-composite-m" class="section-name selfRef">Overview of the Composite ML-KEM Scheme</a>
       </h2>
-<p id="section-3-1">Composite ML-KEM is a Post-Quantum / Traditional hybrid Key Encapsulation Mechanism (KEM) which combines ML-KEM as specified in <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span> and <span>[<a href="#I-D.ietf-lamps-kyber-certificates" class="cite xref">I-D.ietf-lamps-kyber-certificates</a>]</span> with one of RSA-OAEP defined in <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span>, the Elliptic Curve Diffie-Hellman key agreement schemes ECDH defined in section 5.7.1.2 of <span>[<a href="#SP.800-56Ar3" class="cite xref">SP.800-56Ar3</a>]</span>, and X25519 / X448 defined in <span>[<a href="#RFC8410" class="cite xref">RFC8410</a>]</span>. A KEM combiner function is used to combine the two component shared secret keyss into a single shared secret key.<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-1">Composite ML-KEM is a PQ/T hybrid Key Encapsulation Mechanism (KEM) which combines ML-KEM as specified in <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span> and <span>[<a href="#I-D.ietf-lamps-kyber-certificates" class="cite xref">I-D.ietf-lamps-kyber-certificates</a>]</span> with one of RSA-OAEP defined in <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span>, the Elliptic Curve Diffie-Hellman key agreement schemes ECDH defined in section 5.7.1.2 of <span>[<a href="#SP.800-56Ar3" class="cite xref">SP.800-56Ar3</a>]</span>, and X25519 / X448 defined in <span>[<a href="#RFC8410" class="cite xref">RFC8410</a>]</span>. A KEM combiner function is used to combine the two component shared secret keyss into a single shared secret key.<a href="#section-3-1" class="pilcrow">¶</a></p>
 <p id="section-3-2">Composite Key Encapsulation Mechanisms are defined as cryptographic primitives that consist of three algorithms. These definitions are borrowed from <span>[<a href="#RFC9180" class="cite xref">RFC9180</a>]</span>.<a href="#section-3-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3-3.1">
@@ -1691,11 +1691,11 @@ Acceptable public key encodings for <code>enc</code> and <code>pkE</code> are de
 <p id="section-4.1-1">In order to maintain security properties of the composite, applications that use composite keys MUST always perform fresh key generations of both component keys and MUST NOT reuse existing key material. See <a href="#sec-cons-key-reuse" class="auto internal xref">Section 10.3</a> for a discussion.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
 <p id="section-4.1-2">To generate a new keypair for composite schemes, the <code>KeyGen() -&gt; (pk, sk)</code> function is used. The KeyGen() function calls the two key generation functions of the component algorithms independently. Multi-process or multi-threaded applications might choose to execute the key generation functions in parallel for better key generation performance.<a href="#section-4.1-2" class="pilcrow">¶</a></p>
 <p id="section-4.1-3">The following describes how to instantiate a <code>KeyGen()</code> function for a given composite algorithm represented by <code>&lt;OID&gt;</code>.<a href="#section-4.1-3" class="pilcrow">¶</a></p>
-<span id="name-composite-keygen-pk-sk"></span><div id="alg-composite-keygen">
+<span id="name-composite-ml-kemoidkeygen-p"></span><div id="alg-composite-keygen">
 <figure id="figure-1">
           <div class="alignLeft art-text artwork" id="section-4.1-4.1">
 <pre>
-Composite-ML-KEM&lt;OID.KeyGen() -&gt; (pk, sk)
+Composite-ML-KEM&lt;OID&gt;.KeyGen() -&gt; (pk, sk)
 
 Explicit Inputs:
      None
@@ -1733,7 +1733,7 @@ Key Generation Process:
 </pre>
 </div>
 <figcaption><a href="#figure-1" class="selfRef">Figure 1</a>:
-<a href="#name-composite-keygen-pk-sk" class="selfRef">Composite KeyGen() -&gt; (pk, sk)</a>
+<a href="#name-composite-ml-kemoidkeygen-p" class="selfRef">Composite-ML-KEM&lt;OID&gt;.KeyGen() -&gt; (pk, sk)</a>
           </figcaption></figure>
 </div>
 <p id="section-4.1-5">In order to ensure fresh keys, the key generation functions MUST be executed for both component algorithms. Compliant parties MUST NOT use, import or export component keys that are used in other contexts, combinations, or by themselves as keys for standalone algorithm use. For more details on the security considerations around key reuse, see section <a href="#sec-cons-key-reuse" class="auto internal xref">Section 10.3</a>.<a href="#section-4.1-5" class="pilcrow">¶</a></p>
@@ -1749,7 +1749,7 @@ For example, component private keys stored in separate software or hardware modu
         </h3>
 <p id="section-4.2-1">The <code>Encap(pk)</code> of a Composite ML-KEM algorithm is designed to behave exactly the same as <code>ML-KEM.Encaps(ek)</code> defined in Algorithm 20 in Section 7.2 of <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span>. Specifically, <code>Composite-ML-KEM.Encap(pk)</code> produces a 256-bit shared secret key that can be used directly with any symmetric-key cryptographic algorithm. In this way, Composite ML-KEM can be used as a direct drop-in replacement anywhere that ML-KEM is used.<a href="#section-4.2-1" class="pilcrow">¶</a></p>
 <p id="section-4.2-2">The following describes how to instantiate a <code>Encap(pk)</code> function for a given composite algorithm represented by <code>&lt;OID&gt;</code>.<a href="#section-4.2-2" class="pilcrow">¶</a></p>
-<span id="name-composite-ml-kemencappk"></span><div id="alg-composite-mlkem-encap">
+<span id="name-composite-ml-kemoidencappk-"></span><div id="alg-composite-mlkem-encap">
 <figure id="figure-2">
           <div class="alignLeft art-text artwork" id="section-4.2-3.1">
 <pre>
@@ -1815,7 +1815,7 @@ Encap Process:
 </pre>
 </div>
 <figcaption><a href="#figure-2" class="selfRef">Figure 2</a>:
-<a href="#name-composite-ml-kemencappk" class="selfRef">Composite-ML-KEM.Encap(pk)</a>
+<a href="#name-composite-ml-kemoidencappk-" class="selfRef">Composite-ML-KEM&lt;OID&gt;.Encap(pk) -&gt; (ss, ct)</a>
           </figcaption></figure>
 </div>
 <p id="section-4.2-4">Depending on the security needs of the application, it MAY be advantageous to perform steps 2, 3, and 5 in a timing-invariant way to prevent side-channel attackers from learning which component algorithm failed and from learning any of the inputs or output of the KEM combiner.<a href="#section-4.2-4" class="pilcrow">¶</a></p>
@@ -1829,7 +1829,7 @@ Encap Process:
         </h3>
 <p id="section-4.3-1">The <code>Decap(sk, ct) -&gt; ss</code> of a Composite ML-KEM algorithm is designed to behave exactly the same as <code>ML-KEM.Decaps(dk, c)</code> defined in Algorithm 21 in Section 7.3 of <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span>. Specifically, <code>Composite-ML-KEM.Decap(sk, ct)</code> produces a 256-bit shared secret key that can be used directly with any symmetric-key cryptographic algorithm. In this way, Composite ML-KEM can be used as a direct drop-in replacement anywhere that ML-KEM is used.<a href="#section-4.3-1" class="pilcrow">¶</a></p>
 <p id="section-4.3-2">The following describes how to instantiate a <code>Decap(sk, ct)</code> function for a given composite algorithm represented by <code>&lt;OID&gt;</code>.<a href="#section-4.3-2" class="pilcrow">¶</a></p>
-<span id="name-composite-ml-kemdecapsk-ct"></span><div id="alg-composite-mlkem-decap">
+<span id="name-composite-ml-kemoiddecapsk-"></span><div id="alg-composite-mlkem-decap">
 <figure id="figure-3">
           <div class="alignLeft art-text artwork" id="section-4.3-3.1">
 <pre>
@@ -1873,7 +1873,7 @@ Decap Process:
       their algorithm specifications.
 
       mlkemSS = MLKEM.Decaps(mlkemSK, mlkemCT)
-      (_, tradSS)  = TradKEM.Decap(tradSK, tradCT)
+      tradSS  = TradKEM.Decap(tradSK, tradCT)
 
   3. If either ML-KEM.Decaps() or TradKEM.Decap() return an error,
      then this process must return an error.
@@ -1892,7 +1892,7 @@ Decap Process:
 </pre>
 </div>
 <figcaption><a href="#figure-3" class="selfRef">Figure 3</a>:
-<a href="#name-composite-ml-kemdecapsk-ct" class="selfRef">Composite-ML-KEM.Decap(sk, ct)</a>
+<a href="#name-composite-ml-kemoiddecapsk-" class="selfRef">Composite-ML-KEM&lt;OID&gt;.Decap(sk, ct) -&gt; ss</a>
           </figcaption></figure>
 </div>
 <p id="section-4.3-4">Steps 2, 3, and 4 SHOULD be performed in a timing-invariant way to prevent side-channel attackers from learning which component algorithm failed and from learning any of the inputs or output of the KEM combiner.<a href="#section-4.3-4" class="pilcrow">¶</a></p>
@@ -1907,7 +1907,9 @@ Decap Process:
         </h3>
 <p id="section-4.4-1">As noted in the Encapsulation and Decapsulation procedures above, the KEM combiner is parameterized by the choice of underlying KDF. This specification provides two combiner constructions, one with SHA3 and one with HMAC-SHA2.<a href="#section-4.4-1" class="pilcrow">¶</a></p>
 <p id="section-4.4-2">The following describes how to instantiate a <code>KemCombiner()</code> function for a given key derivation function represented by <code>&lt;KDF&gt;</code>.<a href="#section-4.4-2" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-4.4-3">
+<span id="name-kemcombinerkdfmlkemss-trads"></span><div id="alg-kem-combiner">
+<figure id="figure-4">
+          <div class="alignLeft art-text artwork" id="section-4.4-3.1">
 <pre>
 KemCombiner&lt;KDF&gt;(mlkemSS, tradSS, tradCT, tradPK, Domain) -&gt; ss
 
@@ -1919,7 +1921,7 @@ Implicit inputs:
 
   KDF      The KDF specified for the given Composite ML-KEM algorithm.
            In particular, for the KEM combiner it only matters
-           whether this as a SHA3 function, which can be used
+           whether this is a SHA3 function, which can be used
            as a KDF directly, or a SHA2 function which requires
            an HMAC construction.
 
@@ -1950,7 +1952,11 @@ Process:
         # regardless of underlying hash function.
 
   return ss
-</pre><a href="#section-4.4-3" class="pilcrow">¶</a>
+</pre>
+</div>
+<figcaption><a href="#figure-4" class="selfRef">Figure 4</a>:
+<a href="#name-kemcombinerkdfmlkemss-trads" class="selfRef">KemCombiner&lt;KDF&gt;(mlkemSS, tradSS, tradCT, tradPK, Domain) -&gt; ss</a>
+          </figcaption></figure>
 </div>
 <p id="section-4.4-4">Implementation note: The HMAC-based combiner here is exactly the "HKDF-Extract" step from <span>[<a href="#RFC5869" class="cite xref">RFC5869</a>]</span> with an empty <code>salt</code>. Implementations with access to "HKDF-Extract", without the "HKDF-Expand" step, MAY use this interchangeably with the HMAC-based construction presented above. Note that a full invocation of HKDF with both HKDF-Extract and HKDF-Expand, even with the correct output length and empty <code>info</code> param is not equivalent to the HMAC construction above since HKDF-Expand will always perform at least one extra iteration of HMAC.<a href="#section-4.4-4" class="pilcrow">¶</a></p>
 </section>
@@ -2019,8 +2025,8 @@ The functions defined in this section are considered internal implementation det
 <a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-serializepublickey-and-dese" class="section-name selfRef">SerializePublicKey and DeserializePublicKey</a>
         </h3>
 <p id="section-5.1-1">The serialization routine for keys simply concatenates the public keys of the component algorithms, as defined below:<a href="#section-5.1-1" class="pilcrow">¶</a></p>
-<span id="name-serializepublickeymlkempk-t"></span><div id="alg-composite-serialize">
-<figure id="figure-4">
+<span id="name-composite-ml-kemserializepu"></span><div id="alg-composite-serialize">
+<figure id="figure-5">
           <div class="alignLeft art-text artwork" id="section-5.1-2.1">
 <pre>
 Composite-ML-KEM.SerializePublicKey(mlkemPK, tradPK) -&gt; bytes
@@ -2049,14 +2055,14 @@ Serialization Process:
 
 </pre>
 </div>
-<figcaption><a href="#figure-4" class="selfRef">Figure 4</a>:
-<a href="#name-serializepublickeymlkempk-t" class="selfRef">SerializePublicKey(mlkemPK, tradPK) -&gt; bytes</a>
+<figcaption><a href="#figure-5" class="selfRef">Figure 5</a>:
+<a href="#name-composite-ml-kemserializepu" class="selfRef">Composite-ML-KEM.SerializePublicKey(mlkemPK, tradPK) -&gt; bytes</a>
           </figcaption></figure>
 </div>
 <p id="section-5.1-3">Deserialization reverses this process. Each component key is deserialized according to their respective specification as shown in <a href="#appdx_components" class="auto internal xref">Appendix B</a>.<a href="#section-5.1-3" class="pilcrow">¶</a></p>
 <p id="section-5.1-4">The following describes how to instantiate a <code>DeserializePublicKey(bytes)</code> function for a given composite algorithm represented by <code>&lt;OID&gt;</code>.<a href="#section-5.1-4" class="pilcrow">¶</a></p>
-<span id="name-deserializepublickeybytes-m"></span><div id="alg-composite-deserialize-pk">
-<figure id="figure-5">
+<span id="name-composite-ml-kemoiddeserial"></span><div id="alg-composite-deserialize-pk">
+<figure id="figure-6">
           <div class="alignLeft art-text artwork" id="section-5.1-5.1">
 <pre>
 Composite-ML-KEM&lt;OID&gt;.DeserializePublicKey(bytes) -&gt; (mlkemPK, tradPK)
@@ -2101,8 +2107,8 @@ Deserialization Process:
      output (mlkemPK, tradPK)
 </pre>
 </div>
-<figcaption><a href="#figure-5" class="selfRef">Figure 5</a>:
-<a href="#name-deserializepublickeybytes-m" class="selfRef">DeserializePublicKey(bytes) -&gt; (mlkemPK, tradPK)</a>
+<figcaption><a href="#figure-6" class="selfRef">Figure 6</a>:
+<a href="#name-composite-ml-kemoiddeserial" class="selfRef">Composite-ML-KEM&lt;OID&gt;.DeserializePublicKey(bytes) -&gt; (mlkemPK, tradPK)</a>
           </figcaption></figure>
 </div>
 </section>
@@ -2113,8 +2119,8 @@ Deserialization Process:
 <a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-serializeprivatekey-and-des" class="section-name selfRef">SerializePrivateKey and DeserializePrivateKey</a>
         </h3>
 <p id="section-5.2-1">The serialization routine for keys simply concatenates the private keys of the component algorithms, as defined below:<a href="#section-5.2-1" class="pilcrow">¶</a></p>
-<span id="name-serializeprivatekeymlkemsee"></span><div id="alg-composite-serialize-priv-key">
-<figure id="figure-6">
+<span id="name-composite-ml-kemserializepr"></span><div id="alg-composite-serialize-priv-key">
+<figure id="figure-7">
           <div class="alignLeft art-text artwork" id="section-5.2-2.1">
 <pre>
 Composite-ML-KEM.SerializePrivateKey(mlkemSeed, tradSK) -&gt; bytes
@@ -2141,14 +2147,14 @@ Serialization Process:
      output mlkemSeed || tradSK
 </pre>
 </div>
-<figcaption><a href="#figure-6" class="selfRef">Figure 6</a>:
-<a href="#name-serializeprivatekeymlkemsee" class="selfRef">SerializePrivateKey(mlkemSeed, tradSK) -&gt; bytes</a>
+<figcaption><a href="#figure-7" class="selfRef">Figure 7</a>:
+<a href="#name-composite-ml-kemserializepr" class="selfRef">Composite-ML-KEM.SerializePrivateKey(mlkemSeed, tradSK) -&gt; bytes</a>
           </figcaption></figure>
 </div>
 <p id="section-5.2-3">Deserialization reverses this process. Each component key is deserialized according to their respective specification as shown in <a href="#appdx_components" class="auto internal xref">Appendix B</a>.<a href="#section-5.2-3" class="pilcrow">¶</a></p>
-<p id="section-5.2-4">The following describes how to instantiate a <code>DeserializePrivateKey(bytes)</code> function. Since ML-KEM private keys are 64 bytes for all paramater sets, this function does not need to be parametrized.<a href="#section-5.2-4" class="pilcrow">¶</a></p>
-<span id="name-deserializekeybytes-mlkemse"></span><div id="alg-composite-deserialize-priv-key">
-<figure id="figure-7">
+<p id="section-5.2-4">The following describes how to instantiate a <code>DeserializePrivateKey(bytes)</code> function. Since ML-KEM private keys are 64 bytes for all parameter sets, this function does not need to be parametrized.<a href="#section-5.2-4" class="pilcrow">¶</a></p>
+<span id="name-composite-ml-kemdeserialize"></span><div id="alg-composite-deserialize-priv-key">
+<figure id="figure-8">
           <div class="alignLeft art-text artwork" id="section-5.2-5.1">
 <pre>
 Composite-ML-KEM.DeserializePrivateKey(bytes) -&gt; (mlkemSeed, tradSK)
@@ -2187,8 +2193,8 @@ Deserialization Process:
      output (mlkemSeed, tradSK)
 </pre>
 </div>
-<figcaption><a href="#figure-7" class="selfRef">Figure 7</a>:
-<a href="#name-deserializekeybytes-mlkemse" class="selfRef">DeserializeKey(bytes) -&gt; (mlkemSeed, tradSK)</a>
+<figcaption><a href="#figure-8" class="selfRef">Figure 8</a>:
+<a href="#name-composite-ml-kemdeserialize" class="selfRef">Composite-ML-KEM.DeserializeKey(bytes) -&gt; (mlkemSeed, tradSK)</a>
           </figcaption></figure>
 </div>
 </section>
@@ -2200,8 +2206,8 @@ Deserialization Process:
         </h3>
 <p id="section-5.3-1">The serialization routine for the composite ciphertext value simply concatenates the fixed-length
 ML-KEM ciphertext with the ciphertext from the traditional algorithm, as defined below:<a href="#section-5.3-1" class="pilcrow">¶</a></p>
-<span id="name-serializeciphertextmlkemct-"></span><div id="alg-composite-serialize-ct">
-<figure id="figure-8">
+<span id="name-composite-ml-kemserializeci"></span><div id="alg-composite-serialize-ct">
+<figure id="figure-9">
           <div class="alignLeft art-text artwork" id="section-5.3-2.1">
 <pre>
 Composite-ML-KEM.SerializeCiphertext(mlkemCT, tradCT) -&gt; bytes
@@ -2230,14 +2236,14 @@ Serialization Process:
 
 </pre>
 </div>
-<figcaption><a href="#figure-8" class="selfRef">Figure 8</a>:
-<a href="#name-serializeciphertextmlkemct-" class="selfRef">SerializeCiphertext(mlkemCT, tradCT) -&gt; bytes</a>
+<figcaption><a href="#figure-9" class="selfRef">Figure 9</a>:
+<a href="#name-composite-ml-kemserializeci" class="selfRef">Composite-ML-KEM.SerializeCiphertext(mlkemCT, tradCT) -&gt; bytes</a>
           </figcaption></figure>
 </div>
-<p id="section-5.3-3">Deserialization reverses this process, raising an error in the event that the input is malformed.  Each component signature is deserialized according to their respective specification as shown in <a href="#appdx_components" class="auto internal xref">Appendix B</a>.<a href="#section-5.3-3" class="pilcrow">¶</a></p>
+<p id="section-5.3-3">Deserialization reverses this process.  Each component ciphertext is deserialized according to their respective specification as shown in <a href="#appdx_components" class="auto internal xref">Appendix B</a>.<a href="#section-5.3-3" class="pilcrow">¶</a></p>
 <p id="section-5.3-4">The following describes how to instantiate a <code>DeserializeCiphertext(bytes)</code> function for a given composite algorithm represented by <code>&lt;OID&gt;</code>.<a href="#section-5.3-4" class="pilcrow">¶</a></p>
-<span id="name-deserializeciphertextbytes-"></span><div id="alg-composite-deserialize-ct">
-<figure id="figure-9">
+<span id="name-composite-ml-kemoiddeseriali"></span><div id="alg-composite-deserialize-ct">
+<figure id="figure-10">
           <div class="alignLeft art-text artwork" id="section-5.3-5.1">
 <pre>
 Composite-ML-KEM&lt;OID&gt;.DeserializeCiphertext(bytes)
@@ -2283,8 +2289,8 @@ Deserialization Process:
      output (mlkemCT, tradCT)
 </pre>
 </div>
-<figcaption><a href="#figure-9" class="selfRef">Figure 9</a>:
-<a href="#name-deserializeciphertextbytes-" class="selfRef">DeserializeCiphertext(bytes) -&gt; (mldkemCT, tradCT)</a>
+<figcaption><a href="#figure-10" class="selfRef">Figure 10</a>:
+<a href="#name-composite-ml-kemoiddeseriali" class="selfRef">Composite-ML-KEM&lt;OID&gt;.DeserializeCiphertext(bytes) -&gt; (mldkemCT, tradCT)</a>
           </figcaption></figure>
 </div>
 </section>
@@ -2332,7 +2338,7 @@ the post-quantum algorithms do not and therefore the overall composite algorithm
 <p id="section-6.3-1">Composite ML-KEM uses a substantially non-ASN.1 based encoding, as specified in <a href="#sec-serialization" class="auto internal xref">Section 5</a>. However, as as composite algorithms will be used within ASN.1-based X.509 and PKIX protocols, some conventions for ASN.1 wrapping are necessary.<a href="#section-6.3-1" class="pilcrow">¶</a></p>
 <p id="section-6.3-2">The following ASN.1 Information Object Classes are defined to allow for compact definitions of each composite algorithm, leading to a smaller overall ASN.1 module.<a href="#section-6.3-2" class="pilcrow">¶</a></p>
 <span id="name-asn1-object-information-cla"></span><div id="asn1-info-classes">
-<figure id="figure-10">
+<figure id="figure-11">
           <div class="lang-ASN.1 sourcecode" id="section-6.3-3.1">
 <pre>
 pk-CompositeKEM {OBJECT IDENTIFIER:id}
@@ -2351,10 +2357,11 @@ kema-CompositeKEM {
          VALUE OCTET STRING
          PARAMS ARE absent
          PUBLIC-KEYS { publicKeyType }
+         SMIME-CAPS { IDENTIFIED BY id }
         }
 </pre>
 </div>
-<figcaption><a href="#figure-10" class="selfRef">Figure 10</a>:
+<figcaption><a href="#figure-11" class="selfRef">Figure 11</a>:
 <a href="#name-asn1-object-information-cla" class="selfRef">ASN.1 Object Information Classes for Composite ML-KEM</a>
           </figcaption></figure>
 </div>
@@ -2373,7 +2380,7 @@ kema-MLKEM768-ECDH-P256-HMAC-SHA256 KEM-ALGORITHM ::=
 </div>
 <p id="section-6.3-6">The full set of key types defined by this specification can be found in the ASN.1 Module in <a href="#sec-asn1-module" class="auto internal xref">Section 8</a>.<a href="#section-6.3-6" class="pilcrow">¶</a></p>
 <p id="section-6.3-7">Use cases that require an interoperable encoding for composite private keys will often need to place a composite private key inside a <code>OneAsymmetricKey</code> structure defined in <span>[<a href="#RFC5958" class="cite xref">RFC5958</a>]</span>, such as when private keys are carried in PKCS #12 <span>[<a href="#RFC7292" class="cite xref">RFC7292</a>]</span>, CMP <span>[<a href="#RFC4210" class="cite xref">RFC4210</a>]</span> or CRMF <span>[<a href="#RFC4211" class="cite xref">RFC4211</a>]</span>. The definition of <code>OneAsymmetricKey</code> is copied here for convenience:<a href="#section-6.3-7" class="pilcrow">¶</a></p>
-<span id="name-oneasymmetrickey-as-defined"></span><figure id="figure-11">
+<span id="name-oneasymmetrickey-as-defined"></span><figure id="figure-12">
           <div class="lang-ASN.1 sourcecode" id="section-6.3-8.1">
 <pre>
  OneAsymmetricKey ::= SEQUENCE {
@@ -2393,10 +2400,10 @@ kema-MLKEM768-ECDH-P256-HMAC-SHA256 KEM-ALGORITHM ::=
                         -- the key.
 </pre>
 </div>
-<figcaption><a href="#figure-11" class="selfRef">Figure 11</a>:
+<figcaption><a href="#figure-12" class="selfRef">Figure 12</a>:
 <a href="#name-oneasymmetrickey-as-defined" class="selfRef">OneAsymmetricKey as defined in [RFC5958]</a>
           </figcaption></figure>
-<p id="section-6.3-9">When a composite private key is conveyed inside a <code>OneAsymmetricKey</code> structure (version 1 of which is also known as PrivateKeyInfo) <span>[<a href="#RFC5958" class="cite xref">RFC5958</a>]</span>, the <code>privateKeyAlgorithm</code> field SHALL be set to the corresponding composite algorithm identifier defined according to <a href="#sec-alg-ids" class="auto internal xref">Section 7</a> and its parameters field MUST be absent.  The <code>privateKey</code> field SHALL contain the OCTET STRING reperesentation of the serialized composite private key as per <a href="#sec-serialize-privkey" class="auto internal xref">Section 5.2</a>. The <code>publicKey</code> field remains OPTIONAL. If the <code>publicKey</code> field is present, it MUST be a composite public key as per <a href="#sec-serialize-pubkey" class="auto internal xref">Section 5.1</a>.<a href="#section-6.3-9" class="pilcrow">¶</a></p>
+<p id="section-6.3-9">When a composite private key is conveyed inside a <code>OneAsymmetricKey</code> structure (version 1 of which is also known as PrivateKeyInfo) <span>[<a href="#RFC5958" class="cite xref">RFC5958</a>]</span>, the <code>privateKeyAlgorithm</code> field SHALL be set to the corresponding composite algorithm identifier defined according to <a href="#sec-alg-ids" class="auto internal xref">Section 7</a> and its parameters field MUST be absent.  The <code>privateKey</code> field SHALL contain the OCTET STRING representation of the serialized composite private key as per <a href="#sec-serialize-privkey" class="auto internal xref">Section 5.2</a>. The <code>publicKey</code> field remains OPTIONAL. If the <code>publicKey</code> field is present, it MUST be a composite public key as per <a href="#sec-serialize-pubkey" class="auto internal xref">Section 5.1</a>.<a href="#section-6.3-9" class="pilcrow">¶</a></p>
 <p id="section-6.3-10">Some applications might need to reconstruct the <code>SubjectPublicKeyInfo</code> or <code>OneAsymmetricKey</code> objects corresponding to each component key individually, for example if this is required for invoking the underlying primitive. <a href="#sec-alg-ids" class="auto internal xref">Section 7</a> provides the necessary mapping between composite and their component algorithms for doing this reconstruction.<a href="#section-6.3-10" class="pilcrow">¶</a></p>
 <p id="section-6.3-11">Component keys of a composite private key MUST NOT be used in any other type of key or as a standalone key. For more details on the security considerations around key reuse, see <a href="#sec-cons-key-reuse" class="auto internal xref">Section 10.3</a>.<a href="#section-6.3-11" class="pilcrow">¶</a></p>
 </section>
@@ -2411,11 +2418,11 @@ kema-MLKEM768-ECDH-P256-HMAC-SHA256 KEM-ALGORITHM ::=
 <p id="section-7-1">This table summarizes the OID and the component algorithms for each Composite ML-KEM algorithm.<a href="#section-7-1" class="pilcrow">¶</a></p>
 <p id="section-7-2">EDNOTE: these are prototyping OIDs to be replaced by IANA.<a href="#section-7-2" class="pilcrow">¶</a></p>
 <p id="section-7-3">&lt;CompKEM&gt; is equal to 2.16.840.1.114027.80.5.2<a href="#section-7-3" class="pilcrow">¶</a></p>
-<span id="name-composite-ml-kem-key-types"></span><div id="tab-kem-algs">
+<span id="name-composite-ml-kem-algorithm-"></span><div id="tab-kem-algs">
 <table class="center" id="table-2">
         <caption>
 <a href="#table-2" class="selfRef">Table 2</a>:
-<a href="#name-composite-ml-kem-key-types" class="selfRef">Composite ML-KEM key types</a>
+<a href="#name-composite-ml-kem-algorithm-" class="selfRef">Composite ML-KEM algorithm combinations</a>
         </caption>
 <thead>
           <tr>
@@ -3148,13 +3155,13 @@ END
         </h3>
 <p id="section-10.2-1">The KEM combiner from <a href="#sec-kem-combiner" class="auto internal xref">Section 4.4</a> is reproduced here for reference.<a href="#section-10.2-1" class="pilcrow">¶</a></p>
 <span id="name-kem-combiner-construction"></span><div id="code-generic-kem-combiner">
-<figure id="figure-12">
+<figure id="figure-13">
           <div class="alignLeft art-text artwork" id="section-10.2-2.1">
 <pre>
   KDF(mlkemSS || tradSS || tradCT || tradPK || Domain)
 </pre>
 </div>
-<figcaption><a href="#figure-12" class="selfRef">Figure 12</a>:
+<figcaption><a href="#figure-13" class="selfRef">Figure 13</a>:
 <a href="#name-kem-combiner-construction" class="selfRef">KEM combiner construction</a>
           </figcaption></figure>
 </div>
@@ -3165,7 +3172,7 @@ END
             <p id="section-10.2-5.1.1"><code>mlkemSS</code> is always 32 bytes.<a href="#section-10.2-5.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-10.2-5.2">
-            <p id="section-10.2-5.2.1"><code>tradSS</code> in the case of ECDH this is derived by the decapsulator and therefore the length is not controlled by the attacker, however in the case of RSA-OAEP this value is directly chosen by the sender and both the length and content could be freely chosen by an attacker.<a href="#section-10.2-5.2.1" class="pilcrow">¶</a></p>
+            <p id="section-10.2-5.2.1"><code>tradSS</code> in the case of DH this is derived by the decapsulator and therefore the length is not controlled by the attacker, however in the case of RSA-OAEP this value is directly chosen by the sender and both the length and content could be freely chosen by an attacker.<a href="#section-10.2-5.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-10.2-5.3">
             <p id="section-10.2-5.3.1"><code>tradCT</code> is either an elliptic curve public key or an RSA-OAEP ciphertext which is required to have its length checked by step 1b of RSAES-OAEP-DECRYPT in <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span>.<a href="#section-10.2-5.3.1" class="pilcrow">¶</a></p>
@@ -3182,9 +3189,9 @@ END
           <h4 id="name-ind-cca-security-of-the-hyb">
 <a href="#section-10.2.1" class="section-number selfRef">10.2.1. </a><a href="#name-ind-cca-security-of-the-hyb" class="section-name selfRef">IND-CCA Security of the hybrid scheme</a>
           </h4>
-<p id="section-10.2.1-1">Informally, a Composite ML-KEM algorithm is secure if the combiner (HMAC-SHA2 or SHA3) is secure, and either ML-KEM is secure or the traditional component (RSA-OAEP, ECDH, or X25519) is secure.<a href="#section-10.2.1-1" class="pilcrow">¶</a></p>
-<p id="section-10.2.1-2">The security of ML-KEM and ECDH hybrids is covered in <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span> and requires that the first KEM component (ML-KEM in this construction) is IND-CCA and second ciphertext preimage resistant (C2PRI) and that the second traditional component is IND-CCA. This design choice improves performance by not including the large ML-KEM public key and ciphertext, but means that an implementation error in the ML-KEM component that affects the ciphertext check step of the FO transform could result in the overall composite no longer achieving IND-CCA2 security. Note that ciphertext collisions exist in the traditional component by the composite design choice to support any underlying encoding of the traditional component, such as compressed vs uncompressed EC points as the ECDH KEM ciphertext. This solution remains IND-CCA due to binding the <code>tradPK</code> and <code>tradCT</code> in the KEM combiner.<a href="#section-10.2.1-2" class="pilcrow">¶</a></p>
-<p id="section-10.2.1-3">The QSF framework presented in <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span> is extended to cover RSA-OAEP as the traditional algorithm in place of ECDH by noting that RSA-OAEP is also IND-CCA secure <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span>.<a href="#section-10.2.1-3" class="pilcrow">¶</a></p>
+<p id="section-10.2.1-1">Informally, a Composite ML-KEM algorithm is secure if the combiner (HMAC-SHA2 or SHA3) is secure, and either ML-KEM is secure or the traditional component (RSA-OAEP, ECDH, X25519 or X448) is secure.<a href="#section-10.2.1-1" class="pilcrow">¶</a></p>
+<p id="section-10.2.1-2">The security of ML-KEM and DH hybrids is covered in <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span> and requires that the first KEM component (ML-KEM in this construction) is IND-CCA and second ciphertext preimage resistant (C2PRI) and that the second traditional component is IND-CCA. This design choice improves performance by not including the large ML-KEM public key and ciphertext, but means that an implementation error in the ML-KEM component that affects the ciphertext check step of the FO transform could result in the overall composite no longer achieving IND-CCA2 security. Note that ciphertext collisions exist in the traditional component by the composite design choice to support any underlying encoding of the traditional component, such as compressed vs uncompressed EC points as the DH KEM ciphertext. This solution remains IND-CCA due to binding the <code>tradPK</code> and <code>tradCT</code> in the KEM combiner.<a href="#section-10.2.1-2" class="pilcrow">¶</a></p>
+<p id="section-10.2.1-3">The QSF framework presented in <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span> is extended to cover RSA-OAEP as the traditional algorithm in place of DH by noting that RSA-OAEP is also IND-CCA secure <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span>.<a href="#section-10.2.1-3" class="pilcrow">¶</a></p>
 <p id="section-10.2.1-4">Note that X-Wing uses SHA3 as the combiner KDF whereas Composite ML-KEM uses either SHA3 or HMAC-SHA2 which are interchangeable in the X-Wing proof since both behave as random oracles under multiple concatenated inputs.<a href="#section-10.2.1-4" class="pilcrow">¶</a></p>
 <p id="section-10.2.1-5">The composite combiner cannot be assumed to be secure when used with different KEMs and a more cautious approach would bind the public key and ciphertext of the first KEM as well.<a href="#section-10.2.1-5" class="pilcrow">¶</a></p>
 </section>
@@ -3196,7 +3203,7 @@ END
           </h4>
 <p id="section-10.2.2-1">The notion of a "ciphertext second pre-image resistant KEM" is defined in <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span> as being the property that it is computationally difficult to find two different ciphertexts <code>c != c'</code> that will decapsulate to the same shared secret key under the same public key. For the purposes of a hybrid KEM combiner, this property means that given two composite ciphertexts <code>(c1, c2)</code> and <code>(c1', c2')</code>, we must obtain a unique overall shared secret key so long as either <code>c1 != c1'</code> or <code>c2 != c2'</code> -- i.e. the overall Composite ML-KEM is ciphertext second pre-image resistant, and therefore secure so long as one of the component KEMs is secure.<a href="#section-10.2.2-1" class="pilcrow">¶</a></p>
 <p id="section-10.2.2-2">In <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span> it is proven that ML-KEM is a second pre-image resistant KEM and therefore the ML-KEM ciphertext can safely be omitted from the KEM combiner. Note that this makes a fundamental assumption on ML-KEM remaining ciphertext second pre-image resistant, and therefore this formulation of KEM combiner does not fully protect against implementation errors in the ML-KEM component -- particularly around the ciphertext check step of the Fujisaki-Okamoto transform -- which could trivially lead to second ciphertext pre-image attacks that break the IND-CCA2 security of the ML-KEM component and of the overall Composite ML-KEM. This could be more fully mitigated by binding the ML-KEM ciphertext in the combiner, but a design decision was made to settle for protection against algorithmic attacks and not implementation attacks against ML-KEM in order to increase performance.<a href="#section-10.2.2-2" class="pilcrow">¶</a></p>
-<p id="section-10.2.2-3">However, since neither RSA-OAEP nor ECDH guarantee second pre-image resistance at all, even in a correct implementation, these ciphertexts are bound to the key derivation in order to guarantee that <code>c != c'</code> will yield a unique ciphertext, and thus restoring second pre-image resistance to the overall Composite ML-KEM.<a href="#section-10.2.2-3" class="pilcrow">¶</a></p>
+<p id="section-10.2.2-3">However, since neither RSA-OAEP nor DH guarantee second pre-image resistance at all, even in a correct implementation, these ciphertexts are bound to the key derivation in order to guarantee that <code>c != c'</code> will yield a unique ciphertext, and thus restoring second pre-image resistance to the overall Composite ML-KEM.<a href="#section-10.2.2-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sha3-vs-hmac-sha2">
@@ -3224,8 +3231,8 @@ END
 <a href="#section-10.3" class="section-number selfRef">10.3. </a><a href="#name-key-reuse" class="section-name selfRef">Key Reuse</a>
         </h3>
 <p id="section-10.3-1">While conformance with this specification requires that both components of a composite key MUST be freshly generated, the designers are aware that some implementers may be forced to break this rule due to operational constraints. This section documents the implications of doing so.<a href="#section-10.3-1" class="pilcrow">¶</a></p>
-<p id="section-10.3-2">When using single-algorithm cryptography, the best practice is to always generate fresh keying material for each purpose, for example when renewing a certificate, or obtaining both a TLS and S/MIME certificate for the same device. However, in practice key reuse in such scenarios is not always catastrophic to security and therefore often tolerated. However this reasoning does not hold in the PQ / Traditional hybrid setting.<a href="#section-10.3-2" class="pilcrow">¶</a></p>
-<p id="section-10.3-3">Within the broader context of PQ / Traditional hybrids, we need to consider new attack surfaces that arise due to the hybrid constructions and did not exist in single-algorithm contexts. One of these is key reuse where the component keys within a hybrid are also used by themselves within a single-algorithm context. For example, it might be tempting for an operator to take already-deployed RSA keys and add an ML-KEM key to them to form a hybrid. Within a hybrid signature context this leads to a class of attacks referred to as "stripping attacks" where one component signature can be extracted and presented as a single-algorithm signature. Hybrid KEMs using a concatenation-style KEM combiner, as is done in this specification, do not have the analogous attack surface because even if an attacker is able to extract and decrypt one of the component ciphertexts, this will yield a different shared secret key than the overall shared secret key derived from the composite, so any subsequent symmetric cryptographic operations will fail.<a href="#section-10.3-3" class="pilcrow">¶</a></p>
+<p id="section-10.3-2">When using single-algorithm cryptography, the best practice is to always generate fresh keying material for each purpose, for example when renewing a certificate, or obtaining both a TLS and S/MIME certificate for the same device. However, in practice key reuse in such scenarios is not always catastrophic to security and therefore often tolerated. However this reasoning does not hold in the PQ/T hybrid setting.<a href="#section-10.3-2" class="pilcrow">¶</a></p>
+<p id="section-10.3-3">Within the broader context of PQ/T hybrids, we need to consider new attack surfaces that arise due to the hybrid constructions and did not exist in single-algorithm contexts. One of these is key reuse where the component keys within a hybrid are also used by themselves within a single-algorithm context. For example, it might be tempting for an operator to take already-deployed RSA keys and add an ML-KEM key to them to form a hybrid. Within a hybrid signature context this leads to a class of attacks referred to as "stripping attacks" where one component signature can be extracted and presented as a single-algorithm signature. Hybrid KEMs using a concatenation-style KEM combiner, as is done in this specification, do not have the analogous attack surface because even if an attacker is able to extract and decrypt one of the component ciphertexts, this will yield a different shared secret key than the overall shared secret key derived from the composite, so any subsequent symmetric cryptographic operations will fail.<a href="#section-10.3-3" class="pilcrow">¶</a></p>
 <p id="section-10.3-4">In addition, there is a further implication to key reuse regarding certificate revocation. Upon receiving a new certificate enrolment request, many certification authorities will check if the requested public key has been previously revoked due to key compromise. Often a CA will perform this check by using the public key hash. Therefore, if one, or even both, components of a composite have been previously revoked, the CA may only check the hash of the combined composite key and not find the revocations. Therefore, because the possibility of key reuse exists even though forbidden in this specification, CAs performing revocation checks on a composite key SHOULD also check both component keys independently to verify that the component keys have not been revoked.<a href="#section-10.3-4" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -3381,7 +3388,7 @@ id-MLKEM1024-ECDH-P384-HMAC-SHA512
         <h3 id="name-decapsulation-requires-the-">
 <a href="#section-11.4" class="section-number selfRef">11.4. </a><a href="#name-decapsulation-requires-the-" class="section-name selfRef">Decapsulation Requires the Public Key</a>
         </h3>
-<p id="section-11.4-1">ML-KEM always requires the public key in order to perform various steps of the Fujisaki-Okamoto decapsulation <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span>, and for this reason the private key encoding specified in FIPS 203 includes the public key. Moveover, the KEM combiner as specified in <a href="#sec-kem-combiner" class="auto internal xref">Section 4.4</a> requires the public key of the traditional component in order to achieve the public-key binding property and ciphertext collision resistance as described in <a href="#sec-cons-kem-combiner" class="auto internal xref">Section 10.2</a>.<a href="#section-11.4-1" class="pilcrow">¶</a></p>
+<p id="section-11.4-1">ML-KEM always requires the public key in order to perform various steps of the Fujisaki-Okamoto decapsulation <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span>, and for this reason the private key encoding specified in FIPS 203 includes the public key. Moreover, the KEM combiner as specified in <a href="#sec-kem-combiner" class="auto internal xref">Section 4.4</a> requires the public key of the traditional component in order to achieve the public-key binding property and ciphertext collision resistance as described in <a href="#sec-cons-kem-combiner" class="auto internal xref">Section 10.2</a>.<a href="#section-11.4-1" class="pilcrow">¶</a></p>
 <p id="section-11.4-2">The mechanism by which an application transmits the public keys is out of scope of this specification, but it MAY be accomplished by placing a serialized composite public key into the optional <code>OneAsymmetricKey.publicKey</code> field of the private key object.<a href="#section-11.4-2" class="pilcrow">¶</a></p>
 <p id="section-11.4-3">Implementers who choose to use a different private key encoding than the one specified in this document MUST consider how to provide the component public keys to the decapsulate routine. While some implementations might contain routines to computationally derive the public key from the private key, it is not guaranteed that all implementations will support this.<a href="#section-11.4-3" class="pilcrow">¶</a></p>
 </section>
@@ -3964,8 +3971,25 @@ DER:
  86 48 86 F7 0D 01 01 09 04 00
 </pre><a href="#appendix-C-8" class="pilcrow">¶</a>
 </div>
-<p id="appendix-C-9"><strong>ECDH NIST-P-384</strong><a href="#appendix-C-9" class="pilcrow">¶</a></p>
+<p id="appendix-C-9"><strong>ECDH NIST-P-256</strong><a href="#appendix-C-9" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="appendix-C-10">
+<pre>
+ASN.1:
+  algorithm AlgorithmIdentifier ::= {
+    algorithm id-ecPublicKey   -- (1.2.840.10045.2.1)
+    parameters ANY ::= {
+      AlgorithmIdentifier ::= {
+        algorithm secp256r1    -- (1.2.840.10045.3.1.7)
+        }
+      }
+    }
+
+DER:
+  30 13 06 07 2A 86 48 CE 3D 02 01 06 08 2A 86 48 CE 3D 03 01 07
+</pre><a href="#appendix-C-10" class="pilcrow">¶</a>
+</div>
+<p id="appendix-C-11"><strong>ECDH NIST-P-384</strong><a href="#appendix-C-11" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-C-12">
 <pre>
 ASN.1:
   algorithm AlgorithmIdentifier ::= {
@@ -3979,10 +4003,10 @@ ASN.1:
 
 DER:
   30 10 06 07 2A 86 48 CE 3D 02 01 06 05 2B 81 04 00 22
-</pre><a href="#appendix-C-10" class="pilcrow">¶</a>
+</pre><a href="#appendix-C-12" class="pilcrow">¶</a>
 </div>
-<p id="appendix-C-11"><strong>ECDH NIST-P-521</strong><a href="#appendix-C-11" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="appendix-C-12">
+<p id="appendix-C-13"><strong>ECDH NIST-P-521</strong><a href="#appendix-C-13" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-C-14">
 <pre>
 ASN.1:
   algorithm AlgorithmIdentifier ::= {
@@ -3996,10 +4020,10 @@ ASN.1:
 
 DER:
   30 10 06 07 2A 86 48 CE 3D 02 01 06 05 2B 81 04 00 23
-</pre><a href="#appendix-C-12" class="pilcrow">¶</a>
+</pre><a href="#appendix-C-14" class="pilcrow">¶</a>
 </div>
-<p id="appendix-C-13"><strong>ECDH Brainpool-256</strong><a href="#appendix-C-13" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="appendix-C-14">
+<p id="appendix-C-15"><strong>ECDH Brainpool-256</strong><a href="#appendix-C-15" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-C-16">
 <pre>
 ASN.1:
   algorithm AlgorithmIdentifier ::= {
@@ -4013,10 +4037,10 @@ ASN.1:
 
 DER:
   30 14 06 07 2A 86 48 CE 3D 02 01 06 09 2B 24 03 03 02 08 01 01 07
-</pre><a href="#appendix-C-14" class="pilcrow">¶</a>
+</pre><a href="#appendix-C-16" class="pilcrow">¶</a>
 </div>
-<p id="appendix-C-15"><strong>ECDH Brainpool-384</strong><a href="#appendix-C-15" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="appendix-C-16">
+<p id="appendix-C-17"><strong>ECDH Brainpool-384</strong><a href="#appendix-C-17" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-C-18">
 <pre>
 ASN.1:
   algorithm AlgorithmIdentifier ::= {
@@ -4030,10 +4054,10 @@ ASN.1:
 
 DER:
   30 14 06 07 2A 86 48 CE 3D 02 01 06 09 2B 24 03 03 02 08 01 01 0B
-</pre><a href="#appendix-C-16" class="pilcrow">¶</a>
+</pre><a href="#appendix-C-18" class="pilcrow">¶</a>
 </div>
-<p id="appendix-C-17"><strong>X25519</strong><a href="#appendix-C-17" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="appendix-C-18">
+<p id="appendix-C-19"><strong>X25519</strong><a href="#appendix-C-19" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-C-20">
 <pre>
 ASN.1:
   algorithm AlgorithmIdentifier ::= {
@@ -4042,10 +4066,10 @@ ASN.1:
 
 DER:
   30 05 06 03 2B 65 6E
-</pre><a href="#appendix-C-18" class="pilcrow">¶</a>
+</pre><a href="#appendix-C-20" class="pilcrow">¶</a>
 </div>
-<p id="appendix-C-19"><strong>X448</strong><a href="#appendix-C-19" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="appendix-C-20">
+<p id="appendix-C-21"><strong>X448</strong><a href="#appendix-C-21" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-C-22">
 <pre>
 ASN.1:
   algorithm AlgorithmIdentifier ::= {
@@ -4054,7 +4078,7 @@ ASN.1:
 
 DER:
   30 05 06 03 2B 65 6F
-</pre><a href="#appendix-C-20" class="pilcrow">¶</a>
+</pre><a href="#appendix-C-22" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
@@ -4280,7 +4304,7 @@ ss: 8b5f9f1112aec1b72ad8c0ba192595ca9e599791ab33ce7c5b2efa5de8563b5f
           <p id="appendix-F-6.1.1">Load the public key <code>ek</code> or certificate <code>x5c</code> and perform an encapsulation for it.<a href="#appendix-F-6.1.1" class="pilcrow">¶</a></p>
 </li>
         <li id="appendix-F-6.2">
-          <p id="appendix-F-6.2.1">Load the decapsulation private key <code>dk</code> or <code>dk_pkcs8</code> and the ciphertext <code>c</code> and ensure that the same shared secret key <code>k</code> can be derived.<a href="#appendix-F-6.2.1" class="pilcrow">¶</a></p>
+          <p id="appendix-F-6.2.1">Load the decapsulation private key <code>dk</code> or <code>dk_pkcs8</code> and the ciphertext c and perform a <code>Decaps</code> operation to ensure that the same shared secret key <code>k</code> is derived.<a href="#appendix-F-6.2.1" class="pilcrow">¶</a></p>
 </li>
       </ol>
 <p id="appendix-F-7">Test vectors are provided for each underlying ML-KEM algorithm in isolation for the purposes of debugging.<a href="#appendix-F-7" class="pilcrow">¶</a></p>
