@@ -930,7 +930,14 @@ def formatResults(kem, caSK, ct, ss ):
 
   kemCert = signKemCert(caSK, kem)
   jsonTest['x5c'] = base64.b64encode(kemCert.public_bytes(encoding=serialization.Encoding.DER)).decode('ascii')
-  jsonTest['dk'] = base64.b64encode(kem.private_key_bytes()).decode('ascii')
+  
+  # for standalone ML-KEM, we need to wrap the private key in an OCTET STRING, but not when it's a composite
+  if kem.id in ("id-alg-ml-kem-768", "id-alg-ml-kem-1024"):
+    jsonTest['dk'] = base64.b64encode(
+                          encode(univ.OctetString(kem.private_key_bytes()))
+                                                      ).decode('ascii')
+  else:
+    jsonTest['dk'] = base64.b64encode(kem.private_key_bytes()).decode('ascii')
 
   # Construct PKCS#8
   pki = rfc5208.PrivateKeyInfo()
@@ -938,7 +945,13 @@ def formatResults(kem, caSK, ct, ss ):
   algId = rfc5208.AlgorithmIdentifier()
   algId['algorithm'] = OID_TABLE[kem.id]
   pki['privateKeyAlgorithm'] = algId
-  pki['privateKey'] = univ.OctetString(kem.private_key_bytes())
+
+
+  # for standalone ML-KEM, we need to wrap the private key in an OCTET STRING, but not when it's a composite
+  if kem.id in ("id-alg-ml-kem-768", "id-alg-ml-kem-1024"):
+    pki['privateKey'] = univ.OctetString(univ.OctetString(kem.private_key_bytes()))
+  else:
+    pki['privateKey'] = univ.OctetString(kem.private_key_bytes())
   jsonTest['dk_pkcs8'] = base64.b64encode(encode(pki)).decode('ascii')
 
   jsonTest['c'] = base64.b64encode(ct).decode('ascii')
