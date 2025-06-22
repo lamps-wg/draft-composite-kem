@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-06-19T02:05:02.052862+00:00",
+  "timestamp": "2025-06-22T02:19:58.443491+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -2788,16 +2788,26 @@
       "id": "I_kwDOKRPFO868O8vF",
       "title": "Incorrect private key test vectors",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/175",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "danvangeest",
       "authorAssociation": "CONTRIBUTOR",
-      "assignees": [],
+      "assignees": [
+        "johngray-dev"
+      ],
       "labels": [],
       "body": "The test vectors are incorrect for the EC and RSA components of the composite private keys.  The private keys are encoded as a concatenation of the raw (ML-KEM,ML-DSA) seed and a PrivateKeyInfo.  Rather than a PrivateKeyInfo it should be an ECPrivateKey or RSAPrivateKey.  The 25519/448 private key vectors are correct according to the current text.",
       "createdAt": "2025-06-18T20:07:52Z",
-      "updatedAt": "2025-06-18T20:07:52Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2025-06-20T17:55:06Z",
+      "closedAt": "2025-06-20T17:55:06Z",
+      "comments": [
+        {
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Hi Dan, I believe I have fixed the issue in this pull request:\nhttps://github.com/lamps-wg/draft-composite-kem/pull/178\n\nIf you could check them and verify that would be appreciated!\n\n",
+          "createdAt": "2025-06-19T21:28:50Z",
+          "updatedAt": "2025-06-19T21:28:50Z"
+        }
+      ]
     },
     {
       "number": 176,
@@ -7174,6 +7184,56 @@
           "body": "Changes look good. Thanks for the careful review.",
           "createdAt": "2025-06-16T15:29:39Z",
           "updatedAt": "2025-06-16T15:29:39Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 178,
+      "id": "PR_kwDOKRPFO86bUGUY",
+      "title": "Change the encoding of the ECDSA and RSA components to PKCS1",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/178",
+      "state": "MERGED",
+      "author": "johngray-dev",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Closes #175 \r\n\r\nCorrected the composite component encoding format.",
+      "createdAt": "2025-06-19T21:27:55Z",
+      "updatedAt": "2025-06-20T17:55:05Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "24c2cfd4b8210c4a70961c56f2b99e140b109dd2",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "jg_fixRSA_EC_Encoding",
+      "headRefOid": "7de65d04047c12f41e101c472a9d1f654390821e",
+      "closedAt": "2025-06-20T17:55:05Z",
+      "mergedAt": "2025-06-20T17:55:05Z",
+      "mergedBy": "johngray-dev",
+      "mergeCommit": {
+        "oid": "208230972b48d37484eaeb81eaf4baeed086bda2"
+      },
+      "comments": [
+        {
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Thanks Dan for Verifying so quickly!",
+          "createdAt": "2025-06-20T14:23:46Z",
+          "updatedAt": "2025-06-20T14:23:46Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO86ve1ZG",
+          "commit": {
+            "abbreviatedOid": "09ce9b5"
+          },
+          "author": "danvangeest",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "Verified that the ECDSA test vectors work.  I don't have the RSS ones implemented yet, but the ASN.1 looks good.",
+          "createdAt": "2025-06-19T22:02:54Z",
+          "updatedAt": "2025-06-19T22:02:54Z",
           "comments": []
         }
       ]
