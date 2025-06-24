@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-06-22T02:19:58.443491+00:00",
+  "timestamp": "2025-06-24T02:06:02.491352+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -2763,9 +2763,17 @@
       "labels": [],
       "body": "The private key serialization is under-specified, at least for EC.  Section 5 of both drafts says the traditional public EC key is encoded as an ECPoint, but says nothing about the private key. RFC5915 which defines ECPrivateKey isn't referenced anywhere in the documents.  The RSAPublicKey, RSAPrivateKey and ECPrivateKey types aren't referenced anywhere in the documents, I think doing so would make serialization clearer.",
       "createdAt": "2025-06-18T20:06:10Z",
-      "updatedAt": "2025-06-18T20:06:10Z",
+      "updatedAt": "2025-06-22T16:51:55Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "Perksey",
+          "authorAssociation": "NONE",
+          "body": "I'm surprised the complexity of manually specifying the serialisation/deserialisation functions is preferred to just saying a private key is a sequence of octet strings encapsulating whatever the native form is for each KEM within the composite. Yes it's more work doing those operations (as it's more to decode) but it removes ambiguity and complexity, and makes implementing this proposal harder to get wrong while also having emergent benefits such as implementations being able to generalise over the composite KEM (for decreasing code size, *NOT* for allowing any old algorithm to be used in the composite as this isn't something to be done lightly).\n\nEDIT: This would also apply for public keys as well.",
+          "createdAt": "2025-06-22T16:50:58Z",
+          "updatedAt": "2025-06-22T16:51:55Z"
+        }
+      ]
     },
     {
       "number": 174,
