@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-06-24T02:06:02.491352+00:00",
+  "timestamp": "2025-06-26T02:05:13.488706+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -2846,6 +2846,22 @@
       "body": "Composite KEM Authors:\n\nI am confused by this:\n\n   kema-CompositeKEM {\n     OBJECT IDENTIFIER:id,\n       PUBLIC-KEY:publicKeyType }\n       KEM-ALGORITHM ::= {\n            IDENTIFIER id\n            VALUE OCTET STRING\n            PARAMS ARE absent\n            PUBLIC-KEYS { publicKeyType }\n            SMIME-CAPS { IDENTIFIED BY id }\n           }\n\nIn Section 6, you say:\n\n   While composite ML-KEM keys and ciphertext values MAY be used raw,\n   the following sections provide conventions for using them within\n   X.509 and other PKIX protocols such that Composite ML-KEM can be used\n   as a drop-in replacement for KEM algorithms in PKCS#10 [RFC2986], CMP\n   [RFC4210], X.509 [RFC5280], and related protocols.\n\nThese two are in conflict.  The ASN.1 is calling for a OCTET STRING wrapper.\n\nI think you want:\n\n   kema-CompositeKEM {\n     OBJECT IDENTIFIER:id,\n       PUBLIC-KEY:publicKeyType }\n       KEM-ALGORITHM ::= {\n            IDENTIFIER id\n            -- VALUE has no ASN.1 wrapping --\n            PARAMS ARE absent\n            PUBLIC-KEYS { publicKeyType }\n            SMIME-CAPS { IDENTIFIED BY id }\n           }\n\nRuss",
       "createdAt": "2025-06-18T21:38:37Z",
       "updatedAt": "2025-06-18T21:38:37Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 179,
+      "id": "I_kwDOKRPFO869XCfC",
+      "title": "Where is tradPK in Decap from?",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/179",
+      "state": "OPEN",
+      "author": "wangweij",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "The `KemCombiner` operation in the final step requires `tradPK`, but `DeserializePrivateKey(sk)` only gives us `tradSK`. Is `tradPK` derived from `tradSK`? I\u2019m wondering whether all implementations provide a way to do that.",
+      "createdAt": "2025-06-25T20:52:44Z",
+      "updatedAt": "2025-06-25T20:52:44Z",
       "closedAt": null,
       "comments": []
     }
