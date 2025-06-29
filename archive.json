@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-06-26T02:05:13.488706+00:00",
+  "timestamp": "2025-06-29T02:22:27.643783+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -2709,15 +2709,17 @@
       "id": "I_kwDOKRPFO867_MUW",
       "title": "Encap is random",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/171",
-      "state": "CLOSED",
+      "state": "OPEN",
       "author": "wangweij",
       "authorAssociation": "NONE",
-      "assignees": [],
+      "assignees": [
+        "ounsworth"
+      ],
       "labels": [],
       "body": "Appendix F requires\n\n> Load the decapsulation private key `dk` or `dk_pkcs8` and the ciphertext `c` and ensure that the same shared secret key `k` can be derived.\n\nThere is no way to Encap to the same `c` and `k` unless the random used (like the `ikmE` in RFC 9180) is provided.\n\n",
       "createdAt": "2025-06-17T15:23:39Z",
-      "updatedAt": "2025-06-18T21:55:49Z",
-      "closedAt": "2025-06-18T15:13:59Z",
+      "updatedAt": "2025-06-27T15:18:51Z",
+      "closedAt": null,
       "comments": [
         {
           "author": "ounsworth",
@@ -2732,6 +2734,27 @@
           "body": "I know this line is about Decap, but when you say \"the same shared secret key\", it means the same as the one in the Encap operation. If I cannot perform Encap, there is no way to compare the keys.",
           "createdAt": "2025-06-18T21:55:49Z",
           "updatedAt": "2025-06-18T21:55:49Z"
+        },
+        {
+          "author": "janklaussner",
+          "authorAssociation": "COLLABORATOR",
+          "body": "reopening for discussion\n\n@wangweij I am not sure I get your point. We are doing tests, so the same entity does the encap and decap operation. Encap operation provides us a shared secret: k, after that Decap also provides us a shared secret: k'. The tester needs to verify both are equal.\nOr do you mean we should replace 'same' with 'equal' because its the mathematical correct term?",
+          "createdAt": "2025-06-26T09:51:53Z",
+          "updatedAt": "2025-06-26T09:59:50Z"
+        },
+        {
+          "author": "wangweij",
+          "authorAssociation": "NONE",
+          "body": "Thanks for reopening the issue. Appendix F includes the instruction:\n> Load the public key ek or certificate x5c and perform an encapsulation for it.\n\nMy point is that there\u2019s no way to replay the exact same encapsulation operation, since it\u2019s randomized. Using the `ek` from the test vector doesn\u2019t always produce the same `c` and `k`.\n\n\n",
+          "createdAt": "2025-06-26T13:44:21Z",
+          "updatedAt": "2025-06-26T13:44:21Z"
+        },
+        {
+          "author": "janklaussner",
+          "authorAssociation": "COLLABORATOR",
+          "body": "@wangweij yes your are right. \n@ounsworth I think it makes no sense to include c and k in the test vectors since they change with every Encap() call.",
+          "createdAt": "2025-06-27T15:18:42Z",
+          "updatedAt": "2025-06-27T15:18:42Z"
         }
       ]
     },
@@ -2787,9 +2810,17 @@
       "labels": [],
       "body": "For the 25519/448 composites, the traditional private key component is the raw 32 or 56 bytes.  Since the EC and RSA private key components are to be encoded as ECPrivateKey and RSAPrivateKey, it might be more consistent to encode the 25519/448 keys as a CurvePrivateKey (i.e. wrap the raw key in an OCTET STRING).  I'm not convinced that doing this one way or the other is better, just that doing so would be consistent. Then all traditional components will be equivalent to the contents of a standalone traditional PrivateKeyInfo.privateKey OCTET STRING.",
       "createdAt": "2025-06-18T20:07:11Z",
-      "updatedAt": "2025-06-18T20:07:11Z",
+      "updatedAt": "2025-06-26T07:39:08Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "janklaussner",
+          "authorAssociation": "COLLABORATOR",
+          "body": "@danvangeest thanks for the comment. We had a hard time to figure out the encoding and stuck with this. The reason is that the raw encoding is expected by most crypto libs internally (check this comment, applies to KEMs also: https://github.com/lamps-wg/draft-composite-sigs/issues/146#issuecomment-2810106782)\nThis aligns with our first design goal to limit reencoding work (https://github.com/lamps-wg/draft-composite-sigs/issues/146#issue-2986637607).\n\nSince you do net prefer either, I hope its fine if we do not change it.\n\nThis comment also applies to https://github.com/lamps-wg/draft-composite-sigs/issues/216",
+          "createdAt": "2025-06-26T07:39:08Z",
+          "updatedAt": "2025-06-26T07:39:08Z"
+        }
+      ]
     },
     {
       "number": 175,
@@ -2861,7 +2892,31 @@
       "labels": [],
       "body": "The `KemCombiner` operation in the final step requires `tradPK`, but `DeserializePrivateKey(sk)` only gives us `tradSK`. Is `tradPK` derived from `tradSK`? I\u2019m wondering whether all implementations provide a way to do that.",
       "createdAt": "2025-06-25T20:52:44Z",
-      "updatedAt": "2025-06-25T20:52:44Z",
+      "updatedAt": "2025-06-26T07:11:50Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "janklaussner",
+          "authorAssociation": "COLLABORATOR",
+          "body": "good catch, I do not think it was our intention to generate tradPK on Decap(). \nI see these options:\n\n1. explicitly provide pk at the Decap() interface\nDownside:\nThis not the default Decap() interface\n\n2. follow the X-Wing Paper and provide the tradPK in the Composite sk\nDownside: \ndeviates from Composite Sigs where we do not need this\nproduces issue with our current enconding, since tradSK and tradPK may not have fixed length \n\n3. provide tradPK as part of ct\nDownside: \nagain, produces issue with our current enconding, since tradCT and tradPK may not have fixed length \n\n4. enforce generation of tradPK at Decap()\nDownside:\nIn case of e.g. RSA 4096 this would increase the runtime significantly\n\n@ounsworth @johngray-dev @opencrypto anything I missed?",
+          "createdAt": "2025-06-26T07:11:50Z",
+          "updatedAt": "2025-06-26T07:11:50Z"
+        }
+      ]
+    },
+    {
+      "number": 180,
+      "id": "I_kwDOKRPFO869gdZV",
+      "title": "FIPS vs truncated HMAC",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/180",
+      "state": "OPEN",
+      "author": "optnfast",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "> In alignment with ML-KEM [FIPS.203], Composite KEM algorithms output a 256-bit shared secret key at all security levels, truncating is necessary as described in {{sec-kem-combiner}}.\n\nWhere the combiner is SHA3-256 or HMAC-SHA256 this is all good.\n\nHowever where the combiner is HMAC-SHA512 it means we truncate the output to 256 bits.\n\nThis is a headache in the FIPS context:\n* I see nothing in SP800-227ipd which permits truncation, so we can only appeal to the underlying KDF specs.\n* If the combiner is interpreted as the an SP800-56Cr2 one-step KDF we could only get away with it if the result is used directly as key material (it's conceptually the same as only needing 256 bits of KDF output).\n* If the combiner is interpreted as the Extract phase of an SP800-56Cr2 two-step KDF it won't work: the text is clear that the HMAC must be untruncated.\n\nSo if you want more than one AES-256 key, or two AES-128 keys, you're out of luck. I have concrete use cases for up to 1024 bits of output from a PQ/T hybrid KEM so this is going to be a problem for me. (My current use cases don't involve interop so I do have a good plan B, but I'd still like to align with the rest of the world if possible.)\n\nI think I have some responsibility for this, having previously cheered on the use of HMAC-SHA512.\n\nMy suggestion is to remove all truncated HMAC-SHA512 and replace with untruncated HMAC-SHA256. I don't believe this will have any meaningful impact on security level.",
+      "createdAt": "2025-06-26T14:50:48Z",
+      "updatedAt": "2025-06-26T14:51:35Z",
       "closedAt": null,
       "comments": []
     }
