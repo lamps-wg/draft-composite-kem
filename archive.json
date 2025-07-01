@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-06-29T02:22:27.643783+00:00",
+  "timestamp": "2025-07-01T02:23:22.761062+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -2917,6 +2917,22 @@
       "body": "> In alignment with ML-KEM [FIPS.203], Composite KEM algorithms output a 256-bit shared secret key at all security levels, truncating is necessary as described in {{sec-kem-combiner}}.\n\nWhere the combiner is SHA3-256 or HMAC-SHA256 this is all good.\n\nHowever where the combiner is HMAC-SHA512 it means we truncate the output to 256 bits.\n\nThis is a headache in the FIPS context:\n* I see nothing in SP800-227ipd which permits truncation, so we can only appeal to the underlying KDF specs.\n* If the combiner is interpreted as the an SP800-56Cr2 one-step KDF we could only get away with it if the result is used directly as key material (it's conceptually the same as only needing 256 bits of KDF output).\n* If the combiner is interpreted as the Extract phase of an SP800-56Cr2 two-step KDF it won't work: the text is clear that the HMAC must be untruncated.\n\nSo if you want more than one AES-256 key, or two AES-128 keys, you're out of luck. I have concrete use cases for up to 1024 bits of output from a PQ/T hybrid KEM so this is going to be a problem for me. (My current use cases don't involve interop so I do have a good plan B, but I'd still like to align with the rest of the world if possible.)\n\nI think I have some responsibility for this, having previously cheered on the use of HMAC-SHA512.\n\nMy suggestion is to remove all truncated HMAC-SHA512 and replace with untruncated HMAC-SHA256. I don't believe this will have any meaningful impact on security level.",
       "createdAt": "2025-06-26T14:50:48Z",
       "updatedAt": "2025-06-26T14:51:35Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 181,
+      "id": "I_kwDOKRPFO86-I2Ky",
+      "title": "It is unclear that the CRT priv key representation is forbidden",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/181",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "One version of the text explicitly required the (n, d) private key representation, but the current text does not make this clear.",
+      "createdAt": "2025-06-30T22:05:01Z",
+      "updatedAt": "2025-06-30T22:05:01Z",
       "closedAt": null,
       "comments": []
     }
