@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-07-01T02:23:22.761062+00:00",
+  "timestamp": "2025-07-03T02:06:03.595415+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -62,6 +62,11 @@
       "name": "cleanup",
       "description": "",
       "color": "1D76DB"
+    },
+    {
+      "name": "Blocks WGLC",
+      "description": null,
+      "color": "aaaaaa"
     }
   ],
   "issues": [
@@ -2718,7 +2723,7 @@
       "labels": [],
       "body": "Appendix F requires\n\n> Load the decapsulation private key `dk` or `dk_pkcs8` and the ciphertext `c` and ensure that the same shared secret key `k` can be derived.\n\nThere is no way to Encap to the same `c` and `k` unless the random used (like the `ikmE` in RFC 9180) is provided.\n\n",
       "createdAt": "2025-06-17T15:23:39Z",
-      "updatedAt": "2025-06-27T15:18:51Z",
+      "updatedAt": "2025-07-02T14:56:26Z",
       "closedAt": null,
       "comments": [
         {
@@ -2755,6 +2760,20 @@
           "body": "@wangweij yes your are right. \n@ounsworth I think it makes no sense to include c and k in the test vectors since they change with every Encap() call.",
           "createdAt": "2025-06-27T15:18:42Z",
           "updatedAt": "2025-06-27T15:18:42Z"
+        },
+        {
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "body": "We may add more clarifying text to the document.",
+          "createdAt": "2025-07-02T14:51:57Z",
+          "updatedAt": "2025-07-02T14:51:57Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@wangweij \nThe intention of the recommended test is that you can load the public key from the test vectors, and your implementation can do an Encap() for it without crashing or throwing errors.\n\nOf course you will get a different `c`. The text of the draft does not say that you will get the same `c`, but anyway I can make the text clearer.\n\nI also think it makes sense to leave `c` and `k` in the test vectors because the test of taking `c` and ensure that you can extract the same `k` is a valuable test of the correctness of your implementation. This is in fact the most important thing you can test using the test vectors.",
+          "createdAt": "2025-07-02T14:54:12Z",
+          "updatedAt": "2025-07-02T14:56:26Z"
         }
       ]
     },
@@ -2770,9 +2789,17 @@
       "labels": [],
       "body": "While the non-composite ML-KEM test vectors don't actually test composites, they're useful for verifying one's framework when using these test vectors.\n\nThe PKCS#8 non-composite ML-KEM test vectors are encoded incorrectly. They contain the seed in the private key OCTET STRING without any additional wrapping.  Because the CHOICE encoding is now used for ML-KEM, when encoded as a seed the private key needs an extra layer of OCTET STRING.\n\nNot sure how you then want to handle the raw key.  Should it be the raw SEED, or the raw CHOICE (no PKCS#8, but still CHOICE ANS.1 encoding).",
       "createdAt": "2025-06-18T15:49:20Z",
-      "updatedAt": "2025-06-18T15:49:20Z",
+      "updatedAt": "2025-07-02T15:20:34Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Copy over same as in #219 in Sigs  -  https://github.com/lamps-wg/draft-composite-sigs/issues/210  ",
+          "createdAt": "2025-07-02T14:54:18Z",
+          "updatedAt": "2025-07-02T15:20:34Z"
+        }
+      ]
     },
     {
       "number": 173,
@@ -2782,11 +2809,13 @@
       "state": "OPEN",
       "author": "danvangeest",
       "authorAssociation": "CONTRIBUTOR",
-      "assignees": [],
+      "assignees": [
+        "janklaussner"
+      ],
       "labels": [],
       "body": "The private key serialization is under-specified, at least for EC.  Section 5 of both drafts says the traditional public EC key is encoded as an ECPoint, but says nothing about the private key. RFC5915 which defines ECPrivateKey isn't referenced anywhere in the documents.  The RSAPublicKey, RSAPrivateKey and ECPrivateKey types aren't referenced anywhere in the documents, I think doing so would make serialization clearer.",
       "createdAt": "2025-06-18T20:06:10Z",
-      "updatedAt": "2025-06-22T16:51:55Z",
+      "updatedAt": "2025-07-02T14:29:24Z",
       "closedAt": null,
       "comments": [
         {
@@ -2795,6 +2824,20 @@
           "body": "I'm surprised the complexity of manually specifying the serialisation/deserialisation functions is preferred to just saying a private key is a sequence of octet strings encapsulating whatever the native form is for each KEM within the composite. Yes it's more work doing those operations (as it's more to decode) but it removes ambiguity and complexity, and makes implementing this proposal harder to get wrong while also having emergent benefits such as implementations being able to generalise over the composite KEM (for decreasing code size, *NOT* for allowing any old algorithm to be used in the composite as this isn't something to be done lightly).\n\nEDIT: This would also apply for public keys as well.",
           "createdAt": "2025-06-22T16:50:58Z",
           "updatedAt": "2025-06-22T16:51:55Z"
+        },
+        {
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "body": "We will add the appropriate references for Signatures and KEM.   Thanks!",
+          "createdAt": "2025-07-02T14:27:38Z",
+          "updatedAt": "2025-07-02T14:27:38Z"
+        },
+        {
+          "author": "janklaussner",
+          "authorAssociation": "COLLABORATOR",
+          "body": "https://github.com/lamps-wg/draft-composite-sigs/issues/215 is related",
+          "createdAt": "2025-07-02T14:28:25Z",
+          "updatedAt": "2025-07-02T14:29:24Z"
         }
       ]
     },
@@ -2806,11 +2849,13 @@
       "state": "OPEN",
       "author": "danvangeest",
       "authorAssociation": "CONTRIBUTOR",
-      "assignees": [],
+      "assignees": [
+        "janklaussner"
+      ],
       "labels": [],
       "body": "For the 25519/448 composites, the traditional private key component is the raw 32 or 56 bytes.  Since the EC and RSA private key components are to be encoded as ECPrivateKey and RSAPrivateKey, it might be more consistent to encode the 25519/448 keys as a CurvePrivateKey (i.e. wrap the raw key in an OCTET STRING).  I'm not convinced that doing this one way or the other is better, just that doing so would be consistent. Then all traditional components will be equivalent to the contents of a standalone traditional PrivateKeyInfo.privateKey OCTET STRING.",
       "createdAt": "2025-06-18T20:07:11Z",
-      "updatedAt": "2025-06-26T07:39:08Z",
+      "updatedAt": "2025-07-02T14:24:44Z",
       "closedAt": null,
       "comments": [
         {
@@ -2819,6 +2864,20 @@
           "body": "@danvangeest thanks for the comment. We had a hard time to figure out the encoding and stuck with this. The reason is that the raw encoding is expected by most crypto libs internally (check this comment, applies to KEMs also: https://github.com/lamps-wg/draft-composite-sigs/issues/146#issuecomment-2810106782)\nThis aligns with our first design goal to limit reencoding work (https://github.com/lamps-wg/draft-composite-sigs/issues/146#issue-2986637607).\n\nSince you do net prefer either, I hope its fine if we do not change it.\n\nThis comment also applies to https://github.com/lamps-wg/draft-composite-sigs/issues/216",
           "createdAt": "2025-06-26T07:39:08Z",
           "updatedAt": "2025-06-26T07:39:08Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I see what Dan is pointing out: we are not consistent with the encodings specified in RFC8410, which specifies:\n\n```\n   PrivateKey ::= OCTET STRING\n\n   PublicKey ::= BIT STRING\n```\n\nI have not thought about this enough to have a firm opinion, but it probably makes sense to make it consistent with 8410.",
+          "createdAt": "2025-07-02T14:23:09Z",
+          "updatedAt": "2025-07-02T14:23:44Z"
+        },
+        {
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "body": "We agreed to make it consistent with RFC 8410.",
+          "createdAt": "2025-07-02T14:24:32Z",
+          "updatedAt": "2025-07-02T14:24:32Z"
         }
       ]
     },
@@ -2872,11 +2931,13 @@
       "state": "OPEN",
       "author": "johngray-dev",
       "authorAssociation": "COLLABORATOR",
-      "assignees": [],
+      "assignees": [
+        "johngray-dev"
+      ],
       "labels": [],
       "body": "Composite KEM Authors:\n\nI am confused by this:\n\n   kema-CompositeKEM {\n     OBJECT IDENTIFIER:id,\n       PUBLIC-KEY:publicKeyType }\n       KEM-ALGORITHM ::= {\n            IDENTIFIER id\n            VALUE OCTET STRING\n            PARAMS ARE absent\n            PUBLIC-KEYS { publicKeyType }\n            SMIME-CAPS { IDENTIFIED BY id }\n           }\n\nIn Section 6, you say:\n\n   While composite ML-KEM keys and ciphertext values MAY be used raw,\n   the following sections provide conventions for using them within\n   X.509 and other PKIX protocols such that Composite ML-KEM can be used\n   as a drop-in replacement for KEM algorithms in PKCS#10 [RFC2986], CMP\n   [RFC4210], X.509 [RFC5280], and related protocols.\n\nThese two are in conflict.  The ASN.1 is calling for a OCTET STRING wrapper.\n\nI think you want:\n\n   kema-CompositeKEM {\n     OBJECT IDENTIFIER:id,\n       PUBLIC-KEY:publicKeyType }\n       KEM-ALGORITHM ::= {\n            IDENTIFIER id\n            -- VALUE has no ASN.1 wrapping --\n            PARAMS ARE absent\n            PUBLIC-KEYS { publicKeyType }\n            SMIME-CAPS { IDENTIFIED BY id }\n           }\n\nRuss",
       "createdAt": "2025-06-18T21:38:37Z",
-      "updatedAt": "2025-06-18T21:38:37Z",
+      "updatedAt": "2025-07-02T14:46:48Z",
       "closedAt": null,
       "comments": []
     },
@@ -2889,10 +2950,13 @@
       "author": "wangweij",
       "authorAssociation": "NONE",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "bug",
+        "Blocks WGLC"
+      ],
       "body": "The `KemCombiner` operation in the final step requires `tradPK`, but `DeserializePrivateKey(sk)` only gives us `tradSK`. Is `tradPK` derived from `tradSK`? I\u2019m wondering whether all implementations provide a way to do that.",
       "createdAt": "2025-06-25T20:52:44Z",
-      "updatedAt": "2025-06-26T07:11:50Z",
+      "updatedAt": "2025-07-02T14:55:21Z",
       "closedAt": null,
       "comments": [
         {
@@ -2901,6 +2965,13 @@
           "body": "good catch, I do not think it was our intention to generate tradPK on Decap(). \nI see these options:\n\n1. explicitly provide pk at the Decap() interface\nDownside:\nThis not the default Decap() interface\n\n2. follow the X-Wing Paper and provide the tradPK in the Composite sk\nDownside: \ndeviates from Composite Sigs where we do not need this\nproduces issue with our current enconding, since tradSK and tradPK may not have fixed length \n\n3. provide tradPK as part of ct\nDownside: \nagain, produces issue with our current enconding, since tradCT and tradPK may not have fixed length \n\n4. enforce generation of tradPK at Decap()\nDownside:\nIn case of e.g. RSA 4096 this would increase the runtime significantly\n\n@ounsworth @johngray-dev @opencrypto anything I missed?",
           "createdAt": "2025-06-26T07:11:50Z",
           "updatedAt": "2025-06-26T07:11:50Z"
+        },
+        {
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "body": "This needs to be resolved before WGLC.  ",
+          "createdAt": "2025-07-02T14:45:10Z",
+          "updatedAt": "2025-07-02T14:45:10Z"
         }
       ]
     },
@@ -2925,16 +2996,24 @@
       "id": "I_kwDOKRPFO86-I2Ky",
       "title": "It is unclear that the CRT priv key representation is forbidden",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/181",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "One version of the text explicitly required the (n, d) private key representation, but the current text does not make this clear.",
       "createdAt": "2025-06-30T22:05:01Z",
-      "updatedAt": "2025-06-30T22:05:01Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2025-07-02T14:33:07Z",
+      "closedAt": "2025-07-02T14:33:07Z",
+      "comments": [
+        {
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Closing as we allow traditional format use.",
+          "createdAt": "2025-07-02T14:33:07Z",
+          "updatedAt": "2025-07-02T14:33:07Z"
+        }
+      ]
     }
   ],
   "pulls": [
