@@ -276,25 +276,15 @@ This document defines combinations of ML-KEM [FIPS.203] in hybrid with tradition
 
 --- middle
 
-# Changes in version -07
+# Changes in version -08
 
 Interop-affecting changes:
 
-* ML-KEM secret keys are now only seeds.
-* Since all ML-KEM keys and ciphertexts are now fixed-length, dropped the length-tagged encoding.
-* Added complete test vectors.
-* Added ML-KEM1024 + RSA3072 combination.
-* Added ML-KEM1024+ECDH-P521 combination.
-* Updated prototype OIDs so these don't conflict with the previous versions
-* Removed the "Use in CMS" section so that we can get this document across the finish line, and defer CMS-related debates to a separate document.
+* Fixed the ASN.1 module for the pk-CompositeKEM and kema-CompositeKEM to indicate no ASN.1 wrapping is used.
 
 Editorial changes:
 
-* Since we are only using the first step of HKDF, which is HKDF-Extract() and not HKDF-Expand(), it was decided that it's clearer to systematically rename this to "HMAC Combiner".
-* Added an informative section on the difference between SHA3 and HMAC-SHA2 combiners, and the difference between HKDF(), HKDF-Extract(), and HMAC().
-* Since the serialization is now non-DER, drastically reduced the ASN.1-based text.
-* Changed `HKDF-SHA384` to `HKDF-SHA512`. Since SHA-384 is a truncated version of SHA-512, and we are further truncating it to 256 bits, these are binary-compatible, might as well list the parent algorithm for clarity.
-* Added a new section "KEM Combiner Examples" that show all the intermediate values of the KEM Combiner.
+* None
 
 Still to do in a future version:
 
@@ -1083,7 +1073,7 @@ The following ASN.1 Information Object Classes are defined to allow for compact 
 pk-CompositeKEM {OBJECT IDENTIFIER:id}
   PUBLIC-KEY ::= {
     IDENTIFIER id
-    KEY BIT STRING
+    -- KEY without ASN.1 wrapping --
     PARAMS ARE absent
     CERT-KEY-USAGE { keyEncipherment }
   }
@@ -1093,7 +1083,7 @@ kema-CompositeKEM {
     PUBLIC-KEY:publicKeyType }
     KEM-ALGORITHM ::= {
          IDENTIFIER id
-         VALUE OCTET STRING
+         -- VALUE without ASN.1 wrapping --
          PARAMS ARE absent
          PUBLIC-KEYS { publicKeyType }
          SMIME-CAPS { IDENTIFIED BY id }

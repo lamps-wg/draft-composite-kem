@@ -34,7 +34,7 @@ KEM-ALGORITHM
 pk-CompositeKEM {OBJECT IDENTIFIER:id}
   PUBLIC-KEY ::= {
     IDENTIFIER id
-    KEY BIT STRING
+    -- KEY without ASN.1 wrapping --
     PARAMS ARE absent
     CERT-KEY-USAGE { keyEncipherment }
   }
@@ -44,7 +44,7 @@ kema-CompositeKEM {
     PUBLIC-KEY:publicKeyType }
     KEM-ALGORITHM ::= {
          IDENTIFIER id
-         VALUE OCTET STRING
+         -- VALUE without ASN.1 wrapping --
          PARAMS ARE absent
          PUBLIC-KEYS { publicKeyType }
          SMIME-CAPS { IDENTIFIED BY id }
