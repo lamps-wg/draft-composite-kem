@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-07-03T02:06:03.595415+00:00",
+  "timestamp": "2025-07-06T02:21:08.155256+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -2956,7 +2956,7 @@
       ],
       "body": "The `KemCombiner` operation in the final step requires `tradPK`, but `DeserializePrivateKey(sk)` only gives us `tradSK`. Is `tradPK` derived from `tradSK`? I\u2019m wondering whether all implementations provide a way to do that.",
       "createdAt": "2025-06-25T20:52:44Z",
-      "updatedAt": "2025-07-02T14:55:21Z",
+      "updatedAt": "2025-07-03T12:48:07Z",
       "closedAt": null,
       "comments": [
         {
@@ -2972,6 +2972,13 @@
           "body": "This needs to be resolved before WGLC.  ",
           "createdAt": "2025-07-02T14:45:10Z",
           "updatedAt": "2025-07-02T14:45:10Z"
+        },
+        {
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "body": "This kept me up at night.  I think option 3 (using the CipherText to carry the public key) is what we need to go with for the following reasons:\n-  It doesn't change the standard public decap() interface as in option 1.\n-  If the public key is added to the private key (as in option 2), it is problematic for the reasons you site above, as well as when the private key is not accessible (because it is stored on an HSM).   You may only have a reference to the private key, so then trying to extract the public key from a reference would likely involve having to call additional API's.  This turns out to be the exact same reason we did not add the public key onto the private keys for composite signatures.\n- I think expecting an implementation to either regenerate the public key (as in option 4), or having to parse through the private key material to pull out the bits to reconstruct the public key is very efficient.\n- Adding it in the Ciphertext doesn't change any of the discussion around the public and private key encodings.\n\nTherefore, I think appending it to the Composite Cipher Text make the most sense.   The only addition is that we will now need to add a 2-byte length header to indicate the length of the traditional cipherText:\n\ncct  =  TradCTLen ( 2 bytes) || mlkemct || tradct || tradpk\n\n\n~~~\nComposite-ML-KEM.SerializeCiphertext(mlkemCT, tradCT,tradpk) -> bytes\n\n   Explicit inputs:\n\n     mlkemCT  The ML-KEM ciphertext, which is bytes.\n\n     tradCT   The traditional ciphertext in the appropriate\n              encoding for the underlying component algorithm.\n\n     tradpk  The traditional public key in the appropriate encoding\n                  for the underlying component algorithm\n\n   Implicit inputs:\n\n     None\n\n   Output:\n\n     bytes   The encoded composite ciphertext value.\n\n   Serialization Process:\n\n     1. Encode the length of the tradCT into 2 bytes\n\n         tradCTlen = len(tradCT)     \n\n     2. Combine and output the encoded composite ciphertext\n\n        output tradCTlen || mlkemCT || tradCT || tradpk\n\n      Figure 9: Composite-ML-KEM.SerializeCiphertext(mlkemCT, tradCT, tradpk)\n                                  -> bytes\n~~~\n\n   Deserialization reverses this process.  Each component ciphertext is\n   deserialized according to their respective specification as shown in\n   Appendix B.\n\n   The following describes how to instantiate a\n   DeserializeCiphertext(bytes) function for a given composite algorithm\n   represented by <OID>.\n\n~~~\n Composite-ML-KEM<OID>.DeserializeCiphertext(bytes)\n                                                 -> (mldkemCT, tradCT, tradpk)\n\n Explicit inputs:\n\n   bytes   An encoded composite ciphertext value.\n\n Implicit inputs mapped from <OID>:\n\n   ML-KEM   The underlying ML-KEM algorithm and\n            parameter, for example, could be \"ML-KEM-768\".\n\n Output:\n\n   mlkemCT  The ML-KEM ciphertext, which is bytes.\n\n   tradCT   The traditional ciphertext in the appropriate\n            encoding for the underlying component algorithm.\n\n   tradpk  The traditional public key in the appropriate encoding\n                  for the underlying component algorithm\n\n Deserialization Process:\n\n   1.  Read the length of the tradCT from the first 2 bytes of the CipherText\n\n        tradCTlen = bytes[:2]\n   \n   2. Parse each constituent encoded ciphertext.\n      The length of the mlkemCT is known based on the size of\n      the ML-KEM component ciphertext length specified by the Object ID.\n\n      switch ML-KEM do\n         case ML-KEM-768:\n           mlkemCT = bytes[3:1090]\n           tradCT  = bytes[1090:tradCTLen]\n           tradpk = bytes[1090+tradCTLen:]\n         case ML-KEM-1024:\n           mlkemCT= bytes[3:1570]\n           tradCT  = bytes[1570:tractCTLen]\n           tradpk = bytes[1570+tradCTLen:]\n\n      Note that while ML-KEM has fixed-length ciphertexts, RSA and ECDH\n      may not, depending on encoding, so rigorous length-checking is\n      not always possible here.\n\n   3. Output the component ciphertext values\n\n      output (mlkemCT, tradCT, tradpk)\n\n    Figure 10: Composite-ML-KEM<OID>.DeserializeCiphertext(bytes) ->\n                           (mldkemCT, tradCT)\n~~~",
+          "createdAt": "2025-07-03T12:45:26Z",
+          "updatedAt": "2025-07-03T12:48:07Z"
         }
       ]
     },
@@ -7411,6 +7418,32 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 182,
+      "id": "PR_kwDOKRPFO86dfsWX",
+      "title": "Jg 177 asn.1",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/182",
+      "state": "OPEN",
+      "author": "johngray-dev",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Fixed the ASN.1 module for the pk-CompositeSignature and sa-CompositeSignature\r\n\r\nCloses #177",
+      "createdAt": "2025-07-04T21:10:00Z",
+      "updatedAt": "2025-07-04T21:10:19Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "208230972b48d37484eaeb81eaf4baeed086bda2",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "jg_177_ASN.1",
+      "headRefOid": "91289c00b859d3b8b9372db7068b26c179f17973",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
