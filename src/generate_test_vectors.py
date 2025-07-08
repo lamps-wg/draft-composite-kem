@@ -271,12 +271,13 @@ class X25519KEM(KEM):
 
 
   def private_key_bytes(self):
-    return self.sk.private_bytes(
-                        encoding=serialization.Encoding.Raw,
-                        format=serialization.PrivateFormat.Raw,
-                        encryption_algorithm=serialization.NoEncryption()
-                    )
-
+    raw = self.sk.private_bytes(
+                    encoding=serialization.Encoding.Raw,
+                    format=serialization.PrivateFormat.Raw,
+                    encryption_algorithm=serialization.NoEncryption()
+                )
+    CurvePrivateKey = univ.OctetString(raw)
+    return der_encode(CurvePrivateKey)
 
 
 class X448KEM(X25519KEM):

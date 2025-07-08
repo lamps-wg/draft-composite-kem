@@ -785,7 +785,7 @@ While ML-KEM has a single fixed-size representation for each of public key, priv
 * **ML-KEM**: MUST be encoded as specified in [FIPS.203], using a 64-byte seed as the private key.
 * **RSA**: the public key MUST be encoded as RSAPublicKey with the `(n,e)` public key representation as specified in A.1.1 of [RFC8017] and the private key representation as RSAPrivateKey specified in A.1.2 of [RFC8017].
 * **ECDH**: public key MUST be encoded as an `ECPoint` as specified in section 2.2 of [RFC5480], with both compressed and uncompressed keys supported. For maximum interoperability, it is RECOMMENEDED to use uncompressed points. The private key must be encoded as ECPrivateKey specified in [RFC5915].
-* **X25519 and X448**: MUST be encoded as per section 5 of [RFC7748].
+* **X25519 and X448**: the public key MUST be encoded as per section 5 of [RFC7748] and the private key as CurvePrivateKey specified in [RFC8410].
 
 Even with fixed encodings for the traditional component, there may be slight differences in size of the encoded value due to, for example, encoding rules that drop leading zeroes. See {{sec-sizetable}} for further discussion of encoded size of each composite algorithm.
 
