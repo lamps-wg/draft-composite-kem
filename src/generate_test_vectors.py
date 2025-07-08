@@ -112,7 +112,7 @@ class ECDHP256KEM(KEM):
   def private_key_bytes(self):    
     return self.sk.private_bytes(
                         encoding=serialization.Encoding.DER,
-                        format=serialization.PrivateFormat.PKCS8,
+                        format=serialization.PrivateFormat.TraditionalOpenSSL,
                         encryption_algorithm=serialization.NoEncryption()
                     )
 
@@ -328,7 +328,7 @@ class RSA2048OAEPKEM(KEM):
   def private_key_bytes(self):
     return self.sk.private_bytes(
                         encoding=serialization.Encoding.DER,
-                        format=serialization.PrivateFormat.PKCS8,
+                        format=serialization.PrivateFormat.TraditionalOpenSSL,
                         encryption_algorithm=serialization.NoEncryption()
                     )
 
