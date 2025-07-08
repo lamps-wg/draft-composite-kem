@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-07-06T02:21:08.155256+00:00",
+  "timestamp": "2025-07-08T02:06:36.522766+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -2928,7 +2928,7 @@
       "id": "I_kwDOKRPFO868Puwj",
       "title": "Issue with ASN.1 - OCTET STRING Wrapping - Applies to Signatures as well",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/177",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "johngray-dev",
       "authorAssociation": "COLLABORATOR",
       "assignees": [
@@ -2937,8 +2937,8 @@
       "labels": [],
       "body": "Composite KEM Authors:\n\nI am confused by this:\n\n   kema-CompositeKEM {\n     OBJECT IDENTIFIER:id,\n       PUBLIC-KEY:publicKeyType }\n       KEM-ALGORITHM ::= {\n            IDENTIFIER id\n            VALUE OCTET STRING\n            PARAMS ARE absent\n            PUBLIC-KEYS { publicKeyType }\n            SMIME-CAPS { IDENTIFIED BY id }\n           }\n\nIn Section 6, you say:\n\n   While composite ML-KEM keys and ciphertext values MAY be used raw,\n   the following sections provide conventions for using them within\n   X.509 and other PKIX protocols such that Composite ML-KEM can be used\n   as a drop-in replacement for KEM algorithms in PKCS#10 [RFC2986], CMP\n   [RFC4210], X.509 [RFC5280], and related protocols.\n\nThese two are in conflict.  The ASN.1 is calling for a OCTET STRING wrapper.\n\nI think you want:\n\n   kema-CompositeKEM {\n     OBJECT IDENTIFIER:id,\n       PUBLIC-KEY:publicKeyType }\n       KEM-ALGORITHM ::= {\n            IDENTIFIER id\n            -- VALUE has no ASN.1 wrapping --\n            PARAMS ARE absent\n            PUBLIC-KEYS { publicKeyType }\n            SMIME-CAPS { IDENTIFIED BY id }\n           }\n\nRuss",
       "createdAt": "2025-06-18T21:38:37Z",
-      "updatedAt": "2025-07-02T14:46:48Z",
-      "closedAt": null,
+      "updatedAt": "2025-07-06T12:34:44Z",
+      "closedAt": "2025-07-06T12:34:44Z",
       "comments": []
     },
     {
@@ -2956,7 +2956,7 @@
       ],
       "body": "The `KemCombiner` operation in the final step requires `tradPK`, but `DeserializePrivateKey(sk)` only gives us `tradSK`. Is `tradPK` derived from `tradSK`? I\u2019m wondering whether all implementations provide a way to do that.",
       "createdAt": "2025-06-25T20:52:44Z",
-      "updatedAt": "2025-07-03T12:48:07Z",
+      "updatedAt": "2025-07-06T21:06:34Z",
       "closedAt": null,
       "comments": [
         {
@@ -2979,6 +2979,27 @@
           "body": "This kept me up at night.  I think option 3 (using the CipherText to carry the public key) is what we need to go with for the following reasons:\n-  It doesn't change the standard public decap() interface as in option 1.\n-  If the public key is added to the private key (as in option 2), it is problematic for the reasons you site above, as well as when the private key is not accessible (because it is stored on an HSM).   You may only have a reference to the private key, so then trying to extract the public key from a reference would likely involve having to call additional API's.  This turns out to be the exact same reason we did not add the public key onto the private keys for composite signatures.\n- I think expecting an implementation to either regenerate the public key (as in option 4), or having to parse through the private key material to pull out the bits to reconstruct the public key is very efficient.\n- Adding it in the Ciphertext doesn't change any of the discussion around the public and private key encodings.\n\nTherefore, I think appending it to the Composite Cipher Text make the most sense.   The only addition is that we will now need to add a 2-byte length header to indicate the length of the traditional cipherText:\n\ncct  =  TradCTLen ( 2 bytes) || mlkemct || tradct || tradpk\n\n\n~~~\nComposite-ML-KEM.SerializeCiphertext(mlkemCT, tradCT,tradpk) -> bytes\n\n   Explicit inputs:\n\n     mlkemCT  The ML-KEM ciphertext, which is bytes.\n\n     tradCT   The traditional ciphertext in the appropriate\n              encoding for the underlying component algorithm.\n\n     tradpk  The traditional public key in the appropriate encoding\n                  for the underlying component algorithm\n\n   Implicit inputs:\n\n     None\n\n   Output:\n\n     bytes   The encoded composite ciphertext value.\n\n   Serialization Process:\n\n     1. Encode the length of the tradCT into 2 bytes\n\n         tradCTlen = len(tradCT)     \n\n     2. Combine and output the encoded composite ciphertext\n\n        output tradCTlen || mlkemCT || tradCT || tradpk\n\n      Figure 9: Composite-ML-KEM.SerializeCiphertext(mlkemCT, tradCT, tradpk)\n                                  -> bytes\n~~~\n\n   Deserialization reverses this process.  Each component ciphertext is\n   deserialized according to their respective specification as shown in\n   Appendix B.\n\n   The following describes how to instantiate a\n   DeserializeCiphertext(bytes) function for a given composite algorithm\n   represented by <OID>.\n\n~~~\n Composite-ML-KEM<OID>.DeserializeCiphertext(bytes)\n                                                 -> (mldkemCT, tradCT, tradpk)\n\n Explicit inputs:\n\n   bytes   An encoded composite ciphertext value.\n\n Implicit inputs mapped from <OID>:\n\n   ML-KEM   The underlying ML-KEM algorithm and\n            parameter, for example, could be \"ML-KEM-768\".\n\n Output:\n\n   mlkemCT  The ML-KEM ciphertext, which is bytes.\n\n   tradCT   The traditional ciphertext in the appropriate\n            encoding for the underlying component algorithm.\n\n   tradpk  The traditional public key in the appropriate encoding\n                  for the underlying component algorithm\n\n Deserialization Process:\n\n   1.  Read the length of the tradCT from the first 2 bytes of the CipherText\n\n        tradCTlen = bytes[:2]\n   \n   2. Parse each constituent encoded ciphertext.\n      The length of the mlkemCT is known based on the size of\n      the ML-KEM component ciphertext length specified by the Object ID.\n\n      switch ML-KEM do\n         case ML-KEM-768:\n           mlkemCT = bytes[3:1090]\n           tradCT  = bytes[1090:tradCTLen]\n           tradpk = bytes[1090+tradCTLen:]\n         case ML-KEM-1024:\n           mlkemCT= bytes[3:1570]\n           tradCT  = bytes[1570:tractCTLen]\n           tradpk = bytes[1570+tradCTLen:]\n\n      Note that while ML-KEM has fixed-length ciphertexts, RSA and ECDH\n      may not, depending on encoding, so rigorous length-checking is\n      not always possible here.\n\n   3. Output the component ciphertext values\n\n      output (mlkemCT, tradCT, tradpk)\n\n    Figure 10: Composite-ML-KEM<OID>.DeserializeCiphertext(bytes) ->\n                           (mldkemCT, tradCT)\n~~~",
           "createdAt": "2025-07-03T12:45:26Z",
           "updatedAt": "2025-07-03T12:48:07Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I think we need to think this through a little bit more.\nI spoke with Bas about this, and he convinced me that putting TradPK in the ciphertext is the wrong answer; instead the only right answer is for the decapsulator to pull the TradPK somehow from the TradSK.\n\nArguments:\n\n1. If you are hashing in the TradPK that you pull from the CT without checking it, then it's no longer actually binding the PK because the attacker could put any value they want there. If you do check it, that means you already have it, so just use that.\n2. See \"Public Key Confusion Attack\" here: https://cryspen.com/post/pqxdh/\n\n\n(2) is an excellent reference because it talks about what goes wrong in a hybrid KEM when you have encoding ambiguity. I think the right answer is that we need to pull TradPK from TradSK, and we need to be clear about which encoding is used when constructing the KEM Combiner. This will also need Security Consideration tweaks, including referencing that blog.",
+          "createdAt": "2025-07-06T13:55:14Z",
+          "updatedAt": "2025-07-06T13:59:02Z"
+        },
+        {
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Couldn't the attacker just replace either of the CipherText values as well?  The only way to make sure it is correct is to do a key consistency check, which would mean deriving the public key from the private key (or are we assuming the attacker can't get access to the private key - because if they could, then they could change the value of the public inside it and probably do worse things anyway).  \n\nSo if it has to go in the traditional private key, then the private key format of the traditional key needs to be in a format that would allow the private key material to be derived/extracted.",
+          "createdAt": "2025-07-06T17:19:32Z",
+          "updatedAt": "2025-07-06T17:19:32Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> Couldn't the attacker just replace either of the CipherText values as well?\n\nThe point here is that we're basing our proof of security on the X-Wing proof, and this requires binding the TradPK because without it, RSA-OAEP and ECDH are not IND-CCA2. So if we put the TradPK in the ciphertext and we don't check it against the SK, then we are in fact no longer getting the PK-BIND property, and the proof falls apart.\n\n\n\n> So if it has to go in the traditional private key, then the private key format of the traditional key needs to be in a format that would allow the private key material to be derived/extracted.\n\nCorrect.\n\nSo by process of elimination, we're down to Jan's 1) and 2):\n\n> 1. explicitly provide pk at the Decap() interface\n> 2. follow the X-Wing Paper and provide the tradPK in the Composite sk\n\nI would also suggest a 1b) implicitly provide pk at the Decap() interface. For each algorithm we list the explicit and implicit inputs separately. We could add TradPK to the list of implicit inputs, and then add an Implementation Consideration with suggestions for how to implement this: if the public key is carried in the secret key, then do that, else if you have access to the certificate, then get it from there, else derive the public key from the secret key. We will also need to be explicit about which encoding is used for the KDF -- ex.: we say that both compressed and uncompressed ECPoints are allowed, but we'll need to pick one or else you have ambiguous KDFs.",
+          "createdAt": "2025-07-06T21:06:34Z",
+          "updatedAt": "2025-07-06T21:06:34Z"
         }
       ]
     },
@@ -7424,26 +7445,42 @@
       "id": "PR_kwDOKRPFO86dfsWX",
       "title": "Jg 177 asn.1",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/182",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "johngray-dev",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Fixed the ASN.1 module for the pk-CompositeSignature and sa-CompositeSignature\r\n\r\nCloses #177",
       "createdAt": "2025-07-04T21:10:00Z",
-      "updatedAt": "2025-07-04T21:10:19Z",
+      "updatedAt": "2025-07-06T12:34:47Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "208230972b48d37484eaeb81eaf4baeed086bda2",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "jg_177_ASN.1",
       "headRefOid": "91289c00b859d3b8b9372db7068b26c179f17973",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-07-06T12:34:44Z",
+      "mergedAt": "2025-07-06T12:34:44Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "774e8cf1776cc19160816fe2e06e4b5a17ed5999"
+      },
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO86ySpm4",
+          "commit": {
+            "abbreviatedOid": "91289c0"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-07-06T12:34:39Z",
+          "updatedAt": "2025-07-06T12:34:39Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
