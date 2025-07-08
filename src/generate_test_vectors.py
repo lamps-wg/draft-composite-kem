@@ -435,8 +435,6 @@ class CompositeKEM(KEM):
     self.tradkem.keyGen()
 
     self.pk = self.public_key_bytes()
-    self.sk = self.public_key_bytes()
-
 
   
   def serializePublicKey(self):
