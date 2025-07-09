@@ -908,7 +908,7 @@ Output:
 Serialization Process:
 
   1. Compute the length of tradPK
-     
+
      lenTradPK = IntegerToBytes( len(tradPK), 2 )
 
   2. Combine and output the encoded private key.
@@ -954,7 +954,7 @@ Deserialization Process:
 
      lenTradPK = BytesToInteger( bytes[64:66] )
      tradPK = bytes[66: 66+lenTradPK]
-     
+
      tradSK  = bytes[66+lenTradPK:]
 
      Note that while ML-KEM has fixed-length keys, RSA and ECDH
@@ -1536,9 +1536,9 @@ In applications that only allow NIST PQC Level 5, it is RECOMMENDED to focus imp
 
 ## Decapsulation Requires the Public Key {#impl-cons-decaps-pubkey}
 
-ML-KEM always requires the public key in order to perform various steps of the Fujisaki-Okamoto decapsulation [FIPS.203], and for this reason the private key encoding specified in FIPS 203 includes the public key. 
+ML-KEM always requires the public key in order to perform various steps of the Fujisaki-Okamoto decapsulation [FIPS.203], and for this reason the private key encoding specified in FIPS 203 includes the public key.
 
-Moreover, the KEM combiner as specified in {{sec-kem-combiner}} requires the public key of the traditional component in order to achieve the public-key binding property and ciphertext collision resistance as described in {{sec-cons-kem-combiner}}. For this reason, the private key serialization 
+Moreover, the KEM combiner as specified in {{sec-kem-combiner}} requires the public key of the traditional component in order to achieve the public-key binding property and ciphertext collision resistance as described in {{sec-cons-kem-combiner}}. For this reason, the private key serialization
 
 The mechanism by which an application transmits the public keys is out of scope of this specification, but it MAY be accomplished by placing a serialized composite public key into the optional `OneAsymmetricKey.publicKey` field of the private key object.
 
