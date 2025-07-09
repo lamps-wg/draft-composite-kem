@@ -79,6 +79,7 @@ normative:
   RFC5480:
   RFC5652:
   RFC5869:
+  RFC5915:
   RFC5958:
   RFC6234:
   RFC7748:
@@ -779,8 +780,8 @@ For all serialization routines below, when these values are required to be carri
 While ML-KEM has a single fixed-size representation for each of public key, private key, and ciphertext, the traditional component might allow multiple valid encodings; for example an elliptic curve public key, and therefore also ciphertext, might be validly encoded as either compressed or uncompressed [SEC1], or an RSA private key could be encoded in Chinese Remainder Theorem form [RFC8017]. In order to obtain interoperability, composite algorithms MUST use the following encodings of the underlying components:
 
 * **ML-KEM**: MUST be encoded as specified in [FIPS.203], using a 64-byte seed as the private key.
-* **RSA**: MUST be encoded with the `(n,e)` public key representation as specified in A.1.1 of [RFC8017] and the private key representation as specified in A.1.2 of [RFC8017].
-* **ECDH**: public key MUST be encoded as an `ECPoint` as specified in section 2.2 of [RFC5480], with both compressed and uncompressed keys supported. For maximum interoperability, it is RECOMMENEDED to use uncompressed points.
+* **RSA**: the public key MUST be encoded as RSAPublicKey with the `(n,e)` public key representation as specified in A.1.1 of [RFC8017] and the private key representation as RSAPrivateKey specified in A.1.2 of [RFC8017].
+* **ECDH**: public key MUST be encoded as an `ECPoint` as specified in section 2.2 of [RFC5480], with both compressed and uncompressed keys supported. For maximum interoperability, it is RECOMMENEDED to use uncompressed points. The private key must be encoded as ECPrivateKey specified in [RFC5915].
 * **X25519 and X448**: MUST be encoded as per section 5 of [RFC7748].
 
 Even with fixed encodings for the traditional component, there may be slight differences in size of the encoded value due to, for example, encoding rules that drop leading zeroes. See {{sec-sizetable}} for further discussion of encoded size of each composite algorithm.
@@ -1560,7 +1561,7 @@ This section provides references to the full specification of the algorithms use
 | id-ML-KEM-1024 | 2.16.840.1.101.3.4.4.3 | [FIPS.203] |
 | id-X25519 | 1.3.101.110 | [RFC7748], [RFC8410] |
 | id-X448 | 1.3.101.111 | [RFC7748], [RFC8410] |
-| id-ecDH | 1.3.132.1.12 | [RFC5480], [SEC1] |
+| id-ecDH | 1.3.132.1.12 | [RFC5480], [RFC5915], [SEC1] |
 | id-RSAES-OAEP | 1.2.840.113549.1.1.7 | [RFC8017] |
 {: #tab-component-encr-algs title="Component Encryption Algorithms used in Composite Constructions"}
 
