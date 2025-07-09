@@ -913,7 +913,7 @@ Serialization Process:
 
   2. Combine and output the encoded private key.
 
-     output mlkemSeed || lenTradPK || tradSK
+     output mlkemSeed || lenTradPK || tradPK || tradSK
 ~~~
 {: #alg-composite-serialize-priv-key title="Composite-ML-KEM.SerializePrivateKey(mlkemSeed, tradPK, tradSK) -> bytes"}
 
@@ -1538,11 +1538,9 @@ In applications that only allow NIST PQC Level 5, it is RECOMMENDED to focus imp
 
 ML-KEM always requires the public key in order to perform various steps of the Fujisaki-Okamoto decapsulation [FIPS.203], and for this reason the private key encoding specified in FIPS 203 includes the public key.
 
-Moreover, the KEM combiner as specified in {{sec-kem-combiner}} requires the public key of the traditional component in order to achieve the public-key binding property and ciphertext collision resistance as described in {{sec-cons-kem-combiner}}. For this reason, the private key serialization
+Moreover, the KEM combiner as specified in {{sec-kem-combiner}} requires the public key of the traditional component in order to achieve the public-key binding property and ciphertext collision resistance as described in {{sec-cons-kem-combiner}}. For this reason, the private key serialization defined in {{sec-serialize-privkey}} carries the traditional public key so that it is easily available to the decapsulater.
 
-The mechanism by which an application transmits the public keys is out of scope of this specification, but it MAY be accomplished by placing a serialized composite public key into the optional `OneAsymmetricKey.publicKey` field of the private key object.
-
-Implementers who choose to use a different private key encoding than the one specified in this document MUST consider how to provide the component public keys to the decapsulate routine. While some implementations might contain routines to computationally derive the public key from the private key, it is not guaranteed that all implementations will support this.
+Implementers who choose to use a different private key encoding than the one specified in this document MUST consider how to provide the component public keys to the decapsulate routine. This includes, for example, implementations that use a hardware security module to hold the private key. While some implementations might contain routines to computationally derive the public key from the private key, it is not guaranteed that all implementations will support this. In some implementations, the application might be required to cache the public key or certificate associated with the private key so that the public key can be retrieved for the purposes of decapsulation.
 
 
 
