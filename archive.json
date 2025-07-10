@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-07-08T02:06:36.522766+00:00",
+  "timestamp": "2025-07-10T02:08:19.455599+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -2855,7 +2855,7 @@
       "labels": [],
       "body": "For the 25519/448 composites, the traditional private key component is the raw 32 or 56 bytes.  Since the EC and RSA private key components are to be encoded as ECPrivateKey and RSAPrivateKey, it might be more consistent to encode the 25519/448 keys as a CurvePrivateKey (i.e. wrap the raw key in an OCTET STRING).  I'm not convinced that doing this one way or the other is better, just that doing so would be consistent. Then all traditional components will be equivalent to the contents of a standalone traditional PrivateKeyInfo.privateKey OCTET STRING.",
       "createdAt": "2025-06-18T20:07:11Z",
-      "updatedAt": "2025-07-02T14:24:44Z",
+      "updatedAt": "2025-07-08T20:52:59Z",
       "closedAt": null,
       "comments": [
         {
@@ -2878,6 +2878,13 @@
           "body": "We agreed to make it consistent with RFC 8410.",
           "createdAt": "2025-07-02T14:24:32Z",
           "updatedAt": "2025-07-02T14:24:32Z"
+        },
+        {
+          "author": "janklaussner",
+          "authorAssociation": "COLLABORATOR",
+          "body": "> I see what Dan is pointing out: we are not consistent with the encodings specified in RFC8410, which specifies:\n> \n> ```\n>    PrivateKey ::= OCTET STRING\n> \n>    PublicKey ::= BIT STRING\n> ```\n\nActually this part is just repeating the OneAsymmetricKey defintion.\nWhat RFC8410 specifies additionally is \n```\n    CurvePrivateKey ::= OCTET STRING\n```\nThere is no such wrapping for the public key, so here I think we are fine. I will just require CurvePrivateKey for the Ed curves.",
+          "createdAt": "2025-07-08T20:52:59Z",
+          "updatedAt": "2025-07-08T20:52:59Z"
         }
       ]
     },
@@ -2956,7 +2963,7 @@
       ],
       "body": "The `KemCombiner` operation in the final step requires `tradPK`, but `DeserializePrivateKey(sk)` only gives us `tradSK`. Is `tradPK` derived from `tradSK`? I\u2019m wondering whether all implementations provide a way to do that.",
       "createdAt": "2025-06-25T20:52:44Z",
-      "updatedAt": "2025-07-06T21:06:34Z",
+      "updatedAt": "2025-07-09T15:19:26Z",
       "closedAt": null,
       "comments": [
         {
@@ -3000,6 +3007,13 @@
           "body": "> Couldn't the attacker just replace either of the CipherText values as well?\n\nThe point here is that we're basing our proof of security on the X-Wing proof, and this requires binding the TradPK because without it, RSA-OAEP and ECDH are not IND-CCA2. So if we put the TradPK in the ciphertext and we don't check it against the SK, then we are in fact no longer getting the PK-BIND property, and the proof falls apart.\n\n\n\n> So if it has to go in the traditional private key, then the private key format of the traditional key needs to be in a format that would allow the private key material to be derived/extracted.\n\nCorrect.\n\nSo by process of elimination, we're down to Jan's 1) and 2):\n\n> 1. explicitly provide pk at the Decap() interface\n> 2. follow the X-Wing Paper and provide the tradPK in the Composite sk\n\nI would also suggest a 1b) implicitly provide pk at the Decap() interface. For each algorithm we list the explicit and implicit inputs separately. We could add TradPK to the list of implicit inputs, and then add an Implementation Consideration with suggestions for how to implement this: if the public key is carried in the secret key, then do that, else if you have access to the certificate, then get it from there, else derive the public key from the secret key. We will also need to be explicit about which encoding is used for the KDF -- ex.: we say that both compressed and uncompressed ECPoints are allowed, but we'll need to pick one or else you have ambiguous KDFs.",
           "createdAt": "2025-07-06T21:06:34Z",
           "updatedAt": "2025-07-06T21:06:34Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Author's meeting today.\n\nWe have decided to go with Option 1.\n\nNotes:\n\nmlkemCT || len(TradPK) || TradPK || tradCT\n\n\n\n\nPROBLEM: this does not give you the BIND-PK property that we are going for.\n\n\nmlkemCT || len(r) || r || tradCT\n\n\n\n\n\nExplicit inputs\n\n  sk      Composite private key consisting of decryption private keys\n          for each component.\n \n  pk      Either carried in the secret key sk, or re-derived from the\n          secret key.\n\n  ct      The ciphertext, a byte string.\n\n\n\nOPTION 1\n\nComposite-ML-KEM.SerializePrivateKey(mlkemSeed, tradSK) -> bytes\n\n  1. Combine and output the encoded private key.\n\n     output mlkemSeed || len(tradPK) || tradPK || tradSK\n\n     output mlkemSeed || len(tradSK) || tradSK || tradPK\n\n\nAlso fix DeserializePrivateKey\n\nAlso update 11.4. Particularly mention the case of HSMs where the HSM will not or cannot give you the public key.\n\n\n\n\nOPTION 1b\nChange the KEM Combiner to use HashTradPK instead of tradPK, then:\n\nSerializePrivateKey ::= mlkemSeed || HashTradPK || tradSk\n\n\nOPTION 2\n\nSection 6.3: when you put a Composite-ML-KEM private key into a OneAsymmetricKey, you SHOULD / MUST / RECOMMENDED???? put the TradPK into the OneAsymmetricKey.publicKey field. Note: the ML-KEM public key does not need to be carried since it is already contained within the ML-KEM secret key.\n\nOPTION 2a Leave it out, but re-generate it from the SK\n\n\n\n\nOPTION 3\n\nPromote ECDH to a full KEM via the FO transform.",
+          "createdAt": "2025-07-09T15:19:26Z",
+          "updatedAt": "2025-07-09T15:19:26Z"
         }
       ]
     },
@@ -7478,6 +7492,253 @@
           "body": "",
           "createdAt": "2025-07-06T12:34:39Z",
           "updatedAt": "2025-07-06T12:34:39Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 183,
+      "id": "PR_kwDOKRPFO86eAtQh",
+      "title": "Changes representation of X25519/X448 private keys to CurvePrivateKey.",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/183",
+      "state": "OPEN",
+      "author": "janklaussner",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Closes #174",
+      "createdAt": "2025-07-08T20:51:52Z",
+      "updatedAt": "2025-07-08T23:06:41Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "774e8cf1776cc19160816fe2e06e4b5a17ed5999",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "174-x25519x448-encoding",
+      "headRefOid": "014a38f9a79a37f14148306eaca6adfed4cfb8c2",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO86yxZre",
+          "commit": {
+            "abbreviatedOid": "014a38f"
+          },
+          "author": "danvangeest",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "Text looks good, I haven't reviewed the test vectors.",
+          "createdAt": "2025-07-08T23:06:41Z",
+          "updatedAt": "2025-07-08T23:06:41Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 184,
+      "id": "PR_kwDOKRPFO86eIJOe",
+      "title": "Makes encoding of EC and RSA components more specific.",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/184",
+      "state": "OPEN",
+      "author": "janklaussner",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Closes #173",
+      "createdAt": "2025-07-09T13:32:15Z",
+      "updatedAt": "2025-07-09T20:20:30Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "7faa41fbe51816c03e9b98ee6b93a54160306445",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "173-private-key-serialization-is-under-specified",
+      "headRefOid": "2db7bf6dcde3dffe02ee6e2bd96b7fdc17a52076",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO86y7ocp",
+          "commit": {
+            "abbreviatedOid": "2db7bf6"
+          },
+          "author": "danvangeest",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-07-09T15:15:35Z",
+          "updatedAt": "2025-07-09T15:15:35Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOKRPFO86y_be6",
+          "commit": {
+            "abbreviatedOid": "2db7bf6"
+          },
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-07-09T20:20:30Z",
+          "updatedAt": "2025-07-09T20:20:30Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 185,
+      "id": "PR_kwDOKRPFO86eK4TA",
+      "title": "Adding tradPK to sk",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/185",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Closes #179",
+      "createdAt": "2025-07-09T18:22:46Z",
+      "updatedAt": "2025-07-09T20:40:59Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "7faa41fbe51816c03e9b98ee6b93a54160306445",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_add_tradPK_to_sk",
+      "headRefOid": "19afe87a2c0c60f189fb0d4c4d506103871d7684",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Does this require rolling the OIDs? Probably yes.",
+          "createdAt": "2025-07-09T18:44:06Z",
+          "updatedAt": "2025-07-09T18:44:06Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO86y-2Vc",
+          "commit": {
+            "abbreviatedOid": "dbceb87"
+          },
+          "author": "sfluhrer",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-07-09T19:26:28Z",
+          "updatedAt": "2025-07-09T19:26:28Z",
+          "comments": [
+            {
+              "originalPosition": 84,
+              "body": "I think you need TradPK here as well",
+              "createdAt": "2025-07-09T19:26:28Z",
+              "updatedAt": "2025-07-09T19:26:28Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO86y-54o",
+          "commit": {
+            "abbreviatedOid": "dbceb87"
+          },
+          "author": "sfluhrer",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-07-09T19:31:48Z",
+          "updatedAt": "2025-07-09T19:31:48Z",
+          "comments": [
+            {
+              "originalPosition": 144,
+              "body": "\"the private key serialization\" - it feels like the second half of that sentence is missing",
+              "createdAt": "2025-07-09T19:31:48Z",
+              "updatedAt": "2025-07-09T19:31:48Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO86y--G3",
+          "commit": {
+            "abbreviatedOid": "dbceb87"
+          },
+          "author": "sfluhrer",
+          "authorAssociation": "NONE",
+          "state": "CHANGES_REQUESTED",
+          "body": "I put the two things I found inline",
+          "createdAt": "2025-07-09T19:38:44Z",
+          "updatedAt": "2025-07-09T19:38:44Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOKRPFO86y_Se8",
+          "commit": {
+            "abbreviatedOid": "dbceb87"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-07-09T20:08:30Z",
+          "updatedAt": "2025-07-09T20:08:31Z",
+          "comments": [
+            {
+              "originalPosition": 84,
+              "body": "D'oh!",
+              "createdAt": "2025-07-09T20:08:30Z",
+              "updatedAt": "2025-07-09T20:08:31Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO86y_TBW",
+          "commit": {
+            "abbreviatedOid": "dbceb87"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-07-09T20:09:14Z",
+          "updatedAt": "2025-07-09T20:09:14Z",
+          "comments": [
+            {
+              "originalPosition": 144,
+              "body": "Uhh, yep. I meant to come back and finish that.",
+              "createdAt": "2025-07-09T20:09:14Z",
+              "updatedAt": "2025-07-09T20:09:14Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO86y_aSG",
+          "commit": {
+            "abbreviatedOid": "19afe87"
+          },
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-07-09T20:18:49Z",
+          "updatedAt": "2025-07-09T20:18:49Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOKRPFO86y_og9",
+          "commit": {
+            "abbreviatedOid": "19afe87"
+          },
+          "author": "sfluhrer",
+          "authorAssociation": "NONE",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-07-09T20:40:59Z",
+          "updatedAt": "2025-07-09T20:40:59Z",
           "comments": []
         }
       ]
