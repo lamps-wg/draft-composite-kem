@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-07-10T02:08:19.455599+00:00",
+  "timestamp": "2025-07-13T02:25:48.131049+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -7601,7 +7601,7 @@
       "labels": [],
       "body": "Closes #179",
       "createdAt": "2025-07-09T18:22:46Z",
-      "updatedAt": "2025-07-09T20:40:59Z",
+      "updatedAt": "2025-07-10T12:54:07Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "7faa41fbe51816c03e9b98ee6b93a54160306445",
@@ -7739,6 +7739,19 @@
           "body": "",
           "createdAt": "2025-07-09T20:40:59Z",
           "updatedAt": "2025-07-09T20:40:59Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOKRPFO86zJV_O",
+          "commit": {
+            "abbreviatedOid": "19afe87"
+          },
+          "author": "janklaussner",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-07-10T12:54:07Z",
+          "updatedAt": "2025-07-10T12:54:07Z",
           "comments": []
         }
       ]
