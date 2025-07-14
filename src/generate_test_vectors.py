@@ -247,12 +247,13 @@ class X25519KEM(KEM):
 
 
   def private_key_bytes(self):
-    return self.sk.private_bytes(
-                        encoding=serialization.Encoding.Raw,
-                        format=serialization.PrivateFormat.Raw,
-                        encryption_algorithm=serialization.NoEncryption()
-                    )
-
+    raw = self.sk.private_bytes(
+                    encoding=serialization.Encoding.Raw,
+                    format=serialization.PrivateFormat.Raw,
+                    encryption_algorithm=serialization.NoEncryption()
+                )
+    CurvePrivateKey = univ.OctetString(raw)
+    return encode(CurvePrivateKey)
   
 
 class X448KEM(X25519KEM):
@@ -607,7 +608,7 @@ class MLKEM1024_ECDH_P521_HMAC_SHA512(CompositeKEM):
   mlkem = MLKEM1024()
   tradkem = ECDHP521KEM()
   kdf = "HMAC-SHA512"
-  
+
 
 ### KEM Combiner ###
 
