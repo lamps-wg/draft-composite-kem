@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-07-13T02:25:48.131049+00:00",
+  "timestamp": "2025-07-15T02:21:00.830137+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -2714,7 +2714,7 @@
       "id": "I_kwDOKRPFO867_MUW",
       "title": "Encap is random",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/171",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "wangweij",
       "authorAssociation": "NONE",
       "assignees": [
@@ -2723,8 +2723,8 @@
       "labels": [],
       "body": "Appendix F requires\n\n> Load the decapsulation private key `dk` or `dk_pkcs8` and the ciphertext `c` and ensure that the same shared secret key `k` can be derived.\n\nThere is no way to Encap to the same `c` and `k` unless the random used (like the `ikmE` in RFC 9180) is provided.\n\n",
       "createdAt": "2025-06-17T15:23:39Z",
-      "updatedAt": "2025-07-02T14:56:26Z",
-      "closedAt": null,
+      "updatedAt": "2025-07-13T14:15:31Z",
+      "closedAt": "2025-07-13T14:15:21Z",
       "comments": [
         {
           "author": "ounsworth",
@@ -2774,6 +2774,20 @@
           "body": "@wangweij \nThe intention of the recommended test is that you can load the public key from the test vectors, and your implementation can do an Encap() for it without crashing or throwing errors.\n\nOf course you will get a different `c`. The text of the draft does not say that you will get the same `c`, but anyway I can make the text clearer.\n\nI also think it makes sense to leave `c` and `k` in the test vectors because the test of taking `c` and ensure that you can extract the same `k` is a valuable test of the correctness of your implementation. This is in fact the most important thing you can test using the test vectors.",
           "createdAt": "2025-07-02T14:54:12Z",
           "updatedAt": "2025-07-02T14:56:26Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Circling back to this issue.\n\n\n\n> your are right.\n> [@ounsworth](https://github.com/ounsworth) I think it makes no sense to include c and k in the test vectors since they change with every Encap() call.\n\nI fully disagree.\nThe point is to test that your `Decap(sk, ct) --> k` works correctly. In order to do a known-answer-test (KAT) for this, the test vectors need to provide all three values: `sk, ct, k`. Otherwise you're testing your `Decap()` against your own `Encap()`, which defeats the purpose of known-answer tests.\n\nI'll also note that I've modelled these test vectors exactly after the NIST ACVP KATs which have this structure:\n\n```\n        {\n          \"tcId\": 1,\n          \"deferred\": false,\n          \"ek\": \"ADB031A018...\",\n          \"dk\": \"C1C9276205D0DAD6...\",\n          \"c\": \"3244E86669E69F0F238E3CD7F03...\",\n          \"k\": \"6C832560DFE97BECADFBB340EE3...\",\n          \"m\": \"E8D6BAC09B25469BEE582A7DEE...\"\n        }\n```\n\nhttps://github.com/usnistgov/ACVP-Server/blob/master/gen-val/json-files/ML-KEM-encapDecap-FIPS203/internalProjection.json",
+          "createdAt": "2025-07-13T14:13:27Z",
+          "updatedAt": "2025-07-13T14:14:45Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I am going to close this ticket as \"No Change Needed\".\n@wangweij or @janklaussner can re-open it if you think there is still discussion to have.",
+          "createdAt": "2025-07-13T14:15:21Z",
+          "updatedAt": "2025-07-13T14:15:31Z"
         }
       ]
     },
@@ -7508,7 +7522,7 @@
       "labels": [],
       "body": "Closes #174",
       "createdAt": "2025-07-08T20:51:52Z",
-      "updatedAt": "2025-07-08T23:06:41Z",
+      "updatedAt": "2025-07-14T18:00:17Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "774e8cf1776cc19160816fe2e06e4b5a17ed5999",
@@ -7532,6 +7546,19 @@
           "body": "Text looks good, I haven't reviewed the test vectors.",
           "createdAt": "2025-07-08T23:06:41Z",
           "updatedAt": "2025-07-08T23:06:41Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOKRPFO86z1_RV",
+          "commit": {
+            "abbreviatedOid": "014a38f"
+          },
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "Thanks for the Change.  Looks good Jan!",
+          "createdAt": "2025-07-14T18:00:17Z",
+          "updatedAt": "2025-07-14T18:00:17Z",
           "comments": []
         }
       ]
