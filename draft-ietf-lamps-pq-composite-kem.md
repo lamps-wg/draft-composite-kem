@@ -538,7 +538,7 @@ Key Generation Process:
   1. Generate component keys
 
     mlkemSeed = Random(64)
-    (mlkemPK, _) = ML-KEM.KeyGen(mlkemSeed)
+    (mlkemPK, mlkemSK_) = ML-KEM.KeyGen(mlkemSeed)
     (tradPK, tradSK) = Trad.KeyGen()
 
   2. Check for component key gen failure
@@ -548,7 +548,7 @@ Key Generation Process:
   3. Output the composite public and private keys
 
     pk = SerializePublicKey(mlkemPK, tradPK)
-    sk = SerializePrivateKey(mlkemSK, tradSK)
+    sk = SerializePrivateKey(mlkemSeed, tradSK)
     return (pk, sk)
 
 ~~~
@@ -674,7 +674,8 @@ Decap Process:
 
   1. Separate the private keys and ciphertexts
 
-      (mlkemSK, tradSK) = DeserializePrivateKey(sk)
+      (mlkemSeed, tradSK) = DeserializePrivateKey(sk)
+      (_, mlkemSK) = MLKEM.KeyGen(mlkemSeed)
       (mlkemCT, tradCT) = DeserializeCiphertext(ct)
 
   2.  Perform the respective component Encap operations according to
