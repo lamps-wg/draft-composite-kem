@@ -675,13 +675,13 @@ Decap Process:
   1. Separate the private keys and ciphertexts
 
       (mlkemSeed, tradSK) = DeserializePrivateKey(sk)
-      (_, mlkemSK) = MLKEM.KeyGen(mlkemSeed)
+      (_, mlkemSK) = ML-KEM.KeyGen(mlkemSeed)
       (mlkemCT, tradCT) = DeserializeCiphertext(ct)
 
   2.  Perform the respective component Encap operations according to
       their algorithm specifications.
 
-      mlkemSS = MLKEM.Decaps(mlkemSK, mlkemCT)
+      mlkemSS = ML-KEM.Decaps(mlkemSK, mlkemCT)
       tradSS  = TradKEM.Decap(tradSK, tradCT)
 
   3. If either ML-KEM.Decaps() or TradKEM.Decap() return an error,
