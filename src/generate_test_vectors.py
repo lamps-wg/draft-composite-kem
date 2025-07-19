@@ -15,6 +15,7 @@ import datetime
 import base64
 import json
 import textwrap
+from zipfile import ZipFile
 
 from pyasn1.type import univ
 from pyasn1_alt_modules import rfc5208
@@ -909,6 +910,29 @@ def doKEM(kem, caSK, includeInTestVectors=True, includeInDomainTable=True, inclu
     SIZE_TABLE[kem.id] = sizeRow
 
 
+def output_artifacts_certs_r5(jsonTestVectors):
+
+  artifacts_zip = ZipFile('artifacts_certs_r5.zip', mode='w')
+
+  for tc in jsonTestVectors['tests']:
+    try:
+      # <friendlyname>-<oid>_ta.der
+      certFilename = tc['tcId'] + "-" + str(OID_TABLE[tc['tcId']]) + "_ee.der"
+      rawKeyFilename = tc['tcId'] + "-" + str(OID_TABLE[tc['tcId']]) + "_priv.raw"
+      derKeyFilename = tc['tcId'] + "-" + str(OID_TABLE[tc['tcId']]) + "_priv.der"
+      ciphertextFilename = tc['tcId'] + "-" + str(OID_TABLE[tc['tcId']]) + "_ciphertext.bin"
+      sharedSecretFilename = tc['tcId'] + "-" + str(OID_TABLE[tc['tcId']]) + "_ss.bin"
+    except KeyError:
+      # if this one is not in the OID_TABLE, then just skip it
+      continue
+
+    artifacts_zip.writestr(certFilename, data=base64.b64decode(tc['x5c']))
+    artifacts_zip.writestr(rawKeyFilename, data=base64.b64decode(tc['dk']))
+    artifacts_zip.writestr(derKeyFilename, data=base64.b64decode(tc['dk_pkcs8']))
+    artifacts_zip.writestr(ciphertextFilename, data=base64.b64decode(tc['c']))
+    artifacts_zip.writestr(sharedSecretFilename, data=base64.b64decode(tc['k']))
+
+
 def writeTestVectors():
   with open('testvectors.json', 'w') as f:
     f.write(json.dumps(testVectorOutput, indent=2))
@@ -918,6 +942,8 @@ def writeTestVectors():
                                   width=68,
                                   replace_whitespace=False,
                                   drop_whitespace=False)))
+
+  output_artifacts_certs_r5(testVectorOutput)
 
 
 def formatResults(kem, caSK, ct, ss ):
