@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-07-15T02:21:00.830137+00:00",
+  "timestamp": "2025-07-20T02:28:11.255407+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -3070,6 +3070,38 @@
           "updatedAt": "2025-07-02T14:33:07Z"
         }
       ]
+    },
+    {
+      "number": 186,
+      "id": "I_kwDOKRPFO87BSvuf",
+      "title": "KeyGen() and Decap() use mlkemSK instead of mlkemSeed.",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/186",
+      "state": "OPEN",
+      "author": "janklaussner",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Composite KeyGen():\n\nhttps://github.com/lamps-wg/draft-composite-kem/blob/78af696ca5498dcf874089ccaacb89f9c87c3623/draft-ietf-lamps-pq-composite-kem.md?plain=1#L545\n* same issue as in composite-sigs: https://github.com/lamps-wg/draft-composite-sigs/tree/236-editorial-correction-related-to-the-first-appearance-of-mldsask-in-the-document\n\nhttps://github.com/lamps-wg/draft-composite-kem/blob/78af696ca5498dcf874089ccaacb89f9c87c3623/draft-ietf-lamps-pq-composite-kem.md?plain=1#L551\n* has to be mlkemSeed here\n\nComposite Decap()\n\nhttps://github.com/lamps-wg/draft-composite-kem/blob/78af696ca5498dcf874089ccaacb89f9c87c3623/draft-ietf-lamps-pq-composite-kem.md?plain=1#L677\n* has to be mlkemSeed here\n* needs additional mldsa.KeyGen()\n",
+      "createdAt": "2025-07-18T11:28:10Z",
+      "updatedAt": "2025-07-18T11:28:10Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 188,
+      "id": "I_kwDOKRPFO87BbwCp",
+      "title": "RSA exponent",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/188",
+      "state": "OPEN",
+      "author": "danvangeest",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "As I understand it, the exponent of the RSA key is not restricted, although there's no specific text for that.  Explicit text should be added saying that any exponent MAY be used but 65537 is RECOMMENDED.",
+      "createdAt": "2025-07-19T12:35:52Z",
+      "updatedAt": "2025-07-19T13:08:55Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
@@ -7779,6 +7811,82 @@
           "body": "",
           "createdAt": "2025-07-10T12:54:07Z",
           "updatedAt": "2025-07-10T12:54:07Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 187,
+      "id": "PR_kwDOKRPFO86fj8RZ",
+      "title": "Fix KeyGen() and Decap() to use mlkemSeed instead of mlkemSK",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/187",
+      "state": "OPEN",
+      "author": "janklaussner",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "* Composite.KeyGen() returns now mlkemSeed in serialized Composite Private Key.\r\n* Composite.Decap() now generates mlkemSK from mlkemSeed.\r\n* Fixes function calls to ML-KEM.* in Decap().",
+      "createdAt": "2025-07-18T11:41:12Z",
+      "updatedAt": "2025-07-18T11:42:19Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "78af696ca5498dcf874089ccaacb89f9c87c3623",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "186-keygen-and-decap-use-mlkemsk-instead-of-mlkemseed",
+      "headRefOid": "e36c1c9a92c5917ffdf340b69778efdc198e559e",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 189,
+      "id": "PR_kwDOKRPFO86fsJa-",
+      "title": "write an artifact zip",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/189",
+      "state": "MERGED",
+      "author": "xyakimo1",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-07-19T16:33:24Z",
+      "updatedAt": "2025-07-19T17:24:35Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "78af696ca5498dcf874089ccaacb89f9c87c3623",
+      "headRepository": "xyakimo1/draft-composite-kem",
+      "headRefName": "artifacts_certs_r5",
+      "headRefOid": "2700de7a8f234f44e47a739cb61691914318627c",
+      "closedAt": "2025-07-19T17:24:35Z",
+      "mergedAt": "2025-07-19T17:24:35Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "293a257042e849ab76fc605320d773b91a9af2d3"
+      },
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Thank you Stepan, this is great!\r\n\r\nI'll merge this.\r\n\r\nThe next step is to make  PR to https://github.com/IETF-Hackathon/pqc-certificates  .. to add this zip. It probably makes sense to add a new folder `providers/composite-kem-ref-impl` (and maybe rename the existing `composite-ref-impl` to `composite-sigs-ref-impl`)",
+          "createdAt": "2025-07-19T17:24:26Z",
+          "updatedAt": "2025-07-19T17:24:26Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO8607UK4",
+          "commit": {
+            "abbreviatedOid": "2700de7"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-07-19T17:22:22Z",
+          "updatedAt": "2025-07-19T17:22:22Z",
           "comments": []
         }
       ]
