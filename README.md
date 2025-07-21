@@ -10,7 +10,7 @@ This is the working area for the individual Internet-Draft, "Composite KEMs For 
 
 ## Contributing
 
-We weclome contributions via pull requests, github issues, or emails to the authors.
+We welcome contributions via pull requests, github issues, or emails to the authors.
 
 ## Command Line Usage
 
