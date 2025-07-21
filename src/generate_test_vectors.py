@@ -20,8 +20,8 @@ from zipfile import ZipFile
 from pyasn1.type import univ
 from pyasn1_alt_modules import rfc5208
 from pyasn1_alt_modules import rfc5280
-from pyasn1.codec.der.decoder import decode
-from pyasn1.codec.der.encoder import encode
+from pyasn1.codec.der.decoder import decode as der_decode
+from pyasn1.codec.der.encoder import encode as der_encode
 
 
 VERSION_IMPLEMENTED = "draft-ietf-lamps-pq-composite-kem-07"
@@ -51,6 +51,17 @@ OID_TABLE = {
   "id-MLKEM1024-ECDH-P521-HMAC-SHA512": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,60)),
 }
 
+REVERSE_OID_TABLE = {v: k for k, v in OID_TABLE.items()}
+
+def constructSPKI(pk_bytes: bytes, hex_alg_id: str):
+  """
+  Construct a SubjectPublicKeyInfo using the DER-encoded AlgorithmIdentifier encoded in :hex_alg_id:, and the provided :pk_bytes:.
+  """
+  spki = rfc5280.SubjectPublicKeyInfo()
+  spki['algorithm'], _ = der_decode(bytes.fromhex(hex_alg_id), asn1Spec=rfc5280.AlgorithmIdentifier())
+  spki['subjectPublicKey'] = univ.BitString(hexValue=pk_bytes.hex())
+  return der_encode(spki)
+
 
 class KEM:
   pk = None
@@ -61,6 +72,11 @@ class KEM:
   # returns nothing
   def keyGen(self):
     pass
+
+
+  def loadPk(self, sk) -> None:
+    pass
+
 
   # returns (ct, ss)
   def encap(self):
@@ -372,6 +388,9 @@ class MLKEM768(KEM):
     self.sk = secrets.token_bytes(64)
     self.pk, _ = ML_KEM_768.key_derive(self.sk)
 
+  def loadPk(self, seed):
+    self.pk, _ = ML_KEM_768.key_derive(seed)
+
   # returns (ct, ss)
   def encap(self):
     (ss, ct) = ML_KEM_768.encaps(self.pk)
@@ -399,6 +418,9 @@ class MLKEM1024(KEM):
     self.sk = secrets.token_bytes(64)
     self.pk, _ = ML_KEM_1024.key_derive(self.sk)
 
+  def loadPk(self, seed):
+    self.pk, _ = ML_KEM_1024.key_derive(seed)
+
   # returns (ct, ss)
   def encap(self):
     (ss, ct) = ML_KEM_1024.encaps(self.pk)
@@ -421,8 +443,8 @@ class MLKEM1024(KEM):
 ### Composites ###
 
 class CompositeKEM(KEM):
-  mlkem = None
-  tradkem = None
+  mlkem: KEM = None
+  tradkem: KEM = None
   kdf = "None"
   domSep = ""
 
@@ -495,7 +517,6 @@ class CompositeKEM(KEM):
       return ct[:1568], ct[1568:]
 
 
-
   # returns (ct, ss)
   def encap(self):
     if self.mlkem == None or self.tradkem == None:
@@ -525,6 +546,12 @@ class CompositeKEM(KEM):
 
     return ss
 
+
+  def load_sk(self, sk_bytes):
+    mlkem_sk_bytes, traditional_sk_bytes = self.deserializePrivateKey(sk_bytes)
+    self.mlkem.sk = mlkem_sk_bytes
+    self.mlkem.loadPk(sk=mlkem_sk_bytes)
+    self.tradkem.loadPk(sk=traditional_sk_bytes)
 
 
 class MLKEM768_RSA2048_HMAC_SHA256(CompositeKEM):
@@ -698,17 +725,17 @@ caName = x509.Name(
 # input: a cert that already carries a signature that needs to be replaced
 def caSign(cert, caSK):
   certDer = cert.public_bytes(encoding=serialization.Encoding.DER)
-  cert_pyasn1, _ = decode(certDer, rfc5280.Certificate())
+  cert_pyasn1, _ = der_decode(certDer, rfc5280.Certificate())
 
   # Manually set the algID to ML-DSA-65 and re-sign it
   sigAlgID = rfc5280.AlgorithmIdentifier()
   sigAlgID['algorithm'] = univ.ObjectIdentifier((2,16,840,1,101,3,4,3,18))
   cert_pyasn1['tbsCertificate']['signature'] = sigAlgID
-  tbs_bytes = encode(cert_pyasn1['tbsCertificate'])
+  tbs_bytes = der_encode(cert_pyasn1['tbsCertificate'])
   cert_pyasn1['signatureAlgorithm'] = sigAlgID
   cert_pyasn1['signature'] = univ.BitString(hexValue=ML_DSA_65.sign(caSK, tbs_bytes).hex())
 
-  return x509.load_der_x509_certificate(encode(cert_pyasn1))
+  return x509.load_der_x509_certificate(der_encode(cert_pyasn1))
 
 
 # RFC 9500 section 2.1
@@ -780,7 +807,7 @@ def createCA():
 
   # Extract the Certificate
   caCert_der = caCert.public_bytes(encoding=serialization.Encoding.DER)
-  caCert_pyasn1, _ = decode(caCert_der, rfc5280.Certificate())
+  caCert_pyasn1, _ = der_decode(caCert_der, rfc5280.Certificate())
 
   spki = rfc5280.SubjectPublicKeyInfo()
   algid = rfc5280.AlgorithmIdentifier()
@@ -789,7 +816,7 @@ def createCA():
   spki['subjectPublicKey'] = univ.BitString(hexValue=caPK.hex())
   caCert_pyasn1['tbsCertificate']['subjectPublicKeyInfo'] = spki
 
-  caCert = x509.load_der_x509_certificate(encode(caCert_pyasn1))
+  caCert = x509.load_der_x509_certificate(der_encode(caCert_pyasn1))
 
   caCert = caSign(caCert, caSK)
 
@@ -836,7 +863,7 @@ def signKemCert(caSK, kem):
 
   # Extract the Certificate
   kemCert_der = kemCert.public_bytes(encoding=serialization.Encoding.DER)
-  kemCert_pyasn1, _ = decode(kemCert_der, rfc5280.Certificate())
+  kemCert_pyasn1, _ = der_decode(kemCert_der, rfc5280.Certificate())
 
   spki = rfc5280.SubjectPublicKeyInfo()
   algid = rfc5280.AlgorithmIdentifier()
@@ -846,7 +873,7 @@ def signKemCert(caSK, kem):
 
   kemCert_pyasn1['tbsCertificate']['subjectPublicKeyInfo'] = spki
 
-  kemCert = x509.load_der_x509_certificate(encode(kemCert_pyasn1))
+  kemCert = x509.load_der_x509_certificate(der_encode(kemCert_pyasn1))
 
   kemCert = caSign(kemCert, caSK)
 
@@ -856,7 +883,7 @@ def signKemCert(caSK, kem):
 
 
 
-# Setup the test vector output
+# Set up the test vector output
 testVectorOutput = {}
 
 # Create the CA that will sign all KEM certs
@@ -880,7 +907,7 @@ def genDomainTable():
   turned on by doSig(.., includeInDomainTable=True)."""
 
   for alg in OID_TABLE:
-    domain = encode(OID_TABLE[alg])
+    domain = der_encode(OID_TABLE[alg])
     DOMAIN_TABLE[alg] = (domain, False)
 
 # run this statically
@@ -947,7 +974,83 @@ def writeTestVectors():
   output_artifacts_certs_r5(testVectorOutput)
 
 
+def getNewInstanceByName(oidName: str) -> KEM | None:
+  match oidName:
+    # Plain KEMs
+    case ECDHP256KEM.id:
+      return ECDHP256KEM()
+    case ECDHP521KEM.id:
+      return ECDHP521KEM()
+    case ECDHP384KEM.id:
+      return ECDHP384KEM()
+    case ECDHBP256KEM.id:
+      return ECDHBP256KEM()
+    case ECDHBP384KEM.id:
+      return ECDHBP384KEM()
+    case X25519KEM.id:
+      return X25519KEM()
+    case X448KEM.id:
+      return X448KEM()
+    case RSA2048OAEPKEM.id:
+      return RSA2048OAEPKEM()
+    case RSA3072OAEPKEM.id:
+      return RSA3072OAEPKEM()
+    case RSA4096OAEPKEM.id:
+      return RSA4096OAEPKEM()
+    case MLKEM768.id:
+      return MLKEM768()
+    case MLKEM1024.id:
+      return MLKEM1024()
+
+    # Composite KEMs
+    case MLKEM768_RSA2048_HMAC_SHA256.id:
+      return MLKEM768_RSA2048_HMAC_SHA256()
+    case MLKEM768_RSA3072_HMAC_SHA256.id:
+      return MLKEM768_RSA3072_HMAC_SHA256()
+    case MLKEM768_RSA4096_HMAC_SHA256.id:
+      return MLKEM768_RSA4096_HMAC_SHA256()
+    case MLKEM768_X25519_SHA3_256.id:
+      return MLKEM768_X25519_SHA3_256()
+    case MLKEM768_ECDH_P256_HMAC_SHA256.id:
+      return MLKEM768_ECDH_P256_HMAC_SHA256()
+    case MLKEM768_ECDH_P384_HMAC_SHA256.id:
+      return MLKEM768_ECDH_P384_HMAC_SHA256()
+    case MLKEM768_ECDH_brainpoolP256r1_HMAC_SHA256.id:
+      return MLKEM768_ECDH_brainpoolP256r1_HMAC_SHA256()
+    case MLKEM1024_RSA3072_HMAC_SHA512.id:
+      return MLKEM1024_RSA3072_HMAC_SHA512()
+    case MLKEM1024_ECDH_P384_HMAC_SHA512.id:
+      return MLKEM1024_ECDH_P384_HMAC_SHA512()
+    case MLKEM1024_ECDH_brainpoolP384r1_HMAC_SHA512.id:
+      return MLKEM1024_ECDH_brainpoolP384r1_HMAC_SHA512()
+    case MLKEM1024_X448_SHA3_256.id:
+      return MLKEM1024_X448_SHA3_256()
+    case MLKEM1024_ECDH_P521_HMAC_SHA512.id:
+      return MLKEM1024_ECDH_P521_HMAC_SHA512()
+
+
 def validatePrivateKey(priv_bytes: bytes, cert_bytes: bytes, encapsulation_bytes: bytes, shared_secret_bytes: bytes) -> bool:
+  """
+  1. Check that decapsulating :encapsulation_bytes: with :priv_bytes: results into :shared_secret_bytes:
+  2. Check that public key derived from :priv_bytes: equals the public key from :cert_bytes:
+  """
+
+  try:
+    x509obj = x509.load_der_x509_certificate(cert_bytes)
+  except:
+    try:
+      x509obj = x509.load_pem_x509_certificate(cert_bytes)
+    except:
+      raise ValueError("Input could not be parsed as a DER or PEM certificate.")
+
+  OID = univ.ObjectIdentifier(x509obj.public_key_algorithm_oid.dotted_string)
+  algorithmName = REVERSE_OID_TABLE.get(OID)
+  if algorithmName is None:
+    raise LookupError(f"OID does not represent a composite (at least not in {VERSION_IMPLEMENTED}): {str(OID)}")
+
+  kem: KEM = getNewInstanceByName(algorithmName)
+  # TODO load private key to KEM
+
   return True
 
 
@@ -963,7 +1066,7 @@ def formatResults(kem, caSK, ct, ss ):
   # for standalone ML-KEM, we need to wrap the private key in an OCTET STRING, but not when it's a composite
   if kem.id in ("id-alg-ml-kem-768", "id-alg-ml-kem-1024"):
     jsonTest['dk'] = base64.b64encode(
-                          encode(univ.OctetString(kem.private_key_bytes()))
+                          der_encode(univ.OctetString(kem.private_key_bytes()))
                                                       ).decode('ascii')
   else:
     jsonTest['dk'] = base64.b64encode(kem.private_key_bytes()).decode('ascii')
@@ -981,7 +1084,7 @@ def formatResults(kem, caSK, ct, ss ):
     pki['privateKey'] = univ.OctetString(univ.OctetString(kem.private_key_bytes()))
   else:
     pki['privateKey'] = univ.OctetString(kem.private_key_bytes())
-  jsonTest['dk_pkcs8'] = base64.b64encode(encode(pki)).decode('ascii')
+  jsonTest['dk_pkcs8'] = base64.b64encode(der_encode(pki)).decode('ascii')
 
   jsonTest['c'] = base64.b64encode(ct).decode('ascii')
   jsonTest['k'] = base64.b64encode(ss).decode('ascii')

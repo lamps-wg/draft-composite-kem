@@ -11,6 +11,7 @@ from pyasn1.type import univ
 from pyasn1.type.univ import ObjectIdentifier
 
 import generate_test_vectors
+from src.generate_test_vectors import REVERSE_OID_TABLE
 
 _USAGE_STR = "Usage: test_artifacts_r5.py [provider] [artifact zip filename]"
 
@@ -62,12 +63,11 @@ if __name__ == "__main__":
 
         # check if the OID in the file name is a supported composite
         OID: ObjectIdentifier = univ.ObjectIdentifier(OID_str)
-        algorithm_name = [key for key, val in generate_test_vectors.OID_TABLE.items() if val == OID]
+        algorithm_name = REVERSE_OID_TABLE.get(OID)
 
-        if algorithm_name == []:
+        if algorithm_name is None:
             print(f"DEBUG: OID does not represent a composite (at least not of this version of the draft): {OID}")
             continue
-        algorithm_name = algorithm_name[0]
 
         print(f"\nProcessing {algorithm_name} from {filename}")
 
@@ -85,10 +85,6 @@ if __name__ == "__main__":
         # the actual validation
         try:
             validation_result = generate_test_vectors.validatePrivateKey(priv_bytes, cert_bytes, ciphertext_bytes, shared_secret_bytes) # TODO
-        except LookupError as e:
-            print("Private key is not a composite (at least not of this version of the draft)")
-            print(e)
-            continue
         except Exception as e:
             print(f"Exception during validation: {e}")
             continue
