@@ -82,17 +82,20 @@ if __name__ == "__main__":
             print(f"Failed to read artifacts for OID {OID_str}: {e}")
             continue
 
-        # the actual verification
+        # the actual validation
         try:
-            verification_result = generate_test_vectors.verifyPrivateKey(priv_bytes, cert_bytes, ciphertext_bytes, shared_secret_bytes) # TODO
+            validation_result = generate_test_vectors.validatePrivateKey(priv_bytes, cert_bytes, ciphertext_bytes, shared_secret_bytes) # TODO
         except LookupError as e:
             print("Private key is not a composite (at least not of this version of the draft)")
             print(e)
             continue
+        except Exception as e:
+            print(f"Exception during validation: {e}")
+            continue
 
         # report result
-        print(f"\tPrivate key verification result: {str(verification_result)}")
-        if verification_result:
+        print(f"\tPrivate key validation result: {str(validation_result)}")
+        if validation_result:
             compatMatrixFile.write(OID_str+",cert,Y\n")
         else:
             compatMatrixFile.write(OID_str+",cert,N\n")

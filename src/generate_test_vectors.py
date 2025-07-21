@@ -947,7 +947,7 @@ def writeTestVectors():
   output_artifacts_certs_r5(testVectorOutput)
 
 
-def verifyPrivateKey(priv_bytes: bytes, cert_bytes: bytes, encapsulation_bytes: bytes, shared_secret_bytes: bytes) -> bool:
+def validatePrivateKey(priv_bytes: bytes, cert_bytes: bytes, encapsulation_bytes: bytes, shared_secret_bytes: bytes) -> bool:
   return True
 
 
