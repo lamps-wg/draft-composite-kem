@@ -3,6 +3,12 @@
 from cryptography.hazmat.primitives import hashes, hmac
 from cryptography.hazmat.primitives.asymmetric import rsa, ec, x25519, x448, padding
 import secrets
+
+from cryptography.hazmat.primitives.asymmetric.ec import EllipticCurvePrivateKey
+from cryptography.hazmat.primitives.asymmetric.rsa import RSAPrivateKey
+from cryptography.hazmat.primitives.asymmetric.x25519 import X25519PrivateKey
+from cryptography.hazmat.primitives.asymmetric.x448 import X448PrivateKey
+from cryptography.hazmat.primitives.serialization import load_der_private_key
 from dilithium_py.ml_dsa import ML_DSA_65
 from kyber_py.ml_kem import ML_KEM_768, ML_KEM_1024
 
@@ -22,7 +28,6 @@ from pyasn1_alt_modules import rfc5208
 from pyasn1_alt_modules import rfc5280
 from pyasn1.codec.der.decoder import decode as der_decode
 from pyasn1.codec.der.encoder import encode as der_encode
-
 
 VERSION_IMPLEMENTED = "draft-ietf-lamps-pq-composite-kem-07"
 
@@ -53,15 +58,6 @@ OID_TABLE = {
 
 REVERSE_OID_TABLE = {v: k for k, v in OID_TABLE.items()}
 
-def constructSPKI(pk_bytes: bytes, hex_alg_id: str):
-  """
-  Construct a SubjectPublicKeyInfo using the DER-encoded AlgorithmIdentifier encoded in :hex_alg_id:, and the provided :pk_bytes:.
-  """
-  spki = rfc5280.SubjectPublicKeyInfo()
-  spki['algorithm'], _ = der_decode(bytes.fromhex(hex_alg_id), asn1Spec=rfc5280.AlgorithmIdentifier())
-  spki['subjectPublicKey'] = univ.BitString(hexValue=pk_bytes.hex())
-  return der_encode(spki)
-
 
 class KEM:
   pk = None
@@ -73,10 +69,8 @@ class KEM:
   def keyGen(self):
     pass
 
-
-  def loadPk(self, sk) -> None:
+  def loadKeyPair(self, private_bytes: bytes) -> None:
     pass
-
 
   # returns (ct, ss)
   def encap(self):
@@ -105,6 +99,12 @@ class ECDHP256KEM(KEM):
   def keyGen(self):
     self.sk = ec.generate_private_key(ec.SECP256R1())
     self.pk = self.sk.public_key()
+
+  def loadKeyPair(self, private_bytes: bytes) -> None:
+    key = load_der_private_key(data=private_bytes, password=None)
+    assert isinstance(key, EllipticCurvePrivateKey)
+    self.sk = key
+    self.pk = key.public_key()
 
   def encap(self):
     esk = ec.generate_private_key(ec.SECP256R1())
@@ -242,6 +242,11 @@ class X25519KEM(KEM):
     self.sk = x25519.X25519PrivateKey.generate()
     self.pk = self.sk.public_key()
 
+  def loadKeyPair(self, private_bytes: bytes) -> None:
+    key = X25519PrivateKey.from_private_bytes(private_bytes)
+    self.sk = key
+    self.pk = key.public_key()
+
   def encap(self):
     esk = x25519.X25519PrivateKey.generate()
     ss = esk.exchange(self.pk)
@@ -281,6 +286,11 @@ class X448KEM(X25519KEM):
     self.sk = x448.X448PrivateKey.generate()
     self.pk = self.sk.public_key()
 
+  def loadKeyPair(self, private_bytes: bytes) -> None:
+    key = X448PrivateKey.from_private_bytes(private_bytes)
+    self.sk = key
+    self.pk = key.public_key()
+
   def encap(self):
     esk = x448.X448PrivateKey.generate()
     ss = esk.exchange(self.pk)
@@ -309,7 +319,13 @@ class RSA2048OAEPKEM(KEM):
       )
     self.pk = self.sk.public_key()
 
-  # returns (ct, ss)
+  def loadKeyPair(self, private_bytes: bytes) -> None:
+    key = load_der_private_key(data=private_bytes, password=None)
+    assert isinstance(key, RSAPrivateKey)
+    self.sk = key
+    self.pk = key.public_key()
+
+# returns (ct, ss)
   def encap(self):
     ss = secrets.token_bytes(32)
     ct = self.pk.encrypt(
@@ -388,8 +404,10 @@ class MLKEM768(KEM):
     self.sk = secrets.token_bytes(64)
     self.pk, _ = ML_KEM_768.key_derive(self.sk)
 
-  def loadPk(self, seed):
-    self.pk, _ = ML_KEM_768.key_derive(seed)
+  def loadKeyPair(self, private_bytes: bytes) -> None:
+    # Private bytes are the seed
+    self.sk = private_bytes
+    self.pk, _ = ML_KEM_768.key_derive(private_bytes)
 
   # returns (ct, ss)
   def encap(self):
@@ -418,8 +436,10 @@ class MLKEM1024(KEM):
     self.sk = secrets.token_bytes(64)
     self.pk, _ = ML_KEM_1024.key_derive(self.sk)
 
-  def loadPk(self, seed):
-    self.pk, _ = ML_KEM_1024.key_derive(seed)
+  def loadKeyPair(self, private_bytes: bytes) -> None:
+    # Private bytes are the seed
+    self.sk = private_bytes
+    self.pk, _ = ML_KEM_1024.key_derive(private_bytes)
 
   # returns (ct, ss)
   def encap(self):
@@ -459,6 +479,11 @@ class CompositeKEM(KEM):
     self.tradkem.keyGen()
 
     self.pk = self.public_key_bytes()
+
+  def loadKeyPair(self, private_bytes: bytes) -> None:
+    mlkem_private_bytes, traditional_private_bytes = self.deserializePrivateKey(private_bytes)
+    self.mlkem.loadKeyPair(mlkem_private_bytes)
+    self.tradkem.loadKeyPair(traditional_private_bytes)
 
 
   def serializePublicKey(self):
@@ -507,7 +532,6 @@ class CompositeKEM(KEM):
     assert isinstance(ct2, bytes)
     return ct1 + ct2
 
-
   def deserializeCiphertext(self, ct):
     assert isinstance(ct, bytes)
 
@@ -515,7 +539,6 @@ class CompositeKEM(KEM):
       return ct[:1088], ct[1088:]
     elif isinstance(self.mlkem, MLKEM1024):
       return ct[:1568], ct[1568:]
-
 
   # returns (ct, ss)
   def encap(self):
@@ -531,7 +554,6 @@ class CompositeKEM(KEM):
 
     return (ct, ss)
 
-
   # returns (ss)
   def decap(self, ct):
     if self.mlkem == None or self.tradkem == None:
@@ -545,13 +567,6 @@ class CompositeKEM(KEM):
     ss = kemCombiner(self, mlkemSS, tradSS, tradCT, self.tradkem.public_key_bytes())
 
     return ss
-
-
-  def load_sk(self, sk_bytes):
-    mlkem_sk_bytes, traditional_sk_bytes = self.deserializePrivateKey(sk_bytes)
-    self.mlkem.sk = mlkem_sk_bytes
-    self.mlkem.loadPk(sk=mlkem_sk_bytes)
-    self.tradkem.loadPk(sk=traditional_sk_bytes)
 
 
 class MLKEM768_RSA2048_HMAC_SHA256(CompositeKEM):
@@ -1029,7 +1044,7 @@ def getNewInstanceByName(oidName: str) -> KEM | None:
       return MLKEM1024_ECDH_P521_HMAC_SHA512()
 
 
-def validatePrivateKey(priv_bytes: bytes, cert_bytes: bytes, encapsulation_bytes: bytes, shared_secret_bytes: bytes) -> bool:
+def validatePrivateKey(priv_der: bytes, cert_bytes: bytes, encapsulation_bytes: bytes, shared_secret_bytes: bytes) -> bool:
   """
   1. Check that decapsulating :encapsulation_bytes: with :priv_bytes: results into :shared_secret_bytes:
   2. Check that public key derived from :priv_bytes: equals the public key from :cert_bytes:
@@ -1049,7 +1064,9 @@ def validatePrivateKey(priv_bytes: bytes, cert_bytes: bytes, encapsulation_bytes
     raise LookupError(f"OID does not represent a composite (at least not in {VERSION_IMPLEMENTED}): {str(OID)}")
 
   kem: KEM = getNewInstanceByName(algorithmName)
-  # TODO load private key to KEM
+  privateKeyInfo, _ = der_decode(priv_der, rfc5208.PrivateKeyInfo())
+  privateBytes = bytes(privateKeyInfo[2]) # https://datatracker.ietf.org/doc/html/rfc5208#section-5
+  kem.loadKeyPair(private_bytes=privateBytes)
 
   return True
 

@@ -74,7 +74,7 @@ if __name__ == "__main__":
         # read artifacts
         try:
             # R5 format, see http://github.com/IETF-Hackathon/pqc-certificates?tab=readme-ov-file#zip-format-r5
-            priv_bytes = read_bytes(filename=filename) # TODO Windows paths
+            priv_der = read_bytes(filename=filename)
             cert_bytes = read_bytes(f"{filename.strip("_priv.der")}_ee.der")
             ciphertext_bytes = read_bytes(f"{filename.strip("_priv.der")}_ciphertext.bin")
             shared_secret_bytes = read_bytes(f"{filename.strip("_priv.der")}_ss.bin")
@@ -84,7 +84,7 @@ if __name__ == "__main__":
 
         # the actual validation
         try:
-            validation_result = generate_test_vectors.validatePrivateKey(priv_bytes, cert_bytes, ciphertext_bytes, shared_secret_bytes) # TODO
+            validation_result = generate_test_vectors.validatePrivateKey(priv_der, cert_bytes, ciphertext_bytes, shared_secret_bytes)
         except Exception as e:
             print(f"Exception during validation: {e}")
             continue
