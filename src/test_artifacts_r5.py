@@ -69,7 +69,7 @@ if __name__ == "__main__":
             print(f"DEBUG: OID does not represent a composite (at least not of this version of the draft): {OID}")
             continue
 
-        print(f"\nProcessing {algorithm_name} from {filename}")
+        print(f"\n{algorithm_name}")
 
         # read artifacts
         try:

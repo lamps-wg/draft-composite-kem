@@ -485,7 +485,6 @@ class CompositeKEM(KEM):
     self.mlkem.loadKeyPair(mlkem_private_bytes)
     self.tradkem.loadKeyPair(traditional_private_bytes)
 
-
   def serializePublicKey(self):
     """
     (pk1, pk2) -> pk
@@ -1046,10 +1045,12 @@ def getNewInstanceByName(oidName: str) -> KEM | None:
 
 def validatePrivateKey(priv_der: bytes, cert_bytes: bytes, encapsulation_bytes: bytes, shared_secret_bytes: bytes) -> bool:
   """
-  1. Check that decapsulating :encapsulation_bytes: with :priv_bytes: results into :shared_secret_bytes:
-  2. Check that public key derived from :priv_bytes: equals the public key from :cert_bytes:
+  0. Load the private key from :priv_bytes:
+  1. Check that decapsulating :encapsulation_bytes: with the private key results into :shared_secret_bytes:
+  2. Check that public key derived from the private key equals the public key from :cert_bytes:
   """
 
+  # 0. Load the private key from :priv_bytes:
   try:
     x509obj = x509.load_der_x509_certificate(cert_bytes)
   except:
@@ -1065,8 +1066,26 @@ def validatePrivateKey(priv_der: bytes, cert_bytes: bytes, encapsulation_bytes: 
 
   kem: KEM = getNewInstanceByName(algorithmName)
   privateKeyInfo, _ = der_decode(priv_der, rfc5208.PrivateKeyInfo())
-  privateBytes = bytes(privateKeyInfo[2]) # https://datatracker.ietf.org/doc/html/rfc5208#section-5
+  privateBytes = privateKeyInfo["privateKey"].asOctets()
   kem.loadKeyPair(private_bytes=privateBytes)
+
+  # 1. Check that decapsulating :encapsulation_bytes: with the private key results into :shared_secret_bytes:
+  decapsulationBytes: bytes = kem.decap(encapsulation_bytes)
+  if decapsulationBytes != shared_secret_bytes:
+    print( "\tDecapsulation check failed.")
+    print(f"\t\tExpected shared secret: {shared_secret_bytes.hex()}")
+    print(f"\t\tActual:                 {decapsulationBytes.hex()}")
+    return False
+
+  # 2. Check that public key derived from the private key equals the public key from :cert_bytes:
+  asn1Certificate, _ = der_decode(cert_bytes, rfc5280.Certificate())
+  loadedPublicKey = kem.public_key_bytes()
+  certPublicKey = asn1Certificate["tbsCertificate"]["subjectPublicKeyInfo"]["subjectPublicKey"].asOctets()
+  if loadedPublicKey != certPublicKey:
+    print( "\tPublic key check failed.")
+    print(f"\t\tPublic key in the certificate:                  {certPublicKey.hex()}")
+    print(f"\t\tPublic key derived from the loaded private key: {loadedPublicKey.hex()}")
+    return False
 
   return True
 
