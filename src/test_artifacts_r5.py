@@ -11,7 +11,7 @@ from pyasn1.type import univ
 from pyasn1.type.univ import ObjectIdentifier
 
 import generate_test_vectors
-from src.generate_test_vectors import REVERSE_OID_TABLE
+from generate_test_vectors import REVERSE_OID_TABLE
 
 _USAGE_STR = "Usage: test_artifacts_r5.py [provider] [artifact zip filename]"
 
