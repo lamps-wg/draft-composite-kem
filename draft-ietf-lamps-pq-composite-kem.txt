@@ -6027,6 +6027,9 @@ Appendix H.  Contributors and Acknowledgments
    Thanks to Giacomo Pope (github.com/GiacomoPope) whose ML-DSA and ML-
    KEM implementations were used to generate the test vectors.
 
+   Thanks to Stepan Yakimovich for contributing to the reference
+   implementation.
+
    We are grateful to all who have given feedback over the years,
    formally or informally, on mailing lists or in person, including any
    contributors who may have been inadvertently omitted from this list.
