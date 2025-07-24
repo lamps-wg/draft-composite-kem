@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-07-22T02:19:07.407077+00:00",
+  "timestamp": "2025-07-24T02:19:09.879053+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -7903,13 +7903,13 @@
       "labels": [],
       "body": "",
       "createdAt": "2025-07-21T10:23:59Z",
-      "updatedAt": "2025-07-21T15:29:25Z",
+      "updatedAt": "2025-07-23T16:23:53Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "293a257042e849ab76fc605320d773b91a9af2d3",
       "headRepository": "xyakimo1/draft-composite-kem",
       "headRefName": "r5_private_key_verification",
-      "headRefOid": "b7773140edef9b7b55ce1b93bc433bb26a6dbe4a",
+      "headRefOid": "da318bdcbcb6382a0c5020de55e91ec277339cff",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
