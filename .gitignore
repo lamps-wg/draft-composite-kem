@@ -5,3 +5,7 @@
 lib/
 .includes.mk
 .idea/
+
+# Don't check this in because it causes recursion in the hackathon pqc-certificates automated validation
+artifacts_certs_r5.zip
+artifacts_certs_r5/

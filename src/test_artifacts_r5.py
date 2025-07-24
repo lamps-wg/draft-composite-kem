@@ -37,8 +37,12 @@ if __name__ == "__main__":
 
     os.makedirs("output/certs/compatMatrices/artifacts_certs_r5", exist_ok=True)
 
-    compatMatrixFile = open(f"output/certs/compatMatrices/artifacts_certs_r5/{prov}_composite-ref-impl.csv", 'w')
-    compatMatrixFile.write("key_algorithm_oid,type,test_result\n")
+    outfilename = f"output/certs/compatMatrices/artifacts_certs_r5/{prov}_composite-ref-impl.csv"
+    append = os.path.isfile(outfilename)
+    compatMatrixFile = open(outfilename, 'a')
+    if not append:
+        # if we're adding on top of the composite-sigs-ref-impl, then don't add the CSV header
+        compatMatrixFile.write("key_algorithm_oid,type,test_result\n")
 
     zipf = zipfile.ZipFile(infile)
     tmpdir = tempfile.mkdtemp()
