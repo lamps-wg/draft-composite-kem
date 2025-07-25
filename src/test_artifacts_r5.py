@@ -95,7 +95,14 @@ if __name__ == "__main__":
 
         # report result
         print(f"\tPrivate key validation result: {str(validation_result)}")
+        
         if validation_result:
             compatMatrixFile.write(OID_str+",cert,Y\n")
         else:
             compatMatrixFile.write(OID_str+",cert,N\n")
+
+        if filename.endswith('_seed_priv.der'):
+            if validation_result:
+                compatMatrixFile.write(OID_str+",seed,Y\n")
+            else:
+                compatMatrixFile.write(OID_str+",seed,N\n")
