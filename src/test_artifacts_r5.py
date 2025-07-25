@@ -53,8 +53,7 @@ if __name__ == "__main__":
     for filename in glob(tmpdir+'/**/*_priv.der', recursive=True):
 
         # support only single format private keys (<friendlyname>-<oid>_priv.der)
-        if "_seed_priv.der" in filename or \
-           "_expandedkey_priv.der" in filename or \
+        if "_expandedkey_priv.der" in filename or \
            "_both_priv.der" in filename:
             print(f"skipping multiformat private key... filename={filename}")
             continue
