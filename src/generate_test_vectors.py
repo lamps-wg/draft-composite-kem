@@ -10,7 +10,7 @@ from cryptography.hazmat.primitives.asymmetric.x25519 import X25519PrivateKey
 from cryptography.hazmat.primitives.asymmetric.x448 import X448PrivateKey
 from cryptography.hazmat.primitives.serialization import load_der_private_key
 from dilithium_py.ml_dsa import ML_DSA_65
-from kyber_py.ml_kem import ML_KEM_768, ML_KEM_1024
+from kyber_py.ml_kem import ML_KEM_512, ML_KEM_768, ML_KEM_1024
 
 from cryptography import x509
 from cryptography.x509.oid import NameOID
@@ -40,6 +40,7 @@ OID_TABLE = {
   "ECDH-brainpoolP384r1": univ.ObjectIdentifier((1,2,840,10045,2,1)),
   "id-X25519": univ.ObjectIdentifier((1,3,101,110)),
   "id-X448": univ.ObjectIdentifier((1,3,101,111)),
+  "id-alg-ml-kem-512": univ.ObjectIdentifier((2,16,840,1,101,3,4,4,1)),
   "id-alg-ml-kem-768": univ.ObjectIdentifier((2,16,840,1,101,3,4,4,2)),
   "id-alg-ml-kem-1024": univ.ObjectIdentifier((2,16,840,1,101,3,4,4,3)),
   "id-MLKEM768-RSA2048-HMAC-SHA256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,50)),
@@ -395,6 +396,40 @@ class RSA4096OAEPKEM(RSA2048OAEPKEM):
     self.pk = self.sk.public_key()
 
 
+class MLKEM512(KEM):
+  id = "id-alg-ml-kem-512"
+  oid = univ.ObjectIdentifier((2,16,840,1,101,3,4,4,1))
+
+  # returns nothing
+  def keyGen(self):
+    self.sk = secrets.token_bytes(64)
+    self.pk, _ = ML_KEM_512.key_derive(self.sk)
+
+  def loadKeyPair(self, private_bytes: bytes) -> None:
+    if len(private_bytes) == 66:
+      # there's an extra OctetString wrapper
+      private_bytes = private_bytes[2:]
+
+    self.sk = private_bytes
+    self.pk, _ = ML_KEM_512.key_derive(private_bytes)
+
+  # returns (ct, ss)
+  def encap(self):
+    (ss, ct) = ML_KEM_512.encaps(self.pk)
+    return (ct, ss)
+
+  # returns (ss)
+  def decap(self, ct):
+    _, dk = ML_KEM_512.key_derive(self.sk)
+    return ML_KEM_512.decaps(dk, ct)
+
+  def public_key_bytes(self):
+    return self.pk
+
+  def private_key_bytes(self):
+    return self.sk
+
+
 class MLKEM768(KEM):
   id = "id-alg-ml-kem-768"
   oid = univ.ObjectIdentifier((2,16,840,1,101,3,4,4,2))
@@ -405,6 +440,10 @@ class MLKEM768(KEM):
     self.pk, _ = ML_KEM_768.key_derive(self.sk)
 
   def loadKeyPair(self, private_bytes: bytes) -> None:
+    if len(private_bytes) == 66:
+      # there's an extra OctetString wrapper
+      private_bytes = private_bytes[2:]
+
     # Private bytes are the seed
     self.sk = private_bytes
     self.pk, _ = ML_KEM_768.key_derive(private_bytes)
@@ -437,6 +476,10 @@ class MLKEM1024(KEM):
     self.pk, _ = ML_KEM_1024.key_derive(self.sk)
 
   def loadKeyPair(self, private_bytes: bytes) -> None:
+    if len(private_bytes) == 66:
+      # there's an extra OctetString wrapper
+      private_bytes = private_bytes[2:]
+  
     # Private bytes are the seed
     self.sk = private_bytes
     self.pk, _ = ML_KEM_1024.key_derive(private_bytes)
@@ -1011,6 +1054,8 @@ def getNewInstanceByName(oidName: str) -> KEM | None:
       return RSA3072OAEPKEM()
     case RSA4096OAEPKEM.id:
       return RSA4096OAEPKEM()
+    case MLKEM512.id:
+      return MLKEM512()
     case MLKEM768.id:
       return MLKEM768()
     case MLKEM1024.id:

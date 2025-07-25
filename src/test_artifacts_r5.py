@@ -77,10 +77,11 @@ if __name__ == "__main__":
         # read artifacts
         try:
             # R5 format, see http://github.com/IETF-Hackathon/pqc-certificates?tab=readme-ov-file#zip-format-r5
-            priv_der = read_bytes(filename=filename)
-            cert_bytes = read_bytes(f"{filename.strip("_priv.der")}_ee.der")
-            ciphertext_bytes = read_bytes(f"{filename.strip("_priv.der")}_ciphertext.bin")
-            shared_secret_bytes = read_bytes(f"{filename.strip("_priv.der")}_ss.bin")
+            priv_der = read_bytes(filename)
+            filenameprefix = re.search(r'(.*-'+re.escape(OID_str) + r')_.*', filename)[1]
+            cert_bytes = read_bytes(f"{filenameprefix}_ee.der")
+            ciphertext_bytes = read_bytes(f"{filenameprefix}_ciphertext.bin")
+            shared_secret_bytes = read_bytes(f"{filenameprefix}_ss.bin")
         except Exception as e:
             print(f"Failed to read artifacts for OID {OID_str}: {e}")
             continue
