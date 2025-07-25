@@ -544,7 +544,7 @@ Table of Contents
      1. Generate component keys
 
        mlkemSeed = Random(64)
-       (mlkemPK, _) = ML-KEM.KeyGen(mlkemSeed)
+       (mlkemPK, mlkemSK_) = ML-KEM.KeyGen(mlkemSeed)
        (tradPK, tradSK) = Trad.KeyGen()
 
      2. Check for component key gen failure
@@ -554,7 +554,7 @@ Table of Contents
      3. Output the composite public and private keys
 
        pk = SerializePublicKey(mlkemPK, tradPK)
-       sk = SerializePrivateKey(mlkemSK, tradSK)
+       sk = SerializePrivateKey(mlkemSeed, tradSK)
        return (pk, sk)
 
             Figure 1: Composite-ML-KEM<OID>.KeyGen() -> (pk, sk)
@@ -718,13 +718,14 @@ Table of Contents
 
    1. Separate the private keys and ciphertexts
 
-       (mlkemSK, tradSK) = DeserializePrivateKey(sk)
+       (mlkemSeed, tradSK) = DeserializePrivateKey(sk)
+       (_, mlkemSK) = ML-KEM.KeyGen(mlkemSeed)
        (mlkemCT, tradCT) = DeserializeCiphertext(ct)
 
    2.  Perform the respective component Encap operations according to
        their algorithm specifications.
 
-       mlkemSS = MLKEM.Decaps(mlkemSK, mlkemCT)
+       mlkemSS = ML-KEM.Decaps(mlkemSK, mlkemCT)
        tradSS  = TradKEM.Decap(tradSK, tradCT)
 
    3. If either ML-KEM.Decaps() or TradKEM.Decap() return an error,
