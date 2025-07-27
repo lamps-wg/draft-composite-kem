@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-07-24T02:19:09.879053+00:00",
+  "timestamp": "2025-07-27T02:29:11.007458+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -3076,15 +3076,15 @@
       "id": "I_kwDOKRPFO87BSvuf",
       "title": "KeyGen() and Decap() use mlkemSK instead of mlkemSeed.",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/186",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "janklaussner",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Composite KeyGen():\n\nhttps://github.com/lamps-wg/draft-composite-kem/blob/78af696ca5498dcf874089ccaacb89f9c87c3623/draft-ietf-lamps-pq-composite-kem.md?plain=1#L545\n* same issue as in composite-sigs: https://github.com/lamps-wg/draft-composite-sigs/tree/236-editorial-correction-related-to-the-first-appearance-of-mldsask-in-the-document\n\nhttps://github.com/lamps-wg/draft-composite-kem/blob/78af696ca5498dcf874089ccaacb89f9c87c3623/draft-ietf-lamps-pq-composite-kem.md?plain=1#L551\n* has to be mlkemSeed here\n\nComposite Decap()\n\nhttps://github.com/lamps-wg/draft-composite-kem/blob/78af696ca5498dcf874089ccaacb89f9c87c3623/draft-ietf-lamps-pq-composite-kem.md?plain=1#L677\n* has to be mlkemSeed here\n* needs additional mldsa.KeyGen()\n",
       "createdAt": "2025-07-18T11:28:10Z",
-      "updatedAt": "2025-07-18T11:28:10Z",
-      "closedAt": null,
+      "updatedAt": "2025-07-25T16:08:00Z",
+      "closedAt": "2025-07-25T16:08:00Z",
       "comments": []
     },
     {
@@ -7820,24 +7820,26 @@
       "id": "PR_kwDOKRPFO86fj8RZ",
       "title": "Fix KeyGen() and Decap() to use mlkemSeed instead of mlkemSK",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/187",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "janklaussner",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "* Composite.KeyGen() returns now mlkemSeed in serialized Composite Private Key.\r\n* Composite.Decap() now generates mlkemSK from mlkemSeed.\r\n* Fixes function calls to ML-KEM.* in Decap().",
       "createdAt": "2025-07-18T11:41:12Z",
-      "updatedAt": "2025-07-18T11:42:19Z",
+      "updatedAt": "2025-07-25T16:07:59Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "78af696ca5498dcf874089ccaacb89f9c87c3623",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "186-keygen-and-decap-use-mlkemsk-instead-of-mlkemseed",
       "headRefOid": "e36c1c9a92c5917ffdf340b69778efdc198e559e",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-07-25T16:07:59Z",
+      "mergedAt": "2025-07-25T16:07:59Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "c6ae932711ec984d5c371a3cb087338b145b3092"
+      },
       "comments": [],
       "reviews": []
     },
@@ -7896,25 +7898,35 @@
       "id": "PR_kwDOKRPFO86f0qon",
       "title": "Validate artifacts_certs_r5.zip",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/190",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "xyakimo1",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2025-07-21T10:23:59Z",
-      "updatedAt": "2025-07-23T16:23:53Z",
+      "updatedAt": "2025-07-24T18:15:20Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "293a257042e849ab76fc605320d773b91a9af2d3",
       "headRepository": "xyakimo1/draft-composite-kem",
       "headRefName": "r5_private_key_verification",
       "headRefOid": "da318bdcbcb6382a0c5020de55e91ec277339cff",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
-      "comments": [],
+      "closedAt": "2025-07-24T18:15:20Z",
+      "mergedAt": "2025-07-24T18:15:20Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "dea68949b9ac86b7261b431cb30f683978452eb2"
+      },
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "This is amazing! I am going to go ahead and merge, and then integrate into the automated tests in the hackathon repo!",
+          "createdAt": "2025-07-24T18:15:16Z",
+          "updatedAt": "2025-07-24T18:15:16Z"
+        }
+      ],
       "reviews": []
     }
   ]
