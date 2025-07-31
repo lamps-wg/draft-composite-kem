@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-07-27T02:29:11.007458+00:00",
+  "timestamp": "2025-07-31T02:21:38.731050+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -3100,6 +3100,22 @@
       "body": "As I understand it, the exponent of the RSA key is not restricted, although there's no specific text for that.  Explicit text should be added saying that any exponent MAY be used but 65537 is RECOMMENDED.",
       "createdAt": "2025-07-19T12:35:52Z",
       "updatedAt": "2025-07-19T13:08:55Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 191,
+      "id": "I_kwDOKRPFO87DTEQ_",
+      "title": "Editorial corrections to version 08 from 2025.07.30",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/191",
+      "state": "OPEN",
+      "author": "PiotrPopis",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "1. Section 2\n> (...) explicitly hybrid-aware. composite algorithms address\n\nexplicitly hybrid-aware. Composite algorithms address\nExplanation: capital letter\n\n2. Section 2\n> sence \n\nsense\n\n3. Section 2.2\n> (...) -- using its internal sequence of component keys as if they form a single key\n\n(...) -- using its internal concatenation of component keys as if they form a single key\n\n4. Section 3\n> keyss\n\nkeys\n\n5. Section 4.1\n> mlkemSK_\n\nmlkemSK\n\n6. Section 4.1\n> section Section 10.3.\n\nSection 10.3.\n\n7. Section 6.3\n> as as\n\nas\n\n8. Section 7.2\n> charactaristics \n\ncharacteristics\n\n9. Section 7.2\n> However SHA3 is used with X25519 and X448 SHA3-256 to match \n\nHowever SHA3-256 is used with X25519 and X448 to match \n\n10. Section 9.1.1\n> regisetered \n\nregistered \n\n11. Section 10.4\n> behaviour \n\nbehavior\n\n12. Appendix A\n> occaisionally \n\noccasionally\n\n",
+      "createdAt": "2025-07-30T10:48:38Z",
+      "updatedAt": "2025-07-30T10:48:38Z",
       "closedAt": null,
       "comments": []
     }
