@@ -1054,11 +1054,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">Composite ML-KEM</td>
-<td class="right">July 2025</td>
+<td class="right">August 2025</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Ounsworth, et al.</td>
-<td class="center">Expires 26 January 2026</td>
+<td class="center">Expires 13 February 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1071,12 +1071,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-lamps-pq-composite-kem-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-07-25" class="published">25 July 2025</time>
+<time datetime="2025-08-12" class="published">12 August 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-01-26">26 January 2026</time></dd>
+<dd class="expires"><time datetime="2026-02-13">13 February 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1142,7 +1142,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 26 January 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 13 February 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -3888,7 +3888,7 @@ id-MLKEM1024-ECDH-P384-HMAC-SHA512
       <h2 id="name-fixed-component-algorithm-i">
 <a href="#appendix-C" class="section-number selfRef">Appendix C. </a><a href="#name-fixed-component-algorithm-i" class="section-name selfRef">Fixed Component Algorithm Identifiers</a>
       </h2>
-<p id="appendix-C-1">The following sections list explicitly the DER encoded <code>AlgorithmIdentifier</code> that MUST be used when reconstructing <code>SubjectPublicKeyInfo</code> objects for each component algorithm type, which may be required for example if cryptographic library requires the public key in this form in order to process each component algorithm. The public key <code>BIT STRING</code> should be taken directly from the respective component of the Composite ML-KEM public key.<a href="#appendix-C-1" class="pilcrow">¶</a></p>
+<p id="appendix-C-1">Many cryptographic libraries are X.509-focused and do not expose interfaces to instantiate a public key from raw bytes, but only from a SubjectPublicKeyInfo structure as you would find in an X.509 certificate, therefore implementing composite in those libraries requires reconstructing the SPKI for each component algorithm. In order to aid implementers and reduce interoperability issues, this section lists out the full public key and signature AlgorithmIdentifiers for each component algorithm.<a href="#appendix-C-1" class="pilcrow">¶</a></p>
 <p id="appendix-C-2"><strong>ML-KEM-768</strong><a href="#appendix-C-2" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="appendix-C-3">
 <pre>
@@ -7164,16 +7164,16 @@ Deirdre Connolly (SandboxAQ),
 Chris A. Wood (Apple),
 Bas Westerbaan (Cloudflare),
 Falko Strenzke (MTG AG),
-Dan van Geest (Crypto Next),
 Piotr Popis (Enigma),
 Jean-Pierre Fiset (Crypto4A),
 陳志華 (Abel C. H. Chen, Chunghwa Telecom),
 林邦曄 (Austin Lin, Chunghwa Telecom) and
 Douglas Stebila (University of Waterloo).<a href="#appendix-H-2" class="pilcrow">¶</a></p>
 <p id="appendix-H-3">Thanks to Giacomo Pope (github.com/GiacomoPope) whose ML-DSA and ML-KEM implementations were used to generate the test vectors.<a href="#appendix-H-3" class="pilcrow">¶</a></p>
-<p id="appendix-H-4">Thanks to Stepan Yakimovich for contributing to the reference implementation.<a href="#appendix-H-4" class="pilcrow">¶</a></p>
-<p id="appendix-H-5">We are grateful to all who have given feedback over the years, formally or informally, on mailing lists or in person, including any contributors who may have been inadvertently omitted from this list.<a href="#appendix-H-5" class="pilcrow">¶</a></p>
-<p id="appendix-H-6">Finally, we wish to thank the authors of all the referenced documents upon which this specification was built. "Copying always makes things easier and less error prone" - <span>[<a href="#RFC8411" class="cite xref">RFC8411</a>]</span>.<a href="#appendix-H-6" class="pilcrow">¶</a></p>
+<p id="appendix-H-4">We wish to acknowledge particular effort from Carl Wallace and Dan van Geest (Crypto Next), who have put in sustained effort over multiple years both reviewing and implementing at the hackathon each iteration of this draft.<a href="#appendix-H-4" class="pilcrow">¶</a></p>
+<p id="appendix-H-5">Thanks to Stepan Yakimovich for contributing to the reference implementation.<a href="#appendix-H-5" class="pilcrow">¶</a></p>
+<p id="appendix-H-6">We are grateful to all who have given feedback over the years, formally or informally, on mailing lists or in person, including any contributors who may have been inadvertently omitted from this list.<a href="#appendix-H-6" class="pilcrow">¶</a></p>
+<p id="appendix-H-7">Finally, we wish to thank the authors of all the referenced documents upon which this specification was built. "Copying always makes things easier and less error prone" - <span>[<a href="#RFC8411" class="cite xref">RFC8411</a>]</span>.<a href="#appendix-H-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="authors-addresses">
