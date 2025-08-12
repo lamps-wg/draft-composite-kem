@@ -1583,7 +1583,7 @@ This section provides references to the full specification of the algorithms use
 
 # Fixed Component Algorithm Identifiers
 
-The following sections list explicitly the DER encoded `AlgorithmIdentifier` that MUST be used when reconstructing `SubjectPublicKeyInfo` objects for each component algorithm type, which may be required for example if cryptographic library requires the public key in this form in order to process each component algorithm. The public key `BIT STRING` should be taken directly from the respective component of the Composite ML-KEM public key.
+Many cryptographic libraries are X.509-focused and do not expose interfaces to instantiate a public key from raw bytes, but only from a SubjectPublicKeyInfo structure as you would find in an X.509 certificate, therefore implementing composite in those libraries requires reconstructing the SPKI for each component algorithm. In order to aid implementers and reduce interoperability issues, this section lists out the full public key and signature AlgorithmIdentifiers for each component algorithm.
 
 
 **ML-KEM-768**
@@ -1872,7 +1872,6 @@ Deirdre Connolly (SandboxAQ),
 Chris A. Wood (Apple),
 Bas Westerbaan (Cloudflare),
 Falko Strenzke (MTG AG),
-Dan van Geest (Crypto Next),
 Piotr Popis (Enigma),
 Jean-Pierre Fiset (Crypto4A),
 陳志華 (Abel C. H. Chen, Chunghwa Telecom),
@@ -1880,6 +1879,8 @@ Jean-Pierre Fiset (Crypto4A),
 Douglas Stebila (University of Waterloo).
 
 Thanks to Giacomo Pope (github.com/GiacomoPope) whose ML-DSA and ML-KEM implementations were used to generate the test vectors.
+
+We wish to acknowledge particular effort from Carl Wallace and Dan van Geest (Crypto Next), who have put in sustained effort over multiple years both reviewing and implementing at the hackathon each iteration of this draft.
 
 Thanks to Stepan Yakimovich for contributing to the reference implementation.
 
