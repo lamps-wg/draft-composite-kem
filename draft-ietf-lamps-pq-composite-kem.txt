@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 13 February 2026                                        M. Pala
+Expires: 14 February 2026                                        M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                          12 August 2025
+                                                          13 August 2025
 
 
       Composite ML-KEM for use in X.509 Public Key Infrastructure
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 13 February 2026.
+   This Internet-Draft will expire on 14 February 2026.
 
 Copyright Notice
 
@@ -883,14 +883,16 @@ Table of Contents
    *  *ML-KEM*: MUST be encoded as specified in [FIPS.203], using a
       64-byte seed as the private key.
 
-   *  *RSA*: MUST be encoded with the (n,e) public key representation as
-      specified in A.1.1 of [RFC8017] and the private key representation
-      as specified in A.1.2 of [RFC8017].
+   *  *RSA*: the public key MUST be encoded as RSAPublicKey with the
+      (n,e) public key representation as specified in A.1.1 of [RFC8017]
+      and the private key representation as RSAPrivateKey specified in
+      A.1.2 of [RFC8017].
 
    *  *ECDH*: public key MUST be encoded as an ECPoint as specified in
       section 2.2 of [RFC5480], with both compressed and uncompressed
       keys supported.  For maximum interoperability, it is RECOMMENEDED
-      to use uncompressed points.
+      to use uncompressed points.  The private key must be encoded as
+      ECPrivateKey specified in [RFC5915].
 
    *  *X25519 and X448*: MUST be encoded as per section 5 of [RFC7748].
 
@@ -2402,6 +2404,10 @@ Table of Contents
               DOI 10.17487/RFC5869, May 2010,
               <https://www.rfc-editor.org/info/rfc5869>.
 
+   [RFC5915]  Turner, S. and D. Brown, "Elliptic Curve Private Key
+              Structure", RFC 5915, DOI 10.17487/RFC5915, June 2010,
+              <https://www.rfc-editor.org/info/rfc5915>.
+
    [RFC5958]  Turner, S., "Asymmetric Key Packages", RFC 5958,
               DOI 10.17487/RFC5958, August 2010,
               <https://www.rfc-editor.org/info/rfc5958>.
@@ -2697,28 +2703,28 @@ Appendix B.  Component Algorithm Reference
    This section provides references to the full specification of the
    algorithms used in the composite constructions.
 
-        +================+========================+===============+
-        | Component KEM  | OID                    | Specification |
-        | Algorithm ID   |                        |               |
-        +================+========================+===============+
-        | id-ML-KEM-768  | 2.16.840.1.101.3.4.4.2 | [FIPS.203]    |
-        +----------------+------------------------+---------------+
-        | id-ML-KEM-1024 | 2.16.840.1.101.3.4.4.3 | [FIPS.203]    |
-        +----------------+------------------------+---------------+
-        | id-X25519      | 1.3.101.110            | [RFC7748],    |
-        |                |                        | [RFC8410]     |
-        +----------------+------------------------+---------------+
-        | id-X448        | 1.3.101.111            | [RFC7748],    |
-        |                |                        | [RFC8410]     |
-        +----------------+------------------------+---------------+
-        | id-ecDH        | 1.3.132.1.12           | [RFC5480],    |
-        |                |                        | [SEC1]        |
-        +----------------+------------------------+---------------+
-        | id-RSAES-OAEP  | 1.2.840.113549.1.1.7   | [RFC8017]     |
-        +----------------+------------------------+---------------+
+      +================+========================+===================+
+      | Component KEM  | OID                    | Specification     |
+      | Algorithm ID   |                        |                   |
+      +================+========================+===================+
+      | id-ML-KEM-768  | 2.16.840.1.101.3.4.4.2 | [FIPS.203]        |
+      +----------------+------------------------+-------------------+
+      | id-ML-KEM-1024 | 2.16.840.1.101.3.4.4.3 | [FIPS.203]        |
+      +----------------+------------------------+-------------------+
+      | id-X25519      | 1.3.101.110            | [RFC7748],        |
+      |                |                        | [RFC8410]         |
+      +----------------+------------------------+-------------------+
+      | id-X448        | 1.3.101.111            | [RFC7748],        |
+      |                |                        | [RFC8410]         |
+      +----------------+------------------------+-------------------+
+      | id-ecDH        | 1.3.132.1.12           | [RFC5480],        |
+      |                |                        | [RFC5915], [SEC1] |
+      +----------------+------------------------+-------------------+
+      | id-RSAES-OAEP  | 1.2.840.113549.1.1.7   | [RFC8017]         |
+      +----------------+------------------------+-------------------+
 
-              Table 7: Component Encryption Algorithms used in
-                          Composite Constructions
+         Table 7: Component Encryption Algorithms used in Composite
+                               Constructions
 
      +==================+=======================+===================+
      | Elliptic CurveID | OID                   | Specification     |
