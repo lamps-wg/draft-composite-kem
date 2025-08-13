@@ -539,7 +539,7 @@ Key Generation Process:
   1. Generate component keys
 
     mlkemSeed = Random(64)
-    (mlkemPK, mlkemSK_) = ML-KEM.KeyGen(mlkemSeed)
+    (mlkemPK, mlkemSK) = ML-KEM.KeyGen(mlkemSeed)
     (tradPK, tradSK) = Trad.KeyGen()
 
   2. Check for component key gen failure
@@ -558,6 +558,8 @@ Key Generation Process:
 In order to ensure fresh keys, the key generation functions MUST be executed for both component algorithms. Compliant parties MUST NOT use, import or export component keys that are used in other contexts, combinations, or by themselves as keys for standalone algorithm use. For more details on the security considerations around key reuse, see section {{sec-cons-key-reuse}}.
 
 Note that in step 2 above, both component key generation processes are invoked, and no indication is given about which one failed. This SHOULD be done in a timing-invariant way to prevent side-channel attackers from learning which component algorithm failed.
+
+Note that this keygen routine outputs a serialized composite key, which contains only the ML-KEM seed. Implementations should feel free to modify this routine to output the expanded `mlkemSK` or to make free use of `ML-KEM.KeyGen(mldsaSeed)` as needed to expand the ML-KEM seed into an expanded prior to performing a decapsulation operation.
 
 Variations in the keygen process above and decapsulation processes below to accommodate particular private key storage mechanisms or alternate interfaces to the underlying cryptographic modules are considered to be conformant to this specification so long as they produce the same output and error handling.
 For example, component private keys stored in separate software or hardware modules where it is not possible to do a joint simultaneous keygen would be considered compliant so long as both keys are freshly generated. It is also possible that the underlying cryptographic module does not expose a `ML-KEM.KeyGen(seed)` that accepts an externally-generated seed, and instead an alternate keygen interface must be used. Note however that cryptographic modules that do not support seed-based ML-KEM key generation will be incapable of importing or exporting composite keys in the standard format since the private key serialization routines defined in {{sec-serialize-privkey}} only support ML-KEM keys as seeds.
