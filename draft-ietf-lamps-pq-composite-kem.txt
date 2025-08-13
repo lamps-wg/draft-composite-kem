@@ -544,7 +544,7 @@ Table of Contents
      1. Generate component keys
 
        mlkemSeed = Random(64)
-       (mlkemPK, mlkemSK_) = ML-KEM.KeyGen(mlkemSeed)
+       (mlkemPK, mlkemSK) = ML-KEM.KeyGen(mlkemSeed)
        (tradPK, tradSK) = Trad.KeyGen()
 
      2. Check for component key gen failure
@@ -570,6 +570,12 @@ Table of Contents
    are invoked, and no indication is given about which one failed.  This
    SHOULD be done in a timing-invariant way to prevent side-channel
    attackers from learning which component algorithm failed.
+
+   Note that this keygen routine outputs a serialized composite key,
+   which contains only the ML-KEM seed.  Implementations should feel
+   free to modify this routine to output the expanded mlkemSK or to make
+   free use of ML-KEM.KeyGen(mldsaSeed) as needed to expand the ML-KEM
+   seed into an expanded prior to performing a decapsulation operation.
 
    Variations in the keygen process above and decapsulation processes
    below to accommodate particular private key storage mechanisms or
