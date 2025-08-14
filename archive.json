@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-08-07T02:23:21.093712+00:00",
+  "timestamp": "2025-08-14T02:07:03.750907+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -947,15 +947,15 @@
       "id": "I_kwDOKRPFO86RpPjG",
       "title": "Should we have a security proof for the ML-KEM+RSA-OAEP composite KEM?",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/54",
-      "state": "CLOSED",
+      "state": "OPEN",
       "author": "johngray-dev",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "For a security proof of the ML-KEM + ECDH combos, we can point to the X-Wing paper. We should have a similar proof for the RSA-OAEP combos. Not sure how to go about attracting someone to help with this, or if we should attempt proof-writing ourselves.",
       "createdAt": "2024-08-01T21:31:58Z",
-      "updatedAt": "2025-03-03T19:59:02Z",
-      "closedAt": "2025-03-03T19:59:02Z",
+      "updatedAt": "2025-08-12T20:31:42Z",
+      "closedAt": null,
       "comments": [
         {
           "author": "ounsworth",
@@ -1005,6 +1005,20 @@
           "body": "Thanks @fluppe2 !\n\n> I think, it is not relevant if RSA-OAEP is C2PRI for your ML-KEM + RSA-OAEP composites, as this is not the security property that RSA-OAEP is asked to deliver in this construction. ... i.e. one might rather argue along their arguments that one can drop the ciphertext of a C2PRI KEM.\n\nYes. This is also my understanding. I guess I did not do a good job of writing it clearly. Thanks for the extra references. I have also asked a few other people to look at this. I'm will do another round of edits.",
           "createdAt": "2025-02-04T02:20:44Z",
           "updatedAt": "2025-02-04T02:20:44Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I am re-opening this issue due to discussion on the LAMPS list about strengthening the current Security Consideration into something resembling a proper proof.\n\nhttps://mailarchive.ietf.org/arch/msg/spasm/n3JExEG42jUGCImvoTaUpPNCBsQ/",
+          "createdAt": "2025-08-12T20:31:14Z",
+          "updatedAt": "2025-08-12T20:31:14Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Sophie suggests this as a starting point for a proof:\n\n> yeah, this definitely requires a proof, especially since you are using a\nnon-standard construction to turn OAEP into a KEM (you could use the FO\ntransform, but it would be overkill). The first step is proofing that an\nIND-CCA PKE can be turned into a KEM by encrypting a randomly chosen byte\nstring, which should be a straight-forward reduction: Assume an attacker A\non the KEM exists, construct an attacker A' on the PKE by forwarding any\ndecaps queries A makes to the decrypt oracle (neither are allowed to query\nthe challenge ciphertext). Give A the two plaintexts as challenge, when A\nguesses one of the plaintexts as the shared secret, guess that plaintext as\nwell. This makes A' an attacker on the PKE and therefore reduce the IND-CCA\nsecurity of the KEM to the IND-CCA security of the PKE (no ROM model\nneeded, as we are already assuming the PKE to be IND-CCA).\n>From there you just need to prove the IND-CCAness of the combiner, which\nyou should be able to find somewhere in the literature for two IND-CCA KEMs.",
+          "createdAt": "2025-08-12T20:31:42Z",
+          "updatedAt": "2025-08-12T20:31:42Z"
         }
       ]
     },
@@ -2820,7 +2834,7 @@
       "id": "I_kwDOKRPFO868O70r",
       "title": "Private key serialization is under-specified",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/173",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "danvangeest",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -2829,8 +2843,8 @@
       "labels": [],
       "body": "The private key serialization is under-specified, at least for EC.  Section 5 of both drafts says the traditional public EC key is encoded as an ECPoint, but says nothing about the private key. RFC5915 which defines ECPrivateKey isn't referenced anywhere in the documents.  The RSAPublicKey, RSAPrivateKey and ECPrivateKey types aren't referenced anywhere in the documents, I think doing so would make serialization clearer.",
       "createdAt": "2025-06-18T20:06:10Z",
-      "updatedAt": "2025-07-02T14:29:24Z",
-      "closedAt": null,
+      "updatedAt": "2025-08-13T14:16:21Z",
+      "closedAt": "2025-08-13T14:16:21Z",
       "comments": [
         {
           "author": "Perksey",
@@ -7632,24 +7646,26 @@
       "id": "PR_kwDOKRPFO86eIJOe",
       "title": "Makes encoding of EC and RSA components more specific.",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/184",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "janklaussner",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Closes #173",
       "createdAt": "2025-07-09T13:32:15Z",
-      "updatedAt": "2025-07-09T20:20:30Z",
+      "updatedAt": "2025-08-13T14:16:20Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "7faa41fbe51816c03e9b98ee6b93a54160306445",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "173-private-key-serialization-is-under-specified",
       "headRefOid": "2db7bf6dcde3dffe02ee6e2bd96b7fdc17a52076",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-08-13T14:16:20Z",
+      "mergedAt": "2025-08-13T14:16:20Z",
+      "mergedBy": "janklaussner",
+      "mergeCommit": {
+        "oid": "b42e01d6d40e450f90d4932d7744dec200aac584"
+      },
       "comments": [],
       "reviews": [
         {
