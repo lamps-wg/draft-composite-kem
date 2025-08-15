@@ -281,7 +281,8 @@ This document defines combinations of ML-KEM [FIPS.203] in hybrid with tradition
 
 Interop-affecting changes:
 
-* Fixed the ASN.1 module for the pk-CompositeKEM and kema-CompositeKEM to indicate no ASN.1 wrapping is used.
+* Changed the private key serialization to carry the TradPK.
+* Fixed the ASN.1 module for the pk-CompositeKEM and kema-CompositeKEM to indicate no ASN.1 wrapping is used. This simply clarifies the intended encoding but could be an interop-affecting change for implementations that built encoders / decoders from the ASN.1 and ended up with a non-intended encoding.
 
 Editorial changes:
 
@@ -413,9 +414,9 @@ The following algorithms are defined for serializing and deserializing component
 
    * `DeserializeCiphertext(bytes) -> (mlkemCT, tradCT)`: Parse a byte string to recover the component ciphertexts.
 
-   * `SerializePrivateKey(mlkemSeed, tradSK) -> bytes`: Produce a byte string encoding of the component private keys.
+   * `SerializePrivateKey(mlkemSeed, tradPK, tradSK) -> bytes`: Produce a byte string encoding of the component private keys.
 
-   * `DeserializePrivateKey(bytes) -> (mlkemSeed, tradSK)`: Parse a byte string to recover the component private keys.
+   * `DeserializePrivateKey(bytes) -> (mlkemSeed, tradPK, tradSK)`: Parse a byte string to recover the component private keys.
 
 Full definitions of serialization and deserialization algorithms can be found in {{sec-serialization}}.
 
@@ -549,7 +550,7 @@ Key Generation Process:
   3. Output the composite public and private keys
 
     pk = SerializePublicKey(mlkemPK, tradPK)
-    sk = SerializePrivateKey(mlkemSeed, tradSK)
+    sk = SerializePrivateKey(mlkemSeed, tradPK, tradSK)
     return (pk, sk)
 
 ~~~
@@ -662,6 +663,12 @@ Implicit inputs mapped from <OID>:
           parameter set, for example "RSA-OAEP"
           or "X25519".
 
+  tradPK  The tradinional public key is required for the KEM combiner.
+          The suggested algorithm below extracts the tradPK from sk,
+          however implementations that use a non-standard private key
+          encoding will need to obtain the traditional public key
+          some other way.
+
   KDF     The KDF specified for the given Composite ML-KEM algorithm.
           See algorithm specifications below.
 
@@ -677,7 +684,7 @@ Decap Process:
 
   1. Separate the private keys and ciphertexts
 
-      (mlkemSeed, tradSK) = DeserializePrivateKey(sk)
+      (mlkemSeed, tradPK, tradSK) = DeserializePrivateKey(sk)
       (_, mlkemSK) = ML-KEM.KeyGen(mlkemSeed)
       (mlkemCT, tradCT) = DeserializeCiphertext(ct)
 
@@ -880,11 +887,16 @@ Deserialization Process:
 The serialization routine for keys simply concatenates the private keys of the component algorithms, as defined below:
 
 ~~~
-Composite-ML-KEM.SerializePrivateKey(mlkemSeed, tradSK) -> bytes
+Composite-ML-KEM.SerializePrivateKey(mlkemSeed, tradPK, tradSK) -> bytes
 
 Explicit inputs:
 
   mlkemSeed  The ML-KEM private key, which is the bytes of the seed.
+
+  tradPK     The traditional public key in the appropriate
+             encoding for the underlying component algorithm.
+             This is required by the decapsulater for inclusion
+             in the KEM combiner.
 
   tradSK     The traditional private key in the appropriate
              encoding for the underlying component algorithm.
@@ -899,19 +911,24 @@ Output:
 
 Serialization Process:
 
-  1. Combine and output the encoded private key.
+  1. Compute the length of tradPK
 
-     output mlkemSeed || tradSK
+     lenTradPK = IntegerToBytes( len(tradPK), 2 )
+
+  2. Combine and output the encoded private key.
+
+     output mlkemSeed || lenTradPK || tradPK || tradSK
 ~~~
-{: #alg-composite-serialize-priv-key title="Composite-ML-KEM.SerializePrivateKey(mlkemSeed, tradSK) -> bytes"}
+{: #alg-composite-serialize-priv-key title="Composite-ML-KEM.SerializePrivateKey(mlkemSeed, tradPK, tradSK) -> bytes"}
 
+The function `IntegerToBytes(x, a)` is defined in Algorithm 11 of [FIPS.204], which is the usual little-endian encoding of an integer. Encoding to 2 bytes allows for traditional public keys up to 65 kb.
 
 Deserialization reverses this process. Each component key is deserialized according to their respective specification as shown in {{appdx_components}}.
 
 The following describes how to instantiate a `DeserializePrivateKey(bytes)` function. Since ML-KEM private keys are 64 bytes for all parameter sets, this function does not need to be parametrized.
 
 ~~~
-Composite-ML-KEM.DeserializePrivateKey(bytes) -> (mlkemSeed, tradSK)
+Composite-ML-KEM.DeserializePrivateKey(bytes) -> (mlkemSeed, tradPK, tradSK)
 
 Explicit inputs:
 
@@ -931,12 +948,18 @@ Output:
 
 Deserialization Process:
 
-  1. Parse each constituent encoded key.
-     The length of an ML-KEM private key is always a 64 byte seed
+  1. Parse the ML-DSA seed, which is always a 64 byte seed
      for all parameter sets.
 
      mlkemSeed = bytes[:64]
-     tradSK  = bytes[64:]
+
+
+  2. Parse the traditional public and private key
+
+     lenTradPK = BytesToInteger( bytes[64:66] )
+     tradPK = bytes[66: 66+lenTradPK]
+
+     tradSK  = bytes[66+lenTradPK:]
 
      Note that while ML-KEM has fixed-length keys, RSA and ECDH
      may not, depending on encoding, so rigorous length-checking
@@ -944,11 +967,12 @@ Deserialization Process:
 
   2. Output the component private keys
 
-     output (mlkemSeed, tradSK)
+     output (mlkemSeed, tradPK, tradSK)
 ~~~
 {: #alg-composite-deserialize-priv-key title="Composite-ML-KEM.DeserializeKey(bytes) -> (mlkemSeed, tradSK)"}
 
 
+The function `BytesToInteger(x)` is not defined in [FIPS.204], but is the obvious inverse of the defined `IntegerToBytes()` which is the usual little-endian encoding of an integer.
 
 
 ## SerializeCiphertext and DeserializeCiphertext
@@ -1516,11 +1540,11 @@ In applications that only allow NIST PQC Level 5, it is RECOMMENDED to focus imp
 
 ## Decapsulation Requires the Public Key {#impl-cons-decaps-pubkey}
 
-ML-KEM always requires the public key in order to perform various steps of the Fujisaki-Okamoto decapsulation [FIPS.203], and for this reason the private key encoding specified in FIPS 203 includes the public key. Moreover, the KEM combiner as specified in {{sec-kem-combiner}} requires the public key of the traditional component in order to achieve the public-key binding property and ciphertext collision resistance as described in {{sec-cons-kem-combiner}}.
+ML-KEM always requires the public key in order to perform various steps of the Fujisaki-Okamoto decapsulation [FIPS.203], and for this reason the private key encoding specified in FIPS 203 includes the public key.
 
-The mechanism by which an application transmits the public keys is out of scope of this specification, but it MAY be accomplished by placing a serialized composite public key into the optional `OneAsymmetricKey.publicKey` field of the private key object.
+Moreover, the KEM combiner as specified in {{sec-kem-combiner}} requires the public key of the traditional component in order to achieve the public-key binding property and ciphertext collision resistance as described in {{sec-cons-kem-combiner}}. For this reason, the private key serialization defined in {{sec-serialize-privkey}} carries the traditional public key so that it is easily available to the decapsulater.
 
-Implementers who choose to use a different private key encoding than the one specified in this document MUST consider how to provide the component public keys to the decapsulate routine. While some implementations might contain routines to computationally derive the public key from the private key, it is not guaranteed that all implementations will support this.
+Implementers who choose to use a different private key encoding than the one specified in this document MUST consider how to provide the component public keys to the decapsulate routine. This includes, for example, implementations that use a hardware security module to hold the private key. While some implementations might contain routines to computationally derive the public key from the private key, it is not guaranteed that all implementations will support this. In some implementations, the application might be required to cache the public key or certificate associated with the private key so that the public key can be retrieved for the purposes of decapsulation.
 
 
 

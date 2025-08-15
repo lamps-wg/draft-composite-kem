@@ -506,6 +506,7 @@ class MLKEM1024(KEM):
 
 ### Composites ###
 
+
 class CompositeKEM(KEM):
   mlkem: KEM = None
   tradkem: KEM = None
@@ -551,18 +552,28 @@ class CompositeKEM(KEM):
 
   def serializePrivateKey(self):
     """
-    (mlkemSK, tradSK) -> sk
+    (mlkemSeed, tradPK, tradSK) -> sk
     """
-    mlkemSK = self.mlkem.private_key_bytes()
+    mlkemSeed = self.mlkem.private_key_bytes()
+    tradPK = self.tradkem.public_key_bytes()
+    lenTradPK = len(tradPK).to_bytes(2, 'little')
     tradSK  = self.tradkem.private_key_bytes()
-    return mlkemSK + tradSK
+    return mlkemSeed + lenTradPK + tradPK + tradSK
+  
 
   def deserializePrivateKey(self, keyBytes):
     """
-    sk -> (mlkemSK, tradSK)
+    sk -> (mlkemSK, tradPK, tradSK)
     """
     assert isinstance(keyBytes, bytes)
-    return keyBytes[:64], keyBytes[64:]
+    mlkemSeed = keyBytes[:64]
+
+    lenTradPK = int.from_bytes(keyBytes[64:66], 'little')
+    tradPK = keyBytes[66: 66+lenTradPK]
+    tradSK = keyBytes[66+lenTradPK:]
+
+    return mlkemSeed, tradPK, tradSK
+  
 
   def public_key_bytes(self):
     return self.serializePublicKey()
