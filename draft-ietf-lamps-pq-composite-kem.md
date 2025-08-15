@@ -79,6 +79,7 @@ normative:
   RFC5480:
   RFC5652:
   RFC5869:
+  RFC5915:
   RFC5958:
   RFC6234:
   RFC7748:
@@ -539,7 +540,7 @@ Key Generation Process:
   1. Generate component keys
 
     mlkemSeed = Random(64)
-    (mlkemPK, _) = ML-KEM.KeyGen(mlkemSeed)
+    (mlkemPK, mlkemSK) = ML-KEM.KeyGen(mlkemSeed)
     (tradPK, tradSK) = Trad.KeyGen()
 
   2. Check for component key gen failure
@@ -549,7 +550,7 @@ Key Generation Process:
   3. Output the composite public and private keys
 
     pk = SerializePublicKey(mlkemPK, tradPK)
-    sk = SerializePrivateKey(mlkemSK, tradPK, tradSK)
+    sk = SerializePrivateKey(mlkemSeed, tradPK, tradSK)
     return (pk, sk)
 
 ~~~
@@ -558,6 +559,8 @@ Key Generation Process:
 In order to ensure fresh keys, the key generation functions MUST be executed for both component algorithms. Compliant parties MUST NOT use, import or export component keys that are used in other contexts, combinations, or by themselves as keys for standalone algorithm use. For more details on the security considerations around key reuse, see section {{sec-cons-key-reuse}}.
 
 Note that in step 2 above, both component key generation processes are invoked, and no indication is given about which one failed. This SHOULD be done in a timing-invariant way to prevent side-channel attackers from learning which component algorithm failed.
+
+Note that this keygen routine outputs a serialized composite key, which contains only the ML-KEM seed. Implementations should feel free to modify this routine to output the expanded `mlkemSK` or to make free use of `ML-KEM.KeyGen(mldsaSeed)` as needed to expand the ML-KEM seed into an expanded prior to performing a decapsulation operation.
 
 Variations in the keygen process above and decapsulation processes below to accommodate particular private key storage mechanisms or alternate interfaces to the underlying cryptographic modules are considered to be conformant to this specification so long as they produce the same output and error handling.
 For example, component private keys stored in separate software or hardware modules where it is not possible to do a joint simultaneous keygen would be considered compliant so long as both keys are freshly generated. It is also possible that the underlying cryptographic module does not expose a `ML-KEM.KeyGen(seed)` that accepts an externally-generated seed, and instead an alternate keygen interface must be used. Note however that cryptographic modules that do not support seed-based ML-KEM key generation will be incapable of importing or exporting composite keys in the standard format since the private key serialization routines defined in {{sec-serialize-privkey}} only support ML-KEM keys as seeds.
@@ -681,13 +684,14 @@ Decap Process:
 
   1. Separate the private keys and ciphertexts
 
-      (mlkemSK, tradPK, tradSK) = DeserializePrivateKey(sk)
+      (mlkemSeed, tradPK, tradSK) = DeserializePrivateKey(sk)
+      (_, mlkemSK) = ML-KEM.KeyGen(mlkemSeed)
       (mlkemCT, tradCT) = DeserializeCiphertext(ct)
 
   2.  Perform the respective component Encap operations according to
       their algorithm specifications.
 
-      mlkemSS = MLKEM.Decaps(mlkemSK, mlkemCT)
+      mlkemSS = ML-KEM.Decaps(mlkemSK, mlkemCT)
       tradSS  = TradKEM.Decap(tradSK, tradCT)
 
   3. If either ML-KEM.Decaps() or TradKEM.Decap() return an error,
@@ -786,9 +790,9 @@ For all serialization routines below, when these values are required to be carri
 While ML-KEM has a single fixed-size representation for each of public key, private key, and ciphertext, the traditional component might allow multiple valid encodings; for example an elliptic curve public key, and therefore also ciphertext, might be validly encoded as either compressed or uncompressed [SEC1], or an RSA private key could be encoded in Chinese Remainder Theorem form [RFC8017]. In order to obtain interoperability, composite algorithms MUST use the following encodings of the underlying components:
 
 * **ML-KEM**: MUST be encoded as specified in [FIPS.203], using a 64-byte seed as the private key.
-* **RSA**: MUST be encoded with the `(n,e)` public key representation as specified in A.1.1 of [RFC8017] and the private key representation as specified in A.1.2 of [RFC8017].
-* **ECDH**: public key MUST be encoded as an `ECPoint` as specified in section 2.2 of [RFC5480], with both compressed and uncompressed keys supported. For maximum interoperability, it is RECOMMENEDED to use uncompressed points.
-* **X25519 and X448**: MUST be encoded as per section 5 of [RFC7748].
+* **RSA**: the public key MUST be encoded as RSAPublicKey with the `(n,e)` public key representation as specified in A.1.1 of [RFC8017] and the private key representation as RSAPrivateKey specified in A.1.2 of [RFC8017].
+* **ECDH**: public key MUST be encoded as an `ECPoint` as specified in section 2.2 of [RFC5480], with both compressed and uncompressed keys supported. For maximum interoperability, it is RECOMMENEDED to use uncompressed points. The private key must be encoded as ECPrivateKey specified in [RFC5915].
+* **X25519 and X448**: the public key MUST be encoded as per section 5 of [RFC7748] and the private key as CurvePrivateKey specified in [RFC8410].
 
 Even with fixed encodings for the traditional component, there may be slight differences in size of the encoded value due to, for example, encoding rules that drop leading zeroes. See {{sec-sizetable}} for further discussion of encoded size of each composite algorithm.
 
@@ -1584,7 +1588,7 @@ This section provides references to the full specification of the algorithms use
 | id-ML-KEM-1024 | 2.16.840.1.101.3.4.4.3 | [FIPS.203] |
 | id-X25519 | 1.3.101.110 | [RFC7748], [RFC8410] |
 | id-X448 | 1.3.101.111 | [RFC7748], [RFC8410] |
-| id-ecDH | 1.3.132.1.12 | [RFC5480], [SEC1] |
+| id-ecDH | 1.3.132.1.12 | [RFC5480], [RFC5915], [SEC1] |
 | id-RSAES-OAEP | 1.2.840.113549.1.1.7 | [RFC8017] |
 {: #tab-component-encr-algs title="Component Encryption Algorithms used in Composite Constructions"}
 
@@ -1607,7 +1611,7 @@ This section provides references to the full specification of the algorithms use
 
 # Fixed Component Algorithm Identifiers
 
-The following sections list explicitly the DER encoded `AlgorithmIdentifier` that MUST be used when reconstructing `SubjectPublicKeyInfo` objects for each component algorithm type, which may be required for example if cryptographic library requires the public key in this form in order to process each component algorithm. The public key `BIT STRING` should be taken directly from the respective component of the Composite ML-KEM public key.
+Many cryptographic libraries are X.509-focused and do not expose interfaces to instantiate a public key from raw bytes, but only from a SubjectPublicKeyInfo structure as you would find in an X.509 certificate, therefore implementing composite in those libraries requires reconstructing the SPKI for each component algorithm. In order to aid implementers and reduce interoperability issues, this section lists out the full public key and signature AlgorithmIdentifiers for each component algorithm.
 
 
 **ML-KEM-768**
@@ -1855,8 +1859,8 @@ Within each test case there are the following values:
 
 Implementers should be able to perform the following tests using the test vectors below:
 
-1. Load the public key `ek` or certificate `x5c` and perform an encapsulation for it.
-2. Load the decapsulation private key `dk` or `dk_pkcs8` and the ciphertext c and perform a `Decaps` operation to ensure that the same shared secret key `k` is derived.
+1. Load the public key `ek` or certificate `x5c` and perform an encapsulation for it (you should obtain valid `ct` and `k` values, but they will not match the ones in the test vector since `Encap()` is randomized.)
+2. Load the decapsulation private key `dk` or `dk_pkcs8` and the ciphertext `c` and perform a `Decaps()` operation to ensure that the same shared secret key `k` is derived.
 
 Test vectors are provided for each underlying ML-KEM algorithm in isolation for the purposes of debugging.
 
@@ -1896,7 +1900,6 @@ Deirdre Connolly (SandboxAQ),
 Chris A. Wood (Apple),
 Bas Westerbaan (Cloudflare),
 Falko Strenzke (MTG AG),
-Dan van Geest (Crypto Next),
 Piotr Popis (Enigma),
 Jean-Pierre Fiset (Crypto4A),
 陳志華 (Abel C. H. Chen, Chunghwa Telecom),
@@ -1904,6 +1907,10 @@ Jean-Pierre Fiset (Crypto4A),
 Douglas Stebila (University of Waterloo).
 
 Thanks to Giacomo Pope (github.com/GiacomoPope) whose ML-DSA and ML-KEM implementations were used to generate the test vectors.
+
+We wish to acknowledge particular effort from Carl Wallace and Dan van Geest (Crypto Next), who have put in sustained effort over multiple years both reviewing and implementing at the hackathon each iteration of this draft.
+
+Thanks to Stepan Yakimovich for contributing to the reference implementation.
 
 We are grateful to all who have given feedback over the years, formally or informally, on mailing lists or in person, including any contributors who may have been inadvertently omitted from this list.
 

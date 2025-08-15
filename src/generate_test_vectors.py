@@ -3,8 +3,14 @@
 from cryptography.hazmat.primitives import hashes, hmac
 from cryptography.hazmat.primitives.asymmetric import rsa, ec, x25519, x448, padding
 import secrets
+
+from cryptography.hazmat.primitives.asymmetric.ec import EllipticCurvePrivateKey
+from cryptography.hazmat.primitives.asymmetric.rsa import RSAPrivateKey
+from cryptography.hazmat.primitives.asymmetric.x25519 import X25519PrivateKey
+from cryptography.hazmat.primitives.asymmetric.x448 import X448PrivateKey
+from cryptography.hazmat.primitives.serialization import load_der_private_key
 from dilithium_py.ml_dsa import ML_DSA_65
-from kyber_py.ml_kem import ML_KEM_768, ML_KEM_1024
+from kyber_py.ml_kem import ML_KEM_512, ML_KEM_768, ML_KEM_1024
 
 from cryptography import x509
 from cryptography.x509.oid import NameOID
@@ -15,14 +21,15 @@ import datetime
 import base64
 import json
 import textwrap
+from zipfile import ZipFile
 
 from pyasn1.type import univ
 from pyasn1_alt_modules import rfc5208
 from pyasn1_alt_modules import rfc5280
-from pyasn1.codec.der.decoder import decode
-from pyasn1.codec.der.encoder import encode
+from pyasn1.codec.der.decoder import decode as der_decode
+from pyasn1.codec.der.encoder import encode as der_encode
 
-
+VERSION_IMPLEMENTED = "draft-ietf-lamps-pq-composite-kem-07"
 
 OID_TABLE = {
   "id-RSAES-OAEP-2048": univ.ObjectIdentifier((1,2,840,113549,1,1,7)),
@@ -33,6 +40,7 @@ OID_TABLE = {
   "ECDH-brainpoolP384r1": univ.ObjectIdentifier((1,2,840,10045,2,1)),
   "id-X25519": univ.ObjectIdentifier((1,3,101,110)),
   "id-X448": univ.ObjectIdentifier((1,3,101,111)),
+  "id-alg-ml-kem-512": univ.ObjectIdentifier((2,16,840,1,101,3,4,4,1)),
   "id-alg-ml-kem-768": univ.ObjectIdentifier((2,16,840,1,101,3,4,4,2)),
   "id-alg-ml-kem-1024": univ.ObjectIdentifier((2,16,840,1,101,3,4,4,3)),
   "id-MLKEM768-RSA2048-HMAC-SHA256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,50)),
@@ -49,6 +57,8 @@ OID_TABLE = {
   "id-MLKEM1024-ECDH-P521-HMAC-SHA512": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,60)),
 }
 
+REVERSE_OID_TABLE = {v: k for k, v in OID_TABLE.items()}
+
 
 class KEM:
   pk = None
@@ -59,7 +69,10 @@ class KEM:
   # returns nothing
   def keyGen(self):
     pass
-    
+
+  def loadKeyPair(self, private_bytes: bytes) -> None:
+    pass
+
   # returns (ct, ss)
   def encap(self):
     if self.pk == None:
@@ -87,21 +100,27 @@ class ECDHP256KEM(KEM):
   def keyGen(self):
     self.sk = ec.generate_private_key(ec.SECP256R1())
     self.pk = self.sk.public_key()
-    
-  def encap(self):    
+
+  def loadKeyPair(self, private_bytes: bytes) -> None:
+    key = load_der_private_key(data=private_bytes, password=None)
+    assert isinstance(key, EllipticCurvePrivateKey)
+    self.sk = key
+    self.pk = key.public_key()
+
+  def encap(self):
     esk = ec.generate_private_key(ec.SECP256R1())
     ss = esk.exchange(ec.ECDH(), self.pk)
     ct = esk.public_key().public_bytes(
                   encoding=serialization.Encoding.X962,
                   format=serialization.PublicFormat.UncompressedPoint
-                ) 
+                )
     return (ct, ss)
 
   def decap(self, ct):
     if isinstance(ct, bytes):
       ct = ec.EllipticCurvePublicKey.from_encoded_point(ec.SECP256R1(), ct)
     return self.sk.exchange(ec.ECDH(), ct)
-  
+
 
   def public_key_bytes(self):
     return self.pk.public_bytes(
@@ -109,14 +128,14 @@ class ECDHP256KEM(KEM):
                       format=serialization.PublicFormat.UncompressedPoint
                     )
 
-  def private_key_bytes(self):    
+  def private_key_bytes(self):
     return self.sk.private_bytes(
                         encoding=serialization.Encoding.DER,
                         format=serialization.PrivateFormat.TraditionalOpenSSL,
                         encryption_algorithm=serialization.NoEncryption()
                     )
 
-  
+
 # skip some copy&paste'ing by inheriting from P256
 class ECDHP521KEM(ECDHP256KEM):
   id = "ECDH-P521"
@@ -125,21 +144,21 @@ class ECDHP521KEM(ECDHP256KEM):
   def keyGen(self):
     self.sk = ec.generate_private_key(ec.SECP521R1())
     self.pk = self.sk.public_key()
-    
-  def encap(self):    
+
+  def encap(self):
     esk = ec.generate_private_key(ec.SECP521R1())
     ss = esk.exchange(ec.ECDH(), self.pk)
     ct = esk.public_key().public_bytes(
               encoding=serialization.Encoding.X962,
               format=serialization.PublicFormat.UncompressedPoint
-            ) 
+            )
     return (ct, ss)
-  
+
   def decap(self, ct):
     if isinstance(ct, bytes):
       ct = ec.EllipticCurvePublicKey.from_encoded_point(ec.SECP521R1(), ct)
     return self.sk.exchange(ec.ECDH(), ct)
-  
+
 
 # skip some copy&paste'ing by inheriting from P256
 class ECDHP384KEM(ECDHP256KEM):
@@ -149,24 +168,24 @@ class ECDHP384KEM(ECDHP256KEM):
   def keyGen(self):
     self.sk = ec.generate_private_key(ec.SECP384R1())
     self.pk = self.sk.public_key()
-    
-  def encap(self):    
+
+  def encap(self):
     esk = ec.generate_private_key(ec.SECP384R1())
     ss = esk.exchange(ec.ECDH(), self.pk)
     ct = esk.public_key().public_bytes(
               encoding=serialization.Encoding.X962,
               format=serialization.PublicFormat.UncompressedPoint
-            ) 
+            )
     return (ct, ss)
-  
+
   def decap(self, ct):
     if isinstance(ct, bytes):
       ct = ec.EllipticCurvePublicKey.from_encoded_point(ec.SECP384R1(), ct)
     return self.sk.exchange(ec.ECDH(), ct)
-  
 
 
-  
+
+
 # skip some copy&paste'ing by inheriting from P256
 class ECDHBP256KEM(ECDHP256KEM):
   id = "ECDH-brainpoolP256r1"
@@ -175,23 +194,23 @@ class ECDHBP256KEM(ECDHP256KEM):
   def keyGen(self):
     self.sk = ec.generate_private_key(ec.BrainpoolP256R1())
     self.pk = self.sk.public_key()
-    
-  def encap(self):    
+
+  def encap(self):
     esk = ec.generate_private_key(ec.BrainpoolP256R1())
     ss = esk.exchange(ec.ECDH(), self.pk)
     ct = esk.public_key().public_bytes(
               encoding=serialization.Encoding.X962,
               format=serialization.PublicFormat.UncompressedPoint
-            ) 
+            )
     return (ct, ss)
-  
+
   def decap(self, ct):
     if isinstance(ct, bytes):
       ct = ec.EllipticCurvePublicKey.from_encoded_point(ec.BrainpoolP256R1(), ct)
     return self.sk.exchange(ec.ECDH(), ct)
-  
 
-  
+
+
 # skip some copy&paste'ing by inheriting from P256
 class ECDHBP384KEM(ECDHP256KEM):
   id = "ECDH-brainpoolP384r1"
@@ -200,16 +219,16 @@ class ECDHBP384KEM(ECDHP256KEM):
   def keyGen(self):
     self.sk = ec.generate_private_key(ec.BrainpoolP384R1())
     self.pk = self.sk.public_key()
-    
-  def encap(self):    
+
+  def encap(self):
     esk = ec.generate_private_key(ec.BrainpoolP384R1())
     ss = esk.exchange(ec.ECDH(), self.pk)
     ct = esk.public_key().public_bytes(
               encoding=serialization.Encoding.X962,
               format=serialization.PublicFormat.UncompressedPoint
-            ) 
+            )
     return (ct, ss)
-  
+
   def decap(self, ct):
     if isinstance(ct, bytes):
       ct = ec.EllipticCurvePublicKey.from_encoded_point(ec.BrainpoolP384R1(), ct)
@@ -223,21 +242,26 @@ class X25519KEM(KEM):
   def keyGen(self):
     self.sk = x25519.X25519PrivateKey.generate()
     self.pk = self.sk.public_key()
-    
-  def encap(self):    
+
+  def loadKeyPair(self, private_bytes: bytes) -> None:
+    key = X25519PrivateKey.from_private_bytes(private_bytes)
+    self.sk = key
+    self.pk = key.public_key()
+
+  def encap(self):
     esk = x25519.X25519PrivateKey.generate()
     ss = esk.exchange(self.pk)
     ct = esk.public_key().public_bytes(
                   encoding=serialization.Encoding.Raw,
                   format=serialization.PublicFormat.Raw
-                ) 
+                )
     return (ct, ss)
 
   def decap(self, ct):
     if isinstance(ct, bytes):
       ct = x25519.X25519PublicKey.from_public_bytes(ct)
     return self.sk.exchange(ct)
-  
+
 
   def public_key_bytes(self):
     return self.pk.public_bytes(
@@ -247,13 +271,14 @@ class X25519KEM(KEM):
 
 
   def private_key_bytes(self):
-    return self.sk.private_bytes(
-                        encoding=serialization.Encoding.Raw,
-                        format=serialization.PrivateFormat.Raw,
-                        encryption_algorithm=serialization.NoEncryption()
-                    )
+    raw = self.sk.private_bytes(
+                    encoding=serialization.Encoding.Raw,
+                    format=serialization.PrivateFormat.Raw,
+                    encryption_algorithm=serialization.NoEncryption()
+                )
+    CurvePrivateKey = univ.OctetString(raw)
+    return der_encode(CurvePrivateKey)
 
-  
 
 class X448KEM(X25519KEM):
   id = "id-X448"
@@ -263,13 +288,18 @@ class X448KEM(X25519KEM):
     self.sk = x448.X448PrivateKey.generate()
     self.pk = self.sk.public_key()
 
-  def encap(self):    
+  def loadKeyPair(self, private_bytes: bytes) -> None:
+    key = X448PrivateKey.from_private_bytes(private_bytes)
+    self.sk = key
+    self.pk = key.public_key()
+
+  def encap(self):
     esk = x448.X448PrivateKey.generate()
     ss = esk.exchange(self.pk)
     ct = esk.public_key().public_bytes(
               encoding=serialization.Encoding.Raw,
               format=serialization.PublicFormat.Raw
-            ) 
+            )
     return (ct, ss)
 
   def decap(self, ct):
@@ -291,8 +321,14 @@ class RSA2048OAEPKEM(KEM):
       )
     self.pk = self.sk.public_key()
 
-  # returns (ct, ss)
-  def encap(self):    
+  def loadKeyPair(self, private_bytes: bytes) -> None:
+    key = load_der_private_key(data=private_bytes, password=None)
+    assert isinstance(key, RSAPrivateKey)
+    self.sk = key
+    self.pk = key.public_key()
+
+# returns (ct, ss)
+  def encap(self):
     ss = secrets.token_bytes(32)
     ct = self.pk.encrypt(
         ss,
@@ -303,10 +339,10 @@ class RSA2048OAEPKEM(KEM):
         )
       )
     return (ct, ss)
-  
+
 
   # returns (ss)
-  def decap(self, ct):    
+  def decap(self, ct):
     ss = self.sk.decrypt(
         ct,
         padding.OAEP(
@@ -316,7 +352,7 @@ class RSA2048OAEPKEM(KEM):
         )
       )
     return ss
-    
+
 
   def public_key_bytes(self):
     return self.pk.public_bytes(
@@ -361,6 +397,40 @@ class RSA4096OAEPKEM(RSA2048OAEPKEM):
     self.pk = self.sk.public_key()
 
 
+class MLKEM512(KEM):
+  id = "id-alg-ml-kem-512"
+  oid = univ.ObjectIdentifier((2,16,840,1,101,3,4,4,1))
+
+  # returns nothing
+  def keyGen(self):
+    self.sk = secrets.token_bytes(64)
+    self.pk, _ = ML_KEM_512.key_derive(self.sk)
+
+  def loadKeyPair(self, private_bytes: bytes) -> None:
+    if len(private_bytes) == 66:
+      # there's an extra OctetString wrapper
+      private_bytes = private_bytes[2:]
+
+    self.sk = private_bytes
+    self.pk, _ = ML_KEM_512.key_derive(private_bytes)
+
+  # returns (ct, ss)
+  def encap(self):
+    (ss, ct) = ML_KEM_512.encaps(self.pk)
+    return (ct, ss)
+
+  # returns (ss)
+  def decap(self, ct):
+    _, dk = ML_KEM_512.key_derive(self.sk)
+    return ML_KEM_512.decaps(dk, ct)
+
+  def public_key_bytes(self):
+    return self.pk
+
+  def private_key_bytes(self):
+    return self.sk
+
+
 class MLKEM768(KEM):
   id = "id-alg-ml-kem-768"
   oid = univ.ObjectIdentifier((2,16,840,1,101,3,4,4,2))
@@ -369,7 +439,16 @@ class MLKEM768(KEM):
   def keyGen(self):
     self.sk = secrets.token_bytes(64)
     self.pk, _ = ML_KEM_768.key_derive(self.sk)
-    
+
+  def loadKeyPair(self, private_bytes: bytes) -> None:
+    if len(private_bytes) == 66:
+      # there's an extra OctetString wrapper
+      private_bytes = private_bytes[2:]
+
+    # Private bytes are the seed
+    self.sk = private_bytes
+    self.pk, _ = ML_KEM_768.key_derive(private_bytes)
+
   # returns (ct, ss)
   def encap(self):
     (ss, ct) = ML_KEM_768.encaps(self.pk)
@@ -385,7 +464,7 @@ class MLKEM768(KEM):
 
   def private_key_bytes(self):
     return self.sk
-  
+
 
 
 class MLKEM1024(KEM):
@@ -396,7 +475,16 @@ class MLKEM1024(KEM):
   def keyGen(self):
     self.sk = secrets.token_bytes(64)
     self.pk, _ = ML_KEM_1024.key_derive(self.sk)
-    
+
+  def loadKeyPair(self, private_bytes: bytes) -> None:
+    if len(private_bytes) == 66:
+      # there's an extra OctetString wrapper
+      private_bytes = private_bytes[2:]
+  
+    # Private bytes are the seed
+    self.sk = private_bytes
+    self.pk, _ = ML_KEM_1024.key_derive(private_bytes)
+
   # returns (ct, ss)
   def encap(self):
     (ss, ct) = ML_KEM_1024.encaps(self.pk)
@@ -412,7 +500,7 @@ class MLKEM1024(KEM):
 
   def private_key_bytes(self):
     return self.sk
-  
+
 
 
 
@@ -420,8 +508,8 @@ class MLKEM1024(KEM):
 
 
 class CompositeKEM(KEM):
-  mlkem = None
-  tradkem = None
+  mlkem: KEM = None
+  tradkem: KEM = None
   kdf = "None"
   domSep = ""
 
@@ -437,7 +525,11 @@ class CompositeKEM(KEM):
 
     self.pk = self.public_key_bytes()
 
-  
+  def loadKeyPair(self, private_bytes: bytes) -> None:
+    mlkem_private_bytes, traditional_private_bytes = self.deserializePrivateKey(private_bytes)
+    self.mlkem.loadKeyPair(mlkem_private_bytes)
+    self.tradkem.loadKeyPair(traditional_private_bytes)
+
   def serializePublicKey(self):
     """
     (pk1, pk2) -> pk
@@ -445,7 +537,7 @@ class CompositeKEM(KEM):
     mlkemPK = self.mlkem.public_key_bytes()
     tradPK  = self.tradkem.public_key_bytes()
     return mlkemPK + tradPK
-  
+
   def deserializePublicKey(self, keyBytes):
     """
     pk -> (pk1, pk2)
@@ -456,12 +548,11 @@ class CompositeKEM(KEM):
       return keyBytes[:1184], keyBytes[1184:]
     elif isinstance(self.mlkem, MLKEM1024):
       return keyBytes[:1568], keyBytes[1568:]
-    
-    
+
 
   def serializePrivateKey(self):
     """
-    (mlkemSK, tradPK, tradSK) -> sk
+    (mlkemSeed, tradPK, tradSK) -> sk
     """
     mlkemSeed = self.mlkem.private_key_bytes()
     tradPK = self.tradkem.public_key_bytes()
@@ -469,7 +560,7 @@ class CompositeKEM(KEM):
     tradSK  = self.tradkem.private_key_bytes()
     return mlkemSeed + lenTradPK + tradPK + tradSK
   
-  
+
   def deserializePrivateKey(self, keyBytes):
     """
     sk -> (mlkemSK, tradPK, tradSK)
@@ -483,18 +574,17 @@ class CompositeKEM(KEM):
 
     return mlkemSeed, tradPK, tradSK
   
-  
+
   def public_key_bytes(self):
     return self.serializePublicKey()
 
   def private_key_bytes(self):
     return self.serializePrivateKey()
-  
+
   def serializeCiphertext(self, ct1, ct2):
     assert isinstance(ct1, bytes)
     assert isinstance(ct2, bytes)
     return ct1 + ct2
-  
 
   def deserializeCiphertext(self, ct):
     assert isinstance(ct, bytes)
@@ -504,13 +594,11 @@ class CompositeKEM(KEM):
     elif isinstance(self.mlkem, MLKEM1024):
       return ct[:1568], ct[1568:]
 
-
-
   # returns (ct, ss)
   def encap(self):
     if self.mlkem == None or self.tradkem == None:
       raise Exception("Cannot Encap for a KEM with no PK.")
-    
+
     (ct1, ss1) = self.mlkem.encap()
     (ct2, ss2) = self.tradkem.encap()
 
@@ -520,12 +608,11 @@ class CompositeKEM(KEM):
 
     return (ct, ss)
 
-
   # returns (ss)
   def decap(self, ct):
     if self.mlkem == None or self.tradkem == None:
       raise Exception("Cannot Decap for a KEM with no SK.")
-    
+
     (mlkemCT, tradCT) = self.deserializeCiphertext(ct)
 
     mlkemSS = self.mlkem.decap(mlkemCT)
@@ -534,7 +621,6 @@ class CompositeKEM(KEM):
     ss = kemCombiner(self, mlkemSS, tradSS, tradCT, self.tradkem.public_key_bytes())
 
     return ss
-
 
 
 class MLKEM768_RSA2048_HMAC_SHA256(CompositeKEM):
@@ -592,7 +678,7 @@ class MLKEM1024_RSA3072_HMAC_SHA512(CompositeKEM):
   tradkem = RSA3072OAEPKEM()
   kdf = "HMAC-SHA512"
 
-  
+
 class MLKEM1024_ECDH_P384_HMAC_SHA512(CompositeKEM):
   id = "id-MLKEM1024-ECDH-P384-HMAC-SHA512"
   mlkem = MLKEM1024()
@@ -613,13 +699,13 @@ class MLKEM1024_X448_SHA3_256(CompositeKEM):
   tradkem = X448KEM()
   kdf = "SHA3-256"
 
-  
+
 class MLKEM1024_ECDH_P521_HMAC_SHA512(CompositeKEM):
   id = "id-MLKEM1024-ECDH-P521-HMAC-SHA512"
   mlkem = MLKEM1024()
   tradkem = ECDHP521KEM()
   kdf = "HMAC-SHA512"
-  
+
 
 ### KEM Combiner ###
 
@@ -661,7 +747,7 @@ def kemCombiner(kem, mlkemSS, tradSS, tradCT, tradPK ):
     h.update(tradPK)
     h.update(kem.domSep)
     ss = h.finalize()
-    
+
   elif kem.kdf == "HMAC-SHA512":
      # ss = HMAC-{Hash}(salt={0}, IKM=mlkemSS || tradSS || tradCT
      #                                        || tradPK || Domain)
@@ -684,12 +770,12 @@ def kemCombiner(kem, mlkemSS, tradSS, tradCT, tradPK ):
     digest.update(tradPK)
     digest.update(kem.domSep)
     ss = digest.finalize()
-  
+
   else:
     raise Exception("KEM combiner \""+str(kem.kdf)+"\" not recognized.")
-    
+
   return ss
-  
+
 
 
 
@@ -708,17 +794,17 @@ caName = x509.Name(
 # input: a cert that already carries a signature that needs to be replaced
 def caSign(cert, caSK):
   certDer = cert.public_bytes(encoding=serialization.Encoding.DER)
-  cert_pyasn1, _ = decode(certDer, rfc5280.Certificate())
+  cert_pyasn1, _ = der_decode(certDer, rfc5280.Certificate())
 
   # Manually set the algID to ML-DSA-65 and re-sign it
   sigAlgID = rfc5280.AlgorithmIdentifier()
   sigAlgID['algorithm'] = univ.ObjectIdentifier((2,16,840,1,101,3,4,3,18))
   cert_pyasn1['tbsCertificate']['signature'] = sigAlgID
-  tbs_bytes = encode(cert_pyasn1['tbsCertificate'])
+  tbs_bytes = der_encode(cert_pyasn1['tbsCertificate'])
   cert_pyasn1['signatureAlgorithm'] = sigAlgID
   cert_pyasn1['signature'] = univ.BitString(hexValue=ML_DSA_65.sign(caSK, tbs_bytes).hex())
 
-  return x509.load_der_x509_certificate(encode(cert_pyasn1))
+  return x509.load_der_x509_certificate(der_encode(cert_pyasn1))
 
 
 # RFC 9500 section 2.1
@@ -780,17 +866,17 @@ def createCA():
                                 crl_sign=False,
                                 encipher_only=False,
                                 decipher_only=False ), critical=True)
-  
+
   x509_builder = x509_builder.add_extension( x509.BasicConstraints(ca=True, path_length=2), critical=True)
 
   caCert = x509_builder.sign(_RSA_DUMMY_KEY, hashes.SHA256())
 
-  
+
   # Replace the RSA public key with ML-DSA
 
   # Extract the Certificate
   caCert_der = caCert.public_bytes(encoding=serialization.Encoding.DER)
-  caCert_pyasn1, _ = decode(caCert_der, rfc5280.Certificate())
+  caCert_pyasn1, _ = der_decode(caCert_der, rfc5280.Certificate())
 
   spki = rfc5280.SubjectPublicKeyInfo()
   algid = rfc5280.AlgorithmIdentifier()
@@ -799,7 +885,7 @@ def createCA():
   spki['subjectPublicKey'] = univ.BitString(hexValue=caPK.hex())
   caCert_pyasn1['tbsCertificate']['subjectPublicKeyInfo'] = spki
 
-  caCert = x509.load_der_x509_certificate(encode(caCert_pyasn1))
+  caCert = x509.load_der_x509_certificate(der_encode(caCert_pyasn1))
 
   caCert = caSign(caCert, caSK)
 
@@ -836,7 +922,7 @@ def signKemCert(caSK, kem):
                                 crl_sign=False,
                                 encipher_only=False,
                                 decipher_only=False ), critical=True)
-  
+
   # x509_builder = x509_builder.add_extension( x509.BasicConstraints(ca=True, path_length=None), critical=True)
 
   kemCert = x509_builder.sign(_RSA_DUMMY_KEY, hashes.SHA256())
@@ -846,7 +932,7 @@ def signKemCert(caSK, kem):
 
   # Extract the Certificate
   kemCert_der = kemCert.public_bytes(encoding=serialization.Encoding.DER)
-  kemCert_pyasn1, _ = decode(kemCert_der, rfc5280.Certificate())
+  kemCert_pyasn1, _ = der_decode(kemCert_der, rfc5280.Certificate())
 
   spki = rfc5280.SubjectPublicKeyInfo()
   algid = rfc5280.AlgorithmIdentifier()
@@ -856,7 +942,7 @@ def signKemCert(caSK, kem):
 
   kemCert_pyasn1['tbsCertificate']['subjectPublicKeyInfo'] = spki
 
-  kemCert = x509.load_der_x509_certificate(encode(kemCert_pyasn1))
+  kemCert = x509.load_der_x509_certificate(der_encode(kemCert_pyasn1))
 
   kemCert = caSign(kemCert, caSK)
 
@@ -866,7 +952,7 @@ def signKemCert(caSK, kem):
 
 
 
-# Setup the test vector output
+# Set up the test vector output
 testVectorOutput = {}
 
 # Create the CA that will sign all KEM certs
@@ -890,7 +976,7 @@ def genDomainTable():
   turned on by doSig(.., includeInDomainTable=True)."""
 
   for alg in OID_TABLE:
-    domain = encode(OID_TABLE[alg])
+    domain = der_encode(OID_TABLE[alg])
     DOMAIN_TABLE[alg] = (domain, False)
 
 # run this statically
@@ -921,15 +1007,144 @@ def doKEM(kem, caSK, includeInTestVectors=True, includeInDomainTable=True, inclu
     SIZE_TABLE[kem.id] = sizeRow
 
 
+def output_artifacts_certs_r5(jsonTestVectors):
+
+  artifacts_zip = ZipFile('artifacts_certs_r5.zip', mode='w')
+
+  for tc in jsonTestVectors['tests']:
+    try:
+      # <friendlyname>-<oid>_ta.der
+      certFilename = tc['tcId'] + "-" + str(OID_TABLE[tc['tcId']]) + "_ee.der"
+      rawKeyFilename = tc['tcId'] + "-" + str(OID_TABLE[tc['tcId']]) + "_priv.raw"
+      derKeyFilename = tc['tcId'] + "-" + str(OID_TABLE[tc['tcId']]) + "_priv.der"
+      ciphertextFilename = tc['tcId'] + "-" + str(OID_TABLE[tc['tcId']]) + "_ciphertext.bin"
+      sharedSecretFilename = tc['tcId'] + "-" + str(OID_TABLE[tc['tcId']]) + "_ss.bin"
+    except KeyError:
+      # if this one is not in the OID_TABLE, then just skip it
+      continue
+
+    artifacts_zip.writestr(certFilename, data=base64.b64decode(tc['x5c']))
+    artifacts_zip.writestr(rawKeyFilename, data=base64.b64decode(tc['dk']))
+    artifacts_zip.writestr(derKeyFilename, data=base64.b64decode(tc['dk_pkcs8']))
+    artifacts_zip.writestr(ciphertextFilename, data=base64.b64decode(tc['c']))
+    artifacts_zip.writestr(sharedSecretFilename, data=base64.b64decode(tc['k']))
+
+
 def writeTestVectors():
   with open('testvectors.json', 'w') as f:
     f.write(json.dumps(testVectorOutput, indent=2))
-  
+
   with open('testvectors_wrapped.json', 'w') as f:
-    f.write('\n'.join(textwrap.wrap(''.join(json.dumps(testVectorOutput, indent="")), 
+    f.write('\n'.join(textwrap.wrap(''.join(json.dumps(testVectorOutput, indent="")),
                                   width=68,
                                   replace_whitespace=False,
                                   drop_whitespace=False)))
+
+  output_artifacts_certs_r5(testVectorOutput)
+
+
+def getNewInstanceByName(oidName: str) -> KEM | None:
+  match oidName:
+    # Plain KEMs
+    case ECDHP256KEM.id:
+      return ECDHP256KEM()
+    case ECDHP521KEM.id:
+      return ECDHP521KEM()
+    case ECDHP384KEM.id:
+      return ECDHP384KEM()
+    case ECDHBP256KEM.id:
+      return ECDHBP256KEM()
+    case ECDHBP384KEM.id:
+      return ECDHBP384KEM()
+    case X25519KEM.id:
+      return X25519KEM()
+    case X448KEM.id:
+      return X448KEM()
+    case RSA2048OAEPKEM.id:
+      return RSA2048OAEPKEM()
+    case RSA3072OAEPKEM.id:
+      return RSA3072OAEPKEM()
+    case RSA4096OAEPKEM.id:
+      return RSA4096OAEPKEM()
+    case MLKEM512.id:
+      return MLKEM512()
+    case MLKEM768.id:
+      return MLKEM768()
+    case MLKEM1024.id:
+      return MLKEM1024()
+
+    # Composite KEMs
+    case MLKEM768_RSA2048_HMAC_SHA256.id:
+      return MLKEM768_RSA2048_HMAC_SHA256()
+    case MLKEM768_RSA3072_HMAC_SHA256.id:
+      return MLKEM768_RSA3072_HMAC_SHA256()
+    case MLKEM768_RSA4096_HMAC_SHA256.id:
+      return MLKEM768_RSA4096_HMAC_SHA256()
+    case MLKEM768_X25519_SHA3_256.id:
+      return MLKEM768_X25519_SHA3_256()
+    case MLKEM768_ECDH_P256_HMAC_SHA256.id:
+      return MLKEM768_ECDH_P256_HMAC_SHA256()
+    case MLKEM768_ECDH_P384_HMAC_SHA256.id:
+      return MLKEM768_ECDH_P384_HMAC_SHA256()
+    case MLKEM768_ECDH_brainpoolP256r1_HMAC_SHA256.id:
+      return MLKEM768_ECDH_brainpoolP256r1_HMAC_SHA256()
+    case MLKEM1024_RSA3072_HMAC_SHA512.id:
+      return MLKEM1024_RSA3072_HMAC_SHA512()
+    case MLKEM1024_ECDH_P384_HMAC_SHA512.id:
+      return MLKEM1024_ECDH_P384_HMAC_SHA512()
+    case MLKEM1024_ECDH_brainpoolP384r1_HMAC_SHA512.id:
+      return MLKEM1024_ECDH_brainpoolP384r1_HMAC_SHA512()
+    case MLKEM1024_X448_SHA3_256.id:
+      return MLKEM1024_X448_SHA3_256()
+    case MLKEM1024_ECDH_P521_HMAC_SHA512.id:
+      return MLKEM1024_ECDH_P521_HMAC_SHA512()
+
+
+def validatePrivateKey(priv_der: bytes, cert_bytes: bytes, encapsulation_bytes: bytes, shared_secret_bytes: bytes) -> bool:
+  """
+  0. Load the private key from :priv_bytes:
+  1. Check that decapsulating :encapsulation_bytes: with the private key results into :shared_secret_bytes:
+  2. Check that public key derived from the private key equals the public key from :cert_bytes:
+  """
+
+  # 0. Load the private key from :priv_bytes:
+  try:
+    x509obj = x509.load_der_x509_certificate(cert_bytes)
+  except:
+    try:
+      x509obj = x509.load_pem_x509_certificate(cert_bytes)
+    except:
+      raise ValueError("Input could not be parsed as a DER or PEM certificate.")
+
+  OID = univ.ObjectIdentifier(x509obj.public_key_algorithm_oid.dotted_string)
+  algorithmName = REVERSE_OID_TABLE.get(OID)
+  if algorithmName is None:
+    raise LookupError(f"OID does not represent a composite (at least not in {VERSION_IMPLEMENTED}): {str(OID)}")
+
+  kem: KEM = getNewInstanceByName(algorithmName)
+  privateKeyInfo, _ = der_decode(priv_der, rfc5208.PrivateKeyInfo())
+  privateBytes = privateKeyInfo["privateKey"].asOctets()
+  kem.loadKeyPair(private_bytes=privateBytes)
+
+  # 1. Check that decapsulating :encapsulation_bytes: with the private key results into :shared_secret_bytes:
+  decapsulationBytes: bytes = kem.decap(encapsulation_bytes)
+  if decapsulationBytes != shared_secret_bytes:
+    print( "\tDecapsulation check failed.")
+    print(f"\t\tExpected shared secret: {shared_secret_bytes.hex()}")
+    print(f"\t\tActual:                 {decapsulationBytes.hex()}")
+    return False
+
+  # 2. Check that public key derived from the private key equals the public key from :cert_bytes:
+  asn1Certificate, _ = der_decode(cert_bytes, rfc5280.Certificate())
+  loadedPublicKey = kem.public_key_bytes()
+  certPublicKey = asn1Certificate["tbsCertificate"]["subjectPublicKeyInfo"]["subjectPublicKey"].asOctets()
+  if loadedPublicKey != certPublicKey:
+    print( "\tPublic key check failed.")
+    print(f"\t\tPublic key in the certificate:                  {certPublicKey.hex()}")
+    print(f"\t\tPublic key derived from the loaded private key: {loadedPublicKey.hex()}")
+    return False
+
+  return True
 
 
 def formatResults(kem, caSK, ct, ss ):
@@ -940,11 +1155,11 @@ def formatResults(kem, caSK, ct, ss ):
 
   kemCert = signKemCert(caSK, kem)
   jsonTest['x5c'] = base64.b64encode(kemCert.public_bytes(encoding=serialization.Encoding.DER)).decode('ascii')
-  
+
   # for standalone ML-KEM, we need to wrap the private key in an OCTET STRING, but not when it's a composite
   if kem.id in ("id-alg-ml-kem-768", "id-alg-ml-kem-1024"):
     jsonTest['dk'] = base64.b64encode(
-                          encode(univ.OctetString(kem.private_key_bytes()))
+                          der_encode(univ.OctetString(kem.private_key_bytes()))
                                                       ).decode('ascii')
   else:
     jsonTest['dk'] = base64.b64encode(kem.private_key_bytes()).decode('ascii')
@@ -962,7 +1177,7 @@ def formatResults(kem, caSK, ct, ss ):
     pki['privateKey'] = univ.OctetString(univ.OctetString(kem.private_key_bytes()))
   else:
     pki['privateKey'] = univ.OctetString(kem.private_key_bytes())
-  jsonTest['dk_pkcs8'] = base64.b64encode(encode(pki)).decode('ascii')
+  jsonTest['dk_pkcs8'] = base64.b64encode(der_encode(pki)).decode('ascii')
 
   jsonTest['c'] = base64.b64encode(ct).decode('ascii')
   jsonTest['k'] = base64.b64encode(ss).decode('ascii')
@@ -1007,7 +1222,7 @@ def writeSizeTable():
                  str(row['sk']).center(14, ' ') +'|'+
                  str(row['ct']).center(14, ' ') +'|'+
                  str(row['ss']).center(6, ' ') +'|\n')
-  
+
 
 def writeDomainTable():
   """
@@ -1022,7 +1237,7 @@ def writeDomainTable():
       if DOMAIN_TABLE[alg][1]:  # boolean controlling rendering in this table.
         f.write('| ' + alg.ljust(45, ' ') + " | " + base64.b16encode(DOMAIN_TABLE[alg][0]).decode('ascii') + " |\n")
 
-        
+
 
 def writeKEMCombinerExample(kem, filename):
   """
@@ -1043,7 +1258,7 @@ def writeKEMCombinerExample(kem, filename):
 
   wrap_width = 70
 
-  f.write("# Inputs\n")      
+  f.write("# Inputs\n")
   f.write( "\n".join(textwrap.wrap("mlkemSS: " + mlkemSS.hex(), width=wrap_width)) +"\n\n" )
   f.write( "\n".join(textwrap.wrap("tradSS:  " + tradSS.hex(), width=wrap_width)) +"\n\n" )
   f.write( "\n".join(textwrap.wrap("tradCT:  " + tradCT.hex(), width=wrap_width)) +"\n\n" )
@@ -1056,7 +1271,7 @@ def writeKEMCombinerExample(kem, filename):
   f.write("\n\n# Outputs\n")
   f.write("# ss = " + kem.kdf + "(Combined KDF Input)\n\n")
   f.write( "\n".join(textwrap.wrap("ss: " + ss.hex(), width=wrap_width)) +"\n" )
-  
+
 
 
 
@@ -1074,7 +1289,7 @@ def main():
   doKEM(MLKEM1024(), caSK, includeInTestVectors=True, includeInDomainTable=False, includeInSizeTable=True )
 
 
-  
+
   # Composites
   doKEM(MLKEM768_RSA2048_HMAC_SHA256(), caSK)
   doKEM(MLKEM768_RSA3072_HMAC_SHA256(), caSK)
