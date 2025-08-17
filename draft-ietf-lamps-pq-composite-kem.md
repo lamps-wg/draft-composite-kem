@@ -1191,6 +1191,8 @@ EDNOTE: these are prototyping OIDs to be replaced by IANA.
 
 In alignment with ML-KEM [FIPS.203], Composite KEM algorithms output a 256-bit shared secret key at all security levels, truncating is necessary as described in {{sec-kem-combiner}}.
 
+For all RSA key types and sizes, the exponent is RECOMMENDED to be 65537. Where it is advantageous to hard-code an exponent, for example in order to obtain predictable key sizes, implementations MAY hard-code 65537; thus implementations using other values for the exponent should not expect it to be intereperable with all other implementations.
+
 The KDFs were chosen to roughly match the security level of the stronger component. In the case of X25519 and X448 SHA3-256 is used to match the construction in {{X-Wing}}.
 
 Full specifications for the referenced component algorithms can be found in {{appdx_components}}.
