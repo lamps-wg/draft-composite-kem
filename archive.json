@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-08-14T02:07:03.750907+00:00",
+  "timestamp": "2025-08-17T02:19:31.042021+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -2874,7 +2874,7 @@
       "id": "I_kwDOKRPFO868O8Zq",
       "title": "x25519/x448 encoding",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/174",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "danvangeest",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -2883,8 +2883,8 @@
       "labels": [],
       "body": "For the 25519/448 composites, the traditional private key component is the raw 32 or 56 bytes.  Since the EC and RSA private key components are to be encoded as ECPrivateKey and RSAPrivateKey, it might be more consistent to encode the 25519/448 keys as a CurvePrivateKey (i.e. wrap the raw key in an OCTET STRING).  I'm not convinced that doing this one way or the other is better, just that doing so would be consistent. Then all traditional components will be equivalent to the contents of a standalone traditional PrivateKeyInfo.privateKey OCTET STRING.",
       "createdAt": "2025-06-18T20:07:11Z",
-      "updatedAt": "2025-07-08T20:52:59Z",
-      "closedAt": null,
+      "updatedAt": "2025-08-15T11:59:34Z",
+      "closedAt": "2025-08-15T11:59:34Z",
       "comments": [
         {
           "author": "janklaussner",
@@ -2981,7 +2981,7 @@
       "id": "I_kwDOKRPFO869XCfC",
       "title": "Where is tradPK in Decap from?",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/179",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "wangweij",
       "authorAssociation": "NONE",
       "assignees": [],
@@ -2991,8 +2991,8 @@
       ],
       "body": "The `KemCombiner` operation in the final step requires `tradPK`, but `DeserializePrivateKey(sk)` only gives us `tradSK`. Is `tradPK` derived from `tradSK`? I\u2019m wondering whether all implementations provide a way to do that.",
       "createdAt": "2025-06-25T20:52:44Z",
-      "updatedAt": "2025-07-09T15:19:26Z",
-      "closedAt": null,
+      "updatedAt": "2025-08-15T12:39:26Z",
+      "closedAt": "2025-08-15T12:39:26Z",
       "comments": [
         {
           "author": "janklaussner",
@@ -3146,6 +3146,22 @@
       "body": "Section 6.1 says the following:\n```\n... the composite value MUST be wrapped into a DER BIT STRING or OCTET STRING in the obvious ways.\n```\nTo me something like *obvious ways* seems unfitting for an RFC. This wording is especially misleading as the ASN.1 BIT STRING type was not intended to hold byte array like data, but a sequence of flags, and in examples like certificate `subjectPublicKey` fields, one explicitly needs to keep the trailing zeros (see OpenSSL's `ossl_asn1_string_set_bits_left` for example). This may be worth clarifying.",
       "createdAt": "2025-08-05T11:22:39Z",
       "updatedAt": "2025-08-05T11:47:06Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 193,
+      "id": "I_kwDOKRPFO87GU3gO",
+      "title": "Change domain separators to match draft-cfrg-concrete-hybrid-kem?",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/193",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "That means the starship for X-Wing, and ASCII strings of the form `QSF-P256-MLKEM768-SHAKE256-SHA3256` ... need to coordinate with Richard Barnes about whether the KeyGen() PRG (\"SHAKE256\", in this case) is really an interop param.",
+      "createdAt": "2025-08-16T15:10:10Z",
+      "updatedAt": "2025-08-16T15:10:10Z",
       "closedAt": null,
       "comments": []
     }
@@ -7593,24 +7609,26 @@
       "id": "PR_kwDOKRPFO86eAtQh",
       "title": "Changes representation of X25519/X448 private keys to CurvePrivateKey.",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/183",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "janklaussner",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Closes #174",
       "createdAt": "2025-07-08T20:51:52Z",
-      "updatedAt": "2025-07-14T18:00:17Z",
+      "updatedAt": "2025-08-15T11:59:33Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
-      "baseRefOid": "774e8cf1776cc19160816fe2e06e4b5a17ed5999",
+      "baseRefOid": "fed5eab7ee4088bce75a80db5264b20d3a778121",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "174-x25519x448-encoding",
-      "headRefOid": "014a38f9a79a37f14148306eaca6adfed4cfb8c2",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "dd88dc427544f7949d48fc6c3744b0275be13ad1",
+      "closedAt": "2025-08-15T11:59:33Z",
+      "mergedAt": "2025-08-15T11:59:33Z",
+      "mergedBy": "janklaussner",
+      "mergeCommit": {
+        "oid": "51420da83d152fbc7d8b659032d9efcfe7f1b01b"
+      },
       "comments": [],
       "reviews": [
         {
@@ -7701,24 +7719,26 @@
       "id": "PR_kwDOKRPFO86eK4TA",
       "title": "Adding tradPK to sk",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/185",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Closes #179",
       "createdAt": "2025-07-09T18:22:46Z",
-      "updatedAt": "2025-07-10T12:54:07Z",
+      "updatedAt": "2025-08-15T12:39:26Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
-      "baseRefOid": "7faa41fbe51816c03e9b98ee6b93a54160306445",
+      "baseRefOid": "51420da83d152fbc7d8b659032d9efcfe7f1b01b",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_add_tradPK_to_sk",
-      "headRefOid": "19afe87a2c0c60f189fb0d4c4d506103871d7684",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "243222667a6523c8394f9a8e7f23b5c2057f0e29",
+      "closedAt": "2025-08-15T12:39:25Z",
+      "mergedAt": "2025-08-15T12:39:25Z",
+      "mergedBy": "janklaussner",
+      "mergeCommit": {
+        "oid": "38832ef0207bad13b83e9d2a2a7e0351b5b0d28f"
+      },
       "comments": [
         {
           "author": "ounsworth",
@@ -7973,6 +7993,40 @@
           "body": "This is amazing! I am going to go ahead and merge, and then integrate into the automated tests in the hackathon repo!",
           "createdAt": "2025-07-24T18:15:16Z",
           "updatedAt": "2025-07-24T18:15:16Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 194,
+      "id": "PR_kwDOKRPFO86j9buL",
+      "title": "Properly wrapped the non-composite ML-KEM test vector priv keys in an\u2026",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/194",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "\u2026 OCTET STRING to satisfy the CHOICE structure. Closes #172",
+      "createdAt": "2025-08-16T21:17:26Z",
+      "updatedAt": "2025-08-16T21:18:16Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "38832ef0207bad13b83e9d2a2a7e0351b5b0d28f",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_mlkem_priv_raw",
+      "headRefOid": "f891cb71d13e4c78726f7bcd6ce88304c34b9a13",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@danvangeest  I would like your review on this. \r\n\r\nThis PR mirrors https://github.com/lamps-wg/draft-composite-sigs/pull/219 in -sigs.",
+          "createdAt": "2025-08-16T21:18:16Z",
+          "updatedAt": "2025-08-16T21:18:16Z"
         }
       ],
       "reviews": []
