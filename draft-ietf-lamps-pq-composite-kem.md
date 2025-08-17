@@ -304,7 +304,7 @@ Cautious implementers may opt to combine cryptographic algorithms in such a way 
 
 Certain jurisdictions are already recommending or mandating that PQC lattice schemes be used exclusively within a PQ/T hybrid framework. The use of a composite scheme provides a straightforward implementation of hybrid solutions compatible with (and advocated by) some governments and cybersecurity agencies [BSI2021], [ANSSI2024].
 
-This specification defines a specific instantiation of the PQ/T Hybrid paradigm called "composite" where multiple cryptographic algorithms are combined to form a single key encapsulation mechanism (KEM) presenting a single public key and ciphertext such that it can be treated as a single atomic algorithm at the protocol level; a property referred to as "protocol backwards compatibility" since it can be applied to protocols that are not explicitly hybrid-aware. composite algorithms address algorithm strength uncertainty because the composite algorithm remains strong so long as one of its components remains strong. Concrete instantiations of composite ML-KEM algorithms are provided based on ML-KEM, RSA-OAEP and ECDH. Backwards compatibility in the sence of upgraded systems continuing to inter-operate with legacy systems is not directly covered in this specification, but is the subject of {{sec-backwards-compat}}.
+This specification defines a specific instantiation of the PQ/T Hybrid paradigm called "composite" where multiple cryptographic algorithms are combined to form a single key encapsulation mechanism (KEM) presenting a single public key and ciphertext such that it can be treated as a single atomic algorithm at the protocol level; a property referred to as "protocol backwards compatibility" since it can be applied to protocols that are not explicitly hybrid-aware. Composite algorithms address algorithm strength uncertainty because the composite algorithm remains strong so long as one of its components remains strong. Concrete instantiations of composite ML-KEM algorithms are provided based on ML-KEM, RSA-OAEP and ECDH. Backwards compatibility in the sense of upgraded systems continuing to inter-operate with legacy systems is not directly covered in this specification, but is the subject of {{sec-backwards-compat}}.
 
 Composite ML-KEM is applicable in any PKIX-related application that would otherwise use ML-KEM.
 
@@ -375,13 +375,13 @@ The algorithm descriptions use python-like syntax. The following symbols deserve
 >      incorporates multiple component cryptographic elements of the same
 >      type in a multi-algorithm scheme.
 
-Composite algorithms, as defined in this specification, follow this definition and should be regarded as a single key that performs a single cryptographic operation typical of a key establishment mechanism such as key generation, encapsulating, or decapsulating -- using its internal sequence of component keys as if they form a single key. This generally means that the complexity of combining algorithms can and should be handled by the cryptographic library or cryptographic module, and the single composite public key, private key, and ciphertext can be carried in existing fields in protocols such as PKCS#10 {{RFC2986}}, CMP {{RFC4210}}, X.509 {{RFC5280}}, CMS {{RFC5652}}, and the Trust Anchor Format [RFC5914]. In this way, composites achieve "protocol backwards-compatibility" in that they will drop cleanly into any protocol that accepts an analogous single-algorithm cryptographic scheme without requiring any modification of the protocol to handle multiple algorithms.
+Composite algorithms, as defined in this specification, follow this definition and should be regarded as a single key that performs a single cryptographic operation typical of a key establishment mechanism such as key generation, encapsulating, or decapsulating -- using its internal concatenation of component keys as if they form a single key. This generally means that the complexity of combining algorithms can and should be handled by the cryptographic library or cryptographic module, and the single composite public key, private key, and ciphertext can be carried in existing fields in protocols such as PKCS#10 {{RFC2986}}, CMP {{RFC4210}}, X.509 {{RFC5280}}, CMS {{RFC5652}}, and the Trust Anchor Format [RFC5914]. In this way, composites achieve "protocol backwards-compatibility" in that they will drop cleanly into any protocol that accepts an analogous single-algorithm cryptographic scheme without requiring any modification of the protocol to handle multiple algorithms.
 
 Discussion of the specific choices of algorithm pairings can be found in {{sec-rationale}}.
 
 # Overview of the Composite ML-KEM Scheme {#sec-kems}
 
-Composite ML-KEM is a PQ/T hybrid Key Encapsulation Mechanism (KEM) which combines ML-KEM as specified in [FIPS.203] and {{I-D.ietf-lamps-kyber-certificates}} with one of RSA-OAEP defined in [RFC8017], the Elliptic Curve Diffie-Hellman key agreement schemes ECDH defined in section 5.7.1.2 of [SP.800-56Ar3], and X25519 / X448 defined in [RFC8410]. A KEM combiner function is used to combine the two component shared secret keyss into a single shared secret key.
+Composite ML-KEM is a PQ/T hybrid Key Encapsulation Mechanism (KEM) which combines ML-KEM as specified in [FIPS.203] and {{I-D.ietf-lamps-kyber-certificates}} with one of RSA-OAEP defined in [RFC8017], the Elliptic Curve Diffie-Hellman key agreement schemes ECDH defined in section 5.7.1.2 of [SP.800-56Ar3], and X25519 / X448 defined in [RFC8410]. A KEM combiner function is used to combine the two component shared secret keys into a single shared secret key.
 
 Composite Key Encapsulation Mechanisms are defined as cryptographic primitives that consist of three algorithms. These definitions are borrowed from {{RFC9180}}.
 
@@ -513,7 +513,7 @@ This section describes the composite ML-KEM functions needed to instantiate the 
 
 In order to maintain security properties of the composite, applications that use composite keys MUST always perform fresh key generations of both component keys and MUST NOT reuse existing key material. See {{sec-cons-key-reuse}} for a discussion.
 
-To generate a new keypair for composite schemes, the `KeyGen() -> (pk, sk)` function is used. The KeyGen() function calls the two key generation functions of the component algorithms independently. Multi-process or multi-threaded applications might choose to execute the key generation functions in parallel for better key generation performance.
+To generate a new keypair for composite schemes, the `KeyGen() -> (pk, sk)` function is used. The KeyGen() function calls the two key generation functions of the component algorithms independently. Multi-threaded, multi-process, or multi-module applications might choose to execute the key generation functions in parallel for better key generation performance or architectural modularity.
 
 The following describes how to instantiate a `KeyGen()` function for a given composite algorithm represented by `<OID>`.
 
@@ -556,7 +556,7 @@ Key Generation Process:
 ~~~
 {: #alg-composite-keygen title="Composite-ML-KEM<OID>.KeyGen() -> (pk, sk)"}
 
-In order to ensure fresh keys, the key generation functions MUST be executed for both component algorithms. Compliant parties MUST NOT use, import or export component keys that are used in other contexts, combinations, or by themselves as keys for standalone algorithm use. For more details on the security considerations around key reuse, see section {{sec-cons-key-reuse}}.
+In order to ensure fresh keys, the key generation functions MUST be executed for both component algorithms. Compliant parties MUST NOT use, import or export component keys that are used in other contexts, combinations, or by themselves as keys for standalone algorithm use. For more details on the security considerations around key reuse, see {{sec-cons-key-reuse}}.
 
 Note that in step 2 above, both component key generation processes are invoked, and no indication is given about which one failed. This SHOULD be done in a timing-invariant way to prevent side-channel attackers from learning which component algorithm failed.
 
@@ -1093,7 +1093,7 @@ the post-quantum algorithms do not and therefore the overall composite algorithm
 
 ## ASN.1 Definitions {#sec-asn1-defs}
 
-Composite ML-KEM uses a substantially non-ASN.1 based encoding, as specified in {{sec-serialization}}. However, as as composite algorithms will be used within ASN.1-based X.509 and PKIX protocols, some conventions for ASN.1 wrapping are necessary.
+Composite ML-KEM uses a substantially non-ASN.1 based encoding, as specified in {{sec-serialization}}. However, as composite algorithms will be used within ASN.1-based X.509 and PKIX protocols, some conventions for ASN.1 wrapping are necessary.
 
 The following ASN.1 Information Object Classes are defined to allow for compact definitions of each composite algorithm, leading to a smaller overall ASN.1 module.
 
@@ -1191,6 +1191,8 @@ EDNOTE: these are prototyping OIDs to be replaced by IANA.
 
 In alignment with ML-KEM [FIPS.203], Composite KEM algorithms output a 256-bit shared secret key at all security levels, truncating is necessary as described in {{sec-kem-combiner}}.
 
+For all RSA key types and sizes, the exponent is RECOMMENDED to be 65537. Where it is advantageous to hard-code an exponent, for example in order to obtain predictable key sizes, implementations MAY hard-code 65537; thus implementations using other values for the exponent should not expect it to be intereperable with all other implementations.
+
 The KDFs were chosen to roughly match the security level of the stronger component. In the case of X25519 and X448 SHA3-256 is used to match the construction in {{X-Wing}}.
 
 Full specifications for the referenced component algorithms can be found in {{appdx_components}}.
@@ -1223,11 +1225,11 @@ EDNOTE: these domain separators are based on the prototyping OIDs assigned on th
 ## Rationale for choices {#sec-rationale}
 
 
-In generating the list of composite algorithms, the idea was to provide composite algorithms at various security levels with varying performance charactaristics.
+In generating the list of composite algorithms, the idea was to provide composite algorithms at various security levels with varying performance characteristics.
 
 The main design consideration in choosing pairings is to prioritize providing pairings of each ML-KEM security level with commonly-deployed traditional algorithms. This supports the design goal of using composites as a stepping stone to efficiently deploy post-quantum on top of existing hardened and certified traditional algorithm implementations. This was prioritized rather than attempting to exactly match the security level of the post-quantum and traditional components -- which in general is difficult to do since there is no academic consensus on how to compare the "bits of security" against classical attackers and "qubits of security" against quantum attackers.
 
-SHA2 is prioritized over SHA3 in order to facilitate implementations that do not have easy access to SHA3 outside of the ML-KEM module. However SHA3 is used with X25519 and X448 SHA3-256 to match the construction in {{X-Wing}}. This also provides a slight efficiency gain for the X25519 and X448 based composites since a single invocation of SHA3 is known to behave as a dual-PRF, and thus is sufficient for use as a KDF, see {{sec-cons-kem-combiner}}, compared with an HMAC-SHA2 construction.
+SHA2 is prioritized over SHA3 in order to facilitate implementations that do not have easy access to SHA3 outside of the ML-KEM module. However SHA3 is used with X25519 and X448 to match the construction in {{X-Wing}}. This also provides a slight efficiency gain for the X25519 and X448 based composites since a single invocation of SHA3 is known to behave as a dual-PRF, and thus is sufficient for use as a KDF, see {{sec-cons-kem-combiner}}, compared with an HMAC-SHA2 construction.
 
 While it may seem odd to use 256-bit outputs at all security levels, this aligns with ML-KEM [FIPS.203] which produces a 256-bit shared secret key at all security levels. All hash functions used have >= 256 bits of (2nd) pre-image resistance, which is the required property for a KDF to provide 128 bits of security, as allowed in Table 3 of {{SP.800-57pt1r5}}. Composite algorithms at higher security levels use a larger hash function in order to preserve internal collision resistance of the hash function at a comparable strength to the underlying component algorithms up to the point where truncation to a 256-bit output is performed.
 
@@ -1277,7 +1279,7 @@ EDNOTE to IANA: OIDs will need to be replaced in both the ASN.1 module and in {{
 
 ###  Module Registration
 
-The following is to be regisetered in "SMI Security for PKIX Module Identifier":
+The following is to be registered in "SMI Security for PKIX Module Identifier":
 
 -  Decimal: IANA Assigned - **Replace TBDMOD**
 -  Description: Composite-KEM-2023 - id-mod-composite-kems
@@ -1436,7 +1438,7 @@ Provided all inputs are well-formed, the key establishment procedure of ML-KEM w
 | ML-KEM-1024       | 2^(-174)                    |
 {: #tab-mlkem-failure-rate title="ML-KEM decapsulation failure rates"}
 
-In the case of ML-KEM decapsulation failure, Composite ML-KEM MUST preserve the same behaviour and return a well-formed output shared secret key.
+In the case of ML-KEM decapsulation failure, Composite ML-KEM MUST preserve the same behavior and return a well-formed output shared secret key.
 
 
 ## Policy for Deprecated and Acceptable Algorithms
@@ -1559,7 +1561,7 @@ The sizes listed below are approximate: these values are measured from the test 
 
 * Compressed vs uncompressed EC point.
 * The RSA public key `(n, e)` allows `e` to vary is size between 3 and `n - 1` [RFC8017].
-* When the underlying RSA or EC value is itself DER-encoded, integer values could occaisionally be shorter than expected due to leading zeros being dropped from the encoding.
+* When the underlying RSA or EC value is itself DER-encoded, integer values could occasionally be shorter than expected due to leading zeros being dropped from the encoding.
 
 By contrast, ML-KEM values are always fixed size, so composite values can always be correctly de-serialized based on the size of the ML-KEM component.
 
