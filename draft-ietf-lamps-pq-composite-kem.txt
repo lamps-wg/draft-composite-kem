@@ -201,11 +201,11 @@ Table of Contents
    be treated as a single atomic algorithm at the protocol level; a
    property referred to as "protocol backwards compatibility" since it
    can be applied to protocols that are not explicitly hybrid-aware.
-   composite algorithms address algorithm strength uncertainty because
+   Composite algorithms address algorithm strength uncertainty because
    the composite algorithm remains strong so long as one of its
    components remains strong.  Concrete instantiations of composite ML-
    KEM algorithms are provided based on ML-KEM, RSA-OAEP and ECDH.
-   Backwards compatibility in the sence of upgraded systems continuing
+   Backwards compatibility in the sense of upgraded systems continuing
    to inter-operate with legacy systems is not directly covered in this
    specification, but is the subject of Section 11.2.
 
@@ -288,7 +288,7 @@ Table of Contents
    definition and should be regarded as a single key that performs a
    single cryptographic operation typical of a key establishment
    mechanism such as key generation, encapsulating, or decapsulating --
-   using its internal sequence of component keys as if they form a
+   using its internal concatenation of component keys as if they form a
    single key.  This generally means that the complexity of combining
    algorithms can and should be handled by the cryptographic library or
    cryptographic module, and the single composite public key, private
@@ -311,7 +311,7 @@ Table of Contents
    [RFC8017], the Elliptic Curve Diffie-Hellman key agreement schemes
    ECDH defined in section 5.7.1.2 of [SP.800-56Ar3], and X25519 / X448
    defined in [RFC8410].  A KEM combiner function is used to combine the
-   two component shared secret keyss into a single shared secret key.
+   two component shared secret keys into a single shared secret key.
 
    Composite Key Encapsulation Mechanisms are defined as cryptographic
    primitives that consist of three algorithms.  These definitions are
@@ -520,9 +520,9 @@ Table of Contents
    To generate a new keypair for composite schemes, the KeyGen() -> (pk,
    sk) function is used.  The KeyGen() function calls the two key
    generation functions of the component algorithms independently.
-   Multi-process or multi-threaded applications might choose to execute
-   the key generation functions in parallel for better key generation
-   performance.
+   Multi-threaded, multi-process, or multi-module applications might
+   choose to execute the key generation functions in parallel for better
+   key generation performance or architectural modularity.
 
    The following describes how to instantiate a KeyGen() function for a
    given composite algorithm represented by <OID>.
@@ -569,7 +569,7 @@ Table of Contents
    use, import or export component keys that are used in other contexts,
    combinations, or by themselves as keys for standalone algorithm use.
    For more details on the security considerations around key reuse, see
-   section Section 10.3.
+   Section 10.3.
 
    Note that in step 2 above, both component key generation processes
    are invoked, and no indication is given about which one failed.  This
@@ -1247,7 +1247,7 @@ Deserialization Process:
 6.3.  ASN.1 Definitions
 
    Composite ML-KEM uses a substantially non-ASN.1 based encoding, as
-   specified in Section 5.  However, as as composite algorithms will be
+   specified in Section 5.  However, as composite algorithms will be
    used within ASN.1-based X.509 and PKIX protocols, some conventions
    for ASN.1 wrapping are necessary.
 
@@ -1405,6 +1405,13 @@ Deserialization Process:
    a 256-bit shared secret key at all security levels, truncating is
    necessary as described in Section 4.4.
 
+   For all RSA key types and sizes, the exponent is RECOMMENDED to be
+   65537.  Where it is advantageous to hard-code an exponent, for
+   example in order to obtain predictable key sizes, implementations MAY
+   hard-code 65537; thus implementations using other values for the
+   exponent should not expect it to be intereperable with all other
+   implementations.
+
    The KDFs were chosen to roughly match the security level of the
    stronger component.  In the case of X25519 and X448 SHA3-256 is used
    to match the construction in [X-Wing].
@@ -1485,7 +1492,7 @@ Deserialization Process:
 
    In generating the list of composite algorithms, the idea was to
    provide composite algorithms at various security levels with varying
-   performance charactaristics.
+   performance characteristics.
 
    The main design consideration in choosing pairings is to prioritize
    providing pairings of each ML-KEM security level with commonly-
@@ -1501,12 +1508,11 @@ Deserialization Process:
 
    SHA2 is prioritized over SHA3 in order to facilitate implementations
    that do not have easy access to SHA3 outside of the ML-KEM module.
-   However SHA3 is used with X25519 and X448 SHA3-256 to match the
-   construction in [X-Wing].  This also provides a slight efficiency
-   gain for the X25519 and X448 based composites since a single
-   invocation of SHA3 is known to behave as a dual-PRF, and thus is
-   sufficient for use as a KDF, see Section 10.2, compared with an HMAC-
-   SHA2 construction.
+   However SHA3 is used with X25519 and X448 to match the construction
+   in [X-Wing].  This also provides a slight efficiency gain for the
+   X25519 and X448 based composites since a single invocation of SHA3 is
+   known to behave as a dual-PRF, and thus is sufficient for use as a
+   KDF, see Section 10.2, compared with an HMAC-SHA2 construction.
 
    While it may seem odd to use 256-bit outputs at all security levels,
    this aligns with ML-KEM [FIPS.203] which produces a 256-bit shared
@@ -1821,7 +1827,7 @@ Deserialization Process:
 
 9.1.1.  Module Registration
 
-   The following is to be regisetered in "SMI Security for PKIX Module
+   The following is to be registered in "SMI Security for PKIX Module
    Identifier":
 
    *  Decimal: IANA Assigned - *Replace TBDMOD*
@@ -2178,7 +2184,7 @@ Deserialization Process:
                Table 5: ML-KEM decapsulation failure rates
 
    In the case of ML-KEM decapsulation failure, Composite ML-KEM MUST
-   preserve the same behaviour and return a well-formed output shared
+   preserve the same behavior and return a well-formed output shared
    secret key.
 
 10.5.  Policy for Deprecated and Acceptable Algorithms
@@ -2684,7 +2690,7 @@ Appendix A.  Approximate Key and Ciphertext Sizes
       - 1 [RFC8017].
 
    *  When the underlying RSA or EC value is itself DER-encoded, integer
-      values could occaisionally be shorter than expected due to leading
+      values could occasionally be shorter than expected due to leading
       zeros being dropped from the encoding.
 
    By contrast, ML-KEM values are always fixed size, so composite values
