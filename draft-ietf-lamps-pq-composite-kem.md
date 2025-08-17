@@ -1565,6 +1565,8 @@ By contrast, ML-KEM values are always fixed size, so composite values can always
 
 Implementations MUST NOT perform strict length checking based on the values in this table except for ML-KEM + X25519 or X448; since these algorithms produce fixed-size outputs, the values in the table below for these variants MAY be treated as constants.
 
+Note that this table measures the size of the raw byte values, and does not measure any ASN.1 wrapping such as OCTET STRINGS or PKCS#8 PrivateKeyInfo structures. This table is useful primarily for comparison purposes between the different options.
+
 Non-hybrid ML-KEM is included for reference.
 
 
