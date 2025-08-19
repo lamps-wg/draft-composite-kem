@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-08-17T02:19:31.042021+00:00",
+  "timestamp": "2025-08-19T02:00:46.273745+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -65,6 +65,11 @@
     },
     {
       "name": "Blocks WGLC",
+      "description": null,
+      "color": "aaaaaa"
+    },
+    {
+      "name": "wontfix?",
       "description": null,
       "color": "aaaaaa"
     }
@@ -2467,9 +2472,17 @@
       ],
       "body": "As part of WGLC, the link at the top of the Test Vectors section should be locked to a specific commit, and should also probably be moved to be a proper Informative reference.\n\nMight as well leave this until we're pretty sure that we're done tweaking the reference implementation code, which probably means leaving it fairly late in the WGLC.",
       "createdAt": "2025-05-25T15:41:35Z",
-      "updatedAt": "2025-06-03T18:57:35Z",
+      "updatedAt": "2025-08-17T14:37:13Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "One complication is that since we have to put the commit link into the .md and commit that, it can never point at HEAD. I think this is ok.",
+          "createdAt": "2025-08-17T14:37:13Z",
+          "updatedAt": "2025-08-17T14:37:13Z"
+        }
+      ]
     },
     {
       "number": 152,
@@ -2951,12 +2964,22 @@
       "author": "danvangeest",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "wontfix?"
+      ],
       "body": "Appendix A.  Approximate Key and Signature Sizes does not seem particularly useful, because it is just approximate.  If you could list the maximum sizes that would be much more useful. I suspect some of the private key values in this table are no longer approximate because of the serialization issues I mentioned above.",
       "createdAt": "2025-06-18T20:08:29Z",
-      "updatedAt": "2025-06-18T20:08:29Z",
+      "updatedAt": "2025-08-18T17:25:00Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "This is a twin issue with https://github.com/lamps-wg/draft-composite-sigs/issues/218\n\nSee the discussion there.",
+          "createdAt": "2025-08-17T14:44:06Z",
+          "updatedAt": "2025-08-17T14:44:12Z"
+        }
+      ]
     },
     {
       "number": 177,
@@ -3054,12 +3077,29 @@
       "author": "optnfast",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "wontfix?"
+      ],
       "body": "> In alignment with ML-KEM [FIPS.203], Composite KEM algorithms output a 256-bit shared secret key at all security levels, truncating is necessary as described in {{sec-kem-combiner}}.\n\nWhere the combiner is SHA3-256 or HMAC-SHA256 this is all good.\n\nHowever where the combiner is HMAC-SHA512 it means we truncate the output to 256 bits.\n\nThis is a headache in the FIPS context:\n* I see nothing in SP800-227ipd which permits truncation, so we can only appeal to the underlying KDF specs.\n* If the combiner is interpreted as the an SP800-56Cr2 one-step KDF we could only get away with it if the result is used directly as key material (it's conceptually the same as only needing 256 bits of KDF output).\n* If the combiner is interpreted as the Extract phase of an SP800-56Cr2 two-step KDF it won't work: the text is clear that the HMAC must be untruncated.\n\nSo if you want more than one AES-256 key, or two AES-128 keys, you're out of luck. I have concrete use cases for up to 1024 bits of output from a PQ/T hybrid KEM so this is going to be a problem for me. (My current use cases don't involve interop so I do have a good plan B, but I'd still like to align with the rest of the world if possible.)\n\nI think I have some responsibility for this, having previously cheered on the use of HMAC-SHA512.\n\nMy suggestion is to remove all truncated HMAC-SHA512 and replace with untruncated HMAC-SHA256. I don't believe this will have any meaningful impact on security level.",
       "createdAt": "2025-06-26T14:50:48Z",
-      "updatedAt": "2025-06-26T14:51:35Z",
+      "updatedAt": "2025-08-18T08:21:44Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> I have concrete use cases for up to 1024 bits of output from a PQ/T hybrid KEM so this is going to be a problem for me. \n\nSo, how do you do this with ML-KEM? It only gives you 256 bits so you'll have to run a KDF to expand it out. How is this any different with Composite ML-KEM?\n\n\n> My suggestion is to remove all truncated HMAC-SHA512 and replace with untruncated HMAC-SHA256. I don't believe this will have any meaningful impact on security level.\n\nI see where you're coming from, but HMAC-SHA512 retains the collision and second pre-image strength of SHA512 through the double-pass of HMAC, and then only truncates down at the end; by that logic there is an impact on security that would need to be studied. It's an interesting question, but we're also under a lot of pressure to just get this thing published. So I vote to leave it as it is.",
+          "createdAt": "2025-08-17T14:51:39Z",
+          "updatedAt": "2025-08-17T14:51:39Z"
+        },
+        {
+          "author": "optnfast",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "The problem is not the security of the construction, nor the technical feasibility of using it. The problem is getting it through a FIPS evaluation.\n\nThe truncation step invalidates the analysis in [fips-certification-sec-fips](https://github.com/lamps-wg/draft-composite-kem/blob/main/draft-ietf-lamps-pq-composite-kem.md#fips-certification-sec-fips). As well as SHA3 and HMAC-SHA2, we now have truncated HMAC-SHA2 in the mix, and that isn't one of the acceptable choices under SP800-227ipd.\n\nMore specifically SP800-227ipd references SP800-56Ar3 which offers hash(x), HMAC-hash(salt, x) and KMAC(...) as options. \"Truncated HMAC-hash\" is not among the options. \n\nThings to think about:\n* FIPS-198 does allow for truncated HMACs. But it unambiguously defines HMAC-hash as the untruncated form, so it doesn't quite get us out of this hole.\n* FIPS-180 does allow for truncated hashes. So HMAC-(truncated-SHA512) could be a valid option at least in principle (albeit a somewhat strange one). But that is not the same function as truncated HMAC-SHA512.",
+          "createdAt": "2025-08-18T08:21:44Z",
+          "updatedAt": "2025-08-18T08:21:44Z"
+        }
+      ]
     },
     {
       "number": 181,
@@ -3106,15 +3146,15 @@
       "id": "I_kwDOKRPFO87BbwCp",
       "title": "RSA exponent",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/188",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "danvangeest",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "As I understand it, the exponent of the RSA key is not restricted, although there's no specific text for that.  Explicit text should be added saying that any exponent MAY be used but 65537 is RECOMMENDED.",
       "createdAt": "2025-07-19T12:35:52Z",
-      "updatedAt": "2025-07-19T13:08:55Z",
-      "closedAt": null,
+      "updatedAt": "2025-08-17T15:48:47Z",
+      "closedAt": "2025-08-17T15:48:47Z",
       "comments": []
     },
     {
@@ -3122,16 +3162,24 @@
       "id": "I_kwDOKRPFO87DTEQ_",
       "title": "Editorial corrections to version 08 from 2025.07.30",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/191",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "PiotrPopis",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "1. Section 2\n> (...) explicitly hybrid-aware. composite algorithms address\n\nexplicitly hybrid-aware. Composite algorithms address\nExplanation: capital letter\n\n2. Section 2\n> sence \n\nsense\n\n3. Section 2.2\n> (...) -- using its internal sequence of component keys as if they form a single key\n\n(...) -- using its internal concatenation of component keys as if they form a single key\n\n4. Section 3\n> keyss\n\nkeys\n\n5. Section 4.1\n> mlkemSK_\n\nmlkemSK\n\n6. Section 4.1\n> section Section 10.3.\n\nSection 10.3.\n\n7. Section 6.3\n> as as\n\nas\n\n8. Section 7.2\n> charactaristics \n\ncharacteristics\n\n9. Section 7.2\n> However SHA3 is used with X25519 and X448 SHA3-256 to match \n\nHowever SHA3-256 is used with X25519 and X448 to match \n\n10. Section 9.1.1\n> regisetered \n\nregistered \n\n11. Section 10.4\n> behaviour \n\nbehavior\n\n12. Appendix A\n> occaisionally \n\noccasionally\n\n",
       "createdAt": "2025-07-30T10:48:38Z",
-      "updatedAt": "2025-07-30T10:48:38Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2025-08-17T15:48:47Z",
+      "closedAt": "2025-08-17T15:48:47Z",
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Thank you Piotr, once again, for a very detailed reading!\n\n\"behaviour\" vs \"behavior\" ... but I'm Canadian and that's how that word is spelled here! \ud83d\ude43  ... yeah, I know, IETF uses American standard English. Fine Fine.\n",
+          "createdAt": "2025-08-17T15:39:13Z",
+          "updatedAt": "2025-08-17T15:39:13Z"
+        }
+      ]
     },
     {
       "number": 192,
@@ -3142,26 +3190,43 @@
       "author": "bencemali",
       "authorAssociation": "NONE",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "wontfix?"
+      ],
       "body": "Section 6.1 says the following:\n```\n... the composite value MUST be wrapped into a DER BIT STRING or OCTET STRING in the obvious ways.\n```\nTo me something like *obvious ways* seems unfitting for an RFC. This wording is especially misleading as the ASN.1 BIT STRING type was not intended to hold byte array like data, but a sequence of flags, and in examples like certificate `subjectPublicKey` fields, one explicitly needs to keep the trailing zeros (see OpenSSL's `ossl_asn1_string_set_bits_left` for example). This may be worth clarifying.",
       "createdAt": "2025-08-05T11:22:39Z",
-      "updatedAt": "2025-08-05T11:47:06Z",
+      "updatedAt": "2025-08-18T11:53:01Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Yeah, we could clarify that. However, we're not any more vague than the ML-DSA in X.509 RFC, see:\n\nhttps://datatracker.ietf.org/doc/html/draft-ietf-lamps-dilithium-certificates-12#name-ml-dsa-public-keys-in-pkix\n\nCan you propose wording that you think would be clearer?",
+          "createdAt": "2025-08-17T15:56:50Z",
+          "updatedAt": "2025-08-17T15:57:07Z"
+        },
+        {
+          "author": "bencemali",
+          "authorAssociation": "NONE",
+          "body": "@ounsworth\nI see. I still think \"obvious ways\" gives off the wrong impression. Maybe I would make the following changes for clarity:\n```diff\n- ... the composite value MUST be wrapped into a DER BIT STRING or OCTET STRING in the obvious ways.\n+ ... the composite value MUST be wrapped into a DER BIT STRING or OCTET STRING.\n```\n```diff\n- ... of the last octet becoming the last bit of the bit string.\n+ ... of the last octet becoming the last bit of the bit string. Truncation of trailing zeros SHALL NOT be performed and the unused-bits octet MUST be set to 0.\n```",
+          "createdAt": "2025-08-18T08:56:39Z",
+          "updatedAt": "2025-08-18T11:53:01Z"
+        }
+      ]
     },
     {
       "number": 193,
       "id": "I_kwDOKRPFO87GU3gO",
-      "title": "Change domain separators to match draft-cfrg-concrete-hybrid-kem?",
+      "title": "Change domain separators to HPKE-style Labels?",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/193",
       "state": "OPEN",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
-      "body": "That means the starship for X-Wing, and ASCII strings of the form `QSF-P256-MLKEM768-SHAKE256-SHA3256` ... need to coordinate with Richard Barnes about whether the KeyGen() PRG (\"SHAKE256\", in this case) is really an interop param.",
+      "body": "This matches draft-cfrg-concrete-hybrid-kem.\n\nThat means the starship for X-Wing, and ASCII strings of the form `QSF-P256-MLKEM768-SHAKE256-SHA3256` ... need to coordinate with Richard Barnes about whether the KeyGen() PRG (\"SHAKE256\", in this case) is really an interop param.\n\nAnother advantage of this is that it nicely avoids the need to ask IANA to pre-allocate the OIDs so that we can roll the DomSep table. So we can close #131 .",
       "createdAt": "2025-08-16T15:10:10Z",
-      "updatedAt": "2025-08-16T15:10:10Z",
+      "updatedAt": "2025-08-17T03:22:19Z",
       "closedAt": null,
       "comments": []
     }
@@ -8029,6 +8094,88 @@
           "updatedAt": "2025-08-16T21:18:16Z"
         }
       ],
+      "reviews": []
+    },
+    {
+      "number": 195,
+      "id": "PR_kwDOKRPFO86j-Gq-",
+      "title": "Changed OID-based domain separators to HPKE-style ASCII labels",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/195",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Closes #193 \r\nCloses #131 ",
+      "createdAt": "2025-08-17T03:09:07Z",
+      "updatedAt": "2025-08-17T03:10:09Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "38832ef0207bad13b83e9d2a2a7e0351b5b0d28f",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_domsep_cfrg_alignment",
+      "headRefOid": "65f0e049d33f07a71131fb57d10b6f93b75cf6ab",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 196,
+      "id": "PR_kwDOKRPFO86j_fMU",
+      "title": "RECOMMEND e=65537.",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/196",
+      "state": "MERGED",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Closes #188",
+      "createdAt": "2025-08-17T15:12:01Z",
+      "updatedAt": "2025-08-17T15:48:48Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "eb3c35a64aaef569dcaf58badfb2e4a07ab32e36",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_65537",
+      "headRefOid": "1b563ddf86c46b689de000b8a1d822a622340230",
+      "closedAt": "2025-08-17T15:48:48Z",
+      "mergedAt": "2025-08-17T15:48:48Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "1b563ddf86c46b689de000b8a1d822a622340230"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 197,
+      "id": "PR_kwDOKRPFO86j_kvu",
+      "title": "Piotr editorial #191",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/197",
+      "state": "MERGED",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Closes #191 ",
+      "createdAt": "2025-08-17T15:44:35Z",
+      "updatedAt": "2025-08-17T15:48:49Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "eb3c35a64aaef569dcaf58badfb2e4a07ab32e36",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_191",
+      "headRefOid": "60c340d954754fb5ba7083bda729f9094f80e108",
+      "closedAt": "2025-08-17T15:48:46Z",
+      "mergedAt": "2025-08-17T15:48:46Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "0512f9fcdfe219ce23384974e3c3a504dd882570"
+      },
+      "comments": [],
       "reviews": []
     }
   ]
