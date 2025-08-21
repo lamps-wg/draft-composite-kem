@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-08-19T02:00:46.273745+00:00",
+  "timestamp": "2025-08-21T01:57:10.046057+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -3227,6 +3227,22 @@
       "body": "This matches draft-cfrg-concrete-hybrid-kem.\n\nThat means the starship for X-Wing, and ASCII strings of the form `QSF-P256-MLKEM768-SHAKE256-SHA3256` ... need to coordinate with Richard Barnes about whether the KeyGen() PRG (\"SHAKE256\", in this case) is really an interop param.\n\nAnother advantage of this is that it nicely avoids the need to ask IANA to pre-allocate the OIDs so that we can roll the DomSep table. So we can close #131 .",
       "createdAt": "2025-08-16T15:10:10Z",
       "updatedAt": "2025-08-17T03:22:19Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 198,
+      "id": "I_kwDOKRPFO87Gv4bC",
+      "title": "Choose a single encoding for each primitive",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/198",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This ticket a checklist that we have picked a single encoding for each underlying primitive.\n\n* ML-KEM\n  * Pub: Raw\n  * Priv: Raw Seed\n  * CT: Raw\n* RSA\n  * Pub: ____\n  * Priv: ____\n  * CT: ____\n* ECDH\n  * Pub: ____\n  * Priv: ____\n  * CT: ____\n* EdDH\n  * Pub: ____\n  * Priv: ____\n  * CT: ____\n\nThis information should be inserted into the draft either as a list or as a table.\n\nRelated to https://github.com/lamps-wg/draft-composite-sigs/issues/244",
+      "createdAt": "2025-08-19T13:41:14Z",
+      "updatedAt": "2025-08-20T13:41:13Z",
       "closedAt": null,
       "comments": []
     }
