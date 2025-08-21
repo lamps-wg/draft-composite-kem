@@ -511,13 +511,10 @@ class CompositeKEM(KEM):
   mlkem: KEM = None
   tradkem: KEM = None
   kdf = "None"
-  domSep = ""
+  label = ""
 
   def __init__(self):
     super().__init__()
-    self.domSep = DOMAIN_TABLE[self.id][0]  # the first component is the domain,
-                                            # the second is a boolean controlling whether
-                                            # this renders in the domsep table in the draft.
 
   def keyGen(self):
     self.mlkem.keyGen()
@@ -628,6 +625,7 @@ class MLKEM768_RSA2048_HMAC_SHA256(CompositeKEM):
   mlkem = MLKEM768()
   tradkem = RSA2048OAEPKEM()
   kdf = "HMAC-SHA256"
+  label = "QSF-MLKEM768-RSAOAEP2048-HMACSHA256"
 
 
 class MLKEM768_RSA3072_HMAC_SHA256(CompositeKEM):
@@ -635,6 +633,7 @@ class MLKEM768_RSA3072_HMAC_SHA256(CompositeKEM):
   mlkem = MLKEM768()
   tradkem = RSA3072OAEPKEM()
   kdf = "HMAC-SHA256"
+  label = "QSF-MLKEM768-RSAOAEP3072-HMACSHA256"
 
 
 class MLKEM768_RSA4096_HMAC_SHA256(CompositeKEM):
@@ -642,6 +641,7 @@ class MLKEM768_RSA4096_HMAC_SHA256(CompositeKEM):
   mlkem = MLKEM768()
   tradkem = RSA4096OAEPKEM()
   kdf = "HMAC-SHA256"
+  label = "QSF-MLKEM768-RSAOAEP4096-HMACSHA256"
 
 
 class MLKEM768_X25519_SHA3_256(CompositeKEM):
@@ -649,6 +649,7 @@ class MLKEM768_X25519_SHA3_256(CompositeKEM):
   mlkem = MLKEM768()
   tradkem = X25519KEM()
   kdf = "SHA3-256"
+  label = "\\.//^\\"
 
 
 class MLKEM768_ECDH_P256_HMAC_SHA256(CompositeKEM):
@@ -656,6 +657,7 @@ class MLKEM768_ECDH_P256_HMAC_SHA256(CompositeKEM):
   mlkem = MLKEM768()
   tradkem = ECDHP256KEM()
   kdf = "HMAC-SHA256"
+  label = "QSF-MLKEM768-P256-HMACSHA256"
 
 
 class MLKEM768_ECDH_P384_HMAC_SHA256(CompositeKEM):
@@ -663,6 +665,7 @@ class MLKEM768_ECDH_P384_HMAC_SHA256(CompositeKEM):
   mlkem = MLKEM768()
   tradkem = ECDHP384KEM()
   kdf = "HMAC-SHA256"
+  label = "QSF-MLKEM768-P384-HMACSHA256"
 
 
 class MLKEM768_ECDH_brainpoolP256r1_HMAC_SHA256(CompositeKEM):
@@ -670,6 +673,7 @@ class MLKEM768_ECDH_brainpoolP256r1_HMAC_SHA256(CompositeKEM):
   mlkem = MLKEM768()
   tradkem = ECDHBP256KEM()
   kdf = "HMAC-SHA256"
+  label = "QSF-MLKEM768-BP256-HMACSHA256"
 
 
 class MLKEM1024_RSA3072_HMAC_SHA512(CompositeKEM):
@@ -677,6 +681,7 @@ class MLKEM1024_RSA3072_HMAC_SHA512(CompositeKEM):
   mlkem = MLKEM1024()
   tradkem = RSA3072OAEPKEM()
   kdf = "HMAC-SHA512"
+  label = "QSF-MLKEM1024-RSAOAEP3072-HMACSHA512"
 
 
 class MLKEM1024_ECDH_P384_HMAC_SHA512(CompositeKEM):
@@ -684,13 +689,14 @@ class MLKEM1024_ECDH_P384_HMAC_SHA512(CompositeKEM):
   mlkem = MLKEM1024()
   tradkem = ECDHP384KEM()
   kdf = "HMAC-SHA512"
-
+  label = "QSF-MLKEM1024-P384-HMACSHA512"
 
 class MLKEM1024_ECDH_brainpoolP384r1_HMAC_SHA512(CompositeKEM):
   id = "id-MLKEM1024-ECDH-brainpoolP384r1-HMAC-SHA512"
   mlkem = MLKEM1024()
   tradkem = ECDHBP384KEM()
   kdf = "HMAC-SHA512"
+  label = "QSF-MLKEM1024-BP384-HMACSHA512"
 
 
 class MLKEM1024_X448_SHA3_256(CompositeKEM):
@@ -698,6 +704,7 @@ class MLKEM1024_X448_SHA3_256(CompositeKEM):
   mlkem = MLKEM1024()
   tradkem = X448KEM()
   kdf = "SHA3-256"
+  label = "QSF-MLKEM1024-X448-SHA3256"
 
 
 class MLKEM1024_ECDH_P521_HMAC_SHA512(CompositeKEM):
@@ -705,18 +712,19 @@ class MLKEM1024_ECDH_P521_HMAC_SHA512(CompositeKEM):
   mlkem = MLKEM1024()
   tradkem = ECDHP521KEM()
   kdf = "HMAC-SHA512"
+  label = "QSF-MLKEM1024-P521-HMACSHA512"
 
 
 ### KEM Combiner ###
 
 """
   if KDF is "SHA3-256":
-    ss = SHA3-256(mlkemSS || tradSS || tradCT || tradPK || Domain)
+    ss = SHA3-256(mlkemSS || tradSS || tradCT || tradPK || Label)
 
   else if KDF is "HMAC-{Hash}":
 
     ss = HMAC-{Hash}(salt={0}, IKM=mlkemSS || tradSS || tradCT
-                                           || tradPK || Domain)
+                                           || tradPK || Label)
     ss = truncate(ss, 256)
         # Where "{0}" is the string of HashLen zeros according to
         # section 2.2 of [RFC5869].
@@ -738,26 +746,26 @@ def kemCombiner(kem, mlkemSS, tradSS, tradCT, tradPK ):
 
   if kem.kdf == "HMAC-SHA256":
      # ss = HMAC-{Hash}(salt={0}, IKM=mlkemSS || tradSS || tradCT
-     #                                        || tradPK || Domain)
+     #                                        || tradPK || Label)
     emptyStr = "".encode('ascii')
     h = hmac.HMAC(key=emptyStr, algorithm=hashes.SHA256())
     h.update(mlkemSS)
     h.update(tradSS)
     h.update(tradCT)
     h.update(tradPK)
-    h.update(kem.domSep)
+    h.update(kem.label.encode())
     ss = h.finalize()
 
   elif kem.kdf == "HMAC-SHA512":
      # ss = HMAC-{Hash}(salt={0}, IKM=mlkemSS || tradSS || tradCT
-     #                                        || tradPK || Domain)
+     #                                        || tradPK || Label)
     emptyStr = "".encode('ascii')
     h = hmac.HMAC(key=emptyStr, algorithm=hashes.SHA512())
     h.update(mlkemSS)
     h.update(tradSS)
     h.update(tradCT)
     h.update(tradPK)
-    h.update(kem.domSep)
+    h.update(kem.label.encode())
     ss = h.finalize()
     ss = ss[:32]  # truncate to 32 bytes
 
@@ -768,7 +776,7 @@ def kemCombiner(kem, mlkemSS, tradSS, tradCT, tradPK ):
     digest.update(tradSS)
     digest.update(tradCT)
     digest.update(tradPK)
-    digest.update(kem.domSep)
+    digest.update(kem.label.encode())
     ss = digest.finalize()
 
   else:
@@ -961,30 +969,9 @@ testVectorOutput['cacert'] = base64.b64encode(caCert.public_bytes(encoding=seria
 testVectorOutput['tests'] = []
 
 SIZE_TABLE = {}
+LABELS_TABLE = {}
 
-DOMAIN_TABLE = {}
-
-
-
-def genDomainTable():
-  """
-  This is a bit weird; we have to generate it first because
-  this table is used by the composite.sign() to construct Mprime,
-  but also not every supported option should be rendered into
-  the domain separators table in the draft, hence carrying a boolean.
-  By default, everything is False to be included in the table unless
-  turned on by doSig(.., includeInDomainTable=True)."""
-
-  for alg in OID_TABLE:
-    domain = der_encode(OID_TABLE[alg])
-    DOMAIN_TABLE[alg] = (domain, False)
-
-# run this statically
-genDomainTable()
-
-
-
-def doKEM(kem, caSK, includeInTestVectors=True, includeInDomainTable=True, includeInSizeTable=True):
+def doKEM(kem, caSK, includeInTestVectors=True, includeInLabelsTable=True, includeInSizeTable=True):
   kem.keyGen()
   (ct, ss) = kem.encap()
   _ss = kem.decap(ct)
@@ -995,8 +982,8 @@ def doKEM(kem, caSK, includeInTestVectors=True, includeInDomainTable=True, inclu
   if includeInTestVectors:
     testVectorOutput['tests'].append(jsonResult)
 
-  if includeInDomainTable:
-    DOMAIN_TABLE[kem.id] = (DOMAIN_TABLE[kem.id][0], True)
+  if includeInLabelsTable:
+    LABELS_TABLE[kem.id] = (kem.label)
 
   if includeInSizeTable:
     sizeRow = {}
@@ -1224,18 +1211,23 @@ def writeSizeTable():
                  str(row['ss']).center(6, ' ') +'|\n')
 
 
-def writeDomainTable():
+def writeLabelsTable():
   """
-  Writes the table of domain separators to go into the draft.
+  Writes the table of KEM Combiner Labels to go into the draft.
   """
 
-  with open('domSepTable.md', 'w') as f:
-    f.write('| Composite KEM Algorithm                 | Domain Separator (in Hex encoding)|\n')
-    f.write('| ---------------------------------------       | ----------------------------------|\n')
+  with open('labelsTable.md', 'w') as f:
+    f.write("Values are provided as ASCII strings, but MUST be converted into binary in the obvious way.\n")
+    f.write("For example:\n\n")
+    f.write("* \"`"+LABELS_TABLE["id-MLKEM768-X25519-SHA3-256"] + "`\" in hexadecimal is \"`" + LABELS_TABLE["id-MLKEM768-X25519-SHA3-256"].encode().hex()+"`\"\n")
+    f.write("* \"`"+LABELS_TABLE["id-MLKEM768-ECDH-P256-HMAC-SHA256"] + "`\" in hexadecimal is \"`" + LABELS_TABLE["id-MLKEM768-ECDH-P256-HMAC-SHA256"].encode().hex()+"`\"\n")
+    f.write("\n\n")
 
-    for alg in DOMAIN_TABLE:
-      if DOMAIN_TABLE[alg][1]:  # boolean controlling rendering in this table.
-        f.write('| ' + alg.ljust(45, ' ') + " | " + base64.b16encode(DOMAIN_TABLE[alg][0]).decode('ascii') + " |\n")
+    f.write('| Composite KEM Algorithm                       | Label (string)                       |\n')
+    f.write('| --------------------------------------------- | ------------------------------------ |\n')
+
+    for alg in LABELS_TABLE:
+        f.write('| ' + alg.ljust(45, ' ') + " | `" + LABELS_TABLE[alg].ljust(36, ' ') + "` |\n")
 
 
 
@@ -1263,11 +1255,11 @@ def writeKEMCombinerExample(kem, filename):
   f.write( "\n".join(textwrap.wrap("tradSS:  " + tradSS.hex(), width=wrap_width)) +"\n\n" )
   f.write( "\n".join(textwrap.wrap("tradCT:  " + tradCT.hex(), width=wrap_width)) +"\n\n" )
   f.write( "\n".join(textwrap.wrap("tradPK:  " + tradPK.hex(), width=wrap_width)) +"\n\n" )
-  f.write( "\n".join(textwrap.wrap("Domain:  " + kem.domSep.hex(), width=wrap_width)) +"\n\n" )
+  f.write( "\n".join(textwrap.wrap("Label:  " + kem.label, width=wrap_width)) +"\n\n" )
   f.write("\n")
   f.write("# Combined KDF Input:\n")
-  f.write("#  mlkemSS || tradSS || tradCT || tradPK || Domain\n\n")
-  f.write( "\n".join(textwrap.wrap("Combined KDF Input: " + mlkemSS.hex() + tradSS.hex() + tradCT.hex() + tradPK.hex() + kem.domSep.hex(), width=wrap_width)) +"\n" )
+  f.write("#  mlkemSS || tradSS || tradCT || tradPK || Label\n\n")
+  f.write( "\n".join(textwrap.wrap("Combined KDF Input: " + mlkemSS.hex() + tradSS.hex() + tradCT.hex() + tradPK.hex() + kem.label, width=wrap_width)) +"\n" )
   f.write("\n\n# Outputs\n")
   f.write("# ss = " + kem.kdf + "(Combined KDF Input)\n\n")
   f.write( "\n".join(textwrap.wrap("ss: " + ss.hex(), width=wrap_width)) +"\n" )
@@ -1279,14 +1271,14 @@ def writeKEMCombinerExample(kem, filename):
 def main():
 
   # Single algs - remove these, just for testing
-  # doKEM(X25519KEM(), caSK,      includeInTestVectors=True, includeInDomainTable=False, includeInSizeTable=True )
-  # doKEM(ECDHP256KEM(), caSK,    includeInTestVectors=True, includeInDomainTable=False, includeInSizeTable=True )
-  # doKEM(ECDHP384KEM(), caSK,    includeInTestVectors=True, includeInDomainTable=False, includeInSizeTable=True )
-  # doKEM(RSA2048OAEPKEM(), caSK, includeInTestVectors=True, includeInDomainTable=False, includeInSizeTable=True )
-  # doKEM(RSA3072OAEPKEM(), caSK, includeInTestVectors=True, includeInDomainTable=False, includeInSizeTable=True )
-  # doKEM(RSA4096OAEPKEM(), caSK, includeInTestVectors=True, includeInDomainTable=False, includeInSizeTable=True )
-  doKEM(MLKEM768(), caSK,  includeInTestVectors=True, includeInDomainTable=False, includeInSizeTable=True )
-  doKEM(MLKEM1024(), caSK, includeInTestVectors=True, includeInDomainTable=False, includeInSizeTable=True )
+  # doKEM(X25519KEM(), caSK,      includeInTestVectors=True, includeInLabelsTable=False, includeInSizeTable=True )
+  # doKEM(ECDHP256KEM(), caSK,    includeInTestVectors=True, includeInLabelsTable=False, includeInSizeTable=True )
+  # doKEM(ECDHP384KEM(), caSK,    includeInTestVectors=True, includeInLabelsTable=False, includeInSizeTable=True )
+  # doKEM(RSA2048OAEPKEM(), caSK, includeInTestVectors=True, includeInLabelsTable=False, includeInSizeTable=True )
+  # doKEM(RSA3072OAEPKEM(), caSK, includeInTestVectors=True, includeInLabelsTable=False, includeInSizeTable=True )
+  # doKEM(RSA4096OAEPKEM(), caSK, includeInTestVectors=True, includeInLabelsTable=False, includeInSizeTable=True )
+  doKEM(MLKEM768(), caSK,  includeInTestVectors=True, includeInLabelsTable=False, includeInSizeTable=True )
+  doKEM(MLKEM1024(), caSK, includeInTestVectors=True, includeInLabelsTable=False, includeInSizeTable=True )
 
 
 
@@ -1308,7 +1300,7 @@ def main():
   writeTestVectors()
   writeDumpasn1Cfg()
   writeSizeTable()
-  writeDomainTable()
+  writeLabelsTable()
 
   writeKEMCombinerExample(MLKEM768_X25519_SHA3_256(),"kemCombiner_MLKEM768_X25519_SHA3_256.md")
   writeKEMCombinerExample(MLKEM768_ECDH_P256_HMAC_SHA256(),"kemCombiner_MLKEM768_ECDH_P256_HMAC-SHA256.md")
