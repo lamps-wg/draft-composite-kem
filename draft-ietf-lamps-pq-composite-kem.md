@@ -283,10 +283,11 @@ Interop-affecting changes:
 
 * Changed the private key serialization to carry the TradPK.
 * Fixed the ASN.1 module for the pk-CompositeKEM and kema-CompositeKEM to indicate no ASN.1 wrapping is used. This simply clarifies the intended encoding but could be an interop-affecting change for implementations that built encoders / decoders from the ASN.1 and ended up with a non-intended encoding.
+* Changed the domain separator strings to match draft-irtf-cfrg-concrete-hybrid-kems-00, but no reference to it because I don't want this to get stuck in MISREF.
 
 Editorial changes:
 
-* None
+* Changed the "domain separator" to "KEM Combiner Label" to match draft-irtf-cfrg-concrete-hybrid-kems-00, but no reference to it because I don't want this to get stuck in MISREF.
 
 Still to do in a future version:
 
@@ -442,7 +443,7 @@ RSAOAEPKEM.Encap(pkR):
 
 Acceptable public key encodings for `pkR` are described in {{sec-serialization}}.
 
-Note that the OAEP label `L` is left to its default value, which is the empty string as per [RFC8017]. The shared secret key output by the overall Composite ML-KEM already binds a composite domain separator, so there is no need to also use the component domain separators.
+Note that the OAEP label `L` is left to its default value, which is the empty string as per [RFC8017]. The shared secret key output by the overall Composite ML-KEM already binds a composite KEM Combiner Label, so there is no need to also use the component Label.
 
 The value of `ss_len` as well as concrete values for all the RSA-OAEP parameters used within this specification can be found in {{sect-rsaoaep-params}}.
 
@@ -497,7 +498,7 @@ Acceptable public key encodings for `enc` and `pkE` are described in {{sec-seria
 The promotion of DH to a KEM is similar to the DHKEM functions in [RFC9180], but it is simplified in the following ways:
 
 1. Notation has been aligned to the notation used in this specification.
-1. Since a domain separator is included explicitly in the Composite ML-KEM combiner, there is no need to perform the labeled steps of `ExtractAndExpand()`.
+1. Since a KEM Combiner Label is included explicitly in the Composite ML-KEM combiner, there is no need to perform the labeled steps of `ExtractAndExpand()`.
 1. Since the ciphertext and receiver's public key are included explicitly in the Composite ML-KEM combiner, there is no need to construct the `kem_context` object.
 
 Note that here, `SerializePublicKey()` and `DeserializePublicKey()` refer to the underlying encoding of the DH primitive, and not to the composite serialization functions defined in {{sec-serialization}}. Acceptable serializations for the underlying DH primitives are described in {{sec-serialization}}.
@@ -591,8 +592,8 @@ Implicit inputs mapped from <OID>:
   KDF     The KDF specified for the given Composite ML-KEM algorithm.
           See algorithm specifications below.
 
-  Domain  Domain separator value for binding the ciphertext to the
-          Composite OID. See section on Domain Separators below.
+  Label   KEM Combiner Label value for binding the ciphertext to the
+          Composite OID. See section on KEM Combiner Labels below.
 
 Output:
 
@@ -626,7 +627,7 @@ Encap Process:
   5. Combine the KEM secrets and additional context to yield the
      composite shared secret key.
 
-        ss = KemCombiner<KDF>(mlkemSS, tradSS, tradCT, tradPK, Domain)
+        ss = KemCombiner<KDF>(mlkemSS, tradSS, tradCT, tradPK, Label)
 
   6. Output composite shared secret key and ciphertext.
 
@@ -636,7 +637,7 @@ Encap Process:
 
 Depending on the security needs of the application, it MAY be advantageous to perform steps 2, 3, and 5 in a timing-invariant way to prevent side-channel attackers from learning which component algorithm failed and from learning any of the inputs or output of the KEM combiner.
 
-The specific values for `KDF` are defined per Composite ML-KEM algorithm in {{tab-kem-algs}} and the specific values for `Domain` are defined per Composite ML-KEM algorithm in {{sec-alg-ids}}.
+The specific values for `KDF` are defined per Composite ML-KEM algorithm in {{tab-kem-algs}} and the specific values for `Label` are defined per Composite ML-KEM algorithm in {{sec-alg-ids}}.
 
 ## Decapsulation {#sect-composite-decaps}
 
@@ -672,8 +673,8 @@ Implicit inputs mapped from <OID>:
   KDF     The KDF specified for the given Composite ML-KEM algorithm.
           See algorithm specifications below.
 
-  Domain  Domain separator value for binding the ciphertext to the
-          Composite ML-KEM OID. See section on Domain Separators below.
+  Label   KEM Combiner Label value for binding the ciphertext to the
+          Composite ML-KEM OID. See section on KEM Combiner Labels below.
 
 Output:
 
@@ -703,7 +704,7 @@ Decap Process:
   4. Combine the KEM secrets and additional context to yield the
      composite shared secret key.
 
-      ss = KemCombiner<KDF>(mlkemSS, tradSS, tradCT, tradPK, Domain)
+      ss = KemCombiner<KDF>(mlkemSS, tradSS, tradCT, tradPK, Label)
 
   5. Output composite shared secret key.
 
@@ -725,7 +726,7 @@ As noted in the Encapsulation and Decapsulation procedures above, the KEM combin
 The following describes how to instantiate a `KemCombiner()` function for a given key derivation function represented by `<KDF>`.
 
 ~~~
-KemCombiner<KDF>(mlkemSS, tradSS, tradCT, tradPK, Domain) -> ss
+KemCombiner<KDF>(mlkemSS, tradSS, tradCT, tradPK, Label) -> ss
 
 Explicit inputs:
 
@@ -748,12 +749,12 @@ Output:
 Process:
 
   if KDF is "SHA3-256":
-    ss = SHA3-256(mlkemSS || tradSS || tradCT || tradPK || Domain)
+    ss = SHA3-256(mlkemSS || tradSS || tradCT || tradPK || Label)
 
   else if KDF is "HMAC-{Hash}":
 
     ss = HMAC-{Hash}(key={0}, text=mlkemSS || tradSS || tradCT
-                                           || tradPK || Domain)
+                                           || tradPK || Label)
     ss = truncate(ss, 256)
         # Where "{0}" is the string of HashLen zeros according to
         # section 2.2 of [RFC5869].
@@ -767,7 +768,7 @@ Process:
 
   return ss
 ~~~
-{: #alg-kem-combiner title="KemCombiner<KDF>(mlkemSS, tradSS, tradCT, tradPK, Domain) -> ss"}
+{: #alg-kem-combiner title="KemCombiner<KDF>(mlkemSS, tradSS, tradCT, tradPK, Label) -> ss"}
 
 Implementation note: The HMAC-based combiner here is exactly the "HKDF-Extract" step from [RFC5869] with an empty `salt`. Implementations with access to "HKDF-Extract", without the "HKDF-Expand" step, MAY use this interchangeably with the HMAC-based construction presented above. Note that a full invocation of HKDF with both HKDF-Extract and HKDF-Expand, even with the correct output length and empty `info` param is not equivalent to the HMAC construction above since HKDF-Expand will always perform at least one extra iteration of HMAC.
 
@@ -1200,25 +1201,16 @@ Full specifications for the referenced component algorithms can be found in {{ap
 As the number of algorithms can be daunting to implementers, see {{sec-impl-profile}} for a discussion of choosing a subset to support.
 
 
-## Domain Separator Values {#sec-domsep-values}
+## KEM Combiner Label Values {#sec-label-values}
 
-The KEM combiner used in this specification requires a domain separator `Domain` input.  The following table shows the HEX-encoded domain separator for each Composite ML-KEM AlgorithmID; to use it, the value MUST be HEX-decoded and used in binary form. The domain separator is simply the DER encoding of the composite algorithm OID.
-
-
-Each Composite ML-KEM algorithm has a unique domain separator value which is used in constructing the KEM combiner in ({{sec-kem-combiner}}). This helps protect against a different algorithm arriving at the same shared secret key even if all inputs are the same; for example `id-MLKEM768-X25519-SHA3-256` and X-Wing {{X-Wing}} have identical component algorithms and KEM combiners but since they have different security properties, they use different domain separators in order to make them incompatible by design.
-
-The domain separator is simply the DER encoding of the OID. The following table shows the HEX-encoded domain separator value for each Composite ML-KEM algorithm.
+The KEM combiner used in this specification requires a KEM Combiner Label `Label` input. The Labels are ASCII strings which must be converted to byte strings by taking their ASCII values.
 
 
-<!-- Note to authors, this is not auto-generated on build;
-     you have to manually re-run the python script and
-     commit the results to git.
-     This is mainly to save resources and build time on the github commits. -->
+Each Composite ML-KEM algorithm has a unique Label which is used in constructing the KEM combiner in ({{sec-kem-combiner}}). This helps protect against a different algorithm arriving at the same shared secret key even if all inputs are the same.
 
-{::include src/domSepTable.md}
-{: #tab-kem-domains title="Composite ML-KEM fixedInfo Domain Separators"}
 
-EDNOTE: these domain separators are based on the prototyping OIDs assigned on the Entrust arc. We will need to ask for IANA early allocation of these OIDs so that we can re-compute the domain separators over the final OIDs.
+{::include src/labelsTable.md}
+{: #tab-kem-labels title="Composite ML-KEM fixedInfo Labels"}
 
 
 
@@ -1367,7 +1359,7 @@ Migration flexibility. Some PQ/T hybrids exist to provide a sort of "OR" mode wh
 The KEM combiner from {{sec-kem-combiner}} is reproduced here for reference.
 
 ~~~
-  KDF(mlkemSS || tradSS || tradCT || tradPK || Domain)
+  KDF(mlkemSS || tradSS || tradCT || tradPK || Label)
 ~~~
 {: #code-generic-kem-combiner title="KEM combiner construction"}
 
@@ -1375,13 +1367,13 @@ The KEM combiner from {{sec-kem-combiner}} is reproduced here for reference.
 The primary security property of the KEM combiner is that it preserves IND-CCA2 of the overall Composite ML-KEM so long as at least one component is IND-CCA2 {{X-Wing}} [GHP18]. Additionally, we also need to consider the case where one of the component algorithms is completely broken; that the private key is known to an attacker, or worse that the public key, private key, and ciphertext are manipulated by the attacker. In this case, we rely on the construction of the KEM combiner to ensure that the value of the other shared secret key cannot be leaked or the combined shared secret key predicted via manipulation of the broken algorithm.
 
 
-Each registered Composite ML-KEM algorithm specifies the choice of `KDF` and `Domain` -- see {{sec-alg-ids}} and {{sec-domsep-values}}. Given that each Composite ML-KEM algorithm fully specifies the component algorithms, including for example the size of the RSA modulus, all inputs to the KEM combiner are fixed-size and thus do not require length-prefixing.
+Each registered Composite ML-KEM algorithm specifies the choice of `KDF` and `Label` -- see {{sec-alg-ids}} and {{sec-label-values}}. Given that each Composite ML-KEM algorithm fully specifies the component algorithms, including for example the size of the RSA modulus, all inputs to the KEM combiner are fixed-size and thus do not require length-prefixing.
 
 * `mlkemSS` is always 32 bytes.
 * `tradSS` in the case of DH this is derived by the decapsulator and therefore the length is not controlled by the attacker, however in the case of RSA-OAEP this value is directly chosen by the sender and both the length and content could be freely chosen by an attacker.
 * `tradCT` is either an elliptic curve public key or an RSA-OAEP ciphertext which is required to have its length checked by step 1b of RSAES-OAEP-DECRYPT in [RFC8017].
 * `tradPK` is the public key of the traditional component (elliptic curve or RSA) and therefore fixed-length.
-* `Domain` is a fixed value specified in this document.
+* `Label` is a fixed value specified in this document.
 
 
 ### IND-CCA Security of the hybrid scheme {#sec-hybrid-security}
@@ -1474,7 +1466,7 @@ The following sections go into further detail on specific issues that relate to 
 For reference, the KEM combiner used in Composite ML-KEM is:
 
 ~~~
-ss = KDF(mlkemSS || tradSS || tradCT || tradPK || Domain)
+ss = KDF(mlkemSS || tradSS || tradCT || tradPK || Label)
 ~~~
 
 where KDF is either SHA3 or HMAC-SHA2.
@@ -1486,7 +1478,7 @@ NIST SP 800-227 [SP-800-227ipd], which at the time of writing is in its initial 
 K ← KDM(S1‖S2‖ · · · ‖St , OtherInput)           (14)
 ~~~
 
-Composite ML-KEM maps cleanly into this since it places the two shared secret keys `mlkemSS || tradSS` at the beginning of the KDF input such that all other inputs `tradCT || tradPK || Domain` can be considered part of `OtherInput` for the purposes of FIPS certification.
+Composite ML-KEM maps cleanly into this since it places the two shared secret keys `mlkemSS || tradSS` at the beginning of the KDF input such that all other inputs `tradCT || tradPK || Label` can be considered part of `OtherInput` for the purposes of FIPS certification.
 
 For the detailed steps of the Key Derivation Mechanism KDM, [SP-800-227ipd] refers to [SP.800-56Cr2].
 
@@ -1530,7 +1522,7 @@ However, this large number of combinations leads either to fracturing of the eco
 This specification does not list any particular composite algorithm as mandatory-to-implement, however organizations that operate within specific application domains are encouraged to define profiles that select a small number of composites appropriate for that application domain.
 For applications that do not have any regulatory requirements or legacy implementations to consider, it is RECOMMENDED to focus implementation effort on:
 
-    id-MLKEM768-X25519-SHA3-256
+    id-MLKEM768-X25519-SHA3-256  (aka "X-Wing")
     id-MLKEM768-ECDH-P256-HMAC-SHA256
 
 In applications that only allow NIST PQC Level 5, it is RECOMMENDED to focus implementation effort on:
@@ -1788,7 +1780,7 @@ DER:
 
 This specification borrows extensively from the analysis and KEM combiner construction presented in [X-Wing]. In particular, X-Wing and id-MLKEM768-X25519-SHA3-256 are largely interchangeable. The one difference is that X-Wing uses a combined KeyGen function to generate the two component private keys from the same seed, which gives some additional binding properties. However, using a derived value as the seed for `ML-KEM.KeyGen_internal()` is, at time of writing, explicitly disallowed by [FIPS.203] which makes it impossible to create a FIPS-compliant implementation of X-Wing's KeyGen  or private key import functionality. For this reason, this specification keeps the key generation for both components separate and only loosely-specified so that implementers are free to use an existing certified hardware or software module for one or both components.
 
-Due to the difference in key generation and security properties, X-Wing and id-MLKEM768-X25519-SHA3-256 have been registered as separate algorithms with separate OIDs, and they use a different domain separator string in order to ensure that their ciphertexts are not inter-compatible.
+Due to the difference in key generation and security properties, X-Wing and id-MLKEM768-X25519-SHA3-256 have been registered as separate algorithms with separate OIDs, and they use a different KEM Combiner Label in order to ensure that their ciphertexts are not inter-compatible.
 
 ## ETSI CatKDF
 
@@ -1808,7 +1800,7 @@ The main difference between the Composite ML-KEM combiner and the ETSI CatKDF co
 
 Additionally, ETSI CatKDF can be instantiated with either HMAC [RFC2104], KMAC [SP.800-185] or HKDF [RFC5869] as KDF. Using HMAC aligns with some of the KDF variants in this specification, but not the ones that use SHA3 which do not have an equivalent construction of CatKDF.
 
-# KEM Combiner Examples
+# Examples of KEM Combiner Intermediate Values
 
 This section provides examples of constructing the input for the KEM Combiner, showing all intermediate values. This is intended to be useful for debugging purposes. See {{sec-kem-combiner}} for additional information.
 
@@ -1818,7 +1810,7 @@ Each input component is shown. Note that values are shown hex-encoded for displa
 * `tradSS` is the shared secret produce by the traditional algorithm.
 * `tradCT` is either an elliptic curve public key or an RSA-OAEP ciphertext depending on the algorithm chosen.
 * `tradPK` is the public key of the traditional component (elliptic curve or RSA) and therefore fixed-length.
-* `Domain` is the specific domain separator for this composite algorithm.  See {{sec-domsep-values}}
+* `Label` is the specific KEM Combiner Label for this composite algorithm.  See {{sec-label-values}}
 
 Next, the `Combined KDF Input` is given, which is simply the concatenation of the above values.
 
