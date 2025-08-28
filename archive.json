@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-08-21T01:57:10.046057+00:00",
+  "timestamp": "2025-08-28T01:54:31.234525+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -3245,6 +3245,30 @@
       "updatedAt": "2025-08-20T13:41:13Z",
       "closedAt": null,
       "comments": []
+    },
+    {
+      "number": 199,
+      "id": "I_kwDOKRPFO87IBU5d",
+      "title": "Can the size table to turned into a table of maximum sizes?",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/199",
+      "state": "CLOSED",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Dan Van Geest points out that a table of approximate sizes with text saying _\"MUST NOT perform strict length checking based on the values in this table\"_ is not all that useful, and potentially dangerous if people miss that sentence.\n\nNow that we have locked down the encoding for each component, and values like `e=65537`, it should be possible to calculate a maximum size for each entry in the table, which would make the table much more useful.",
+      "createdAt": "2025-08-26T14:02:37Z",
+      "updatedAt": "2025-08-27T00:35:11Z",
+      "closedAt": "2025-08-27T00:35:11Z",
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Duplicate of #176 ",
+          "createdAt": "2025-08-27T00:35:11Z",
+          "updatedAt": "2025-08-27T00:35:11Z"
+        }
+      ]
     }
   ],
   "pulls": [
