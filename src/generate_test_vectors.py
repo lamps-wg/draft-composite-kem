@@ -139,6 +139,29 @@ class ECDHKEM(KEM):
     prk['version'] = 1
     prk['privateKey'] = self.sk.private_numbers().private_value.to_bytes((self.sk.key_size + 7) // 8)
     return der_encode(prk)
+  
+  def public_key_max_len(self):  
+    return (1 + 2 * size_in_bits_to_size_in_bytes(self.curve.key_size), True)
+    
+  def private_key_max_len(self):
+    """
+    ECPrivateKey ::= SEQUENCE {
+      version        INTEGER { ecPrivkeyVer1(1) } (ecPrivkeyVer1),
+      privateKey     OCTET STRING,
+      parameters [0] ECParameters {{ NamedCurve }} OPTIONAL,
+      publicKey  [1] BIT STRING OPTIONAL
+    }
+    """
+    maxLen = calculate_der_universal_sequence_max_length([
+        calculate_der_universal_integer_max_length(max_size_in_bits=1),  # version must be 1
+        calculate_der_universal_octet_string_max_length(size_in_bits_to_size_in_bytes(self.curve.key_size))  # privateKey
+        # ECParameters are not allowed in Composite ML-DSA
+        # publicKey is not allowed in Composite ML-DSA
+    ])
+    return (maxLen, True)
+
+  def ct_max_len(self):
+    return (1 + 2 * size_in_bits_to_size_in_bytes(self.curve.key_size), True)
 
 
 class ECDHP256KEM(ECDHKEM):
@@ -212,8 +235,17 @@ class XKEM(KEM):
                 )
     CurvePrivateKey = univ.OctetString(raw)
     return der_encode(CurvePrivateKey)
-
-
+        
+  def public_key_max_len(self):
+    return (len(self.public_key_bytes()), True)
+        
+  def private_key_max_len(self):
+    return (len(self.private_key_bytes()), True)
+    
+  def ct_max_len(self):
+    return self.public_key_max_len()
+      
+      
 class X25519KEM(XKEM):
   id = "id-X25519"
   oid = univ.ObjectIdentifier((1,3,101,110))
@@ -282,8 +314,53 @@ class RSAOAPKEM(KEM):
                         format=serialization.PrivateFormat.TraditionalOpenSSL,
                         encryption_algorithm=serialization.NoEncryption()
                       )
-  
 
+  def public_key_max_len(self):
+    """
+    RSAPublicKey ::= SEQUENCE {
+        modulus           INTEGER,  -- n
+        publicExponent    INTEGER   -- e
+    }
+    """
+    maxLen = calculate_der_universal_sequence_max_length([
+        calculate_der_universal_integer_max_length(self.pk.key_size),  # n
+        calculate_der_universal_integer_max_length(self.pk.public_numbers().e.bit_length())  # e = 65537 = 0b1_00000000_00000001
+    ])
+    return (maxLen, False)
+
+  def private_key_max_len(self):
+    """
+    RSAPrivateKey::= SEQUENCE {
+        version Version,
+        modulus           INTEGER,  --n
+        publicExponent INTEGER,  --e
+        privateExponent INTEGER,  --d
+        prime1 INTEGER,  --p
+        prime2 INTEGER,  --q
+        exponent1 INTEGER,  --d mod(p - 1)
+        exponent2 INTEGER,  --d mod(q - 1)
+        coefficient INTEGER,  --(inverse of q) mod p
+        otherPrimeInfos OtherPrimeInfos OPTIONAL
+    }
+    """
+    maxLen = calculate_der_universal_sequence_max_length([
+        calculate_der_universal_integer_max_length(max_size_in_bits=1),  # version must be 0 for Composite ML-KEM
+        calculate_der_universal_integer_max_length(self.sk.key_size),  # n
+        calculate_der_universal_integer_max_length(self.pk.public_numbers().e.bit_length()),  # e = 65537 = 0b1_00000000_00000001
+        calculate_der_universal_integer_max_length(self.sk.key_size),  # d
+        calculate_der_universal_integer_max_length(self.sk.key_size // 2),  # p
+        calculate_der_universal_integer_max_length(self.sk.key_size // 2),  # q
+        calculate_der_universal_integer_max_length(self.sk.key_size // 2),  # d mod (p-1)
+        calculate_der_universal_integer_max_length(self.sk.key_size // 2),  # d mod (q-1)
+        calculate_der_universal_integer_max_length(self.sk.key_size // 2)   # (inverse of q) mod p
+        # OtherPrimeInfos are not allowed in Composite ML-KEM
+    ])
+    return (maxLen, False)
+
+  def ct_max_len(self):
+    return (size_in_bits_to_size_in_bytes(self.sk.key_size) , True)
+    
+    
 class RSA2048OAEPKEM(RSAOAPKEM):
   id = "id-RSAES-OAEP-2048"
   oid = univ.ObjectIdentifier((1,2,840,113549,1,1))
@@ -336,6 +413,20 @@ class MLKEM(KEM):
 
   def private_key_bytes(self):
     return self.sk
+    
+  def public_key_max_len(self):
+    return (len(self.public_key_bytes()), True)
+    
+  def private_key_max_len(self):
+    return (len(self.private_key_bytes()), True)
+    
+  def ct_max_len(self):    
+    if isinstance(self, MLKEM512):
+      return (768, True)
+    if isinstance(self, MLKEM768):
+      return (1088, True)
+    elif isinstance(self, MLKEM1024):
+      return (1568, True)
 
 
 class MLKEM512(MLKEM):
@@ -472,6 +563,22 @@ class CompositeKEM(KEM):
 
     return ss
 
+  def public_key_max_len(self):
+    (maxMLKEM, fixedSizeMLKEM) = self.mlkem.public_key_max_len()
+    (maxTrad, fixedSizeTrad) = self.tradkem.public_key_max_len()
+    return (maxMLKEM + maxTrad, fixedSizeMLKEM and fixedSizeTrad)
+  
+  def private_key_max_len(self):
+    (maxMLKEM, fixedSizeMLKEM) = self.mlkem.private_key_max_len()
+    (maxTrad, fixedSizeTrad) = self.tradkem.private_key_max_len()
+    (maxTradPub, fixedSizeTradPub) = self.tradkem.public_key_max_len()
+    return (maxMLKEM + 2 + maxTradPub + maxTrad, fixedSizeMLKEM and fixedSizeTrad and fixedSizeTradPub)
+    
+  def ct_max_len(self):
+    (maxMLKEM, fixedSizeMLKEM) = self.mlkem.ct_max_len()
+    (maxTrad, fixedSizeTrad) = self.tradkem.ct_max_len()
+    return (maxMLKEM + maxTrad, fixedSizeMLKEM and fixedSizeTrad)
+    
 
 class MLKEM768_RSA2048_HMAC_SHA256(CompositeKEM):
   id = "id-MLKEM768-RSA2048-HMAC-SHA256"
@@ -840,9 +947,9 @@ def doKEM(kem, caSK, includeInTestVectors=True, includeInLabelsTable=True, inclu
 
   if includeInSizeTable:
     sizeRow = {}
-    sizeRow['pk'] = len(kem.public_key_bytes())
-    sizeRow['sk'] = len(kem.private_key_bytes())
-    sizeRow['ct'] = len(ct)
+    sizeRow['pk'] = kem.public_key_max_len()
+    sizeRow['sk'] = kem.private_key_max_len()
+    sizeRow['ct'] = kem.ct_max_len()
     sizeRow['ss'] = len(ss)
     SIZE_TABLE[kem.id] = sizeRow
 
@@ -1042,6 +1149,11 @@ def writeDumpasn1Cfg():
       f.write("Description = "+ oid+"\n")
       f.write("\n")
 
+def conditionalAsterisk(switch):
+    if switch:
+      return '*'
+    else:
+      return ' '
 
 def writeSizeTable():
   # In this style:
@@ -1057,10 +1169,13 @@ def writeSizeTable():
 
     for alg in SIZE_TABLE:
       row = SIZE_TABLE[alg]
+      (pk, pkFix) = row['pk']
+      (sk, skFix) = row['sk']
+      (ct, ctFix) = row['ct']
       f.write('| '+ alg.ljust(46, ' ') +'|'+
-                 str(row['pk']).center(14, ' ') +'|'+
-                 str(row['sk']).center(14, ' ') +'|'+
-                 str(row['ct']).center(14, ' ') +'|'+
+                 (str(pk)+conditionalAsterisk(not pkFix)).center(14, ' ') +'|'+
+                 (str(sk)+conditionalAsterisk(not skFix)).center(14, ' ') +'|'+
+                 (str(ct)+conditionalAsterisk(not ctFix)).center(14, ' ') +'|'+
                  str(row['ss']).center(6, ' ') +'|\n')
 
 
@@ -1118,7 +1233,53 @@ def writeKEMCombinerExample(kem, filename):
   f.write( "\n".join(textwrap.wrap("ss: " + ss.hex(), width=wrap_width)) +"\n" )
 
 
+def calculate_length_length(der_byte_count):
+    assert der_byte_count >= 0
 
+    if der_byte_count < (1 << 7):  # Short form
+        return 1  # 1 byte for length
+    elif der_byte_count < (1 << 8):
+        return 2  # 1 byte for length + 1 byte for the length value
+    elif der_byte_count < (1 << 16):
+        return 3  # 1 byte for length + 2 bytes for the length value
+    elif der_byte_count < (1 << 24):
+        return 4  # 1 byte for length + 3 bytes for the length value
+    else:
+        return 5  # 1 byte for length + 4 bytes for the length value
+
+
+def size_in_bits_to_size_in_bytes(size_in_bits):
+    return (size_in_bits + 7) // 8
+
+
+def calculate_der_universal_integer_max_length(max_size_in_bits):
+    # DER uses signed integers, so account for possible leading sign bit.
+    signed_max_size_in_bits = max_size_in_bits + 1
+
+    max_der_size_in_bytes = size_in_bits_to_size_in_bytes(signed_max_size_in_bits)
+
+    UNIVERSAL_INTEGER_IDENTIFIER_LENGTH = 1
+
+    return UNIVERSAL_INTEGER_IDENTIFIER_LENGTH + calculate_length_length(max_der_size_in_bytes) + max_der_size_in_bytes
+
+
+def calculate_der_universal_octet_string_max_length(length):
+    UNIVERSAL_OCTET_STRING_IDENTIFIER_LENGTH = 1
+
+    return UNIVERSAL_OCTET_STRING_IDENTIFIER_LENGTH + calculate_length_length(length) + length
+
+
+def calculate_der_universal_sequence_max_length(der_size_of_sequence_elements):
+    UNIVERSAL_SEQUENCE_IDENTIFIER_LENGTH = 1
+
+    length = 0
+
+    for element_size in der_size_of_sequence_elements:
+        length += element_size
+
+    length += UNIVERSAL_SEQUENCE_IDENTIFIER_LENGTH + calculate_length_length(length)
+
+    return length
 
 
 def main():

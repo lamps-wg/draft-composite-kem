@@ -1549,9 +1549,9 @@ Implementers who choose to use a different private key encoding than the one spe
 
 --- back
 
-# Approximate Key and Ciphertext Sizes {#sec-sizetable}
+# Maximum Key and Ciphertext Sizes {#sec-sizetable}
 
-The sizes listed below are approximate: these values are measured from the test vectors, however, several factors could cause fluctuations in the size of the traditional component. For example, this could be due to:
+The sizes listed below are maximum values: several factors could cause fluctuations in the size of the traditional component. For example, this could be due to:
 
 * Compressed vs uncompressed EC point.
 * The RSA public key `(n, e)` allows `e` to vary is size between 3 and `n - 1` [RFC8017].
@@ -1559,9 +1559,7 @@ The sizes listed below are approximate: these values are measured from the test 
 
 By contrast, ML-KEM values are always fixed size, so composite values can always be correctly de-serialized based on the size of the ML-KEM component.
 
-Implementations MUST NOT perform strict length checking based on the values in this table except for ML-KEM + X25519 or X448; since these algorithms produce fixed-size outputs, the values in the table below for these variants MAY be treated as constants.
-
-Note that this table measures the size of the raw byte values, and does not measure any ASN.1 wrapping such as OCTET STRINGS or PKCS#8 PrivateKeyInfo structures. This table is useful primarily for comparison purposes between the different options.
+Size values marked with an asterisk in the table are not fixed but maximum possible values for the composite key or ciphertext. Implementations MUST NOT perform strict length checking based on such values.
 
 Non-hybrid ML-KEM is included for reference.
 
@@ -1572,7 +1570,7 @@ Non-hybrid ML-KEM is included for reference.
      This is mainly to save resources and build time on the github commits. -->
 
 {::include src/sizeTable.md}
-{: #tab-size-values title="Approximate size values of composite ML-KEM"}
+{: #tab-size-values title="Maximum size values of composite ML-KEM"}
 
 
 
