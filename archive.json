@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-08-28T01:54:31.234525+00:00",
+  "timestamp": "2025-08-31T02:00:26.016577+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -955,11 +955,13 @@
       "state": "OPEN",
       "author": "johngray-dev",
       "authorAssociation": "COLLABORATOR",
-      "assignees": [],
+      "assignees": [
+        "ounsworth"
+      ],
       "labels": [],
       "body": "For a security proof of the ML-KEM + ECDH combos, we can point to the X-Wing paper. We should have a similar proof for the RSA-OAEP combos. Not sure how to go about attracting someone to help with this, or if we should attempt proof-writing ourselves.",
       "createdAt": "2024-08-01T21:31:58Z",
-      "updatedAt": "2025-08-12T20:31:42Z",
+      "updatedAt": "2025-08-28T14:48:06Z",
       "closedAt": null,
       "comments": [
         {
@@ -2332,7 +2334,7 @@
       "id": "I_kwDOKRPFO86zCJFC",
       "title": "After WGLC: early allocation of OIDs and re-roll domSeps and Test Vectors",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/131",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -2341,8 +2343,8 @@
       ],
       "body": "",
       "createdAt": "2025-04-18T00:48:06Z",
-      "updatedAt": "2025-04-24T20:58:42Z",
-      "closedAt": null,
+      "updatedAt": "2025-08-28T13:29:21Z",
+      "closedAt": "2025-08-28T13:29:21Z",
       "comments": []
     },
     {
@@ -2847,7 +2849,7 @@
       "id": "I_kwDOKRPFO868O70r",
       "title": "Private key serialization is under-specified",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/173",
-      "state": "CLOSED",
+      "state": "OPEN",
       "author": "danvangeest",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -2856,8 +2858,8 @@
       "labels": [],
       "body": "The private key serialization is under-specified, at least for EC.  Section 5 of both drafts says the traditional public EC key is encoded as an ECPoint, but says nothing about the private key. RFC5915 which defines ECPrivateKey isn't referenced anywhere in the documents.  The RSAPublicKey, RSAPrivateKey and ECPrivateKey types aren't referenced anywhere in the documents, I think doing so would make serialization clearer.",
       "createdAt": "2025-06-18T20:06:10Z",
-      "updatedAt": "2025-08-13T14:16:21Z",
-      "closedAt": "2025-08-13T14:16:21Z",
+      "updatedAt": "2025-08-29T13:20:07Z",
+      "closedAt": null,
       "comments": [
         {
           "author": "Perksey",
@@ -2879,6 +2881,13 @@
           "body": "https://github.com/lamps-wg/draft-composite-sigs/issues/215 is related",
           "createdAt": "2025-07-02T14:28:25Z",
           "updatedAt": "2025-07-02T14:29:24Z"
+        },
+        {
+          "author": "janklaussner",
+          "authorAssociation": "COLLABORATOR",
+          "body": "in https://github.com.mcas.ms/lamps-wg/draft-composite-sigs/issues/215 we went for even more restrictions not reflected by PR #184 yet, hence reopening.",
+          "createdAt": "2025-08-29T13:20:07Z",
+          "updatedAt": "2025-08-29T13:20:07Z"
         }
       ]
     },
@@ -2963,13 +2972,13 @@
       "state": "OPEN",
       "author": "danvangeest",
       "authorAssociation": "CONTRIBUTOR",
-      "assignees": [],
-      "labels": [
-        "wontfix?"
+      "assignees": [
+        "janklaussner"
       ],
+      "labels": [],
       "body": "Appendix A.  Approximate Key and Signature Sizes does not seem particularly useful, because it is just approximate.  If you could list the maximum sizes that would be much more useful. I suspect some of the private key values in this table are no longer approximate because of the serialization issues I mentioned above.",
       "createdAt": "2025-06-18T20:08:29Z",
-      "updatedAt": "2025-08-18T17:25:00Z",
+      "updatedAt": "2025-08-28T13:08:16Z",
       "closedAt": null,
       "comments": [
         {
@@ -3076,13 +3085,13 @@
       "state": "OPEN",
       "author": "optnfast",
       "authorAssociation": "CONTRIBUTOR",
-      "assignees": [],
-      "labels": [
-        "wontfix?"
+      "assignees": [
+        "johngray-dev"
       ],
+      "labels": [],
       "body": "> In alignment with ML-KEM [FIPS.203], Composite KEM algorithms output a 256-bit shared secret key at all security levels, truncating is necessary as described in {{sec-kem-combiner}}.\n\nWhere the combiner is SHA3-256 or HMAC-SHA256 this is all good.\n\nHowever where the combiner is HMAC-SHA512 it means we truncate the output to 256 bits.\n\nThis is a headache in the FIPS context:\n* I see nothing in SP800-227ipd which permits truncation, so we can only appeal to the underlying KDF specs.\n* If the combiner is interpreted as the an SP800-56Cr2 one-step KDF we could only get away with it if the result is used directly as key material (it's conceptually the same as only needing 256 bits of KDF output).\n* If the combiner is interpreted as the Extract phase of an SP800-56Cr2 two-step KDF it won't work: the text is clear that the HMAC must be untruncated.\n\nSo if you want more than one AES-256 key, or two AES-128 keys, you're out of luck. I have concrete use cases for up to 1024 bits of output from a PQ/T hybrid KEM so this is going to be a problem for me. (My current use cases don't involve interop so I do have a good plan B, but I'd still like to align with the rest of the world if possible.)\n\nI think I have some responsibility for this, having previously cheered on the use of HMAC-SHA512.\n\nMy suggestion is to remove all truncated HMAC-SHA512 and replace with untruncated HMAC-SHA256. I don't believe this will have any meaningful impact on security level.",
       "createdAt": "2025-06-26T14:50:48Z",
-      "updatedAt": "2025-08-18T08:21:44Z",
+      "updatedAt": "2025-08-29T09:22:34Z",
       "closedAt": null,
       "comments": [
         {
@@ -3098,6 +3107,20 @@
           "body": "The problem is not the security of the construction, nor the technical feasibility of using it. The problem is getting it through a FIPS evaluation.\n\nThe truncation step invalidates the analysis in [fips-certification-sec-fips](https://github.com/lamps-wg/draft-composite-kem/blob/main/draft-ietf-lamps-pq-composite-kem.md#fips-certification-sec-fips). As well as SHA3 and HMAC-SHA2, we now have truncated HMAC-SHA2 in the mix, and that isn't one of the acceptable choices under SP800-227ipd.\n\nMore specifically SP800-227ipd references SP800-56Ar3 which offers hash(x), HMAC-hash(salt, x) and KMAC(...) as options. \"Truncated HMAC-hash\" is not among the options. \n\nThings to think about:\n* FIPS-198 does allow for truncated HMACs. But it unambiguously defines HMAC-hash as the untruncated form, so it doesn't quite get us out of this hole.\n* FIPS-180 does allow for truncated hashes. So HMAC-(truncated-SHA512) could be a valid option at least in principle (albeit a somewhat strange one). But that is not the same function as truncated HMAC-SHA512.",
           "createdAt": "2025-08-18T08:21:44Z",
           "updatedAt": "2025-08-18T08:21:44Z"
+        },
+        {
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Authors group believes this is worth fixing so it can be FIPS certified.   Use HMAC-SHA256 throughout.  \n- ML-KEM outputs 256 bit output\n- If we use HMAC-SHA256, lower collision resistance of internal HMAC... does this matter?\n  -  Suppose ML-KEM is broken but P-521 is not...  unlikely. \n- Authors group agreed to change.\n",
+          "createdAt": "2025-08-28T14:37:25Z",
+          "updatedAt": "2025-08-28T14:44:58Z"
+        },
+        {
+          "author": "optnfast",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Thankyou John.\n\n> If we use HMAC-SHA256, lower collision resistance of internal HMAC... does this matter\n\nAFAIK it does not.\n\nPer https://eprint.iacr.org/2006/043.pdf the security of HMAC-H, for a Merkle-Damg\u00e5rd hash H, does not depend on the collision resistance of H but only on the compression function being a PRF. The proof here was motivated by the weakness of SHA1 but we could lean on it here to disregard the 128-bit collision resistance of SHA256.\n\nIntuitively, even if an adversary has an efficient SHA256 collision finder (supporting chosen prefixes and suffixes) and can break exactly one of the component KEMs (i.e. letting them learn or control one of the two shared secrets), what are they going to do with these tools? There is still at least one secret input involved in any key establishment operation so they have no way to make their collision finder match it short of exhaustive search over about 2^256 possible values. Conversely if they start by choosing a colliding pair they have no way to 'drive' the unbroken KEM to match the its secret in one of their inputs better than ~2^256 exhaustive search.",
+          "createdAt": "2025-08-29T09:22:34Z",
+          "updatedAt": "2025-08-29T09:22:34Z"
         }
       ]
     },
@@ -3189,13 +3212,15 @@
       "state": "OPEN",
       "author": "bencemali",
       "authorAssociation": "NONE",
-      "assignees": [],
+      "assignees": [
+        "johngray-dev"
+      ],
       "labels": [
         "wontfix?"
       ],
       "body": "Section 6.1 says the following:\n```\n... the composite value MUST be wrapped into a DER BIT STRING or OCTET STRING in the obvious ways.\n```\nTo me something like *obvious ways* seems unfitting for an RFC. This wording is especially misleading as the ASN.1 BIT STRING type was not intended to hold byte array like data, but a sequence of flags, and in examples like certificate `subjectPublicKey` fields, one explicitly needs to keep the trailing zeros (see OpenSSL's `ossl_asn1_string_set_bits_left` for example). This may be worth clarifying.",
       "createdAt": "2025-08-05T11:22:39Z",
-      "updatedAt": "2025-08-18T11:53:01Z",
+      "updatedAt": "2025-08-28T14:28:17Z",
       "closedAt": null,
       "comments": [
         {
@@ -3219,15 +3244,15 @@
       "id": "I_kwDOKRPFO87GU3gO",
       "title": "Change domain separators to HPKE-style Labels?",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/193",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "This matches draft-cfrg-concrete-hybrid-kem.\n\nThat means the starship for X-Wing, and ASCII strings of the form `QSF-P256-MLKEM768-SHAKE256-SHA3256` ... need to coordinate with Richard Barnes about whether the KeyGen() PRG (\"SHAKE256\", in this case) is really an interop param.\n\nAnother advantage of this is that it nicely avoids the need to ask IANA to pre-allocate the OIDs so that we can roll the DomSep table. So we can close #131 .",
       "createdAt": "2025-08-16T15:10:10Z",
-      "updatedAt": "2025-08-17T03:22:19Z",
-      "closedAt": null,
+      "updatedAt": "2025-08-28T13:29:21Z",
+      "closedAt": "2025-08-28T13:29:21Z",
       "comments": []
     },
     {
@@ -3269,6 +3294,42 @@
           "updatedAt": "2025-08-27T00:35:11Z"
         }
       ]
+    },
+    {
+      "number": 200,
+      "id": "I_kwDOKRPFO87Ieetd",
+      "title": "EC public key is encoded as RAW, needs to be ECPoint",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/200",
+      "state": "OPEN",
+      "author": "johngray-dev",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [
+        "janklaussner"
+      ],
+      "labels": [],
+      "body": "TODO - Code bug - EC public key is RAW (X9.62) value, not an ECPoint which is what we decided to use. ",
+      "createdAt": "2025-08-28T13:55:52Z",
+      "updatedAt": "2025-08-28T14:54:12Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 201,
+      "id": "I_kwDOKRPFO87IfTZy",
+      "title": "Add Consolidated Algorithm Table for KEM",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/201",
+      "state": "OPEN",
+      "author": "johngray-dev",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [
+        "janklaussner"
+      ],
+      "labels": [],
+      "body": "Similar to https://github.com/lamps-wg/draft-composite-sigs/pull/254 in signatures, we want to do in KEM.",
+      "createdAt": "2025-08-28T14:53:41Z",
+      "updatedAt": "2025-08-28T14:53:41Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
@@ -7776,7 +7837,7 @@
       "labels": [],
       "body": "Closes #173",
       "createdAt": "2025-07-09T13:32:15Z",
-      "updatedAt": "2025-08-13T14:16:20Z",
+      "updatedAt": "2025-08-29T13:21:57Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "7faa41fbe51816c03e9b98ee6b93a54160306445",
@@ -8114,7 +8175,7 @@
       "labels": [],
       "body": "\u2026 OCTET STRING to satisfy the CHOICE structure. Closes #172",
       "createdAt": "2025-08-16T21:17:26Z",
-      "updatedAt": "2025-08-16T21:18:16Z",
+      "updatedAt": "2025-08-28T13:37:20Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "38832ef0207bad13b83e9d2a2a7e0351b5b0d28f",
@@ -8132,6 +8193,13 @@
           "body": "@danvangeest  I would like your review on this. \r\n\r\nThis PR mirrors https://github.com/lamps-wg/draft-composite-sigs/pull/219 in -sigs.",
           "createdAt": "2025-08-16T21:18:16Z",
           "updatedAt": "2025-08-16T21:18:16Z"
+        },
+        {
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Authors agree, please merge after resolving conflict.",
+          "createdAt": "2025-08-28T13:37:20Z",
+          "updatedAt": "2025-08-28T13:37:20Z"
         }
       ],
       "reviews": []
@@ -8141,24 +8209,26 @@
       "id": "PR_kwDOKRPFO86j-Gq-",
       "title": "Changed OID-based domain separators to HPKE-style ASCII labels",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/195",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Closes #193 \r\nCloses #131 ",
       "createdAt": "2025-08-17T03:09:07Z",
-      "updatedAt": "2025-08-17T03:10:09Z",
+      "updatedAt": "2025-08-28T13:29:31Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "38832ef0207bad13b83e9d2a2a7e0351b5b0d28f",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_domsep_cfrg_alignment",
       "headRefOid": "65f0e049d33f07a71131fb57d10b6f93b75cf6ab",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-08-28T13:29:20Z",
+      "mergedAt": "2025-08-28T13:29:20Z",
+      "mergedBy": "johngray-dev",
+      "mergeCommit": {
+        "oid": "6afe372f793aef353865587150cb96312446a388"
+      },
       "comments": [],
       "reviews": []
     },
