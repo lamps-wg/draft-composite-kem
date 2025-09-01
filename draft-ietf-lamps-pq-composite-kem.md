@@ -791,9 +791,11 @@ For all serialization routines below, when these values are required to be carri
 While ML-KEM has a single fixed-size representation for each of public key, private key, and ciphertext, the traditional component might allow multiple valid encodings; for example an elliptic curve public key, and therefore also ciphertext, might be validly encoded as either compressed or uncompressed [SEC1], or an RSA private key could be encoded in Chinese Remainder Theorem form [RFC8017]. In order to obtain interoperability, composite algorithms MUST use the following encodings of the underlying components:
 
 * **ML-KEM**: MUST be encoded as specified in [FIPS.203], using a 64-byte seed as the private key.
-* **RSA**: the public key MUST be encoded as RSAPublicKey with the `(n,e)` public key representation as specified in A.1.1 of [RFC8017] and the private key representation as RSAPrivateKey specified in A.1.2 of [RFC8017].
-* **ECDH**: public key MUST be encoded as an `ECPoint` as specified in section 2.2 of [RFC5480], with both compressed and uncompressed keys supported. For maximum interoperability, it is RECOMMENEDED to use uncompressed points. The private key must be encoded as ECPrivateKey specified in [RFC5915].
+* **RSA**: the public key MUST be encoded as RSAPublicKey with the `(n,e)` public key representation as specified in A.1.1 of [RFC8017] and the private key representation as RSAPrivateKey specified in A.1.2 of [RFC8017] with version 0 and 'otherPrimeInfos' absent.
+* **ECDH**: public key MUST be encoded as an `ECPoint` as specified in section 2.2 of [RFC5480], with both compressed and uncompressed keys supported. For maximum interoperability, it is RECOMMENEDED to use uncompressed points. The private key must be encoded as ECPrivateKey specified in [RFC5915] without 'NamedCurve' parameter and without 'publicKey' field.
 * **X25519 and X448**: the public key MUST be encoded as per section 5 of [RFC7748] and the private key as CurvePrivateKey specified in [RFC8410].
+
+All ASN.1 objects SHALL be encoded using DER on serialization.
 
 Even with fixed encodings for the traditional component, there may be slight differences in size of the encoded value due to, for example, encoding rules that drop leading zeroes. See {{sec-sizetable}} for further discussion of encoded size of each composite algorithm.
 

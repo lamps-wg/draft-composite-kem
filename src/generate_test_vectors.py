@@ -23,7 +23,7 @@ import json
 import textwrap
 from zipfile import ZipFile
 
-from pyasn1.type import univ
+from pyasn1.type import univ, namedtype
 from pyasn1_alt_modules import rfc5208
 from pyasn1_alt_modules import rfc5280
 from pyasn1.codec.der.decoder import decode as der_decode
@@ -92,6 +92,15 @@ class KEM:
     raise Exception("Not implemented")
 
 
+class Version(univ.Integer):
+    pass
+
+class ECDSAPrivateKey(univ.Sequence):
+    componentType = namedtype.NamedTypes(
+        namedtype.NamedType('version', Version()),
+        namedtype.NamedType('privateKey', univ.OctetString())
+    )
+
 class ECDHKEM(KEM):
   curve = None
 
@@ -126,11 +135,10 @@ class ECDHKEM(KEM):
                     )
 
   def private_key_bytes(self):
-    return self.sk.private_bytes(
-                        encoding=serialization.Encoding.DER,
-                        format=serialization.PrivateFormat.TraditionalOpenSSL,
-                        encryption_algorithm=serialization.NoEncryption()
-                    )
+    prk = ECDSAPrivateKey()
+    prk['version'] = 1
+    prk['privateKey'] = self.sk.private_numbers().private_value.to_bytes((self.sk.key_size + 7) // 8)
+    return der_encode(prk)
 
 
 class ECDHP256KEM(ECDHKEM):
