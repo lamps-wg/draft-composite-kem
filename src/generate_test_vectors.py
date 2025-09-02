@@ -129,10 +129,16 @@ class ECDHKEM(KEM):
     return self.sk.exchange(ec.ECDH(), ct)
 
   def public_key_bytes(self):
-    return self.pk.public_bytes(
+    '''
+    [RFC5480]
+    ECPoint ::= OCTET STRING
+    '''
+    raw = self.pk.public_bytes(
                       encoding=serialization.Encoding.X962,
                       format=serialization.PublicFormat.UncompressedPoint
                     )
+    ECPoint = univ.OctetString(raw)
+    return der_encode(ECPoint)
 
   def private_key_bytes(self):
     prk = ECDSAPrivateKey()
@@ -141,7 +147,7 @@ class ECDHKEM(KEM):
     return der_encode(prk)
   
   def public_key_max_len(self):  
-    return (1 + 2 * size_in_bits_to_size_in_bytes(self.curve.key_size), True)
+    return (calculate_der_universal_octet_string_max_length(1 + 2 * size_in_bits_to_size_in_bytes(self.curve.key_size)), True)
     
   def private_key_max_len(self):
     """
