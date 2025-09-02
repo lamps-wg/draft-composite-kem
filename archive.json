@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-08-31T02:00:26.016577+00:00",
+  "timestamp": "2025-09-02T01:56:31.432175+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -8285,6 +8285,32 @@
       "mergeCommit": {
         "oid": "0512f9fcdfe219ce23384974e3c3a504dd882570"
       },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 202,
+      "id": "PR_kwDOKRPFO86mS02K",
+      "title": "Restricts encoding of RSPrivateKey, ECPoint and ECPrivateKey. ",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/202",
+      "state": "OPEN",
+      "author": "janklaussner",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "In line with issue #244, encoding of RSAPrivateKey is changed to a fix version number and prohibits use of otherPrimeInfos field. ECPoint only allows uncompressed format now and ECPrivateKey prohibits NamedCurve and publicKey. Also its made clear DER encoding of components is used if applicable. Changes ECPrivateKey test vectors to restricted encoding by removing namedCurve and publicKey fields from ECPrivateKey encodings for all ECDSA components.\r\n\r\nCloses #173 ",
+      "createdAt": "2025-09-01T14:02:48Z",
+      "updatedAt": "2025-09-01T14:02:48Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "6afe372f793aef353865587150cb96312446a388",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "184-private-key-serialization-is-under-specified",
+      "headRefOid": "63a2d49d1b4e26dc154e8d8fbd3dd1598b9bbc65",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
       "comments": [],
       "reviews": []
     }
