@@ -126,7 +126,7 @@ Table of Contents
    12. References
      12.1.  Normative References
      12.2.  Informative References
-   Appendix A.  Approximate Key and Ciphertext Sizes
+   Appendix A.  Maximum Key and Ciphertext Sizes
    Appendix B.  Component Algorithm Reference
    Appendix C.  Fixed Component Algorithm Identifiers
    Appendix D.  Comparison with other Hybrid KEMs
@@ -2679,12 +2679,11 @@ Deserialization Process:
               Hybrid KEM You’ve Been Looking For", 9 January 2024,
               <https://eprint.iacr.org/2024/039.pdf>.
 
-Appendix A.  Approximate Key and Ciphertext Sizes
+Appendix A.  Maximum Key and Ciphertext Sizes
 
-   The sizes listed below are approximate: these values are measured
-   from the test vectors, however, several factors could cause
-   fluctuations in the size of the traditional component.  For example,
-   this could be due to:
+   The sizes listed below are maximum values: several factors could
+   cause fluctuations in the size of the traditional component.  For
+   example, this could be due to:
 
    *  Compressed vs uncompressed EC point.
 
@@ -2699,15 +2698,10 @@ Appendix A.  Approximate Key and Ciphertext Sizes
    can always be correctly de-serialized based on the size of the ML-KEM
    component.
 
-   Implementations MUST NOT perform strict length checking based on the
-   values in this table except for ML-KEM + X25519 or X448; since these
-   algorithms produce fixed-size outputs, the values in the table below
-   for these variants MAY be treated as constants.
-
-   Note that this table measures the size of the raw byte values, and
-   does not measure any ASN.1 wrapping such as OCTET STRINGS or PKCS#8
-   PrivateKeyInfo structures.  This table is useful primarily for
-   comparison purposes between the different options.
+   Size values marked with an asterisk in the table are not fixed but
+   maximum possible values for the composite key or ciphertext.
+   Implementations MUST NOT perform strict length checking based on such
+   values.
 
    Non-hybrid ML-KEM is included for reference.
 
@@ -2719,13 +2713,13 @@ Appendix A.  Approximate Key and Ciphertext Sizes
    +-----------------------------+--------+---------+------------+----+
    | id-alg-ml-kem-1024          | 1568   | 64      | 1568       | 32 |
    +-----------------------------+--------+---------+------------+----+
-   | id-MLKEM768-RSA2048-HMAC-   | 1454   | 1528    | 1344       | 32 |
+   | id-MLKEM768-RSA2048-HMAC-   | 1454*  | 1530*   | 1344       | 32 |
    | SHA256                      |        |         |            |    |
    +-----------------------------+--------+---------+------------+----+
-   | id-MLKEM768-RSA3072-HMAC-   | 1582   | 2230    | 1472       | 32 |
+   | id-MLKEM768-RSA3072-HMAC-   | 1582*  | 2234*   | 1472       | 32 |
    | SHA256                      |        |         |            |    |
    +-----------------------------+--------+---------+------------+----+
-   | id-MLKEM768-RSA4096-HMAC-   | 1710   | 2941    | 1600       | 32 |
+   | id-MLKEM768-RSA4096-HMAC-   | 1710*  | 2943*   | 1600       | 32 |
    | SHA256                      |        |         |            |    |
    +-----------------------------+--------+---------+------------+----+
    | id-MLKEM768-X25519-SHA3-256 | 1216   | 132     | 1120       | 32 |
@@ -2739,7 +2733,7 @@ Appendix A.  Approximate Key and Ciphertext Sizes
    | id-MLKEM768-ECDH-           | 1249   | 170     | 1153       | 32 |
    | brainpoolP256r1-HMAC-SHA256 |        |         |            |    |
    +-----------------------------+--------+---------+------------+----+
-   | id-MLKEM1024-RSA3072-HMAC-  | 1966   | 2232    | 1952       | 32 |
+   | id-MLKEM1024-RSA3072-HMAC-  | 1966*  | 2234*   | 1952       | 32 |
    | SHA512                      |        |         |            |    |
    +-----------------------------+--------+---------+------------+----+
    | id-MLKEM1024-ECDH-P384-     | 1665   | 218     | 1665       | 32 |
@@ -2754,7 +2748,7 @@ Appendix A.  Approximate Key and Ciphertext Sizes
    | HMAC-SHA512                 |        |         |            |    |
    +-----------------------------+--------+---------+------------+----+
 
-           Table 6: Approximate size values of composite ML-KEM
+             Table 6: Maximum size values of composite ML-KEM
 
 Appendix B.  Component Algorithm Reference
 
