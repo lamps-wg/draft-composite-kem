@@ -23,7 +23,7 @@ import json
 import textwrap
 from zipfile import ZipFile
 
-from pyasn1.type import univ
+from pyasn1.type import univ, namedtype
 from pyasn1_alt_modules import rfc5208
 from pyasn1_alt_modules import rfc5280
 from pyasn1.codec.der.decoder import decode as der_decode
@@ -92,13 +92,20 @@ class KEM:
     raise Exception("Not implemented")
 
 
+class Version(univ.Integer):
+    pass
 
-class ECDHP256KEM(KEM):
-  id = "ECDH-P256"
-  oid = univ.ObjectIdentifier((1,2,840,10045))
+class ECDSAPrivateKey(univ.Sequence):
+    componentType = namedtype.NamedTypes(
+        namedtype.NamedType('version', Version()),
+        namedtype.NamedType('privateKey', univ.OctetString())
+    )
+
+class ECDHKEM(KEM):
+  curve = None
 
   def keyGen(self):
-    self.sk = ec.generate_private_key(ec.SECP256R1())
+    self.sk = ec.generate_private_key(self.curve)
     self.pk = self.sk.public_key()
 
   def loadKeyPair(self, private_bytes: bytes) -> None:
@@ -108,7 +115,7 @@ class ECDHP256KEM(KEM):
     self.pk = key.public_key()
 
   def encap(self):
-    esk = ec.generate_private_key(ec.SECP256R1())
+    esk = ec.generate_private_key(self.curve)
     ss = esk.exchange(ec.ECDH(), self.pk)
     ct = esk.public_key().public_bytes(
                   encoding=serialization.Encoding.X962,
@@ -118,9 +125,8 @@ class ECDHP256KEM(KEM):
 
   def decap(self, ct):
     if isinstance(ct, bytes):
-      ct = ec.EllipticCurvePublicKey.from_encoded_point(ec.SECP256R1(), ct)
+      ct = ec.EllipticCurvePublicKey.from_encoded_point(self.curve, ct)
     return self.sk.exchange(ec.ECDH(), ct)
-
 
   def public_key_bytes(self):
     return self.pk.public_bytes(
@@ -129,127 +135,57 @@ class ECDHP256KEM(KEM):
                     )
 
   def private_key_bytes(self):
-    return self.sk.private_bytes(
-                        encoding=serialization.Encoding.DER,
-                        format=serialization.PrivateFormat.TraditionalOpenSSL,
-                        encryption_algorithm=serialization.NoEncryption()
-                    )
+    prk = ECDSAPrivateKey()
+    prk['version'] = 1
+    prk['privateKey'] = self.sk.private_numbers().private_value.to_bytes((self.sk.key_size + 7) // 8)
+    return der_encode(prk)
 
 
-# skip some copy&paste'ing by inheriting from P256
-class ECDHP521KEM(ECDHP256KEM):
+class ECDHP256KEM(ECDHKEM):
+  id = "ECDH-P256"
+  oid = univ.ObjectIdentifier((1,2,840,10045))
+  curve = ec.SECP256R1()
+
+
+class ECDHP521KEM(ECDHKEM):
   id = "ECDH-P521"
   oid = univ.ObjectIdentifier((1,2,840,10045))
-
-  def keyGen(self):
-    self.sk = ec.generate_private_key(ec.SECP521R1())
-    self.pk = self.sk.public_key()
-
-  def encap(self):
-    esk = ec.generate_private_key(ec.SECP521R1())
-    ss = esk.exchange(ec.ECDH(), self.pk)
-    ct = esk.public_key().public_bytes(
-              encoding=serialization.Encoding.X962,
-              format=serialization.PublicFormat.UncompressedPoint
-            )
-    return (ct, ss)
-
-  def decap(self, ct):
-    if isinstance(ct, bytes):
-      ct = ec.EllipticCurvePublicKey.from_encoded_point(ec.SECP521R1(), ct)
-    return self.sk.exchange(ec.ECDH(), ct)
+  curve = ec.SECP521R1()
 
 
-# skip some copy&paste'ing by inheriting from P256
-class ECDHP384KEM(ECDHP256KEM):
+class ECDHP384KEM(ECDHKEM):
   id = "ECDH-P384"
   oid = univ.ObjectIdentifier((1,2,840,10045))
-
-  def keyGen(self):
-    self.sk = ec.generate_private_key(ec.SECP384R1())
-    self.pk = self.sk.public_key()
-
-  def encap(self):
-    esk = ec.generate_private_key(ec.SECP384R1())
-    ss = esk.exchange(ec.ECDH(), self.pk)
-    ct = esk.public_key().public_bytes(
-              encoding=serialization.Encoding.X962,
-              format=serialization.PublicFormat.UncompressedPoint
-            )
-    return (ct, ss)
-
-  def decap(self, ct):
-    if isinstance(ct, bytes):
-      ct = ec.EllipticCurvePublicKey.from_encoded_point(ec.SECP384R1(), ct)
-    return self.sk.exchange(ec.ECDH(), ct)
+  curve = ec.SECP384R1()
 
 
-
-
-# skip some copy&paste'ing by inheriting from P256
-class ECDHBP256KEM(ECDHP256KEM):
+class ECDHBP256KEM(ECDHKEM):
   id = "ECDH-brainpoolP256r1"
   oid = univ.ObjectIdentifier((1,2,840,10045))
-
-  def keyGen(self):
-    self.sk = ec.generate_private_key(ec.BrainpoolP256R1())
-    self.pk = self.sk.public_key()
-
-  def encap(self):
-    esk = ec.generate_private_key(ec.BrainpoolP256R1())
-    ss = esk.exchange(ec.ECDH(), self.pk)
-    ct = esk.public_key().public_bytes(
-              encoding=serialization.Encoding.X962,
-              format=serialization.PublicFormat.UncompressedPoint
-            )
-    return (ct, ss)
-
-  def decap(self, ct):
-    if isinstance(ct, bytes):
-      ct = ec.EllipticCurvePublicKey.from_encoded_point(ec.BrainpoolP256R1(), ct)
-    return self.sk.exchange(ec.ECDH(), ct)
+  curve = ec.BrainpoolP256R1()
 
 
-
-# skip some copy&paste'ing by inheriting from P256
-class ECDHBP384KEM(ECDHP256KEM):
+class ECDHBP384KEM(ECDHKEM):
   id = "ECDH-brainpoolP384r1"
   oid = univ.ObjectIdentifier((1,2,840,10045))
+  curve = ec.BrainpoolP384R1()
 
+
+class XKEM(KEM):
+  curvePrivKey = None
+  curvePubKey = None
+  
   def keyGen(self):
-    self.sk = ec.generate_private_key(ec.BrainpoolP384R1())
-    self.pk = self.sk.public_key()
-
-  def encap(self):
-    esk = ec.generate_private_key(ec.BrainpoolP384R1())
-    ss = esk.exchange(ec.ECDH(), self.pk)
-    ct = esk.public_key().public_bytes(
-              encoding=serialization.Encoding.X962,
-              format=serialization.PublicFormat.UncompressedPoint
-            )
-    return (ct, ss)
-
-  def decap(self, ct):
-    if isinstance(ct, bytes):
-      ct = ec.EllipticCurvePublicKey.from_encoded_point(ec.BrainpoolP384R1(), ct)
-    return self.sk.exchange(ec.ECDH(), ct)
-
-
-class X25519KEM(KEM):
-  id = "id-X25519"
-  oid = univ.ObjectIdentifier((1,3,101,110))
-
-  def keyGen(self):
-    self.sk = x25519.X25519PrivateKey.generate()
+    self.sk = self.curvePrivKey.generate()
     self.pk = self.sk.public_key()
 
   def loadKeyPair(self, private_bytes: bytes) -> None:
-    key = X25519PrivateKey.from_private_bytes(private_bytes)
+    key = self.curvePrivKey.from_private_bytes(private_bytes)
     self.sk = key
     self.pk = key.public_key()
 
   def encap(self):
-    esk = x25519.X25519PrivateKey.generate()
+    esk = self.curvePrivKey.generate()
     ss = esk.exchange(self.pk)
     ct = esk.public_key().public_bytes(
                   encoding=serialization.Encoding.Raw,
@@ -259,16 +195,14 @@ class X25519KEM(KEM):
 
   def decap(self, ct):
     if isinstance(ct, bytes):
-      ct = x25519.X25519PublicKey.from_public_bytes(ct)
+      ct = self.curvePubKey.from_public_bytes(ct)
     return self.sk.exchange(ct)
-
 
   def public_key_bytes(self):
     return self.pk.public_bytes(
                       encoding=serialization.Encoding.Raw,
                       format=serialization.PublicFormat.Raw
                     )
-
 
   def private_key_bytes(self):
     raw = self.sk.private_bytes(
@@ -280,44 +214,28 @@ class X25519KEM(KEM):
     return der_encode(CurvePrivateKey)
 
 
-class X448KEM(X25519KEM):
+class X25519KEM(XKEM):
+  id = "id-X25519"
+  oid = univ.ObjectIdentifier((1,3,101,110))
+  curvePrivKey = X25519PrivateKey
+  curvePubKey = x25519.X25519PublicKey
+
+
+class X448KEM(XKEM):
   id = "id-X448"
   oid = univ.ObjectIdentifier((1,3,101,111))
-
-  def keyGen(self):
-    self.sk = x448.X448PrivateKey.generate()
-    self.pk = self.sk.public_key()
-
-  def loadKeyPair(self, private_bytes: bytes) -> None:
-    key = X448PrivateKey.from_private_bytes(private_bytes)
-    self.sk = key
-    self.pk = key.public_key()
-
-  def encap(self):
-    esk = x448.X448PrivateKey.generate()
-    ss = esk.exchange(self.pk)
-    ct = esk.public_key().public_bytes(
-              encoding=serialization.Encoding.Raw,
-              format=serialization.PublicFormat.Raw
-            )
-    return (ct, ss)
-
-  def decap(self, ct):
-    if isinstance(ct, bytes):
-      ct = x448.X448PublicKey.from_public_bytes(ct)
-    return self.sk.exchange(ct)
+  curvePrivKey = X448PrivateKey
+  curvePubKey = x448.X448PublicKey
 
 
-
-class RSA2048OAEPKEM(KEM):
-  id = "id-RSAES-OAEP-2048"
-  oid = univ.ObjectIdentifier((1,2,840,113549,1,1))
+class RSAOAPKEM(KEM):
+  key_size = None
 
   # returns nothing
   def keyGen(self):
     self.sk = rsa.generate_private_key(
         public_exponent=65537,
-        key_size=2048
+        key_size=self.key_size
       )
     self.pk = self.sk.public_key()
 
@@ -340,7 +258,6 @@ class RSA2048OAEPKEM(KEM):
       )
     return (ct, ss)
 
-
   # returns (ss)
   def decap(self, ct):
     ss = self.sk.decrypt(
@@ -353,154 +270,90 @@ class RSA2048OAEPKEM(KEM):
       )
     return ss
 
-
   def public_key_bytes(self):
     return self.pk.public_bytes(
                       encoding=serialization.Encoding.DER,
                       format=serialization.PublicFormat.PKCS1
                     )
 
-
   def private_key_bytes(self):
     return self.sk.private_bytes(
                         encoding=serialization.Encoding.DER,
                         format=serialization.PrivateFormat.TraditionalOpenSSL,
                         encryption_algorithm=serialization.NoEncryption()
-                    )
+                      )
+  
+
+class RSA2048OAEPKEM(RSAOAPKEM):
+  id = "id-RSAES-OAEP-2048"
+  oid = univ.ObjectIdentifier((1,2,840,113549,1,1))
+  key_size = 2048
 
 
 # save some copy&paste by inheriting
-class RSA3072OAEPKEM(RSA2048OAEPKEM):
+class RSA3072OAEPKEM(RSAOAPKEM):
   id = "id-RSAES-OAEP-3072"
   oid = univ.ObjectIdentifier((1,2,840,113549,1,1))
-
-  # returns nothing
-  def keyGen(self):
-    self.sk = rsa.generate_private_key(
-        public_exponent=65537,
-        key_size=3072
-      )
-    self.pk = self.sk.public_key()
+  key_size = 3072
 
 
 # save some copy&paste by inheriting
-class RSA4096OAEPKEM(RSA2048OAEPKEM):
+class RSA4096OAEPKEM(RSAOAPKEM):
   id = "id-RSAES-OAEP-4096"
   oid = univ.ObjectIdentifier((1,2,840,113549,1,1))
+  key_size = 4096
 
+
+class MLKEM(KEM):
+  mlkem_class = None
+  
   # returns nothing
   def keyGen(self):
-    self.sk = rsa.generate_private_key(
-        public_exponent=65537,
-        key_size=4096
-      )
-    self.pk = self.sk.public_key()
+    self.sk = secrets.token_bytes(64)
+    self.pk, _ = self.mlkem_class.key_derive(self.sk)
+
+  def loadKeyPair(self, private_bytes: bytes) -> None:
+    if len(private_bytes) == 66:
+      # there's an extra OctetString wrapper
+      private_bytes = private_bytes[2:]
+
+    # Private bytes are the seed
+    self.sk = private_bytes
+    self.pk, _ = self.mlkem_class.key_derive(private_bytes)
+
+  # returns (ct, ss)
+  def encap(self):
+    (ss, ct) = self.mlkem_class.encaps(self.pk)
+    return (ct, ss)
+
+  # returns (ss)
+  def decap(self, ct):
+    _, dk = self.mlkem_class.key_derive(self.sk)
+    return self.mlkem_class.decaps(dk, ct)
+
+  def public_key_bytes(self):
+    return self.pk
+
+  def private_key_bytes(self):
+    return self.sk
 
 
-class MLKEM512(KEM):
+class MLKEM512(MLKEM):
   id = "id-alg-ml-kem-512"
   oid = univ.ObjectIdentifier((2,16,840,1,101,3,4,4,1))
-
-  # returns nothing
-  def keyGen(self):
-    self.sk = secrets.token_bytes(64)
-    self.pk, _ = ML_KEM_512.key_derive(self.sk)
-
-  def loadKeyPair(self, private_bytes: bytes) -> None:
-    if len(private_bytes) == 66:
-      # there's an extra OctetString wrapper
-      private_bytes = private_bytes[2:]
-
-    self.sk = private_bytes
-    self.pk, _ = ML_KEM_512.key_derive(private_bytes)
-
-  # returns (ct, ss)
-  def encap(self):
-    (ss, ct) = ML_KEM_512.encaps(self.pk)
-    return (ct, ss)
-
-  # returns (ss)
-  def decap(self, ct):
-    _, dk = ML_KEM_512.key_derive(self.sk)
-    return ML_KEM_512.decaps(dk, ct)
-
-  def public_key_bytes(self):
-    return self.pk
-
-  def private_key_bytes(self):
-    return self.sk
-
-
-class MLKEM768(KEM):
+  mlkem_class = ML_KEM_512
+  
+  
+class MLKEM768(MLKEM):
   id = "id-alg-ml-kem-768"
   oid = univ.ObjectIdentifier((2,16,840,1,101,3,4,4,2))
-
-  # returns nothing
-  def keyGen(self):
-    self.sk = secrets.token_bytes(64)
-    self.pk, _ = ML_KEM_768.key_derive(self.sk)
-
-  def loadKeyPair(self, private_bytes: bytes) -> None:
-    if len(private_bytes) == 66:
-      # there's an extra OctetString wrapper
-      private_bytes = private_bytes[2:]
-
-    # Private bytes are the seed
-    self.sk = private_bytes
-    self.pk, _ = ML_KEM_768.key_derive(private_bytes)
-
-  # returns (ct, ss)
-  def encap(self):
-    (ss, ct) = ML_KEM_768.encaps(self.pk)
-    return (ct, ss)
-
-  # returns (ss)
-  def decap(self, ct):
-    _, dk = ML_KEM_768.key_derive(self.sk)
-    return ML_KEM_768.decaps(dk, ct)
-
-  def public_key_bytes(self):
-    return self.pk
-
-  def private_key_bytes(self):
-    return self.sk
+  mlkem_class = ML_KEM_768
 
 
-
-class MLKEM1024(KEM):
+class MLKEM1024(MLKEM):
   id = "id-alg-ml-kem-1024"
   oid = univ.ObjectIdentifier((2,16,840,1,101,3,4,4,3))
-
-  # returns nothing
-  def keyGen(self):
-    self.sk = secrets.token_bytes(64)
-    self.pk, _ = ML_KEM_1024.key_derive(self.sk)
-
-  def loadKeyPair(self, private_bytes: bytes) -> None:
-    if len(private_bytes) == 66:
-      # there's an extra OctetString wrapper
-      private_bytes = private_bytes[2:]
-  
-    # Private bytes are the seed
-    self.sk = private_bytes
-    self.pk, _ = ML_KEM_1024.key_derive(private_bytes)
-
-  # returns (ct, ss)
-  def encap(self):
-    (ss, ct) = ML_KEM_1024.encaps(self.pk)
-    return (ct, ss)
-
-  # returns (ss)
-  def decap(self, ct):
-    _, dk = ML_KEM_1024.key_derive(self.sk)
-    return ML_KEM_1024.decaps(dk, ct)
-
-  def public_key_bytes(self):
-    return self.pk
-
-  def private_key_bytes(self):
-    return self.sk
-
+  mlkem_class = ML_KEM_1024
 
 
 
