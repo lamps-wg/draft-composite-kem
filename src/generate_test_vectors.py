@@ -16,7 +16,7 @@ from cryptography import x509
 from cryptography.x509.oid import NameOID
 from cryptography.hazmat.primitives import serialization
 
-
+import sys
 import datetime
 import base64
 import json
@@ -977,6 +977,52 @@ def output_artifacts_certs_r5(jsonTestVectors):
     artifacts_zip.writestr(sharedSecretFilename, data=base64.b64decode(tc['k']))
 
 
+    
+def checkTestVectorsSize():
+  """
+  Checks that the test vectors produced match the sizes advertized in the size table.
+  Aborts if it finds a mismatch.
+  """
+  error = False
+  for test in testVectorOutput['tests']:
+    alg = test['tcId']
+    if alg in ("id-alg-ml-kem-768", "id-alg-ml-kem-1024"): continue  # these have an extra OCTET String wrapper added .. because reasons. Don't bother with them.
+    size = SIZE_TABLE[alg]
+    (pkMaxSize, pkFix) = size['pk']
+    (skMaxSize, skFix) = size['sk']
+    (ctMaxSize, ctFix) = size['ct']
+    pkSize = len(base64.b64decode(test['ek']))
+    skSize = len(base64.b64decode(test['dk']))
+    ctSize  = len(base64.b64decode(test['c']))
+    
+    
+    if pkFix and pkSize != pkMaxSize:
+        print("Error: "+alg+" pk size does not match expected: "+str(pkSize)+" != "+str(pkMaxSize)+conditionalAsterisk(not pkFix)+"\n") 
+        error = True
+    if not pkFix and pkSize > pkMaxSize:
+        print("Error: "+alg+" pk size does not match expected: "+str(pkSize)+" > "+str(pkMaxSize)+conditionalAsterisk(not pkFix)+"\n") 
+        error = True
+    
+    if skFix and skSize != skMaxSize:
+        print("Error: "+alg+" sk size does not match expected: "+str(skSize)+" != "+str(skMaxSize)+conditionalAsterisk(not skFix)+"\n") 
+        error = True
+    if not skFix and skSize > skMaxSize:
+        print("Error: "+alg+" sk size does not match expected: "+str(skSize)+" > "+str(skMaxSize)+conditionalAsterisk(not skFix)+"\n") 
+        error = True
+        
+    if ctFix and ctSize != ctMaxSize:
+        print("Error: "+alg+" ct size does not match expected: "+str(ctSize)+" != "+str(ctMaxSize)+conditionalAsterisk(not ctFix)+"\n") 
+        error = True
+    if not ctFix and pkSize > pkMaxSize:
+        print("Error: "+alg+" ct size does not match expected: "+str(ctSize)+" > "+str(ctMaxSize)+conditionalAsterisk(not ctFix)+"\n") 
+        error = True
+    
+  if error: sys.exit()
+  #else: print("DEBUG: all sizes matched expected!")
+
+
+
+
 def writeTestVectors():
   with open('testvectors.json', 'w') as f:
     f.write(json.dumps(testVectorOutput, indent=2))
@@ -1310,7 +1356,7 @@ def main():
   doKEM(MLKEM1024_X448_SHA3_256(), caSK )
   doKEM(MLKEM1024_ECDH_P521_HMAC_SHA512(), caSK )
 
-
+  checkTestVectorsSize()
   writeTestVectors()
   writeDumpasn1Cfg()
   writeSizeTable()
