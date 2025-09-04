@@ -6,11 +6,11 @@
 | id-MLKEM768-RSA3072-HMAC-SHA256               |    1582*     |    2234*     |    1472      |  32  |
 | id-MLKEM768-RSA4096-HMAC-SHA256               |    1710*     |    2943*     |    1600      |  32  |
 | id-MLKEM768-X25519-SHA3-256                   |    1216      |     132      |    1120      |  32  |
-| id-MLKEM768-ECDH-P256-HMAC-SHA256             |    1249      |     170      |    1153      |  32  |
-| id-MLKEM768-ECDH-P384-HMAC-SHA256             |    1281      |     218      |    1185      |  32  |
-| id-MLKEM768-ECDH-brainpoolP256r1-HMAC-SHA256  |    1249      |     170      |    1153      |  32  |
+| id-MLKEM768-ECDH-P256-HMAC-SHA256             |    1251      |     172      |    1153      |  32  |
+| id-MLKEM768-ECDH-P384-HMAC-SHA256             |    1283      |     220      |    1185      |  32  |
+| id-MLKEM768-ECDH-brainpoolP256r1-HMAC-SHA256  |    1251      |     172      |    1153      |  32  |
 | id-MLKEM1024-RSA3072-HMAC-SHA512              |    1966*     |    2234*     |    1952      |  32  |
-| id-MLKEM1024-ECDH-P384-HMAC-SHA512            |    1665      |     218      |    1665      |  32  |
-| id-MLKEM1024-ECDH-brainpoolP384r1-HMAC-SHA512 |    1665      |     218      |    1665      |  32  |
+| id-MLKEM1024-ECDH-P384-HMAC-SHA512            |    1667      |     220      |    1665      |  32  |
+| id-MLKEM1024-ECDH-brainpoolP384r1-HMAC-SHA512 |    1667      |     220      |    1665      |  32  |
 | id-MLKEM1024-X448-SHA3-256                    |    1624      |     180      |    1624      |  32  |
-| id-MLKEM1024-ECDH-P521-HMAC-SHA512            |    1701      |     272      |    1701      |  32  |
+| id-MLKEM1024-ECDH-P521-HMAC-SHA512            |    1704      |     275      |    1701      |  32  |
