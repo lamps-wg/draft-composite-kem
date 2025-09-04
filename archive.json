@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-09-02T01:56:31.432175+00:00",
+  "timestamp": "2025-09-04T01:49:03.610913+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -2849,7 +2849,7 @@
       "id": "I_kwDOKRPFO868O70r",
       "title": "Private key serialization is under-specified",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/173",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "danvangeest",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -2858,8 +2858,8 @@
       "labels": [],
       "body": "The private key serialization is under-specified, at least for EC.  Section 5 of both drafts says the traditional public EC key is encoded as an ECPoint, but says nothing about the private key. RFC5915 which defines ECPrivateKey isn't referenced anywhere in the documents.  The RSAPublicKey, RSAPrivateKey and ECPrivateKey types aren't referenced anywhere in the documents, I think doing so would make serialization clearer.",
       "createdAt": "2025-06-18T20:06:10Z",
-      "updatedAt": "2025-08-29T13:20:07Z",
-      "closedAt": null,
+      "updatedAt": "2025-09-03T14:36:47Z",
+      "closedAt": "2025-09-03T14:36:47Z",
       "comments": [
         {
           "author": "Perksey",
@@ -2969,7 +2969,7 @@
       "id": "I_kwDOKRPFO868O9DB",
       "title": "Approximate key sizes",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/176",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "danvangeest",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -2978,8 +2978,8 @@
       "labels": [],
       "body": "Appendix A.  Approximate Key and Signature Sizes does not seem particularly useful, because it is just approximate.  If you could list the maximum sizes that would be much more useful. I suspect some of the private key values in this table are no longer approximate because of the serialization issues I mentioned above.",
       "createdAt": "2025-06-18T20:08:29Z",
-      "updatedAt": "2025-08-28T13:08:16Z",
-      "closedAt": null,
+      "updatedAt": "2025-09-03T18:30:31Z",
+      "closedAt": "2025-09-03T18:30:31Z",
       "comments": [
         {
           "author": "ounsworth",
@@ -8293,25 +8293,118 @@
       "id": "PR_kwDOKRPFO86mS02K",
       "title": "Restricts encoding of RSPrivateKey, ECPoint and ECPrivateKey. ",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/202",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "janklaussner",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "In line with issue #244, encoding of RSAPrivateKey is changed to a fix version number and prohibits use of otherPrimeInfos field. ECPoint only allows uncompressed format now and ECPrivateKey prohibits NamedCurve and publicKey. Also its made clear DER encoding of components is used if applicable. Changes ECPrivateKey test vectors to restricted encoding by removing namedCurve and publicKey fields from ECPrivateKey encodings for all ECDSA components.\r\n\r\nCloses #173 ",
       "createdAt": "2025-09-01T14:02:48Z",
-      "updatedAt": "2025-09-01T14:02:48Z",
+      "updatedAt": "2025-09-03T14:36:51Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "6afe372f793aef353865587150cb96312446a388",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "184-private-key-serialization-is-under-specified",
       "headRefOid": "63a2d49d1b4e26dc154e8d8fbd3dd1598b9bbc65",
+      "closedAt": "2025-09-03T14:36:46Z",
+      "mergedAt": "2025-09-03T14:36:46Z",
+      "mergedBy": "janklaussner",
+      "mergeCommit": {
+        "oid": "c86730c640dd35058969155ae42fc1610c5e13b5"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 203,
+      "id": "PR_kwDOKRPFO86meHeB",
+      "title": "Changes size table calculation to maximum values with fixed length hint.",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/203",
+      "state": "MERGED",
+      "author": "janklaussner",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": " Closes #176",
+      "createdAt": "2025-09-02T14:32:31Z",
+      "updatedAt": "2025-09-03T18:30:37Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "6afe372f793aef353865587150cb96312446a388",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "176-approximate-key-sizes",
+      "headRefOid": "2e8dd67bd0fe288bd711bc6e5569b34ea37e7ad9",
+      "closedAt": "2025-09-03T18:30:30Z",
+      "mergedAt": "2025-09-03T18:30:30Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "524341e0bdd8a59e12ae746d3f8df09b1c44ee0a"
+      },
+      "comments": [
+        {
+          "author": "janklaussner",
+          "authorAssociation": "COLLABORATOR",
+          "body": "merge PR #202 first! This PR relies on the changes made there...",
+          "createdAt": "2025-09-02T14:33:11Z",
+          "updatedAt": "2025-09-02T14:33:11Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "- [x] Before merging this, I will take an action to modify the script to test the actual test vectors against the calculated maximum:\r\n\r\n* If the value is variable, then check that the test vector is <=\r\n* If the value is not variable, then check that the test vector is ==",
+          "createdAt": "2025-09-03T14:40:31Z",
+          "updatedAt": "2025-09-03T18:29:18Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO869qKwf",
+          "commit": {
+            "abbreviatedOid": "2e8dd67"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "I added test code to check the generated test vectors against the expected size table.\r\n\r\nEverything looks good:\r\n\r\n> DEBUG: all sizes matched expected!",
+          "createdAt": "2025-09-03T18:30:21Z",
+          "updatedAt": "2025-09-03T18:30:21Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 204,
+      "id": "PR_kwDOKRPFO86mei7k",
+      "title": "Fixes ECDH Public Key encoding.",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/204",
+      "state": "OPEN",
+      "author": "janklaussner",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "OCTET STRING wrapper is added to the X9.62 encoded EC public key as\r\nspecified in RFC 5480.\r\n\r\nCloses #200 ",
+      "createdAt": "2025-09-02T15:06:50Z",
+      "updatedAt": "2025-09-02T15:08:33Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "6afe372f793aef353865587150cb96312446a388",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "200-ec-public-key-is-encoded-as-raw-needs-to-be-ecpoint",
+      "headRefOid": "89c27d5c978234c56278aa995b84c25b81e6d18a",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "janklaussner",
+          "authorAssociation": "COLLABORATOR",
+          "body": "merge PR #203 first.",
+          "createdAt": "2025-09-02T15:07:29Z",
+          "updatedAt": "2025-09-02T15:07:29Z"
+        }
+      ],
       "reviews": []
     }
   ]
