@@ -650,8 +650,8 @@ Composite-ML-KEM<OID>.Decap(sk, ct) -> ss
 
 Explicit inputs
 
-  sk      Composite private key consisting of decryption private keys
-          for each component.
+  sk      Composite private key consisting of decryption private
+          keys for each component.
 
   ct      The ciphertext, a byte string.
 
@@ -664,22 +664,24 @@ Implicit inputs mapped from <OID>:
           parameter set, for example "RSA-OAEP"
           or "X25519".
 
-  tradPK  The tradinional public key is required for the KEM combiner.
-          The suggested algorithm below extracts the tradPK from sk,
-          however implementations that use a non-standard private key
-          encoding will need to obtain the traditional public key
-          some other way.
+  tradPK  The traditional public key is required for the KEM
+          combiner.
+          The suggested algorithm below extracts the tradPK
+          from sk, however implementations that use a non-standard
+          private key encoding will need to obtain the traditional
+          public key some other way.
 
-  KDF     The KDF specified for the given Composite ML-KEM algorithm.
-          See algorithm specifications below.
+  KDF     The KDF specified for the given Composite ML-KEM
+          algorithm. See algorithm specifications below.
 
-  Label   KEM Combiner Label value for binding the ciphertext to the
-          Composite ML-KEM OID. See section on KEM Combiner Labels below.
+  Label   KEM Combiner Label value for binding the ciphertext to
+          the Composite ML-KEM OID.
+          See section on KEM Combiner Labels below.
 
 Output:
 
-  ss      The shared secret key, a 256-bit key suitable for use with
-          symmetric cryptographic algorithms.
+  ss      The shared secret key, a 256-bit key suitable for use
+          with symmetric cryptographic algorithms.
 
 Decap Process:
 
@@ -689,8 +691,8 @@ Decap Process:
       (_, mlkemSK) = ML-KEM.KeyGen(mlkemSeed)
       (mlkemCT, tradCT) = DeserializeCiphertext(ct)
 
-  2.  Perform the respective component Encap operations according to
-      their algorithm specifications.
+  2.  Perform the respective component Encap operations according
+      to their algorithm specifications.
 
       mlkemSS = ML-KEM.Decaps(mlkemSK, mlkemCT)
       tradSS  = TradKEM.Decap(tradSK, tradCT)
@@ -890,7 +892,8 @@ Deserialization Process:
 The serialization routine for keys simply concatenates the private keys of the component algorithms, as defined below:
 
 ~~~
-Composite-ML-KEM.SerializePrivateKey(mlkemSeed, tradPK, tradSK) -> bytes
+Composite-ML-KEM.SerializePrivateKey(mlkemSeed, tradPK, tradSK)
+                                  -> bytes
 
 Explicit inputs:
 
@@ -922,7 +925,8 @@ Serialization Process:
 
      output mlkemSeed || lenTradPK || tradPK || tradSK
 ~~~
-{: #alg-composite-serialize-priv-key title="Composite-ML-KEM.SerializePrivateKey(mlkemSeed, tradPK, tradSK) -> bytes"}
+{: #alg-composite-serialize-priv-key title="Composite-ML-KEM.SerializePrivateKey(mlkemSeed, tradPK, tradSK)
+                                      -> bytes"}
 
 The function `IntegerToBytes(x, a)` is defined in Algorithm 11 of [FIPS.204], which is the usual little-endian encoding of an integer. Encoding to 2 bytes allows for traditional public keys up to 65 kb.
 
@@ -931,7 +935,8 @@ Deserialization reverses this process. Each component key is deserialized accord
 The following describes how to instantiate a `DeserializePrivateKey(bytes)` function. Since ML-KEM private keys are 64 bytes for all parameter sets, this function does not need to be parametrized.
 
 ~~~
-Composite-ML-KEM.DeserializePrivateKey(bytes) -> (mlkemSeed, tradPK, tradSK)
+Composite-ML-KEM.DeserializePrivateKey(bytes)
+                                    -> (mlkemSeed, tradPK, tradSK)
 
 Explicit inputs:
 
@@ -972,7 +977,8 @@ Deserialization Process:
 
      output (mlkemSeed, tradPK, tradSK)
 ~~~
-{: #alg-composite-deserialize-priv-key title="Composite-ML-KEM.DeserializeKey(bytes) -> (mlkemSeed, tradSK)"}
+{: #alg-composite-deserialize-priv-key title="Composite-ML-KEM.DeserializeKey(bytes)
+                                -> (mlkemSeed, tradPK, tradSK)"}
 
 
 The function `BytesToInteger(x)` is not defined in [FIPS.204], but is the obvious inverse of the defined `IntegerToBytes()` which is the usual little-endian encoding of an integer.
@@ -1018,7 +1024,7 @@ The following describes how to instantiate a `DeserializeCiphertext(bytes)` func
 
 ~~~
 Composite-ML-KEM<OID>.DeserializeCiphertext(bytes)
-                                                -> (mldkemCT, tradCT)
+                                          -> (mldkemCT, tradCT)
 
 Explicit inputs:
 
@@ -1040,8 +1046,8 @@ Output:
 Deserialization Process:
 
   1. Parse each constituent encoded ciphertext.
-     The length of the mlkemCT is known based on the size of
-     the ML-KEM component ciphertext length specified by the Object ID.
+     The length of the mlkemCT is known based on the size of the
+     ML-KEM component ciphertext length specified by the Object ID.
 
      switch ML-KEM do
         case ML-KEM-768:
@@ -1051,15 +1057,16 @@ Deserialization Process:
           mlkemCT= bytes[:1568]
           tradCT  = bytes[1568:]
 
-     Note that while ML-KEM has fixed-length ciphertexts, RSA and ECDH
-     may not, depending on encoding, so rigorous length-checking is
-     not always possible here.
+     Note that while ML-KEM has fixed-length ciphertexts, RSA and
+     ECDH may not, depending on encoding, so rigorous length-checking
+     is not always possible here.
 
   2. Output the component ciphertext values
 
      output (mlkemCT, tradCT)
 ~~~
-{: #alg-composite-deserialize-ct title="Composite-ML-KEM<OID>.DeserializeCiphertext(bytes) -> (mldkemCT, tradCT)"}
+{: #alg-composite-deserialize-ct title="Composite-ML-KEM<OID>.DeserializeCiphertext(bytes)
+                                            -> (mldkemCT, tradCT)"}
 
 
 
@@ -1765,7 +1772,8 @@ Due to the difference in key generation and security properties, X-Wing and id-M
 
 ~~~
 1) Form secret = psk || k1 || k 2.
-2) Set context = f(info, MA, MB), where f is a context formatting function.
+2) Set context = f(info, MA, MB), where f is a context formatting
+   function.
 3) key_material = KDF(secret, label, context, length).
 4) Return key_material.
 

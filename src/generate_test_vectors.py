@@ -1295,7 +1295,7 @@ def writeKEMCombinerExample(kem, filename):
   ss = kemCombiner(kem, mlkemSS, tradSS, tradCT, tradPK)
 
 
-  wrap_width = 70
+  wrap_width = 67
 
   f.write("# Inputs\n")
   f.write( "\n".join(textwrap.wrap("mlkemSS: " + mlkemSS.hex(), width=wrap_width)) +"\n\n" )
