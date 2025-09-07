@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-09-04T01:49:03.610913+00:00",
+  "timestamp": "2025-09-07T01:57:34.687331+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -8385,13 +8385,13 @@
       "labels": [],
       "body": "OCTET STRING wrapper is added to the X9.62 encoded EC public key as\r\nspecified in RFC 5480.\r\n\r\nCloses #200 ",
       "createdAt": "2025-09-02T15:06:50Z",
-      "updatedAt": "2025-09-02T15:08:33Z",
+      "updatedAt": "2025-09-04T09:03:08Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
-      "baseRefOid": "6afe372f793aef353865587150cb96312446a388",
+      "baseRefOid": "524341e0bdd8a59e12ae746d3f8df09b1c44ee0a",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "200-ec-public-key-is-encoded-as-raw-needs-to-be-ecpoint",
-      "headRefOid": "89c27d5c978234c56278aa995b84c25b81e6d18a",
+      "headRefOid": "7ed3589304a61069d2f09df82dfe4c65f59c0777",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
@@ -8403,8 +8403,41 @@
           "body": "merge PR #203 first.",
           "createdAt": "2025-09-02T15:07:29Z",
           "updatedAt": "2025-09-02T15:07:29Z"
+        },
+        {
+          "author": "janklaussner",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Cleaned up the PR and added the modified Size Table not included yet. Be aware that the TradPK is included in the CompositeSK also, hence all ECDH composite SKs also increase.\r\n@ounsworth @johngray-dev  please review again",
+          "createdAt": "2025-09-04T09:03:08Z",
+          "updatedAt": "2025-09-04T09:03:08Z"
         }
       ],
+      "reviews": []
+    },
+    {
+      "number": 205,
+      "id": "PR_kwDOKRPFO86m2cj9",
+      "title": "Adds consolidated algorithm table.",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/205",
+      "state": "OPEN",
+      "author": "janklaussner",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "The major change is to rearrange how per-composite Composite ML-KEM\r\nparameters are presented.  Rather than per-parameter tables, each\r\ncomposite is listed with its OID and all its parameter.  As an\r\nimplementer it is easier to use, there is no bouncing back\r\nand forth between tables.\r\n\r\nAdditionally it fixes nagative indentation issues of code blocks.",
+      "createdAt": "2025-09-04T12:39:52Z",
+      "updatedAt": "2025-09-04T12:40:01Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "524341e0bdd8a59e12ae746d3f8df09b1c44ee0a",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "201-add-consolidated-algorithm-table-for-kem",
+      "headRefOid": "31ac8d44f51a8bcfeb077b493c3077b355cee4fe",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
       "reviews": []
     }
   ]
