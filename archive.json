@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-09-07T01:57:34.687331+00:00",
+  "timestamp": "2025-09-11T01:52:40.740516+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -3328,6 +3328,22 @@
       "body": "Similar to https://github.com/lamps-wg/draft-composite-sigs/pull/254 in signatures, we want to do in KEM.",
       "createdAt": "2025-08-28T14:53:41Z",
       "updatedAt": "2025-08-28T14:53:41Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 206,
+      "id": "I_kwDOKRPFO87KzzcB",
+      "title": "SHA2 vs SHA3 for the KEM combiner",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/206",
+      "state": "OPEN",
+      "author": "johngray-dev",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This is the only outstanding item not covered in https://github.com/lamps-wg/draft-composite-sigs/issues/244\n\nSHA2 vs SHA3 for the KEM combiner. Alignment with cms-mldsa which uses SHA2, vs alignment with cfrg-hybrid-kems which uses SHA3. MikeO is working with Richard Barnes. We need to re-survey the community on the operational requirements behind this point. It would be nice if we could just use SHA3 throughout, maybe except for the RSA composites which CFRG doesn't have.",
+      "createdAt": "2025-09-10T13:50:14Z",
+      "updatedAt": "2025-09-10T13:50:14Z",
       "closedAt": null,
       "comments": []
     }
@@ -8378,21 +8394,21 @@
       "id": "PR_kwDOKRPFO86mei7k",
       "title": "Fixes ECDH Public Key encoding.",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/204",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "janklaussner",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "OCTET STRING wrapper is added to the X9.62 encoded EC public key as\r\nspecified in RFC 5480.\r\n\r\nCloses #200 ",
       "createdAt": "2025-09-02T15:06:50Z",
-      "updatedAt": "2025-09-04T09:03:08Z",
+      "updatedAt": "2025-09-10T14:52:34Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "524341e0bdd8a59e12ae746d3f8df09b1c44ee0a",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "200-ec-public-key-is-encoded-as-raw-needs-to-be-ecpoint",
       "headRefOid": "7ed3589304a61069d2f09df82dfe4c65f59c0777",
-      "closedAt": null,
+      "closedAt": "2025-09-10T14:52:33Z",
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
@@ -8410,9 +8426,57 @@
           "body": "Cleaned up the PR and added the modified Size Table not included yet. Be aware that the TradPK is included in the CompositeSK also, hence all ECDH composite SKs also increase.\r\n@ounsworth @johngray-dev  please review again",
           "createdAt": "2025-09-04T09:03:08Z",
           "updatedAt": "2025-09-04T09:03:08Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "On more careful reading of RFC 5480, even though `ECPoint ::= OCTET STRING`, it has wording that when you put it into a SubjectPublicKeyInfo, you put it directly into the SPKI BIT STRING _without_ the OS wrapper. We checked a publicly-trusted EC root to confirm.\r\n\r\nSo, actually, our test vectors were correct already.\r\n\r\nClosing this PR.",
+          "createdAt": "2025-09-10T14:52:33Z",
+          "updatedAt": "2025-09-10T14:52:33Z"
         }
       ],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO86_IClY",
+          "commit": {
+            "abbreviatedOid": "7ed3589"
+          },
+          "author": "feventura",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-09-10T14:51:42Z",
+          "updatedAt": "2025-09-10T14:51:43Z",
+          "comments": [
+            {
+              "originalPosition": 19,
+              "body": "backslash is escaping the dot.",
+              "createdAt": "2025-09-10T14:51:42Z",
+              "updatedAt": "2025-09-10T14:51:43Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO86_ICsh",
+          "commit": {
+            "abbreviatedOid": "7ed3589"
+          },
+          "author": "feventura",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-09-10T14:51:49Z",
+          "updatedAt": "2025-09-10T14:51:50Z",
+          "comments": [
+            {
+              "originalPosition": 28,
+              "body": "backslash is escaping the dot.",
+              "createdAt": "2025-09-10T14:51:50Z",
+              "updatedAt": "2025-09-10T14:51:50Z"
+            }
+          ]
+        }
+      ]
     },
     {
       "number": 205,
@@ -8426,7 +8490,7 @@
       "labels": [],
       "body": "The major change is to rearrange how per-composite Composite ML-KEM\r\nparameters are presented.  Rather than per-parameter tables, each\r\ncomposite is listed with its OID and all its parameter.  As an\r\nimplementer it is easier to use, there is no bouncing back\r\nand forth between tables.\r\n\r\nAdditionally it fixes nagative indentation issues of code blocks.",
       "createdAt": "2025-09-04T12:39:52Z",
-      "updatedAt": "2025-09-04T12:40:01Z",
+      "updatedAt": "2025-09-10T15:26:52Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "524341e0bdd8a59e12ae746d3f8df09b1c44ee0a",
@@ -8437,8 +8501,70 @@
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
-      "reviews": []
+      "comments": [
+        {
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "body": "- Only real comment is to fix the X_Wing combiner label in explanation text (missing escape backslash in code).   \r\n- Copy the explanation text over to sigs and better separate the algorithm text from the table components.\r\n",
+          "createdAt": "2025-09-10T14:26:42Z",
+          "updatedAt": "2025-09-10T14:26:42Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO86_HpU_",
+          "commit": {
+            "abbreviatedOid": "31ac8d4"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "This looks good. We should merge it as soon as those editorial changes are made.",
+          "createdAt": "2025-09-10T14:27:22Z",
+          "updatedAt": "2025-09-10T14:27:22Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOKRPFO86_Io0R",
+          "commit": {
+            "abbreviatedOid": "31ac8d4"
+          },
+          "author": "feventura",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-09-10T15:26:44Z",
+          "updatedAt": "2025-09-10T15:26:45Z",
+          "comments": [
+            {
+              "originalPosition": 19,
+              "body": "backslash is escaping the dot.",
+              "createdAt": "2025-09-10T15:26:44Z",
+              "updatedAt": "2025-09-10T15:26:45Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO86_Io8D",
+          "commit": {
+            "abbreviatedOid": "31ac8d4"
+          },
+          "author": "feventura",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-09-10T15:26:52Z",
+          "updatedAt": "2025-09-10T15:26:52Z",
+          "comments": [
+            {
+              "originalPosition": 28,
+              "body": "backslash is escaping the dot.",
+              "createdAt": "2025-09-10T15:26:52Z",
+              "updatedAt": "2025-09-10T15:26:53Z"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
