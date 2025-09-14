@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-09-11T01:52:40.740516+00:00",
+  "timestamp": "2025-09-14T01:56:59.487673+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -8565,6 +8565,32 @@
           ]
         }
       ]
+    },
+    {
+      "number": 207,
+      "id": "PR_kwDOKRPFO86ocRaY",
+      "title": "Remove unreferenced references",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/207",
+      "state": "OPEN",
+      "author": "danvangeest",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-09-13T22:01:12Z",
+      "updatedAt": "2025-09-13T22:01:12Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "524341e0bdd8a59e12ae746d3f8df09b1c44ee0a",
+      "headRepository": "danvangeest/draft-composite-kem",
+      "headRefName": "dvg/unreferenced-references",
+      "headRefOid": "59cbff80d834b10c926ad0e196eca6722dfb986c",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
