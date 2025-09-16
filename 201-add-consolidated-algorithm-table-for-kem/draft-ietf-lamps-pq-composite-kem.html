@@ -2422,362 +2422,365 @@ kema-MLKEM768-ECDH-P256-HMAC-SHA256 KEM-ALGORITHM ::=
 <p id="section-7-2">Full specifications for the referenced algorithms can be found in <a href="#appdx_components" class="auto internal xref">Appendix B</a>.<a href="#section-7-2" class="pilcrow">¶</a></p>
 <p id="section-7-3">As the number of algorithms can be daunting to implementers, see <a href="#sec-impl-profile" class="auto internal xref">Section 11.3</a> for a discussion of choosing a subset to support.<a href="#section-7-3" class="pilcrow">¶</a></p>
 <p id="section-7-4">Each Composite ML-KEM algorithm has a unique Label which is used in constructing the KEM combiner in (<a href="#sec-kem-combiner" class="auto internal xref">Section 4.4</a>). This helps protect against a different algorithm arriving at the same shared secret key even if all inputs are the same.<a href="#section-7-4" class="pilcrow">¶</a></p>
-<p id="section-7-5">EDNOTE: the OIDs listed below are prototyping OIDs defined in Entrust's 2.16.840.1.114027.80.9.1 arc but will be replaced by IANA.<a href="#section-7-5" class="pilcrow">¶</a></p>
-<p id="section-7-6">Label values are provided as ASCII strings, but MUST be converted into binary strings in the obvious way.
-For example:<a href="#section-7-6" class="pilcrow">¶</a></p>
+<p id="section-7-5">Label values are provided as ASCII strings, but MUST be converted into binary strings in the obvious way.
+For example:<a href="#section-7-5" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-7-7.1">
-          <p id="section-7-7.1.1">"<code>\.//^\</code>" in hexadecimal is "<code>5c2e2f2f5e5c</code>"<a href="#section-7-7.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-7-6.1">
+          <p id="section-7-6.1.1">".//^" in hexadecimal is "5c2e2f2f5e5c"<a href="#section-7-6.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-7-7.2">
-          <p id="section-7-7.2.1">"<code>QSF-MLKEM768-P256-HMACSHA256</code>" in hexadecimal is "<code>5153462d4d4c4b454d3736382d503235362d484d4143534841323536</code>"<a href="#section-7-7.2.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-7-6.2">
+          <p id="section-7-6.2.1">"QSF-MLKEM768-P256-HMACSHA256" in hexadecimal is "5153462d4d4c4b454d3736382d503235362d484d4143534841323536"<a href="#section-7-6.2.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-7-7.3">
-          <p id="section-7-7.3.1">id-MLKEM768-RSA2048-HMAC-SHA256<a href="#section-7-7.3.1" class="pilcrow">¶</a></p>
+      </ul>
+<p id="section-7-7">EDNOTE: the OIDs listed below are prototyping OIDs defined in Entrust's 2.16.840.1.114027.80.9.1 arc but will be replaced by IANA.<a href="#section-7-7" class="pilcrow">¶</a></p>
+<p id="section-7-8">Composite KEM algorithm list:<a href="#section-7-8" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-7-7.3.2.1">
-              <p id="section-7-7.3.2.1.1">OID: 2.16.840.1.114027.80.5.2.50<a href="#section-7-7.3.2.1.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="normal" id="section-7-7.3.2.2">
-              <p id="section-7-7.3.2.2.1">Label: "<code>QSF-MLKEM768-RSAOAEP2048-HMACSHA256</code>"<a href="#section-7-7.3.2.2.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="normal" id="section-7-7.3.2.3">
-              <p id="section-7-7.3.2.3.1">Key Derivation Function (KDF): HMAC-SHA256<a href="#section-7-7.3.2.3.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="normal" id="section-7-7.3.2.4">
-              <p id="section-7-7.3.2.4.1">ML-KEM variant: ML-KEM-768<a href="#section-7-7.3.2.4.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="normal" id="section-7-7.3.2.5">
-              <p id="section-7-7.3.2.5.1">Traditional Algorithm: RSA<a href="#section-7-7.3.2.5.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-7-9.1">
+          <p id="section-7-9.1.1">id-MLKEM768-RSA2048-HMAC-SHA256<a href="#section-7-9.1.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-7-7.3.2.5.2.1">
-                  <p id="section-7-7.3.2.5.2.1.1">Traditional KEM Algorithm: id-RSAES-OAEP<a href="#section-7-7.3.2.5.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-7-9.1.2.1">
+              <p id="section-7-9.1.2.1.1">OID: 2.16.840.1.114027.80.5.2.50<a href="#section-7-9.1.2.1.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-7-7.3.2.5.2.2">
-                  <p id="section-7-7.3.2.5.2.2.1">RSA size: 2048<a href="#section-7-7.3.2.5.2.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-7-9.1.2.2">
+              <p id="section-7-9.1.2.2.1">Label: "<code>QSF-MLKEM768-RSAOAEP2048-HMACSHA256</code>"<a href="#section-7-9.1.2.2.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-7-7.3.2.5.2.3">
-                  <p id="section-7-7.3.2.5.2.3.1">RSAES-OAEP parameters: See <a href="#rsa-oaep-params" class="auto internal xref">Table 2</a><a href="#section-7-7.3.2.5.2.3.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-7-9.1.2.3">
+              <p id="section-7-9.1.2.3.1">Key Derivation Function (KDF): HMAC-SHA256<a href="#section-7-9.1.2.3.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-7-9.1.2.4">
+              <p id="section-7-9.1.2.4.1">ML-KEM variant: ML-KEM-768<a href="#section-7-9.1.2.4.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-7-9.1.2.5">
+              <p id="section-7-9.1.2.5.1">Traditional Algorithm: RSA<a href="#section-7-9.1.2.5.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-7-9.1.2.5.2.1">
+                  <p id="section-7-9.1.2.5.2.1.1">Traditional KEM Algorithm: id-RSAES-OAEP<a href="#section-7-9.1.2.5.2.1.1" class="pilcrow">¶</a></p>
+</li>
+                <li class="normal" id="section-7-9.1.2.5.2.2">
+                  <p id="section-7-9.1.2.5.2.2.1">RSA size: 2048<a href="#section-7-9.1.2.5.2.2.1" class="pilcrow">¶</a></p>
+</li>
+                <li class="normal" id="section-7-9.1.2.5.2.3">
+                  <p id="section-7-9.1.2.5.2.3.1">RSAES-OAEP parameters: See <a href="#rsa-oaep-params" class="auto internal xref">Table 2</a><a href="#section-7-9.1.2.5.2.3.1" class="pilcrow">¶</a></p>
 </li>
               </ul>
 </li>
           </ul>
 </li>
-        <li class="normal" id="section-7-7.4">
-          <p id="section-7-7.4.1">id-MLKEM768-RSA3072-HMAC-SHA256<a href="#section-7-7.4.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-7-9.2">
+          <p id="section-7-9.2.1">id-MLKEM768-RSA3072-HMAC-SHA256<a href="#section-7-9.2.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-7-7.4.2.1">
-              <p id="section-7-7.4.2.1.1">OID: 2.16.840.1.114027.80.5.2.51<a href="#section-7-7.4.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-7-9.2.2.1">
+              <p id="section-7-9.2.2.1.1">OID: 2.16.840.1.114027.80.5.2.51<a href="#section-7-9.2.2.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-7-7.4.2.2">
-              <p id="section-7-7.4.2.2.1">Label: "<code>QSF-MLKEM768-RSAOAEP3072-HMACSHA256</code>"<a href="#section-7-7.4.2.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-7-9.2.2.2">
+              <p id="section-7-9.2.2.2.1">Label: "<code>QSF-MLKEM768-RSAOAEP3072-HMACSHA256</code>"<a href="#section-7-9.2.2.2.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-7-7.4.2.3">
-              <p id="section-7-7.4.2.3.1">Key Derivation Function (KDF): HMAC-SHA256<a href="#section-7-7.4.2.3.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-7-9.2.2.3">
+              <p id="section-7-9.2.2.3.1">Key Derivation Function (KDF): HMAC-SHA256<a href="#section-7-9.2.2.3.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-7-7.4.2.4">
-              <p id="section-7-7.4.2.4.1">ML-KEM variant: ML-KEM-768<a href="#section-7-7.4.2.4.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-7-9.2.2.4">
+              <p id="section-7-9.2.2.4.1">ML-KEM variant: ML-KEM-768<a href="#section-7-9.2.2.4.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-7-7.4.2.5">
-              <p id="section-7-7.4.2.5.1">Traditional Algorithm: RSA<a href="#section-7-7.4.2.5.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-7-9.2.2.5">
+              <p id="section-7-9.2.2.5.1">Traditional Algorithm: RSA<a href="#section-7-9.2.2.5.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-7-7.4.2.5.2.1">
-                  <p id="section-7-7.4.2.5.2.1.1">Traditional KEM Algorithm: id-RSAES-OAEP<a href="#section-7-7.4.2.5.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-7-9.2.2.5.2.1">
+                  <p id="section-7-9.2.2.5.2.1.1">Traditional KEM Algorithm: id-RSAES-OAEP<a href="#section-7-9.2.2.5.2.1.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-7-7.4.2.5.2.2">
-                  <p id="section-7-7.4.2.5.2.2.1">RSA size: 3072<a href="#section-7-7.4.2.5.2.2.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-7-9.2.2.5.2.2">
+                  <p id="section-7-9.2.2.5.2.2.1">RSA size: 3072<a href="#section-7-9.2.2.5.2.2.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-7-7.4.2.5.2.3">
-                  <p id="section-7-7.4.2.5.2.3.1">RSAES-OAEP parameters: See <a href="#rsa-oaep-params" class="auto internal xref">Table 2</a><a href="#section-7-7.4.2.5.2.3.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-7-9.2.2.5.2.3">
+                  <p id="section-7-9.2.2.5.2.3.1">RSAES-OAEP parameters: See <a href="#rsa-oaep-params" class="auto internal xref">Table 2</a><a href="#section-7-9.2.2.5.2.3.1" class="pilcrow">¶</a></p>
 </li>
               </ul>
 </li>
           </ul>
 </li>
-        <li class="normal" id="section-7-7.5">
-          <p id="section-7-7.5.1">id-MLKEM768-RSA4096-HMAC-SHA256<a href="#section-7-7.5.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-7-9.3">
+          <p id="section-7-9.3.1">id-MLKEM768-RSA4096-HMAC-SHA256<a href="#section-7-9.3.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-7-7.5.2.1">
-              <p id="section-7-7.5.2.1.1">OID: 2.16.840.1.114027.80.5.2.52<a href="#section-7-7.5.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-7-9.3.2.1">
+              <p id="section-7-9.3.2.1.1">OID: 2.16.840.1.114027.80.5.2.52<a href="#section-7-9.3.2.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-7-7.5.2.2">
-              <p id="section-7-7.5.2.2.1">Label: "<code>QSF-MLKEM768-RSAOAEP4096-HMACSHA256</code>"<a href="#section-7-7.5.2.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-7-9.3.2.2">
+              <p id="section-7-9.3.2.2.1">Label: "<code>QSF-MLKEM768-RSAOAEP4096-HMACSHA256</code>"<a href="#section-7-9.3.2.2.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-7-7.5.2.3">
-              <p id="section-7-7.5.2.3.1">Key Derivation Function (KDF): HMAC-SHA256<a href="#section-7-7.5.2.3.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-7-9.3.2.3">
+              <p id="section-7-9.3.2.3.1">Key Derivation Function (KDF): HMAC-SHA256<a href="#section-7-9.3.2.3.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-7-7.5.2.4">
-              <p id="section-7-7.5.2.4.1">ML-KEM variant: ML-KEM-768<a href="#section-7-7.5.2.4.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-7-9.3.2.4">
+              <p id="section-7-9.3.2.4.1">ML-KEM variant: ML-KEM-768<a href="#section-7-9.3.2.4.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-7-7.5.2.5">
-              <p id="section-7-7.5.2.5.1">Traditional Algorithm: RSA<a href="#section-7-7.5.2.5.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-7-9.3.2.5">
+              <p id="section-7-9.3.2.5.1">Traditional Algorithm: RSA<a href="#section-7-9.3.2.5.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-7-7.5.2.5.2.1">
-                  <p id="section-7-7.5.2.5.2.1.1">Traditional KEM Algorithm: id-RSAES-OAEP<a href="#section-7-7.5.2.5.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-7-9.3.2.5.2.1">
+                  <p id="section-7-9.3.2.5.2.1.1">Traditional KEM Algorithm: id-RSAES-OAEP<a href="#section-7-9.3.2.5.2.1.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-7-7.5.2.5.2.2">
-                  <p id="section-7-7.5.2.5.2.2.1">RSA size: 4096<a href="#section-7-7.5.2.5.2.2.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-7-9.3.2.5.2.2">
+                  <p id="section-7-9.3.2.5.2.2.1">RSA size: 4096<a href="#section-7-9.3.2.5.2.2.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-7-7.5.2.5.2.3">
-                  <p id="section-7-7.5.2.5.2.3.1">RSAES-OAEP parameters: See <a href="#rsa-oaep-params" class="auto internal xref">Table 2</a><a href="#section-7-7.5.2.5.2.3.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-7-9.3.2.5.2.3">
+                  <p id="section-7-9.3.2.5.2.3.1">RSAES-OAEP parameters: See <a href="#rsa-oaep-params" class="auto internal xref">Table 2</a><a href="#section-7-9.3.2.5.2.3.1" class="pilcrow">¶</a></p>
 </li>
               </ul>
 </li>
           </ul>
 </li>
-        <li class="normal" id="section-7-7.6">
-          <p id="section-7-7.6.1">id-MLKEM768-X25519-SHA3-256<a href="#section-7-7.6.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-7-9.4">
+          <p id="section-7-9.4.1">id-MLKEM768-X25519-SHA3-256<a href="#section-7-9.4.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-7-7.6.2.1">
-              <p id="section-7-7.6.2.1.1">OID: 2.16.840.1.114027.80.5.2.53<a href="#section-7-7.6.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-7-9.4.2.1">
+              <p id="section-7-9.4.2.1.1">OID: 2.16.840.1.114027.80.5.2.53<a href="#section-7-9.4.2.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-7-7.6.2.2">
-              <p id="section-7-7.6.2.2.1">Label: "<code>\.//^\</code>"<a href="#section-7-7.6.2.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-7-9.4.2.2">
+              <p id="section-7-9.4.2.2.1">Label: "<code>\.//^\</code>"<a href="#section-7-9.4.2.2.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-7-7.6.2.3">
-              <p id="section-7-7.6.2.3.1">Key Derivation Function (KDF): SHA3-256<a href="#section-7-7.6.2.3.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-7-9.4.2.3">
+              <p id="section-7-9.4.2.3.1">Key Derivation Function (KDF): SHA3-256<a href="#section-7-9.4.2.3.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-7-7.6.2.4">
-              <p id="section-7-7.6.2.4.1">ML-KEM variant: ML-KEM-768<a href="#section-7-7.6.2.4.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-7-9.4.2.4">
+              <p id="section-7-9.4.2.4.1">ML-KEM variant: ML-KEM-768<a href="#section-7-9.4.2.4.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-7-7.6.2.5">
-              <p id="section-7-7.6.2.5.1">Traditional Algorithm: X25519<a href="#section-7-7.6.2.5.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-7-9.4.2.5">
+              <p id="section-7-9.4.2.5.1">Traditional Algorithm: X25519<a href="#section-7-9.4.2.5.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-7-7.6.2.5.2.1">
-                  <p id="section-7-7.6.2.5.2.1.1">Traditional KEM Algorithm: id-X25519<a href="#section-7-7.6.2.5.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-7-9.4.2.5.2.1">
+                  <p id="section-7-9.4.2.5.2.1.1">Traditional KEM Algorithm: id-X25519<a href="#section-7-9.4.2.5.2.1.1" class="pilcrow">¶</a></p>
 </li>
               </ul>
 </li>
           </ul>
 </li>
-        <li class="normal" id="section-7-7.7">
-          <p id="section-7-7.7.1">id-MLKEM768-ECDH-P256-HMAC-SHA256<a href="#section-7-7.7.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-7-9.5">
+          <p id="section-7-9.5.1">id-MLKEM768-ECDH-P256-HMAC-SHA256<a href="#section-7-9.5.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-7-7.7.2.1">
-              <p id="section-7-7.7.2.1.1">OID: 2.16.840.1.114027.80.5.2.54<a href="#section-7-7.7.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-7-9.5.2.1">
+              <p id="section-7-9.5.2.1.1">OID: 2.16.840.1.114027.80.5.2.54<a href="#section-7-9.5.2.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-7-7.7.2.2">
-              <p id="section-7-7.7.2.2.1">Label: "<code>QSF-MLKEM768-P256-HMACSHA256</code>"<a href="#section-7-7.7.2.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-7-9.5.2.2">
+              <p id="section-7-9.5.2.2.1">Label: "<code>QSF-MLKEM768-P256-HMACSHA256</code>"<a href="#section-7-9.5.2.2.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-7-7.7.2.3">
-              <p id="section-7-7.7.2.3.1">Key Derivation Function (KDF): HMAC-SHA256<a href="#section-7-7.7.2.3.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-7-9.5.2.3">
+              <p id="section-7-9.5.2.3.1">Key Derivation Function (KDF): HMAC-SHA256<a href="#section-7-9.5.2.3.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-7-7.7.2.4">
-              <p id="section-7-7.7.2.4.1">ML-KEM variant: ML-KEM-768<a href="#section-7-7.7.2.4.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-7-9.5.2.4">
+              <p id="section-7-9.5.2.4.1">ML-KEM variant: ML-KEM-768<a href="#section-7-9.5.2.4.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-7-7.7.2.5">
-              <p id="section-7-7.7.2.5.1">Traditional Algorithm: ECDH<a href="#section-7-7.7.2.5.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-7-9.5.2.5">
+              <p id="section-7-9.5.2.5.1">Traditional Algorithm: ECDH<a href="#section-7-9.5.2.5.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-7-7.7.2.5.2.1">
-                  <p id="section-7-7.7.2.5.2.1.1">Traditional KEM Algorithm: id-ecDH<a href="#section-7-7.7.2.5.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-7-9.5.2.5.2.1">
+                  <p id="section-7-9.5.2.5.2.1.1">Traditional KEM Algorithm: id-ecDH<a href="#section-7-9.5.2.5.2.1.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-7-7.7.2.5.2.2">
-                  <p id="section-7-7.7.2.5.2.2.1">ECDH curve: secp256r1<a href="#section-7-7.7.2.5.2.2.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-7-9.5.2.5.2.2">
+                  <p id="section-7-9.5.2.5.2.2.1">ECDH curve: secp256r1<a href="#section-7-9.5.2.5.2.2.1" class="pilcrow">¶</a></p>
 </li>
               </ul>
 </li>
           </ul>
 </li>
-        <li class="normal" id="section-7-7.8">
-          <p id="section-7-7.8.1">id-MLKEM768-ECDH-P384-HMAC-SHA256<a href="#section-7-7.8.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-7-9.6">
+          <p id="section-7-9.6.1">id-MLKEM768-ECDH-P384-HMAC-SHA256<a href="#section-7-9.6.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-7-7.8.2.1">
-              <p id="section-7-7.8.2.1.1">OID: 2.16.840.1.114027.80.5.2.55<a href="#section-7-7.8.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-7-9.6.2.1">
+              <p id="section-7-9.6.2.1.1">OID: 2.16.840.1.114027.80.5.2.55<a href="#section-7-9.6.2.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-7-7.8.2.2">
-              <p id="section-7-7.8.2.2.1">Label: "<code>QSF-MLKEM768-P384-HMACSHA256</code>"<a href="#section-7-7.8.2.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-7-9.6.2.2">
+              <p id="section-7-9.6.2.2.1">Label: "<code>QSF-MLKEM768-P384-HMACSHA256</code>"<a href="#section-7-9.6.2.2.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-7-7.8.2.3">
-              <p id="section-7-7.8.2.3.1">Key Derivation Function (KDF): HMAC-SHA256<a href="#section-7-7.8.2.3.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-7-9.6.2.3">
+              <p id="section-7-9.6.2.3.1">Key Derivation Function (KDF): HMAC-SHA256<a href="#section-7-9.6.2.3.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-7-7.8.2.4">
-              <p id="section-7-7.8.2.4.1">ML-KEM variant: ML-KEM-768<a href="#section-7-7.8.2.4.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-7-9.6.2.4">
+              <p id="section-7-9.6.2.4.1">ML-KEM variant: ML-KEM-768<a href="#section-7-9.6.2.4.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-7-7.8.2.5">
-              <p id="section-7-7.8.2.5.1">Traditional Algorithm: ECDH<a href="#section-7-7.8.2.5.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-7-9.6.2.5">
+              <p id="section-7-9.6.2.5.1">Traditional Algorithm: ECDH<a href="#section-7-9.6.2.5.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-7-7.8.2.5.2.1">
-                  <p id="section-7-7.8.2.5.2.1.1">Traditional KEM Algorithm: id-ecDH<a href="#section-7-7.8.2.5.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-7-9.6.2.5.2.1">
+                  <p id="section-7-9.6.2.5.2.1.1">Traditional KEM Algorithm: id-ecDH<a href="#section-7-9.6.2.5.2.1.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-7-7.8.2.5.2.2">
-                  <p id="section-7-7.8.2.5.2.2.1">ECDH curve: secp384r1<a href="#section-7-7.8.2.5.2.2.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-7-9.6.2.5.2.2">
+                  <p id="section-7-9.6.2.5.2.2.1">ECDH curve: secp384r1<a href="#section-7-9.6.2.5.2.2.1" class="pilcrow">¶</a></p>
 </li>
               </ul>
 </li>
           </ul>
 </li>
-        <li class="normal" id="section-7-7.9">
-          <p id="section-7-7.9.1">id-MLKEM768-ECDH-brainpoolP256r1-HMAC-SHA256<a href="#section-7-7.9.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-7-9.7">
+          <p id="section-7-9.7.1">id-MLKEM768-ECDH-brainpoolP256r1-HMAC-SHA256<a href="#section-7-9.7.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-7-7.9.2.1">
-              <p id="section-7-7.9.2.1.1">OID: 2.16.840.1.114027.80.5.2.56<a href="#section-7-7.9.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-7-9.7.2.1">
+              <p id="section-7-9.7.2.1.1">OID: 2.16.840.1.114027.80.5.2.56<a href="#section-7-9.7.2.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-7-7.9.2.2">
-              <p id="section-7-7.9.2.2.1">Label: "<code>QSF-MLKEM768-BP256-HMACSHA256</code>"<a href="#section-7-7.9.2.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-7-9.7.2.2">
+              <p id="section-7-9.7.2.2.1">Label: "<code>QSF-MLKEM768-BP256-HMACSHA256</code>"<a href="#section-7-9.7.2.2.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-7-7.9.2.3">
-              <p id="section-7-7.9.2.3.1">Key Derivation Function (KDF): HMAC-SHA256<a href="#section-7-7.9.2.3.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-7-9.7.2.3">
+              <p id="section-7-9.7.2.3.1">Key Derivation Function (KDF): HMAC-SHA256<a href="#section-7-9.7.2.3.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-7-7.9.2.4">
-              <p id="section-7-7.9.2.4.1">ML-KEM variant: ML-KEM-768<a href="#section-7-7.9.2.4.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-7-9.7.2.4">
+              <p id="section-7-9.7.2.4.1">ML-KEM variant: ML-KEM-768<a href="#section-7-9.7.2.4.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-7-7.9.2.5">
-              <p id="section-7-7.9.2.5.1">Traditional Algorithm: ECDH<a href="#section-7-7.9.2.5.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-7-9.7.2.5">
+              <p id="section-7-9.7.2.5.1">Traditional Algorithm: ECDH<a href="#section-7-9.7.2.5.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-7-7.9.2.5.2.1">
-                  <p id="section-7-7.9.2.5.2.1.1">Traditional KEM Algorithm: id-ecDH<a href="#section-7-7.9.2.5.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-7-9.7.2.5.2.1">
+                  <p id="section-7-9.7.2.5.2.1.1">Traditional KEM Algorithm: id-ecDH<a href="#section-7-9.7.2.5.2.1.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-7-7.9.2.5.2.2">
-                  <p id="section-7-7.9.2.5.2.2.1">ECDH curve: brainpoolP256r1<a href="#section-7-7.9.2.5.2.2.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-7-9.7.2.5.2.2">
+                  <p id="section-7-9.7.2.5.2.2.1">ECDH curve: brainpoolP256r1<a href="#section-7-9.7.2.5.2.2.1" class="pilcrow">¶</a></p>
 </li>
               </ul>
 </li>
           </ul>
 </li>
-        <li class="normal" id="section-7-7.10">
-          <p id="section-7-7.10.1">id-MLKEM1024-RSA3072-HMAC-SHA512<a href="#section-7-7.10.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-7-9.8">
+          <p id="section-7-9.8.1">id-MLKEM1024-RSA3072-HMAC-SHA512<a href="#section-7-9.8.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-7-7.10.2.1">
-              <p id="section-7-7.10.2.1.1">OID: 2.16.840.1.114027.80.5.2.61<a href="#section-7-7.10.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-7-9.8.2.1">
+              <p id="section-7-9.8.2.1.1">OID: 2.16.840.1.114027.80.5.2.61<a href="#section-7-9.8.2.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-7-7.10.2.2">
-              <p id="section-7-7.10.2.2.1">Label: "<code>QSF-MLKEM1024-RSAOAEP3072-HMACSHA512</code>"<a href="#section-7-7.10.2.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-7-9.8.2.2">
+              <p id="section-7-9.8.2.2.1">Label: "<code>QSF-MLKEM1024-RSAOAEP3072-HMACSHA512</code>"<a href="#section-7-9.8.2.2.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-7-7.10.2.3">
-              <p id="section-7-7.10.2.3.1">Key Derivation Function (KDF): HMAC-SHA512<a href="#section-7-7.10.2.3.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-7-9.8.2.3">
+              <p id="section-7-9.8.2.3.1">Key Derivation Function (KDF): HMAC-SHA512<a href="#section-7-9.8.2.3.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-7-7.10.2.4">
-              <p id="section-7-7.10.2.4.1">ML-KEM variant: ML-KEM-1024<a href="#section-7-7.10.2.4.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-7-9.8.2.4">
+              <p id="section-7-9.8.2.4.1">ML-KEM variant: ML-KEM-1024<a href="#section-7-9.8.2.4.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-7-7.10.2.5">
-              <p id="section-7-7.10.2.5.1">Traditional Algorithm: RSA<a href="#section-7-7.10.2.5.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-7-9.8.2.5">
+              <p id="section-7-9.8.2.5.1">Traditional Algorithm: RSA<a href="#section-7-9.8.2.5.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-7-7.10.2.5.2.1">
-                  <p id="section-7-7.10.2.5.2.1.1">Traditional KEM Algorithm: id-RSAES-OAEP<a href="#section-7-7.10.2.5.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-7-9.8.2.5.2.1">
+                  <p id="section-7-9.8.2.5.2.1.1">Traditional KEM Algorithm: id-RSAES-OAEP<a href="#section-7-9.8.2.5.2.1.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-7-7.10.2.5.2.2">
-                  <p id="section-7-7.10.2.5.2.2.1">RSA size: 3072<a href="#section-7-7.10.2.5.2.2.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-7-9.8.2.5.2.2">
+                  <p id="section-7-9.8.2.5.2.2.1">RSA size: 3072<a href="#section-7-9.8.2.5.2.2.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-7-7.10.2.5.2.3">
-                  <p id="section-7-7.10.2.5.2.3.1">RSAES-OAEP parameters: See <a href="#rsa-oaep-params" class="auto internal xref">Table 2</a><a href="#section-7-7.10.2.5.2.3.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-7-9.8.2.5.2.3">
+                  <p id="section-7-9.8.2.5.2.3.1">RSAES-OAEP parameters: See <a href="#rsa-oaep-params" class="auto internal xref">Table 2</a><a href="#section-7-9.8.2.5.2.3.1" class="pilcrow">¶</a></p>
 </li>
               </ul>
 </li>
           </ul>
 </li>
-        <li class="normal" id="section-7-7.11">
-          <p id="section-7-7.11.1">id-MLKEM1024-ECDH-P384-HMAC-SHA512<a href="#section-7-7.11.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-7-9.9">
+          <p id="section-7-9.9.1">id-MLKEM1024-ECDH-P384-HMAC-SHA512<a href="#section-7-9.9.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-7-7.11.2.1">
-              <p id="section-7-7.11.2.1.1">OID: 2.16.840.1.114027.80.5.2.57<a href="#section-7-7.11.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-7-9.9.2.1">
+              <p id="section-7-9.9.2.1.1">OID: 2.16.840.1.114027.80.5.2.57<a href="#section-7-9.9.2.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-7-7.11.2.2">
-              <p id="section-7-7.11.2.2.1">Label: "<code>QSF-MLKEM1024-P384-HMACSHA512</code>"<a href="#section-7-7.11.2.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-7-9.9.2.2">
+              <p id="section-7-9.9.2.2.1">Label: "<code>QSF-MLKEM1024-P384-HMACSHA512</code>"<a href="#section-7-9.9.2.2.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-7-7.11.2.3">
-              <p id="section-7-7.11.2.3.1">Key Derivation Function (KDF): HMAC-SHA512<a href="#section-7-7.11.2.3.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-7-9.9.2.3">
+              <p id="section-7-9.9.2.3.1">Key Derivation Function (KDF): HMAC-SHA512<a href="#section-7-9.9.2.3.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-7-7.11.2.4">
-              <p id="section-7-7.11.2.4.1">ML-KEM variant: ML-KEM-1024<a href="#section-7-7.11.2.4.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-7-9.9.2.4">
+              <p id="section-7-9.9.2.4.1">ML-KEM variant: ML-KEM-1024<a href="#section-7-9.9.2.4.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-7-7.11.2.5">
-              <p id="section-7-7.11.2.5.1">Traditional Algorithm: ECDH<a href="#section-7-7.11.2.5.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-7-9.9.2.5">
+              <p id="section-7-9.9.2.5.1">Traditional Algorithm: ECDH<a href="#section-7-9.9.2.5.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-7-7.11.2.5.2.1">
-                  <p id="section-7-7.11.2.5.2.1.1">Traditional KEM Algorithm: id-ecDH<a href="#section-7-7.11.2.5.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-7-9.9.2.5.2.1">
+                  <p id="section-7-9.9.2.5.2.1.1">Traditional KEM Algorithm: id-ecDH<a href="#section-7-9.9.2.5.2.1.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-7-7.11.2.5.2.2">
-                  <p id="section-7-7.11.2.5.2.2.1">ECDH curve: secp384r1<a href="#section-7-7.11.2.5.2.2.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-7-9.9.2.5.2.2">
+                  <p id="section-7-9.9.2.5.2.2.1">ECDH curve: secp384r1<a href="#section-7-9.9.2.5.2.2.1" class="pilcrow">¶</a></p>
 </li>
               </ul>
 </li>
           </ul>
 </li>
-        <li class="normal" id="section-7-7.12">
-          <p id="section-7-7.12.1">id-MLKEM1024-ECDH-brainpoolP384r1-HMAC-SHA512<a href="#section-7-7.12.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-7-9.10">
+          <p id="section-7-9.10.1">id-MLKEM1024-ECDH-brainpoolP384r1-HMAC-SHA512<a href="#section-7-9.10.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-7-7.12.2.1">
-              <p id="section-7-7.12.2.1.1">OID: 2.16.840.1.114027.80.5.2.58<a href="#section-7-7.12.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-7-9.10.2.1">
+              <p id="section-7-9.10.2.1.1">OID: 2.16.840.1.114027.80.5.2.58<a href="#section-7-9.10.2.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-7-7.12.2.2">
-              <p id="section-7-7.12.2.2.1">Label: "<code>QSF-MLKEM1024-BP384-HMACSHA512</code>"<a href="#section-7-7.12.2.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-7-9.10.2.2">
+              <p id="section-7-9.10.2.2.1">Label: "<code>QSF-MLKEM1024-BP384-HMACSHA512</code>"<a href="#section-7-9.10.2.2.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-7-7.12.2.3">
-              <p id="section-7-7.12.2.3.1">Key Derivation Function (KDF): HMAC-SHA512<a href="#section-7-7.12.2.3.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-7-9.10.2.3">
+              <p id="section-7-9.10.2.3.1">Key Derivation Function (KDF): HMAC-SHA512<a href="#section-7-9.10.2.3.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-7-7.12.2.4">
-              <p id="section-7-7.12.2.4.1">ML-KEM variant: ML-KEM-1024<a href="#section-7-7.12.2.4.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-7-9.10.2.4">
+              <p id="section-7-9.10.2.4.1">ML-KEM variant: ML-KEM-1024<a href="#section-7-9.10.2.4.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-7-7.12.2.5">
-              <p id="section-7-7.12.2.5.1">Traditional Algorithm: ECDH<a href="#section-7-7.12.2.5.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-7-9.10.2.5">
+              <p id="section-7-9.10.2.5.1">Traditional Algorithm: ECDH<a href="#section-7-9.10.2.5.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-7-7.12.2.5.2.1">
-                  <p id="section-7-7.12.2.5.2.1.1">Traditional KEM Algorithm: id-ecDH<a href="#section-7-7.12.2.5.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-7-9.10.2.5.2.1">
+                  <p id="section-7-9.10.2.5.2.1.1">Traditional KEM Algorithm: id-ecDH<a href="#section-7-9.10.2.5.2.1.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-7-7.12.2.5.2.2">
-                  <p id="section-7-7.12.2.5.2.2.1">ECDH curve: brainpoolP384r1<a href="#section-7-7.12.2.5.2.2.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-7-9.10.2.5.2.2">
+                  <p id="section-7-9.10.2.5.2.2.1">ECDH curve: brainpoolP384r1<a href="#section-7-9.10.2.5.2.2.1" class="pilcrow">¶</a></p>
 </li>
               </ul>
 </li>
           </ul>
 </li>
-        <li class="normal" id="section-7-7.13">
-          <p id="section-7-7.13.1">id-MLKEM1024-X448-SHA3-256<a href="#section-7-7.13.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-7-9.11">
+          <p id="section-7-9.11.1">id-MLKEM1024-X448-SHA3-256<a href="#section-7-9.11.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-7-7.13.2.1">
-              <p id="section-7-7.13.2.1.1">OID: 2.16.840.1.114027.80.5.2.59<a href="#section-7-7.13.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-7-9.11.2.1">
+              <p id="section-7-9.11.2.1.1">OID: 2.16.840.1.114027.80.5.2.59<a href="#section-7-9.11.2.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-7-7.13.2.2">
-              <p id="section-7-7.13.2.2.1">Label: "<code>QSF-MLKEM1024-X448-SHA3256</code>"<a href="#section-7-7.13.2.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-7-9.11.2.2">
+              <p id="section-7-9.11.2.2.1">Label: "<code>QSF-MLKEM1024-X448-SHA3256</code>"<a href="#section-7-9.11.2.2.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-7-7.13.2.3">
-              <p id="section-7-7.13.2.3.1">Key Derivation Function (KDF): SHA3-256<a href="#section-7-7.13.2.3.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-7-9.11.2.3">
+              <p id="section-7-9.11.2.3.1">Key Derivation Function (KDF): SHA3-256<a href="#section-7-9.11.2.3.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-7-7.13.2.4">
-              <p id="section-7-7.13.2.4.1">ML-KEM variant: ML-KEM-1024<a href="#section-7-7.13.2.4.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-7-9.11.2.4">
+              <p id="section-7-9.11.2.4.1">ML-KEM variant: ML-KEM-1024<a href="#section-7-9.11.2.4.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-7-7.13.2.5">
-              <p id="section-7-7.13.2.5.1">Traditional Algorithm: X448<a href="#section-7-7.13.2.5.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-7-9.11.2.5">
+              <p id="section-7-9.11.2.5.1">Traditional Algorithm: X448<a href="#section-7-9.11.2.5.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-7-7.13.2.5.2.1">
-                  <p id="section-7-7.13.2.5.2.1.1">Traditional KEM Algorithm: id-X448<a href="#section-7-7.13.2.5.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-7-9.11.2.5.2.1">
+                  <p id="section-7-9.11.2.5.2.1.1">Traditional KEM Algorithm: id-X448<a href="#section-7-9.11.2.5.2.1.1" class="pilcrow">¶</a></p>
 </li>
               </ul>
 </li>
           </ul>
 </li>
-        <li class="normal" id="section-7-7.14">
-          <p id="section-7-7.14.1">id-MLKEM1024-ECDH-P521-HMAC-SHA512<a href="#section-7-7.14.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-7-9.12">
+          <p id="section-7-9.12.1">id-MLKEM1024-ECDH-P521-HMAC-SHA512<a href="#section-7-9.12.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-7-7.14.2.1">
-              <p id="section-7-7.14.2.1.1">OID: 2.16.840.1.114027.80.5.2.60<a href="#section-7-7.14.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-7-9.12.2.1">
+              <p id="section-7-9.12.2.1.1">OID: 2.16.840.1.114027.80.5.2.60<a href="#section-7-9.12.2.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-7-7.14.2.2">
-              <p id="section-7-7.14.2.2.1">Label: "<code>QSF-MLKEM1024-P521-HMACSHA512</code>"<a href="#section-7-7.14.2.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-7-9.12.2.2">
+              <p id="section-7-9.12.2.2.1">Label: "<code>QSF-MLKEM1024-P521-HMACSHA512</code>"<a href="#section-7-9.12.2.2.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-7-7.14.2.3">
-              <p id="section-7-7.14.2.3.1">Key Derivation Function (KDF): HMAC-SHA512<a href="#section-7-7.14.2.3.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-7-9.12.2.3">
+              <p id="section-7-9.12.2.3.1">Key Derivation Function (KDF): HMAC-SHA512<a href="#section-7-9.12.2.3.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-7-7.14.2.4">
-              <p id="section-7-7.14.2.4.1">ML-KEM variant: ML-KEM-1024<a href="#section-7-7.14.2.4.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-7-9.12.2.4">
+              <p id="section-7-9.12.2.4.1">ML-KEM variant: ML-KEM-1024<a href="#section-7-9.12.2.4.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-7-7.14.2.5">
-              <p id="section-7-7.14.2.5.1">Traditional Algorithm: ECDH<a href="#section-7-7.14.2.5.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-7-9.12.2.5">
+              <p id="section-7-9.12.2.5.1">Traditional Algorithm: ECDH<a href="#section-7-9.12.2.5.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-7-7.14.2.5.2.1">
-                  <p id="section-7-7.14.2.5.2.1.1">Traditional KEM Algorithm: id-ecDH<a href="#section-7-7.14.2.5.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-7-9.12.2.5.2.1">
+                  <p id="section-7-9.12.2.5.2.1.1">Traditional KEM Algorithm: id-ecDH<a href="#section-7-9.12.2.5.2.1.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-7-7.14.2.5.2.2">
-                  <p id="section-7-7.14.2.5.2.2.1">ECDH curve: secp521r1<a href="#section-7-7.14.2.5.2.2.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-7-9.12.2.5.2.2">
+                  <p id="section-7-9.12.2.5.2.2.1">ECDH curve: secp521r1<a href="#section-7-9.12.2.5.2.2.1" class="pilcrow">¶</a></p>
 </li>
               </ul>
 </li>
           </ul>
 </li>
       </ul>
-<p id="section-7-8">In alignment with ML-KEM <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span>, Composite KEM algorithms output a 256-bit shared secret key at all security levels, truncating is necessary as described in <a href="#sec-kem-combiner" class="auto internal xref">Section 4.4</a>.<a href="#section-7-8" class="pilcrow">¶</a></p>
-<p id="section-7-9">For all RSA key types and sizes, the exponent is RECOMMENDED to be 65537. Where it is advantageous to hard-code an exponent, for example in order to obtain predictable key sizes, implementations MAY hard-code 65537; thus implementations using other values for the exponent should not expect it to be intereperable with all other implementations.<a href="#section-7-9" class="pilcrow">¶</a></p>
-<p id="section-7-10">The KDFs were chosen to roughly match the security level of the stronger component. In the case of X25519 and X448 SHA3-256 is used to match the construction in <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span>.<a href="#section-7-10" class="pilcrow">¶</a></p>
+<p id="section-7-10">In alignment with ML-KEM <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span>, Composite KEM algorithms output a 256-bit shared secret key at all security levels, truncating is necessary as described in <a href="#sec-kem-combiner" class="auto internal xref">Section 4.4</a>.<a href="#section-7-10" class="pilcrow">¶</a></p>
+<p id="section-7-11">For all RSA key types and sizes, the exponent is RECOMMENDED to be 65537. Where it is advantageous to hard-code an exponent, for example in order to obtain predictable key sizes, implementations MAY hard-code 65537; thus implementations using other values for the exponent should not expect it to be intereperable with all other implementations.<a href="#section-7-11" class="pilcrow">¶</a></p>
+<p id="section-7-12">The KDFs were chosen to roughly match the security level of the stronger component. In the case of X25519 and X448 SHA3-256 is used to match the construction in <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span>.<a href="#section-7-12" class="pilcrow">¶</a></p>
 <div id="sect-rsaoaep-params">
 <section id="section-7.1">
         <h3 id="name-rsa-oaep-parameters">

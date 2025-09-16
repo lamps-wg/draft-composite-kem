@@ -1364,16 +1364,18 @@ Table of Contents
    against a different algorithm arriving at the same shared secret key
    even if all inputs are the same.
 
-   EDNOTE: the OIDs listed below are prototyping OIDs defined in
-   Entrust's 2.16.840.1.114027.80.9.1 arc but will be replaced by IANA.
-
    Label values are provided as ASCII strings, but MUST be converted
    into binary strings in the obvious way.  For example:
 
-   *  "\.//^\" in hexadecimal is "5c2e2f2f5e5c"
+   *  ".//^" in hexadecimal is "5c2e2f2f5e5c"
 
    *  "QSF-MLKEM768-P256-HMACSHA256" in hexadecimal is
       "5153462d4d4c4b454d3736382d503235362d484d4143534841323536"
+
+   EDNOTE: the OIDs listed below are prototyping OIDs defined in
+   Entrust's 2.16.840.1.114027.80.9.1 arc but will be replaced by IANA.
+
+   Composite KEM algorithm list:
 
    *  id-MLKEM768-RSA2048-HMAC-SHA256
 
