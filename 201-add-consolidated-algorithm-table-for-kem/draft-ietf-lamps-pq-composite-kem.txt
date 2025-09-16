@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 8 March 2026                                            M. Pala
+Expires: 20 March 2026                                           M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                        4 September 2025
+                                                       16 September 2025
 
 
       Composite ML-KEM for use in X.509 Public Key Infrastructure
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 8 March 2026.
+   This Internet-Draft will expire on 20 March 2026.
 
 Copyright Notice
 
@@ -1379,7 +1379,7 @@ Table of Contents
 
       -  OID: 2.16.840.1.114027.80.5.2.50
 
-      -  Label: QSF-MLKEM768-RSAOAEP2048-HMACSHA256
+      -  Label: "QSF-MLKEM768-RSAOAEP2048-HMACSHA256"
 
       -  Key Derivation Function (KDF): HMAC-SHA256
 
@@ -1397,7 +1397,7 @@ Table of Contents
 
       -  OID: 2.16.840.1.114027.80.5.2.51
 
-      -  Label: QSF-MLKEM768-RSAOAEP3072-HMACSHA256
+      -  Label: "QSF-MLKEM768-RSAOAEP3072-HMACSHA256"
 
       -  Key Derivation Function (KDF): HMAC-SHA256
 
@@ -1415,7 +1415,7 @@ Table of Contents
 
       -  OID: 2.16.840.1.114027.80.5.2.52
 
-      -  Label: QSF-MLKEM768-RSAOAEP4096-HMACSHA256
+      -  Label: "QSF-MLKEM768-RSAOAEP4096-HMACSHA256"
 
       -  Key Derivation Function (KDF): HMAC-SHA256
 
@@ -1433,7 +1433,7 @@ Table of Contents
 
       -  OID: 2.16.840.1.114027.80.5.2.53
 
-      -  Label: .//^\
+      -  Label: "\.//^\"
 
       -  Key Derivation Function (KDF): SHA3-256
 
@@ -1447,7 +1447,7 @@ Table of Contents
 
       -  OID: 2.16.840.1.114027.80.5.2.54
 
-      -  Label: QSF-MLKEM768-P256-HMACSHA256
+      -  Label: "QSF-MLKEM768-P256-HMACSHA256"
 
       -  Key Derivation Function (KDF): HMAC-SHA256
 
@@ -1463,7 +1463,7 @@ Table of Contents
 
       -  OID: 2.16.840.1.114027.80.5.2.55
 
-      -  Label: QSF-MLKEM768-P384-HMACSHA256
+      -  Label: "QSF-MLKEM768-P384-HMACSHA256"
 
       -  Key Derivation Function (KDF): HMAC-SHA256
 
@@ -1479,7 +1479,7 @@ Table of Contents
 
       -  OID: 2.16.840.1.114027.80.5.2.56
 
-      -  Label: QSF-MLKEM768-BP256-HMACSHA256
+      -  Label: "QSF-MLKEM768-BP256-HMACSHA256"
 
       -  Key Derivation Function (KDF): HMAC-SHA256
 
@@ -1495,7 +1495,7 @@ Table of Contents
 
       -  OID: 2.16.840.1.114027.80.5.2.61
 
-      -  Label: QSF-MLKEM1024-RSAOAEP3072-HMACSHA512
+      -  Label: "QSF-MLKEM1024-RSAOAEP3072-HMACSHA512"
 
       -  Key Derivation Function (KDF): HMAC-SHA512
 
@@ -1513,7 +1513,7 @@ Table of Contents
 
       -  OID: 2.16.840.1.114027.80.5.2.57
 
-      -  Label: QSF-MLKEM1024-P384-HMACSHA512
+      -  Label: "QSF-MLKEM1024-P384-HMACSHA512"
 
       -  Key Derivation Function (KDF): HMAC-SHA512
 
@@ -1529,7 +1529,7 @@ Table of Contents
 
       -  OID: 2.16.840.1.114027.80.5.2.58
 
-      -  Label: QSF-MLKEM1024-BP384-HMACSHA512
+      -  Label: "QSF-MLKEM1024-BP384-HMACSHA512"
 
       -  Key Derivation Function (KDF): HMAC-SHA512
 
@@ -1545,7 +1545,7 @@ Table of Contents
 
       -  OID: 2.16.840.1.114027.80.5.2.59
 
-      -  Label: QSF-MLKEM1024-X448-SHA3256
+      -  Label: "QSF-MLKEM1024-X448-SHA3256"
 
       -  Key Derivation Function (KDF): SHA3-256
 
@@ -1559,7 +1559,7 @@ Table of Contents
 
       -  OID: 2.16.840.1.114027.80.5.2.60
 
-      -  Label: QSF-MLKEM1024-P521-HMACSHA512
+      -  Label: "QSF-MLKEM1024-P521-HMACSHA512"
 
       -  Key Derivation Function (KDF): HMAC-SHA512
 
