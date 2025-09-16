@@ -1255,11 +1255,6 @@ def writeAlgParams():
   """
 
   with open('algParams.md', 'w') as f:
-    f.write("Label values are provided as ASCII strings, but MUST be converted into binary strings in the obvious way.\n")
-    f.write("For example:\n\n")
-    f.write("* \"`"+LABELS_TABLE["id-MLKEM768-X25519-SHA3-256"]['label'] + "`\" in hexadecimal is \"`" + LABELS_TABLE["id-MLKEM768-X25519-SHA3-256"]['label'].encode().hex()+"`\"\n")
-    f.write("* \"`"+LABELS_TABLE["id-MLKEM768-ECDH-P256-HMAC-SHA256"]['label'] + "`\" in hexadecimal is \"`" + LABELS_TABLE["id-MLKEM768-ECDH-P256-HMAC-SHA256"]['label'].encode().hex()+"`\"\n")
-    f.write("\n\n")
     
     for alg in LABELS_TABLE:
       f.write("- " + alg + "\n")

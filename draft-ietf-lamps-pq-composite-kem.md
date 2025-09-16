@@ -1185,7 +1185,15 @@ As the number of algorithms can be daunting to implementers, see {{sec-impl-prof
 
 Each Composite ML-KEM algorithm has a unique Label which is used in constructing the KEM combiner in ({{sec-kem-combiner}}). This helps protect against a different algorithm arriving at the same shared secret key even if all inputs are the same.
 
+Label values are provided as ASCII strings, but MUST be converted into binary strings in the obvious way.
+For example:
+
+* "\.//^\" in hexadecimal is "5c2e2f2f5e5c"
+* "QSF-MLKEM768-P256-HMACSHA256" in hexadecimal is "5153462d4d4c4b454d3736382d503235362d484d4143534841323536"
+
 EDNOTE: the OIDs listed below are prototyping OIDs defined in Entrust's 2.16.840.1.114027.80.9.1 arc but will be replaced by IANA.
+
+Composite KEM algorithm list:
 
 <!-- Note to authors, this is not auto-generated on build;
      you have to manually re-run the python script and
