@@ -1264,7 +1264,7 @@ def writeAlgParams():
     for alg in LABELS_TABLE:
       f.write("- " + alg + "\n")
       f.write("  - OID: " + str(OID_TABLE[alg]) + "\n")
-      f.write("  - Label: " + LABELS_TABLE[alg]['label'] + "\n")
+      f.write("  - Label: \"`" + LABELS_TABLE[alg]['label'] + "`\"\n")
       f.write("  - Key Derivation Function (KDF): " + LABELS_TABLE[alg]['kdf'] + "\n")
       f.write("  - ML-KEM variant: " + LABELS_TABLE[alg]['mlkem'] + "\n")
       f.write("  - Traditional Algorithm: " + LABELS_TABLE[alg]['trad'] + "\n")
