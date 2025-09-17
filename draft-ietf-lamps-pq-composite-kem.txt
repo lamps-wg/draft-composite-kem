@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 7 March 2026                                            M. Pala
+Expires: 21 March 2026                                           M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                        3 September 2025
+                                                       17 September 2025
 
 
       Composite ML-KEM for use in X.509 Public Key Infrastructure
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 7 March 2026.
+   This Internet-Draft will expire on 21 March 2026.
 
 Copyright Notice
 
@@ -2404,12 +2404,6 @@ Deserialization Process:
 
 12.1.  Normative References
 
-   [FIPS.180-4]
-              National Institute of Standards and Technology (NIST),
-              "FIPS Publication 180-4: Secure Hash Standard", August
-              2015, <https://nvlpubs.nist.gov/nistpubs/FIPS/
-              NIST.FIPS.180-4.pdf>.
-
    [FIPS.202] National Institute of Standards and Technology (NIST),
               "SHA-3 Standard: Permutation-Based Hash and Extendable-
               Output Functions", August 2015,
@@ -2561,11 +2555,6 @@ Deserialization Process:
               recommendations", October 2021,
               <https://www.bsi.bund.de/SharedDocs/Downloads/EN/BSI/
               Publications/Brochure/quantum-safe-cryptography.pdf>.
-
-   [CNSA2.0]  National Security Agency, "Commercial National Security
-              Algorithm Suite 2.0", n.d.,
-              <https://media.defense.gov/2022/Sep/07/2003071834/-1/-1/0/
-              CSA_CNSA_2.0_ALGORITHMS_.PDF>.
 
    [ETSI.TS.103.744]
               ETSI, "ETSI TS 103 744 V1.2.1 CYBER-QSC; Quantum-safe
