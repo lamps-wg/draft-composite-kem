@@ -131,12 +131,6 @@ normative:
     author:
       - org: "National Institute of Standards and Technology (NIST)"
     target: https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-185.pdf
-  FIPS.180-4:
-    title: "FIPS Publication 180-4: Secure Hash Standard"
-    date: August 2015
-    author:
-      - org: National Institute of Standards and Technology (NIST)
-    target: https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf
   FIPS.202:
     title: "SHA-3 Standard: Permutation-Based Hash and Extendable-Output Functions"
     date: August 2015
@@ -249,11 +243,6 @@ informative:
       - name: Eyal Ronen
       - name: Eylon Yogev
     target: https://eprint.iacr.org/2022/065
-  CNSA2.0:
-    title: "Commercial National Security Algorithm Suite 2.0"
-    author:
-     - org: National Security Agency
-    target: https://media.defense.gov/2022/Sep/07/2003071834/-1/-1/0/CSA_CNSA_2.0_ALGORITHMS_.PDF
   FIPS-140-3-IG:
     title: Implementation Guidance for FIPS 140-3 and the Cryptographic Module Validation Program
     target: https://csrc.nist.gov/csrc/media/Projects/cryptographic-module-validation-program/documents/fips%20140-3/FIPS%20140-3%20IG.pdf
