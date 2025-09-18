@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-09-14T01:56:59.487673+00:00",
+  "timestamp": "2025-09-18T01:49:16.608707+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -3344,6 +3344,38 @@
       "body": "This is the only outstanding item not covered in https://github.com/lamps-wg/draft-composite-sigs/issues/244\n\nSHA2 vs SHA3 for the KEM combiner. Alignment with cms-mldsa which uses SHA2, vs alignment with cfrg-hybrid-kems which uses SHA3. MikeO is working with Richard Barnes. We need to re-survey the community on the operational requirements behind this point. It would be nice if we could just use SHA3 throughout, maybe except for the RSA composites which CFRG doesn't have.",
       "createdAt": "2025-09-10T13:50:14Z",
       "updatedAt": "2025-09-10T13:50:14Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 208,
+      "id": "I_kwDOKRPFO87L-Quc",
+      "title": "Using Figures to list algorithm steps",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/208",
+      "state": "OPEN",
+      "author": "danvangeest",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Figures are used to list algorithm steps, e.g. \"Figure 1: Composite-ML-KEM<OID>.KeyGen() -> (pk, sk)\".\n\nBecause the contents of the figure is just a sequence of lines of text, when reading the pdf and txt versions of the draft, it's not clear where the figure begins.  At a minimum these figures should be indented a number of spaces, but really do they need to be labeled figures at all?  The figure numbers aren't referenced from anywhere, \n",
+      "createdAt": "2025-09-16T12:32:33Z",
+      "updatedAt": "2025-09-16T12:32:33Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 209,
+      "id": "I_kwDOKRPFO87L-ZCH",
+      "title": "Timing invariance in KeyGen",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/209",
+      "state": "OPEN",
+      "author": "danvangeest",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "The draft says keygen SHOULD be timing invariant if one of the algorithms fails.  Is this actually necessary?  You can't learn anything about the keys if you never use them because one of them failed.  Even if you keep the successful one and regen the failed one, is an attacker learning anything useful.  This seems like an unnecessary stipulation to include.",
+      "createdAt": "2025-09-16T12:40:34Z",
+      "updatedAt": "2025-09-16T12:40:34Z",
       "closedAt": null,
       "comments": []
     }
@@ -8490,13 +8522,13 @@
       "labels": [],
       "body": "The major change is to rearrange how per-composite Composite ML-KEM\r\nparameters are presented.  Rather than per-parameter tables, each\r\ncomposite is listed with its OID and all its parameter.  As an\r\nimplementer it is easier to use, there is no bouncing back\r\nand forth between tables.\r\n\r\nAdditionally it fixes nagative indentation issues of code blocks.",
       "createdAt": "2025-09-04T12:39:52Z",
-      "updatedAt": "2025-09-10T15:26:52Z",
+      "updatedAt": "2025-09-17T19:29:49Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "524341e0bdd8a59e12ae746d3f8df09b1c44ee0a",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "201-add-consolidated-algorithm-table-for-kem",
-      "headRefOid": "31ac8d44f51a8bcfeb077b493c3077b355cee4fe",
+      "headRefOid": "eca25eb448d0468e2fe9efb4c11fc8469f64c388",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
@@ -8508,6 +8540,20 @@
           "body": "- Only real comment is to fix the X_Wing combiner label in explanation text (missing escape backslash in code).   \r\n- Copy the explanation text over to sigs and better separate the algorithm text from the table components.\r\n",
           "createdAt": "2025-09-10T14:26:42Z",
           "updatedAt": "2025-09-10T14:26:42Z"
+        },
+        {
+          "author": "janklaussner",
+          "authorAssociation": "COLLABORATOR",
+          "body": "> * Only real comment is to fix the X_Wing combiner label in explanation text (missing escape backslash in code).\r\n> \r\n>     * Copy the explanation text over to sigs and better separate the algorithm text from the table components.\r\n\r\nall done",
+          "createdAt": "2025-09-16T21:34:33Z",
+          "updatedAt": "2025-09-16T21:34:33Z"
+        },
+        {
+          "author": "feventura",
+          "authorAssociation": "NONE",
+          "body": "@janklaussner did you ran the python script again after your changes? The [kemCombiner_MLKEM768_X25519_SHA3_256.md](https://github.com/lamps-wg/draft-composite-kem/blob/31ac8d44f51a8bcfeb077b493c3077b355cee4fe/src/kemCombiner_MLKEM768_X25519_SHA3_256.md) last commit was 2 weeks ago and the backslash still escaping the dot.",
+          "createdAt": "2025-09-17T19:29:48Z",
+          "updatedAt": "2025-09-17T19:29:48Z"
         }
       ],
       "reviews": [
@@ -8563,6 +8609,66 @@
               "updatedAt": "2025-09-10T15:26:53Z"
             }
           ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO87AoI9D",
+          "commit": {
+            "abbreviatedOid": "31ac8d4"
+          },
+          "author": "janklaussner",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-09-16T21:21:11Z",
+          "updatedAt": "2025-09-16T21:21:11Z",
+          "comments": [
+            {
+              "originalPosition": 28,
+              "body": "Fixed",
+              "createdAt": "2025-09-16T21:21:11Z",
+              "updatedAt": "2025-09-16T21:21:11Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO87AoJOI",
+          "commit": {
+            "abbreviatedOid": "31ac8d4"
+          },
+          "author": "janklaussner",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-09-16T21:21:29Z",
+          "updatedAt": "2025-09-16T21:21:29Z",
+          "comments": [
+            {
+              "originalPosition": 19,
+              "body": "Fixed",
+              "createdAt": "2025-09-16T21:21:29Z",
+              "updatedAt": "2025-09-16T21:21:30Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO87A0QKy",
+          "commit": {
+            "abbreviatedOid": "31ac8d4"
+          },
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-09-17T14:59:15Z",
+          "updatedAt": "2025-09-17T14:59:15Z",
+          "comments": [
+            {
+              "originalPosition": 28,
+              "body": "Author Discussion:  The python code needs to convert the KDF Input to Hex (including the starship label).",
+              "createdAt": "2025-09-17T14:59:15Z",
+              "updatedAt": "2025-09-17T14:59:15Z"
+            }
+          ]
         }
       ]
     },
@@ -8571,24 +8677,26 @@
       "id": "PR_kwDOKRPFO86ocRaY",
       "title": "Remove unreferenced references",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/207",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "danvangeest",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2025-09-13T22:01:12Z",
-      "updatedAt": "2025-09-13T22:01:12Z",
+      "updatedAt": "2025-09-17T14:54:39Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "524341e0bdd8a59e12ae746d3f8df09b1c44ee0a",
       "headRepository": "danvangeest/draft-composite-kem",
       "headRefName": "dvg/unreferenced-references",
       "headRefOid": "59cbff80d834b10c926ad0e196eca6722dfb986c",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-09-17T14:54:38Z",
+      "mergedAt": "2025-09-17T14:54:38Z",
+      "mergedBy": "johngray-dev",
+      "mergeCommit": {
+        "oid": "d488497f16fe36be8bc09ba4b8e6711814efa9c0"
+      },
       "comments": [],
       "reviews": []
     }
