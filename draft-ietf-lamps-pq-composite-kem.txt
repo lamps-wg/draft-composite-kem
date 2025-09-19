@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 21 March 2026                                           M. Pala
+Expires: 23 March 2026                                           M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                       17 September 2025
+                                                       19 September 2025
 
 
       Composite ML-KEM for use in X.509 Public Key Infrastructure
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 21 March 2026.
+   This Internet-Draft will expire on 23 March 2026.
 
 Copyright Notice
 
@@ -2677,7 +2677,9 @@ Appendix A.  Maximum Key and Ciphertext Sizes
    *  Compressed vs uncompressed EC point.
 
    *  The RSA public key (n, e) allows e to vary is size between 3 and n
-      - 1 [RFC8017].
+      - 1 [RFC8017].  Note that the size table below assumes the
+      recommended value of e = 65537, so for RSA combinations it is in
+      fact not a true maximum.
 
    *  When the underlying RSA or EC value is itself DER-encoded, integer
       values could occasionally be shorter than expected due to leading
