@@ -568,8 +568,6 @@ Table of Contents
        sk = SerializePrivateKey(mlkemSeed, tradPK, tradSK)
        return (pk, sk)
 
-            Figure 1: Composite-ML-KEM<OID>.KeyGen() -> (pk, sk)
-
    In order to ensure fresh keys, the key generation functions MUST be
    executed for both component algorithms.  Compliant parties MUST NOT
    use, import or export component keys that are used in other contexts,
@@ -677,8 +675,6 @@ Table of Contents
 
         return (ss, ct)
 
-           Figure 2: Composite-ML-KEM<OID>.Encap(pk) -> (ss, ct)
-
    Depending on the security needs of the application, it MAY be
    advantageous to perform steps 2, 3, and 5 in a timing-invariant way
    to prevent side-channel attackers from learning which component
@@ -766,8 +762,6 @@ Decap Process:
 
      return ss
 
-         Figure 3: Composite-ML-KEM<OID>.Decap(sk, ct) -> ss
-
    Steps 2, 3, and 4 SHOULD be performed in a timing-invariant way to
    prevent side-channel attackers from learning which component
    algorithm failed and from learning any of the inputs or output of the
@@ -854,9 +848,6 @@ Decap Process:
 
     return ss
 
-       Figure 4: KemCombiner<KDF>(mlkemSS, tradSS, tradCT, tradPK,
-                               Label) -> ss
-
    Implementation note: The HMAC-based combiner here is exactly the
    "HKDF-Extract" step from [RFC5869] with an empty salt.
    Implementations with access to "HKDF-Extract", without the "HKDF-
@@ -888,7 +879,7 @@ Decap Process:
           | ML-KEM-1024 | 1568       | 64          | 1568       |
           +-------------+------------+-------------+------------+
 
-                  Table 1: ML-KEM Key and Ciphertext Sizes
+                                  Table 1
 
    For all serialization routines below, when these values are required
    to be carried in an ASN.1 structure, they are wrapped as described in
@@ -963,9 +954,6 @@ Decap Process:
 
         output mlkemPK || tradPK
 
-     Figure 5: Composite-ML-KEM.SerializePublicKey(mlkemPK, tradPK) ->
-                                   bytes
-
    Deserialization reverses this process.  Each component key is
    deserialized according to their respective specification as shown in
    Appendix B.
@@ -1015,9 +1003,6 @@ Decap Process:
 
        output (mlkemPK, tradPK)
 
-      Figure 6: Composite-ML-KEM<OID>.DeserializePublicKey(bytes) ->
-                            (mlkemPK, tradPK)
-
 5.2.  SerializePrivateKey and DeserializePrivateKey
 
    The serialization routine for keys simply concatenates the private
@@ -1054,9 +1039,6 @@ Serialization Process:
   2. Combine and output the encoded private key.
 
      output mlkemSeed || lenTradPK || tradPK || tradSK
-
-  Figure 7: Composite-ML-KEM.SerializePrivateKey(mlkemSeed, tradPK,
-                           tradSK) -> bytes
 
    The function IntegerToBytes(x, a) is defined in Algorithm 11 of
    [FIPS.204], which is the usual little-endian encoding of an integer.
@@ -1112,9 +1094,6 @@ Deserialization Process:
 
      output (mlkemSeed, tradPK, tradSK)
 
-   Figure 8: Composite-ML-KEM.DeserializeKey(bytes) -> (mlkemSeed,
-                               tradSK)
-
    The function BytesToInteger(x) is not defined in [FIPS.204], but is
    the obvious inverse of the defined IntegerToBytes() which is the
    usual little-endian encoding of an integer.
@@ -1148,9 +1127,6 @@ Deserialization Process:
      1. Combine and output the encoded composite ciphertext
 
         output mlkemCT || tradCT
-
-      Figure 9: Composite-ML-KEM.SerializeCiphertext(mlkemCT, tradCT)
-                                  -> bytes
 
    Deserialization reverses this process.  Each component ciphertext is
    deserialized according to their respective specification as shown in
@@ -1201,9 +1177,6 @@ Deserialization Process:
    2. Output the component ciphertext values
 
       output (mlkemCT, tradCT)
-
-    Figure 10: Composite-ML-KEM<OID>.DeserializeCiphertext(bytes) ->
-                           (mldkemCT, tradCT)
 
 6.  Use within X.509 and PKIX
 
@@ -1283,7 +1256,7 @@ Deserialization Process:
             SMIME-CAPS { IDENTIFIED BY id }
            }
 
-      Figure 11: ASN.1 Object Information Classes for Composite ML-KEM
+      Figure 1: ASN.1 Object Information Classes for Composite ML-KEM
 
    As an example, the public key and KEM algorithm types associated with
    id-MLKEM768-ECDH-P256-HMAC-SHA256 are defined as:
@@ -1323,7 +1296,7 @@ Deserialization Process:
                            -- algorithm identifier dictates the format of
                            -- the key.
 
-            Figure 12: OneAsymmetricKey as defined in [RFC5958]
+             Figure 2: OneAsymmetricKey as defined in [RFC5958]
 
    When a composite private key is conveyed inside a OneAsymmetricKey
    structure (version 1 of which is also known as PrivateKeyInfo)
@@ -1976,7 +1949,7 @@ Deserialization Process:
 
      KDF(mlkemSS || tradSS || tradCT || tradPK || Label)
 
-                    Figure 13: KEM combiner construction
+                    Figure 3: KEM combiner construction
 
    The primary security property of the KEM combiner is that it
    preserves IND-CCA2 of the overall Composite ML-KEM so long as at
