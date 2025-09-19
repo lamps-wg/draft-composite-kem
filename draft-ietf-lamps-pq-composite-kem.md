@@ -1543,7 +1543,7 @@ Implementers who choose to use a different private key encoding than the one spe
 The sizes listed below are maximum values: several factors could cause fluctuations in the size of the traditional component. For example, this could be due to:
 
 * Compressed vs uncompressed EC point.
-* The RSA public key `(n, e)` allows `e` to vary is size between 3 and `n - 1` [RFC8017].
+* The RSA public key `(n, e)` allows `e` to vary is size between 3 and `n - 1` [RFC8017]. Note that the size table below assumes the recommended value of `e = 65537`, so for RSA combinations it is in fact not a true maximum.
 * When the underlying RSA or EC value is itself DER-encoded, integer values could occasionally be shorter than expected due to leading zeros being dropped from the encoding.
 
 By contrast, ML-KEM values are always fixed size, so composite values can always be correctly de-serialized based on the size of the ML-KEM component.
