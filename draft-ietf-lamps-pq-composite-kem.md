@@ -225,6 +225,23 @@ informative:
       - name: Hamilton Silberg
       - name: Noah Waller
       - org: National Institute of Standards and Technology (NIST)
+  Bindel2017: # Not referenced, but I think it's important to included.
+    title: "Transitioning to a quantum-resistant public key infrastructure"
+    target: "https://link.springer.com/chapter/10.1007/978-3-319-59879-6_22"
+    author:
+      -
+        ins: N. Bindel
+        name: Nina Bindel
+      -
+        ins: U. Herath
+        name: Udyani Herath
+      -
+        ins: M. McKague
+        name: Matthew McKague
+      -
+        ins: D. Stebila
+        name: Douglas Stebila
+    date: 2017
   GHP18:
     title: KEM Combiners
     author:
@@ -294,7 +311,7 @@ Cautious implementers may opt to combine cryptographic algorithms in such a way 
 
 Certain jurisdictions are already recommending or mandating that PQC lattice schemes be used exclusively within a PQ/T hybrid framework. The use of a composite scheme provides a straightforward implementation of hybrid solutions compatible with (and advocated by) some governments and cybersecurity agencies [BSI2021], [ANSSI2024].
 
-This specification defines a specific instantiation of the PQ/T Hybrid paradigm called "composite" where multiple cryptographic algorithms are combined to form a single key encapsulation mechanism (KEM) presenting a single public key and ciphertext such that it can be treated as a single atomic algorithm at the protocol level; a property referred to as "protocol backwards compatibility" since it can be applied to protocols that are not explicitly hybrid-aware. Composite algorithms address algorithm strength uncertainty because the composite algorithm remains strong so long as one of its components remains strong. Concrete instantiations of composite ML-KEM algorithms are provided based on ML-KEM, RSA-OAEP and ECDH. Backwards compatibility in the sense of upgraded systems continuing to inter-operate with legacy systems is not directly covered in this specification, but is the subject of {{sec-backwards-compat}}.
+This specification defines a specific instantiation of the PQ/T Hybrid paradigm called "composite" where multiple cryptographic algorithms are combined to form a single key encapsulation mechanism (KEM) presenting a single public key and ciphertext such that it can be treated as a single atomic algorithm at the protocol level; a property referred to as "protocol backwards compatibility" since it can be applied to protocols that are not explicitly hybrid-aware. Composite algorithms address algorithm strength uncertainty because the composite algorithm remains strong so long as one of its components remains strong. Concrete instantiations of composite ML-KEM algorithms are provided based on ML-KEM, RSA-OAEP and ECDH. Backwards compatibility in the sense of upgraded systems continuing to inter-operate with legacy systems is not directly covered in this specification, but is the subject of {{sec-backwards-compat}}. The idea of a composite was first presented in {{bindel}}
 
 Composite ML-KEM is applicable in any PKIX-related application that would otherwise use ML-KEM.
 
