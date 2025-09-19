@@ -544,7 +544,6 @@ Key Generation Process:
     return (pk, sk)
 
 ~~~
-{: #alg-composite-keygen title="Composite-ML-KEM<OID>.KeyGen() -> (pk, sk)"}
 
 In order to ensure fresh keys, the key generation functions MUST be executed for both component algorithms. Compliant parties MUST NOT use, import or export component keys that are used in other contexts, combinations, or by themselves as keys for standalone algorithm use. For more details on the security considerations around key reuse, see {{sec-cons-key-reuse}}.
 
@@ -622,7 +621,6 @@ Encap Process:
 
      return (ss, ct)
 ~~~
-{: #alg-composite-mlkem-encap title="Composite-ML-KEM<OID>.Encap(pk) -> (ss, ct)"}
 
 Depending on the security needs of the application, it MAY be advantageous to perform steps 2, 3, and 5 in a timing-invariant way to prevent side-channel attackers from learning which component algorithm failed and from learning any of the inputs or output of the KEM combiner.
 
@@ -699,7 +697,6 @@ Decap Process:
 
      return ss
 ~~~
-{: #alg-composite-mlkem-decap title="Composite-ML-KEM<OID>.Decap(sk, ct) -> ss"}
 
 Steps 2, 3, and 4 SHOULD be performed in a timing-invariant way to prevent side-channel attackers from learning which component algorithm failed and from learning any of the inputs or output of the KEM combiner.
 
@@ -757,7 +754,6 @@ Process:
 
   return ss
 ~~~
-{: #alg-kem-combiner title="KemCombiner<KDF>(mlkemSS, tradSS, tradCT, tradPK, Label) -> ss"}
 
 Implementation note: The HMAC-based combiner here is exactly the "HKDF-Extract" step from [RFC5869] with an empty `salt`. Implementations with access to "HKDF-Extract", without the "HKDF-Expand" step, MAY use this interchangeably with the HMAC-based construction presented above. Note that a full invocation of HKDF with both HKDF-Extract and HKDF-Expand, even with the correct output length and empty `info` param is not equivalent to the HMAC construction above since HKDF-Expand will always perform at least one extra iteration of HMAC.
 
@@ -773,7 +769,6 @@ Deserialization is possible because ML-KEM has fixed-length public keys, private
 | ----------- | ----------- | ----------- |  ----------- |
 | ML-KEM-768  |    1184     |     64      |     1088     |
 | ML-KEM-1024 |    1568     |     64      |     1568     |
-{: #tab-mlkem-sizes title="ML-KEM Key and Ciphertext Sizes"}
 
 For all serialization routines below, when these values are required to be carried in an ASN.1 structure, they are wrapped as described in {{sec-encoding-to-der}}.
 
@@ -821,7 +816,6 @@ Serialization Process:
      output mlkemPK || tradPK
 
 ~~~
-{: #alg-composite-serialize title="Composite-ML-KEM.SerializePublicKey(mlkemPK, tradPK) -> bytes"}
 
 Deserialization reverses this process. Each component key is deserialized according to their respective specification as shown in {{appdx_components}}.
 
@@ -869,7 +863,6 @@ Deserialization Process:
 
      output (mlkemPK, tradPK)
 ~~~
-{: #alg-composite-deserialize-pk title="Composite-ML-KEM<OID>.DeserializePublicKey(bytes) -> (mlkemPK, tradPK)"}
 
 
 
@@ -911,7 +904,6 @@ Serialization Process:
 
      output mlkemSeed || lenTradPK || tradPK || tradSK
 ~~~
-{: #alg-composite-serialize-priv-key title="Composite-ML-KEM.SerializePrivateKey(mlkemSeed, tradPK, tradSK) -> bytes"}
 
 The function `IntegerToBytes(x, a)` is defined in Algorithm 11 of [FIPS.204], which is the usual little-endian encoding of an integer. Encoding to 2 bytes allows for traditional public keys up to 65 kb.
 
@@ -961,7 +953,6 @@ Deserialization Process:
 
      output (mlkemSeed, tradPK, tradSK)
 ~~~
-{: #alg-composite-deserialize-priv-key title="Composite-ML-KEM.DeserializeKey(bytes) -> (mlkemSeed, tradSK)"}
 
 
 The function `BytesToInteger(x)` is not defined in [FIPS.204], but is the obvious inverse of the defined `IntegerToBytes()` which is the usual little-endian encoding of an integer.
@@ -998,7 +989,6 @@ Serialization Process:
      output mlkemCT || tradCT
 
 ~~~
-{: #alg-composite-serialize-ct title="Composite-ML-KEM.SerializeCiphertext(mlkemCT, tradCT) -> bytes"}
 
 
 Deserialization reverses this process.  Each component ciphertext is deserialized according to their respective specification as shown in {{appdx_components}}.
@@ -1048,7 +1038,6 @@ Deserialization Process:
 
      output (mlkemCT, tradCT)
 ~~~
-{: #alg-composite-deserialize-ct title="Composite-ML-KEM<OID>.DeserializeCiphertext(bytes) -> (mldkemCT, tradCT)"}
 
 
 
