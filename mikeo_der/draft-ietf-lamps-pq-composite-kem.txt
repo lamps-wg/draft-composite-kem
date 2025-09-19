@@ -1415,11 +1415,10 @@ Deserialization Process:
    necessary as described in Section 4.4.
 
    For all RSA key types and sizes, the exponent is RECOMMENDED to be
-   65537.  Where it is advantageous to hard-code an exponent, for
-   example in order to obtain predictable key sizes, implementations MAY
-   hard-code 65537; thus implementations using other values for the
-   exponent should not expect it to be intereperable with all other
-   implementations.
+   65537.  Implementations MAY support only 65537 and reject other
+   exponent values.  Legacy RSA implementations that use other values
+   for the exponent MAY be used to within a composite, but need to be
+   careful when interoperating with other implementations.
 
    The KDFs were chosen to roughly match the security level of the
    stronger component.  In the case of X25519 and X448 SHA3-256 is used
