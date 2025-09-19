@@ -213,7 +213,8 @@ Table of Contents
    KEM algorithms are provided based on ML-KEM, RSA-OAEP and ECDH.
    Backwards compatibility in the sense of upgraded systems continuing
    to inter-operate with legacy systems is not directly covered in this
-   specification, but is the subject of Section 11.2.
+   specification, but is the subject of Section 11.2.  The idea of a
+   composite was first presented in [Bindel2017].
 
    Composite ML-KEM is applicable in any PKIX-related application that
    would otherwise use ML-KEM.
@@ -2517,6 +2518,12 @@ Deserialization Process:
               Ronen, E., and E. Yogev, "Practical (Post-Quantum) Key
               Combiners from One-Wayness and Applications to TLS", n.d.,
               <https://eprint.iacr.org/2022/065>.
+
+   [Bindel2017]
+              Bindel, N., Herath, U., McKague, M., and D. Stebila,
+              "Transitioning to a quantum-resistant public key
+              infrastructure", 2017, <https://link.springer.com/
+              chapter/10.1007/978-3-319-59879-6_22>.
 
    [BSI2021]  Federal Office for Information Security (BSI), "Quantum-
               safe cryptography - fundamentals, current developments and
