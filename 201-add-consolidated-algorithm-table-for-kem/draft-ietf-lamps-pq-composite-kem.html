@@ -17,13 +17,13 @@
 
 
     " name="description">
-<meta content="xml2rfc 3.30.1" name="generator">
+<meta content="xml2rfc 3.30.2" name="generator">
 <meta content="X.509" name="keyword">
 <meta content="Post-Quantum" name="keyword">
 <meta content="KEM" name="keyword">
 <meta content="draft-ietf-lamps-pq-composite-kem-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.30.1
+  xml2rfc 3.30.2
     Python 3.12.11
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
@@ -1058,7 +1058,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Ounsworth, et al.</td>
-<td class="center">Expires 20 March 2026</td>
+<td class="center">Expires 25 March 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1071,12 +1071,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-lamps-pq-composite-kem-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-09-16" class="published">16 September 2025</time>
+<time datetime="2025-09-21" class="published">21 September 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-03-20">20 March 2026</time></dd>
+<dd class="expires"><time datetime="2026-03-25">25 March 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1142,7 +1142,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 20 March 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 25 March 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -4339,39 +4339,41 @@ Example of id-MLKEM768-ECDH-P256-HMAC-SHA256 Combiner function output.
 
 # Inputs
 mlkemSS:
-203e6728c8ed19267ef1d384856906a645b3f3b5b4e0dc69334072e3a30dd562
+168d69694f888d927f732ec3665586a9d8637ac597eef27a689cc49611e6d445
 
 tradSS:
-c72614a4a5aeb8eeb7f68fac5305b094b57a86ef4de916b9aa538bc03920ebff
+09b6f8511c4e0ba33b2b23326ae29d8f0d151514d705515551a6a2ce02a00a43
 
-tradCT:  0490b66eb28ba121aac1f4e2558153bb1ca095cce5d38e49c690c581a8
-e008c98eb7e334ab93518a8cc88537ded4f8154a247fee41e99d0c179b36459bfe6
-c8d3c
+tradCT:  04d8ca108f3170c28d9977d9bd01cd0f56d89d2adfba0b9161d5e80a54
+0ce6dae491f9ace59dc65da37cbf1e787cc9eeabc4095b87a0e8f9fa62efb3a969e
+8b77b
 
-tradPK:  043f3ae2c15fdb1df097d5fcc141398e6e1a945ab167f9eb2f44f2fc2c
-a7085804f38aeb8cd6d20ece09d5e6b1812ed2c7c261d4fd43eff877a7e596040b3
-08bdb
+tradPK:  04797b5f1e9febfd1613c96b44280e59c84e252fc803f6218539c052a6
+04efac72be91d18cfffa8430dd1b62eaef21439dc5a84947d999b00d5be3d16972c
+3bd6b
 
-Label:  QSF-MLKEM768-P256-HMACSHA256
+Label:  5153462d4d4c4b454d3736382d503235362d484d4143534841323536
+
+        (ascii: "QSF-MLKEM768-P256-HMACSHA256")
 
 
 # Combined KDF Input:
 #  mlkemSS || tradSS || tradCT || tradPK || Label
 
-Combined KDF Input: 203e6728c8ed19267ef1d384856906a645b3f3b5b4e0dc6
-9334072e3a30dd562c72614a4a5aeb8eeb7f68fac5305b094b57a86ef4de916b9aa
-538bc03920ebff0490b66eb28ba121aac1f4e2558153bb1ca095cce5d38e49c690c
-581a8e008c98eb7e334ab93518a8cc88537ded4f8154a247fee41e99d0c179b3645
-9bfe6c8d3c043f3ae2c15fdb1df097d5fcc141398e6e1a945ab167f9eb2f44f2fc2
-ca7085804f38aeb8cd6d20ece09d5e6b1812ed2c7c261d4fd43eff877a7e596040b
-308bdbQSF-MLKEM768-P256-HMACSHA256
+Combined KDF Input: 168d69694f888d927f732ec3665586a9d8637ac597eef27
+a689cc49611e6d44509b6f8511c4e0ba33b2b23326ae29d8f0d151514d705515551
+a6a2ce02a00a4304d8ca108f3170c28d9977d9bd01cd0f56d89d2adfba0b9161d5e
+80a540ce6dae491f9ace59dc65da37cbf1e787cc9eeabc4095b87a0e8f9fa62efb3
+a969e8b77b04797b5f1e9febfd1613c96b44280e59c84e252fc803f6218539c052a
+604efac72be91d18cfffa8430dd1b62eaef21439dc5a84947d999b00d5be3d16972
+c3bd6b5153462d4d4c4b454d3736382d503235362d484d4143534841323536
 
 
 # Outputs
 # ss = HMAC-SHA256(Combined KDF Input)
 
 ss:
-890344a0e5e1e7626f234abe6faf26bf299d808992071e29758d6a361d0bac82
+5c97eddbe31a50c41248d37fcd624b26dac4d3c9d6749e72f9e27313ff71d711
 </pre><a href="#appendix-E-8" class="pilcrow">¶</a>
 </div>
 <p id="appendix-E-9">Example 2:<a href="#appendix-E-9" class="pilcrow">¶</a></p>
@@ -4381,35 +4383,37 @@ Example of id-MLKEM768-X25519-SHA3-256 Combiner function output.
 
 # Inputs
 mlkemSS:
-482523c04e82c6a2d302751f65153d0a67910dd6eecc1f52487cf453572cb1ce
+6f3a03c01ee644a579f2f19b4a8ab18bd1c3566d53734f36e44f006a28ea663f
 
 tradSS:
-db6931a143b79ed8ccafb96fccf502012c4a19641c89d663ebcf5e582bacab62
+5aef32a7787f0f7529f3d48688b29a2cdf30623f878bb8d2ce4d18d88e207905
 
 tradCT:
-1568594f56ed7f3ea95e92747e3cfa24dd27ea55194c15bfbae3c30cc473f559
+2c29e1fd91da87318c386e0efdbd1407d3a2d50f86dd3192e509d3c4625fe321
 
 tradPK:
-f8a9b94ac5b7eac26ae99a74b36517d23183864af727094b4f4b46dc26c44c00
+104a34c97d422f68e1ffe75c6384ea6d485d910c4d737d08f8ddd47c372d3330
 
-Label:  \.//^\
+Label:  5c2e2f2f5e5c
+
+        (ascii: "\.//^\")
 
 
 # Combined KDF Input:
 #  mlkemSS || tradSS || tradCT || tradPK || Label
 
-Combined KDF Input: 482523c04e82c6a2d302751f65153d0a67910dd6eecc1f5
-2487cf453572cb1cedb6931a143b79ed8ccafb96fccf502012c4a19641c89d663eb
-cf5e582bacab621568594f56ed7f3ea95e92747e3cfa24dd27ea55194c15bfbae3c
-30cc473f559f8a9b94ac5b7eac26ae99a74b36517d23183864af727094b4f4b46dc
-26c44c00\.//^\
+Combined KDF Input: 6f3a03c01ee644a579f2f19b4a8ab18bd1c3566d53734f3
+6e44f006a28ea663f5aef32a7787f0f7529f3d48688b29a2cdf30623f878bb8d2ce
+4d18d88e2079052c29e1fd91da87318c386e0efdbd1407d3a2d50f86dd3192e509d
+3c4625fe321104a34c97d422f68e1ffe75c6384ea6d485d910c4d737d08f8ddd47c
+372d33305c2e2f2f5e5c
 
 
 # Outputs
 # ss = SHA3-256(Combined KDF Input)
 
 ss:
-f8361af92b51cee08cb69db1eb1dfc6f744f6bc70320c3840c93f0cf36ef2711
+fb87fe95b58c0f0a88da73bc5d8375b8a5bcf24ed1fa7ad35d717f014d087913
 </pre><a href="#appendix-E-10" class="pilcrow">¶</a>
 </div>
 <p id="appendix-E-11">Example 3:<a href="#appendix-E-11" class="pilcrow">¶</a></p>
@@ -4419,43 +4423,46 @@ Example of id-MLKEM1024-ECDH-P384-HMAC-SHA512 Combiner function output.
 
 # Inputs
 mlkemSS:
-762ebf90869a30f797d490c54e5a86064edabeb1e765c0f5c05cb62dc78f64d8
+dc069635e53088cdbe2e37b895e7382ab845076cc64e93250caf9abb7c794531
 
-tradSS:  87f97859b24899bdebf1f243d68b3db37ad30b55a46d2bdaa4f690c28c
-c70a03f2943e98a58df1ab1056708a24c659b4
+tradSS:  f90f9cd4ca510d644aca166ed30c77befb48e8c7f17df2412851266282
+f8be8146e827f2c43d459c3822fcf1f6d636ed
 
-tradCT:  044c0c543e6835f7661c1fb84ff7ffe35118981e7db0936847aac7d85d
-a72c1dc7a5fc1388083b7ea2ef1eede3a1dccea3638a59dc52f2fb2c883a55fdda8
-35c02789637216c633799e39e693e67b09f4cf6473d2dc0e4fdd3d8e8ef8de43d6f
-99
+tradCT:  042251dd9af01752d447f2c826fb2a2e378f0467c7e2b201b20d00f0a7
+628a0106363f975de6577e870c9b00d1abf5d5fea49657bf3d6b065e1d96a417dc5
+0fb57fcb36732ecf2c02b2b2ea1efcbe385ce9c5d265038c4ef21600d203a7b1607
+4f
 
-tradPK:  04c5b843ce6ccb59f9d419097d6f0791e758f414aab9569908cc9c7a48
-3cb62981186b7d33b180e1b70d8d9822018b1bda614d171bdb7ab6e0c2bdbe43dcc
-f9439dfa3cefcc46bfb232b50bdfaad0630b04a83831f13195d3308c0ffe842ae66
-49
+tradPK:  049bd1548ada427c2839bed2cd00cf858122f63883d0330668285506e6
+5a9221dfb6de8c5bb981789a356085caed843fc7f3a41bd7ecad4e93ccf738d3bb2
+b6ce989e32214eb08ecfb1d872eb3b6c4ec2cc70a23ae77469033075bd5d360c3ce
+0f
 
-Label:  QSF-MLKEM1024-P384-HMACSHA512
+Label:  5153462d4d4c4b454d313032342d503338342d484d4143534841353132
+
+        (ascii: "QSF-MLKEM1024-P384-HMACSHA512")
 
 
 # Combined KDF Input:
 #  mlkemSS || tradSS || tradCT || tradPK || Label
 
-Combined KDF Input: 762ebf90869a30f797d490c54e5a86064edabeb1e765c0f
-5c05cb62dc78f64d887f97859b24899bdebf1f243d68b3db37ad30b55a46d2bdaa4
-f690c28cc70a03f2943e98a58df1ab1056708a24c659b4044c0c543e6835f7661c1
-fb84ff7ffe35118981e7db0936847aac7d85da72c1dc7a5fc1388083b7ea2ef1eed
-e3a1dccea3638a59dc52f2fb2c883a55fdda835c02789637216c633799e39e693e6
-7b09f4cf6473d2dc0e4fdd3d8e8ef8de43d6f9904c5b843ce6ccb59f9d419097d6f
-0791e758f414aab9569908cc9c7a483cb62981186b7d33b180e1b70d8d9822018b1
-bda614d171bdb7ab6e0c2bdbe43dccf9439dfa3cefcc46bfb232b50bdfaad0630b0
-4a83831f13195d3308c0ffe842ae6649QSF-MLKEM1024-P384-HMACSHA512
+Combined KDF Input: dc069635e53088cdbe2e37b895e7382ab845076cc64e932
+50caf9abb7c794531f90f9cd4ca510d644aca166ed30c77befb48e8c7f17df24128
+51266282f8be8146e827f2c43d459c3822fcf1f6d636ed042251dd9af01752d447f
+2c826fb2a2e378f0467c7e2b201b20d00f0a7628a0106363f975de6577e870c9b00
+d1abf5d5fea49657bf3d6b065e1d96a417dc50fb57fcb36732ecf2c02b2b2ea1efc
+be385ce9c5d265038c4ef21600d203a7b16074f049bd1548ada427c2839bed2cd00
+cf858122f63883d0330668285506e65a9221dfb6de8c5bb981789a356085caed843
+fc7f3a41bd7ecad4e93ccf738d3bb2b6ce989e32214eb08ecfb1d872eb3b6c4ec2c
+c70a23ae77469033075bd5d360c3ce0f5153462d4d4c4b454d313032342d5033383
+42d484d4143534841353132
 
 
 # Outputs
 # ss = HMAC-SHA512(Combined KDF Input)
 
 ss:
-df3f0b83e3f72298b67be6d2873bad0c969a77ee5b12a68f2b42ff3287fff7ed
+2ce011f3865ffae5efc7474491c21027c988c877059af0cc00e1a29874d27134
 </pre><a href="#appendix-E-12" class="pilcrow">¶</a>
 </div>
 </section>
