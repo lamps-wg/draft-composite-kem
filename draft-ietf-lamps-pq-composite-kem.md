@@ -131,12 +131,6 @@ normative:
     author:
       - org: "National Institute of Standards and Technology (NIST)"
     target: https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-185.pdf
-  FIPS.180-4:
-    title: "FIPS Publication 180-4: Secure Hash Standard"
-    date: August 2015
-    author:
-      - org: National Institute of Standards and Technology (NIST)
-    target: https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf
   FIPS.202:
     title: "SHA-3 Standard: Permutation-Based Hash and Extendable-Output Functions"
     date: August 2015
@@ -231,6 +225,23 @@ informative:
       - name: Hamilton Silberg
       - name: Noah Waller
       - org: National Institute of Standards and Technology (NIST)
+  Bindel2017: # Not referenced, but I think it's important to included.
+    title: "Transitioning to a quantum-resistant public key infrastructure"
+    target: "https://link.springer.com/chapter/10.1007/978-3-319-59879-6_22"
+    author:
+      -
+        ins: N. Bindel
+        name: Nina Bindel
+      -
+        ins: U. Herath
+        name: Udyani Herath
+      -
+        ins: M. McKague
+        name: Matthew McKague
+      -
+        ins: D. Stebila
+        name: Douglas Stebila
+    date: 2017
   GHP18:
     title: KEM Combiners
     author:
@@ -249,11 +260,6 @@ informative:
       - name: Eyal Ronen
       - name: Eylon Yogev
     target: https://eprint.iacr.org/2022/065
-  CNSA2.0:
-    title: "Commercial National Security Algorithm Suite 2.0"
-    author:
-     - org: National Security Agency
-    target: https://media.defense.gov/2022/Sep/07/2003071834/-1/-1/0/CSA_CNSA_2.0_ALGORITHMS_.PDF
   FIPS-140-3-IG:
     title: Implementation Guidance for FIPS 140-3 and the Cryptographic Module Validation Program
     target: https://csrc.nist.gov/csrc/media/Projects/cryptographic-module-validation-program/documents/fips%20140-3/FIPS%20140-3%20IG.pdf
@@ -305,7 +311,7 @@ Cautious implementers may opt to combine cryptographic algorithms in such a way 
 
 Certain jurisdictions are already recommending or mandating that PQC lattice schemes be used exclusively within a PQ/T hybrid framework. The use of a composite scheme provides a straightforward implementation of hybrid solutions compatible with (and advocated by) some governments and cybersecurity agencies [BSI2021], [ANSSI2024].
 
-This specification defines a specific instantiation of the PQ/T Hybrid paradigm called "composite" where multiple cryptographic algorithms are combined to form a single key encapsulation mechanism (KEM) presenting a single public key and ciphertext such that it can be treated as a single atomic algorithm at the protocol level; a property referred to as "protocol backwards compatibility" since it can be applied to protocols that are not explicitly hybrid-aware. Composite algorithms address algorithm strength uncertainty because the composite algorithm remains strong so long as one of its components remains strong. Concrete instantiations of composite ML-KEM algorithms are provided based on ML-KEM, RSA-OAEP and ECDH. Backwards compatibility in the sense of upgraded systems continuing to inter-operate with legacy systems is not directly covered in this specification, but is the subject of {{sec-backwards-compat}}.
+This specification defines a specific instantiation of the PQ/T Hybrid paradigm called "composite" where multiple cryptographic algorithms are combined to form a single key encapsulation mechanism (KEM) presenting a single public key and ciphertext such that it can be treated as a single atomic algorithm at the protocol level; a property referred to as "protocol backwards compatibility" since it can be applied to protocols that are not explicitly hybrid-aware. Composite algorithms address algorithm strength uncertainty because the composite algorithm remains strong so long as one of its components remains strong. Concrete instantiations of composite ML-KEM algorithms are provided based on ML-KEM, RSA-OAEP and ECDH. Backwards compatibility in the sense of upgraded systems continuing to inter-operate with legacy systems is not directly covered in this specification, but is the subject of {{sec-backwards-compat}}. The idea of a composite was first presented in {{Bindel2017}}.
 
 Composite ML-KEM is applicable in any PKIX-related application that would otherwise use ML-KEM.
 
@@ -555,11 +561,8 @@ Key Generation Process:
     return (pk, sk)
 
 ~~~
-{: #alg-composite-keygen title="Composite-ML-KEM<OID>.KeyGen() -> (pk, sk)"}
 
 In order to ensure fresh keys, the key generation functions MUST be executed for both component algorithms. Compliant parties MUST NOT use, import or export component keys that are used in other contexts, combinations, or by themselves as keys for standalone algorithm use. For more details on the security considerations around key reuse, see {{sec-cons-key-reuse}}.
-
-Note that in step 2 above, both component key generation processes are invoked, and no indication is given about which one failed. This SHOULD be done in a timing-invariant way to prevent side-channel attackers from learning which component algorithm failed.
 
 Note that this keygen routine outputs a serialized composite key, which contains only the ML-KEM seed. Implementations should feel free to modify this routine to output the expanded `mlkemSK` or to make free use of `ML-KEM.KeyGen(mldsaSeed)` as needed to expand the ML-KEM seed into an expanded prior to performing a decapsulation operation.
 
@@ -633,7 +636,6 @@ Encap Process:
 
      return (ss, ct)
 ~~~
-{: #alg-composite-mlkem-encap title="Composite-ML-KEM<OID>.Encap(pk) -> (ss, ct)"}
 
 Depending on the security needs of the application, it MAY be advantageous to perform steps 2, 3, and 5 in a timing-invariant way to prevent side-channel attackers from learning which component algorithm failed and from learning any of the inputs or output of the KEM combiner.
 
@@ -712,7 +714,6 @@ Decap Process:
 
      return ss
 ~~~
-{: #alg-composite-mlkem-decap title="Composite-ML-KEM<OID>.Decap(sk, ct) -> ss"}
 
 Steps 2, 3, and 4 SHOULD be performed in a timing-invariant way to prevent side-channel attackers from learning which component algorithm failed and from learning any of the inputs or output of the KEM combiner.
 
@@ -770,7 +771,6 @@ Process:
 
   return ss
 ~~~
-{: #alg-kem-combiner title="KemCombiner<KDF>(mlkemSS, tradSS, tradCT, tradPK, Label) -> ss"}
 
 Implementation note: The HMAC-based combiner here is exactly the "HKDF-Extract" step from [RFC5869] with an empty `salt`. Implementations with access to "HKDF-Extract", without the "HKDF-Expand" step, MAY use this interchangeably with the HMAC-based construction presented above. Note that a full invocation of HKDF with both HKDF-Extract and HKDF-Expand, even with the correct output length and empty `info` param is not equivalent to the HMAC construction above since HKDF-Expand will always perform at least one extra iteration of HMAC.
 
@@ -786,7 +786,6 @@ Deserialization is possible because ML-KEM has fixed-length public keys, private
 | ----------- | ----------- | ----------- |  ----------- |
 | ML-KEM-768  |    1184     |     64      |     1088     |
 | ML-KEM-1024 |    1568     |     64      |     1568     |
-{: #tab-mlkem-sizes title="ML-KEM Key and Ciphertext Sizes"}
 
 For all serialization routines below, when these values are required to be carried in an ASN.1 structure, they are wrapped as described in {{sec-encoding-to-der}}.
 
@@ -834,7 +833,6 @@ Serialization Process:
      output mlkemPK || tradPK
 
 ~~~
-{: #alg-composite-serialize title="Composite-ML-KEM.SerializePublicKey(mlkemPK, tradPK) -> bytes"}
 
 Deserialization reverses this process. Each component key is deserialized according to their respective specification as shown in {{appdx_components}}.
 
@@ -882,7 +880,6 @@ Deserialization Process:
 
      output (mlkemPK, tradPK)
 ~~~
-{: #alg-composite-deserialize-pk title="Composite-ML-KEM<OID>.DeserializePublicKey(bytes) -> (mlkemPK, tradPK)"}
 
 
 
@@ -925,8 +922,6 @@ Serialization Process:
 
      output mlkemSeed || lenTradPK || tradPK || tradSK
 ~~~
-{: #alg-composite-serialize-priv-key title="Composite-ML-KEM.SerializePrivateKey(mlkemSeed, tradPK, tradSK)
-                                      -> bytes"}
 
 The function `IntegerToBytes(x, a)` is defined in Algorithm 11 of [FIPS.204], which is the usual little-endian encoding of an integer. Encoding to 2 bytes allows for traditional public keys up to 65 kb.
 
@@ -977,8 +972,6 @@ Deserialization Process:
 
      output (mlkemSeed, tradPK, tradSK)
 ~~~
-{: #alg-composite-deserialize-priv-key title="Composite-ML-KEM.DeserializeKey(bytes)
-                                -> (mlkemSeed, tradPK, tradSK)"}
 
 
 The function `BytesToInteger(x)` is not defined in [FIPS.204], but is the obvious inverse of the defined `IntegerToBytes()` which is the usual little-endian encoding of an integer.
@@ -1015,7 +1008,6 @@ Serialization Process:
      output mlkemCT || tradCT
 
 ~~~
-{: #alg-composite-serialize-ct title="Composite-ML-KEM.SerializeCiphertext(mlkemCT, tradCT) -> bytes"}
 
 
 Deserialization reverses this process.  Each component ciphertext is deserialized according to their respective specification as shown in {{appdx_components}}.
@@ -1065,8 +1057,6 @@ Deserialization Process:
 
      output (mlkemCT, tradCT)
 ~~~
-{: #alg-composite-deserialize-ct title="Composite-ML-KEM<OID>.DeserializeCiphertext(bytes)
-                                            -> (mldkemCT, tradCT)"}
 
 
 
@@ -1546,7 +1536,7 @@ Implementers who choose to use a different private key encoding than the one spe
 The sizes listed below are maximum values: several factors could cause fluctuations in the size of the traditional component. For example, this could be due to:
 
 * Compressed vs uncompressed EC point.
-* The RSA public key `(n, e)` allows `e` to vary is size between 3 and `n - 1` [RFC8017].
+* The RSA public key `(n, e)` allows `e` to vary is size between 3 and `n - 1` [RFC8017]. Note that the size table below assumes the recommended value of `e = 65537`, so for RSA combinations it is in fact not a true maximum.
 * When the underlying RSA or EC value is itself DER-encoded, integer values could occasionally be shorter than expected due to leading zeros being dropped from the encoding.
 
 By contrast, ML-KEM values are always fixed size, so composite values can always be correctly de-serialized based on the size of the ML-KEM component.
