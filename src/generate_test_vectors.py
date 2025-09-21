@@ -62,7 +62,6 @@ class KEM:
   pk = None
   sk = None
   id = None
-  oid = None
 
   # returns nothing
   def keyGen(self):
@@ -165,31 +164,26 @@ class ECDHKEM(KEM):
 
 
 class ECDHP256KEM(ECDHKEM):
-  oid = univ.ObjectIdentifier((1,2,840,10045))
   curve = ec.SECP256R1()
   component_curve = "secp256r1"
 
 
 class ECDHP521KEM(ECDHKEM):
-  oid = univ.ObjectIdentifier((1,2,840,10045))
   curve = ec.SECP521R1()
   component_curve = "secp521r1"
 
 
 class ECDHP384KEM(ECDHKEM):
-  oid = univ.ObjectIdentifier((1,2,840,10045))
   curve = ec.SECP384R1()
   component_curve = "secp384r1"
 
 
 class ECDHBP256KEM(ECDHKEM):
-  oid = univ.ObjectIdentifier((1,2,840,10045))
   curve = ec.BrainpoolP256R1()
   component_curve = "brainpoolP256r1"
 
 
 class ECDHBP384KEM(ECDHKEM):
-  oid = univ.ObjectIdentifier((1,2,840,10045))
   curve = ec.BrainpoolP384R1()
   component_curve = "brainpoolP384r1"
 
@@ -248,7 +242,6 @@ class XKEM(KEM):
       
 class X25519KEM(XKEM):
   id = "id-X25519"
-  oid = univ.ObjectIdentifier((1,3,101,110))
   curvePrivKey = X25519PrivateKey
   curvePubKey = x25519.X25519PublicKey
   component_name = "X25519"
@@ -256,7 +249,6 @@ class X25519KEM(XKEM):
 
 class X448KEM(XKEM):
   id = "id-X448"
-  oid = univ.ObjectIdentifier((1,3,101,111))
   curvePrivKey = X448PrivateKey
   curvePubKey = x448.X448PublicKey
   component_name = "X448"
@@ -366,19 +358,16 @@ class RSAOAPKEM(KEM):
     
     
 class RSA2048OAEPKEM(RSAOAPKEM):
-  oid = univ.ObjectIdentifier((1,2,840,113549,1,1))
   key_size = 2048
 
 
 # save some copy&paste by inheriting
 class RSA3072OAEPKEM(RSAOAPKEM):
-  oid = univ.ObjectIdentifier((1,2,840,113549,1,1))
   key_size = 3072
 
 
 # save some copy&paste by inheriting
 class RSA4096OAEPKEM(RSAOAPKEM):
-  oid = univ.ObjectIdentifier((1,2,840,113549,1,1))
   key_size = 4096
 
 
@@ -432,21 +421,18 @@ class MLKEM(KEM):
 
 class MLKEM512(MLKEM):
   id = "id-alg-ml-kem-512"
-  oid = univ.ObjectIdentifier((2,16,840,1,101,3,4,4,1))
   mlkem_class = ML_KEM_512
   component_name = "ML-KEM-512"
   
   
 class MLKEM768(MLKEM):
   id = "id-alg-ml-kem-768"
-  oid = univ.ObjectIdentifier((2,16,840,1,101,3,4,4,2))
   mlkem_class = ML_KEM_768
   component_name = "ML-KEM-768"
 
 
 class MLKEM1024(MLKEM):
   id = "id-alg-ml-kem-1024"
-  oid = univ.ObjectIdentifier((2,16,840,1,101,3,4,4,3))
   mlkem_class = ML_KEM_1024
   component_name = "ML-KEM-1024"
 
