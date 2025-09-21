@@ -23,7 +23,7 @@ import json
 import textwrap
 from zipfile import ZipFile
 
-from pyasn1.type import univ, namedtype
+from pyasn1.type import univ, tag, namedtype
 from pyasn1_alt_modules import rfc5208
 from pyasn1_alt_modules import rfc5280
 from pyasn1.codec.der.decoder import decode as der_decode
@@ -1159,13 +1159,8 @@ def formatResults(kem, caSK, ct, ss ):
   kemCert = signKemCert(caSK, kem)
   jsonTest['x5c'] = base64.b64encode(kemCert.public_bytes(encoding=serialization.Encoding.DER)).decode('ascii')
 
-  # for standalone ML-KEM, we need to wrap the private key in an OCTET STRING, but not when it's a composite
-  if kem.id in ("id-alg-ml-kem-768", "id-alg-ml-kem-1024"):
-    jsonTest['dk'] = base64.b64encode(
-                          der_encode(univ.OctetString(kem.private_key_bytes()))
-                                                      ).decode('ascii')
-  else:
-    jsonTest['dk'] = base64.b64encode(kem.private_key_bytes()).decode('ascii')
+
+  jsonTest['dk'] = base64.b64encode(kem.private_key_bytes()).decode('ascii')
 
   # Construct PKCS#8
   pki = rfc5208.PrivateKeyInfo()
@@ -1177,7 +1172,7 @@ def formatResults(kem, caSK, ct, ss ):
 
   # for standalone ML-KEM, we need to wrap the private key in an OCTET STRING, but not when it's a composite
   if kem.id in ("id-alg-ml-kem-768", "id-alg-ml-kem-1024"):
-    pki['privateKey'] = univ.OctetString(univ.OctetString(kem.private_key_bytes()))
+    pki['privateKey'] = univ.OctetString(der_encode(univ.OctetString(kem.private_key_bytes()).subtype(implicitTag=tag.Tag(tag.tagClassContext, tag.tagFormatSimple, 0))))
   else:
     pki['privateKey'] = univ.OctetString(kem.private_key_bytes())
   jsonTest['dk_pkcs8'] = base64.b64encode(der_encode(pki)).decode('ascii')
