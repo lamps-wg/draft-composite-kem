@@ -16,14 +16,14 @@ from cryptography import x509
 from cryptography.x509.oid import NameOID
 from cryptography.hazmat.primitives import serialization
 
-
+import sys
 import datetime
 import base64
 import json
 import textwrap
 from zipfile import ZipFile
 
-from pyasn1.type import univ, tag
+from pyasn1.type import univ, tag, namedtype
 from pyasn1_alt_modules import rfc5208
 from pyasn1_alt_modules import rfc5280
 from pyasn1.codec.der.decoder import decode as der_decode
@@ -92,13 +92,20 @@ class KEM:
     raise Exception("Not implemented")
 
 
+class Version(univ.Integer):
+    pass
 
-class ECDHP256KEM(KEM):
-  id = "ECDH-P256"
-  oid = univ.ObjectIdentifier((1,2,840,10045))
+class ECDSAPrivateKey(univ.Sequence):
+    componentType = namedtype.NamedTypes(
+        namedtype.NamedType('version', Version()),
+        namedtype.NamedType('privateKey', univ.OctetString())
+    )
+
+class ECDHKEM(KEM):
+  curve = None
 
   def keyGen(self):
-    self.sk = ec.generate_private_key(ec.SECP256R1())
+    self.sk = ec.generate_private_key(self.curve)
     self.pk = self.sk.public_key()
 
   def loadKeyPair(self, private_bytes: bytes) -> None:
@@ -108,7 +115,7 @@ class ECDHP256KEM(KEM):
     self.pk = key.public_key()
 
   def encap(self):
-    esk = ec.generate_private_key(ec.SECP256R1())
+    esk = ec.generate_private_key(self.curve)
     ss = esk.exchange(ec.ECDH(), self.pk)
     ct = esk.public_key().public_bytes(
                   encoding=serialization.Encoding.X962,
@@ -118,9 +125,8 @@ class ECDHP256KEM(KEM):
 
   def decap(self, ct):
     if isinstance(ct, bytes):
-      ct = ec.EllipticCurvePublicKey.from_encoded_point(ec.SECP256R1(), ct)
+      ct = ec.EllipticCurvePublicKey.from_encoded_point(self.curve, ct)
     return self.sk.exchange(ec.ECDH(), ct)
-
 
   def public_key_bytes(self):
     return self.pk.public_bytes(
@@ -129,127 +135,80 @@ class ECDHP256KEM(KEM):
                     )
 
   def private_key_bytes(self):
-    return self.sk.private_bytes(
-                        encoding=serialization.Encoding.DER,
-                        format=serialization.PrivateFormat.TraditionalOpenSSL,
-                        encryption_algorithm=serialization.NoEncryption()
-                    )
+    prk = ECDSAPrivateKey()
+    prk['version'] = 1
+    prk['privateKey'] = self.sk.private_numbers().private_value.to_bytes((self.sk.key_size + 7) // 8)
+    return der_encode(prk)
+  
+  def public_key_max_len(self):  
+    return (1 + 2 * size_in_bits_to_size_in_bytes(self.curve.key_size), True)
+    
+  def private_key_max_len(self):
+    """
+    ECPrivateKey ::= SEQUENCE {
+      version        INTEGER { ecPrivkeyVer1(1) } (ecPrivkeyVer1),
+      privateKey     OCTET STRING,
+      parameters [0] ECParameters {{ NamedCurve }} OPTIONAL,
+      publicKey  [1] BIT STRING OPTIONAL
+    }
+    """
+    maxLen = calculate_der_universal_sequence_max_length([
+        calculate_der_universal_integer_max_length(max_size_in_bits=1),  # version must be 1
+        calculate_der_universal_octet_string_max_length(size_in_bits_to_size_in_bytes(self.curve.key_size))  # privateKey
+        # ECParameters are not allowed in Composite ML-DSA
+        # publicKey is not allowed in Composite ML-DSA
+    ])
+    return (maxLen, True)
+
+  def ct_max_len(self):
+    return (1 + 2 * size_in_bits_to_size_in_bytes(self.curve.key_size), True)
 
 
-# skip some copy&paste'ing by inheriting from P256
-class ECDHP521KEM(ECDHP256KEM):
+class ECDHP256KEM(ECDHKEM):
+  id = "ECDH-P256"
+  oid = univ.ObjectIdentifier((1,2,840,10045))
+  curve = ec.SECP256R1()
+
+
+class ECDHP521KEM(ECDHKEM):
   id = "ECDH-P521"
   oid = univ.ObjectIdentifier((1,2,840,10045))
-
-  def keyGen(self):
-    self.sk = ec.generate_private_key(ec.SECP521R1())
-    self.pk = self.sk.public_key()
-
-  def encap(self):
-    esk = ec.generate_private_key(ec.SECP521R1())
-    ss = esk.exchange(ec.ECDH(), self.pk)
-    ct = esk.public_key().public_bytes(
-              encoding=serialization.Encoding.X962,
-              format=serialization.PublicFormat.UncompressedPoint
-            )
-    return (ct, ss)
-
-  def decap(self, ct):
-    if isinstance(ct, bytes):
-      ct = ec.EllipticCurvePublicKey.from_encoded_point(ec.SECP521R1(), ct)
-    return self.sk.exchange(ec.ECDH(), ct)
+  curve = ec.SECP521R1()
 
 
-# skip some copy&paste'ing by inheriting from P256
-class ECDHP384KEM(ECDHP256KEM):
+class ECDHP384KEM(ECDHKEM):
   id = "ECDH-P384"
   oid = univ.ObjectIdentifier((1,2,840,10045))
-
-  def keyGen(self):
-    self.sk = ec.generate_private_key(ec.SECP384R1())
-    self.pk = self.sk.public_key()
-
-  def encap(self):
-    esk = ec.generate_private_key(ec.SECP384R1())
-    ss = esk.exchange(ec.ECDH(), self.pk)
-    ct = esk.public_key().public_bytes(
-              encoding=serialization.Encoding.X962,
-              format=serialization.PublicFormat.UncompressedPoint
-            )
-    return (ct, ss)
-
-  def decap(self, ct):
-    if isinstance(ct, bytes):
-      ct = ec.EllipticCurvePublicKey.from_encoded_point(ec.SECP384R1(), ct)
-    return self.sk.exchange(ec.ECDH(), ct)
+  curve = ec.SECP384R1()
 
 
-
-
-# skip some copy&paste'ing by inheriting from P256
-class ECDHBP256KEM(ECDHP256KEM):
+class ECDHBP256KEM(ECDHKEM):
   id = "ECDH-brainpoolP256r1"
   oid = univ.ObjectIdentifier((1,2,840,10045))
-
-  def keyGen(self):
-    self.sk = ec.generate_private_key(ec.BrainpoolP256R1())
-    self.pk = self.sk.public_key()
-
-  def encap(self):
-    esk = ec.generate_private_key(ec.BrainpoolP256R1())
-    ss = esk.exchange(ec.ECDH(), self.pk)
-    ct = esk.public_key().public_bytes(
-              encoding=serialization.Encoding.X962,
-              format=serialization.PublicFormat.UncompressedPoint
-            )
-    return (ct, ss)
-
-  def decap(self, ct):
-    if isinstance(ct, bytes):
-      ct = ec.EllipticCurvePublicKey.from_encoded_point(ec.BrainpoolP256R1(), ct)
-    return self.sk.exchange(ec.ECDH(), ct)
+  curve = ec.BrainpoolP256R1()
 
 
-
-# skip some copy&paste'ing by inheriting from P256
-class ECDHBP384KEM(ECDHP256KEM):
+class ECDHBP384KEM(ECDHKEM):
   id = "ECDH-brainpoolP384r1"
   oid = univ.ObjectIdentifier((1,2,840,10045))
+  curve = ec.BrainpoolP384R1()
 
+
+class XKEM(KEM):
+  curvePrivKey = None
+  curvePubKey = None
+  
   def keyGen(self):
-    self.sk = ec.generate_private_key(ec.BrainpoolP384R1())
-    self.pk = self.sk.public_key()
-
-  def encap(self):
-    esk = ec.generate_private_key(ec.BrainpoolP384R1())
-    ss = esk.exchange(ec.ECDH(), self.pk)
-    ct = esk.public_key().public_bytes(
-              encoding=serialization.Encoding.X962,
-              format=serialization.PublicFormat.UncompressedPoint
-            )
-    return (ct, ss)
-
-  def decap(self, ct):
-    if isinstance(ct, bytes):
-      ct = ec.EllipticCurvePublicKey.from_encoded_point(ec.BrainpoolP384R1(), ct)
-    return self.sk.exchange(ec.ECDH(), ct)
-
-
-class X25519KEM(KEM):
-  id = "id-X25519"
-  oid = univ.ObjectIdentifier((1,3,101,110))
-
-  def keyGen(self):
-    self.sk = x25519.X25519PrivateKey.generate()
+    self.sk = self.curvePrivKey.generate()
     self.pk = self.sk.public_key()
 
   def loadKeyPair(self, private_bytes: bytes) -> None:
-    key = X25519PrivateKey.from_private_bytes(private_bytes)
+    key = self.curvePrivKey.from_private_bytes(private_bytes)
     self.sk = key
     self.pk = key.public_key()
 
   def encap(self):
-    esk = x25519.X25519PrivateKey.generate()
+    esk = self.curvePrivKey.generate()
     ss = esk.exchange(self.pk)
     ct = esk.public_key().public_bytes(
                   encoding=serialization.Encoding.Raw,
@@ -259,16 +218,14 @@ class X25519KEM(KEM):
 
   def decap(self, ct):
     if isinstance(ct, bytes):
-      ct = x25519.X25519PublicKey.from_public_bytes(ct)
+      ct = self.curvePubKey.from_public_bytes(ct)
     return self.sk.exchange(ct)
-
 
   def public_key_bytes(self):
     return self.pk.public_bytes(
                       encoding=serialization.Encoding.Raw,
                       format=serialization.PublicFormat.Raw
                     )
-
 
   def private_key_bytes(self):
     raw = self.sk.private_bytes(
@@ -278,46 +235,39 @@ class X25519KEM(KEM):
                 )
     CurvePrivateKey = univ.OctetString(raw)
     return der_encode(CurvePrivateKey)
+        
+  def public_key_max_len(self):
+    return (len(self.public_key_bytes()), True)
+        
+  def private_key_max_len(self):
+    return (len(self.private_key_bytes()), True)
+    
+  def ct_max_len(self):
+    return self.public_key_max_len()
+      
+      
+class X25519KEM(XKEM):
+  id = "id-X25519"
+  oid = univ.ObjectIdentifier((1,3,101,110))
+  curvePrivKey = X25519PrivateKey
+  curvePubKey = x25519.X25519PublicKey
 
 
-class X448KEM(X25519KEM):
+class X448KEM(XKEM):
   id = "id-X448"
   oid = univ.ObjectIdentifier((1,3,101,111))
-
-  def keyGen(self):
-    self.sk = x448.X448PrivateKey.generate()
-    self.pk = self.sk.public_key()
-
-  def loadKeyPair(self, private_bytes: bytes) -> None:
-    key = X448PrivateKey.from_private_bytes(private_bytes)
-    self.sk = key
-    self.pk = key.public_key()
-
-  def encap(self):
-    esk = x448.X448PrivateKey.generate()
-    ss = esk.exchange(self.pk)
-    ct = esk.public_key().public_bytes(
-              encoding=serialization.Encoding.Raw,
-              format=serialization.PublicFormat.Raw
-            )
-    return (ct, ss)
-
-  def decap(self, ct):
-    if isinstance(ct, bytes):
-      ct = x448.X448PublicKey.from_public_bytes(ct)
-    return self.sk.exchange(ct)
+  curvePrivKey = X448PrivateKey
+  curvePubKey = x448.X448PublicKey
 
 
-
-class RSA2048OAEPKEM(KEM):
-  id = "id-RSAES-OAEP-2048"
-  oid = univ.ObjectIdentifier((1,2,840,113549,1,1))
+class RSAOAPKEM(KEM):
+  key_size = None
 
   # returns nothing
   def keyGen(self):
     self.sk = rsa.generate_private_key(
         public_exponent=65537,
-        key_size=2048
+        key_size=self.key_size
       )
     self.pk = self.sk.public_key()
 
@@ -340,7 +290,6 @@ class RSA2048OAEPKEM(KEM):
       )
     return (ct, ss)
 
-
   # returns (ss)
   def decap(self, ct):
     ss = self.sk.decrypt(
@@ -353,154 +302,149 @@ class RSA2048OAEPKEM(KEM):
       )
     return ss
 
-
   def public_key_bytes(self):
     return self.pk.public_bytes(
                       encoding=serialization.Encoding.DER,
                       format=serialization.PublicFormat.PKCS1
                     )
 
-
   def private_key_bytes(self):
     return self.sk.private_bytes(
                         encoding=serialization.Encoding.DER,
                         format=serialization.PrivateFormat.TraditionalOpenSSL,
                         encryption_algorithm=serialization.NoEncryption()
-                    )
+                      )
+
+  def public_key_max_len(self):
+    """
+    RSAPublicKey ::= SEQUENCE {
+        modulus           INTEGER,  -- n
+        publicExponent    INTEGER   -- e
+    }
+    """
+    maxLen = calculate_der_universal_sequence_max_length([
+        calculate_der_universal_integer_max_length(self.pk.key_size),  # n
+        calculate_der_universal_integer_max_length(self.pk.public_numbers().e.bit_length())  # e = 65537 = 0b1_00000000_00000001
+    ])
+    return (maxLen, False)
+
+  def private_key_max_len(self):
+    """
+    RSAPrivateKey::= SEQUENCE {
+        version Version,
+        modulus           INTEGER,  --n
+        publicExponent INTEGER,  --e
+        privateExponent INTEGER,  --d
+        prime1 INTEGER,  --p
+        prime2 INTEGER,  --q
+        exponent1 INTEGER,  --d mod(p - 1)
+        exponent2 INTEGER,  --d mod(q - 1)
+        coefficient INTEGER,  --(inverse of q) mod p
+        otherPrimeInfos OtherPrimeInfos OPTIONAL
+    }
+    """
+    maxLen = calculate_der_universal_sequence_max_length([
+        calculate_der_universal_integer_max_length(max_size_in_bits=1),  # version must be 0 for Composite ML-KEM
+        calculate_der_universal_integer_max_length(self.sk.key_size),  # n
+        calculate_der_universal_integer_max_length(self.pk.public_numbers().e.bit_length()),  # e = 65537 = 0b1_00000000_00000001
+        calculate_der_universal_integer_max_length(self.sk.key_size),  # d
+        calculate_der_universal_integer_max_length(self.sk.key_size // 2),  # p
+        calculate_der_universal_integer_max_length(self.sk.key_size // 2),  # q
+        calculate_der_universal_integer_max_length(self.sk.key_size // 2),  # d mod (p-1)
+        calculate_der_universal_integer_max_length(self.sk.key_size // 2),  # d mod (q-1)
+        calculate_der_universal_integer_max_length(self.sk.key_size // 2)   # (inverse of q) mod p
+        # OtherPrimeInfos are not allowed in Composite ML-KEM
+    ])
+    return (maxLen, False)
+
+  def ct_max_len(self):
+    return (size_in_bits_to_size_in_bytes(self.sk.key_size) , True)
+    
+    
+class RSA2048OAEPKEM(RSAOAPKEM):
+  id = "id-RSAES-OAEP-2048"
+  oid = univ.ObjectIdentifier((1,2,840,113549,1,1))
+  key_size = 2048
 
 
 # save some copy&paste by inheriting
-class RSA3072OAEPKEM(RSA2048OAEPKEM):
+class RSA3072OAEPKEM(RSAOAPKEM):
   id = "id-RSAES-OAEP-3072"
   oid = univ.ObjectIdentifier((1,2,840,113549,1,1))
-
-  # returns nothing
-  def keyGen(self):
-    self.sk = rsa.generate_private_key(
-        public_exponent=65537,
-        key_size=3072
-      )
-    self.pk = self.sk.public_key()
+  key_size = 3072
 
 
 # save some copy&paste by inheriting
-class RSA4096OAEPKEM(RSA2048OAEPKEM):
+class RSA4096OAEPKEM(RSAOAPKEM):
   id = "id-RSAES-OAEP-4096"
   oid = univ.ObjectIdentifier((1,2,840,113549,1,1))
+  key_size = 4096
 
+
+class MLKEM(KEM):
+  mlkem_class = None
+  
   # returns nothing
   def keyGen(self):
-    self.sk = rsa.generate_private_key(
-        public_exponent=65537,
-        key_size=4096
-      )
-    self.pk = self.sk.public_key()
+    self.sk = secrets.token_bytes(64)
+    self.pk, _ = self.mlkem_class.key_derive(self.sk)
+
+  def loadKeyPair(self, private_bytes: bytes) -> None:
+    if len(private_bytes) == 66:
+      # there's an extra OctetString wrapper
+      private_bytes = private_bytes[2:]
+
+    # Private bytes are the seed
+    self.sk = private_bytes
+    self.pk, _ = self.mlkem_class.key_derive(private_bytes)
+
+  # returns (ct, ss)
+  def encap(self):
+    (ss, ct) = self.mlkem_class.encaps(self.pk)
+    return (ct, ss)
+
+  # returns (ss)
+  def decap(self, ct):
+    _, dk = self.mlkem_class.key_derive(self.sk)
+    return self.mlkem_class.decaps(dk, ct)
+
+  def public_key_bytes(self):
+    return self.pk
+
+  def private_key_bytes(self):
+    return self.sk
+    
+  def public_key_max_len(self):
+    return (len(self.public_key_bytes()), True)
+    
+  def private_key_max_len(self):
+    return (len(self.private_key_bytes()), True)
+    
+  def ct_max_len(self):    
+    if isinstance(self, MLKEM512):
+      return (768, True)
+    if isinstance(self, MLKEM768):
+      return (1088, True)
+    elif isinstance(self, MLKEM1024):
+      return (1568, True)
 
 
-class MLKEM512(KEM):
+class MLKEM512(MLKEM):
   id = "id-alg-ml-kem-512"
   oid = univ.ObjectIdentifier((2,16,840,1,101,3,4,4,1))
-
-  # returns nothing
-  def keyGen(self):
-    self.sk = secrets.token_bytes(64)
-    self.pk, _ = ML_KEM_512.key_derive(self.sk)
-
-  def loadKeyPair(self, private_bytes: bytes) -> None:
-    if len(private_bytes) == 66:
-      # there's an extra OctetString wrapper
-      private_bytes = private_bytes[2:]
-
-    self.sk = private_bytes
-    self.pk, _ = ML_KEM_512.key_derive(private_bytes)
-
-  # returns (ct, ss)
-  def encap(self):
-    (ss, ct) = ML_KEM_512.encaps(self.pk)
-    return (ct, ss)
-
-  # returns (ss)
-  def decap(self, ct):
-    _, dk = ML_KEM_512.key_derive(self.sk)
-    return ML_KEM_512.decaps(dk, ct)
-
-  def public_key_bytes(self):
-    return self.pk
-
-  def private_key_bytes(self):
-    return self.sk
-
-
-class MLKEM768(KEM):
+  mlkem_class = ML_KEM_512
+  
+  
+class MLKEM768(MLKEM):
   id = "id-alg-ml-kem-768"
   oid = univ.ObjectIdentifier((2,16,840,1,101,3,4,4,2))
-
-  # returns nothing
-  def keyGen(self):
-    self.sk = secrets.token_bytes(64)
-    self.pk, _ = ML_KEM_768.key_derive(self.sk)
-
-  def loadKeyPair(self, private_bytes: bytes) -> None:
-    if len(private_bytes) == 66:
-      # there's an extra OctetString wrapper
-      private_bytes = private_bytes[2:]
-
-    # Private bytes are the seed
-    self.sk = private_bytes
-    self.pk, _ = ML_KEM_768.key_derive(private_bytes)
-
-  # returns (ct, ss)
-  def encap(self):
-    (ss, ct) = ML_KEM_768.encaps(self.pk)
-    return (ct, ss)
-
-  # returns (ss)
-  def decap(self, ct):
-    _, dk = ML_KEM_768.key_derive(self.sk)
-    return ML_KEM_768.decaps(dk, ct)
-
-  def public_key_bytes(self):
-    return self.pk
-
-  def private_key_bytes(self):
-    return self.sk
+  mlkem_class = ML_KEM_768
 
 
-
-class MLKEM1024(KEM):
+class MLKEM1024(MLKEM):
   id = "id-alg-ml-kem-1024"
   oid = univ.ObjectIdentifier((2,16,840,1,101,3,4,4,3))
-
-  # returns nothing
-  def keyGen(self):
-    self.sk = secrets.token_bytes(64)
-    self.pk, _ = ML_KEM_1024.key_derive(self.sk)
-
-  def loadKeyPair(self, private_bytes: bytes) -> None:
-    if len(private_bytes) == 66:
-      # there's an extra OctetString wrapper
-      private_bytes = private_bytes[2:]
-  
-    # Private bytes are the seed
-    self.sk = private_bytes
-    self.pk, _ = ML_KEM_1024.key_derive(private_bytes)
-
-  # returns (ct, ss)
-  def encap(self):
-    (ss, ct) = ML_KEM_1024.encaps(self.pk)
-    return (ct, ss)
-
-  # returns (ss)
-  def decap(self, ct):
-    _, dk = ML_KEM_1024.key_derive(self.sk)
-    return ML_KEM_1024.decaps(dk, ct)
-
-  def public_key_bytes(self):
-    return self.pk
-
-  def private_key_bytes(self):
-    return self.sk
-
+  mlkem_class = ML_KEM_1024
 
 
 
@@ -511,13 +455,10 @@ class CompositeKEM(KEM):
   mlkem: KEM = None
   tradkem: KEM = None
   kdf = "None"
-  domSep = ""
+  label = ""
 
   def __init__(self):
     super().__init__()
-    self.domSep = DOMAIN_TABLE[self.id][0]  # the first component is the domain,
-                                            # the second is a boolean controlling whether
-                                            # this renders in the domsep table in the draft.
 
   def keyGen(self):
     self.mlkem.keyGen()
@@ -622,12 +563,29 @@ class CompositeKEM(KEM):
 
     return ss
 
+  def public_key_max_len(self):
+    (maxMLKEM, fixedSizeMLKEM) = self.mlkem.public_key_max_len()
+    (maxTrad, fixedSizeTrad) = self.tradkem.public_key_max_len()
+    return (maxMLKEM + maxTrad, fixedSizeMLKEM and fixedSizeTrad)
+  
+  def private_key_max_len(self):
+    (maxMLKEM, fixedSizeMLKEM) = self.mlkem.private_key_max_len()
+    (maxTrad, fixedSizeTrad) = self.tradkem.private_key_max_len()
+    (maxTradPub, fixedSizeTradPub) = self.tradkem.public_key_max_len()
+    return (maxMLKEM + 2 + maxTradPub + maxTrad, fixedSizeMLKEM and fixedSizeTrad and fixedSizeTradPub)
+    
+  def ct_max_len(self):
+    (maxMLKEM, fixedSizeMLKEM) = self.mlkem.ct_max_len()
+    (maxTrad, fixedSizeTrad) = self.tradkem.ct_max_len()
+    return (maxMLKEM + maxTrad, fixedSizeMLKEM and fixedSizeTrad)
+    
 
 class MLKEM768_RSA2048_HMAC_SHA256(CompositeKEM):
   id = "id-MLKEM768-RSA2048-HMAC-SHA256"
   mlkem = MLKEM768()
   tradkem = RSA2048OAEPKEM()
   kdf = "HMAC-SHA256"
+  label = "QSF-MLKEM768-RSAOAEP2048-HMACSHA256"
 
 
 class MLKEM768_RSA3072_HMAC_SHA256(CompositeKEM):
@@ -635,6 +593,7 @@ class MLKEM768_RSA3072_HMAC_SHA256(CompositeKEM):
   mlkem = MLKEM768()
   tradkem = RSA3072OAEPKEM()
   kdf = "HMAC-SHA256"
+  label = "QSF-MLKEM768-RSAOAEP3072-HMACSHA256"
 
 
 class MLKEM768_RSA4096_HMAC_SHA256(CompositeKEM):
@@ -642,6 +601,7 @@ class MLKEM768_RSA4096_HMAC_SHA256(CompositeKEM):
   mlkem = MLKEM768()
   tradkem = RSA4096OAEPKEM()
   kdf = "HMAC-SHA256"
+  label = "QSF-MLKEM768-RSAOAEP4096-HMACSHA256"
 
 
 class MLKEM768_X25519_SHA3_256(CompositeKEM):
@@ -649,6 +609,7 @@ class MLKEM768_X25519_SHA3_256(CompositeKEM):
   mlkem = MLKEM768()
   tradkem = X25519KEM()
   kdf = "SHA3-256"
+  label = "\\.//^\\"
 
 
 class MLKEM768_ECDH_P256_HMAC_SHA256(CompositeKEM):
@@ -656,6 +617,7 @@ class MLKEM768_ECDH_P256_HMAC_SHA256(CompositeKEM):
   mlkem = MLKEM768()
   tradkem = ECDHP256KEM()
   kdf = "HMAC-SHA256"
+  label = "QSF-MLKEM768-P256-HMACSHA256"
 
 
 class MLKEM768_ECDH_P384_HMAC_SHA256(CompositeKEM):
@@ -663,6 +625,7 @@ class MLKEM768_ECDH_P384_HMAC_SHA256(CompositeKEM):
   mlkem = MLKEM768()
   tradkem = ECDHP384KEM()
   kdf = "HMAC-SHA256"
+  label = "QSF-MLKEM768-P384-HMACSHA256"
 
 
 class MLKEM768_ECDH_brainpoolP256r1_HMAC_SHA256(CompositeKEM):
@@ -670,6 +633,7 @@ class MLKEM768_ECDH_brainpoolP256r1_HMAC_SHA256(CompositeKEM):
   mlkem = MLKEM768()
   tradkem = ECDHBP256KEM()
   kdf = "HMAC-SHA256"
+  label = "QSF-MLKEM768-BP256-HMACSHA256"
 
 
 class MLKEM1024_RSA3072_HMAC_SHA512(CompositeKEM):
@@ -677,6 +641,7 @@ class MLKEM1024_RSA3072_HMAC_SHA512(CompositeKEM):
   mlkem = MLKEM1024()
   tradkem = RSA3072OAEPKEM()
   kdf = "HMAC-SHA512"
+  label = "QSF-MLKEM1024-RSAOAEP3072-HMACSHA512"
 
 
 class MLKEM1024_ECDH_P384_HMAC_SHA512(CompositeKEM):
@@ -684,13 +649,14 @@ class MLKEM1024_ECDH_P384_HMAC_SHA512(CompositeKEM):
   mlkem = MLKEM1024()
   tradkem = ECDHP384KEM()
   kdf = "HMAC-SHA512"
-
+  label = "QSF-MLKEM1024-P384-HMACSHA512"
 
 class MLKEM1024_ECDH_brainpoolP384r1_HMAC_SHA512(CompositeKEM):
   id = "id-MLKEM1024-ECDH-brainpoolP384r1-HMAC-SHA512"
   mlkem = MLKEM1024()
   tradkem = ECDHBP384KEM()
   kdf = "HMAC-SHA512"
+  label = "QSF-MLKEM1024-BP384-HMACSHA512"
 
 
 class MLKEM1024_X448_SHA3_256(CompositeKEM):
@@ -698,6 +664,7 @@ class MLKEM1024_X448_SHA3_256(CompositeKEM):
   mlkem = MLKEM1024()
   tradkem = X448KEM()
   kdf = "SHA3-256"
+  label = "QSF-MLKEM1024-X448-SHA3256"
 
 
 class MLKEM1024_ECDH_P521_HMAC_SHA512(CompositeKEM):
@@ -705,18 +672,19 @@ class MLKEM1024_ECDH_P521_HMAC_SHA512(CompositeKEM):
   mlkem = MLKEM1024()
   tradkem = ECDHP521KEM()
   kdf = "HMAC-SHA512"
+  label = "QSF-MLKEM1024-P521-HMACSHA512"
 
 
 ### KEM Combiner ###
 
 """
   if KDF is "SHA3-256":
-    ss = SHA3-256(mlkemSS || tradSS || tradCT || tradPK || Domain)
+    ss = SHA3-256(mlkemSS || tradSS || tradCT || tradPK || Label)
 
   else if KDF is "HMAC-{Hash}":
 
     ss = HMAC-{Hash}(salt={0}, IKM=mlkemSS || tradSS || tradCT
-                                           || tradPK || Domain)
+                                           || tradPK || Label)
     ss = truncate(ss, 256)
         # Where "{0}" is the string of HashLen zeros according to
         # section 2.2 of [RFC5869].
@@ -738,26 +706,26 @@ def kemCombiner(kem, mlkemSS, tradSS, tradCT, tradPK ):
 
   if kem.kdf == "HMAC-SHA256":
      # ss = HMAC-{Hash}(salt={0}, IKM=mlkemSS || tradSS || tradCT
-     #                                        || tradPK || Domain)
+     #                                        || tradPK || Label)
     emptyStr = "".encode('ascii')
     h = hmac.HMAC(key=emptyStr, algorithm=hashes.SHA256())
     h.update(mlkemSS)
     h.update(tradSS)
     h.update(tradCT)
     h.update(tradPK)
-    h.update(kem.domSep)
+    h.update(kem.label.encode())
     ss = h.finalize()
 
   elif kem.kdf == "HMAC-SHA512":
      # ss = HMAC-{Hash}(salt={0}, IKM=mlkemSS || tradSS || tradCT
-     #                                        || tradPK || Domain)
+     #                                        || tradPK || Label)
     emptyStr = "".encode('ascii')
     h = hmac.HMAC(key=emptyStr, algorithm=hashes.SHA512())
     h.update(mlkemSS)
     h.update(tradSS)
     h.update(tradCT)
     h.update(tradPK)
-    h.update(kem.domSep)
+    h.update(kem.label.encode())
     ss = h.finalize()
     ss = ss[:32]  # truncate to 32 bytes
 
@@ -768,7 +736,7 @@ def kemCombiner(kem, mlkemSS, tradSS, tradCT, tradPK ):
     digest.update(tradSS)
     digest.update(tradCT)
     digest.update(tradPK)
-    digest.update(kem.domSep)
+    digest.update(kem.label.encode())
     ss = digest.finalize()
 
   else:
@@ -961,30 +929,9 @@ testVectorOutput['cacert'] = base64.b64encode(caCert.public_bytes(encoding=seria
 testVectorOutput['tests'] = []
 
 SIZE_TABLE = {}
+LABELS_TABLE = {}
 
-DOMAIN_TABLE = {}
-
-
-
-def genDomainTable():
-  """
-  This is a bit weird; we have to generate it first because
-  this table is used by the composite.sign() to construct Mprime,
-  but also not every supported option should be rendered into
-  the domain separators table in the draft, hence carrying a boolean.
-  By default, everything is False to be included in the table unless
-  turned on by doSig(.., includeInDomainTable=True)."""
-
-  for alg in OID_TABLE:
-    domain = der_encode(OID_TABLE[alg])
-    DOMAIN_TABLE[alg] = (domain, False)
-
-# run this statically
-genDomainTable()
-
-
-
-def doKEM(kem, caSK, includeInTestVectors=True, includeInDomainTable=True, includeInSizeTable=True):
+def doKEM(kem, caSK, includeInTestVectors=True, includeInLabelsTable=True, includeInSizeTable=True):
   kem.keyGen()
   (ct, ss) = kem.encap()
   _ss = kem.decap(ct)
@@ -995,14 +942,14 @@ def doKEM(kem, caSK, includeInTestVectors=True, includeInDomainTable=True, inclu
   if includeInTestVectors:
     testVectorOutput['tests'].append(jsonResult)
 
-  if includeInDomainTable:
-    DOMAIN_TABLE[kem.id] = (DOMAIN_TABLE[kem.id][0], True)
+  if includeInLabelsTable:
+    LABELS_TABLE[kem.id] = (kem.label)
 
   if includeInSizeTable:
     sizeRow = {}
-    sizeRow['pk'] = len(kem.public_key_bytes())
-    sizeRow['sk'] = len(kem.private_key_bytes())
-    sizeRow['ct'] = len(ct)
+    sizeRow['pk'] = kem.public_key_max_len()
+    sizeRow['sk'] = kem.private_key_max_len()
+    sizeRow['ct'] = kem.ct_max_len()
     sizeRow['ss'] = len(ss)
     SIZE_TABLE[kem.id] = sizeRow
 
@@ -1028,6 +975,52 @@ def output_artifacts_certs_r5(jsonTestVectors):
     artifacts_zip.writestr(derKeyFilename, data=base64.b64decode(tc['dk_pkcs8']))
     artifacts_zip.writestr(ciphertextFilename, data=base64.b64decode(tc['c']))
     artifacts_zip.writestr(sharedSecretFilename, data=base64.b64decode(tc['k']))
+
+
+    
+def checkTestVectorsSize():
+  """
+  Checks that the test vectors produced match the sizes advertized in the size table.
+  Aborts if it finds a mismatch.
+  """
+  error = False
+  for test in testVectorOutput['tests']:
+    alg = test['tcId']
+    if alg in ("id-alg-ml-kem-768", "id-alg-ml-kem-1024"): continue  # these have an extra OCTET String wrapper added .. because reasons. Don't bother with them.
+    size = SIZE_TABLE[alg]
+    (pkMaxSize, pkFix) = size['pk']
+    (skMaxSize, skFix) = size['sk']
+    (ctMaxSize, ctFix) = size['ct']
+    pkSize = len(base64.b64decode(test['ek']))
+    skSize = len(base64.b64decode(test['dk']))
+    ctSize  = len(base64.b64decode(test['c']))
+    
+    
+    if pkFix and pkSize != pkMaxSize:
+        print("Error: "+alg+" pk size does not match expected: "+str(pkSize)+" != "+str(pkMaxSize)+conditionalAsterisk(not pkFix)+"\n") 
+        error = True
+    if not pkFix and pkSize > pkMaxSize:
+        print("Error: "+alg+" pk size does not match expected: "+str(pkSize)+" > "+str(pkMaxSize)+conditionalAsterisk(not pkFix)+"\n") 
+        error = True
+    
+    if skFix and skSize != skMaxSize:
+        print("Error: "+alg+" sk size does not match expected: "+str(skSize)+" != "+str(skMaxSize)+conditionalAsterisk(not skFix)+"\n") 
+        error = True
+    if not skFix and skSize > skMaxSize:
+        print("Error: "+alg+" sk size does not match expected: "+str(skSize)+" > "+str(skMaxSize)+conditionalAsterisk(not skFix)+"\n") 
+        error = True
+        
+    if ctFix and ctSize != ctMaxSize:
+        print("Error: "+alg+" ct size does not match expected: "+str(ctSize)+" != "+str(ctMaxSize)+conditionalAsterisk(not ctFix)+"\n") 
+        error = True
+    if not ctFix and pkSize > pkMaxSize:
+        print("Error: "+alg+" ct size does not match expected: "+str(ctSize)+" > "+str(ctMaxSize)+conditionalAsterisk(not ctFix)+"\n") 
+        error = True
+    
+  if error: sys.exit()
+  #else: print("DEBUG: all sizes matched expected!")
+
+
 
 
 def writeTestVectors():
@@ -1197,6 +1190,11 @@ def writeDumpasn1Cfg():
       f.write("Description = "+ oid+"\n")
       f.write("\n")
 
+def conditionalAsterisk(switch):
+    if switch:
+      return '*'
+    else:
+      return ' '
 
 def writeSizeTable():
   # In this style:
@@ -1212,25 +1210,33 @@ def writeSizeTable():
 
     for alg in SIZE_TABLE:
       row = SIZE_TABLE[alg]
+      (pk, pkFix) = row['pk']
+      (sk, skFix) = row['sk']
+      (ct, ctFix) = row['ct']
       f.write('| '+ alg.ljust(46, ' ') +'|'+
-                 str(row['pk']).center(14, ' ') +'|'+
-                 str(row['sk']).center(14, ' ') +'|'+
-                 str(row['ct']).center(14, ' ') +'|'+
+                 (str(pk)+conditionalAsterisk(not pkFix)).center(14, ' ') +'|'+
+                 (str(sk)+conditionalAsterisk(not skFix)).center(14, ' ') +'|'+
+                 (str(ct)+conditionalAsterisk(not ctFix)).center(14, ' ') +'|'+
                  str(row['ss']).center(6, ' ') +'|\n')
 
 
-def writeDomainTable():
+def writeLabelsTable():
   """
-  Writes the table of domain separators to go into the draft.
+  Writes the table of KEM Combiner Labels to go into the draft.
   """
 
-  with open('domSepTable.md', 'w') as f:
-    f.write('| Composite KEM Algorithm                 | Domain Separator (in Hex encoding)|\n')
-    f.write('| ---------------------------------------       | ----------------------------------|\n')
+  with open('labelsTable.md', 'w') as f:
+    f.write("Values are provided as ASCII strings, but MUST be converted into binary in the obvious way.\n")
+    f.write("For example:\n\n")
+    f.write("* \"`"+LABELS_TABLE["id-MLKEM768-X25519-SHA3-256"] + "`\" in hexadecimal is \"`" + LABELS_TABLE["id-MLKEM768-X25519-SHA3-256"].encode().hex()+"`\"\n")
+    f.write("* \"`"+LABELS_TABLE["id-MLKEM768-ECDH-P256-HMAC-SHA256"] + "`\" in hexadecimal is \"`" + LABELS_TABLE["id-MLKEM768-ECDH-P256-HMAC-SHA256"].encode().hex()+"`\"\n")
+    f.write("\n\n")
 
-    for alg in DOMAIN_TABLE:
-      if DOMAIN_TABLE[alg][1]:  # boolean controlling rendering in this table.
-        f.write('| ' + alg.ljust(45, ' ') + " | " + base64.b16encode(DOMAIN_TABLE[alg][0]).decode('ascii') + " |\n")
+    f.write('| Composite KEM Algorithm                       | Label (string)                       |\n')
+    f.write('| --------------------------------------------- | ------------------------------------ |\n')
+
+    for alg in LABELS_TABLE:
+        f.write('| ' + alg.ljust(45, ' ') + " | `" + LABELS_TABLE[alg].ljust(36, ' ') + "` |\n")
 
 
 
@@ -1258,30 +1264,76 @@ def writeKEMCombinerExample(kem, filename):
   f.write( "\n".join(textwrap.wrap("tradSS:  " + tradSS.hex(), width=wrap_width)) +"\n\n" )
   f.write( "\n".join(textwrap.wrap("tradCT:  " + tradCT.hex(), width=wrap_width)) +"\n\n" )
   f.write( "\n".join(textwrap.wrap("tradPK:  " + tradPK.hex(), width=wrap_width)) +"\n\n" )
-  f.write( "\n".join(textwrap.wrap("Domain:  " + kem.domSep.hex(), width=wrap_width)) +"\n\n" )
+  f.write( "\n".join(textwrap.wrap("Label:  " + kem.label, width=wrap_width)) +"\n\n" )
   f.write("\n")
   f.write("# Combined KDF Input:\n")
-  f.write("#  mlkemSS || tradSS || tradCT || tradPK || Domain\n\n")
-  f.write( "\n".join(textwrap.wrap("Combined KDF Input: " + mlkemSS.hex() + tradSS.hex() + tradCT.hex() + tradPK.hex() + kem.domSep.hex(), width=wrap_width)) +"\n" )
+  f.write("#  mlkemSS || tradSS || tradCT || tradPK || Label\n\n")
+  f.write( "\n".join(textwrap.wrap("Combined KDF Input: " + mlkemSS.hex() + tradSS.hex() + tradCT.hex() + tradPK.hex() + kem.label, width=wrap_width)) +"\n" )
   f.write("\n\n# Outputs\n")
   f.write("# ss = " + kem.kdf + "(Combined KDF Input)\n\n")
   f.write( "\n".join(textwrap.wrap("ss: " + ss.hex(), width=wrap_width)) +"\n" )
 
 
+def calculate_length_length(der_byte_count):
+    assert der_byte_count >= 0
 
+    if der_byte_count < (1 << 7):  # Short form
+        return 1  # 1 byte for length
+    elif der_byte_count < (1 << 8):
+        return 2  # 1 byte for length + 1 byte for the length value
+    elif der_byte_count < (1 << 16):
+        return 3  # 1 byte for length + 2 bytes for the length value
+    elif der_byte_count < (1 << 24):
+        return 4  # 1 byte for length + 3 bytes for the length value
+    else:
+        return 5  # 1 byte for length + 4 bytes for the length value
+
+
+def size_in_bits_to_size_in_bytes(size_in_bits):
+    return (size_in_bits + 7) // 8
+
+
+def calculate_der_universal_integer_max_length(max_size_in_bits):
+    # DER uses signed integers, so account for possible leading sign bit.
+    signed_max_size_in_bits = max_size_in_bits + 1
+
+    max_der_size_in_bytes = size_in_bits_to_size_in_bytes(signed_max_size_in_bits)
+
+    UNIVERSAL_INTEGER_IDENTIFIER_LENGTH = 1
+
+    return UNIVERSAL_INTEGER_IDENTIFIER_LENGTH + calculate_length_length(max_der_size_in_bytes) + max_der_size_in_bytes
+
+
+def calculate_der_universal_octet_string_max_length(length):
+    UNIVERSAL_OCTET_STRING_IDENTIFIER_LENGTH = 1
+
+    return UNIVERSAL_OCTET_STRING_IDENTIFIER_LENGTH + calculate_length_length(length) + length
+
+
+def calculate_der_universal_sequence_max_length(der_size_of_sequence_elements):
+    UNIVERSAL_SEQUENCE_IDENTIFIER_LENGTH = 1
+
+    length = 0
+
+    for element_size in der_size_of_sequence_elements:
+        length += element_size
+
+    length += UNIVERSAL_SEQUENCE_IDENTIFIER_LENGTH + calculate_length_length(length)
+
+    return length
 
 
 def main():
 
   # Single algs - remove these, just for testing
-  # doKEM(X25519KEM(), caSK,      includeInTestVectors=True, includeInDomainTable=False, includeInSizeTable=True )
-  # doKEM(ECDHP256KEM(), caSK,    includeInTestVectors=True, includeInDomainTable=False, includeInSizeTable=True )
-  # doKEM(ECDHP384KEM(), caSK,    includeInTestVectors=True, includeInDomainTable=False, includeInSizeTable=True )
-  # doKEM(RSA2048OAEPKEM(), caSK, includeInTestVectors=True, includeInDomainTable=False, includeInSizeTable=True )
-  # doKEM(RSA3072OAEPKEM(), caSK, includeInTestVectors=True, includeInDomainTable=False, includeInSizeTable=True )
-  # doKEM(RSA4096OAEPKEM(), caSK, includeInTestVectors=True, includeInDomainTable=False, includeInSizeTable=True )
-  doKEM(MLKEM768(), caSK,  includeInTestVectors=True, includeInDomainTable=False, includeInSizeTable=True )
-  doKEM(MLKEM1024(), caSK, includeInTestVectors=True, includeInDomainTable=False, includeInSizeTable=True )
+  # doKEM(X25519KEM(), caSK,      includeInTestVectors=True, includeInLabelsTable=False, includeInSizeTable=True )
+  # doKEM(ECDHP256KEM(), caSK,    includeInTestVectors=True, includeInLabelsTable=False, includeInSizeTable=True )
+  # doKEM(ECDHP384KEM(), caSK,    includeInTestVectors=True, includeInLabelsTable=False, includeInSizeTable=True )
+  # doKEM(RSA2048OAEPKEM(), caSK, includeInTestVectors=True, includeInLabelsTable=False, includeInSizeTable=True )
+  # doKEM(RSA3072OAEPKEM(), caSK, includeInTestVectors=True, includeInLabelsTable=False, includeInSizeTable=True )
+  # doKEM(RSA4096OAEPKEM(), caSK, includeInTestVectors=True, includeInLabelsTable=False, includeInSizeTable=True )
+  doKEM(MLKEM768(), caSK,  includeInTestVectors=True, includeInLabelsTable=False, includeInSizeTable=True )
+  doKEM(MLKEM1024(), caSK, includeInTestVectors=True, includeInLabelsTable=False, includeInSizeTable=True )
 
 
 
@@ -1299,11 +1351,11 @@ def main():
   doKEM(MLKEM1024_X448_SHA3_256(), caSK )
   doKEM(MLKEM1024_ECDH_P521_HMAC_SHA512(), caSK )
 
-
+  checkTestVectorsSize()
   writeTestVectors()
   writeDumpasn1Cfg()
   writeSizeTable()
-  writeDomainTable()
+  writeLabelsTable()
 
   writeKEMCombinerExample(MLKEM768_X25519_SHA3_256(),"kemCombiner_MLKEM768_X25519_SHA3_256.md")
   writeKEMCombinerExample(MLKEM768_ECDH_P256_HMAC_SHA256(),"kemCombiner_MLKEM768_ECDH_P256_HMAC-SHA256.md")
