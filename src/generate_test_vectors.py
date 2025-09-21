@@ -1156,13 +1156,8 @@ def formatResults(kem, caSK, ct, ss ):
   kemCert = signKemCert(caSK, kem)
   jsonTest['x5c'] = base64.b64encode(kemCert.public_bytes(encoding=serialization.Encoding.DER)).decode('ascii')
 
-  # for standalone ML-KEM, we need to wrap the private key in an OCTET STRING, but not when it's a composite
-  if kem.id in ("id-alg-ml-kem-768", "id-alg-ml-kem-1024"):
-    jsonTest['dk'] = base64.b64encode(
-                          der_encode(univ.OctetString(kem.private_key_bytes()))
-                                                      ).decode('ascii')
-  else:
-    jsonTest['dk'] = base64.b64encode(kem.private_key_bytes()).decode('ascii')
+
+  jsonTest['dk'] = base64.b64encode(kem.private_key_bytes()).decode('ascii')
 
   # Construct PKCS#8
   pki = rfc5208.PrivateKeyInfo()
