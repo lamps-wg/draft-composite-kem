@@ -1070,13 +1070,20 @@ While composite ML-KEM keys and ciphertext values MAY be used raw, the following
 
 ## Encoding to DER {#sec-encoding-to-der}
 
-The serialization routines presented in {{sec-serialization}} produce raw binary values. When these values are required to be carried within a DER-encoded message format such as an X.509's `subjectPublicKey BIT STRING` [RFC5280] or a CMS `KEMRecipientInfo.kemct OCTET STRING` [RFC9629], then the composite value MUST be wrapped into a DER BIT STRING or OCTET STRING in the obvious ways.
+The serialization routines presented in {{sec-serialization}} produce raw binary values. When these values are required to be carried within a DER-encoded message format such as an X.509's `subjectPublicKey` and `signatureValue` BIT STRING [RFC5280] or a `OneAsymmetricKey.privateKey OCTET STRING` [RFC5958], then the BIT STRING or OCTET STRING contains this raw byte string encoding of the public key.
 
-When a BIT STRING is required, the octets of the composite data value SHALL be used as the bits of the bit string, with the most significant bit of the first octet becoming the first bit, and so on, ending with the least significant bit of the last octet becoming the last bit of the bit string.
+When a Composite ML-KEM
+public key appears outside of a `SubjectPublicKeyInfo` type in an
+environment that uses ASN.1 encoding, it could be encoded as an OCTET
+STRING by using the Composite-ML-KEM-PublicKey type defined below.
 
-When an OCTET STRING is required, the DER encoding of the composite data value SHALL be used directly.
+
+~~~
+Composite-ML-KEM-PublicKey ::= OCTET STRING
+~~~
 
 
+Size constraints MAY be enforced, as appropriate as per {{sec-sizetable}}.
 
 ## Key Usage Bits
 
@@ -1194,7 +1201,7 @@ Composite KEM algorithm list:
 
 In alignment with ML-KEM [FIPS.203], Composite KEM algorithms output a 256-bit shared secret key at all security levels, truncating is necessary as described in {{sec-kem-combiner}}.
 
-For all RSA key types and sizes, the exponent is RECOMMENDED to be 65537. Where it is advantageous to hard-code an exponent, for example in order to obtain predictable key sizes, implementations MAY hard-code 65537; thus implementations using other values for the exponent should not expect it to be intereperable with all other implementations.
+For all RSA key types and sizes, the exponent is RECOMMENDED to be 65537. Implementations MAY support only 65537 and reject other exponent values. Legacy RSA implementations that use other values for the exponent MAY be used to within a composite, but need to be careful when interoperating with other implementations.
 
 The KDFs were chosen to roughly match the security level of the stronger component. In the case of X25519 and X448 SHA3-256 is used to match the construction in {{X-Wing}}.
 
