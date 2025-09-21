@@ -959,7 +959,7 @@ def doKEM(kem, caSK, includeInTestVectors=True, includeInLabelsTable=True, inclu
   '''
   if includeInLabelsTable:
     LABELS_TABLE[kem.id] = {}
-    LABELS_TABLE[kem.id]['label'] = kem.label
+    LABELS_TABLE[kem.id]['label'] = kem.label  # Intentionally not calling .encode() on this because we want it printed in the draft in ASCII.
     LABELS_TABLE[kem.id]['kdf'] = kem.kdf
     LABELS_TABLE[kem.id]['mlkem'] = kem.mlkem.component_name
     LABELS_TABLE[kem.id]['trad'] = kem.tradkem.component_name
@@ -1297,11 +1297,12 @@ def writeKEMCombinerExample(kem, filename):
   f.write( "\n".join(textwrap.wrap("tradSS:  " + tradSS.hex(), width=wrap_width)) +"\n\n" )
   f.write( "\n".join(textwrap.wrap("tradCT:  " + tradCT.hex(), width=wrap_width)) +"\n\n" )
   f.write( "\n".join(textwrap.wrap("tradPK:  " + tradPK.hex(), width=wrap_width)) +"\n\n" )
-  f.write( "\n".join(textwrap.wrap("Label:  " + kem.label, width=wrap_width)) +"\n\n" )
+  f.write( "\n".join(textwrap.wrap("Label:  " + kem.label.encode().hex(), width=wrap_width)) +"\n\n" )
+  f.write( "\n".join(textwrap.wrap("\t(ascii: \"" + kem.label+"\")", width=wrap_width)) +"\n\n" )
   f.write("\n")
   f.write("# Combined KDF Input:\n")
   f.write("#  mlkemSS || tradSS || tradCT || tradPK || Label\n\n")
-  f.write( "\n".join(textwrap.wrap("Combined KDF Input: " + mlkemSS.hex() + tradSS.hex() + tradCT.hex() + tradPK.hex() + kem.label, width=wrap_width)) +"\n" )
+  f.write( "\n".join(textwrap.wrap("Combined KDF Input: " + mlkemSS.hex() + tradSS.hex() + tradCT.hex() + tradPK.hex() + kem.label.encode().hex(), width=wrap_width)) +"\n" )
   f.write("\n\n# Outputs\n")
   f.write("# ss = " + kem.kdf + "(Combined KDF Input)\n\n")
   f.write( "\n".join(textwrap.wrap("ss: " + ss.hex(), width=wrap_width)) +"\n" )
