@@ -212,7 +212,8 @@ Table of Contents
    KEM algorithms are provided based on ML-KEM, RSA-OAEP and ECDH.
    Backwards compatibility in the sense of upgraded systems continuing
    to inter-operate with legacy systems is not directly covered in this
-   specification, but is the subject of Section 11.2.
+   specification, but is the subject of Section 11.2.  The idea of a
+   composite was first presented in [Bindel2017].
 
    Composite ML-KEM is applicable in any PKIX-related application that
    would otherwise use ML-KEM.
@@ -567,19 +568,12 @@ Table of Contents
        sk = SerializePrivateKey(mlkemSeed, tradPK, tradSK)
        return (pk, sk)
 
-            Figure 1: Composite-ML-KEM<OID>.KeyGen() -> (pk, sk)
-
    In order to ensure fresh keys, the key generation functions MUST be
    executed for both component algorithms.  Compliant parties MUST NOT
    use, import or export component keys that are used in other contexts,
    combinations, or by themselves as keys for standalone algorithm use.
    For more details on the security considerations around key reuse, see
    Section 10.3.
-
-   Note that in step 2 above, both component key generation processes
-   are invoked, and no indication is given about which one failed.  This
-   SHOULD be done in a timing-invariant way to prevent side-channel
-   attackers from learning which component algorithm failed.
 
    Note that this keygen routine outputs a serialized composite key,
    which contains only the ML-KEM seed.  Implementations should feel
@@ -676,8 +670,6 @@ Table of Contents
 
         return (ss, ct)
 
-           Figure 2: Composite-ML-KEM<OID>.Encap(pk) -> (ss, ct)
-
    Depending on the security needs of the application, it MAY be
    advantageous to perform steps 2, 3, and 5 in a timing-invariant way
    to prevent side-channel attackers from learning which component
@@ -766,8 +758,6 @@ Table of Contents
 
         return ss
 
-            Figure 3: Composite-ML-KEM<OID>.Decap(sk, ct) -> ss
-
    Steps 2, 3, and 4 SHOULD be performed in a timing-invariant way to
    prevent side-channel attackers from learning which component
    algorithm failed and from learning any of the inputs or output of the
@@ -854,9 +844,6 @@ Table of Contents
 
     return ss
 
-       Figure 4: KemCombiner<KDF>(mlkemSS, tradSS, tradCT, tradPK,
-                               Label) -> ss
-
    Implementation note: The HMAC-based combiner here is exactly the
    "HKDF-Extract" step from [RFC5869] with an empty salt.
    Implementations with access to "HKDF-Extract", without the "HKDF-
@@ -888,7 +875,7 @@ Table of Contents
           | ML-KEM-1024 | 1568       | 64          | 1568       |
           +-------------+------------+-------------+------------+
 
-                  Table 1: ML-KEM Key and Ciphertext Sizes
+                                  Table 1
 
    For all serialization routines below, when these values are required
    to be carried in an ASN.1 structure, they are wrapped as described in
@@ -963,9 +950,6 @@ Table of Contents
 
         output mlkemPK || tradPK
 
-     Figure 5: Composite-ML-KEM.SerializePublicKey(mlkemPK, tradPK) ->
-                                   bytes
-
    Deserialization reverses this process.  Each component key is
    deserialized according to their respective specification as shown in
    Appendix B.
@@ -1015,9 +999,6 @@ Table of Contents
 
        output (mlkemPK, tradPK)
 
-      Figure 6: Composite-ML-KEM<OID>.DeserializePublicKey(bytes) ->
-                            (mlkemPK, tradPK)
-
 5.2.  SerializePrivateKey and DeserializePrivateKey
 
    The serialization routine for keys simply concatenates the private
@@ -1055,9 +1036,6 @@ Table of Contents
      2. Combine and output the encoded private key.
 
         output mlkemSeed || lenTradPK || tradPK || tradSK
-
-     Figure 7: Composite-ML-KEM.SerializePrivateKey(mlkemSeed, tradPK,
-                              tradSK) -> bytes
 
    The function IntegerToBytes(x, a) is defined in Algorithm 11 of
    [FIPS.204], which is the usual little-endian encoding of an integer.
@@ -1114,9 +1092,6 @@ Table of Contents
 
         output (mlkemSeed, tradPK, tradSK)
 
-      Figure 8: Composite-ML-KEM.DeserializeKey(bytes) -> (mlkemSeed,
-                              tradPK, tradSK)
-
    The function BytesToInteger(x) is not defined in [FIPS.204], but is
    the obvious inverse of the defined IntegerToBytes() which is the
    usual little-endian encoding of an integer.
@@ -1150,9 +1125,6 @@ Table of Contents
      1. Combine and output the encoded composite ciphertext
 
         output mlkemCT || tradCT
-
-      Figure 9: Composite-ML-KEM.SerializeCiphertext(mlkemCT, tradCT)
-                                  -> bytes
 
    Deserialization reverses this process.  Each component ciphertext is
    deserialized according to their respective specification as shown in
@@ -1203,9 +1175,6 @@ Table of Contents
      2. Output the component ciphertext values
 
         output (mlkemCT, tradCT)
-
-      Figure 10: Composite-ML-KEM<OID>.DeserializeCiphertext(bytes) ->
-                             (mldkemCT, tradCT)
 
 6.  Use within X.509 and PKIX
 
@@ -1285,7 +1254,7 @@ Table of Contents
             SMIME-CAPS { IDENTIFIED BY id }
            }
 
-      Figure 11: ASN.1 Object Information Classes for Composite ML-KEM
+      Figure 1: ASN.1 Object Information Classes for Composite ML-KEM
 
    As an example, the public key and KEM algorithm types associated with
    id-MLKEM768-ECDH-P256-HMAC-SHA256 are defined as:
@@ -1325,7 +1294,7 @@ Table of Contents
                            -- algorithm identifier dictates the format of
                            -- the key.
 
-            Figure 12: OneAsymmetricKey as defined in [RFC5958]
+             Figure 2: OneAsymmetricKey as defined in [RFC5958]
 
    When a composite private key is conveyed inside a OneAsymmetricKey
    structure (version 1 of which is also known as PrivateKeyInfo)
@@ -2074,7 +2043,7 @@ Table of Contents
 
      KDF(mlkemSS || tradSS || tradCT || tradPK || Label)
 
-                    Figure 13: KEM combiner construction
+                    Figure 3: KEM combiner construction
 
    The primary security property of the KEM combiner is that it
    preserves IND-CCA2 of the overall Composite ML-KEM so long as at
@@ -2502,12 +2471,6 @@ Table of Contents
 
 12.1.  Normative References
 
-   [FIPS.180-4]
-              National Institute of Standards and Technology (NIST),
-              "FIPS Publication 180-4: Secure Hash Standard", August
-              2015, <https://nvlpubs.nist.gov/nistpubs/FIPS/
-              NIST.FIPS.180-4.pdf>.
-
    [FIPS.202] National Institute of Standards and Technology (NIST),
               "SHA-3 Standard: Permutation-Based Hash and Extendable-
               Output Functions", August 2015,
@@ -2654,16 +2617,17 @@ Table of Contents
               Combiners from One-Wayness and Applications to TLS", n.d.,
               <https://eprint.iacr.org/2022/065>.
 
+   [Bindel2017]
+              Bindel, N., Herath, U., McKague, M., and D. Stebila,
+              "Transitioning to a quantum-resistant public key
+              infrastructure", 2017, <https://link.springer.com/
+              chapter/10.1007/978-3-319-59879-6_22>.
+
    [BSI2021]  Federal Office for Information Security (BSI), "Quantum-
               safe cryptography - fundamentals, current developments and
               recommendations", October 2021,
               <https://www.bsi.bund.de/SharedDocs/Downloads/EN/BSI/
               Publications/Brochure/quantum-safe-cryptography.pdf>.
-
-   [CNSA2.0]  National Security Agency, "Commercial National Security
-              Algorithm Suite 2.0", n.d.,
-              <https://media.defense.gov/2022/Sep/07/2003071834/-1/-1/0/
-              CSA_CNSA_2.0_ALGORITHMS_.PDF>.
 
    [ETSI.TS.103.744]
               ETSI, "ETSI TS 103 744 V1.2.1 CYBER-QSC; Quantum-safe
@@ -2786,7 +2750,9 @@ Appendix A.  Maximum Key and Ciphertext Sizes
    *  Compressed vs uncompressed EC point.
 
    *  The RSA public key (n, e) allows e to vary is size between 3 and n
-      - 1 [RFC8017].
+      - 1 [RFC8017].  Note that the size table below assumes the
+      recommended value of e = 65537, so for RSA combinations it is in
+      fact not a true maximum.
 
    *  When the underlying RSA or EC value is itself DER-encoded, integer
       values could occasionally be shorter than expected due to leading
