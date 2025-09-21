@@ -32,9 +32,7 @@ from pyasn1.codec.der.encoder import encode as der_encode
 VERSION_IMPLEMENTED = "draft-ietf-lamps-pq-composite-kem-07"
 
 OID_TABLE = {
-  "id-RSAES-OAEP-2048": univ.ObjectIdentifier((1,2,840,113549,1,1,7)),
-  "id-RSAES-OAEP-3072": univ.ObjectIdentifier((1,2,840,113549,1,1,7)),
-  "id-RSAES-OAEP-4096": univ.ObjectIdentifier((1,2,840,113549,1,1,7)),
+  "id-RSAES-OAEP": univ.ObjectIdentifier((1,2,840,113549,1,1,7)),
   "ECDH-P256": univ.ObjectIdentifier((1,2,840,10045,2,1)),
   "ECDH-P384": univ.ObjectIdentifier((1,2,840,10045,2,1)),
   "ECDH-brainpoolP384r1": univ.ObjectIdentifier((1,2,840,10045,2,1)),
@@ -64,7 +62,6 @@ class KEM:
   pk = None
   sk = None
   id = None
-  oid = None
 
   # returns nothing
   def keyGen(self):
@@ -103,6 +100,8 @@ class ECDSAPrivateKey(univ.Sequence):
 
 class ECDHKEM(KEM):
   curve = None
+  id = "id-ecDH"
+  component_name = "ECDH"
 
   def keyGen(self):
     self.sk = ec.generate_private_key(self.curve)
@@ -165,33 +164,28 @@ class ECDHKEM(KEM):
 
 
 class ECDHP256KEM(ECDHKEM):
-  id = "ECDH-P256"
-  oid = univ.ObjectIdentifier((1,2,840,10045))
   curve = ec.SECP256R1()
+  component_curve = "secp256r1"
 
 
 class ECDHP521KEM(ECDHKEM):
-  id = "ECDH-P521"
-  oid = univ.ObjectIdentifier((1,2,840,10045))
   curve = ec.SECP521R1()
+  component_curve = "secp521r1"
 
 
 class ECDHP384KEM(ECDHKEM):
-  id = "ECDH-P384"
-  oid = univ.ObjectIdentifier((1,2,840,10045))
   curve = ec.SECP384R1()
+  component_curve = "secp384r1"
 
 
 class ECDHBP256KEM(ECDHKEM):
-  id = "ECDH-brainpoolP256r1"
-  oid = univ.ObjectIdentifier((1,2,840,10045))
   curve = ec.BrainpoolP256R1()
+  component_curve = "brainpoolP256r1"
 
 
 class ECDHBP384KEM(ECDHKEM):
-  id = "ECDH-brainpoolP384r1"
-  oid = univ.ObjectIdentifier((1,2,840,10045))
   curve = ec.BrainpoolP384R1()
+  component_curve = "brainpoolP384r1"
 
 
 class XKEM(KEM):
@@ -248,19 +242,21 @@ class XKEM(KEM):
       
 class X25519KEM(XKEM):
   id = "id-X25519"
-  oid = univ.ObjectIdentifier((1,3,101,110))
   curvePrivKey = X25519PrivateKey
   curvePubKey = x25519.X25519PublicKey
+  component_name = "X25519"
 
 
 class X448KEM(XKEM):
   id = "id-X448"
-  oid = univ.ObjectIdentifier((1,3,101,111))
   curvePrivKey = X448PrivateKey
   curvePubKey = x448.X448PublicKey
+  component_name = "X448"
 
 
 class RSAOAPKEM(KEM):
+  component_name = "RSA"
+  id = "id-RSAES-OAEP"
   key_size = None
 
   # returns nothing
@@ -362,22 +358,16 @@ class RSAOAPKEM(KEM):
     
     
 class RSA2048OAEPKEM(RSAOAPKEM):
-  id = "id-RSAES-OAEP-2048"
-  oid = univ.ObjectIdentifier((1,2,840,113549,1,1))
   key_size = 2048
 
 
 # save some copy&paste by inheriting
 class RSA3072OAEPKEM(RSAOAPKEM):
-  id = "id-RSAES-OAEP-3072"
-  oid = univ.ObjectIdentifier((1,2,840,113549,1,1))
   key_size = 3072
 
 
 # save some copy&paste by inheriting
 class RSA4096OAEPKEM(RSAOAPKEM):
-  id = "id-RSAES-OAEP-4096"
-  oid = univ.ObjectIdentifier((1,2,840,113549,1,1))
   key_size = 4096
 
 
@@ -431,20 +421,20 @@ class MLKEM(KEM):
 
 class MLKEM512(MLKEM):
   id = "id-alg-ml-kem-512"
-  oid = univ.ObjectIdentifier((2,16,840,1,101,3,4,4,1))
   mlkem_class = ML_KEM_512
+  component_name = "ML-KEM-512"
   
   
 class MLKEM768(MLKEM):
   id = "id-alg-ml-kem-768"
-  oid = univ.ObjectIdentifier((2,16,840,1,101,3,4,4,2))
   mlkem_class = ML_KEM_768
+  component_name = "ML-KEM-768"
 
 
 class MLKEM1024(MLKEM):
   id = "id-alg-ml-kem-1024"
-  oid = univ.ObjectIdentifier((2,16,840,1,101,3,4,4,3))
   mlkem_class = ML_KEM_1024
+  component_name = "ML-KEM-1024"
 
 
 
@@ -942,8 +932,28 @@ def doKEM(kem, caSK, includeInTestVectors=True, includeInLabelsTable=True, inclu
   if includeInTestVectors:
     testVectorOutput['tests'].append(jsonResult)
 
+  '''
+  - id-...
+    - OID: ...
+    - Label: ...
+    - KDF: ...
+    - ML-KEM variant: ...
+    - Trad Algo:
+      - Trad KEM
+      - RSA size / curve
+      - RSASA_OAEP parameters: see {{rsa-oaep-params}}
+  '''
   if includeInLabelsTable:
-    LABELS_TABLE[kem.id] = (kem.label)
+    LABELS_TABLE[kem.id] = {}
+    LABELS_TABLE[kem.id]['label'] = kem.label  # Intentionally not calling .encode() on this because we want it printed in the draft in ASCII.
+    LABELS_TABLE[kem.id]['kdf'] = kem.kdf
+    LABELS_TABLE[kem.id]['mlkem'] = kem.mlkem.component_name
+    LABELS_TABLE[kem.id]['trad'] = kem.tradkem.component_name
+    LABELS_TABLE[kem.id]['trad_kem_alg'] = kem.tradkem.id
+    if hasattr(kem.tradkem, 'component_curve'):
+      LABELS_TABLE[kem.id]['trad_curve'] = kem.tradkem.component_curve
+    if hasattr(kem.tradkem, 'key_size'):
+      LABELS_TABLE[kem.id]['trad_rsa_key_size'] = str(kem.tradkem.key_size)
 
   if includeInSizeTable:
     sizeRow = {}
@@ -1220,24 +1230,28 @@ def writeSizeTable():
                  str(row['ss']).center(6, ' ') +'|\n')
 
 
-def writeLabelsTable():
+def writeAlgParams():
   """
-  Writes the table of KEM Combiner Labels to go into the draft.
+  Writes the sets of all algorithm to go into the draft.
   """
 
-  with open('labelsTable.md', 'w') as f:
-    f.write("Values are provided as ASCII strings, but MUST be converted into binary in the obvious way.\n")
-    f.write("For example:\n\n")
-    f.write("* \"`"+LABELS_TABLE["id-MLKEM768-X25519-SHA3-256"] + "`\" in hexadecimal is \"`" + LABELS_TABLE["id-MLKEM768-X25519-SHA3-256"].encode().hex()+"`\"\n")
-    f.write("* \"`"+LABELS_TABLE["id-MLKEM768-ECDH-P256-HMAC-SHA256"] + "`\" in hexadecimal is \"`" + LABELS_TABLE["id-MLKEM768-ECDH-P256-HMAC-SHA256"].encode().hex()+"`\"\n")
-    f.write("\n\n")
-
-    f.write('| Composite KEM Algorithm                       | Label (string)                       |\n')
-    f.write('| --------------------------------------------- | ------------------------------------ |\n')
-
+  with open('algParams.md', 'w') as f:
+    
     for alg in LABELS_TABLE:
-        f.write('| ' + alg.ljust(45, ' ') + " | `" + LABELS_TABLE[alg].ljust(36, ' ') + "` |\n")
-
+      f.write("- " + alg + "\n")
+      f.write("  - OID: " + str(OID_TABLE[alg]) + "\n")
+      f.write("  - Label: \"`" + LABELS_TABLE[alg]['label'] + "`\"\n")
+      f.write("  - Key Derivation Function (KDF): " + LABELS_TABLE[alg]['kdf'] + "\n")
+      f.write("  - ML-KEM variant: " + LABELS_TABLE[alg]['mlkem'] + "\n")
+      f.write("  - Traditional Algorithm: " + LABELS_TABLE[alg]['trad'] + "\n")
+      f.write("    - Traditional KEM Algorithm: " + LABELS_TABLE[alg]['trad_kem_alg'] + "\n")
+      if 'trad_curve' in LABELS_TABLE[alg]:
+        f.write("    - ECDH curve: " + LABELS_TABLE[alg]['trad_curve'] + "\n")
+      if 'trad_rsa_key_size' in LABELS_TABLE[alg]:
+        f.write("    - RSA size: " + LABELS_TABLE[alg]['trad_rsa_key_size'] + "\n")
+      if LABELS_TABLE[alg]['trad_kem_alg'] == "id-RSAES-OAEP":
+          f.write("    - RSAES-OAEP parameters: See {{rsa-oaep-params}}\n")
+      f.write("\n")
 
 
 def writeKEMCombinerExample(kem, filename):
@@ -1257,18 +1271,19 @@ def writeKEMCombinerExample(kem, filename):
   ss = kemCombiner(kem, mlkemSS, tradSS, tradCT, tradPK)
 
 
-  wrap_width = 70
+  wrap_width = 67
 
   f.write("# Inputs\n")
   f.write( "\n".join(textwrap.wrap("mlkemSS: " + mlkemSS.hex(), width=wrap_width)) +"\n\n" )
   f.write( "\n".join(textwrap.wrap("tradSS:  " + tradSS.hex(), width=wrap_width)) +"\n\n" )
   f.write( "\n".join(textwrap.wrap("tradCT:  " + tradCT.hex(), width=wrap_width)) +"\n\n" )
   f.write( "\n".join(textwrap.wrap("tradPK:  " + tradPK.hex(), width=wrap_width)) +"\n\n" )
-  f.write( "\n".join(textwrap.wrap("Label:  " + kem.label, width=wrap_width)) +"\n\n" )
+  f.write( "\n".join(textwrap.wrap("Label:  " + kem.label.encode().hex(), width=wrap_width)) +"\n\n" )
+  f.write( "\n".join(textwrap.wrap("\t(ascii: \"" + kem.label+"\")", width=wrap_width)) +"\n\n" )
   f.write("\n")
   f.write("# Combined KDF Input:\n")
   f.write("#  mlkemSS || tradSS || tradCT || tradPK || Label\n\n")
-  f.write( "\n".join(textwrap.wrap("Combined KDF Input: " + mlkemSS.hex() + tradSS.hex() + tradCT.hex() + tradPK.hex() + kem.label, width=wrap_width)) +"\n" )
+  f.write( "\n".join(textwrap.wrap("Combined KDF Input: " + mlkemSS.hex() + tradSS.hex() + tradCT.hex() + tradPK.hex() + kem.label.encode().hex(), width=wrap_width)) +"\n" )
   f.write("\n\n# Outputs\n")
   f.write("# ss = " + kem.kdf + "(Combined KDF Input)\n\n")
   f.write( "\n".join(textwrap.wrap("ss: " + ss.hex(), width=wrap_width)) +"\n" )
@@ -1355,7 +1370,7 @@ def main():
   writeTestVectors()
   writeDumpasn1Cfg()
   writeSizeTable()
-  writeLabelsTable()
+  writeAlgParams()
 
   writeKEMCombinerExample(MLKEM768_X25519_SHA3_256(),"kemCombiner_MLKEM768_X25519_SHA3_256.md")
   writeKEMCombinerExample(MLKEM768_ECDH_P256_HMAC_SHA256(),"kemCombiner_MLKEM768_ECDH_P256_HMAC-SHA256.md")

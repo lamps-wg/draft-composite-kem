@@ -12,8 +12,9 @@ tradCT:
 
 tradPK:
 e55679d58ec4db4e08402346dcb0da6884497c4bfd58b22b4791d80a85d44b63
+Label:  5c2e2f2f5e5c
 
-Label:  \.//^\
+        (ascii: "\.//^\")
 
 
 # Combined KDF Input:
