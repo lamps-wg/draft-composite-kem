@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-09-18T01:49:16.608707+00:00",
+  "timestamp": "2025-09-21T02:00:15.770777+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -8223,7 +8223,7 @@
       "labels": [],
       "body": "\u2026 OCTET STRING to satisfy the CHOICE structure. Closes #172",
       "createdAt": "2025-08-16T21:17:26Z",
-      "updatedAt": "2025-08-28T13:37:20Z",
+      "updatedAt": "2025-09-18T10:56:06Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "38832ef0207bad13b83e9d2a2a7e0351b5b0d28f",
@@ -8250,7 +8250,34 @@
           "updatedAt": "2025-08-28T13:37:20Z"
         }
       ],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO87BCn-B",
+          "commit": {
+            "abbreviatedOid": "f891cb7"
+          },
+          "author": "danvangeest",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "CHANGES_REQUESTED",
+          "body": "",
+          "createdAt": "2025-09-18T10:26:29Z",
+          "updatedAt": "2025-09-18T10:56:06Z",
+          "comments": [
+            {
+              "originalPosition": 16,
+              "body": "`dk_pkcs8` is now a properly encoded ML-KEM PKCS#8 (in this case the seed CHOICE which is an octet string with tag [0]) with ASN.1 type 0x80.\r\n\r\nHowever, `dk` is just a regular OCTET STRING (ASN.1 type 0x04) wrapping the raw private key.  This encoding is useful to no one, it should either be the CHOICE encoding (i.e. the same as `dk_pkcs8` without the PKCS#8 wrapping), or it should be the raw seed without any ANS.1 wrapping.\r\n\r\nSince `ek` is simply a raw public key without any ASN.1 wrapping, I think `pk` should also be the raw key without any ASN.1 wrapping.  Also Appendix F says \"dk the raw decapsulation private key.\"\r\n\r\nSince these tests are meant to mirror the NIST ACVP KATs, should `dk` be the expanded key?  Regardless, the text \"dk the raw decapsulation private key.\" should be changed to a more explicit \"dk the raw decapsulation private key in <seed? expanded?> format.\" `dk_pkcs` could be any of the CHOICE options, currently seed.\r\n\r\nPerhaps controversially, do `ek` and `dk` actually need to be included in the test vectors when we already have `x5c` and `dk_pkcs8`?  Possibly, since some implementations may only implement the algorithm and some may also implement the encoding.",
+              "createdAt": "2025-09-18T10:26:29Z",
+              "updatedAt": "2025-09-18T10:56:06Z"
+            },
+            {
+              "originalPosition": 11,
+              "body": "Per my other comment on this review, I believe that `dk` should just be the raw bytes.  Hence the standalone KEM logic on line 1159 should be removed and the raw bytes always set for `jsonTest['dk']`.\r\n\r\nOnly when encoding the key into PKCS#8 does there need to be different logic.  Here on line 1175 the comment should be changed from\r\n\r\n> \\# for standalone ML-KEM, we need to wrap the private key in an OCTET STRING, but not when it's a composite\r\n\r\nto\r\n\r\n> \\# for standalone ML-KEM, we need to encode the private key using ML-DSA's CHOICE encoding, but not when it's a composite",
+              "createdAt": "2025-09-18T10:54:21Z",
+              "updatedAt": "2025-09-18T10:56:06Z"
+            }
+          ]
+        }
+      ]
     },
     {
       "number": 195,
@@ -8522,7 +8549,7 @@
       "labels": [],
       "body": "The major change is to rearrange how per-composite Composite ML-KEM\r\nparameters are presented.  Rather than per-parameter tables, each\r\ncomposite is listed with its OID and all its parameter.  As an\r\nimplementer it is easier to use, there is no bouncing back\r\nand forth between tables.\r\n\r\nAdditionally it fixes nagative indentation issues of code blocks.",
       "createdAt": "2025-09-04T12:39:52Z",
-      "updatedAt": "2025-09-17T19:29:49Z",
+      "updatedAt": "2025-09-18T11:49:37Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "524341e0bdd8a59e12ae746d3f8df09b1c44ee0a",
@@ -8669,6 +8696,38 @@
               "updatedAt": "2025-09-17T14:59:15Z"
             }
           ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO87BEJff",
+          "commit": {
+            "abbreviatedOid": "eca25eb"
+          },
+          "author": "danvangeest",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-09-18T11:38:17Z",
+          "updatedAt": "2025-09-18T11:49:37Z",
+          "comments": [
+            {
+              "originalPosition": 25,
+              "body": "From a quick scan, `oid` is never used and should be removed from all classes to avoid confusion.",
+              "createdAt": "2025-09-18T11:38:18Z",
+              "updatedAt": "2025-09-18T11:49:37Z"
+            },
+            {
+              "originalPosition": 51,
+              "body": "Similar to the X-wing label, the \"QSF-MLKEM1024-P384-HMACSHA512\" portion of this should be in hexadecimal (presumably there's a way to fix this globally, just commenting here so it's easy to verify later)",
+              "createdAt": "2025-09-18T11:48:18Z",
+              "updatedAt": "2025-09-18T11:49:37Z"
+            },
+            {
+              "originalPosition": 42,
+              "body": "Similar to the X-wing label, the \"QSF-MLKEM768-P256-HMACSHA256\" portion of this should be in hexadecimal (presumably there's a way to fix this globally, just commenting here so it's easy to verify later)",
+              "createdAt": "2025-09-18T11:48:35Z",
+              "updatedAt": "2025-09-18T11:49:37Z"
+            }
+          ]
         }
       ]
     },
@@ -8698,6 +8757,40 @@
         "oid": "d488497f16fe36be8bc09ba4b8e6711814efa9c0"
       },
       "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 210,
+      "id": "PR_kwDOKRPFO86pmJW9",
+      "title": "Tweaked the wording of the Encoding to DER section",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/210",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Closes #192 ",
+      "createdAt": "2025-09-19T22:26:22Z",
+      "updatedAt": "2025-09-19T22:38:55Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "d488497f16fe36be8bc09ba4b8e6711814efa9c0",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_der",
+      "headRefOid": "2c5175d86ac26c102143fc7ff4eda034e149ccd5",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I got confused about branches. So this PR also contains a tweak to the 65537 text.",
+          "createdAt": "2025-09-19T22:38:55Z",
+          "updatedAt": "2025-09-19T22:38:55Z"
+        }
+      ],
       "reviews": []
     }
   ]
