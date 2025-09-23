@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-09-21T02:00:15.770777+00:00",
+  "timestamp": "2025-09-23T01:50:03.680879+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -2825,15 +2825,15 @@
       "id": "I_kwDOKRPFO868Mddt",
       "title": "Invalid encoding for non-composite ML-KEM test vectors",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/172",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "danvangeest",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "While the non-composite ML-KEM test vectors don't actually test composites, they're useful for verifying one's framework when using these test vectors.\n\nThe PKCS#8 non-composite ML-KEM test vectors are encoded incorrectly. They contain the seed in the private key OCTET STRING without any additional wrapping.  Because the CHOICE encoding is now used for ML-KEM, when encoded as a seed the private key needs an extra layer of OCTET STRING.\n\nNot sure how you then want to handle the raw key.  Should it be the raw SEED, or the raw CHOICE (no PKCS#8, but still CHOICE ANS.1 encoding).",
       "createdAt": "2025-06-18T15:49:20Z",
-      "updatedAt": "2025-07-02T15:20:34Z",
-      "closedAt": null,
+      "updatedAt": "2025-09-21T21:48:21Z",
+      "closedAt": "2025-09-21T21:48:20Z",
       "comments": [
         {
           "author": "johngray-dev",
@@ -3091,7 +3091,7 @@
       "labels": [],
       "body": "> In alignment with ML-KEM [FIPS.203], Composite KEM algorithms output a 256-bit shared secret key at all security levels, truncating is necessary as described in {{sec-kem-combiner}}.\n\nWhere the combiner is SHA3-256 or HMAC-SHA256 this is all good.\n\nHowever where the combiner is HMAC-SHA512 it means we truncate the output to 256 bits.\n\nThis is a headache in the FIPS context:\n* I see nothing in SP800-227ipd which permits truncation, so we can only appeal to the underlying KDF specs.\n* If the combiner is interpreted as the an SP800-56Cr2 one-step KDF we could only get away with it if the result is used directly as key material (it's conceptually the same as only needing 256 bits of KDF output).\n* If the combiner is interpreted as the Extract phase of an SP800-56Cr2 two-step KDF it won't work: the text is clear that the HMAC must be untruncated.\n\nSo if you want more than one AES-256 key, or two AES-128 keys, you're out of luck. I have concrete use cases for up to 1024 bits of output from a PQ/T hybrid KEM so this is going to be a problem for me. (My current use cases don't involve interop so I do have a good plan B, but I'd still like to align with the rest of the world if possible.)\n\nI think I have some responsibility for this, having previously cheered on the use of HMAC-SHA512.\n\nMy suggestion is to remove all truncated HMAC-SHA512 and replace with untruncated HMAC-SHA256. I don't believe this will have any meaningful impact on security level.",
       "createdAt": "2025-06-26T14:50:48Z",
-      "updatedAt": "2025-08-29T09:22:34Z",
+      "updatedAt": "2025-09-21T22:16:21Z",
       "closedAt": null,
       "comments": [
         {
@@ -3121,6 +3121,13 @@
           "body": "Thankyou John.\n\n> If we use HMAC-SHA256, lower collision resistance of internal HMAC... does this matter\n\nAFAIK it does not.\n\nPer https://eprint.iacr.org/2006/043.pdf the security of HMAC-H, for a Merkle-Damg\u00e5rd hash H, does not depend on the collision resistance of H but only on the compression function being a PRF. The proof here was motivated by the weakness of SHA1 but we could lean on it here to disregard the 128-bit collision resistance of SHA256.\n\nIntuitively, even if an adversary has an efficient SHA256 collision finder (supporting chosen prefixes and suffixes) and can break exactly one of the component KEMs (i.e. letting them learn or control one of the two shared secrets), what are they going to do with these tools? There is still at least one secret input involved in any key establishment operation so they have no way to make their collision finder match it short of exhaustive search over about 2^256 possible values. Conversely if they start by choosing a colliding pair they have no way to 'drive' the unbroken KEM to match the its secret in one of their inputs better than ~2^256 exhaustive search.",
           "createdAt": "2025-08-29T09:22:34Z",
           "updatedAt": "2025-08-29T09:22:34Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Relates to #206 ",
+          "createdAt": "2025-09-21T22:16:21Z",
+          "updatedAt": "2025-09-21T22:16:21Z"
         }
       ]
     },
@@ -3209,7 +3216,7 @@
       "id": "I_kwDOKRPFO87EQrol",
       "title": "Encoding to DER in obvious ways",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/192",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "bencemali",
       "authorAssociation": "NONE",
       "assignees": [
@@ -3220,8 +3227,8 @@
       ],
       "body": "Section 6.1 says the following:\n```\n... the composite value MUST be wrapped into a DER BIT STRING or OCTET STRING in the obvious ways.\n```\nTo me something like *obvious ways* seems unfitting for an RFC. This wording is especially misleading as the ASN.1 BIT STRING type was not intended to hold byte array like data, but a sequence of flags, and in examples like certificate `subjectPublicKey` fields, one explicitly needs to keep the trailing zeros (see OpenSSL's `ossl_asn1_string_set_bits_left` for example). This may be worth clarifying.",
       "createdAt": "2025-08-05T11:22:39Z",
-      "updatedAt": "2025-08-28T14:28:17Z",
-      "closedAt": null,
+      "updatedAt": "2025-09-21T21:13:27Z",
+      "closedAt": "2025-09-21T21:13:27Z",
       "comments": [
         {
           "author": "ounsworth",
@@ -3318,7 +3325,7 @@
       "id": "I_kwDOKRPFO87IfTZy",
       "title": "Add Consolidated Algorithm Table for KEM",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/201",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "johngray-dev",
       "authorAssociation": "COLLABORATOR",
       "assignees": [
@@ -3327,8 +3334,8 @@
       "labels": [],
       "body": "Similar to https://github.com/lamps-wg/draft-composite-sigs/pull/254 in signatures, we want to do in KEM.",
       "createdAt": "2025-08-28T14:53:41Z",
-      "updatedAt": "2025-08-28T14:53:41Z",
-      "closedAt": null,
+      "updatedAt": "2025-09-21T21:12:45Z",
+      "closedAt": "2025-09-21T21:12:45Z",
       "comments": []
     },
     {
@@ -3343,39 +3350,79 @@
       "labels": [],
       "body": "This is the only outstanding item not covered in https://github.com/lamps-wg/draft-composite-sigs/issues/244\n\nSHA2 vs SHA3 for the KEM combiner. Alignment with cms-mldsa which uses SHA2, vs alignment with cfrg-hybrid-kems which uses SHA3. MikeO is working with Richard Barnes. We need to re-survey the community on the operational requirements behind this point. It would be nice if we could just use SHA3 throughout, maybe except for the RSA composites which CFRG doesn't have.",
       "createdAt": "2025-09-10T13:50:14Z",
-      "updatedAt": "2025-09-10T13:50:14Z",
+      "updatedAt": "2025-09-22T11:34:34Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Will need to update the FIPS Compliance section.\n\nSome pointers from Richard:\n\nApprovals analysis:\nSP800-227 approves the SP800-56Cr2 KDFs\nFIPS 140-3 IG D.P approves the counterless variant of the SP800-56Cr2 s4.1 provided the output is no longer than the hash function output, i.e. an approved hash can be a one-step KDF.\nSP800-131Ar2 approves SHA3 for all uses",
+          "createdAt": "2025-09-22T11:34:33Z",
+          "updatedAt": "2025-09-22T11:34:33Z"
+        }
+      ]
     },
     {
       "number": 208,
       "id": "I_kwDOKRPFO87L-Quc",
       "title": "Using Figures to list algorithm steps",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/208",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "danvangeest",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Figures are used to list algorithm steps, e.g. \"Figure 1: Composite-ML-KEM<OID>.KeyGen() -> (pk, sk)\".\n\nBecause the contents of the figure is just a sequence of lines of text, when reading the pdf and txt versions of the draft, it's not clear where the figure begins.  At a minimum these figures should be indented a number of spaces, but really do they need to be labeled figures at all?  The figure numbers aren't referenced from anywhere, \n",
       "createdAt": "2025-09-16T12:32:33Z",
-      "updatedAt": "2025-09-16T12:32:33Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2025-09-21T21:49:51Z",
+      "closedAt": "2025-09-21T21:49:50Z",
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Fixed in b2c0085eb899ffc85f50b9005e6182c5bcbffc5a",
+          "createdAt": "2025-09-21T21:49:51Z",
+          "updatedAt": "2025-09-21T21:49:51Z"
+        }
+      ]
     },
     {
       "number": 209,
       "id": "I_kwDOKRPFO87L-ZCH",
       "title": "Timing invariance in KeyGen",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/209",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "danvangeest",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "The draft says keygen SHOULD be timing invariant if one of the algorithms fails.  Is this actually necessary?  You can't learn anything about the keys if you never use them because one of them failed.  Even if you keep the successful one and regen the failed one, is an attacker learning anything useful.  This seems like an unnecessary stipulation to include.",
       "createdAt": "2025-09-16T12:40:34Z",
-      "updatedAt": "2025-09-16T12:40:34Z",
+      "updatedAt": "2025-09-21T22:15:20Z",
+      "closedAt": "2025-09-21T22:15:20Z",
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Fixed in 269c11ae58725630084aefc10c322bf5ad927c42",
+          "createdAt": "2025-09-21T22:15:20Z",
+          "updatedAt": "2025-09-21T22:15:20Z"
+        }
+      ]
+    },
+    {
+      "number": 211,
+      "id": "I_kwDOKRPFO87M9dJ2",
+      "title": "Roll the OIDs for -08",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/211",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-09-21T22:14:16Z",
+      "updatedAt": "2025-09-21T22:14:16Z",
       "closedAt": null,
       "comments": []
     }
@@ -7604,7 +7651,7 @@
       "labels": [],
       "body": "Closes #166 \r\nCloses #168 \r\nCloses #169\r\nCloses #164",
       "createdAt": "2025-06-04T19:58:13Z",
-      "updatedAt": "2025-06-12T17:26:48Z",
+      "updatedAt": "2025-09-21T21:33:01Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "a23cd0165c32e0870c973f64085e804d92b5db0a",
@@ -7940,7 +7987,7 @@
       "labels": [],
       "body": "Closes #179",
       "createdAt": "2025-07-09T18:22:46Z",
-      "updatedAt": "2025-08-15T12:39:26Z",
+      "updatedAt": "2025-09-21T21:33:01Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "51420da83d152fbc7d8b659032d9efcfe7f1b01b",
@@ -8216,24 +8263,26 @@
       "id": "PR_kwDOKRPFO86j9buL",
       "title": "Properly wrapped the non-composite ML-KEM test vector priv keys in an\u2026",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/194",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "\u2026 OCTET STRING to satisfy the CHOICE structure. Closes #172",
       "createdAt": "2025-08-16T21:17:26Z",
-      "updatedAt": "2025-09-18T10:56:06Z",
+      "updatedAt": "2025-09-21T21:48:22Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
-      "baseRefOid": "38832ef0207bad13b83e9d2a2a7e0351b5b0d28f",
+      "baseRefOid": "e15f5d5018e52a932a4147b249cded2864841f89",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_mlkem_priv_raw",
-      "headRefOid": "f891cb71d13e4c78726f7bcd6ce88304c34b9a13",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "b0f6c0b413004edb69170f6b9064835522f5c227",
+      "closedAt": "2025-09-21T21:48:20Z",
+      "mergedAt": "2025-09-21T21:48:20Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "feff3c8374e353c60bfff3e111b123dbf129912c"
+      },
       "comments": [
         {
           "author": "ounsworth",
@@ -8274,6 +8323,46 @@
               "body": "Per my other comment on this review, I believe that `dk` should just be the raw bytes.  Hence the standalone KEM logic on line 1159 should be removed and the raw bytes always set for `jsonTest['dk']`.\r\n\r\nOnly when encoding the key into PKCS#8 does there need to be different logic.  Here on line 1175 the comment should be changed from\r\n\r\n> \\# for standalone ML-KEM, we need to wrap the private key in an OCTET STRING, but not when it's a composite\r\n\r\nto\r\n\r\n> \\# for standalone ML-KEM, we need to encode the private key using ML-DSA's CHOICE encoding, but not when it's a composite",
               "createdAt": "2025-09-18T10:54:21Z",
               "updatedAt": "2025-09-18T10:56:06Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO87BuZik",
+          "commit": {
+            "abbreviatedOid": "f891cb7"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-09-21T21:21:43Z",
+          "updatedAt": "2025-09-21T21:21:43Z",
+          "comments": [
+            {
+              "originalPosition": 16,
+              "body": "Good point. My intention was for it to be the raw seed.\r\nAnd that's what's done in composite-sigs:\r\nhttps://github.com/lamps-wg/draft-composite-sigs/blob/main/src/testvectors.json#L8\r\n\r\n... so that's a bug. I'll fix that.\r\n\r\n... somewhat embarassingly, I ended up having to put in stupid wrapper code to deal with this stray OCTET STRING ... and yet I still didn't realize that this was wrong LOL\r\n\r\n```\r\n  def loadKeyPair(self, private_bytes: bytes) -> None:\r\n    if len(private_bytes) == 66:\r\n      # there's an extra OctetString wrapper\r\n      private_bytes = private_bytes[2:]\r\n```\r\n\r\nGreat. Let's take that out.",
+              "createdAt": "2025-09-21T21:21:43Z",
+              "updatedAt": "2025-09-21T21:22:11Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO87BuauQ",
+          "commit": {
+            "abbreviatedOid": "f891cb7"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-09-21T21:39:07Z",
+          "updatedAt": "2025-09-21T21:39:07Z",
+          "comments": [
+            {
+              "originalPosition": 16,
+              "body": "Fixed in [5ac0c98](https://github.com/lamps-wg/draft-composite-kem/pull/194/commits/5ac0c9866ddda1dc2a08211900224eaf4fd5b333)",
+              "createdAt": "2025-09-21T21:39:07Z",
+              "updatedAt": "2025-09-21T21:39:07Z"
             }
           ]
         }
@@ -8319,7 +8408,7 @@
       "labels": [],
       "body": "Closes #188",
       "createdAt": "2025-08-17T15:12:01Z",
-      "updatedAt": "2025-08-17T15:48:48Z",
+      "updatedAt": "2025-09-21T21:32:55Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "eb3c35a64aaef569dcaf58badfb2e4a07ab32e36",
@@ -8542,24 +8631,26 @@
       "id": "PR_kwDOKRPFO86m2cj9",
       "title": "Adds consolidated algorithm table.",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/205",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "janklaussner",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "The major change is to rearrange how per-composite Composite ML-KEM\r\nparameters are presented.  Rather than per-parameter tables, each\r\ncomposite is listed with its OID and all its parameter.  As an\r\nimplementer it is easier to use, there is no bouncing back\r\nand forth between tables.\r\n\r\nAdditionally it fixes nagative indentation issues of code blocks.",
       "createdAt": "2025-09-04T12:39:52Z",
-      "updatedAt": "2025-09-18T11:49:37Z",
+      "updatedAt": "2025-09-21T21:12:47Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
-      "baseRefOid": "524341e0bdd8a59e12ae746d3f8df09b1c44ee0a",
+      "baseRefOid": "792eb041b44d7d7c69d85013863fa5e207b84f34",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "201-add-consolidated-algorithm-table-for-kem",
-      "headRefOid": "eca25eb448d0468e2fe9efb4c11fc8469f64c388",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "cdc60b61149eb2773fa3a6afd624d3a38f608b88",
+      "closedAt": "2025-09-21T21:12:44Z",
+      "mergedAt": "2025-09-21T21:12:44Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "024e1db362585015a694489a14410559935c4d90"
+      },
       "comments": [
         {
           "author": "johngray-dev",
@@ -8728,6 +8819,66 @@
               "updatedAt": "2025-09-18T11:49:37Z"
             }
           ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO87BuTE0",
+          "commit": {
+            "abbreviatedOid": "eca25eb"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-09-21T19:48:42Z",
+          "updatedAt": "2025-09-21T19:48:42Z",
+          "comments": [
+            {
+              "originalPosition": 51,
+              "body": "Fixed.",
+              "createdAt": "2025-09-21T19:48:42Z",
+              "updatedAt": "2025-09-21T19:48:42Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO87BuTGR",
+          "commit": {
+            "abbreviatedOid": "eca25eb"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-09-21T19:48:54Z",
+          "updatedAt": "2025-09-21T19:48:54Z",
+          "comments": [
+            {
+              "originalPosition": 42,
+              "body": "Fixed.",
+              "createdAt": "2025-09-21T19:48:54Z",
+              "updatedAt": "2025-09-21T19:48:55Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO87BuTTS",
+          "commit": {
+            "abbreviatedOid": "eca25eb"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-09-21T19:52:21Z",
+          "updatedAt": "2025-09-21T19:52:21Z",
+          "comments": [
+            {
+              "originalPosition": 25,
+              "body": "Removed.",
+              "createdAt": "2025-09-21T19:52:21Z",
+              "updatedAt": "2025-09-21T19:52:21Z"
+            }
+          ]
         }
       ]
     },
@@ -8764,24 +8915,26 @@
       "id": "PR_kwDOKRPFO86pmJW9",
       "title": "Tweaked the wording of the Encoding to DER section",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/210",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Closes #192 ",
       "createdAt": "2025-09-19T22:26:22Z",
-      "updatedAt": "2025-09-19T22:38:55Z",
+      "updatedAt": "2025-09-21T21:13:29Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "d488497f16fe36be8bc09ba4b8e6711814efa9c0",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_der",
       "headRefOid": "2c5175d86ac26c102143fc7ff4eda034e149ccd5",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-09-21T21:13:26Z",
+      "mergedAt": "2025-09-21T21:13:26Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "e15f5d5018e52a932a4147b249cded2864841f89"
+      },
       "comments": [
         {
           "author": "ounsworth",
