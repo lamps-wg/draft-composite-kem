@@ -873,17 +873,21 @@ Table of Contents
 
    In Composite ML-KEM, not all component algorithms will be implicitly
    rejecting, for example RSA-OAEP's Decrypt() can return an error if
-   the padding is incorrect.  In general, Composite ML-KEM SHOULD
-   forward any errors produced by a component algorithm to its caller;
-   I.E.  Composite ML-KEM SHOULD be explicitly rejecting whenever one of
-   its components is.  In some situations, a Composite ML-KEM
-   implementation might be forced to behave as an implicitly rejecting
-   KEM -- for example if it is required to match exactly the API of ML-
-   KEM and is not allowed to return errors -- in which case it is
-   acceptable to return a freshly generated 256-bit cryptographically
-   random value as the shared secret.  Since the goal here is simply to
-   fit an API and not to turn Composite ML-KEM into a true implicitly
-   rejecting KEM, it is ok that this does not provide the security of an
+   the padding is incorrect.  In general, in the case that one of the
+   component primitives generates an error during Composite ML-KEM
+   KeyGen, Encaps, or Decaps, If a component primitive returns an error,
+   Composite ML-KEM SHOULD clear all buffers containing key material and
+   forward the error to its caller; I.E.  Composite ML-KEM SHOULD be
+   explicitly rejecting whenever one of its components is.
+
+   An exception case to this could arise if a Composite ML-KEM
+   implementation is required to fit an API which does not allow for
+   returning errors, as might be the case of a Decaps API designed for
+   ML-KEM.  In such a case it is acceptable to return a freshly
+   generated 256-bit cryptographically random value as the shared
+   secret.  Since the goal in this case would be simply to satisfy an
+   API and not to turn Composite ML-KEM into a true implicitly rejecting
+   KEM, it is ok that this does not provide the security of an
    implicitly rejecting KEM -- I.E. it is ok that this returns different
    shared secrets for successive decapsulations of the same error-
    causing ciphertext.  That said, the rejection value MUST be
