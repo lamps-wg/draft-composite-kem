@@ -865,7 +865,7 @@ Table of Contents
 4.5.  Error Handling and Explicit Rejection
 
    ML-KEM, particularly its Decaps() defined in Algorithms 18 and 21 of
-   [FIPS.203] is designed to be implicitly rejecting, meaning that ML-
+   [FIPS.203], is designed to be implicitly rejecting, meaning that ML-
    KEM.Decaps() will never return an error, but instead any errors
    encountered during decapsulation are handled by producing a pseudo-
    randomized shared secret that does not match the intended shared
@@ -875,21 +875,22 @@ Table of Contents
    rejecting, for example RSA-OAEP's Decrypt() can return an error if
    the padding is incorrect.  In general, Composite ML-KEM SHOULD
    forward any errors produced by a component algorithm to its caller;
-   ie Composite ML-KEM SHOULD be explicitly rejecting whenever one of
+   I.E.  Composite ML-KEM SHOULD be explicitly rejecting whenever one of
    its components is.  In some situations, a Composite ML-KEM
    implementation might be forced to behave as an implicitly rejecting
-   KEM -- for example if it must match exactly the API of ML-KEM and is
-   not allowed to return errors -- in which case it is acceptable to
-   return a freshly-generated 256-bit cryptographically random value as
-   the shared secret.  Since the goal here is simply to fit an API and
-   not to turn Composite ML-KEM into a true implicitly rejecting KEM, it
-   is ok that this does not provide the security of an implicitly
-   rejecting KEM -- I.E. it is ok that this returns different shared
-   secrets for successive decapsulations of the same error-causing
-   ciphertext.  That said, the rejection value MUST by cryptographically
-   random, and implementations MUST NOT return a fixed value such as all
-   zeros, as this could lead to catestrophic loss of security if an
-   application does not notice and uses this to protect data.
+   KEM -- for example if it is required to match exactly the API of ML-
+   KEM and is not allowed to return errors -- in which case it is
+   acceptable to return a freshly generated 256-bit cryptographically
+   random value as the shared secret.  Since the goal here is simply to
+   fit an API and not to turn Composite ML-KEM into a true implicitly
+   rejecting KEM, it is ok that this does not provide the security of an
+   implicitly rejecting KEM -- I.E. it is ok that this returns different
+   shared secrets for successive decapsulations of the same error-
+   causing ciphertext.  That said, the rejection value MUST be
+   cryptographically random, and implementations MUST NOT return a fixed
+   value such as all zeros, as this could lead to catastrophic loss of
+   security if an application does not notice and uses this to protect
+   data.
 
 5.  Serialization
 
