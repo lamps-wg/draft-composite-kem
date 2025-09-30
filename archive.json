@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-09-23T01:50:03.680879+00:00",
+  "timestamp": "2025-09-30T01:49:52.232415+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -3423,6 +3423,22 @@
       "body": "",
       "createdAt": "2025-09-21T22:14:16Z",
       "updatedAt": "2025-09-21T22:14:16Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 212,
+      "id": "I_kwDOKRPFO87OmVEX",
+      "title": "Implicit rejection",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/212",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Followup from the CFRG Hybrid KEMs interim.\n\nhttps://mailarchive.ietf.org/arch/msg/spasm/-8O9dFQruU9pQN81aHJb0f2FjGE/\n\nI think the outcome is to add an implementation note:\n\n> \"If you want to fit this into a KEM API that is not capable of returning errors, then feel free to return a randomized shared secret instead of an error.\"",
+      "createdAt": "2025-09-29T18:37:25Z",
+      "updatedAt": "2025-09-29T18:37:25Z",
       "closedAt": null,
       "comments": []
     }
