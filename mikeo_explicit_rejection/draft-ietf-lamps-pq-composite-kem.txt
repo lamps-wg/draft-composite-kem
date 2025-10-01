@@ -600,7 +600,7 @@ Table of Contents
    the private key serialization routines defined in Section 5.2 only
    support ML-KEM keys as seeds.
 
-   Erors produced by the component KeyGen() routines MUST be forwarded
+   Errors produced by the component KeyGen() routines MUST be forwarded
    on to the calling application.  Further discussion can be found below
    in Section 4.5.
 
@@ -686,7 +686,7 @@ Table of Contents
    The specific values for KDF and the specific values for Label are
    defined per Composite ML-KEM algorithm in Section 7.
 
-   Erors produced by the component Encaps() routines MUST be forwarded
+   Errors produced by the component Encaps() routines MUST be forwarded
    on to the calling application.  Further discussion can be found below
    in Section 4.5.
 
@@ -803,7 +803,7 @@ Table of Contents
    leading zeroes; since these variations are not attacker-controlled
    they are considered benign.
 
-   Erors produced by the component Decaps() routines MUST be forwarded
+   Errors produced by the component Decaps() routines MUST be forwarded
    on to the calling application.  Further discussion can be found below
    in Section 4.5.
 
