@@ -154,11 +154,12 @@ Table of Contents
       concrete-hybrid-kems-00, but no reference to it because I don't
       want this to get stuck in MISREF.
 
+   *  Added a normative section saying that the composite MUST forward
+      any errors produced by the component primitives.
+
    Editorial changes:
 
-   *  Changed the "domain separator" to "KEM Combiner Label" to match
-      draft-irtf-cfrg-concrete-hybrid-kems-00, but no reference to it
-      because I don't want this to get stuck in MISREF.
+   *  none...
 
    Still to do in a future version:
 
