@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 3 April 2026                                            M. Pala
+Expires: 4 April 2026                                            M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                       30 September 2025
+                                                          1 October 2025
 
 
       Composite ML-KEM for use in X.509 Public Key Infrastructure
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 3 April 2026.
+   This Internet-Draft will expire on 4 April 2026.
 
 Copyright Notice
 
@@ -600,6 +600,10 @@ Table of Contents
    the private key serialization routines defined in Section 5.2 only
    support ML-KEM keys as seeds.
 
+   Erors produced by the component KeyGen() routines MUST be forwarded
+   on to the calling application.  Further discussion can be found below
+   in Section 4.5.
+
 4.2.  Encapsulation
 
    The Encap(pk) of a Composite ML-KEM algorithm is designed to behave
@@ -681,6 +685,10 @@ Table of Contents
 
    The specific values for KDF and the specific values for Label are
    defined per Composite ML-KEM algorithm in Section 7.
+
+   Erors produced by the component Encaps() routines MUST be forwarded
+   on to the calling application.  Further discussion can be found below
+   in Section 4.5.
 
 4.3.  Decapsulation
 
@@ -795,10 +803,9 @@ Table of Contents
    leading zeroes; since these variations are not attacker-controlled
    they are considered benign.
 
-   In general, errors produced by the component Decaps() routines SHOULD
-   be forwarded on to the calling application -- I.E.  Composite ML-KEM
-   Decaps() SHOULD behave as an explicitly rejecting KEM.  Further
-   discussion can be found below in Section 4.5.
+   Erors produced by the component Decaps() routines MUST be forwarded
+   on to the calling application.  Further discussion can be found below
+   in Section 4.5.
 
 4.4.  KEM Combiner Function
 
@@ -865,36 +872,24 @@ Table of Contents
 4.5.  Error Handling and Explicit Rejection
 
    ML-KEM, particularly its Decaps() defined in Algorithms 18 and 21 of
-   [FIPS.203], is designed to be implicitly rejecting, meaning that ML-
-   KEM.Decaps() will never return an error, but instead any errors
-   encountered during decapsulation are handled by producing a pseudo-
-   randomized shared secret that does not match the intended shared
-   secret.
+   [FIPS.203], is designed to be implicitly rejecting, meaning that a
+   failure within the underlying PKE scheme will not cause ML-
+   KEM.Decaps() to return an error, but instead any errors encountered
+   during decapsulation are handled by producing a pseudo-randomized
+   shared secret that does not match the intended shared secret.  ML-
+   KEM.Decaps() can, however return errors for example if the provided
+   ciphertext is the wrong size.
 
    In Composite ML-KEM, not all component algorithms will be implicitly
    rejecting, for example RSA-OAEP's Decrypt() can return an error if
    the padding is incorrect.  In general, in the case that one of the
    component primitives generates an error during Composite ML-KEM
    KeyGen, Encaps, or Decaps, If a component primitive returns an error,
-   Composite ML-KEM SHOULD clear all buffers containing key material and
-   forward the error to its caller; I.E.  Composite ML-KEM SHOULD be
-   explicitly rejecting whenever one of its components is.
-
-   An exception case to this could arise if a Composite ML-KEM
-   implementation is required to fit an API which does not allow for
-   returning errors, as might be the case of a Decaps API designed for
-   ML-KEM.  In such a case it is acceptable to return a freshly
-   generated 256-bit cryptographically random value as the shared
-   secret.  Since the goal in this case would be simply to satisfy an
-   API and not to turn Composite ML-KEM into a true implicitly rejecting
-   KEM, it is ok that this does not provide the security of an
-   implicitly rejecting KEM -- I.E. it is ok that this returns different
-   shared secrets for successive decapsulations of the same error-
-   causing ciphertext.  That said, the rejection value MUST be
-   cryptographically random, and implementations MUST NOT return a fixed
-   value such as all zeros, as this could lead to catastrophic loss of
-   security if an application does not notice and uses this to protect
-   data.
+   Composite ML-KEM MUST clear all buffers containing key material and
+   forward the error to its caller; I.E.  Composite ML-KEM MUST be
+   explicitly rejecting whenever one of its components is.  The same
+   applies to Composite ML-KEM KeyGen() and Encaps(): Composite KEM MUST
+   forward any errors produced by component algorithms.
 
 5.  Serialization
 
