@@ -873,18 +873,19 @@ Table of Contents
 
    ML-KEM, particularly its Decaps() defined in Algorithms 18 and 21 of
    [FIPS.203], is designed to be implicitly rejecting, meaning that a
-   failure within the underlying PKE scheme will not cause ML-
-   KEM.Decaps() to return an error, but instead any errors encountered
-   during decapsulation are handled by producing a pseudo-randomized
-   shared secret that does not match the intended shared secret.  ML-
-   KEM.Decaps() can, however return errors for example if the provided
-   ciphertext is the wrong size.
+   failure within the underlying PKE scheme due to a mangled ciphertext
+   will not cause ML-KEM.Decaps() to return an error, but instead any
+   errors encountered during decapsulation are handled by producing a
+   pseudo-randomized shared secret that does not match the intended
+   shared secret.  ML-KEM.Decaps() can, however return errors for
+   example if the provided ciphertext or decapsulation private key is
+   the wrong size.
 
    In Composite ML-KEM, not all component algorithms will be implicitly
    rejecting, for example RSA-OAEP's Decrypt() can return an error if
    the padding is incorrect.  In general, in the case that one of the
    component primitives generates an error during Composite ML-KEM
-   KeyGen, Encaps, or Decaps, If a component primitive returns an error,
+   KeyGen, Encaps, or Decaps, if a component primitive returns an error,
    Composite ML-KEM MUST clear all buffers containing key material and
    forward the error to its caller; I.E.  Composite ML-KEM MUST be
    explicitly rejecting whenever one of its components is.  The same
