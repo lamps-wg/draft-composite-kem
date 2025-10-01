@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 25 March 2026                                           M. Pala
+Expires: 4 April 2026                                            M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                       21 September 2025
+                                                          1 October 2025
 
 
       Composite ML-KEM for use in X.509 Public Key Infrastructure
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 25 March 2026.
+   This Internet-Draft will expire on 4 April 2026.
 
 Copyright Notice
 
@@ -89,6 +89,7 @@ Table of Contents
      4.2.  Encapsulation
      4.3.  Decapsulation
      4.4.  KEM Combiner Function
+     4.5.  Error Handling and Explicit Rejection
    5.  Serialization
      5.1.  SerializePublicKey and DeserializePublicKey
      5.2.  SerializePrivateKey and DeserializePrivateKey
@@ -153,11 +154,12 @@ Table of Contents
       concrete-hybrid-kems-00, but no reference to it because I don't
       want this to get stuck in MISREF.
 
+   *  Added a normative section saying that the composite MUST forward
+      any errors produced by the component primitives.
+
    Editorial changes:
 
-   *  Changed the "domain separator" to "KEM Combiner Label" to match
-      draft-irtf-cfrg-concrete-hybrid-kems-00, but no reference to it
-      because I don't want this to get stuck in MISREF.
+   *  none...
 
    Still to do in a future version:
 
@@ -585,17 +587,23 @@ Table of Contents
    below to accommodate particular private key storage mechanisms or
    alternate interfaces to the underlying cryptographic modules are
    considered to be conformant to this specification so long as they
-   produce the same output and error handling.  For example, component
-   private keys stored in separate software or hardware modules where it
-   is not possible to do a joint simultaneous keygen would be considered
-   compliant so long as both keys are freshly generated.  It is also
-   possible that the underlying cryptographic module does not expose a
-   ML-KEM.KeyGen(seed) that accepts an externally-generated seed, and
-   instead an alternate keygen interface must be used.  Note however
-   that cryptographic modules that do not support seed-based ML-KEM key
-   generation will be incapable of importing or exporting composite keys
-   in the standard format since the private key serialization routines
-   defined in Section 5.2 only support ML-KEM keys as seeds.
+   produce the same output and error handling.
+
+   For example, component private keys stored in separate software or
+   hardware modules where it is not possible to do a joint simultaneous
+   keygen would be considered compliant so long as both keys are freshly
+   generated.  It is also possible that the underlying cryptographic
+   module does not expose a ML-KEM.KeyGen(seed) that accepts an
+   externally-generated seed, and instead an alternate keygen interface
+   must be used.  Note however that cryptographic modules that do not
+   support seed-based ML-KEM key generation will be incapable of
+   importing or exporting composite keys in the standard format since
+   the private key serialization routines defined in Section 5.2 only
+   support ML-KEM keys as seeds.
+
+   Errors produced by the component KeyGen() routines MUST be forwarded
+   on to the calling application.  Further discussion can be found below
+   in Section 4.5.
 
 4.2.  Encapsulation
 
@@ -678,6 +686,10 @@ Table of Contents
 
    The specific values for KDF and the specific values for Label are
    defined per Composite ML-KEM algorithm in Section 7.
+
+   Errors produced by the component Encaps() routines MUST be forwarded
+   on to the calling application.  Further discussion can be found below
+   in Section 4.5.
 
 4.3.  Decapsulation
 
@@ -792,6 +804,10 @@ Table of Contents
    leading zeroes; since these variations are not attacker-controlled
    they are considered benign.
 
+   Errors produced by the component Decaps() routines MUST be forwarded
+   on to the calling application.  Further discussion can be found below
+   in Section 4.5.
+
 4.4.  KEM Combiner Function
 
    As noted in the Encapsulation and Decapsulation procedures above, the
@@ -853,6 +869,29 @@ Table of Contents
    length and empty info param is not equivalent to the HMAC
    construction above since HKDF-Expand will always perform at least one
    extra iteration of HMAC.
+
+4.5.  Error Handling and Explicit Rejection
+
+   ML-KEM, particularly its Decaps() defined in Algorithms 18 and 21 of
+   [FIPS.203], is designed to be implicitly rejecting, meaning that a
+   failure within the underlying PKE scheme due to a mangled ciphertext
+   will not cause ML-KEM.Decaps() to return an error, but instead any
+   errors encountered during decapsulation are handled by producing a
+   pseudo-randomized shared secret that does not match the intended
+   shared secret.  ML-KEM.Decaps() can, however return errors for
+   example if the provided ciphertext or decapsulation private key is
+   the wrong size.
+
+   In Composite ML-KEM, not all component algorithms will be implicitly
+   rejecting, for example RSA-OAEP's Decrypt() can return an error if
+   the padding is incorrect.  In general, in the case that one of the
+   component primitives generates an error during Composite ML-KEM
+   KeyGen, Encaps, or Decaps, if a component primitive returns an error,
+   Composite ML-KEM MUST clear all buffers containing key material and
+   forward the error to its caller; I.E.  Composite ML-KEM MUST be
+   explicitly rejecting whenever one of its components is.  The same
+   applies to Composite ML-KEM KeyGen() and Encaps(): Composite KEM MUST
+   forward any errors produced by component algorithms.
 
 5.  Serialization
 
