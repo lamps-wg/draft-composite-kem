@@ -41,18 +41,18 @@ OID_TABLE = {
   "id-alg-ml-kem-512": univ.ObjectIdentifier((2,16,840,1,101,3,4,4,1)),
   "id-alg-ml-kem-768": univ.ObjectIdentifier((2,16,840,1,101,3,4,4,2)),
   "id-alg-ml-kem-1024": univ.ObjectIdentifier((2,16,840,1,101,3,4,4,3)),
-  "id-MLKEM768-RSA2048-HMAC-SHA256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,50)),
-  "id-MLKEM768-RSA3072-HMAC-SHA256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,51)),
-  "id-MLKEM768-RSA4096-HMAC-SHA256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,52)),
+  "id-MLKEM768-RSA2048-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,50)),
+  "id-MLKEM768-RSA3072-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,51)),
+  "id-MLKEM768-RSA4096-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,52)),
   "id-MLKEM768-X25519-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,53)),
-  "id-MLKEM768-ECDH-P256-HMAC-SHA256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,54)),
-  "id-MLKEM768-ECDH-P384-HMAC-SHA256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,55)),
-  "id-MLKEM768-ECDH-brainpoolP256r1-HMAC-SHA256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,56)),
-  "id-MLKEM1024-RSA3072-HMAC-SHA512": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,61)),
-  "id-MLKEM1024-ECDH-P384-HMAC-SHA512": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,57)),
-  "id-MLKEM1024-ECDH-brainpoolP384r1-HMAC-SHA512": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,58)),
+  "id-MLKEM768-ECDH-P256-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,54)),
+  "id-MLKEM768-ECDH-P384-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,55)),
+  "id-MLKEM768-ECDH-brainpoolP256r1-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,56)),
+  "id-MLKEM1024-RSA3072-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,61)),
+  "id-MLKEM1024-ECDH-P384-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,57)),
+  "id-MLKEM1024-ECDH-brainpoolP384r1-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,58)),
   "id-MLKEM1024-X448-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,59)),
-  "id-MLKEM1024-ECDH-P521-HMAC-SHA512": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,60)),
+  "id-MLKEM1024-ECDH-P521-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,60)),
 }
 
 REVERSE_OID_TABLE = {v: k for k, v in OID_TABLE.items()}
@@ -570,28 +570,28 @@ class CompositeKEM(KEM):
     return (maxMLKEM + maxTrad, fixedSizeMLKEM and fixedSizeTrad)
     
 
-class MLKEM768_RSA2048_HMAC_SHA256(CompositeKEM):
-  id = "id-MLKEM768-RSA2048-HMAC-SHA256"
+class MLKEM768_RSA2048_SHA3_256(CompositeKEM):
+  id = "id-MLKEM768-RSA2048-SHA3-256"
   mlkem = MLKEM768()
   tradkem = RSA2048OAEPKEM()
-  kdf = "HMAC-SHA256"
-  label = "QSF-MLKEM768-RSAOAEP2048-HMACSHA256"
+  kdf = "SHA3-256"
+  label = "QSF-MLKEM768-RSAOAEP2048-SHA3-256"
 
 
-class MLKEM768_RSA3072_HMAC_SHA256(CompositeKEM):
-  id = "id-MLKEM768-RSA3072-HMAC-SHA256"
+class MLKEM768_RSA3072_SHA3_256(CompositeKEM):
+  id = "id-MLKEM768-RSA3072-SHA3-256"
   mlkem = MLKEM768()
   tradkem = RSA3072OAEPKEM()
-  kdf = "HMAC-SHA256"
-  label = "QSF-MLKEM768-RSAOAEP3072-HMACSHA256"
+  kdf = "SHA3-256"
+  label = "QSF-MLKEM768-RSAOAEP3072-SHA3-256"
 
 
-class MLKEM768_RSA4096_HMAC_SHA256(CompositeKEM):
-  id = "id-MLKEM768-RSA4096-HMAC-SHA256"
+class MLKEM768_RSA4096_SHA3_256(CompositeKEM):
+  id = "id-MLKEM768-RSA4096-SHA3-256"
   mlkem = MLKEM768()
   tradkem = RSA4096OAEPKEM()
-  kdf = "HMAC-SHA256"
-  label = "QSF-MLKEM768-RSAOAEP4096-HMACSHA256"
+  kdf = "SHA3-256"
+  label = "QSF-MLKEM768-RSAOAEP4096-SHA3-256"
 
 
 class MLKEM768_X25519_SHA3_256(CompositeKEM):
@@ -602,51 +602,51 @@ class MLKEM768_X25519_SHA3_256(CompositeKEM):
   label = "\\.//^\\"
 
 
-class MLKEM768_ECDH_P256_HMAC_SHA256(CompositeKEM):
-  id = "id-MLKEM768-ECDH-P256-HMAC-SHA256"
+class MLKEM768_ECDH_P256_SHA3_256(CompositeKEM):
+  id = "id-MLKEM768-ECDH-P256-SHA3-256"
   mlkem = MLKEM768()
   tradkem = ECDHP256KEM()
-  kdf = "HMAC-SHA256"
-  label = "QSF-MLKEM768-P256-HMACSHA256"
+  kdf = "SHA3-256"
+  label = "QSF-MLKEM768-P256-SHA3-256"
 
 
-class MLKEM768_ECDH_P384_HMAC_SHA256(CompositeKEM):
-  id = "id-MLKEM768-ECDH-P384-HMAC-SHA256"
+class MLKEM768_ECDH_P384_SHA3_256(CompositeKEM):
+  id = "id-MLKEM768-ECDH-P384-SHA3-256"
   mlkem = MLKEM768()
   tradkem = ECDHP384KEM()
-  kdf = "HMAC-SHA256"
-  label = "QSF-MLKEM768-P384-HMACSHA256"
+  kdf = "SHA3-256"
+  label = "QSF-MLKEM768-P384-SHA3-256"
 
 
-class MLKEM768_ECDH_brainpoolP256r1_HMAC_SHA256(CompositeKEM):
-  id = "id-MLKEM768-ECDH-brainpoolP256r1-HMAC-SHA256"
+class MLKEM768_ECDH_brainpoolP256r1_SHA3_256(CompositeKEM):
+  id = "id-MLKEM768-ECDH-brainpoolP256r1-SHA3-256"
   mlkem = MLKEM768()
   tradkem = ECDHBP256KEM()
-  kdf = "HMAC-SHA256"
-  label = "QSF-MLKEM768-BP256-HMACSHA256"
+  kdf = "SHA3-256"
+  label = "QSF-MLKEM768-BP256-SHA3-256"
 
 
-class MLKEM1024_RSA3072_HMAC_SHA512(CompositeKEM):
-  id = "id-MLKEM1024-RSA3072-HMAC-SHA512"
+class MLKEM1024_RSA3072_SHA3_256(CompositeKEM):
+  id = "id-MLKEM1024-RSA3072-SHA3-256"
   mlkem = MLKEM1024()
   tradkem = RSA3072OAEPKEM()
-  kdf = "HMAC-SHA512"
-  label = "QSF-MLKEM1024-RSAOAEP3072-HMACSHA512"
+  kdf = "SHA3-256"
+  label = "QSF-MLKEM1024-RSAOAEP3072-SHA3-256"
 
 
-class MLKEM1024_ECDH_P384_HMAC_SHA512(CompositeKEM):
-  id = "id-MLKEM1024-ECDH-P384-HMAC-SHA512"
+class MLKEM1024_ECDH_P384_SHA3_256(CompositeKEM):
+  id = "id-MLKEM1024-ECDH-P384-SHA3-256"
   mlkem = MLKEM1024()
   tradkem = ECDHP384KEM()
-  kdf = "HMAC-SHA512"
-  label = "QSF-MLKEM1024-P384-HMACSHA512"
+  kdf = "SHA3-256"
+  label = "QSF-MLKEM1024-P384-SHA3-256"
 
-class MLKEM1024_ECDH_brainpoolP384r1_HMAC_SHA512(CompositeKEM):
-  id = "id-MLKEM1024-ECDH-brainpoolP384r1-HMAC-SHA512"
+class MLKEM1024_ECDH_brainpoolP384r1_SHA3_256(CompositeKEM):
+  id = "id-MLKEM1024-ECDH-brainpoolP384r1-SHA3-256"
   mlkem = MLKEM1024()
   tradkem = ECDHBP384KEM()
-  kdf = "HMAC-SHA512"
-  label = "QSF-MLKEM1024-BP384-HMACSHA512"
+  kdf = "SHA3-256"
+  label = "QSF-MLKEM1024-BP384-SHA3-256"
 
 
 class MLKEM1024_X448_SHA3_256(CompositeKEM):
@@ -654,15 +654,15 @@ class MLKEM1024_X448_SHA3_256(CompositeKEM):
   mlkem = MLKEM1024()
   tradkem = X448KEM()
   kdf = "SHA3-256"
-  label = "QSF-MLKEM1024-X448-SHA3256"
+  label = "QSF-MLKEM1024-X448-SHA3-256"
 
 
-class MLKEM1024_ECDH_P521_HMAC_SHA512(CompositeKEM):
-  id = "id-MLKEM1024-ECDH-P521-HMAC-SHA512"
+class MLKEM1024_ECDH_P521_SHA3_256(CompositeKEM):
+  id = "id-MLKEM1024-ECDH-P521-SHA3-256"
   mlkem = MLKEM1024()
   tradkem = ECDHP521KEM()
-  kdf = "HMAC-SHA512"
-  label = "QSF-MLKEM1024-P521-HMACSHA512"
+  kdf = "SHA3-256"
+  label = "QSF-MLKEM1024-P521-SHA3-256"
 
 
 ### KEM Combiner ###
@@ -694,7 +694,7 @@ def kemCombiner(kem, mlkemSS, tradSS, tradCT, tradPK ):
 
   ss = None
 
-  if kem.kdf == "HMAC-SHA256":
+  if kem.kdf == "SHA3-256":
      # ss = HMAC-{Hash}(salt={0}, IKM=mlkemSS || tradSS || tradCT
      #                                        || tradPK || Label)
     emptyStr = "".encode('ascii')
@@ -706,7 +706,7 @@ def kemCombiner(kem, mlkemSS, tradSS, tradCT, tradPK ):
     h.update(kem.label.encode())
     ss = h.finalize()
 
-  elif kem.kdf == "HMAC-SHA512":
+  elif kem.kdf == "SHA3-256":
      # ss = HMAC-{Hash}(salt={0}, IKM=mlkemSS || tradSS || tradCT
      #                                        || tradPK || Label)
     emptyStr = "".encode('ascii')
@@ -1077,30 +1077,30 @@ def getNewInstanceByName(oidName: str) -> KEM | None:
       return MLKEM1024()
 
     # Composite KEMs
-    case MLKEM768_RSA2048_HMAC_SHA256.id:
-      return MLKEM768_RSA2048_HMAC_SHA256()
-    case MLKEM768_RSA3072_HMAC_SHA256.id:
-      return MLKEM768_RSA3072_HMAC_SHA256()
-    case MLKEM768_RSA4096_HMAC_SHA256.id:
-      return MLKEM768_RSA4096_HMAC_SHA256()
+    case MLKEM768_RSA2048_SHA3_256.id:
+      return MLKEM768_RSA2048_SHA3_256()
+    case MLKEM768_RSA3072_SHA3_256.id:
+      return MLKEM768_RSA3072_SHA3_256()
+    case MLKEM768_RSA4096_SHA3_256.id:
+      return MLKEM768_RSA4096_SHA3_256()
     case MLKEM768_X25519_SHA3_256.id:
       return MLKEM768_X25519_SHA3_256()
-    case MLKEM768_ECDH_P256_HMAC_SHA256.id:
-      return MLKEM768_ECDH_P256_HMAC_SHA256()
-    case MLKEM768_ECDH_P384_HMAC_SHA256.id:
-      return MLKEM768_ECDH_P384_HMAC_SHA256()
-    case MLKEM768_ECDH_brainpoolP256r1_HMAC_SHA256.id:
-      return MLKEM768_ECDH_brainpoolP256r1_HMAC_SHA256()
-    case MLKEM1024_RSA3072_HMAC_SHA512.id:
-      return MLKEM1024_RSA3072_HMAC_SHA512()
-    case MLKEM1024_ECDH_P384_HMAC_SHA512.id:
-      return MLKEM1024_ECDH_P384_HMAC_SHA512()
-    case MLKEM1024_ECDH_brainpoolP384r1_HMAC_SHA512.id:
-      return MLKEM1024_ECDH_brainpoolP384r1_HMAC_SHA512()
+    case MLKEM768_ECDH_P256_SHA3_256.id:
+      return MLKEM768_ECDH_P256_SHA3_256()
+    case MLKEM768_ECDH_P384_SHA3_256.id:
+      return MLKEM768_ECDH_P384_SHA3_256()
+    case MLKEM768_ECDH_brainpoolP256r1_SHA3_256.id:
+      return MLKEM768_ECDH_brainpoolP256r1_SHA3_256()
+    case MLKEM1024_RSA3072_SHA3_256.id:
+      return MLKEM1024_RSA3072_SHA3_256()
+    case MLKEM1024_ECDH_P384_SHA3_256.id:
+      return MLKEM1024_ECDH_P384_SHA3_256()
+    case MLKEM1024_ECDH_brainpoolP384r1_SHA3_256.id:
+      return MLKEM1024_ECDH_brainpoolP384r1_SHA3_256()
     case MLKEM1024_X448_SHA3_256.id:
       return MLKEM1024_X448_SHA3_256()
-    case MLKEM1024_ECDH_P521_HMAC_SHA512.id:
-      return MLKEM1024_ECDH_P521_HMAC_SHA512()
+    case MLKEM1024_ECDH_P521_SHA3_256.id:
+      return MLKEM1024_ECDH_P521_SHA3_256()
 
 
 def validatePrivateKey(priv_der: bytes, cert_bytes: bytes, encapsulation_bytes: bytes, shared_secret_bytes: bytes) -> bool:
@@ -1353,18 +1353,18 @@ def main():
 
 
   # Composites
-  doKEM(MLKEM768_RSA2048_HMAC_SHA256(), caSK)
-  doKEM(MLKEM768_RSA3072_HMAC_SHA256(), caSK)
-  doKEM(MLKEM768_RSA4096_HMAC_SHA256(), caSK)
+  doKEM(MLKEM768_RSA2048_SHA3_256(), caSK)
+  doKEM(MLKEM768_RSA3072_SHA3_256(), caSK)
+  doKEM(MLKEM768_RSA4096_SHA3_256(), caSK)
   doKEM(MLKEM768_X25519_SHA3_256(), caSK)
-  doKEM(MLKEM768_ECDH_P256_HMAC_SHA256(), caSK )
-  doKEM(MLKEM768_ECDH_P384_HMAC_SHA256(), caSK )
-  doKEM(MLKEM768_ECDH_brainpoolP256r1_HMAC_SHA256(), caSK )
-  doKEM(MLKEM1024_RSA3072_HMAC_SHA512(), caSK)
-  doKEM(MLKEM1024_ECDH_P384_HMAC_SHA512(), caSK )
-  doKEM(MLKEM1024_ECDH_brainpoolP384r1_HMAC_SHA512(), caSK )
+  doKEM(MLKEM768_ECDH_P256_SHA3_256(), caSK )
+  doKEM(MLKEM768_ECDH_P384_SHA3_256(), caSK )
+  doKEM(MLKEM768_ECDH_brainpoolP256r1_SHA3_256(), caSK )
+  doKEM(MLKEM1024_RSA3072_SHA3_256(), caSK)
+  doKEM(MLKEM1024_ECDH_P384_SHA3_256(), caSK )
+  doKEM(MLKEM1024_ECDH_brainpoolP384r1_SHA3_256(), caSK )
   doKEM(MLKEM1024_X448_SHA3_256(), caSK )
-  doKEM(MLKEM1024_ECDH_P521_HMAC_SHA512(), caSK )
+  doKEM(MLKEM1024_ECDH_P521_SHA3_256(), caSK )
 
   checkTestVectorsSize()
   writeTestVectors()
@@ -1373,8 +1373,8 @@ def main():
   writeAlgParams()
 
   writeKEMCombinerExample(MLKEM768_X25519_SHA3_256(),"kemCombiner_MLKEM768_X25519_SHA3_256.md")
-  writeKEMCombinerExample(MLKEM768_ECDH_P256_HMAC_SHA256(),"kemCombiner_MLKEM768_ECDH_P256_HMAC-SHA256.md")
-  writeKEMCombinerExample(MLKEM1024_ECDH_P384_HMAC_SHA512(),"kemCombiner_MLKEM1024_ECDH_P384_HMAC_SHA512.md")
+  writeKEMCombinerExample(MLKEM768_ECDH_P256_SHA3_256(),"kemCombiner_MLKEM768_ECDH_P256_SHA3-256.md")
+  writeKEMCombinerExample(MLKEM1024_ECDH_P384_SHA3_256(),"kemCombiner_MLKEM1024_ECDH_P384_SHA3_256.md")
 
 
 if __name__ == "__main__":

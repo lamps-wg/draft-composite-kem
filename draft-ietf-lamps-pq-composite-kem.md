@@ -291,6 +291,7 @@ Interop-affecting changes:
 * Fixed the ASN.1 module for the pk-CompositeKEM and kema-CompositeKEM to indicate no ASN.1 wrapping is used. This simply clarifies the intended encoding but could be an interop-affecting change for implementations that built encoders / decoders from the ASN.1 and ended up with a non-intended encoding.
 * Changed the domain separator strings to match draft-irtf-cfrg-concrete-hybrid-kems-00, but no reference to it because I don't want this to get stuck in MISREF.
 * Added a normative section saying that the composite MUST forward any errors produced by the component primitives.
+* Fully removed SHA2; changed all HMACSHA2 to SHA3.
 
 Editorial changes:
 
