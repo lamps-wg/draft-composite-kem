@@ -570,6 +570,9 @@ Variations in the keygen process above and decapsulation processes below to acco
 
 For example, component private keys stored in separate software or hardware modules where it is not possible to do a joint simultaneous keygen would be considered compliant so long as both keys are freshly generated. It is also possible that the underlying cryptographic module does not expose a `ML-KEM.KeyGen(seed)` that accepts an externally-generated seed, and instead an alternate keygen interface must be used. Note however that cryptographic modules that do not support seed-based ML-KEM key generation will be incapable of importing or exporting composite keys in the standard format since the private key serialization routines defined in {{sec-serialize-privkey}} only support ML-KEM keys as seeds.
 
+Erors produced by the component `KeyGen()` routines MUST be forwarded on to the calling application. Further discussion can be found below in {{sec-explicit-rejection}}.
+
+
 ## Encapsulation
 
 The `Encap(pk)` of a Composite ML-KEM algorithm is designed to behave exactly the same as `ML-KEM.Encaps(ek)` defined in Algorithm 20 in Section 7.2 of [FIPS.203]. Specifically, `Composite-ML-KEM.Encap(pk)` produces a 256-bit shared secret key that can be used directly with any symmetric-key cryptographic algorithm. In this way, Composite ML-KEM can be used as a direct drop-in replacement anywhere that ML-KEM is used.
@@ -641,6 +644,9 @@ Encap Process:
 Depending on the security needs of the application, it MAY be advantageous to perform steps 2, 3, and 5 in a timing-invariant way to prevent side-channel attackers from learning which component algorithm failed and from learning any of the inputs or output of the KEM combiner.
 
 The specific values for `KDF` and the specific values for `Label` are defined per Composite ML-KEM algorithm in {{alg-params}}.
+
+Erors produced by the component `Encaps()` routines MUST be forwarded on to the calling application. Further discussion can be found below in {{sec-explicit-rejection}}.
+
 
 ## Decapsulation {#sect-composite-decaps}
 
@@ -722,7 +728,7 @@ It is possible to use component private keys stored in separate software or hard
 
 In order to properly achieve its security properties, the KEM combiner requires that all inputs are fixed-length. Since each Composite ML-KEM algorithm fully specifies its component algorithms, including key sizes, all inputs should be fixed-length in non-error scenarios except for minor variations introduced by encoding. However some implementations may choose to perform additional checking to handle certain error conditions. In particular, the KEM combiner step should not be performed if either of the component decapsulations returned an error condition indicating malformed inputs. For timing-invariance reasons, it is RECOMMENDED to perform both decapsulation operations and check for errors afterwards to prevent an attacker from using a timing channel to tell which component failed decapsulation. Also, RSA-based composites MUST ensure that the modulus size (i.e. the size of `tradCT` and `tradPK`) matches that specified for the given Composite ML-KEM algorithm in {{alg-params}}; depending on the cryptographic library used, this check may be done by the library or may require an explicit check as part of the `Composite-ML-KEM.Decap()` routine. Implementers should keep in mind that some instances of `tradCT` and `tradPK` will be DER-encoded which could introduce minor length variations such as dropping leading zeroes; since these variations are not attacker-controlled they are considered benign.
 
-In general, errors produced by the component `Decaps()` routines SHOULD be forwarded on to the calling application -- I.E. Composite ML-KEM `Decaps()` SHOULD behave as an explicitly rejecting KEM. Further discussion can be found below in {{sec-explicit-rejection}}.
+Erors produced by the component `Decaps()` routines MUST be forwarded on to the calling application. Further discussion can be found below in {{sec-explicit-rejection}}.
 
 
 ## KEM Combiner Function {#sec-kem-combiner}
@@ -779,11 +785,9 @@ Implementation note: The HMAC-based combiner here is exactly the "HKDF-Extract" 
 
 ## Error Handling and Explicit Rejection {#sec-explicit-rejection}
 
-ML-KEM, particularly its `Decaps()` defined in Algorithms 18 and 21 of [FIPS.203], is designed to be implicitly rejecting, meaning that `ML-KEM.Decaps()` will never return an error, but instead any errors encountered during decapsulation are handled by producing a pseudo-randomized shared secret that does not match the intended shared secret.
+ML-KEM, particularly its `Decaps()` defined in Algorithms 18 and 21 of [FIPS.203], is designed to be implicitly rejecting, meaning that a failure within the underlying PKE scheme will not cause `ML-KEM.Decaps()` to return an error, but instead any errors encountered during decapsulation are handled by producing a pseudo-randomized shared secret that does not match the intended shared secret. `ML-KEM.Decaps()` can, however return errors for example if the provided ciphertext is the wrong size.
 
-In Composite ML-KEM, not all component algorithms will be implicitly rejecting, for example RSA-OAEP's `Decrypt()` can return an error if the padding is incorrect. In general, in the case that one of the component primitives generates an error during Composite ML-KEM KeyGen, Encaps, or Decaps, If a component primitive returns an error, Composite ML-KEM SHOULD clear all buffers containing key material and forward the error to its caller; I.E. Composite ML-KEM SHOULD be explicitly rejecting whenever one of its components is.
-
-An exception case to this could arise if a Composite ML-KEM implementation is required to fit an API which does not allow for returning errors, as might be the case of a Decaps API designed for ML-KEM. In such a case it is acceptable to return a freshly generated 256-bit cryptographically random value as the shared secret. Since the goal in this case would be simply to satisfy an API and not to turn Composite ML-KEM into a true implicitly rejecting KEM, it is ok that this does not provide the security of an implicitly rejecting KEM -- I.E. it is ok that this returns different shared secrets for successive decapsulations of the same error-causing ciphertext. That said, the rejection value MUST be cryptographically random, and implementations MUST NOT return a fixed value such as all zeros, as this could lead to catastrophic loss of security if an application does not notice and uses this to protect data.
+In Composite ML-KEM, not all component algorithms will be implicitly rejecting, for example RSA-OAEP's `Decrypt()` can return an error if the padding is incorrect. In general, in the case that one of the component primitives generates an error during Composite ML-KEM KeyGen, Encaps, or Decaps, If a component primitive returns an error, Composite ML-KEM MUST clear all buffers containing key material and forward the error to its caller; I.E. Composite ML-KEM MUST be explicitly rejecting whenever one of its components is. The same applies to Composite ML-KEM `KeyGen()` and `Encaps()`: Composite KEM MUST forward any errors produced by component algorithms.
 
 # Serialization {#sec-serialization}
 
