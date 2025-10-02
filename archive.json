@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-09-30T01:49:52.232415+00:00",
+  "timestamp": "2025-10-02T01:50:01.863385+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -3431,15 +3431,15 @@
       "id": "I_kwDOKRPFO87OmVEX",
       "title": "Implicit rejection",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/212",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Followup from the CFRG Hybrid KEMs interim.\n\nhttps://mailarchive.ietf.org/arch/msg/spasm/-8O9dFQruU9pQN81aHJb0f2FjGE/\n\nI think the outcome is to add an implementation note:\n\n> \"If you want to fit this into a KEM API that is not capable of returning errors, then feel free to return a randomized shared secret instead of an error.\"",
       "createdAt": "2025-09-29T18:37:25Z",
-      "updatedAt": "2025-09-29T18:37:25Z",
-      "closedAt": null,
+      "updatedAt": "2025-10-01T20:33:32Z",
+      "closedAt": "2025-10-01T20:33:32Z",
       "comments": []
     }
   ],
@@ -8960,6 +8960,173 @@
           "updatedAt": "2025-09-19T22:38:55Z"
         }
       ],
+      "reviews": []
+    },
+    {
+      "number": 213,
+      "id": "PR_kwDOKRPFO86rX5VB",
+      "title": "Added a section on explicit rejection",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/213",
+      "state": "MERGED",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Closes #212 ",
+      "createdAt": "2025-09-30T16:02:21Z",
+      "updatedAt": "2025-10-01T20:33:34Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "feff3c8374e353c60bfff3e111b123dbf129912c",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_explicit_rejection",
+      "headRefOid": "997bc384f13d5dc98f4c8f04c58e55501c900a3c",
+      "closedAt": "2025-10-01T20:33:31Z",
+      "mergedAt": "2025-10-01T20:33:31Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "fb83020f7adec9ac76e5aa8796756dda2b043bea"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO87D_4YY",
+          "commit": {
+            "abbreviatedOid": "8ef2629"
+          },
+          "author": "tomato42",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-10-01T09:35:45Z",
+          "updatedAt": "2025-10-01T09:35:45Z",
+          "comments": [
+            {
+              "originalPosition": 23,
+              "body": "passing in `dk` or `c` that is of unexpected size will cause an error...",
+              "createdAt": "2025-10-01T09:35:45Z",
+              "updatedAt": "2025-10-01T09:35:45Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO87EAT7a",
+          "commit": {
+            "abbreviatedOid": "8ef2629"
+          },
+          "author": "dennisjackson",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "Some suggested text in line with my mail. ",
+          "createdAt": "2025-10-01T10:11:28Z",
+          "updatedAt": "2025-10-01T10:15:00Z",
+          "comments": [
+            {
+              "originalPosition": 27,
+              "body": "```suggestion\n```",
+              "createdAt": "2025-10-01T10:11:28Z",
+              "updatedAt": "2025-10-01T10:15:00Z"
+            },
+            {
+              "originalPosition": 25,
+              "body": "```suggestion\nIn Composite ML-KEM, not all component algorithms will be implicitly rejecting, for example RSA-OAEP's `Decrypt()` can return an error if the padding is incorrect. In general, in the case that one of the component primitives generates an error during Composite ML-KEM KeyGen, Encaps, or Decaps, if a component primitive returns an error, Composite ML-KEM SHOULD clear all buffers containing key material and MUST forward the error to its caller; I.E. Composite ML-KEM is explicitly rejecting whenever one of its components is.\n```",
+              "createdAt": "2025-10-01T10:12:39Z",
+              "updatedAt": "2025-10-01T10:15:00Z"
+            },
+            {
+              "originalPosition": 23,
+              "body": "```suggestion\nML-KEM, particularly its `Decaps()` defined in Algorithms 18 and 21 of [FIPS.203], is designed to be implicitly rejecting, meaning that `ML-KEM.Decaps()` will typically not return an error for a mangled ciphertext, but instead produce a pseudo-randomized shared secret.\n```",
+              "createdAt": "2025-10-01T10:14:28Z",
+              "updatedAt": "2025-10-01T10:15:00Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO87EFD39",
+          "commit": {
+            "abbreviatedOid": "a16939b"
+          },
+          "author": "dennisjackson",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-10-01T14:55:56Z",
+          "updatedAt": "2025-10-01T14:55:56Z",
+          "comments": [
+            {
+              "originalPosition": 7,
+              "body": "```suggestion\nErrors produced by the component `KeyGen()` routines MUST be forwarded on to the calling application. Further discussion can be found below in {{sec-explicit-rejection}}.\n```",
+              "createdAt": "2025-10-01T14:55:56Z",
+              "updatedAt": "2025-10-01T14:55:56Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO87EFEW0",
+          "commit": {
+            "abbreviatedOid": "a16939b"
+          },
+          "author": "dennisjackson",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-10-01T14:56:18Z",
+          "updatedAt": "2025-10-01T14:56:18Z",
+          "comments": [
+            {
+              "originalPosition": 17,
+              "body": "```suggestion\nErrors produced by the component `Encaps()` routines MUST be forwarded on to the calling application. Further discussion can be found below in {{sec-explicit-rejection}}.\n```",
+              "createdAt": "2025-10-01T14:56:18Z",
+              "updatedAt": "2025-10-01T14:56:18Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO87EFEld",
+          "commit": {
+            "abbreviatedOid": "a16939b"
+          },
+          "author": "dennisjackson",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-10-01T14:56:29Z",
+          "updatedAt": "2025-10-01T14:56:29Z",
+          "comments": [
+            {
+              "originalPosition": 27,
+              "body": "```suggestion\nErrors produced by the component `Decaps()` routines MUST be forwarded on to the calling application. Further discussion can be found below in {{sec-explicit-rejection}}.\n```",
+              "createdAt": "2025-10-01T14:56:29Z",
+              "updatedAt": "2025-10-01T14:56:29Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 214,
+      "id": "PR_kwDOKRPFO86rqXmt",
+      "title": "Changed HMAC-SHA2 to SHA3 in test vectors",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/214",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-10-01T23:37:33Z",
+      "updatedAt": "2025-10-01T23:37:33Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "fb83020f7adec9ac76e5aa8796756dda2b043bea",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_sha3_only",
+      "headRefOid": "32a6390da5bd290261d51c5ef81ea7d23cba056b",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
       "reviews": []
     }
   ]
