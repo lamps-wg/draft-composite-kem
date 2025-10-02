@@ -29,7 +29,7 @@ from pyasn1_alt_modules import rfc5280
 from pyasn1.codec.der.decoder import decode as der_decode
 from pyasn1.codec.der.encoder import encode as der_encode
 
-VERSION_IMPLEMENTED = "draft-ietf-lamps-pq-composite-kem-07"
+VERSION_IMPLEMENTED = "draft-ietf-lamps-pq-composite-kem-08"
 
 OID_TABLE = {
   "id-RSAES-OAEP": univ.ObjectIdentifier((1,2,840,113549,1,1,7)),
@@ -41,18 +41,18 @@ OID_TABLE = {
   "id-alg-ml-kem-512": univ.ObjectIdentifier((2,16,840,1,101,3,4,4,1)),
   "id-alg-ml-kem-768": univ.ObjectIdentifier((2,16,840,1,101,3,4,4,2)),
   "id-alg-ml-kem-1024": univ.ObjectIdentifier((2,16,840,1,101,3,4,4,3)),
-  "id-MLKEM768-RSA2048-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,50)),
-  "id-MLKEM768-RSA3072-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,51)),
-  "id-MLKEM768-RSA4096-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,52)),
-  "id-MLKEM768-X25519-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,53)),
-  "id-MLKEM768-ECDH-P256-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,54)),
-  "id-MLKEM768-ECDH-P384-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,55)),
-  "id-MLKEM768-ECDH-brainpoolP256r1-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,56)),
-  "id-MLKEM1024-RSA3072-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,61)),
-  "id-MLKEM1024-ECDH-P384-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,57)),
-  "id-MLKEM1024-ECDH-brainpoolP384r1-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,58)),
-  "id-MLKEM1024-X448-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,59)),
-  "id-MLKEM1024-ECDH-P521-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,60)),
+  "id-MLKEM768-RSA2048-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,62)),
+  "id-MLKEM768-RSA3072-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,63)),
+  "id-MLKEM768-RSA4096-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,64)),
+  "id-MLKEM768-X25519-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,65)),
+  "id-MLKEM768-ECDH-P256-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,66)),
+  "id-MLKEM768-ECDH-P384-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,67)),
+  "id-MLKEM768-ECDH-brainpoolP256r1-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,68)),
+  "id-MLKEM1024-RSA3072-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,69)),
+  "id-MLKEM1024-ECDH-P384-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,70)),
+  "id-MLKEM1024-ECDH-brainpoolP384r1-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,71)),
+  "id-MLKEM1024-X448-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,72)),
+  "id-MLKEM1024-ECDH-P521-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,73)),
 }
 
 REVERSE_OID_TABLE = {v: k for k, v in OID_TABLE.items()}
@@ -695,31 +695,6 @@ def kemCombiner(kem, mlkemSS, tradSS, tradCT, tradPK ):
   ss = None
 
   if kem.kdf == "SHA3-256":
-     # ss = HMAC-{Hash}(salt={0}, IKM=mlkemSS || tradSS || tradCT
-     #                                        || tradPK || Label)
-    emptyStr = "".encode('ascii')
-    h = hmac.HMAC(key=emptyStr, algorithm=hashes.SHA256())
-    h.update(mlkemSS)
-    h.update(tradSS)
-    h.update(tradCT)
-    h.update(tradPK)
-    h.update(kem.label.encode())
-    ss = h.finalize()
-
-  elif kem.kdf == "SHA3-256":
-     # ss = HMAC-{Hash}(salt={0}, IKM=mlkemSS || tradSS || tradCT
-     #                                        || tradPK || Label)
-    emptyStr = "".encode('ascii')
-    h = hmac.HMAC(key=emptyStr, algorithm=hashes.SHA512())
-    h.update(mlkemSS)
-    h.update(tradSS)
-    h.update(tradCT)
-    h.update(tradPK)
-    h.update(kem.label.encode())
-    ss = h.finalize()
-    ss = ss[:32]  # truncate to 32 bytes
-
-  elif kem.kdf == "SHA3-256":
     # SHA3-256(..)
     digest = hashes.Hash(hashes.SHA3_256())
     digest.update(mlkemSS)
@@ -1373,7 +1348,7 @@ def main():
   writeAlgParams()
 
   writeKEMCombinerExample(MLKEM768_X25519_SHA3_256(),"kemCombiner_MLKEM768_X25519_SHA3_256.md")
-  writeKEMCombinerExample(MLKEM768_ECDH_P256_SHA3_256(),"kemCombiner_MLKEM768_ECDH_P256_SHA3-256.md")
+  writeKEMCombinerExample(MLKEM768_ECDH_P256_SHA3_256(),"kemCombiner_MLKEM768_ECDH_P256_SHA3_256.md")
   writeKEMCombinerExample(MLKEM1024_ECDH_P384_SHA3_256(),"kemCombiner_MLKEM1024_ECDH_P384_SHA3_256.md")
 
 
