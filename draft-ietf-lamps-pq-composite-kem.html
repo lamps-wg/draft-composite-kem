@@ -35,7 +35,7 @@
     PyYAML 6.0.2
     requests 2.32.5
     setuptools 80.9.0
-    wcwidth 0.2.13
+    wcwidth 0.2.14
 -->
 <link href="draft-ietf-lamps-pq-composite-kem.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -1058,7 +1058,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Ounsworth, et al.</td>
-<td class="center">Expires 5 April 2026</td>
+<td class="center">Expires 11 April 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1071,12 +1071,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-lamps-pq-composite-kem-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-10-02" class="published">2 October 2025</time>
+<time datetime="2025-10-08" class="published">8 October 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-04-05">5 April 2026</time></dd>
+<dd class="expires"><time datetime="2026-04-11">11 April 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1142,7 +1142,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 5 April 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 11 April 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1976,13 +1976,13 @@ The functions defined in this section are considered internal implementation det
 <p id="section-5-5">While ML-KEM has a single fixed-size representation for each of public key, private key, and ciphertext, the traditional component might allow multiple valid encodings; for example an elliptic curve public key, and therefore also ciphertext, might be validly encoded as either compressed or uncompressed <span>[<a href="#SEC1" class="cite xref">SEC1</a>]</span>, or an RSA private key could be encoded in Chinese Remainder Theorem form <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span>. In order to obtain interoperability, composite algorithms MUST use the following encodings of the underlying components:<a href="#section-5-5" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-5-6.1">
-          <p id="section-5-6.1.1"><strong>ML-KEM</strong>: MUST be encoded as specified in <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span>, using a 64-byte seed as the private key.<a href="#section-5-6.1.1" class="pilcrow">¶</a></p>
+          <p id="section-5-6.1.1"><strong>ML-KEM</strong>: MUST be encoded as specified in sections 7.1, 7.2 and 7.3 of <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span>, using a 64-byte seed as the private key.<a href="#section-5-6.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-5-6.2">
-          <p id="section-5-6.2.1"><strong>RSA</strong>: the public key MUST be encoded as RSAPublicKey with the <code>(n,e)</code> public key representation as specified in A.1.1 of <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span> and the private key representation as RSAPrivateKey specified in A.1.2 of <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span> with version 0 and 'otherPrimeInfos' absent.<a href="#section-5-6.2.1" class="pilcrow">¶</a></p>
+          <p id="section-5-6.2.1"><strong>RSA</strong>: the public key MUST be encoded as RSAPublicKey with the <code>(n,e)</code> public key representation as specified in A.1.1 of <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span> and the private key representation as RSAPrivateKey specified in A.1.2 of <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span> with version 0 and 'otherPrimeInfos' absent. An RSA-OAEP ciphertext MUST be encoded as specified in section 7.1.1 of <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span><a href="#section-5-6.2.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-5-6.3">
-          <p id="section-5-6.3.1"><strong>ECDH</strong>: public key MUST be encoded as an <code>ECPoint</code> as specified in section 2.2 of <span>[<a href="#RFC5480" class="cite xref">RFC5480</a>]</span>, with both compressed and uncompressed keys supported. For maximum interoperability, it is RECOMMENEDED to use uncompressed points. The private key must be encoded as ECPrivateKey specified in <span>[<a href="#RFC5915" class="cite xref">RFC5915</a>]</span> without 'NamedCurve' parameter and without 'publicKey' field.<a href="#section-5-6.3.1" class="pilcrow">¶</a></p>
+          <p id="section-5-6.3.1"><strong>ECDH</strong>: public key MUST be encoded as an uncompressed <code>ECPoint</code> as specified in section 2.2 of <span>[<a href="#RFC5480" class="cite xref">RFC5480</a>]</span>. The private key must be encoded as ECPrivateKey specified in <span>[<a href="#RFC5915" class="cite xref">RFC5915</a>]</span> without 'NamedCurve' parameter and without 'publicKey' field.<a href="#section-5-6.3.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-5-6.4">
           <p id="section-5-6.4.1"><strong>X25519 and X448</strong>: the public key MUST be encoded as per section 5 of <span>[<a href="#RFC7748" class="cite xref">RFC7748</a>]</span> and the private key as CurvePrivateKey specified in <span>[<a href="#RFC8410" class="cite xref">RFC8410</a>]</span>.<a href="#section-5-6.4.1" class="pilcrow">¶</a></p>
