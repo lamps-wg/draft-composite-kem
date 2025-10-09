@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-10-05T02:00:34.084722+00:00",
+  "timestamp": "2025-10-09T01:51:51.536174+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -3267,15 +3267,15 @@
       "id": "I_kwDOKRPFO87Gv4bC",
       "title": "Choose a single encoding for each primitive",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/198",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "This ticket a checklist that we have picked a single encoding for each underlying primitive.\n\n* ML-KEM\n  * Pub: Raw\n  * Priv: Raw Seed\n  * CT: Raw\n* RSA\n  * Pub: ____\n  * Priv: ____\n  * CT: ____\n* ECDH\n  * Pub: ____\n  * Priv: ____\n  * CT: ____\n* EdDH\n  * Pub: ____\n  * Priv: ____\n  * CT: ____\n\nThis information should be inserted into the draft either as a list or as a table.\n\nRelated to https://github.com/lamps-wg/draft-composite-sigs/issues/244",
       "createdAt": "2025-08-19T13:41:14Z",
-      "updatedAt": "2025-10-02T16:35:36Z",
-      "closedAt": null,
+      "updatedAt": "2025-10-08T14:33:34Z",
+      "closedAt": "2025-10-08T14:33:34Z",
       "comments": [
         {
           "author": "ounsworth",
@@ -9149,7 +9149,7 @@
       "labels": [],
       "body": "Closes #206 \r\nCloses #180 \r\nCloses #211 \r\n\r\n- [x] Needs new OIDs from the Entrust arc.  ... #211 ",
       "createdAt": "2025-10-01T23:37:33Z",
-      "updatedAt": "2025-10-02T14:03:25Z",
+      "updatedAt": "2025-10-08T15:23:28Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "fb83020f7adec9ac76e5aa8796756dda2b043bea",
@@ -9161,32 +9161,69 @@
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO87FnGBu",
+          "commit": {
+            "abbreviatedOid": "8c6d8a0"
+          },
+          "author": "danvangeest",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-10-08T15:18:43Z",
+          "updatedAt": "2025-10-08T15:23:28Z",
+          "comments": [
+            {
+              "originalPosition": 105,
+              "body": "How much is this document aligning with draft-irtf-cfrg-concrete-hybrid-kems?  Because their label is \"QSF-P256-MLKEM768-SHAKE256-SHA3256\".  Which is not even consistent with their KEM naming, I've raised that here: https://github.com/cfrg/draft-irtf-cfrg-concrete-hybrid-kems/issues/23",
+              "createdAt": "2025-10-08T15:18:43Z",
+              "updatedAt": "2025-10-08T15:23:29Z"
+            },
+            {
+              "originalPosition": 7,
+              "body": "As above, all these labels don't align with the label convention from draft-irtf-cfrg-concrete-hybrid-kems.\r\n\r\nI'm not confident that they won't change that convention.",
+              "createdAt": "2025-10-08T15:20:35Z",
+              "updatedAt": "2025-10-08T15:23:29Z"
+            }
+          ]
+        }
+      ]
     },
     {
       "number": 215,
       "id": "PR_kwDOKRPFO86rzEdx",
       "title": "Single encoding",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/215",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Closes #198\r\n\r\nNote: because of the ASN.1 fiddling, should do a Squash and Merge.",
       "createdAt": "2025-10-02T16:08:15Z",
-      "updatedAt": "2025-10-02T16:34:39Z",
+      "updatedAt": "2025-10-08T14:33:37Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "fb83020f7adec9ac76e5aa8796756dda2b043bea",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_single_encoding",
       "headRefOid": "42157d5b2bdf3a316bd9a694787bf0545777550f",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
-      "comments": [],
+      "closedAt": "2025-10-08T14:33:33Z",
+      "mergedAt": "2025-10-08T14:33:33Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "a5934261dd140456263fb5b0438e009358be8687"
+      },
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Reviewed during author's meeting.",
+          "createdAt": "2025-10-08T14:33:12Z",
+          "updatedAt": "2025-10-08T14:33:12Z"
+        }
+      ],
       "reviews": []
     }
   ]
