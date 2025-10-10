@@ -95,7 +95,8 @@ class Version(univ.Integer):
 class ECDSAPrivateKey(univ.Sequence):
     componentType = namedtype.NamedTypes(
         namedtype.NamedType('version', Version()),
-        namedtype.NamedType('privateKey', univ.OctetString())
+        namedtype.NamedType('privateKey', univ.OctetString()),
+        namedtype.NamedType('parameters', univ.ObjectIdentifier())
     )
 
 class ECDHKEM(KEM):
@@ -137,6 +138,7 @@ class ECDHKEM(KEM):
     prk = ECDSAPrivateKey()
     prk['version'] = 1
     prk['privateKey'] = self.sk.private_numbers().private_value.to_bytes((self.sk.key_size + 7) // 8)
+    prk['parameters'] = univ.ObjectIdentifier(self.curveOid)
     return der_encode(prk)
   
   def public_key_max_len(self):  
@@ -153,8 +155,8 @@ class ECDHKEM(KEM):
     """
     maxLen = calculate_der_universal_sequence_max_length([
         calculate_der_universal_integer_max_length(max_size_in_bits=1),  # version must be 1
-        calculate_der_universal_octet_string_max_length(size_in_bits_to_size_in_bytes(self.curve.key_size))  # privateKey
-        # ECParameters are not allowed in Composite ML-DSA
+        calculate_der_universal_octet_string_max_length(size_in_bits_to_size_in_bytes(self.curve.key_size)),  # privateKey
+        len(der_encode(univ.ObjectIdentifier(self.curveOid))) # ECParameters
         # publicKey is not allowed in Composite ML-DSA
     ])
     return (maxLen, True)
@@ -166,26 +168,28 @@ class ECDHKEM(KEM):
 class ECDHP256KEM(ECDHKEM):
   curve = ec.SECP256R1()
   component_curve = "secp256r1"
-
-
-class ECDHP521KEM(ECDHKEM):
-  curve = ec.SECP521R1()
-  component_curve = "secp521r1"
-
+  curveOid = "1.2.840.10045.3.1.7"
 
 class ECDHP384KEM(ECDHKEM):
   curve = ec.SECP384R1()
   component_curve = "secp384r1"
+  curveOid = "1.3.132.0.34"
 
+class ECDHP521KEM(ECDHKEM):
+  curve = ec.SECP521R1()
+  component_curve = "secp521r1"
+  curveOid = "1.3.132.0.35"
 
 class ECDHBP256KEM(ECDHKEM):
   curve = ec.BrainpoolP256R1()
   component_curve = "brainpoolP256r1"
+  curveOid = "1.3.36.3.3.2.8.1.1.7"
 
 
 class ECDHBP384KEM(ECDHKEM):
   curve = ec.BrainpoolP384R1()
   component_curve = "brainpoolP384r1"
+  curveOid = "1.3.36.3.3.2.8.1.1.11"
 
 
 class XKEM(KEM):
@@ -222,13 +226,11 @@ class XKEM(KEM):
                     )
 
   def private_key_bytes(self):
-    raw = self.sk.private_bytes(
+    return self.sk.private_bytes(
                     encoding=serialization.Encoding.Raw,
                     format=serialization.PrivateFormat.Raw,
                     encryption_algorithm=serialization.NoEncryption()
                 )
-    CurvePrivateKey = univ.OctetString(raw)
-    return der_encode(CurvePrivateKey)
         
   def public_key_max_len(self):
     return (len(self.public_key_bytes()), True)
