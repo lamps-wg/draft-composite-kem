@@ -973,8 +973,8 @@ Table of Contents
    order to obtain interoperability, composite algorithms MUST use the
    following encodings of the underlying components:
 
-   *  *ML-KEM*: MUST be encoded as specified in sections 7.1, 7.2 and
-      7.3 of [FIPS.203], using a 64-byte seed as the private key.
+   *  *ML-KEM*: MUST be encoded as specified in sections 7.1 and 7.2 of
+      [FIPS.203], using a 64-byte seed as the private key.
 
    *  *RSA*: the public key MUST be encoded as RSAPublicKey with the
       (n,e) public key representation as specified in A.1.1 of [RFC8017]
