@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-10-09T01:51:51.536174+00:00",
+  "timestamp": "2025-10-12T01:56:02.833745+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -2474,7 +2474,7 @@
       ],
       "body": "As part of WGLC, the link at the top of the Test Vectors section should be locked to a specific commit, and should also probably be moved to be a proper Informative reference.\n\nMight as well leave this until we're pretty sure that we're done tweaking the reference implementation code, which probably means leaving it fairly late in the WGLC.",
       "createdAt": "2025-05-25T15:41:35Z",
-      "updatedAt": "2025-08-17T14:37:13Z",
+      "updatedAt": "2025-10-10T05:34:38Z",
       "closedAt": null,
       "comments": [
         {
@@ -2483,6 +2483,13 @@
           "body": "One complication is that since we have to put the commit link into the .md and commit that, it can never point at HEAD. I think this is ok.",
           "createdAt": "2025-08-17T14:37:13Z",
           "updatedAt": "2025-08-17T14:37:13Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I think it's fine to point generically to\n\n> https://github.com/lamps-wg/draft-composite-kem/tree/main/src\n\nWe can \"Archive\" the repo (ie make it read-only) once it's published as an RFC.",
+          "createdAt": "2025-10-10T05:34:38Z",
+          "updatedAt": "2025-10-10T05:34:38Z"
         }
       ]
     },
@@ -3473,6 +3480,30 @@
           "body": "Go digging around in (and maybe even contribute to) Wycheproof. Any negative test for a component algorithm is likely a good candidate for a negative test in the composite, with a focus on making sure that the composite handles the component error properly.\n\nhttps://github.com/C2SP/wycheproof/tree/main/testvectors_v1",
           "createdAt": "2025-10-03T13:49:48Z",
           "updatedAt": "2025-10-03T13:49:48Z"
+        }
+      ]
+    },
+    {
+      "number": 217,
+      "id": "I_kwDOKRPFO87QjXV0",
+      "title": "Still some underspecified encodings",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/217",
+      "state": "OPEN",
+      "author": "danvangeest",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": ">  *ML-KEM*: MUST be encoded as specified in sections 7.1, 7.2 and\n      7.3 of [FIPS.203], using a 64-byte seed as the private key.\n\nI think 7.3 is unnecessary since it defines decapsulation, without introducing any new encodings.\n\n>    *ECDH*: public key MUST be encoded as an uncompressed ECPoint as\n      specified in section 2.2 of [RFC5480].  The private key must be\n      encoded as ECPrivateKey specified in [RFC5915] without\n      'NamedCurve' parameter and without 'publicKey' field.\n\nNeeds to specify ciphertext encoding.  I know it'll just same something about a certina number of raw bytes or whatever, but it should still say something.\n\n>     *X25519 and X448*: the public key MUST be encoded as per section 5\n      of [RFC7748] and the private key as CurvePrivateKey specified in\n      [RFC8410].\n\nNeeds to specify ciphertext encoding.  I know it'll just same something about a certina number of raw bytes or whatever, but it should still say something.",
+      "createdAt": "2025-10-09T12:19:13Z",
+      "updatedAt": "2025-10-10T05:33:13Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Bah. ECDH-KEM ciphertexts _are_ public keys. I think that's nit-picking. I'll address the ML-KEM comment.",
+          "createdAt": "2025-10-10T05:33:13Z",
+          "updatedAt": "2025-10-10T05:33:13Z"
         }
       ]
     }
@@ -9224,6 +9255,32 @@
           "updatedAt": "2025-10-08T14:33:12Z"
         }
       ],
+      "reviews": []
+    },
+    {
+      "number": 218,
+      "id": "PR_kwDOKRPFO86tA3w-",
+      "title": "WGLC pass over encodings",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/218",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Closes #217 \r\nCloses #149 ",
+      "createdAt": "2025-10-10T05:30:56Z",
+      "updatedAt": "2025-10-10T14:33:01Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "a5934261dd140456263fb5b0438e009358be8687",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_encoding_review",
+      "headRefOid": "fbc0dd7609c9a408be51dcb0a6d9b7fa70c630c0",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
       "reviews": []
     }
   ]
