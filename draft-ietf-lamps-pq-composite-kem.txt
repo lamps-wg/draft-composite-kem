@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 11 April 2026                                           M. Pala
+Expires: 18 April 2026                                           M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                          8 October 2025
+                                                         15 October 2025
 
 
       Composite ML-KEM for use in X.509 Public Key Infrastructure
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 11 April 2026.
+   This Internet-Draft will expire on 18 April 2026.
 
 Copyright Notice
 
@@ -208,10 +208,9 @@ Table of Contents
    be treated as a single atomic algorithm at the protocol level; a
    property referred to as "protocol backwards compatibility" since it
    can be applied to protocols that are not explicitly hybrid-aware.
-   Composite algorithms address algorithm strength uncertainty because
-   the composite algorithm remains strong so long as one of its
-   components remains strong.  Concrete instantiations of composite ML-
-   KEM algorithms are provided based on ML-KEM, RSA-OAEP and ECDH.
+   Composite algorithms retain some security even if one of their
+   component algorithms is broken.  Concrete instantiations of composite
+   ML-KEM algorithms are provided based on ML-KEM, RSA-OAEP and ECDH.
    Backwards compatibility in the sense of upgraded systems continuing
    to inter-operate with legacy systems is not directly covered in this
    specification, but is the subject of Section 11.2.  The idea of a
