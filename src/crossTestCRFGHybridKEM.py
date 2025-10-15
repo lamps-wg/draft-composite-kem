@@ -11,8 +11,8 @@ from kyber_py.ml_kem import ML_KEM_768
 
 
 
-# from https://github.com/cfrg/draft-irtf-cfrg-concrete-hybrid-kems/pull/16/files
-# retrieved 2025-08-11
+# from https://github.com/cfrg/draft-irtf-cfrg-concrete-hybrid-kems/blob/main/test-vectors.json
+# retrieved 2025-08-28
 
 jsonstr = '''{"qsf_p256_mlkem768_shake256_sha3256": [
     {
@@ -60,7 +60,8 @@ def qsf_x25519_mlkem768_shake256_sha3256_keygen(seed):
   dk_T = x25519.X25519PrivateKey.from_private_bytes(TSeed)
 
   # Serialize the private key into the Composite encoding
-  composite_priv_key = mlkemSeed + dk_T.private_bytes_raw()
+  composite_priv_key = mlkemSeed + len(dk_T.public_key().public_bytes_raw()).to_bytes(2, 'little') + \
+                                            dk_T.public_key().public_bytes_raw() + dk_T.private_bytes_raw()
 
   KEM = generate_test_vectors.MLKEM768_X25519_SHA3_256()
   KEM.loadKeyPair(private_bytes=composite_priv_key)
@@ -87,15 +88,19 @@ def qsf_p256_mlkem768_shake256_sha3256_keygen(seed):
   TSeed = seedExpansion[64:]
 
   dk_T = ec.derive_private_key(int.from_bytes(TSeed, "little"), ec.SECP256R1())
-
+  ek_T_bytes = dk_T.public_key().public_bytes(
+                      encoding=serialization.Encoding.X962,
+                      format=serialization.PublicFormat.UncompressedPoint
+                    )
+  
   # Serialize the private key into the Composite encoding
-  composite_priv_key = mlkemSeed + dk_T.private_bytes(
+  composite_priv_key = mlkemSeed + len(ek_T_bytes).to_bytes(2, 'little') + ek_T_bytes + dk_T.private_bytes(
                                             encoding=serialization.Encoding.DER,
                                             format=serialization.PrivateFormat.TraditionalOpenSSL,
                                             encryption_algorithm=serialization.NoEncryption()
                                                     )
 
-  KEM = generate_test_vectors.MLKEM768_ECDH_P256_HMAC_SHA256()
+  KEM = generate_test_vectors.MLKEM768_ECDH_P256_SHA3_256()
   KEM.loadKeyPair(private_bytes=composite_priv_key)
 
   return KEM

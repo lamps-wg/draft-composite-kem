@@ -460,7 +460,7 @@ class CompositeKEM(KEM):
     self.pk = self.public_key_bytes()
 
   def loadKeyPair(self, private_bytes: bytes) -> None:
-    mlkem_private_bytes, traditional_private_bytes = self.deserializePrivateKey(private_bytes)
+    mlkem_private_bytes, _, traditional_private_bytes = self.deserializePrivateKey(private_bytes)
     self.mlkem.loadKeyPair(mlkem_private_bytes)
     self.tradkem.loadKeyPair(traditional_private_bytes)
 
