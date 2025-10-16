@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-10-12T01:56:02.833745+00:00",
+  "timestamp": "2025-10-16T01:54:19.290333+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -2464,7 +2464,7 @@
       "id": "I_kwDOKRPFO864JEx-",
       "title": "Lock the ref impl github link to a specific commit",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/149",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -2474,8 +2474,8 @@
       ],
       "body": "As part of WGLC, the link at the top of the Test Vectors section should be locked to a specific commit, and should also probably be moved to be a proper Informative reference.\n\nMight as well leave this until we're pretty sure that we're done tweaking the reference implementation code, which probably means leaving it fairly late in the WGLC.",
       "createdAt": "2025-05-25T15:41:35Z",
-      "updatedAt": "2025-10-10T05:34:38Z",
-      "closedAt": null,
+      "updatedAt": "2025-10-15T14:44:37Z",
+      "closedAt": "2025-10-15T14:44:37Z",
       "comments": [
         {
           "author": "ounsworth",
@@ -3089,7 +3089,7 @@
       "id": "I_kwDOKRPFO869gdZV",
       "title": "FIPS vs truncated HMAC",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/180",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "optnfast",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -3098,8 +3098,8 @@
       "labels": [],
       "body": "> In alignment with ML-KEM [FIPS.203], Composite KEM algorithms output a 256-bit shared secret key at all security levels, truncating is necessary as described in {{sec-kem-combiner}}.\n\nWhere the combiner is SHA3-256 or HMAC-SHA256 this is all good.\n\nHowever where the combiner is HMAC-SHA512 it means we truncate the output to 256 bits.\n\nThis is a headache in the FIPS context:\n* I see nothing in SP800-227ipd which permits truncation, so we can only appeal to the underlying KDF specs.\n* If the combiner is interpreted as the an SP800-56Cr2 one-step KDF we could only get away with it if the result is used directly as key material (it's conceptually the same as only needing 256 bits of KDF output).\n* If the combiner is interpreted as the Extract phase of an SP800-56Cr2 two-step KDF it won't work: the text is clear that the HMAC must be untruncated.\n\nSo if you want more than one AES-256 key, or two AES-128 keys, you're out of luck. I have concrete use cases for up to 1024 bits of output from a PQ/T hybrid KEM so this is going to be a problem for me. (My current use cases don't involve interop so I do have a good plan B, but I'd still like to align with the rest of the world if possible.)\n\nI think I have some responsibility for this, having previously cheered on the use of HMAC-SHA512.\n\nMy suggestion is to remove all truncated HMAC-SHA512 and replace with untruncated HMAC-SHA256. I don't believe this will have any meaningful impact on security level.",
       "createdAt": "2025-06-26T14:50:48Z",
-      "updatedAt": "2025-09-21T22:16:21Z",
-      "closedAt": null,
+      "updatedAt": "2025-10-15T23:28:08Z",
+      "closedAt": "2025-10-15T23:28:08Z",
       "comments": [
         {
           "author": "ounsworth",
@@ -3322,7 +3322,7 @@
       "id": "I_kwDOKRPFO87Ieetd",
       "title": "EC public key is encoded as RAW, needs to be ECPoint",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/200",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "johngray-dev",
       "authorAssociation": "COLLABORATOR",
       "assignees": [
@@ -3331,9 +3331,17 @@
       "labels": [],
       "body": "TODO - Code bug - EC public key is RAW (X9.62) value, not an ECPoint which is what we decided to use. ",
       "createdAt": "2025-08-28T13:55:52Z",
-      "updatedAt": "2025-08-28T14:54:12Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2025-10-16T00:46:52Z",
+      "closedAt": "2025-10-16T00:46:52Z",
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Sorted out in #218 ",
+          "createdAt": "2025-10-16T00:46:52Z",
+          "updatedAt": "2025-10-16T00:46:52Z"
+        }
+      ]
     },
     {
       "number": 201,
@@ -3358,15 +3366,15 @@
       "id": "I_kwDOKRPFO87KzzcB",
       "title": "SHA2 vs SHA3 for the KEM combiner",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/206",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "johngray-dev",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "This is the only outstanding item not covered in https://github.com/lamps-wg/draft-composite-sigs/issues/244\n\nSHA2 vs SHA3 for the KEM combiner. Alignment with cms-mldsa which uses SHA2, vs alignment with cfrg-hybrid-kems which uses SHA3. MikeO is working with Richard Barnes. We need to re-survey the community on the operational requirements behind this point. It would be nice if we could just use SHA3 throughout, maybe except for the RSA composites which CFRG doesn't have.",
       "createdAt": "2025-09-10T13:50:14Z",
-      "updatedAt": "2025-09-22T11:34:34Z",
-      "closedAt": null,
+      "updatedAt": "2025-10-15T23:28:07Z",
+      "closedAt": "2025-10-15T23:28:07Z",
       "comments": [
         {
           "author": "ounsworth",
@@ -3430,15 +3438,15 @@
       "id": "I_kwDOKRPFO87M9dJ2",
       "title": "Roll the OIDs for -08",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/211",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2025-09-21T22:14:16Z",
-      "updatedAt": "2025-09-21T22:14:16Z",
-      "closedAt": null,
+      "updatedAt": "2025-10-15T23:28:08Z",
+      "closedAt": "2025-10-15T23:28:08Z",
       "comments": []
     },
     {
@@ -3488,15 +3496,15 @@
       "id": "I_kwDOKRPFO87QjXV0",
       "title": "Still some underspecified encodings",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/217",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "danvangeest",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": ">  *ML-KEM*: MUST be encoded as specified in sections 7.1, 7.2 and\n      7.3 of [FIPS.203], using a 64-byte seed as the private key.\n\nI think 7.3 is unnecessary since it defines decapsulation, without introducing any new encodings.\n\n>    *ECDH*: public key MUST be encoded as an uncompressed ECPoint as\n      specified in section 2.2 of [RFC5480].  The private key must be\n      encoded as ECPrivateKey specified in [RFC5915] without\n      'NamedCurve' parameter and without 'publicKey' field.\n\nNeeds to specify ciphertext encoding.  I know it'll just same something about a certina number of raw bytes or whatever, but it should still say something.\n\n>     *X25519 and X448*: the public key MUST be encoded as per section 5\n      of [RFC7748] and the private key as CurvePrivateKey specified in\n      [RFC8410].\n\nNeeds to specify ciphertext encoding.  I know it'll just same something about a certina number of raw bytes or whatever, but it should still say something.",
       "createdAt": "2025-10-09T12:19:13Z",
-      "updatedAt": "2025-10-10T05:33:13Z",
-      "closedAt": null,
+      "updatedAt": "2025-10-15T14:44:36Z",
+      "closedAt": "2025-10-15T14:44:36Z",
       "comments": [
         {
           "author": "ounsworth",
@@ -3504,6 +3512,71 @@
           "body": "Bah. ECDH-KEM ciphertexts _are_ public keys. I think that's nit-picking. I'll address the ML-KEM comment.",
           "createdAt": "2025-10-10T05:33:13Z",
           "updatedAt": "2025-10-10T05:33:13Z"
+        }
+      ]
+    },
+    {
+      "number": 219,
+      "id": "I_kwDOKRPFO87Rbx0V",
+      "title": "Re-align the FIPS section given that SP800-227 has been published",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/219",
+      "state": "CLOSED",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-10-14T12:31:03Z",
+      "updatedAt": "2025-10-16T00:47:08Z",
+      "closedAt": "2025-10-16T00:47:08Z",
+      "comments": []
+    },
+    {
+      "number": 221,
+      "id": "I_kwDOKRPFO87Re4ae",
+      "title": "Editorial comments from Russ",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/221",
+      "state": "CLOSED",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "For the Acknowledgements, \"Peter C\" is Peter Campbell.\n\nI do not understand the structure of the Acknowledgements section. \u00a0Some people are in the big list and elsewhere. \u00a0Others are not. \u00a0I understand why\u00a0Giacomo Pope is not in the big list, but the other people seem to be confusing.\n\nI think the\u00a0Intellectual Property Considerations needs to marked for removal by the RFC Editor. \u00a0Some unknown party could make an IPR disclosure after the document become an RFC...",
+      "createdAt": "2025-10-14T15:53:06Z",
+      "updatedAt": "2025-10-16T01:45:09Z",
+      "closedAt": "2025-10-16T01:45:09Z",
+      "comments": []
+    },
+    {
+      "number": 222,
+      "id": "I_kwDOKRPFO87RuVeX",
+      "title": "Cross-test against CFRG Hybrid KEMs",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/222",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "Post-WGLC"
+      ],
+      "body": "Cross-test the test vectors here\n\nhttps://datatracker.ietf.org/doc/draft-irtf-cfrg-concrete-hybrid-kems/\n\n```\n<insert compatibility table>\n```",
+      "createdAt": "2025-10-15T15:37:56Z",
+      "updatedAt": "2025-10-16T00:45:33Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I just pulled the latest test vectors from  https://github.com/cfrg/draft-irtf-cfrg-concrete-hybrid-kems, and updated the `src/crossTestCRFGHybridKEM.py`.  Results: we are cross-compatible on X-Wing, but not on P256 (and that's after hacking my script to use the CFRG label not the LAMPS label, so there's clearly some other bug at play, but I have no idea what, so of course I assume it's on the cfrg reference impl side \ud83d\ude0b).\n\n```\nMLKEM768_X25519:\n        ss from CFRG test vectors, and decapsulated ss\n        60447f94b1e3675f09dbc4bc1abe8eafa14aed544547637aa980c3822ddd8578\n        60447f94b1e3675f09dbc4bc1abe8eafa14aed544547637aa980c3822ddd8578\n\nMLKEM768_P256:\n        ss from CFRG test vectors, and decapsulated ss\n        0a0768e2475eb7897799ac2e5d3abae0632792cd3d2221ebac2c04fa7cd973fc\n        f726c75f8e63da0f59f28130622ef2d67038000d959d632e7053f9b3383be9d3\n```\n",
+          "createdAt": "2025-10-16T00:25:43Z",
+          "updatedAt": "2025-10-16T00:25:59Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Since LAMPS Composites is ahead of the cfrg-concrete draft, and we have pressure to start WGLC, I'm going to tag this as a \"Post-WGLC\" activity ... which essentially puts the responsibility on the HPKE community to seek alignment, if they so desire (ie, we've done as much as we possibly can in regards to changing the Combiner and Labels, and doing cross-testing).",
+          "createdAt": "2025-10-16T00:43:30Z",
+          "updatedAt": "2025-10-16T00:43:30Z"
         }
       ]
     }
@@ -9173,25 +9246,42 @@
       "id": "PR_kwDOKRPFO86rqXmt",
       "title": "Changed HMAC-SHA2 to SHA3 in test vectors",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/214",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Closes #206 \r\nCloses #180 \r\nCloses #211 \r\n\r\n- [x] Needs new OIDs from the Entrust arc.  ... #211 ",
       "createdAt": "2025-10-01T23:37:33Z",
-      "updatedAt": "2025-10-08T15:23:28Z",
+      "updatedAt": "2025-10-15T23:28:10Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
-      "baseRefOid": "fb83020f7adec9ac76e5aa8796756dda2b043bea",
+      "baseRefOid": "2e97f58672bec66225b90df134b01bdd240fde0f",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_sha3_only",
-      "headRefOid": "8c6d8a00b6314eb078491cdf6b5fdf018dfdfdd8",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
-      "comments": [],
+      "headRefOid": "3632f74eb2a1cc62bf97e912817dfc029ed10095",
+      "closedAt": "2025-10-15T23:28:06Z",
+      "mergedAt": "2025-10-15T23:28:06Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "9cbc14640a5836177f249a1362644f0d2a01d07a"
+      },
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "TODO: did I remember to remove SHA2 from the Algorithm References Appendix table?",
+          "createdAt": "2025-10-15T14:50:23Z",
+          "updatedAt": "2025-10-15T14:50:23Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Author's meeting today: this is good. Merge it once this is all cleaned up.",
+          "createdAt": "2025-10-15T15:01:10Z",
+          "updatedAt": "2025-10-15T15:01:10Z"
+        }
+      ],
       "reviews": [
         {
           "id": "PRR_kwDOKRPFO87FnGBu",
@@ -9216,6 +9306,26 @@
               "body": "As above, all these labels don't align with the label convention from draft-irtf-cfrg-concrete-hybrid-kems.\r\n\r\nI'm not confident that they won't change that convention.",
               "createdAt": "2025-10-08T15:20:35Z",
               "updatedAt": "2025-10-08T15:23:29Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO87HJSSC",
+          "commit": {
+            "abbreviatedOid": "8c6d8a0"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-10-15T15:43:16Z",
+          "updatedAt": "2025-10-15T15:43:17Z",
+          "comments": [
+            {
+              "originalPosition": 105,
+              "body": "Thanks @danvangeest . I'll change the \"SHA3-256\" to \"SHA3256\".\r\n\r\nI've also yelled at them about the order of components, which is dumb.\r\n\r\nAbout the SHAKE256: I know that Richard is of the opinion that how you did the keygen shouldn't matter for for encapsulating to a public key, but I think I'll leave that one alone. The LAMPS document is out of time; it needs to go now, so I think the right thing to do is to choose HPKE-friendly labels, and if they choose not to align to them, that's their choice.",
+              "createdAt": "2025-10-15T15:43:16Z",
+              "updatedAt": "2025-10-15T15:43:17Z"
             }
           ]
         }
@@ -9262,24 +9372,131 @@
       "id": "PR_kwDOKRPFO86tA3w-",
       "title": "WGLC pass over encodings",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/218",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Closes #217 \r\nCloses #149 ",
       "createdAt": "2025-10-10T05:30:56Z",
-      "updatedAt": "2025-10-10T14:33:01Z",
+      "updatedAt": "2025-10-15T14:44:40Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "a5934261dd140456263fb5b0438e009358be8687",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_encoding_review",
-      "headRefOid": "fbc0dd7609c9a408be51dcb0a6d9b7fa70c630c0",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "54b0c52d93554698664fa8e02d39ba6c5e362562",
+      "closedAt": "2025-10-15T14:44:35Z",
+      "mergedAt": "2025-10-15T14:44:35Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "2e97f58672bec66225b90df134b01bdd240fde0f"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO87HIHcg",
+          "commit": {
+            "abbreviatedOid": "fbc0dd7"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-10-15T14:40:41Z",
+          "updatedAt": "2025-10-15T14:40:41Z",
+          "comments": [
+            {
+              "originalPosition": 44,
+              "body": "```suggestion\n* **ECDH**: public key MUST be encoded as an uncompressed X9.62 [X9.62\u20132005], including the leading byte `0x04` indicating uncompressed. This is consistent with the encoding of `ECPoint` as specified in section 2.2 of [RFC5480] when no ASN.1 OCTET STRING wrapping is present. The private key MUST be encoded as ECPrivateKey specified in [RFC5915] with 'NamedCurve' parameter set to the OID of the curve, but without the 'publicKey' field.\n```",
+              "createdAt": "2025-10-15T14:40:41Z",
+              "updatedAt": "2025-10-15T14:40:41Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 220,
+      "id": "PR_kwDOKRPFO86tqXmx",
+      "title": "Fixed a typo called out by Russ",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/220",
+      "state": "MERGED",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-10-14T12:57:23Z",
+      "updatedAt": "2025-10-15T14:17:34Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "a5934261dd140456263fb5b0438e009358be8687",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_retain_remain",
+      "headRefOid": "e4fb5de5bcf352d47fcda3c6df9c446c5ffe7a00",
+      "closedAt": "2025-10-15T14:17:30Z",
+      "mergedAt": "2025-10-15T14:17:30Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "ed2cf920725bace48df16a8cf7430f1febbf1d78"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 223,
+      "id": "PR_kwDOKRPFO86t_HnF",
+      "title": "Tweaked to account for SP800-227-final.",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/223",
+      "state": "MERGED",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Closes #219",
+      "createdAt": "2025-10-16T00:41:56Z",
+      "updatedAt": "2025-10-16T00:47:13Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "409aadd1e89bce629d5fe0dcb8a2741bb49119ad",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_fips800_227_update",
+      "headRefOid": "7e729b02048855cb0a2a8e3d317c0ef6d742839e",
+      "closedAt": "2025-10-16T00:47:07Z",
+      "mergedAt": "2025-10-16T00:47:07Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "632b4b4b8b1f608606334fd1c55fe4b13c74cb95"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 224,
+      "id": "PR_kwDOKRPFO86t_ar1",
+      "title": "Russ' comments",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/224",
+      "state": "MERGED",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Closes #221 ",
+      "createdAt": "2025-10-16T01:44:59Z",
+      "updatedAt": "2025-10-16T01:49:17Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "632b4b4b8b1f608606334fd1c55fe4b13c74cb95",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_acks_cleanup",
+      "headRefOid": "9ae22b24317802d467404eaf9d468bf67a388773",
+      "closedAt": "2025-10-16T01:45:08Z",
+      "mergedAt": "2025-10-16T01:45:08Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "03b62c88e4ed45d72ce7f8aef7ecdefaa2ec31a4"
+      },
       "comments": [],
       "reviews": []
     }
