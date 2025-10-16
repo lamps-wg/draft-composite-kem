@@ -213,9 +213,9 @@ informative:
       - ins: A. Roginksy
         name: Allan Reginsky
       - org: National Institute of Standards and Technology (NIST)
-  SP-800-227ipd:
-    title: "Recommendations for Key-Encapsulation Mechanisms (Initial Public Draft)"
-    target: https://csrc.nist.gov/pubs/sp/800/227/ipd
+  SP-800-227:
+    title: "Recommendations for Key-Encapsulation Mechanisms"
+    target: https://csrc.nist.gov/pubs/sp/800/227/final
     author:
       - name: Gorjan Alagic
       - name: Elaine Barker
@@ -225,6 +225,7 @@ informative:
       - name: Hamilton Silberg
       - name: Noah Waller
       - org: National Institute of Standards and Technology (NIST)
+    date: September 2025
   Bindel2017: # Not referenced, but I think it's important to included.
     title: "Transitioning to a quantum-resistant public key infrastructure"
     target: "https://link.springer.com/chapter/10.1007/978-3-319-59879-6_22"
@@ -1455,15 +1456,15 @@ ss = SHA3-256(mlkemSS || tradSS || tradCT || tradPK || Label)
 ~~~
 
 
-NIST SP 800-227 [SP-800-227ipd], which at the time of writing is in its initial public draft period, allows hybrid key combiners of the following form:
+NIST SP 800-227 [SP-800-227] allows hybrid key combiners of the following form:
 
 ~~~
-K ← KDM(S1‖S2‖ · · · ‖St , OtherInput)           (14)
+K <- KDM((S1,S2,...,St), OtherInput)           (14)
 ~~~
 
 Composite ML-KEM maps cleanly into this since it places the two shared secret keys `mlkemSS || tradSS` at the beginning of the KDF input such that all other inputs `tradCT || tradPK || Label` can be considered part of `OtherInput` for the purposes of FIPS certification.
 
-For the detailed steps of the Key Derivation Mechanism KDM, [SP-800-227ipd] refers to [SP.800-56Cr2].
+For the detailed steps of the Key Derivation Mechanism KDM, [SP-800-227] refers to [SP.800-56Cr2].
 
 Compliance of the Composite ML-KEM variants is achieved in the following way:
 
@@ -1473,7 +1474,7 @@ The Composite ML-KEM algorithms use SHA3, and so can be certified under [SP.800-
 
 ### Order of KDF inputs with Non-Approved Algorithms
 
-[SP-800-227ipd] adds an important stipulation that was not present in earlier NIST specifications:
+[SP-800-227] adds an important stipulation that was not present in earlier NIST specifications:
 
 > This publication approves the use of the key combiner (14) for any t > 1, so long as at
 > least one shared secret (i.e., S_j for some j) is a shared secret generated from the key-
@@ -1481,7 +1482,7 @@ The Composite ML-KEM algorithms use SHA3, and so can be certified under [SP.800-
 
 This means that although Composite ML-KEM always places the shared secret key from ML-KEM in the first slot, a Composite ML-KEM can be FIPS certified so long as either component is FIPS certified. This is important for several reasons. First, in the early stages of PQC migration, composites allow for a non-FIPS certified ML-KEM implementation to be added to a module that already has a FIPS certified traditional component, and the resulting composite can be FIPS certified. Second, when eventually RSA and Elliptic Curve are no longer FIPS-allowed, the composite can retain its FIPS certified status on the strength of the ML-KEM component. Third, while this is outside the scope of this specification, the general composite construction could be used to create FIPS certified algorithms that contain a component algorithm from a different jurisdiction. Third, a composite where both components are FIPS-certified could allow an implementer to patch one component algorithm while awaiting re-certification while continuing to use the overall composite in FIPS mode.
 
-At the time of writing, [SP-800-227ipd] is in its public draft period and not yet in force. A Composite ML-KEM implementation using a FIPS-certified traditional component and a non-FIPS certified ML-KEM is not believed to be certifiable under [SP.800-56Cr2] since this requires the shared secret key from the certified algorithm to be in the first slot.
+At the time of writing, [SP-800-227] is in its public draft period and not yet in force. A Composite ML-KEM implementation using a FIPS-certified traditional component and a non-FIPS certified ML-KEM is not believed to be certifiable under [SP.800-56Cr2] since this requires the shared secret key from the certified algorithm to be in the first slot.
 
 ## Backwards Compatibility {#sec-backwards-compat}
 
