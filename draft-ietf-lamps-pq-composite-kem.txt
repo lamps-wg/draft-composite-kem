@@ -2389,12 +2389,12 @@ Table of Contents
    certification while continuing to use the overall composite in FIPS
    mode.
 
-   At the time of writing, [SP-800-227] is in its public draft period
-   and not yet in force.  A Composite ML-KEM implementation using a
-   FIPS-certified traditional component and a non-FIPS certified ML-KEM
-   is not believed to be certifiable under [SP.800-56Cr2] since this
-   requires the shared secret key from the certified algorithm to be in
-   the first slot.
+   Note that before [SP.800-227] was in force, [SP.800-56Cr2] required
+   the shared secret key from the certified algorithm to be in the first
+   slot and therefore a Composite ML-KEM implementation using a FIPS-
+   certified traditional component and a non-FIPS certified ML-KEM is
+   not believed to be certifiable under [SP.800-56Cr2] alone, and
+   requires the ammendments made by [SP.800-227].
 
 11.2.  Backwards Compatibility
 
