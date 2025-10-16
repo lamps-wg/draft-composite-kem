@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 18 April 2026                                           M. Pala
+Expires: 19 April 2026                                           M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                         15 October 2025
+                                                         16 October 2025
 
 
       Composite ML-KEM for use in X.509 Public Key Infrastructure
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 18 April 2026.
+   This Internet-Draft will expire on 19 April 2026.
 
 Copyright Notice
 
@@ -2336,11 +2336,10 @@ Table of Contents
 
    ss = SHA3-256(mlkemSS || tradSS || tradCT || tradPK || Label)
 
-   NIST SP 800-227 [SP-800-227ipd], which at the time of writing is in
-   its initial public draft period, allows hybrid key combiners of the
+   NIST SP 800-227 [SP-800-227] allows hybrid key combiners of the
    following form:
 
-   K ← KDM(S1‖S2‖ · · · ‖St , OtherInput)           (14)
+   K <- KDM((S1,S2,...,St), OtherInput)           (14)
 
    Composite ML-KEM maps cleanly into this since it places the two
    shared secret keys mlkemSS || tradSS at the beginning of the KDF
@@ -2348,7 +2347,7 @@ Table of Contents
    considered part of OtherInput for the purposes of FIPS certification.
 
    For the detailed steps of the Key Derivation Mechanism KDM,
-   [SP-800-227ipd] refers to [SP.800-56Cr2].
+   [SP-800-227] refers to [SP.800-56Cr2].
 
    Compliance of the Composite ML-KEM variants is achieved in the
    following way:
@@ -2365,7 +2364,7 @@ Table of Contents
 
 11.1.2.  Order of KDF inputs with Non-Approved Algorithms
 
-   [SP-800-227ipd] adds an important stipulation that was not present in
+   [SP-800-227] adds an important stipulation that was not present in
    earlier NIST specifications:
 
       This publication approves the use of the key combiner (14) for any
@@ -2391,7 +2390,7 @@ Table of Contents
    certification while continuing to use the overall composite in FIPS
    mode.
 
-   At the time of writing, [SP-800-227ipd] is in its public draft period
+   At the time of writing, [SP-800-227] is in its public draft period
    and not yet in force.  A Composite ML-KEM implementation using a
    FIPS-certified traditional component and a non-FIPS certified ML-KEM
    is not believed to be certifiable under [SP.800-56Cr2] since this
@@ -2726,12 +2725,12 @@ Table of Contents
               Public Key Encryption", RFC 9180, DOI 10.17487/RFC9180,
               February 2022, <https://www.rfc-editor.org/info/rfc9180>.
 
-   [SP-800-227ipd]
+   [SP-800-227]
               Alagic, G., Barker, E., Chen, L., Moody, D., Robinson, A.,
               Silberg, H., Waller, N., and National Institute of
               Standards and Technology (NIST), "Recommendations for Key-
-              Encapsulation Mechanisms (Initial Public Draft)", n.d.,
-              <https://csrc.nist.gov/pubs/sp/800/227/ipd>.
+              Encapsulation Mechanisms", September 2025,
+              <https://csrc.nist.gov/pubs/sp/800/227/final>.
 
    [SP800-131Ar2]
               Barker, E., Roginksy, A., and National Institute of
