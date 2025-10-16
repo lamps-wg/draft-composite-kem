@@ -1849,18 +1849,9 @@ https://github.com/lamps-wg/draft-composite-kem/tree/main/src
 ~~~
 
 
-
-# Intellectual Property Considerations
-
-The following IPR Disclosure relates to this draft:
-
-https://datatracker.ietf.org/ipr/3588/
-
-
-
 # Contributors and Acknowledgments
 
-This document incorporates contributions and comments from a large group of experts. The editors would especially like to acknowledge the expertise and tireless dedication of the following people, who attended many long meetings and generated millions of bytes of electronic mail and VOIP traffic over the past six years in pursuit of this document:
+This document represents the results of a many-year effort by the LAMPS working group. Over that time the following working group members provided valuable review and commentary on the document:
 
 Serge Mister (Entrust),
 Felipe Ventura (Entrust),
@@ -1875,15 +1866,21 @@ Bas Westerbaan (Cloudflare),
 Falko Strenzke (MTG AG),
 Piotr Popis (Enigma),
 Jean-Pierre Fiset (Crypto4A),
+Carl Wallace,
+Daniel Van Geest (CryptoNext Security),
 陳志華 (Abel C. H. Chen, Chunghwa Telecom),
 林邦曄 (Austin Lin, Chunghwa Telecom) and
 Douglas Stebila (University of Waterloo).
 
+We wish to acknowledge a few people who have made notable contributions to specific sections of this document.
+
+We wish to acknowledge particular effort from Carl Wallace and Daniel Van Geest (CryptoNext Security), who have implemented each successive version of the draft over multiple years to provide valuable implementation experience and hackathon testing.
+Thanks to Stepan Yakimovich for contributing to the reference implementation to be able to provide and verify hackathon artifacts.
+
+
 Thanks to Giacomo Pope (github.com/GiacomoPope) whose ML-DSA and ML-KEM implementations were used to generate the test vectors.
 
-We wish to acknowledge particular effort from Carl Wallace and Dan van Geest (Crypto Next), who have put in sustained effort over multiple years both reviewing and implementing at the hackathon each iteration of this draft.
 
-Thanks to Stepan Yakimovich for contributing to the reference implementation.
 
 We are grateful to all who have given feedback over the years, formally or informally, on mailing lists or in person, including any contributors who may have been inadvertently omitted from this list.
 
