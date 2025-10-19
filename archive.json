@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-10-16T01:54:19.290333+00:00",
+  "timestamp": "2025-10-19T02:05:53.109115+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -3579,6 +3579,22 @@
           "updatedAt": "2025-10-16T00:43:30Z"
         }
       ]
+    },
+    {
+      "number": 225,
+      "id": "I_kwDOKRPFO87SAx10",
+      "title": "Russ comments 2025-10-16",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/225",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "In Section 6.1, I am confused by the phrase \"raw byte string encoding\".  The point is that no encoding is performed.\n\nI think that subjectPublicKey (a BIT STRING) contains the output of SerializePublicKey() without further encoding.\n\nI think that OneAsymmetricKey.privateKey (an OCTET STRING) contains the output of SerializePrivateKey() without further encoding.\n\nI am confused by the discussion of signatureValue (a BIT STRING) in this section.  Composite KEMs do not have anything to do with this, right?",
+      "createdAt": "2025-10-16T20:30:15Z",
+      "updatedAt": "2025-10-16T20:30:15Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
