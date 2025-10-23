@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-10-19T02:05:53.109115+00:00",
+  "timestamp": "2025-10-23T01:55:15.457291+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -3592,9 +3592,24 @@
       "labels": [],
       "body": "In Section 6.1, I am confused by the phrase \"raw byte string encoding\".  The point is that no encoding is performed.\n\nI think that subjectPublicKey (a BIT STRING) contains the output of SerializePublicKey() without further encoding.\n\nI think that OneAsymmetricKey.privateKey (an OCTET STRING) contains the output of SerializePrivateKey() without further encoding.\n\nI am confused by the discussion of signatureValue (a BIT STRING) in this section.  Composite KEMs do not have anything to do with this, right?",
       "createdAt": "2025-10-16T20:30:15Z",
-      "updatedAt": "2025-10-16T20:30:15Z",
+      "updatedAt": "2025-10-22T11:07:59Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "PiotrPopis",
+          "authorAssociation": "NONE",
+          "body": "1. I generally agree with Russ regarding chapter 6.1 and believe the content from version 07 should be restored, particularly the paragraph about converting OCTET STRING to BIT STRING.\n2. Regarding OneAsymetricKey.privateKey, I would like to retain the current wording from chapter 6.3.\nI'm not sure if I understood Russ's comment correctly, but for interoperability purposes, when transmitting a private key, the OneAsymetricKey structure should be used, where the public key is optional and especially not in the privateKey field.\n3. I don't find the arguments presented in chapter 11.4 convincing. In my opinion, we could just as easily have omitted the introduction of the traditional algorithm public key (tradPK) in chapter 5.2 regarding the private key, leaving the correct KEM combiner building aspect to the implementers (which is somewhat mentioned in chapter 11.4). But _I can live with that_ and if others support this change, then OK.\n4. I'd like to draw the authors' attention to a few editorial corrections:\na) Section 4.5\n> I.E.\n\ni.e.\nb) Section 5\n[X9.62\u20132005] is not mentioned in chapter 12.\nIt should be:\n[X9.62\u20132005] ANSI X9.62 (2005): \"Public Key Cryptography for the Financial Services Industry, The Elliptic Curve Digital Signature Algorithm (ECDSA)\"\nc) Section 7\n> \"5c2e2f2f5e5c\"\n\n\"2e2f2f5e\"\nComment: it is problem with backslash into GitHub.\nd) Section 7\n> In alignment with ML-KEM [FIPS.203], Composite KEM algorithms output\n   a 256-bit shared secret key at all security levels, truncating is\n   necessary as described in Section 4.4.\n\nIn alignment with ML-KEM [FIPS.203], Composite KEM algorithms output\n   a 256-bit shared secret key at all security levels.\n\nClarification: Version 08 only uses SHA3-256.\n\ne) Section 7\n> The KDFs were chosen to roughly match the security level of the\n   stronger component.  In the case of X25519 and X448 SHA3-256 is used\n   to match the construction in [X-Wing].\n\nThe KDFs were chosen to roughly match the security level of the\n   stronger component. \n\n\nThe last sentence in chapter 7 should be removed for the same reason.\nf) Section 11.1.2\nIntroduce an appropriate citation from the final version 800-227, namely:\n\nThis publication approves the use of the key combiner (14) for any \nt > 1 if at least one shared secret (i.e., S_j for some j) \nis generated from the key-establishment methods in SP 800-56A or\nSP 800-56B or an approved KEM.\n\nand remove the reference to draft version 800-227.\ng) Appendix C\n> In\n   order to aid implementers and reduce interoperability issues, this\n   section lists out the full public key and signature\n   AlgorithmIdentifiers for each component algorithm.\n\nIn\n   order to aid implementers and reduce interoperability issues, this\n   section lists out the full public key and \n   AlgorithmIdentifiers for each component algorithm.\n",
+          "createdAt": "2025-10-22T09:34:34Z",
+          "updatedAt": "2025-10-22T09:34:34Z"
+        },
+        {
+          "author": "PiotrPopis",
+          "authorAssociation": "NONE",
+          "body": "One more:\nh) Section 7\nwrong label at id-MLKEM768-X25519-SHA3-256",
+          "createdAt": "2025-10-22T11:07:59Z",
+          "updatedAt": "2025-10-22T11:07:59Z"
+        }
+      ]
     }
   ],
   "pulls": [
