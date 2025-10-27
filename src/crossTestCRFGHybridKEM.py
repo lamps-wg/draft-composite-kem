@@ -89,10 +89,11 @@ def qsf_p256_mlkem768_shake256_sha3256_keygen(seed, cfrg_dk_t):
   mlkemSeed = seedExpansion[:64]
   TSeed = seedExpansion[64:]
 
-  # print("TSeed: \n"+base64.b16encode(TSeed).decode('Utf8').lower())
-
   dk_T = ec.derive_private_key(int.from_bytes(TSeed, "big"), ec.SECP256R1())
 
+  # For some reason, Python's routine to export dk_T as PKCS8 is not working,
+  # ... but hand-rolling a PKCS8 does work.
+  # I'm obviously missing something about how I'm invoking python's dk_T.private_bytes(..) below.
   prk = generate_test_vectors.ECDSAPrivateKey()
   prk['version'] = 1
   prk['privateKey'] = cfrg_dk_t
