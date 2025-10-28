@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-10-23T01:55:15.457291+00:00",
+  "timestamp": "2025-10-28T01:55:33.243973+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -3610,6 +3610,46 @@
           "updatedAt": "2025-10-22T11:07:59Z"
         }
       ]
+    },
+    {
+      "number": 226,
+      "id": "I_kwDOKRPFO87T1gou",
+      "title": "X-Wing label not rendering properly",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/226",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "At the top of section 7, we have:\n\n> \".//^\" in hexadecimal is \"5c2e2f2f5e5c\"\n\nThat should be \"\\.//^\\\"",
+      "createdAt": "2025-10-26T14:14:56Z",
+      "updatedAt": "2025-10-27T06:24:52Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "PiotrPopis",
+          "authorAssociation": "NONE",
+          "body": "@ounsworth \nA few days ago, I commented on issue #225 and also flagged a few edits. Among them was the one regarding the incorrect display of backslashes on GitHub. I suggest dropping the backslash altogether, meaning x5c.\n\nFurthermore, I hope there will be a discussion about chapter 11.4, which includes adding public keys to private key serialization.\n",
+          "createdAt": "2025-10-27T06:24:52Z",
+          "updatedAt": "2025-10-27T06:24:52Z"
+        }
+      ]
+    },
+    {
+      "number": 227,
+      "id": "I_kwDOKRPFO87UG6dj",
+      "title": "CopyPaste Errors in Decapsulation Process",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/227",
+      "state": "OPEN",
+      "author": "janklaussner",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "https://github.com/lamps-wg/draft-composite-kem/blob/65796408ed7043fa8308aec7c923c1c0a171a8f6/draft-ietf-lamps-pq-composite-kem.md?plain=1#L719\n\nshould be \"Decap\"\n\nhttps://github.com/lamps-wg/draft-composite-kem/blob/65796408ed7043fa8308aec7c923c1c0a171a8f6/draft-ietf-lamps-pq-composite-kem.md?plain=1#L729\n\nshould be \"Decapsulation\"",
+      "createdAt": "2025-10-27T20:43:13Z",
+      "updatedAt": "2025-10-27T20:43:13Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
