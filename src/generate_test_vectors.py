@@ -1016,12 +1016,21 @@ def writeTestVectors():
     f.write(json.dumps(testVectorOutput, indent=2))
 
   with open('testvectors_wrapped.json', 'w') as f:
-    f.write('\n'.join(textwrap.wrap(''.join(json.dumps(testVectorOutput, indent="")),
-                                  width=68,
-                                  replace_whitespace=False,
-                                  drop_whitespace=False)))
+    s = json.dumps(testVectorOutput, indent="").split('\n')
+    for l in s:
+      f.write('\n'.join(textwrap.wrap(l, width=68, replace_whitespace=False, drop_whitespace=False)))
+      f.write('\n')
 
   output_artifacts_certs_r5(testVectorOutput)
+
+
+# Recreate testvectors_wrapped.json with better wrapping:
+#   python3 -c 'import generate_test_vectors; generate_test_vectors.rewriteTestVectors()'
+def rewriteTestVectors():
+  global testVectorOutput
+  with open('testvectors.json') as f:
+    testVectorOutput = json.load(f)
+  writeTestVectors()
 
 
 def getNewInstanceByName(oidName: str) -> KEM | None:
@@ -1219,7 +1228,6 @@ def writeAlgParams():
       f.write("- " + alg + "\n")
       f.write("  - OID: " + str(OID_TABLE[alg]) + "\n")
       f.write("  - Label: \"`" + LABELS_TABLE[alg]['label'] + "`\"\n")
-      f.write("  - Key Derivation Function (KDF): " + LABELS_TABLE[alg]['kdf'] + "\n")
       f.write("  - ML-KEM variant: " + LABELS_TABLE[alg]['mlkem'] + "\n")
       f.write("  - Traditional Algorithm: " + LABELS_TABLE[alg]['trad'] + "\n")
       f.write("    - Traditional KEM Algorithm: " + LABELS_TABLE[alg]['trad_kem_alg'] + "\n")
