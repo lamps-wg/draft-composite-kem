@@ -578,7 +578,7 @@ class MLKEM768_RSA2048_SHA3_256(CompositeKEM):
   mlkem = MLKEM768()
   tradkem = RSA2048OAEPKEM()
   kdf = "SHA3-256"
-  label = "QSF-MLKEM768-RSAOAEP2048-SHA3256"
+  label = "MLKEM768-RSAOAEP2048-SHA3256".encode()
 
 
 class MLKEM768_RSA3072_SHA3_256(CompositeKEM):
@@ -586,7 +586,7 @@ class MLKEM768_RSA3072_SHA3_256(CompositeKEM):
   mlkem = MLKEM768()
   tradkem = RSA3072OAEPKEM()
   kdf = "SHA3-256"
-  label = "QSF-MLKEM768-RSAOAEP3072-SHA3256"
+  label = "MLKEM768-RSAOAEP3072-SHA3256".encode()
 
 
 class MLKEM768_RSA4096_SHA3_256(CompositeKEM):
@@ -594,7 +594,7 @@ class MLKEM768_RSA4096_SHA3_256(CompositeKEM):
   mlkem = MLKEM768()
   tradkem = RSA4096OAEPKEM()
   kdf = "SHA3-256"
-  label = "QSF-MLKEM768-RSAOAEP4096-SHA3256"
+  label = "MLKEM768-RSAOAEP4096-SHA3256".encode()
 
 
 class MLKEM768_X25519_SHA3_256(CompositeKEM):
@@ -602,7 +602,7 @@ class MLKEM768_X25519_SHA3_256(CompositeKEM):
   mlkem = MLKEM768()
   tradkem = X25519KEM()
   kdf = "SHA3-256"
-  label = "\\.//^\\"
+  label = base64.b16decode("5C2E2F2F5E5C")
 
 
 class MLKEM768_ECDH_P256_SHA3_256(CompositeKEM):
@@ -610,7 +610,7 @@ class MLKEM768_ECDH_P256_SHA3_256(CompositeKEM):
   mlkem = MLKEM768()
   tradkem = ECDHP256KEM()
   kdf = "SHA3-256"
-  label = "QSF-MLKEM768-P256-SHA3256"
+  label = base64.b16decode("7C2D28292D7C")
 
 
 class MLKEM768_ECDH_P384_SHA3_256(CompositeKEM):
@@ -618,7 +618,7 @@ class MLKEM768_ECDH_P384_SHA3_256(CompositeKEM):
   mlkem = MLKEM768()
   tradkem = ECDHP384KEM()
   kdf = "SHA3-256"
-  label = "QSF-MLKEM768-P384-SHA3256"
+  label = "MLKEM768-P384-SHA3256".encode()
 
 
 class MLKEM768_ECDH_brainpoolP256r1_SHA3_256(CompositeKEM):
@@ -626,7 +626,7 @@ class MLKEM768_ECDH_brainpoolP256r1_SHA3_256(CompositeKEM):
   mlkem = MLKEM768()
   tradkem = ECDHBP256KEM()
   kdf = "SHA3-256"
-  label = "QSF-MLKEM768-BP256-SHA3256"
+  label = "MLKEM768-BP256-SHA3256".encode()
 
 
 class MLKEM1024_RSA3072_SHA3_256(CompositeKEM):
@@ -634,7 +634,7 @@ class MLKEM1024_RSA3072_SHA3_256(CompositeKEM):
   mlkem = MLKEM1024()
   tradkem = RSA3072OAEPKEM()
   kdf = "SHA3-256"
-  label = "QSF-MLKEM1024-RSAOAEP3072-SHA3256"
+  label = "MLKEM1024-RSAOAEP3072-SHA3256".encode()
 
 
 class MLKEM1024_ECDH_P384_SHA3_256(CompositeKEM):
@@ -642,22 +642,23 @@ class MLKEM1024_ECDH_P384_SHA3_256(CompositeKEM):
   mlkem = MLKEM1024()
   tradkem = ECDHP384KEM()
   kdf = "SHA3-256"
-  label = "QSF-MLKEM1024-P384-SHA3256"
+  label = base64.b16decode("207C202F2D5C")
+
 
 class MLKEM1024_ECDH_brainpoolP384r1_SHA3_256(CompositeKEM):
   id = "id-MLKEM1024-ECDH-brainpoolP384r1-SHA3-256"
   mlkem = MLKEM1024()
   tradkem = ECDHBP384KEM()
   kdf = "SHA3-256"
-  label = "QSF-MLKEM1024-BP384-SHA3256"
-
+  label = "MLKEM1024-BP384-SHA3256".encode()
+  
 
 class MLKEM1024_X448_SHA3_256(CompositeKEM):
   id = "id-MLKEM1024-X448-SHA3-256"
   mlkem = MLKEM1024()
   tradkem = X448KEM()
   kdf = "SHA3-256"
-  label = "QSF-MLKEM1024-X448-SHA3256"
+  label = "MLKEM1024-X448-SHA3256".encode()
 
 
 class MLKEM1024_ECDH_P521_SHA3_256(CompositeKEM):
@@ -665,7 +666,9 @@ class MLKEM1024_ECDH_P521_SHA3_256(CompositeKEM):
   mlkem = MLKEM1024()
   tradkem = ECDHP521KEM()
   kdf = "SHA3-256"
-  label = "QSF-MLKEM1024-P521-SHA3256"
+  label = "MLKEM1024-P521-SHA3256".encode()
+
+
 
 
 ### KEM Combiner ###
@@ -704,7 +707,7 @@ def kemCombiner(kem, mlkemSS, tradSS, tradCT, tradPK ):
     digest.update(tradSS)
     digest.update(tradCT)
     digest.update(tradPK)
-    digest.update(kem.label.encode())
+    digest.update(kem.label)
     ss = digest.finalize()
 
   else:
@@ -1227,7 +1230,16 @@ def writeAlgParams():
     for alg in LABELS_TABLE:
       f.write("- " + alg + "\n")
       f.write("  - OID: " + str(OID_TABLE[alg]) + "\n")
-      f.write("  - Label: \"`" + LABELS_TABLE[alg]['label'] + "`\"\n")
+      
+      # Handle the ASCII strings differently from the stupid spaceships
+      label = LABELS_TABLE[alg]['label']
+      if label[:5] == b'MLKEM':
+        f.write("  - Label: \"`" + label.decode() + "`\"\n")
+      else:
+        f.write("  - Label: \"`" + label.hex() + "`\" (hex)\n")
+
+      f.write("  - Key Derivation Function (KDF): " + LABELS_TABLE[alg]['kdf'] + "\n")
+      
       f.write("  - ML-KEM variant: " + LABELS_TABLE[alg]['mlkem'] + "\n")
       f.write("  - Traditional Algorithm: " + LABELS_TABLE[alg]['trad'] + "\n")
       f.write("    - Traditional KEM Algorithm: " + LABELS_TABLE[alg]['trad_kem_alg'] + "\n")
@@ -1264,12 +1276,12 @@ def writeKEMCombinerExample(kem, filename):
   f.write( "\n".join(textwrap.wrap("tradSS:  " + tradSS.hex(), width=wrap_width)) +"\n\n" )
   f.write( "\n".join(textwrap.wrap("tradCT:  " + tradCT.hex(), width=wrap_width)) +"\n\n" )
   f.write( "\n".join(textwrap.wrap("tradPK:  " + tradPK.hex(), width=wrap_width)) +"\n\n" )
-  f.write( "\n".join(textwrap.wrap("Label:  " + kem.label.encode().hex(), width=wrap_width)) +"\n\n" )
-  f.write( "\n".join(textwrap.wrap("\t(ascii: \"" + kem.label+"\")", width=wrap_width)) +"\n\n" )
+  f.write( "\n".join(textwrap.wrap("Label:  " + kem.label.hex(), width=wrap_width)) +"\n\n" )
+  f.write( "\n".join(textwrap.wrap("\t(ascii: \"" + kem.label.decode()+"\")", width=wrap_width)) +"\n\n" )
   f.write("\n")
   f.write("# Combined KDF Input:\n")
   f.write("#  mlkemSS || tradSS || tradCT || tradPK || Label\n\n")
-  f.write( "\n".join(textwrap.wrap("Combined KDF Input: " + mlkemSS.hex() + tradSS.hex() + tradCT.hex() + tradPK.hex() + kem.label.encode().hex(), width=wrap_width)) +"\n" )
+  f.write( "\n".join(textwrap.wrap("Combined KDF Input: " + mlkemSS.hex() + tradSS.hex() + tradCT.hex() + tradPK.hex() + kem.label.hex(), width=wrap_width)) +"\n" )
   f.write("\n\n# Outputs\n")
   f.write("# ss = " + kem.kdf + "(Combined KDF Input)\n\n")
   f.write( "\n".join(textwrap.wrap("ss: " + ss.hex(), width=wrap_width)) +"\n" )
