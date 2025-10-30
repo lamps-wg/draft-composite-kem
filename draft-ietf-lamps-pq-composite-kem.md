@@ -81,7 +81,6 @@ normative:
   RFC5869:
   RFC5915:
   RFC5958:
-  RFC6234:
   RFC7748:
   RFC8017:
   #RFC8174: -- does not need to be explicit; added by bcp14 boilerplateu
@@ -463,8 +462,6 @@ RSAOAEPKEM.Encap(pkR):
   return shared_secret, enc
 ~~~
 
-Acceptable public key encodings for `pkR` are described in {{sec-serialization}}.
-
 Note that the OAEP label `L` is left to its default value, which is the empty string as per [RFC8017]. The shared secret key output by the overall Composite ML-KEM already binds a composite KEM Combiner Label, so there is no need to also use the component Label.
 
 The value of `ss_len` as well as concrete values for all the RSA-OAEP parameters used within this specification can be found in {{sect-rsaoaep-params}}.
@@ -477,6 +474,8 @@ RSAOAEPKEM.Decap(skR, enc):
 
   return shared_secret
 ~~~
+
+The encodings for the public key (`pkR`), private key (`skR`), and ciphertext (`enc`) are described in {{sec-serialization}}.
 
 A quick note on the choice of RSA-OAEP as the supported RSA encryption primitive. RSA-KEM [RFC5990] is cryptographically robust and is more straightforward to work with, but it has fairly limited adoption and therefore is of limited value as a PQ migration mechanism. Also, while RSA-PKCS#1v1.5 [RFC8017] is still widely used, it is hard to make secure and no longer FIPS-approved as of the end of 2023 [SP800-131Ar2], so it is of limited forwards value. This leaves RSA-OAEP [RFC8017] as the remaining choice. See {{sec-rationale}} for further discussion of algorithm choices.
 
@@ -512,10 +511,10 @@ DHKEM.Decap(skR, ct):
 This construction applies for all variants of elliptic curve Diffie-Hellman used in this specification: ECDH, X25519, and X448.
 
 For ECDH, `DH()` yields the value `Z` as described in section 5.7.1.2 of [SP.800-56Ar3].
-Acceptable public key encodings for `enc` and `pkE` are described in {{sec-serialization}}.
 
 For X25519 and X448, `DH()` yields the value `K` as described in section 6 of [RFC7748].
-Acceptable public key encodings for `enc` and `pkE` are described in {{sec-serialization}}.
+
+The encodings for the public key (`pkR`), private key (`skR`), and ciphertext (`pkE`) are described in {{sec-serialization}}.
 
 The promotion of DH to a KEM is similar to the DHKEM functions in [RFC9180], but it is simplified in the following ways:
 
@@ -523,7 +522,7 @@ The promotion of DH to a KEM is similar to the DHKEM functions in [RFC9180], but
 1. Since a KEM Combiner Label is included explicitly in the Composite ML-KEM combiner, there is no need to perform the labeled steps of `ExtractAndExpand()`.
 1. Since the ciphertext and receiver's public key are included explicitly in the Composite ML-KEM combiner, there is no need to construct the `kem_context` object.
 
-Note that here, `SerializePublicKey()` and `DeserializePublicKey()` refer to the underlying encoding of the DH primitive, and not to the composite serialization functions defined in {{sec-serialization}}. Acceptable serializations for the underlying DH primitives are described in {{sec-serialization}}.
+Note that here, `SerializePublicKey()` and `DeserializePublicKey()` refer to the underlying encoding of the DH primitive, and not to the composite serialization functions defined in {{sec-serialization}}.
 
 Note that, at least at the time of writing, the algorithm `DHKEM` is not defined as a standalone algorithm within PKIX standards and it does not have an assigned algorithm OID, so it cannot be used directly with CMS KEMRecipientInfo [RFC9629]; it is merely a building block for the composite algorithm.
 
@@ -549,7 +548,7 @@ Explicit Inputs:
 Implicit Inputs mapped from <OID>:
 
   ML-KEM     The underlying ML-KEM algorithm and
-             parameter set, for example, could be "ML-KEM-768".
+             parameter set, for example "ML-KEM-768".
 
   Trad       The underlying traditional algorithm and
              parameter, for example "RSA-OAEP"
@@ -580,7 +579,7 @@ Key Generation Process:
 
 In order to ensure fresh keys, the key generation functions MUST be executed for both component algorithms. Compliant parties MUST NOT use, import or export component keys that are used in other contexts, combinations, or by themselves as keys for standalone algorithm use. For more details on the security considerations around key reuse, see {{sec-cons-key-reuse}}.
 
-Note that this keygen routine outputs a serialized composite key, which contains only the ML-KEM seed. Implementations should feel free to modify this routine to output the expanded `mlkemSK` or to make free use of `ML-KEM.KeyGen(mldsaSeed)` as needed to expand the ML-KEM seed into an expanded prior to performing a decapsulation operation.
+Note that this keygen routine outputs a serialized composite key, which contains only the ML-KEM seed. Implementations should feel free to modify this routine to additionally output the expanded `mlkemSK` or to make free use of `ML-KEM.KeyGen(mldsaSeed)` as needed to expand the ML-KEM seed into an expanded key prior to performing a decapsulation operation.
 
 Variations in the keygen process above and decapsulation processes below to accommodate particular private key storage mechanisms or alternate interfaces to the underlying cryptographic modules are considered to be conformant to this specification so long as they produce the same output and error handling.
 
@@ -611,9 +610,6 @@ Implicit inputs mapped from <OID>:
   Trad    The underlying ML-KEM algorithm and
           parameter set, for example "RSA-OAEP"
           or "X25519".
-
-  KDF     The KDF specified for the given Composite ML-KEM algorithm.
-          See algorithm specifications below.
 
   Label   KEM Combiner Label value for binding the ciphertext to the
           Composite OID. See section on KEM Combiner Labels below.
@@ -650,7 +646,7 @@ Encap Process:
   5. Combine the KEM secrets and additional context to yield the
      composite shared secret key.
 
-        ss = KemCombiner<KDF>(mlkemSS, tradSS, tradCT, tradPK, Label)
+        ss = KemCombiner(mlkemSS, tradSS, tradCT, tradPK, Label)
 
   6. Output composite shared secret key and ciphertext.
 
@@ -659,7 +655,7 @@ Encap Process:
 
 Depending on the security needs of the application, it MAY be advantageous to perform steps 2, 3, and 5 in a timing-invariant way to prevent side-channel attackers from learning which component algorithm failed and from learning any of the inputs or output of the KEM combiner.
 
-The specific values for `KDF` and the specific values for `Label` are defined per Composite ML-KEM algorithm in {{alg-params}}.
+The specific values for `Label` are defined per Composite ML-KEM algorithm in {{alg-params}}.
 
 Errors produced by the component `Encaps()` routines MUST be forwarded on to the calling application. Further discussion can be found below in {{sec-explicit-rejection}}.
 
@@ -683,7 +679,7 @@ Explicit inputs
 Implicit inputs mapped from <OID>:
 
   ML-KEM  The underlying ML-KEM algorithm and
-          parameter set, for example, could be "ML-KEM-768".
+          parameter set, for example "ML-KEM-768".
 
   Trad    The underlying traditional algorithm and
           parameter set, for example "RSA-OAEP"
@@ -695,9 +691,6 @@ Implicit inputs mapped from <OID>:
           from sk, however implementations that use a non-standard
           private key encoding will need to obtain the traditional
           public key some other way.
-
-  KDF     The KDF specified for the given Composite ML-KEM
-          algorithm. See algorithm specifications below.
 
   Label   KEM Combiner Label value for binding the ciphertext to
           the Composite ML-KEM OID.
@@ -731,7 +724,7 @@ Decap Process:
   4. Combine the KEM secrets and additional context to yield the
      composite shared secret key.
 
-      ss = KemCombiner<KDF>(mlkemSS, tradSS, tradCT, tradPK, Label)
+      ss = KemCombiner(mlkemSS, tradSS, tradCT, tradPK, Label)
 
   5. Output composite shared secret key.
 
@@ -742,14 +735,14 @@ Steps 2, 3, and 4 SHOULD be performed in a timing-invariant way to prevent side-
 
 It is possible to use component private keys stored in separate software or hardware keystores. Variations in the process to accommodate particular private key storage mechanisms are considered to be conformant to this specification so long as it produces the same output and error handling as the process sketched above.
 
-In order to properly achieve its security properties, the KEM combiner requires that all inputs are fixed-length. Since each Composite ML-KEM algorithm fully specifies its component algorithms, including key sizes, all inputs should be fixed-length in non-error scenarios except for minor variations introduced by encoding. However some implementations may choose to perform additional checking to handle certain error conditions. In particular, the KEM combiner step should not be performed if either of the component decapsulations returned an error condition indicating malformed inputs. For timing-invariance reasons, it is RECOMMENDED to perform both decapsulation operations and check for errors afterwards to prevent an attacker from using a timing channel to tell which component failed decapsulation. Also, RSA-based composites MUST ensure that the modulus size (i.e. the size of `tradCT` and `tradPK`) matches that specified for the given Composite ML-KEM algorithm in {{alg-params}}; depending on the cryptographic library used, this check may be done by the library or may require an explicit check as part of the `Composite-ML-KEM.Decap()` routine. Implementers should keep in mind that some instances of `tradCT` and `tradPK` will be DER-encoded which could introduce minor length variations such as dropping leading zeroes; since these variations are not attacker-controlled they are considered benign.
+In order to properly achieve its security properties, the KEM combiner requires that all inputs are fixed-length or length-encoded. Since each Composite ML-KEM algorithm fully specifies its component algorithms, including key sizes, all inputs should be fixed-length in non-error scenarios except for minor variations introduced by encoding. In the cases where there are minor variations introduced by encoding, those encodings already have a fixed-length prefix followed by length-encoded data, so the requirements for the KEM combiner security properties hold (namely that the input is injective). However some implementations may choose to perform additional checking to handle certain error conditions. In particular, the KEM combiner step should not be performed if either of the component decapsulations returned an error condition indicating malformed inputs. For timing-invariance reasons, it is RECOMMENDED to perform both decapsulation operations and check for errors afterwards to prevent an attacker from using a timing channel to tell which component failed decapsulation. Also, RSA-based composites MUST ensure that the modulus size (i.e. the size of `tradCT` and `tradPK`) matches that specified for the given Composite ML-KEM algorithm in {{alg-params}}; depending on the cryptographic library used, this check may be done by the library or may require an explicit check as part of the `Composite-ML-KEM.Decap()` routine. Implementers should keep in mind that some instances of `tradCT` and `tradPK` will be DER-encoded which could introduce minor length variations such as dropping leading zeroes; since these variations are not attacker-controlled they are considered benign.
 
 Errors produced by the component `Decaps()` routines MUST be forwarded on to the calling application. Further discussion can be found below in {{sec-explicit-rejection}}.
 
 
 ## KEM Combiner Function {#sec-kem-combiner}
 
-As noted in the Encapsulation and Decapsulation procedures above, the KEM combiner is parameterized by the choice of underlying KDF. This specification provides a combiner construction with SHA3-256 for all combinations of algorithms.
+This specification provides a combiner construction with SHA3-256 for all combinations of algorithms.
 
 ~~~
 KemCombiner(mlkemSS, tradSS, tradCT, tradPK, Label) -> ss
@@ -774,14 +767,14 @@ Process:
 
 ## Error Handling and Explicit Rejection {#sec-explicit-rejection}
 
-ML-KEM, particularly its `Decaps()` defined in Algorithms 18 and 21 of [FIPS.203], is designed to be implicitly rejecting, meaning that a failure within the underlying PKE scheme due to a mangled ciphertext will not cause `ML-KEM.Decaps()` to return an error, but instead any errors encountered during decapsulation are handled by producing a pseudo-randomized shared secret that does not match the intended shared secret. `ML-KEM.Decaps()` can, however return errors for example if the provided ciphertext or decapsulation private key is the wrong size.
+ML-KEM, particularly its `Decaps()` defined in Algorithms 18 and 21 of [FIPS.203], is designed to be implicitly rejecting, meaning that a failure within the underlying PKE scheme due to a mangled ciphertext will not cause `ML-KEM.Decaps()` to return an error, but instead any errors encountered during decapsulation are handled by producing a pseudo-random shared secret. `ML-KEM.Decaps()` can, however return errors for example if the provided ciphertext or decapsulation private key is the wrong size.
 
-In Composite ML-KEM, not all component algorithms will be implicitly rejecting, for example RSA-OAEP's `Decrypt()` can return an error if the padding is incorrect. In general, in the case that one of the component primitives generates an error during Composite ML-KEM KeyGen, Encaps, or Decaps, if a component primitive returns an error, Composite ML-KEM MUST clear all buffers containing key material and forward the error to its caller; I.E. Composite ML-KEM MUST be explicitly rejecting whenever one of its components is. The same applies to Composite ML-KEM `KeyGen()` and `Encaps()`: Composite KEM MUST forward any errors produced by component algorithms.
+In Composite ML-KEM, not all component algorithms will be implicitly rejecting, for example RSA-OAEP's `Decrypt()` can return an error if the padding is incorrect. In general, in the case that one of the component primitives generates an error during Composite ML-KEM KeyGen, Encaps, or Decaps, Composite ML-KEM MUST clear all buffers containing key material and forward the error to its caller; i.e. Composite ML-KEM MUST be explicitly rejecting whenever one of its components is. The same applies to Composite ML-KEM `KeyGen()` and `Encaps()`: Composite KEM MUST forward any errors produced by component algorithms.
 
 # Serialization {#sec-serialization}
 
-This section presents routines for serializing and deserializing composite public keys, private keys, and ciphertext values to bytes via simple concatenation of the underlying encodings of the component algorithms.
-The functions defined in this section are considered internal implementation detail and are referenced from within the public API definitions in {{sec-composite-mlkem}}.
+This section presents routines for serializing and deserializing composite public keys, private keys, and ciphertext values to bytes.
+The functions defined in this section are considered internal implementation details and are referenced from within the public API definitions in {{sec-composite-mlkem}}.
 
 Deserialization is possible because ML-KEM has fixed-length public keys, private keys (seeds), and ciphertext values as shown in the following table.
 
@@ -797,8 +790,8 @@ While ML-KEM has a single fixed-size representation for each of public key, priv
 
 * **ML-KEM**: MUST be encoded as specified in sections 7.1 and 7.2 of [FIPS.203], using a 64-byte seed as the private key.
 * **RSA**: the public key MUST be encoded as RSAPublicKey with the `(n,e)` public key representation as specified in A.1.1 of [RFC8017] and the private key representation as RSAPrivateKey specified in A.1.2 of [RFC8017] with version 0 and 'otherPrimeInfos' absent. An RSA-OAEP ciphertext MUST be encoded as specified in section 7.1.1 of {{RFC8017}}
-* **ECDH**: public key MUST be encoded as an uncompressed X9.62 [X9.62–2005], including the leading byte `0x04` indicating uncompressed. This is consistent with the encoding of `ECPoint` as specified in section 2.2 of [RFC5480] when no ASN.1 OCTET STRING wrapping is present. The private key MUST be encoded as ECPrivateKey specified in [RFC5915] with 'NamedCurve' parameter set to the OID of the curve, but without the 'publicKey' field.
-* **X25519 and X448**: the public key MUST be encoded as per section 5 of [RFC7748] and the private key is a 32 or 57 byte raw value for Ed25519 and Ed448 respectively, which can be converted to a CurvePrivateKey specified in [RFC8410] by the addition of an OCTET STRING wrapper.
+* **ECDH**: public key MUST be encoded as an uncompressed X9.62 [X9.62–2005], including the leading byte `0x04` indicating uncompressed. This is consistent with the encoding of `ECPoint` as specified in section 2.2 of [RFC5480] when no ASN.1 OCTET STRING wrapping is present. The private key MUST be encoded as ECPrivateKey specified in [RFC5915] with 'NamedCurve' parameter set to the OID of the curve, but without the 'publicKey' field. The ciphertext MUST be encoded in the same manner as the public key.
+* **X25519 and X448**: the public key MUST be encoded as per section 5 of [RFC7748] and the private key is a 32 or 57 byte raw value for Ed25519 and Ed448 respectively. The ciphertext MUST be encoded in the same manner as the public key.
 
 All ASN.1 objects SHALL be encoded using DER on serialization.
 
@@ -876,7 +869,7 @@ Deserialization Process:
           mlkemPK = bytes[:1568]
           tradPK  = bytes[1568:]
 
-     Note that while ML-KEM has fixed-length keys, RSA and ECDH
+     Note that while ML-KEM has fixed-length keys, RSA
      may not, depending on encoding, so rigorous length-checking
      of the overall composite key is not always possible.
 
@@ -890,7 +883,7 @@ Deserialization Process:
 
 ## SerializePrivateKey and DeserializePrivateKey {#sec-serialize-privkey}
 
-The serialization routine for keys simply concatenates the private keys of the component algorithms, as defined below:
+The serialization routine for keys simply concatenates the private keys of the component algorithms, including a length encoding for the public key, as defined below:
 
 ~~~
 Composite-ML-KEM.SerializePrivateKey(mlkemSeed, tradPK, tradSK)
@@ -955,7 +948,7 @@ Output:
 
 Deserialization Process:
 
-  1. Parse the ML-DSA seed, which is always a 64 byte seed
+  1. Parse the ML-KEM seed, which is always a 64 byte seed
      for all parameter sets.
 
      mlkemSeed = bytes[:64]
@@ -968,7 +961,7 @@ Deserialization Process:
 
      tradSK  = bytes[66+lenTradPK:]
 
-     Note that while ML-KEM has fixed-length keys, RSA and ECDH
+     Note that while ML-KEM has fixed-length keys, RSA
      may not, depending on encoding, so rigorous length-checking
      of the overall composite key is not always possible.
 
@@ -1053,10 +1046,6 @@ Deserialization Process:
           mlkemCT= bytes[:1568]
           tradCT  = bytes[1568:]
 
-     Note that while ML-KEM has fixed-length ciphertexts, RSA and
-     ECDH may not, depending on encoding, so rigorous length-checking
-     is not always possible here.
-
   2. Output the component ciphertext values
 
      output (mlkemCT, tradCT)
@@ -1112,9 +1101,10 @@ The following ASN.1 Information Object Classes are defined to allow for compact 
 pk-CompositeKEM {OBJECT IDENTIFIER:id}
   PUBLIC-KEY ::= {
     IDENTIFIER id
-    -- KEY without ASN.1 wrapping --
+    -- KEY no ASN.1 wrapping --
     PARAMS ARE absent
     CERT-KEY-USAGE { keyEncipherment }
+    -- PRIVATE-KEY no ASN.1 wrapping --
   }
 
 kema-CompositeKEM {
@@ -1122,7 +1112,7 @@ kema-CompositeKEM {
     PUBLIC-KEY:publicKeyType }
     KEM-ALGORITHM ::= {
          IDENTIFIER id
-         -- VALUE without ASN.1 wrapping --
+         -- VALUE no ASN.1 wrapping --
          PARAMS ARE absent
          PUBLIC-KEYS { publicKeyType }
          SMIME-CAPS { IDENTIFIED BY id }
@@ -1189,7 +1179,7 @@ Each Composite ML-KEM algorithm has a unique Label which is used in constructing
 Label values are provided as ASCII strings, but MUST be converted into binary strings in the obvious way.
 For example:
 
-* "\.//^\" in hexadecimal is "5c2e2f2f5e5c"
+* "\\.//^\\" in hexadecimal is "5c2e2f2f5e5c".  Note that this unusual label is used in id-MLKEM768-X25519-SHA3-256 in order to align with {{X-Wing}}. The label contains two instances of the backskash character (\\) which is commonly used as an escape character in programming languages.  BE VERY CAREFUL IF YOU ARE USING THE STRING REPRESENTATION OF THIS LABEL.  Properly escape the backslash so it appears correctly in the final 6-character label used by the KDF.
 * "QSF-MLKEM768-P256-SHA3-256" in hexadecimal is "5153462d4d4c4b454d3736382d503235362d534841332d323536"
 
 EDNOTE: the OIDs listed below are prototyping OIDs defined in Entrust's 2.16.840.1.114027.80.9.1 arc but will be replaced by IANA.
@@ -1203,11 +1193,11 @@ Composite KEM algorithm list:
 
 {::include src/algParams.md}
 
-In alignment with ML-KEM [FIPS.203], Composite KEM algorithms output a 256-bit shared secret key at all security levels, truncating is necessary as described in {{sec-kem-combiner}}.
+In alignment with ML-KEM [FIPS.203], Composite KEM algorithms output a 256-bit shared secret key at all security levels.
 
-For all RSA key types and sizes, the exponent is RECOMMENDED to be 65537. Implementations MAY support only 65537 and reject other exponent values. Legacy RSA implementations that use other values for the exponent MAY be used to within a composite, but need to be careful when interoperating with other implementations.
+For all RSA key types and sizes, the exponent is RECOMMENDED to be 65537. Implementations MAY support only 65537 and reject other exponent values. Legacy RSA implementations that use other values for the exponent MAY be used within a composite, but need to be careful when interoperating with other implementations.
 
-The KDFs were chosen to roughly match the security level of the stronger component. In the case of X25519 and X448 SHA3-256 is used to match the construction in {{X-Wing}}.
+SHA3-256 is used as the KDF for all Composite ML-KEM algorithms.
 
 ## RSA-OAEP Parameters {#sect-rsaoaep-params}
 
@@ -1215,7 +1205,7 @@ Use of RSA-OAEP [RFC8017] requires additional parameters to be specified.
 
 The RSA component keys MUST be generated at the specified 2048-bit, 3072-bit, 4096-bit key sizes respectively (up to small differences such as dropping leading zeros); intermediate sizes are not acceptable.
 
-As with the other Composite ML-KEM algorithms, AlgorithmIdentifier parameters MUST be absent. The RSA-OAEP primitive SHALL be instantiated with the following hard-coded parameters which are the same for the 2048, 3072 and 4096 bit security levels since the objective is to carry and output a 256-bit shared secret key at all security levels.
+As with the other Composite ML-KEM algorithms, AlgorithmIdentifier parameters MUST be absent. The RSA-OAEP primitive SHALL be instantiated with the following hard-coded parameters which are the same for the 2048, 3072 and 4096 bit key sizes since the objective is to carry and output a 256-bit shared secret key at all security levels.
 
 | RSAES-OAEP-params           | Value               |
 | ----------------------      | ---------------     |
@@ -1238,7 +1228,7 @@ In generating the list of composite algorithms, the idea was to provide composit
 
 The main design consideration in choosing pairings is to prioritize providing pairings of each ML-KEM security level with commonly-deployed traditional algorithms. This supports the design goal of using composites as a stepping stone to efficiently deploy post-quantum on top of existing hardened and certified traditional algorithm implementations. This was prioritized rather than attempting to exactly match the security level of the post-quantum and traditional components -- which in general is difficult to do since there is no academic consensus on how to compare the "bits of security" against classical attackers and "qubits of security" against quantum attackers.
 
-While it may seem odd to use 256-bit outputs at all security levels, this aligns with ML-KEM [FIPS.203] which produces a 256-bit shared secret key at all security levels. All hash functions used have >= 256 bits of (2nd) pre-image resistance, which is the required property for a KDF to provide 128 bits of security, as allowed in Table 3 of {{SP.800-57pt1r5}}. Composite algorithms at higher security levels use a larger hash function in order to preserve internal collision resistance of the hash function at a comparable strength to the underlying component algorithms up to the point where truncation to a 256-bit output is performed.
+While it may seem odd to use 256-bit outputs at all security levels, this aligns with ML-KEM [FIPS.203] which produces a 256-bit shared secret key at all security levels. SHA3-256 has 256 bits of (2nd) pre-image resistance, which is the required property for a KDF to provide 128 bits of security, as allowed in Table 3 of {{SP.800-57pt1r5}}.
 
 
 
@@ -1352,15 +1342,15 @@ Migration flexibility. Some PQ/T hybrids exist to provide a sort of "OR" mode wh
 The KEM combiner from {{sec-kem-combiner}} is reproduced here for reference.
 
 ~~~
-  KDF(mlkemSS || tradSS || tradCT || tradPK || Label)
+  SHA3-256(mlkemSS || tradSS || tradCT || tradPK || Label)
 ~~~
 {: #code-generic-kem-combiner title="KEM combiner construction"}
 
 
-The primary security property of the KEM combiner is that it preserves IND-CCA2 of the overall Composite ML-KEM so long as at least one component is IND-CCA2 {{X-Wing}} [GHP18]. Additionally, we also need to consider the case where one of the component algorithms is completely broken; that the private key is known to an attacker, or worse that the public key, private key, and ciphertext are manipulated by the attacker. In this case, we rely on the construction of the KEM combiner to ensure that the value of the other shared secret key cannot be leaked or the combined shared secret key predicted via manipulation of the broken algorithm.
+The primary security property of the KEM combiner is that it preserves indistinguishable (adaptive) chosen-ciphertext (IND-CCA2) security of the overall Composite ML-KEM so long as at least one component is IND-CCA2 {{X-Wing}} [GHP18]. Additionally, we also need to consider the case where one of the component algorithms is completely broken; that the private key is known to an attacker, or worse that the public key, private key, and ciphertext are manipulated by the attacker. In this case, we rely on the construction of the KEM combiner to ensure that the value of the other shared secret key cannot be leaked or the combined shared secret key predicted via manipulation of the broken algorithm.
 
 
-Each registered Composite ML-KEM algorithm specifies the choice of `KDF` and `Label` -- see {{alg-params}}. Given that each Composite ML-KEM algorithm fully specifies the component algorithms, including for example the size of the RSA modulus, all inputs to the KEM combiner are fixed-size and thus do not require length-prefixing.
+Each registered Composite ML-KEM algorithm specifies a `Label` -- see {{alg-params}}. Given that each Composite ML-KEM algorithm fully specifies the component algorithms, including for example the size of the RSA modulus, all inputs to the KEM combiner are fixed-size and thus do not require length-prefixing.
 
 * `mlkemSS` is always 32 bytes.
 * `tradSS` in the case of DH this is derived by the decapsulator and therefore the length is not controlled by the attacker, however in the case of RSA-OAEP this value is directly chosen by the sender and both the length and content could be freely chosen by an attacker.
@@ -1369,13 +1359,13 @@ Each registered Composite ML-KEM algorithm specifies the choice of `KDF` and `La
 * `Label` is a fixed value specified in this document.
 
 
-### IND-CCA Security of the hybrid scheme {#sec-hybrid-security}
+### IND-CCA2 Security of the hybrid scheme {#sec-hybrid-security}
 
 Informally, a Composite ML-KEM algorithm is secure if the combiner (SHA3) is secure, and either ML-KEM is secure or the traditional component (RSA-OAEP, ECDH, X25519 or X448) is secure.
 
-The security of ML-KEM and DH hybrids is covered in [X-Wing] and requires that the first KEM component (ML-KEM in this construction) is IND-CCA and second ciphertext preimage resistant (C2PRI) and that the second traditional component is IND-CCA. This design choice improves performance by not including the large ML-KEM public key and ciphertext, but means that an implementation error in the ML-KEM component that affects the ciphertext check step of the FO transform could result in the overall composite no longer achieving IND-CCA2 security. Note that ciphertext collisions exist in the traditional component by the composite design choice to support any underlying encoding of the traditional component, such as compressed vs uncompressed EC points as the DH KEM ciphertext. This solution remains IND-CCA due to binding the `tradPK` and `tradCT` in the KEM combiner.
+The security of ML-KEM and DH hybrids is covered in [X-Wing] and requires that the first KEM component (ML-KEM in this construction) is IND-CCA2 and second ciphertext preimage resistant (C2PRI) and that the second traditional component is IND-CCA2. This design choice improves performance by not including the large ML-KEM public key and ciphertext, but means that an implementation error in the ML-KEM component that affects the ciphertext check step of the FO transform could result in the overall composite no longer achieving IND-CCA2 security. This solution remains IND-CCA2 due to binding the `tradPK` and `tradCT` in the KEM combiner.
 
-The QSF framework presented in [X-Wing] is extended to cover RSA-OAEP as the traditional algorithm in place of DH by noting that RSA-OAEP is also IND-CCA secure [RFC8017].
+The QSF framework presented in [X-Wing] is extended to cover RSA-OAEP as the traditional algorithm in place of DH by noting that RSA-OAEP is also IND-CCA2 secure [RFC8017].
 
 The composite combiner cannot be assumed to be secure when used with different KEMs and a more cautious approach would bind the public key and ciphertext of the first KEM as well.
 
@@ -1518,7 +1508,7 @@ ML-KEM always requires the public key in order to perform various steps of the F
 
 Moreover, the KEM combiner as specified in {{sec-kem-combiner}} requires the public key of the traditional component in order to achieve the public-key binding property and ciphertext collision resistance as described in {{sec-cons-kem-combiner}}. For this reason, the private key serialization defined in {{sec-serialize-privkey}} carries the traditional public key so that it is easily available to the decapsulater.
 
-Implementers who choose to use a different private key encoding than the one specified in this document MUST consider how to provide the component public keys to the decapsulate routine. This includes, for example, implementations that use a hardware security module to hold the private key. While some implementations might contain routines to computationally derive the public key from the private key, it is not guaranteed that all implementations will support this. In some implementations, the application might be required to cache the public key or certificate associated with the private key so that the public key can be retrieved for the purposes of decapsulation.
+Implementers who choose to use a different private key encoding than the one specified in this document MUST consider how to provide the component public keys to the decapsulate routine. This includes, for example, implementations that use a hardware security module to hold the private key. While some implementations might contain routines to computationally derive the public key from the private key, it is not guaranteed that all implementations will support this, or that they will then encode the public key in the correct format. In some implementations, the application might be required to cache the public key or certificate associated with the private key so that the public key can be retrieved for the purposes of decapsulation.
 
 
 
@@ -1531,13 +1521,12 @@ Implementers who choose to use a different private key encoding than the one spe
 
 The sizes listed below are maximum values: several factors could cause fluctuations in the size of the traditional component. For example, this could be due to:
 
-* Compressed vs uncompressed EC point.
-* The RSA public key `(n, e)` allows `e` to vary is size between 3 and `n - 1` [RFC8017]. Note that the size table below assumes the recommended value of `e = 65537`, so for RSA combinations it is in fact not a true maximum.
+* The RSA public key `(n, e)` allows `e` to vary in size between 3 and `n - 1` [RFC8017]. Note that the size table below assumes the recommended value of `e = 65537`, so for RSA combinations it is in fact not a true maximum.
 * When the underlying RSA or EC value is itself DER-encoded, integer values could occasionally be shorter than expected due to leading zeros being dropped from the encoding.
 
 By contrast, ML-KEM values are always fixed size, so composite values can always be correctly de-serialized based on the size of the ML-KEM component.
 
-Size values marked with an asterisk in the table are not fixed but maximum possible values for the composite key or ciphertext. Implementations MUST NOT perform strict length checking based on such values.
+Size values marked with an asterisk (*) in the table are not fixed but maximum possible values for the composite key or ciphertext. Implementations MUST NOT perform strict length checking based on such values.
 
 Non-hybrid ML-KEM is included for reference.
 
@@ -1577,15 +1566,13 @@ This section provides references to the full specification of the algorithms use
 
 | HashID | OID | Specification |
 | ----------- | ----------- | ----------- |
-| id-sha256 | 2.16.840.1.101.3.4.2.1 | [RFC6234] |
-| id-sha512 | 2.16.840.1.101.3.4.2.3 | [RFC6234] |
 | id-sha3-256 | 2.16.840.1.101.3.4.2.8 | [FIPS.202] |
 {: #tab-component-hash title="Hash algorithms used in Composite Constructions"}
 
 
 # Fixed Component Algorithm Identifiers
 
-Many cryptographic libraries are X.509-focused and do not expose interfaces to instantiate a public key from raw bytes, but only from a SubjectPublicKeyInfo structure as you would find in an X.509 certificate, therefore implementing composite in those libraries requires reconstructing the SPKI for each component algorithm. In order to aid implementers and reduce interoperability issues, this section lists out the full public key and signature AlgorithmIdentifiers for each component algorithm.
+Many cryptographic libraries are X.509-focused and do not expose interfaces to instantiate a public key from raw bytes, but only from a SubjectPublicKeyInfo structure as you would find in an X.509 certificate, therefore implementing Composite ML-KEM in those libraries requires reconstructing the SPKI for each component algorithm. In order to aid implementers and reduce interoperability issues, this section lists out the full public key and signature AlgorithmIdentifiers for each component algorithm.
 
 
 **ML-KEM-768**
@@ -1758,14 +1745,14 @@ DER:
 
 This specification borrows extensively from the analysis and KEM combiner construction presented in [X-Wing]. In particular, X-Wing and id-MLKEM768-X25519-SHA3-256 are largely interchangeable. The one difference is that X-Wing uses a combined KeyGen function to generate the two component private keys from the same seed, which gives some additional binding properties. However, using a derived value as the seed for `ML-KEM.KeyGen_internal()` is, at time of writing, explicitly disallowed by [FIPS.203] which makes it impossible to create a FIPS-compliant implementation of X-Wing's KeyGen  or private key import functionality. For this reason, this specification keeps the key generation for both components separate and only loosely-specified so that implementers are free to use an existing certified hardware or software module for one or both components.
 
-Due to the difference in key generation and security properties, X-Wing and id-MLKEM768-X25519-SHA3-256 have been registered as separate algorithms with separate OIDs, and they use a different KEM Combiner Label in order to ensure that their ciphertexts are not inter-compatible.
+Due to the difference in key generation and security properties, X-Wing and id-MLKEM768-X25519-SHA3-256 have been registered as separate algorithms with separate OIDs.
 
 ## ETSI CatKDF
 
 [ETSI.TS.103.744] section 8.2.3 defines CatKDF as:
 
 ~~~
-1) Form secret = psk || k1 || k 2.
+1) Form secret = psk || k1 || k2.
 2) Set context = f(info, MA, MB), where f is a context formatting
    function.
 3) key_material = KDF(secret, label, context, length).
@@ -1795,7 +1782,7 @@ Next, the `Combined KDF Input` is given, which is simply the concatenation of th
 
 Finally, the `KDF Function` and the `ss Output` are shown as outputs.  The `ss` is the Composite ML-KEM shared-secret generated by applying the KDF to the `Combined KDF Input`.
 
-Examples are given for each recommended Composite ML-KEM algorithm from {{sec-impl-profile}}, which happens to demonstrate all three combiner functions.
+Examples are given for each recommended Composite ML-KEM algorithm from {{sec-impl-profile}}.
 
 Example 1:
 
