@@ -1,5 +1,5 @@
 - id-MLKEM768-RSA2048-SHA3-256
-  - OID: 2.16.840.1.114027.80.5.2.62
+  - OID: 2.16.840.1.114027.80.5.2.74
   - Label: "`MLKEM768-RSAOAEP2048-SHA3256`"
   - Key Derivation Function (KDF): SHA3-256
   - ML-KEM variant: ML-KEM-768
@@ -9,7 +9,7 @@
     - RSAES-OAEP parameters: See {{rsa-oaep-params}}
 
 - id-MLKEM768-RSA3072-SHA3-256
-  - OID: 2.16.840.1.114027.80.5.2.63
+  - OID: 2.16.840.1.114027.80.5.2.75
   - Label: "`MLKEM768-RSAOAEP3072-SHA3256`"
   - Key Derivation Function (KDF): SHA3-256
   - ML-KEM variant: ML-KEM-768
@@ -19,7 +19,7 @@
     - RSAES-OAEP parameters: See {{rsa-oaep-params}}
 
 - id-MLKEM768-RSA4096-SHA3-256
-  - OID: 2.16.840.1.114027.80.5.2.64
+  - OID: 2.16.840.1.114027.80.5.2.76
   - Label: "`MLKEM768-RSAOAEP4096-SHA3256`"
   - Key Derivation Function (KDF): SHA3-256
   - ML-KEM variant: ML-KEM-768
@@ -29,7 +29,7 @@
     - RSAES-OAEP parameters: See {{rsa-oaep-params}}
 
 - id-MLKEM768-X25519-SHA3-256
-  - OID: 2.16.840.1.114027.80.5.2.65
+  - OID: 2.16.840.1.114027.80.5.2.77
   - Label: "`5c2e2f2f5e5c`" (hex)
   - Key Derivation Function (KDF): SHA3-256
   - ML-KEM variant: ML-KEM-768
@@ -37,7 +37,7 @@
     - Traditional KEM Algorithm: id-X25519
 
 - id-MLKEM768-ECDH-P256-SHA3-256
-  - OID: 2.16.840.1.114027.80.5.2.66
+  - OID: 2.16.840.1.114027.80.5.2.78
   - Label: "`7c2d28292d7c`" (hex)
   - Key Derivation Function (KDF): SHA3-256
   - ML-KEM variant: ML-KEM-768
@@ -46,7 +46,7 @@
     - ECDH curve: secp256r1
 
 - id-MLKEM768-ECDH-P384-SHA3-256
-  - OID: 2.16.840.1.114027.80.5.2.67
+  - OID: 2.16.840.1.114027.80.5.2.79
   - Label: "`MLKEM768-P384-SHA3256`"
   - Key Derivation Function (KDF): SHA3-256
   - ML-KEM variant: ML-KEM-768
@@ -55,7 +55,7 @@
     - ECDH curve: secp384r1
 
 - id-MLKEM768-ECDH-brainpoolP256r1-SHA3-256
-  - OID: 2.16.840.1.114027.80.5.2.68
+  - OID: 2.16.840.1.114027.80.5.2.80
   - Label: "`MLKEM768-BP256-SHA3256`"
   - Key Derivation Function (KDF): SHA3-256
   - ML-KEM variant: ML-KEM-768
@@ -64,7 +64,7 @@
     - ECDH curve: brainpoolP256r1
 
 - id-MLKEM1024-RSA3072-SHA3-256
-  - OID: 2.16.840.1.114027.80.5.2.69
+  - OID: 2.16.840.1.114027.80.5.2.81
   - Label: "`MLKEM1024-RSAOAEP3072-SHA3256`"
   - Key Derivation Function (KDF): SHA3-256
   - ML-KEM variant: ML-KEM-1024
@@ -74,7 +74,7 @@
     - RSAES-OAEP parameters: See {{rsa-oaep-params}}
 
 - id-MLKEM1024-ECDH-P384-SHA3-256
-  - OID: 2.16.840.1.114027.80.5.2.70
+  - OID: 2.16.840.1.114027.80.5.2.82
   - Label: "`207c202f2d5c`" (hex)
   - Key Derivation Function (KDF): SHA3-256
   - ML-KEM variant: ML-KEM-1024
@@ -83,7 +83,7 @@
     - ECDH curve: secp384r1
 
 - id-MLKEM1024-ECDH-brainpoolP384r1-SHA3-256
-  - OID: 2.16.840.1.114027.80.5.2.71
+  - OID: 2.16.840.1.114027.80.5.2.83
   - Label: "`MLKEM1024-BP384-SHA3256`"
   - Key Derivation Function (KDF): SHA3-256
   - ML-KEM variant: ML-KEM-1024
@@ -92,7 +92,7 @@
     - ECDH curve: brainpoolP384r1
 
 - id-MLKEM1024-X448-SHA3-256
-  - OID: 2.16.840.1.114027.80.5.2.72
+  - OID: 2.16.840.1.114027.80.5.2.84
   - Label: "`MLKEM1024-X448-SHA3256`"
   - Key Derivation Function (KDF): SHA3-256
   - ML-KEM variant: ML-KEM-1024
@@ -100,7 +100,7 @@
     - Traditional KEM Algorithm: id-X448
 
 - id-MLKEM1024-ECDH-P521-SHA3-256
-  - OID: 2.16.840.1.114027.80.5.2.73
+  - OID: 2.16.840.1.114027.80.5.2.85
   - Label: "`MLKEM1024-P521-SHA3256`"
   - Key Derivation Function (KDF): SHA3-256
   - ML-KEM variant: ML-KEM-1024

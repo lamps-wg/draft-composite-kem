@@ -41,18 +41,18 @@ OID_TABLE = {
   "id-alg-ml-kem-512": univ.ObjectIdentifier((2,16,840,1,101,3,4,4,1)),
   "id-alg-ml-kem-768": univ.ObjectIdentifier((2,16,840,1,101,3,4,4,2)),
   "id-alg-ml-kem-1024": univ.ObjectIdentifier((2,16,840,1,101,3,4,4,3)),
-  "id-MLKEM768-RSA2048-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,62)),
-  "id-MLKEM768-RSA3072-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,63)),
-  "id-MLKEM768-RSA4096-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,64)),
-  "id-MLKEM768-X25519-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,65)),
-  "id-MLKEM768-ECDH-P256-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,66)),
-  "id-MLKEM768-ECDH-P384-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,67)),
-  "id-MLKEM768-ECDH-brainpoolP256r1-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,68)),
-  "id-MLKEM1024-RSA3072-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,69)),
-  "id-MLKEM1024-ECDH-P384-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,70)),
-  "id-MLKEM1024-ECDH-brainpoolP384r1-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,71)),
-  "id-MLKEM1024-X448-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,72)),
-  "id-MLKEM1024-ECDH-P521-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,73)),
+  "id-MLKEM768-RSA2048-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,74)),
+  "id-MLKEM768-RSA3072-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,75)),
+  "id-MLKEM768-RSA4096-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,76)),
+  "id-MLKEM768-X25519-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,77)),
+  "id-MLKEM768-ECDH-P256-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,78)),
+  "id-MLKEM768-ECDH-P384-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,79)),
+  "id-MLKEM768-ECDH-brainpoolP256r1-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,80)),
+  "id-MLKEM1024-RSA3072-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,81)),
+  "id-MLKEM1024-ECDH-P384-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,82)),
+  "id-MLKEM1024-ECDH-brainpoolP384r1-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,83)),
+  "id-MLKEM1024-X448-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,84)),
+  "id-MLKEM1024-ECDH-P521-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,85)),
 }
 
 REVERSE_OID_TABLE = {v: k for k, v in OID_TABLE.items()}
@@ -1239,7 +1239,7 @@ def writeAlgParams():
         f.write("  - Label: \"`" + label.hex() + "`\" (hex)\n")
 
       f.write("  - Key Derivation Function (KDF): " + LABELS_TABLE[alg]['kdf'] + "\n")
-      
+
       f.write("  - ML-KEM variant: " + LABELS_TABLE[alg]['mlkem'] + "\n")
       f.write("  - Traditional Algorithm: " + LABELS_TABLE[alg]['trad'] + "\n")
       f.write("    - Traditional KEM Algorithm: " + LABELS_TABLE[alg]['trad_kem_alg'] + "\n")
