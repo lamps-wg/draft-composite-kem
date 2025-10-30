@@ -150,6 +150,11 @@ Composite_MLKEM768_P256.label = 'QSF-P256-MLKEM768-SHAKE256-SHA3256'
 # MODIFICATION: Need to modify the composite KEM to use SHA3-256
 Composite_MLKEM768_P256.kdf = "SHA3-256"
 
+# Hackathon TODO: 
+#   * get X-Wing working again
+#   * add P384, P521 from CFRG test vectors
+#   * perform encap() for x-wing and P256, send to Richard, make sure he can decap()
+
 ct = base64.b16decode(cfrg_test_vectors['qsf_p256_mlkem768_shake256_sha3256'][0]['ciphertext'].strip(), casefold=True)
 ss = Composite_MLKEM768_P256.decap( ct )
 
