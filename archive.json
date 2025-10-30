@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-10-28T01:55:33.243973+00:00",
+  "timestamp": "2025-10-30T02:01:48.553295+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -9570,6 +9570,61 @@
       },
       "comments": [],
       "reviews": []
+    },
+    {
+      "number": 228,
+      "id": "PR_kwDOKRPFO86wYM0X",
+      "title": "WGLC review",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/228",
+      "state": "OPEN",
+      "author": "danvangeest",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-10-29T13:55:03Z",
+      "updatedAt": "2025-10-29T16:25:13Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "dcbe262875284f0c9da4043ed1e5b632efdb6f22",
+      "headRepository": "danvangeest/draft-composite-kem",
+      "headRefName": "dvg/WGLC_review",
+      "headRefOid": "8eb034d7af1b3af521a639c1777a0e9a728d92e6",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "danvangeest",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "The change to testvectors_wrapped.json is just to rewrap them with better line wrapping (trust me bro).  In particular, previously often the \"tcId\" value would be wrapped in the middle which made it had to actually find algorithm test vectors in the draft,",
+          "createdAt": "2025-10-29T16:25:13Z",
+          "updatedAt": "2025-10-29T16:25:13Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO87KS0Yn",
+          "commit": {
+            "abbreviatedOid": "a90d5a6"
+          },
+          "author": "danvangeest",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-10-29T14:36:32Z",
+          "updatedAt": "2025-10-29T14:36:32Z",
+          "comments": [
+            {
+              "originalPosition": 233,
+              "body": "comment that the X-wing label sucks",
+              "createdAt": "2025-10-29T14:36:32Z",
+              "updatedAt": "2025-10-29T16:51:24Z"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
