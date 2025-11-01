@@ -658,7 +658,7 @@ class MLKEM1024_X448_SHA3_256(CompositeKEM):
   mlkem = MLKEM1024()
   tradkem = X448KEM()
   kdf = "SHA3-256"
-  label = b"MLKEM1024-X448-SHA3256"
+  label = b"MLKEM1024-X448"
 
 
 class MLKEM1024_ECDH_P521_SHA3_256(CompositeKEM):
