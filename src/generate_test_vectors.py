@@ -578,7 +578,7 @@ class MLKEM768_RSA2048_SHA3_256(CompositeKEM):
   mlkem = MLKEM768()
   tradkem = RSA2048OAEPKEM()
   kdf = "SHA3-256"
-  label = "MLKEM768-RSAOAEP2048-SHA3256".encode()
+  label = b"MLKEM768-RSAOAEP2048"
 
 
 class MLKEM768_RSA3072_SHA3_256(CompositeKEM):
@@ -586,7 +586,7 @@ class MLKEM768_RSA3072_SHA3_256(CompositeKEM):
   mlkem = MLKEM768()
   tradkem = RSA3072OAEPKEM()
   kdf = "SHA3-256"
-  label = "MLKEM768-RSAOAEP3072-SHA3256".encode()
+  label = b"MLKEM768-RSAOAEP3072"
 
 
 class MLKEM768_RSA4096_SHA3_256(CompositeKEM):
@@ -594,7 +594,7 @@ class MLKEM768_RSA4096_SHA3_256(CompositeKEM):
   mlkem = MLKEM768()
   tradkem = RSA4096OAEPKEM()
   kdf = "SHA3-256"
-  label = "MLKEM768-RSAOAEP4096-SHA3256".encode()
+  label = b"MLKEM768-RSAOAEP4096"
 
 
 class MLKEM768_X25519_SHA3_256(CompositeKEM):
@@ -610,7 +610,7 @@ class MLKEM768_ECDH_P256_SHA3_256(CompositeKEM):
   mlkem = MLKEM768()
   tradkem = ECDHP256KEM()
   kdf = "SHA3-256"
-  label = base64.b16decode("7C2D28292D7C")
+  label = b"MLKEM768-P256"
 
 
 class MLKEM768_ECDH_P384_SHA3_256(CompositeKEM):
@@ -618,7 +618,7 @@ class MLKEM768_ECDH_P384_SHA3_256(CompositeKEM):
   mlkem = MLKEM768()
   tradkem = ECDHP384KEM()
   kdf = "SHA3-256"
-  label = "MLKEM768-P384-SHA3256".encode()
+  label = b"MLKEM768-P384"
 
 
 class MLKEM768_ECDH_brainpoolP256r1_SHA3_256(CompositeKEM):
@@ -626,7 +626,7 @@ class MLKEM768_ECDH_brainpoolP256r1_SHA3_256(CompositeKEM):
   mlkem = MLKEM768()
   tradkem = ECDHBP256KEM()
   kdf = "SHA3-256"
-  label = "MLKEM768-BP256-SHA3256".encode()
+  label = b"MLKEM768-BP256"
 
 
 class MLKEM1024_RSA3072_SHA3_256(CompositeKEM):
@@ -634,7 +634,7 @@ class MLKEM1024_RSA3072_SHA3_256(CompositeKEM):
   mlkem = MLKEM1024()
   tradkem = RSA3072OAEPKEM()
   kdf = "SHA3-256"
-  label = "MLKEM1024-RSAOAEP3072-SHA3256".encode()
+  label = b"MLKEM1024-RSAOAEP3072"
 
 
 class MLKEM1024_ECDH_P384_SHA3_256(CompositeKEM):
@@ -642,7 +642,7 @@ class MLKEM1024_ECDH_P384_SHA3_256(CompositeKEM):
   mlkem = MLKEM1024()
   tradkem = ECDHP384KEM()
   kdf = "SHA3-256"
-  label = base64.b16decode("207C202F2D5C")
+  label = b"MLKEM1024-P384"
 
 
 class MLKEM1024_ECDH_brainpoolP384r1_SHA3_256(CompositeKEM):
@@ -650,7 +650,7 @@ class MLKEM1024_ECDH_brainpoolP384r1_SHA3_256(CompositeKEM):
   mlkem = MLKEM1024()
   tradkem = ECDHBP384KEM()
   kdf = "SHA3-256"
-  label = "MLKEM1024-BP384-SHA3256".encode()
+  label = b"MLKEM1024-BP384"
   
 
 class MLKEM1024_X448_SHA3_256(CompositeKEM):
@@ -658,7 +658,7 @@ class MLKEM1024_X448_SHA3_256(CompositeKEM):
   mlkem = MLKEM1024()
   tradkem = X448KEM()
   kdf = "SHA3-256"
-  label = "MLKEM1024-X448-SHA3256".encode()
+  label = b"MLKEM1024-X448-SHA3256"
 
 
 class MLKEM1024_ECDH_P521_SHA3_256(CompositeKEM):
@@ -666,7 +666,7 @@ class MLKEM1024_ECDH_P521_SHA3_256(CompositeKEM):
   mlkem = MLKEM1024()
   tradkem = ECDHP521KEM()
   kdf = "SHA3-256"
-  label = "MLKEM1024-P521-SHA3256".encode()
+  label = b"MLKEM1024-P521"
 
 
 
