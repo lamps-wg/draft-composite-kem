@@ -93,7 +93,7 @@
 
 - id-MLKEM1024-X448-SHA3-256
   - OID: 2.16.840.1.114027.80.5.2.84
-  - Label: "`MLKEM1024-X448-SHA3256`"
+  - Label: "`MLKEM1024-X448`"
   - Key Derivation Function (KDF): SHA3-256
   - ML-KEM variant: ML-KEM-1024
   - Traditional Algorithm: X448
