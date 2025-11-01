@@ -1382,7 +1382,7 @@ Table of Contents
    hexadecimal value 4D4C4B454D3736382D5253414F41455032303438.
 
    Some of the label values contain problematic characters such as
-   backslashed that can cause issues displaying correctly in rendered
+   backslashes that can cause issues displaying correctly in rendered
    documents or even in source code when the compiler interprets it as
    an escape character, so they are represented below directly in
    hexadecimal, for example the label for id-MLKEM768-X25519-SHA3-256 is
