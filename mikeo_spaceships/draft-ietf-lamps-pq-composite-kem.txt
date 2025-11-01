@@ -1385,7 +1385,7 @@ Table of Contents
    backslashed that can cause issues displaying correctly in rendered
    documents or even in source code when the compiler interprets it as
    an escape character, so they are represented below directly in
-   hexadecimal, for example the label for MLKEM768-X25519-SHA3-256 is
+   hexadecimal, for example the label for id-MLKEM768-X25519-SHA3-256 is
    "\.//^\", but to avoid transcription errors it is provided only in
    hexadecimal as "5c2e2f2f5e5c"
 
