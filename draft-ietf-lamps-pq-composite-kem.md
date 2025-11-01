@@ -1176,11 +1176,10 @@ As the number of algorithms can be daunting to implementers, see {{sec-impl-prof
 
 Each Composite ML-KEM algorithm has a unique Label which is used in constructing the KEM combiner in ({{sec-kem-combiner}}). This helps protect against a different algorithm arriving at the same shared secret key even if all inputs are the same.
 
-Label values are provided as ASCII strings, but MUST be converted into binary strings in the obvious way.
-For example:
+Label values are provided in two forms: where the label value is alphanumeric ASCII, they are represented below as strings.
+For example, "MLKEM768-RSAOAEP2048" below is equivalent to the hexadecimal value `4D4C4B454D3736382D5253414F41455032303438`.
 
-* "\\.//^\\" in hexadecimal is "5c2e2f2f5e5c".  Note that this unusual label is used in id-MLKEM768-X25519-SHA3-256 in order to align with {{X-Wing}}. The label contains two instances of the backskash character (\\) which is commonly used as an escape character in programming languages.  BE VERY CAREFUL IF YOU ARE USING THE STRING REPRESENTATION OF THIS LABEL.  Properly escape the backslash so it appears correctly in the final 6-character label used by the KDF.
-* "QSF-MLKEM768-P256-SHA3-256" in hexadecimal is "5153462d4d4c4b454d3736382d503235362d534841332d323536"
+Some of the label values contain problematic characters such as backslashes that can cause issues displaying correctly in rendered documents or even in source code when the compiler interprets it as an escape character, so they are represented below directly in hexadecimal, for example the label for id-MLKEM768-X25519-SHA3-256 is "\\.//^\\", but to avoid transcription errors it is provided only in hexadecimal as "5c2e2f2f5e5c"
 
 EDNOTE: the OIDs listed below are prototyping OIDs defined in Entrust's 2.16.840.1.114027.80.9.1 arc but will be replaced by IANA.
 
