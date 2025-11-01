@@ -1177,7 +1177,7 @@ As the number of algorithms can be daunting to implementers, see {{sec-impl-prof
 Each Composite ML-KEM algorithm has a unique Label which is used in constructing the KEM combiner in ({{sec-kem-combiner}}). This helps protect against a different algorithm arriving at the same shared secret key even if all inputs are the same.
 
 Label values are provided in two forms: where the label value is alphanumeric ASCII, they are represented below as strings.
-For example, "MLKEM768-RSAOAEP2048-SHA3256" below is equivalent to the hexadecimal value `4D4C4B454D3736382D5253414F414550323034382D53484133323536`.
+For example, "MLKEM768-RSAOAEP2048" below is equivalent to the hexadecimal value `4D4C4B454D3736382D5253414F41455032303438`.
 
 Some of the label values contain problematic characters such as backslashed that can cause issues displaying correctly in rendered documents or even in source code when the compiler interprets it as an escape character, so they are represented below directly in hexadecimal, for example the label for MLKEM768-X25519-SHA3-256 is "\\.//^\\", but to avoid transcription errors it is provided only in hexadecimal as "5c2e2f2f5e5c"
 
