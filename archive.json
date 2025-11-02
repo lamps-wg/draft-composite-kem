@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-10-30T02:01:48.553295+00:00",
+  "timestamp": "2025-11-02T02:04:53.820185+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -9576,24 +9576,26 @@
       "id": "PR_kwDOKRPFO86wYM0X",
       "title": "WGLC review",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/228",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "danvangeest",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2025-10-29T13:55:03Z",
-      "updatedAt": "2025-10-29T16:25:13Z",
+      "updatedAt": "2025-10-30T23:32:48Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "dcbe262875284f0c9da4043ed1e5b632efdb6f22",
       "headRepository": "danvangeest/draft-composite-kem",
       "headRefName": "dvg/WGLC_review",
       "headRefOid": "8eb034d7af1b3af521a639c1777a0e9a728d92e6",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-10-30T12:51:43Z",
+      "mergedAt": "2025-10-30T12:51:43Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "722ce3dc1c2c5504a5c83681223ff8b7f71b1479"
+      },
       "comments": [
         {
           "author": "danvangeest",
@@ -9623,6 +9625,264 @@
               "updatedAt": "2025-10-29T16:51:24Z"
             }
           ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO87Kx4E3",
+          "commit": {
+            "abbreviatedOid": "a90d5a6"
+          },
+          "author": "sophieschmieg",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-10-30T23:32:48Z",
+          "updatedAt": "2025-10-30T23:32:48Z",
+          "comments": [
+            {
+              "originalPosition": 233,
+              "body": "we could consider just using the hex here, that way the whole backslash backlash goes away",
+              "createdAt": "2025-10-30T23:32:48Z",
+              "updatedAt": "2025-10-30T23:32:48Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 229,
+      "id": "PR_kwDOKRPFO86wmxhn",
+      "title": "New CFRG Labels (not spaceships)",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/229",
+      "state": "MERGED",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "spaceships",
+      "createdAt": "2025-10-30T12:15:30Z",
+      "updatedAt": "2025-11-01T20:44:02Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "dcbe262875284f0c9da4043ed1e5b632efdb6f22",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_spaceships",
+      "headRefOid": "c735cfb47a9201875878ae6a0756bce82f0c229c",
+      "closedAt": "2025-11-01T20:43:58Z",
+      "mergedAt": "2025-11-01T20:43:58Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "d66758ed6309a46e58080a7156d7f3fd21cb70d2"
+      },
+      "comments": [
+        {
+          "author": "danvangeest",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Updated my implementation with the new labels and the test vectors pass.",
+          "createdAt": "2025-10-30T12:44:07Z",
+          "updatedAt": "2025-10-30T12:44:07Z"
+        },
+        {
+          "author": "danvangeest",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Not cycling the OIDs?",
+          "createdAt": "2025-10-30T12:52:34Z",
+          "updatedAt": "2025-10-30T12:52:34Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> Not cycling the OIDs?\r\n\r\nYeah, that's probably right.",
+          "createdAt": "2025-10-30T12:53:24Z",
+          "updatedAt": "2025-10-30T12:53:24Z"
+        },
+        {
+          "author": "samuel-lee-msft",
+          "authorAssociation": "NONE",
+          "body": "Updated labels LGTM",
+          "createdAt": "2025-10-30T18:05:25Z",
+          "updatedAt": "2025-10-30T18:05:25Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Updating to match\r\nhttps://github.com/cfrg/draft-irtf-cfrg-concrete-hybrid-kems/pull/41\r\n\r\nusing the labels:\r\n* b\"MLKEM768-P256\"\r\n* br\"\\.//^\\\"\r\n* b\"MLKEM1024-P384\"\r\n\r\n... and I suppose I should make the others match ?",
+          "createdAt": "2025-11-01T15:04:18Z",
+          "updatedAt": "2025-11-01T15:04:18Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Interop achieved with https://github.com/cfrg/draft-irtf-cfrg-concrete-hybrid-kems/pull/41 (specifically the test vectors in commit https://github.com/cfrg/draft-irtf-cfrg-concrete-hybrid-kems/blob/def40628ff80b7bedff546de4e18bad60fe0afaa/test-vectors.json\r\n\r\n\r\n\r\nMLKEM768_X25519:\r\n\tss from CFRG test vectors, and decapsulated ss\r\n\te5ba94031ea6efd69c09c254f6d9783136ba6037e2d4c43bcccf19d6f3f4343a\r\n\te5ba94031ea6efd69c09c254f6d9783136ba6037e2d4c43bcccf19d6f3f4343a\r\n\r\nMLKEM768_P256:\r\n\tss from CFRG test vectors, and decapsulated ss\r\n\t9bd018e869bb01b63fb8f5da374a73d347ea14cb2bc570b13d0908e2288ec456\r\n\t9bd018e869bb01b63fb8f5da374a73d347ea14cb2bc570b13d0908e2288ec456\r\n\r\nMLKEM1024_P384:\r\n\tss from CFRG test vectors, and decapsulated ss\r\n\t8c028c6ea72a1c59408e2b15dd8fed8008517e861cd2329b159bda1919ea656c\r\n\t8c028c6ea72a1c59408e2b15dd8fed8008517e861cd2329b159bda1919ea656c\r\n",
+          "createdAt": "2025-11-01T18:02:42Z",
+          "updatedAt": "2025-11-01T18:02:42Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO87Knr7Z",
+          "commit": {
+            "abbreviatedOid": "f4c507d"
+          },
+          "author": "danvangeest",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-10-30T12:40:35Z",
+          "updatedAt": "2025-10-30T12:40:35Z",
+          "comments": [
+            {
+              "originalPosition": 1,
+              "body": "this file is new, is it intended?",
+              "createdAt": "2025-10-30T12:40:35Z",
+              "updatedAt": "2025-10-30T12:40:35Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO87Kn2CI",
+          "commit": {
+            "abbreviatedOid": "f4c507d"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-10-30T12:49:51Z",
+          "updatedAt": "2025-10-30T12:49:51Z",
+          "comments": [
+            {
+              "originalPosition": 1,
+              "body": "Oops.",
+              "createdAt": "2025-10-30T12:49:51Z",
+              "updatedAt": "2025-10-30T12:49:51Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO87KoWmr",
+          "commit": {
+            "abbreviatedOid": "76fe8f1"
+          },
+          "author": "danvangeest",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "Verified with cycled OIDs.",
+          "createdAt": "2025-10-30T13:19:16Z",
+          "updatedAt": "2025-10-30T13:19:16Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOKRPFO87Kthu-",
+          "commit": {
+            "abbreviatedOid": "76fe8f1"
+          },
+          "author": "samuel-lee-msft",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-10-30T17:57:49Z",
+          "updatedAt": "2025-10-30T17:57:49Z",
+          "comments": [
+            {
+              "originalPosition": 248,
+              "body": "nitpick: backslashed -> backslashes",
+              "createdAt": "2025-10-30T17:57:49Z",
+              "updatedAt": "2025-10-30T17:57:49Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO87LHHE8",
+          "commit": {
+            "abbreviatedOid": "c823f22"
+          },
+          "author": "danvangeest",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-11-01T18:38:50Z",
+          "updatedAt": "2025-11-01T18:38:50Z",
+          "comments": [
+            {
+              "originalPosition": 127,
+              "body": "```suggestion\r\n  label = b\"MLKEM1024-X448\"\r\n```",
+              "createdAt": "2025-11-01T18:38:50Z",
+              "updatedAt": "2025-11-01T18:38:50Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO87LHHaW",
+          "commit": {
+            "abbreviatedOid": "c823f22"
+          },
+          "author": "danvangeest",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-11-01T18:40:14Z",
+          "updatedAt": "2025-11-01T18:40:15Z",
+          "comments": [
+            {
+              "originalPosition": 244,
+              "body": "```suggestion\r\nFor example, \"MLKEM768-RSAOAEP2048\" below is equivalent to the hexadecimal value `4D4C4B454D3736382D5253414F41455032303438`.\r\n```",
+              "createdAt": "2025-11-01T18:40:14Z",
+              "updatedAt": "2025-11-01T18:40:15Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO87LHHdZ",
+          "commit": {
+            "abbreviatedOid": "c823f22"
+          },
+          "author": "danvangeest",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-11-01T18:40:35Z",
+          "updatedAt": "2025-11-01T18:40:35Z",
+          "comments": [
+            {
+              "originalPosition": 248,
+              "body": "```suggestion\r\nSome of the label values contain problematic characters such as backslashed that can cause issues displaying correctly in rendered documents or even in source code when the compiler interprets it as an escape character, so they are represented below directly in hexadecimal, for example the label for id-MLKEM768-X25519-SHA3-256 is \"\\\\.//^\\\\\", but to avoid transcription errors it is provided only in hexadecimal as \"5c2e2f2f5e5c\"\r\n```",
+              "createdAt": "2025-11-01T18:40:35Z",
+              "updatedAt": "2025-11-01T18:40:35Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO87LHH00",
+          "commit": {
+            "abbreviatedOid": "c823f22"
+          },
+          "author": "danvangeest",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-11-01T18:42:15Z",
+          "updatedAt": "2025-11-01T18:42:15Z",
+          "comments": [
+            {
+              "originalPosition": 248,
+              "body": "```suggestion\r\nSome of the label values contain problematic characters such as backslashes that can cause issues displaying correctly in rendered documents or even in source code when the compiler interprets it as an escape character, so they are represented below directly in hexadecimal, for example the label for MLKEM768-X25519-SHA3-256 is \"\\\\.//^\\\\\", but to avoid transcription errors it is provided only in hexadecimal as \"5c2e2f2f5e5c\"\r\n```",
+              "createdAt": "2025-11-01T18:42:15Z",
+              "updatedAt": "2025-11-01T18:42:15Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO87LHYn7",
+          "commit": {
+            "abbreviatedOid": "c735cfb"
+          },
+          "author": "danvangeest",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "OMG SHIP IT!",
+          "createdAt": "2025-11-01T20:35:30Z",
+          "updatedAt": "2025-11-01T20:35:30Z",
+          "comments": []
         }
       ]
     }
