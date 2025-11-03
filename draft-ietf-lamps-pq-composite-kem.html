@@ -1882,7 +1882,7 @@ Decap Process:
       (_, mlkemSK) = ML-KEM.KeyGen(mlkemSeed)
       (mlkemCT, tradCT) = DeserializeCiphertext(ct)
 
-  2.  Perform the respective component Encap operations according
+  2.  Perform the respective component Decap operations according
       to their algorithm specifications.
 
       mlkemSS = ML-KEM.Decaps(mlkemSK, mlkemCT)
@@ -1892,7 +1892,7 @@ Decap Process:
      then this process must return an error.
 
       if NOT mlkemSS or NOT tradSS:
-        output "Encapsulation error"
+        output "Decapsulation error"
 
   4. Combine the KEM secrets and additional context to yield the
      composite shared secret key.
@@ -1998,7 +1998,7 @@ The functions defined in this section are considered internal implementation det
           <p id="section-5-6.2.1"><strong>RSA</strong>: the public key MUST be encoded as RSAPublicKey with the <code>(n,e)</code> public key representation as specified in A.1.1 of <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span> and the private key representation as RSAPrivateKey specified in A.1.2 of <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span> with version 0 and 'otherPrimeInfos' absent. An RSA-OAEP ciphertext MUST be encoded as specified in section 7.1.1 of <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span><a href="#section-5-6.2.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-5-6.3">
-          <p id="section-5-6.3.1"><strong>ECDH</strong>: public key MUST be encoded as an uncompressed X9.62 [X9.62–2005], including the leading byte <code>0x04</code> indicating uncompressed. This is consistent with the encoding of <code>ECPoint</code> as specified in section 2.2 of <span>[<a href="#RFC5480" class="cite xref">RFC5480</a>]</span> when no ASN.1 OCTET STRING wrapping is present. The private key MUST be encoded as ECPrivateKey specified in <span>[<a href="#RFC5915" class="cite xref">RFC5915</a>]</span> with 'NamedCurve' parameter set to the OID of the curve, but without the 'publicKey' field. The ciphertext MUST be encoded in the same manner as the public key.<a href="#section-5-6.3.1" class="pilcrow">¶</a></p>
+          <p id="section-5-6.3.1"><strong>ECDH</strong>: public key MUST be encoded as an uncompressed X9.62 <span>[<a href="#X9.62_2005" class="cite xref">X9.62_2005</a>]</span>, including the leading byte <code>0x04</code> indicating uncompressed. This is consistent with the encoding of <code>ECPoint</code> as specified in section 2.2 of <span>[<a href="#RFC5480" class="cite xref">RFC5480</a>]</span> when no ASN.1 OCTET STRING wrapping is present. The private key MUST be encoded as ECPrivateKey specified in <span>[<a href="#RFC5915" class="cite xref">RFC5915</a>]</span> with 'NamedCurve' parameter set to the OID of the curve, but without the 'publicKey' field. The ciphertext MUST be encoded in the same manner as the public key.<a href="#section-5-6.3.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-5-6.4">
           <p id="section-5-6.4.1"><strong>X25519 and X448</strong>: the public key MUST be encoded as per section 5 of <span>[<a href="#RFC7748" class="cite xref">RFC7748</a>]</span> and the private key is a 32 or 57 byte raw value for Ed25519 and Ed448 respectively. The ciphertext MUST be encoded in the same manner as the public key.<a href="#section-5-6.4.1" class="pilcrow">¶</a></p>
@@ -3448,14 +3448,14 @@ END
 ss = SHA3-256(mlkemSS || tradSS || tradCT || tradPK || Label)
 </pre><a href="#section-11.1.1-2" class="pilcrow">¶</a>
 </div>
-<p id="section-11.1.1-3">NIST SP 800-227 <span>[<a href="#SP-800-227" class="cite xref">SP-800-227</a>]</span> allows hybrid key combiners of the following form:<a href="#section-11.1.1-3" class="pilcrow">¶</a></p>
+<p id="section-11.1.1-3">NIST SP 800-227 <span>[<a href="#SP800-227" class="cite xref">SP800-227</a>]</span> allows hybrid key combiners of the following form:<a href="#section-11.1.1-3" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-11.1.1-4">
 <pre>
 K &lt;- KDM((S1,S2,...,St), OtherInput)           (14)
 </pre><a href="#section-11.1.1-4" class="pilcrow">¶</a>
 </div>
 <p id="section-11.1.1-5">Composite ML-KEM maps cleanly into this since it places the two shared secret keys <code>mlkemSS || tradSS</code> at the beginning of the KDF input such that all other inputs <code>tradCT || tradPK || Label</code> can be considered part of <code>OtherInput</code> for the purposes of FIPS certification.<a href="#section-11.1.1-5" class="pilcrow">¶</a></p>
-<p id="section-11.1.1-6">For the detailed steps of the Key Derivation Mechanism KDM, <span>[<a href="#SP-800-227" class="cite xref">SP-800-227</a>]</span> refers to <span>[<a href="#SP.800-56Cr2" class="cite xref">SP.800-56Cr2</a>]</span>.<a href="#section-11.1.1-6" class="pilcrow">¶</a></p>
+<p id="section-11.1.1-6">For the detailed steps of the Key Derivation Mechanism KDM, <span>[<a href="#SP800-227" class="cite xref">SP800-227</a>]</span> refers to <span>[<a href="#SP.800-56Cr2" class="cite xref">SP.800-56Cr2</a>]</span>.<a href="#section-11.1.1-6" class="pilcrow">¶</a></p>
 <p id="section-11.1.1-7">Compliance of the Composite ML-KEM variants is achieved in the following way:<a href="#section-11.1.1-7" class="pilcrow">¶</a></p>
 <p id="section-11.1.1-8">The Composite ML-KEM algorithms use SHA3, and so can be certified under <span>[<a href="#SP.800-56Cr2" class="cite xref">SP.800-56Cr2</a>]</span> One-Step Key Derivation Option 1: <code>H(x) = hash(x)</code>.<a href="#section-11.1.1-8" class="pilcrow">¶</a></p>
 <p id="section-11.1.1-9"><span>[<a href="#SP.800-56Cr2" class="cite xref">SP.800-56Cr2</a>]</span> section 4 "One-Step Key Derivation" requires a <code>counter</code> which begins at the 4-byte value 0x00000001. However, the counter is allowed to be omitted when the hash function is executed only once, as specified on page 159 of the FIPS 140-3 Implementation Guidance <span>[<a href="#FIPS-140-3-IG" class="cite xref">FIPS-140-3-IG</a>]</span>.<a href="#section-11.1.1-9" class="pilcrow">¶</a></p>
@@ -3466,7 +3466,7 @@ K &lt;- KDM((S1,S2,...,St), OtherInput)           (14)
           <h4 id="name-order-of-kdf-inputs-with-no">
 <a href="#section-11.1.2" class="section-number selfRef">11.1.2. </a><a href="#name-order-of-kdf-inputs-with-no" class="section-name selfRef">Order of KDF inputs with Non-Approved Algorithms</a>
           </h4>
-<p id="section-11.1.2-1"><span>[<a href="#SP-800-227" class="cite xref">SP-800-227</a>]</span> adds an important stipulation that was not present in earlier NIST specifications:<a href="#section-11.1.2-1" class="pilcrow">¶</a></p>
+<p id="section-11.1.2-1"><span>[<a href="#SP800-227" class="cite xref">SP800-227</a>]</span> adds an important stipulation that was not present in earlier NIST specifications:<a href="#section-11.1.2-1" class="pilcrow">¶</a></p>
 <ul class="normal ulEmpty">
 <li class="normal ulEmpty" id="section-11.1.2-2.1">
               <p id="section-11.1.2-2.1.1">This publication approves the use of the key combiner (14) for any t &gt; 1, so long as at
@@ -3475,7 +3475,7 @@ establishment methods of SP 800-56A or SP 800-56B, or an approved KEM.<a href="#
 </li>
           </ul>
 <p id="section-11.1.2-3">This means that although Composite ML-KEM always places the shared secret key from ML-KEM in the first slot, a Composite ML-KEM can be FIPS certified so long as either component is FIPS certified. This is important for several reasons. First, in the early stages of PQC migration, composites allow for a non-FIPS certified ML-KEM implementation to be added to a module that already has a FIPS certified traditional component, and the resulting composite can be FIPS certified. Second, when eventually RSA and Elliptic Curve are no longer FIPS-allowed, the composite can retain its FIPS certified status on the strength of the ML-KEM component. Third, while this is outside the scope of this specification, the general composite construction could be used to create FIPS certified algorithms that contain a component algorithm from a different jurisdiction. Third, a composite where both components are FIPS-certified could allow an implementer to patch one component algorithm while awaiting re-certification while continuing to use the overall composite in FIPS mode.<a href="#section-11.1.2-3" class="pilcrow">¶</a></p>
-<p id="section-11.1.2-4">Note that before [SP.800-227] was in force, <span>[<a href="#SP.800-56Cr2" class="cite xref">SP.800-56Cr2</a>]</span> required the shared secret key from the certified algorithm to be in the first slot and therefore a Composite ML-KEM implementation using a FIPS-certified traditional component and a non-FIPS certified ML-KEM is not believed to be certifiable under <span>[<a href="#SP.800-56Cr2" class="cite xref">SP.800-56Cr2</a>]</span> alone, and requires the ammendments made by [SP.800-227].<a href="#section-11.1.2-4" class="pilcrow">¶</a></p>
+<p id="section-11.1.2-4">Note that before <span>[<a href="#SP800-227" class="cite xref">SP800-227</a>]</span> was in force, <span>[<a href="#SP.800-56Cr2" class="cite xref">SP.800-56Cr2</a>]</span> required the shared secret key from the certified algorithm to be in the first slot and therefore a Composite ML-KEM implementation using a FIPS-certified traditional component and a non-FIPS certified ML-KEM is not believed to be certifiable under <span>[<a href="#SP.800-56Cr2" class="cite xref">SP.800-56Cr2</a>]</span> alone, and requires the ammendments made by <span>[<a href="#SP800-227" class="cite xref">SP800-227</a>]</span>.<a href="#section-11.1.2-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -3629,8 +3629,12 @@ id-MLKEM1024-ECDH-P384-SHA3-256
 <span class="refAuthor">National Institute of Standards and Technology (NIST)</span>, <span class="refTitle">"Recommendation for Key Management: Part 1 – General"</span>, <time datetime="2020-05" class="refDate">May 2020</time>, <span>&lt;<a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-57pt1r5.pdf">https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-57pt1r5.pdf</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="X.690">[X.690]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">ITU-T</span>, <span class="refTitle">"Information technology - ASN.1 encoding Rules: Specification of Basic Encoding Rules (BER), Canonical Encoding Rules (CER) and Distinguished Encoding Rules (DER)"</span>, <span class="seriesInfo">ISO/IEC 8825-1:2015</span>, <time datetime="2015-11" class="refDate">November 2015</time>. </dd>
+<dd class="break"></dd>
+<dt id="X9.62_2005">[X9.62_2005]</dt>
+      <dd>
+<span class="refTitle">"Public Key Cryptography for the Financial Services Industry, The Elliptic Curve Digital Signature Algorithm (ECDSA)"</span>, <time datetime="2005-11" class="refDate">November 2005</time>. </dd>
 <dd class="break"></dd>
 </dl>
 </section>
@@ -3725,13 +3729,13 @@ id-MLKEM1024-ECDH-P384-SHA3-256
         <dd>
 <span class="refAuthor">Barnes, R.</span>, <span class="refAuthor">Bhargavan, K.</span>, <span class="refAuthor">Lipp, B.</span>, and <span class="refAuthor">C. Wood</span>, <span class="refTitle">"Hybrid Public Key Encryption"</span>, <span class="seriesInfo">RFC 9180</span>, <span class="seriesInfo">DOI 10.17487/RFC9180</span>, <time datetime="2022-02" class="refDate">February 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc9180">https://www.rfc-editor.org/info/rfc9180</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="SP-800-227">[SP-800-227]</dt>
-        <dd>
-<span class="refAuthor">Alagic, G.</span>, <span class="refAuthor">Barker, E.</span>, <span class="refAuthor">Chen, L.</span>, <span class="refAuthor">Moody, D.</span>, <span class="refAuthor">Robinson, A.</span>, <span class="refAuthor">Silberg, H.</span>, <span class="refAuthor">Waller, N.</span>, and <span class="refAuthor">National Institute of Standards and Technology (NIST)</span>, <span class="refTitle">"Recommendations for Key-Encapsulation Mechanisms"</span>, <time datetime="2025-09" class="refDate">September 2025</time>, <span>&lt;<a href="https://csrc.nist.gov/pubs/sp/800/227/final">https://csrc.nist.gov/pubs/sp/800/227/final</a>&gt;</span>. </dd>
-<dd class="break"></dd>
 <dt id="SP800-131Ar2">[SP800-131Ar2]</dt>
         <dd>
 <span class="refAuthor">Barker, E.</span>, <span class="refAuthor">Roginksy, A.</span>, and <span class="refAuthor">National Institute of Standards and Technology (NIST)</span>, <span class="refTitle">"Transitioning the Use of Cryptographic Algorithms and Key Lengths"</span>, <span>n.d.</span>, <span>&lt;<a href="https://nvlpubs.nist.gov/nistpubs/specialpublications/nist.sp.800-131ar2.pdf">https://nvlpubs.nist.gov/nistpubs/specialpublications/nist.sp.800-131ar2.pdf</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="SP800-227">[SP800-227]</dt>
+        <dd>
+<span class="refAuthor">Alagic, G.</span>, <span class="refAuthor">Barker, E.</span>, <span class="refAuthor">Chen, L.</span>, <span class="refAuthor">Moody, D.</span>, <span class="refAuthor">Robinson, A.</span>, <span class="refAuthor">Silberg, H.</span>, <span class="refAuthor">Waller, N.</span>, and <span class="refAuthor">National Institute of Standards and Technology (NIST)</span>, <span class="refTitle">"Recommendations for Key-Encapsulation Mechanisms"</span>, <time datetime="2025-09" class="refDate">September 2025</time>, <span>&lt;<a href="https://csrc.nist.gov/pubs/sp/800/227/final">https://csrc.nist.gov/pubs/sp/800/227/final</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="X-Wing">[X-Wing]</dt>
       <dd>

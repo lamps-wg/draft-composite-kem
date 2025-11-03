@@ -786,7 +786,7 @@ Table of Contents
          (_, mlkemSK) = ML-KEM.KeyGen(mlkemSeed)
          (mlkemCT, tradCT) = DeserializeCiphertext(ct)
 
-     2.  Perform the respective component Encap operations according
+     2.  Perform the respective component Decap operations according
          to their algorithm specifications.
 
          mlkemSS = ML-KEM.Decaps(mlkemSK, mlkemCT)
@@ -796,7 +796,7 @@ Table of Contents
         then this process must return an error.
 
          if NOT mlkemSS or NOT tradSS:
-           output "Encapsulation error"
+           output "Decapsulation error"
 
      4. Combine the KEM secrets and additional context to yield the
         composite shared secret key.
@@ -940,7 +940,7 @@ Table of Contents
       7.1.1 of [RFC8017]
 
    *  *ECDH*: public key MUST be encoded as an uncompressed X9.62
-      [X9.62–2005], including the leading byte 0x04 indicating
+      [X9.62_2005], including the leading byte 0x04 indicating
       uncompressed.  This is consistent with the encoding of ECPoint as
       specified in section 2.2 of [RFC5480] when no ASN.1 OCTET STRING
       wrapping is present.  The private key MUST be encoded as
@@ -2326,7 +2326,7 @@ Table of Contents
 
    ss = SHA3-256(mlkemSS || tradSS || tradCT || tradPK || Label)
 
-   NIST SP 800-227 [SP-800-227] allows hybrid key combiners of the
+   NIST SP 800-227 [SP800-227] allows hybrid key combiners of the
    following form:
 
    K <- KDM((S1,S2,...,St), OtherInput)           (14)
@@ -2337,7 +2337,7 @@ Table of Contents
    considered part of OtherInput for the purposes of FIPS certification.
 
    For the detailed steps of the Key Derivation Mechanism KDM,
-   [SP-800-227] refers to [SP.800-56Cr2].
+   [SP800-227] refers to [SP.800-56Cr2].
 
    Compliance of the Composite ML-KEM variants is achieved in the
    following way:
@@ -2354,7 +2354,7 @@ Table of Contents
 
 11.1.2.  Order of KDF inputs with Non-Approved Algorithms
 
-   [SP-800-227] adds an important stipulation that was not present in
+   [SP800-227] adds an important stipulation that was not present in
    earlier NIST specifications:
 
       This publication approves the use of the key combiner (14) for any
@@ -2380,12 +2380,12 @@ Table of Contents
    certification while continuing to use the overall composite in FIPS
    mode.
 
-   Note that before [SP.800-227] was in force, [SP.800-56Cr2] required
+   Note that before [SP800-227] was in force, [SP.800-56Cr2] required
    the shared secret key from the certified algorithm to be in the first
    slot and therefore a Composite ML-KEM implementation using a FIPS-
    certified traditional component and a non-FIPS certified ML-KEM is
    not believed to be certifiable under [SP.800-56Cr2] alone, and
-   requires the ammendments made by [SP.800-227].
+   requires the ammendments made by [SP800-227].
 
 11.2.  Backwards Compatibility
 
@@ -2590,6 +2590,11 @@ Table of Contents
               Encoding Rules (CER) and Distinguished Encoding Rules
               (DER)", ISO/IEC 8825-1:2015, November 2015.
 
+   [X9.62_2005]
+              "Public Key Cryptography for the Financial Services
+              Industry, The Elliptic Curve Digital Signature Algorithm
+              (ECDSA)", November 2005.
+
 12.2.  Informative References
 
    [ANSSI2024]
@@ -2711,19 +2716,19 @@ Table of Contents
               Public Key Encryption", RFC 9180, DOI 10.17487/RFC9180,
               February 2022, <https://www.rfc-editor.org/info/rfc9180>.
 
-   [SP-800-227]
-              Alagic, G., Barker, E., Chen, L., Moody, D., Robinson, A.,
-              Silberg, H., Waller, N., and National Institute of
-              Standards and Technology (NIST), "Recommendations for Key-
-              Encapsulation Mechanisms", September 2025,
-              <https://csrc.nist.gov/pubs/sp/800/227/final>.
-
    [SP800-131Ar2]
               Barker, E., Roginksy, A., and National Institute of
               Standards and Technology (NIST), "Transitioning the Use of
               Cryptographic Algorithms and Key Lengths", n.d.,
               <https://nvlpubs.nist.gov/nistpubs/specialpublications/
               nist.sp.800-131ar2.pdf>.
+
+   [SP800-227]
+              Alagic, G., Barker, E., Chen, L., Moody, D., Robinson, A.,
+              Silberg, H., Waller, N., and National Institute of
+              Standards and Technology (NIST), "Recommendations for Key-
+              Encapsulation Mechanisms", September 2025,
+              <https://csrc.nist.gov/pubs/sp/800/227/final>.
 
    [X-Wing]   Barbosa, M., Connolly, D., Duarte, J., Kaiser, A.,
               Schwabe, P., Varner, K., and B. Westerbaan, "X-Wing The
