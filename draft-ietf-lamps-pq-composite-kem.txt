@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 5 May 2026                                              M. Pala
+Expires: 7 May 2026                                              M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                         1 November 2025
+                                                         3 November 2025
 
 
       Composite ML-KEM for use in X.509 Public Key Infrastructure
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 5 May 2026.
+   This Internet-Draft will expire on 7 May 2026.
 
 Copyright Notice
 
@@ -1235,10 +1235,11 @@ Table of Contents
 
    The serialization routines presented in Section 5 produce raw binary
    values.  When these values are required to be carried within a DER-
-   encoded message format such as an X.509's subjectPublicKey and
-   signatureValue BIT STRING [RFC5280] or a OneAsymmetricKey.privateKey
-   OCTET STRING [RFC5958], then the BIT STRING or OCTET STRING contains
-   this raw byte string encoding of the public key.
+   encoded message format such as an X.509's subjectPublicKey or a
+   OneAsymmetricKey.privateKey OCTET STRING [RFC5958], then the BIT
+   STRING or OCTET STRING contains this raw byte string output of the
+   appropriate serialization routine from Section 5 without further
+   encoding.
 
    When a Composite ML-KEM public key appears outside of a
    SubjectPublicKeyInfo type in an environment that uses ASN.1 encoding,
@@ -2861,8 +2862,8 @@ Appendix C.  Fixed Component Algorithm Identifiers
    certificate, therefore implementing Composite ML-KEM in those
    libraries requires reconstructing the SPKI for each component
    algorithm.  In order to aid implementers and reduce interoperability
-   issues, this section lists out the full public key and signature
-   AlgorithmIdentifiers for each component algorithm.
+   issues, this section lists out the full public key for each component
+   algorithm.
 
    *ML-KEM-768*
 
