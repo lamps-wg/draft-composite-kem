@@ -1237,9 +1237,6 @@ def writeAlgParams():
         f.write("  - Label: \"`" + label.decode() + "`\"\n")
       else:
         f.write("  - Label: \"`" + label.hex() + "`\" (hex)\n")
-
-      f.write("  - Key Derivation Function (KDF): " + LABELS_TABLE[alg]['kdf'] + "\n")
-
       f.write("  - ML-KEM variant: " + LABELS_TABLE[alg]['mlkem'] + "\n")
       f.write("  - Traditional Algorithm: " + LABELS_TABLE[alg]['trad'] + "\n")
       f.write("    - Traditional KEM Algorithm: " + LABELS_TABLE[alg]['trad_kem_alg'] + "\n")
