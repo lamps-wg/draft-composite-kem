@@ -1063,18 +1063,16 @@ While composite ML-KEM keys and ciphertext values MAY be used raw, the following
 
 ## Encoding to DER {#sec-encoding-to-der}
 
-The serialization routines presented in {{sec-serialization}} produce raw binary values. When these values are required to be carried within a DER-encoded message format such as an X.509's `subjectPublicKey` and `signatureValue` BIT STRING [RFC5280] or a `OneAsymmetricKey.privateKey OCTET STRING` [RFC5958], then the BIT STRING or OCTET STRING contains this raw byte string encoding of the public key.
+The serialization routines presented in {{sec-serialization}} produce raw binary values. When these values are required to be carried within a DER-encoded message format such as an X.509's `subjectPublicKey` or a `OneAsymmetricKey.privateKey OCTET STRING` [RFC5958], then the BIT STRING or OCTET STRING contains this raw byte string output of the appropriate serialization routine from {{sec-serialization}} without further encoding.
 
 When a Composite ML-KEM
 public key appears outside of a `SubjectPublicKeyInfo` type in an
 environment that uses ASN.1 encoding, it could be encoded as an OCTET
 STRING by using the Composite-ML-KEM-PublicKey type defined below.
 
-
 ~~~
 Composite-ML-KEM-PublicKey ::= OCTET STRING
 ~~~
-
 
 Size constraints MAY be enforced, as appropriate as per {{sec-sizetable}}.
 
@@ -1571,7 +1569,7 @@ This section provides references to the full specification of the algorithms use
 
 # Fixed Component Algorithm Identifiers
 
-Many cryptographic libraries are X.509-focused and do not expose interfaces to instantiate a public key from raw bytes, but only from a SubjectPublicKeyInfo structure as you would find in an X.509 certificate, therefore implementing Composite ML-KEM in those libraries requires reconstructing the SPKI for each component algorithm. In order to aid implementers and reduce interoperability issues, this section lists out the full public key and signature AlgorithmIdentifiers for each component algorithm.
+Many cryptographic libraries are X.509-focused and do not expose interfaces to instantiate a public key from raw bytes, but only from a SubjectPublicKeyInfo structure as you would find in an X.509 certificate, therefore implementing Composite ML-KEM in those libraries requires reconstructing the SPKI for each component algorithm. In order to aid implementers and reduce interoperability issues, this section lists out the full public key for each component algorithm.
 
 
 **ML-KEM-768**
