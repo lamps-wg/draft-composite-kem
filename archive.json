@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-11-02T02:04:53.820185+00:00",
+  "timestamp": "2025-11-04T01:59:15.646710+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -3552,7 +3552,7 @@
       "id": "I_kwDOKRPFO87RuVeX",
       "title": "Cross-test against CFRG Hybrid KEMs",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/222",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -3561,8 +3561,8 @@
       ],
       "body": "Cross-test the test vectors here\n\nhttps://datatracker.ietf.org/doc/draft-irtf-cfrg-concrete-hybrid-kems/\n\n```\n<insert compatibility table>\n```",
       "createdAt": "2025-10-15T15:37:56Z",
-      "updatedAt": "2025-10-16T00:45:33Z",
-      "closedAt": null,
+      "updatedAt": "2025-11-03T15:41:06Z",
+      "closedAt": "2025-11-03T15:41:06Z",
       "comments": [
         {
           "author": "ounsworth",
@@ -3577,6 +3577,13 @@
           "body": "Since LAMPS Composites is ahead of the cfrg-concrete draft, and we have pressure to start WGLC, I'm going to tag this as a \"Post-WGLC\" activity ... which essentially puts the responsibility on the HPKE community to seek alignment, if they so desire (ie, we've done as much as we possibly can in regards to changing the Combiner and Labels, and doing cross-testing).",
           "createdAt": "2025-10-16T00:43:30Z",
           "updatedAt": "2025-10-16T00:43:30Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "DONE! SUCCEEDED DURING 124 Hackathon.",
+          "createdAt": "2025-11-03T15:41:06Z",
+          "updatedAt": "2025-11-03T15:41:06Z"
         }
       ]
     },
@@ -3585,15 +3592,15 @@
       "id": "I_kwDOKRPFO87SAx10",
       "title": "Russ comments 2025-10-16",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/225",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "In Section 6.1, I am confused by the phrase \"raw byte string encoding\".  The point is that no encoding is performed.\n\nI think that subjectPublicKey (a BIT STRING) contains the output of SerializePublicKey() without further encoding.\n\nI think that OneAsymmetricKey.privateKey (an OCTET STRING) contains the output of SerializePrivateKey() without further encoding.\n\nI am confused by the discussion of signatureValue (a BIT STRING) in this section.  Composite KEMs do not have anything to do with this, right?",
       "createdAt": "2025-10-16T20:30:15Z",
-      "updatedAt": "2025-10-22T11:07:59Z",
-      "closedAt": null,
+      "updatedAt": "2025-11-03T15:52:23Z",
+      "closedAt": "2025-11-03T15:39:50Z",
       "comments": [
         {
           "author": "PiotrPopis",
@@ -3608,6 +3615,13 @@
           "body": "One more:\nh) Section 7\nwrong label at id-MLKEM768-X25519-SHA3-256",
           "createdAt": "2025-10-22T11:07:59Z",
           "updatedAt": "2025-10-22T11:07:59Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> In Section 6.1, I am confused by the phrase \"raw byte string encoding\". The point is that no encoding is performed.\n> \n> I think that subjectPublicKey (a BIT STRING) contains the output of SerializePublicKey() without further encoding.\n> \n> I think that OneAsymmetricKey.privateKey (an OCTET STRING) contains the output of SerializePrivateKey() without further encoding.\n> \n> I am confused by the discussion of signatureValue (a BIT STRING) in this section. Composite KEMs do not have anything to do with this, right?\n\nI am addressing Russ' comments.",
+          "createdAt": "2025-11-03T15:32:35Z",
+          "updatedAt": "2025-11-03T15:32:35Z"
         }
       ]
     },
@@ -3616,15 +3630,15 @@
       "id": "I_kwDOKRPFO87T1gou",
       "title": "X-Wing label not rendering properly",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/226",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "At the top of section 7, we have:\n\n> \".//^\" in hexadecimal is \"5c2e2f2f5e5c\"\n\nThat should be \"\\.//^\\\"",
       "createdAt": "2025-10-26T14:14:56Z",
-      "updatedAt": "2025-10-27T06:24:52Z",
-      "closedAt": null,
+      "updatedAt": "2025-11-03T15:42:20Z",
+      "closedAt": "2025-11-03T15:42:20Z",
       "comments": [
         {
           "author": "PiotrPopis",
@@ -3632,6 +3646,13 @@
           "body": "@ounsworth \nA few days ago, I commented on issue #225 and also flagged a few edits. Among them was the one regarding the incorrect display of backslashes on GitHub. I suggest dropping the backslash altogether, meaning x5c.\n\nFurthermore, I hope there will be a discussion about chapter 11.4, which includes adding public keys to private key serialization.\n",
           "createdAt": "2025-10-27T06:24:52Z",
           "updatedAt": "2025-10-27T06:24:52Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Now renders properly as:\n\n```\nLabel: \"5c2e2f2f5e5c\" (hex)\n```\n\nWe're just not gonna display the ASCII at all.",
+          "createdAt": "2025-11-03T15:42:20Z",
+          "updatedAt": "2025-11-03T15:42:20Z"
         }
       ]
     },
@@ -3640,14 +3661,150 @@
       "id": "I_kwDOKRPFO87UG6dj",
       "title": "CopyPaste Errors in Decapsulation Process",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/227",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "janklaussner",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "https://github.com/lamps-wg/draft-composite-kem/blob/65796408ed7043fa8308aec7c923c1c0a171a8f6/draft-ietf-lamps-pq-composite-kem.md?plain=1#L719\n\nshould be \"Decap\"\n\nhttps://github.com/lamps-wg/draft-composite-kem/blob/65796408ed7043fa8308aec7c923c1c0a171a8f6/draft-ietf-lamps-pq-composite-kem.md?plain=1#L729\n\nshould be \"Decapsulation\"",
       "createdAt": "2025-10-27T20:43:13Z",
-      "updatedAt": "2025-10-27T20:43:13Z",
+      "updatedAt": "2025-11-03T15:59:00Z",
+      "closedAt": "2025-11-03T15:59:00Z",
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Closed in 5a0264db70acffd04f3aab2e43ff925dd4be9458",
+          "createdAt": "2025-11-03T15:59:00Z",
+          "updatedAt": "2025-11-03T15:59:00Z"
+        }
+      ]
+    },
+    {
+      "number": 230,
+      "id": "I_kwDOKRPFO87VWvZ8",
+      "title": "Clarification on \"QFS-\" label usage in Section 7",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/230",
+      "state": "CLOSED",
+      "author": "Guiliano99",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "Hi,\n\nI have a question about the label string mentioned in [7. ](https://www.ietf.org/archive/id/draft-ietf-lamps-pq-composite-kem-08.html#section-7)[Algorithm Identifiers and Parameters](https://www.ietf.org/archive/id/draft-ietf-lamps-pq-composite-kem-08.html#name-algorithm-identifiers-and-p) of the draft.\n\nShould the \"QFS-\" prefix be included in the label string?\nI noticed that in the provided code examples, does this prefix not appear to be included. Could someone please clarify whether \"QFS-\" is meant to be part of the actual label or just a descriptive prefix in the text?\n\nAlso the KDF name is missing.\nIf this was a error, I included a draft to fix it. #231 \n\nThanks in advance for your help.",
+      "createdAt": "2025-11-02T12:39:53Z",
+      "updatedAt": "2025-11-03T13:23:17Z",
+      "closedAt": "2025-11-03T13:23:17Z",
+      "comments": []
+    },
+    {
+      "number": 233,
+      "id": "I_kwDOKRPFO87Vj63q",
+      "title": "DVG WGLC comment: The TLA \"CVE\" is used but not defined",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/233",
+      "state": "OPEN",
+      "author": "danvangeest",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-11-03T17:06:01Z",
+      "updatedAt": "2025-11-03T17:06:01Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 234,
+      "id": "I_kwDOKRPFO87Vj7ic",
+      "title": "DVG WGLC comment: remove CMS paragraph",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/234",
+      "state": "OPEN",
+      "author": "danvangeest",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "2. Section 3: The following paragraph seems unnecessary.  We don't say anything similar for kyber-certificates.  This was probably added when the CMS parts were split into a pending draft.\n\n\n>    The KEM interface defined above differs from both traditional key\n   transport mechanism (for example for use with KeyTransRecipientInfo\n   defined in [RFC5652]), and key agreement (for example for use with\n   KeyAgreeRecipientInfo defined in [RFC5652]) and thus Composite ML-KEM\n   MUST be used with KEMRecipientInfo defined in [RFC9629], however full\n   conventions for use of Composite ML-KEM within the Cryptographic\n   Message Syntax will be included in a separate specification.",
+      "createdAt": "2025-11-03T17:06:56Z",
+      "updatedAt": "2025-11-03T17:06:56Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 235,
+      "id": "I_kwDOKRPFO87Vj9Q0",
+      "title": "DVG WGLC comment: no need to mention KEMRecipientInfo",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/235",
+      "state": "OPEN",
+      "author": "danvangeest",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "3. Section 3.1: The CMS comment below seems unnecessary, perhaps stop after \"does not have an assigned algorithm OID.\" or remove the paragraph.\n\n\n>    Note that, at least at the time of writing, the algorithm RSAOAEPKEM\n   is not defined as a standalone algorithm within PKIX standards and it\n   does not have an assigned algorithm OID, so it cannot be used\n   directly with CMS KEMRecipientInfo [RFC9629]; it is merely a building\n   block for the composite algorithm\n\nThe same comment applies to similar text in section 3.2",
+      "createdAt": "2025-11-03T17:09:16Z",
+      "updatedAt": "2025-11-03T17:09:16Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 236,
+      "id": "I_kwDOKRPFO87Vj94-",
+      "title": "DVG WGLC comment: how is ciphertext not attacker controlled?",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/236",
+      "state": "OPEN",
+      "author": "danvangeest",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "5. Section 4.3: How is ciphertext not attacker controlled?  If anything, this could say that because DER uses length-encoding these variations are benign (my PR says something similar a few lines up but I wanted to point this sentence out explicitly because of the \"attacker controlled\" part).\n\n\n>    Implementers should keep in\n   mind that some instances of tradCT and tradPK will be DER-encoded\n   which could introduce minor length variations such as dropping\n   leading zeroes; since these variations are not attacker-controlled\n   they are considered benign",
+      "createdAt": "2025-11-03T17:10:05Z",
+      "updatedAt": "2025-11-03T17:10:05Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 237,
+      "id": "I_kwDOKRPFO87Vj-g8",
+      "title": "DVG WGLC comment: Add Security Considerations reference to sfluhrer-cfrg-ml-kem-security-considerations",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/237",
+      "state": "OPEN",
+      "author": "danvangeest",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "6. Section 10: Should there be a reference to sfluhrer-cfrg-ml-kem-security-considerations somewhere in the Security Considerations?",
+      "createdAt": "2025-11-03T17:10:47Z",
+      "updatedAt": "2025-11-03T17:10:47Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 238,
+      "id": "I_kwDOKRPFO87Vj_eu",
+      "title": "DVG WGLC comment: Remove section 10.4",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/238",
+      "state": "OPEN",
+      "author": "danvangeest",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "7. Section 10.4: Most or all other ML-KEM-related drafts throughout the IETF have stopped mentioning the probability of ML-KEM decapsulation failure because it is so vanishingly small.  I'd recommend removing this section.",
+      "createdAt": "2025-11-03T17:11:39Z",
+      "updatedAt": "2025-11-03T17:11:39Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 239,
+      "id": "I_kwDOKRPFO87VkBVE",
+      "title": "Address Peter C's WGLC comments",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/239",
+      "state": "OPEN",
+      "author": "danvangeest",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Peter C's WGLC comments: https://mailarchive.ietf.org/arch/msg/spasm/erQjg2YMk5hjpdZoJXiB0ophnUU/",
+      "createdAt": "2025-11-03T17:13:39Z",
+      "updatedAt": "2025-11-03T17:13:39Z",
       "closedAt": null,
       "comments": []
     }
@@ -9885,6 +10042,80 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 231,
+      "id": "PR_kwDOKRPFO86xD0zb",
+      "title": "Update labels",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/231",
+      "state": "CLOSED",
+      "author": "Guiliano99",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "\r\n- Changed the labels to include the prefix \"QFS-\" and the suffix \"-SHA3256\".\r\n- Regenerated the test vectors.",
+      "createdAt": "2025-11-02T13:06:40Z",
+      "updatedAt": "2025-11-03T13:22:57Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "d66758ed6309a46e58080a7156d7f3fd21cb70d2",
+      "headRepository": null,
+      "headRefName": "main",
+      "headRefOid": "d0985d633dc4d7cd8a19f6d2883cece3aa83ec55",
+      "closedAt": "2025-11-03T13:22:56Z",
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "Guiliano99",
+          "authorAssociation": "NONE",
+          "body": "Thank you.",
+          "createdAt": "2025-11-03T13:22:55Z",
+          "updatedAt": "2025-11-03T13:22:55Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO87LT1Ly",
+          "commit": {
+            "abbreviatedOid": "d0985d6"
+          },
+          "author": "danvangeest",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "QFS- and KDF suffix were removed with cooperation with CFRG to align the drafts.  They will not be added back.",
+          "createdAt": "2025-11-03T13:11:23Z",
+          "updatedAt": "2025-11-03T13:11:23Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 232,
+      "id": "PR_kwDOKRPFO86xOhEE",
+      "title": "A merge error removed my change to remove the alg-specific KDF line. \u2026",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/232",
+      "state": "OPEN",
+      "author": "danvangeest",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "\u2026 Fix that.",
+      "createdAt": "2025-11-03T16:28:47Z",
+      "updatedAt": "2025-11-03T16:28:47Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "5a0264db70acffd04f3aab2e43ff925dd4be9458",
+      "headRepository": "danvangeest/draft-composite-kem",
+      "headRefName": "dvg/fix_merge_problem",
+      "headRefOid": "a50309f5cd6d009bb5c77942f7d4e298a42dabc1",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
