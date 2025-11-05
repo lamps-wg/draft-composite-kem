@@ -1581,30 +1581,29 @@ Note: this specification uses <code>Decap()</code> to conform to <span>[<a href=
 but <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span> uses <code>Decaps()</code>.<a href="#section-3-3.3.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-3-4">The KEM interface defined above differs from both traditional key transport mechanism (for example for use with KeyTransRecipientInfo defined in <span>[<a href="#RFC5652" class="cite xref">RFC5652</a>]</span>), and key agreement (for example for use with KeyAgreeRecipientInfo defined in <span>[<a href="#RFC5652" class="cite xref">RFC5652</a>]</span>) and thus Composite ML-KEM MUST be used with KEMRecipientInfo defined in <span>[<a href="#RFC9629" class="cite xref">RFC9629</a>]</span>, however full conventions for use of Composite ML-KEM within the Cryptographic Message Syntax will be included in a separate specification.<a href="#section-3-4" class="pilcrow">¶</a></p>
-<p id="section-3-5">The KEM interface was chosen as the interface for a composite key establishment because it allows for arbitrary combinations of component algorithm types since both key transport and key agreement mechanisms can be promoted into KEMs as described in <a href="#sec-RSAOAEPKEM" class="auto internal xref">Section 3.1</a> and <a href="#sec-DHKEM" class="auto internal xref">Section 3.2</a> below.<a href="#section-3-5" class="pilcrow">¶</a></p>
-<p id="section-3-6">The following algorithms are defined for serializing and deserializing component values. These algorithms are inspired by similar algorithms in <span>[<a href="#RFC9180" class="cite xref">RFC9180</a>]</span>.<a href="#section-3-6" class="pilcrow">¶</a></p>
+<p id="section-3-4">The KEM interface was chosen as the interface for a composite key establishment because it allows for arbitrary combinations of component algorithm types since both key transport and key agreement mechanisms can be promoted into KEMs as described in <a href="#sec-RSAOAEPKEM" class="auto internal xref">Section 3.1</a> and <a href="#sec-DHKEM" class="auto internal xref">Section 3.2</a> below.<a href="#section-3-4" class="pilcrow">¶</a></p>
+<p id="section-3-5">The following algorithms are defined for serializing and deserializing component values. These algorithms are inspired by similar algorithms in <span>[<a href="#RFC9180" class="cite xref">RFC9180</a>]</span>.<a href="#section-3-5" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-3-7.1">
-          <p id="section-3-7.1.1"><code>SerializePublicKey(mlkemPK, tradPK) -&gt; bytes</code>: Produce a byte string encoding of the component public keys.<a href="#section-3-7.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-3-6.1">
+          <p id="section-3-6.1.1"><code>SerializePublicKey(mlkemPK, tradPK) -&gt; bytes</code>: Produce a byte string encoding of the component public keys.<a href="#section-3-6.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-3-7.2">
-          <p id="section-3-7.2.1"><code>DeserializePublicKey(bytes) -&gt; (mlkemPK, tradPK)</code>: Parse a byte string to recover the component public keys.<a href="#section-3-7.2.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-3-6.2">
+          <p id="section-3-6.2.1"><code>DeserializePublicKey(bytes) -&gt; (mlkemPK, tradPK)</code>: Parse a byte string to recover the component public keys.<a href="#section-3-6.2.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-3-7.3">
-          <p id="section-3-7.3.1"><code>SerializeCiphertext(mlkemCT, tradCT) -&gt; bytes</code>: Produce a byte string encoding of the component ciphertexts.<a href="#section-3-7.3.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-3-6.3">
+          <p id="section-3-6.3.1"><code>SerializeCiphertext(mlkemCT, tradCT) -&gt; bytes</code>: Produce a byte string encoding of the component ciphertexts.<a href="#section-3-6.3.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-3-7.4">
-          <p id="section-3-7.4.1"><code>DeserializeCiphertext(bytes) -&gt; (mlkemCT, tradCT)</code>: Parse a byte string to recover the component ciphertexts.<a href="#section-3-7.4.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-3-6.4">
+          <p id="section-3-6.4.1"><code>DeserializeCiphertext(bytes) -&gt; (mlkemCT, tradCT)</code>: Parse a byte string to recover the component ciphertexts.<a href="#section-3-6.4.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-3-7.5">
-          <p id="section-3-7.5.1"><code>SerializePrivateKey(mlkemSeed, tradPK, tradSK) -&gt; bytes</code>: Produce a byte string encoding of the component private keys.<a href="#section-3-7.5.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-3-6.5">
+          <p id="section-3-6.5.1"><code>SerializePrivateKey(mlkemSeed, tradPK, tradSK) -&gt; bytes</code>: Produce a byte string encoding of the component private keys.<a href="#section-3-6.5.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-3-7.6">
-          <p id="section-3-7.6.1"><code>DeserializePrivateKey(bytes) -&gt; (mlkemSeed, tradPK, tradSK)</code>: Parse a byte string to recover the component private keys.<a href="#section-3-7.6.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-3-6.6">
+          <p id="section-3-6.6.1"><code>DeserializePrivateKey(bytes) -&gt; (mlkemSeed, tradPK, tradSK)</code>: Parse a byte string to recover the component private keys.<a href="#section-3-6.6.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-3-8">Full definitions of serialization and deserialization algorithms can be found in <a href="#sec-serialization" class="auto internal xref">Section 5</a>.<a href="#section-3-8" class="pilcrow">¶</a></p>
+<p id="section-3-7">Full definitions of serialization and deserialization algorithms can be found in <a href="#sec-serialization" class="auto internal xref">Section 5</a>.<a href="#section-3-7" class="pilcrow">¶</a></p>
 <div id="sec-RSAOAEPKEM">
 <section id="section-3.1">
         <h3 id="name-promotion-of-rsa-oaep-into-">
