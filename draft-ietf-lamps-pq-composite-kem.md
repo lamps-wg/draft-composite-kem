@@ -426,9 +426,6 @@ Composite Key Encapsulation Mechanisms are defined as cryptographic primitives t
       Note: this specification uses `Decap()` to conform to {{RFC9180}},
       but [FIPS.203] uses `Decaps()`.
 
-
-The KEM interface defined above differs from both traditional key transport mechanism (for example for use with KeyTransRecipientInfo defined in {{RFC5652}}), and key agreement (for example for use with KeyAgreeRecipientInfo defined in {{RFC5652}}) and thus Composite ML-KEM MUST be used with KEMRecipientInfo defined in {{RFC9629}}, however full conventions for use of Composite ML-KEM within the Cryptographic Message Syntax will be included in a separate specification.
-
 The KEM interface was chosen as the interface for a composite key establishment because it allows for arbitrary combinations of component algorithm types since both key transport and key agreement mechanisms can be promoted into KEMs as described in {{sec-RSAOAEPKEM}} and {{sec-DHKEM}} below.
 
 The following algorithms are defined for serializing and deserializing component values. These algorithms are inspired by similar algorithms in {{RFC9180}}.
