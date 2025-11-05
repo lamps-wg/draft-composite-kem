@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 7 May 2026                                              M. Pala
+Expires: 9 May 2026                                              M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                         3 November 2025
+                                                         5 November 2025
 
 
       Composite ML-KEM for use in X.509 Public Key Infrastructure
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 7 May 2026.
+   This Internet-Draft will expire on 9 May 2026.
 
 Copyright Notice
 
@@ -1401,8 +1401,6 @@ Table of Contents
 
       -  Label: "MLKEM768-RSAOAEP2048"
 
-      -  Key Derivation Function (KDF): SHA3-256
-
       -  ML-KEM variant: ML-KEM-768
 
       -  Traditional Algorithm: RSA
@@ -1418,8 +1416,6 @@ Table of Contents
       -  OID: 2.16.840.1.114027.80.5.2.75
 
       -  Label: "MLKEM768-RSAOAEP3072"
-
-      -  Key Derivation Function (KDF): SHA3-256
 
       -  ML-KEM variant: ML-KEM-768
 
@@ -1437,8 +1433,6 @@ Table of Contents
 
       -  Label: "MLKEM768-RSAOAEP4096"
 
-      -  Key Derivation Function (KDF): SHA3-256
-
       -  ML-KEM variant: ML-KEM-768
 
       -  Traditional Algorithm: RSA
@@ -1455,8 +1449,6 @@ Table of Contents
 
       -  Label: "5c2e2f2f5e5c" (hex)
 
-      -  Key Derivation Function (KDF): SHA3-256
-
       -  ML-KEM variant: ML-KEM-768
 
       -  Traditional Algorithm: X25519
@@ -1468,8 +1460,6 @@ Table of Contents
       -  OID: 2.16.840.1.114027.80.5.2.78
 
       -  Label: "MLKEM768-P256"
-
-      -  Key Derivation Function (KDF): SHA3-256
 
       -  ML-KEM variant: ML-KEM-768
 
@@ -1485,8 +1475,6 @@ Table of Contents
 
       -  Label: "MLKEM768-P384"
 
-      -  Key Derivation Function (KDF): SHA3-256
-
       -  ML-KEM variant: ML-KEM-768
 
       -  Traditional Algorithm: ECDH
@@ -1501,8 +1489,6 @@ Table of Contents
 
       -  Label: "MLKEM768-BP256"
 
-      -  Key Derivation Function (KDF): SHA3-256
-
       -  ML-KEM variant: ML-KEM-768
 
       -  Traditional Algorithm: ECDH
@@ -1516,8 +1502,6 @@ Table of Contents
       -  OID: 2.16.840.1.114027.80.5.2.81
 
       -  Label: "MLKEM1024-RSAOAEP3072"
-
-      -  Key Derivation Function (KDF): SHA3-256
 
       -  ML-KEM variant: ML-KEM-1024
 
@@ -1535,8 +1519,6 @@ Table of Contents
 
       -  Label: "MLKEM1024-P384"
 
-      -  Key Derivation Function (KDF): SHA3-256
-
       -  ML-KEM variant: ML-KEM-1024
 
       -  Traditional Algorithm: ECDH
@@ -1550,8 +1532,6 @@ Table of Contents
       -  OID: 2.16.840.1.114027.80.5.2.83
 
       -  Label: "MLKEM1024-BP384"
-
-      -  Key Derivation Function (KDF): SHA3-256
 
       -  ML-KEM variant: ML-KEM-1024
 
@@ -1567,8 +1547,6 @@ Table of Contents
 
       -  Label: "MLKEM1024-X448"
 
-      -  Key Derivation Function (KDF): SHA3-256
-
       -  ML-KEM variant: ML-KEM-1024
 
       -  Traditional Algorithm: X448
@@ -1580,8 +1558,6 @@ Table of Contents
       -  OID: 2.16.840.1.114027.80.5.2.85
 
       -  Label: "MLKEM1024-P521"
-
-      -  Key Derivation Function (KDF): SHA3-256
 
       -  ML-KEM variant: ML-KEM-1024
 
