@@ -834,8 +834,10 @@ Table of Contents
    check as part of the Composite-ML-KEM.Decap() routine.  Implementers
    should keep in mind that some instances of tradCT and tradPK will be
    DER-encoded which could introduce minor length variations such as
-   dropping leading zeroes; since these variations are not attacker-
-   controlled they are considered benign.
+   dropping leading zeroes; since the underlying KEMs are assumed to be
+   IND-CCA secure, decapsulation against tampered ciphertexts or public
+   keys is assumed to fail, these length differences are considered
+   benign to the KEM combiner.
 
    Errors produced by the component Decaps() routines MUST be forwarded
    on to the calling application.  Further discussion can be found below
