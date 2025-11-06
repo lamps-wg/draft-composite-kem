@@ -1397,21 +1397,6 @@ Within the broader context of PQ/T hybrids, we need to consider new attack surfa
 In addition, there is a further implication to key reuse regarding certificate revocation. Upon receiving a new certificate enrolment request, many certification authorities will check if the requested public key has been previously revoked due to key compromise. Often a CA will perform this check by using the public key hash. Therefore, if one, or even both, components of a composite have been previously revoked, the CA may only check the hash of the combined composite key and not find the revocations. Therefore, because the possibility of key reuse exists even though forbidden in this specification, CAs performing revocation checks on a composite key SHOULD also check both component keys independently to verify that the component keys have not been revoked.
 
 
-## Decapsulation failure
-
-Provided all inputs are well-formed, the key establishment procedure of ML-KEM will never explicitly fail. Specifically, the `ML-KEM.Encaps()` and `ML-KEM.Decaps()` algorithms from [FIPS.203] will always output a value with the same data type as a shared secret key, and will never output an error or failure symbol. However, it is possible (though extremely unlikely) that the process will fail in the sense that `ML-KEM.Encaps()` and `ML-KEM.Decaps()` will produce different outputs, even though both of them are behaving honestly and no adversarial interference is present. This is due to the lattice arithmetic for decapsulation with the secret key having hit an unrecoverable degenerate case that could not have been predicted by the encapsulator without knowledge of the secret key. In this case, the sender and recipient clearly did not succeed in producing a shared secret key. This event is called a decapsulation failure. Estimates for the decapsulation failure probability (or rate) for each of the ML-KEM parameter sets are provided in Table 1  of [FIPS.203] and reproduced here in {{tab-mlkem-failure-rate}}.
-
-
-| Parameter set     | Decapsulation failure rate  |
-|---------          | -----------------           |
-| ML-KEM-512        | 2^(-139)                    |
-| ML-KEM-768        | 2^(-164)                    |
-| ML-KEM-1024       | 2^(-174)                    |
-{: #tab-mlkem-failure-rate title="ML-KEM decapsulation failure rates"}
-
-In the case of ML-KEM decapsulation failure, Composite ML-KEM MUST preserve the same behavior and return a well-formed output shared secret key.
-
-
 ## Policy for Deprecated and Acceptable Algorithms
 
 Traditionally, a public key or certificate contains a single cryptographic algorithm. If and when an algorithm becomes deprecated (for example, RSA-512, or SHA1), the path to deprecating it through policy and removing it from operational environments is, at least is principle, straightforward.
