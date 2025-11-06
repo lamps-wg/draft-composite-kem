@@ -168,6 +168,7 @@ informative:
   RFC8551:
   I-D.draft-ietf-pquip-pqt-hybrid-terminology-06:
   I-D.draft-ietf-lamps-kyber-certificates-10:
+  I-D.draft-sfluhrer-cfrg-ml-kem-security-considerations-03:
   X-Wing:
     title: "X-Wing The Hybrid KEM You’ve Been Looking For"
     date: 2024-01-09
@@ -1327,6 +1328,9 @@ The following is to be registered in "SMI Security for PKIX Algorithms":
 
 
 # Security Considerations
+
+As this specification uses ML-KEM as a component of all composite algorithms, all security considerations from {{I-D.ietf-lamps-kyber-certificates}} and {{I-D.sfluhrer-cfrg-ml-kem-security-considerations}} apply.
+
 
 ## Why Hybrids?
 
