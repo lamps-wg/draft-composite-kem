@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 9 May 2026                                              M. Pala
+Expires: 10 May 2026                                             M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                         5 November 2025
+                                                         6 November 2025
 
 
       Composite ML-KEM for use in X.509 Public Key Infrastructure
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 9 May 2026.
+   This Internet-Draft will expire on 10 May 2026.
 
 Copyright Notice
 
@@ -2012,6 +2012,11 @@ Table of Contents
 
 10.  Security Considerations
 
+   As this specification uses ML-KEM as a component of all composite
+   algorithms, all security considerations from
+   [I-D.ietf-lamps-kyber-certificates] and
+   [I-D.sfluhrer-cfrg-ml-kem-security-considerations] apply.
+
 10.1.  Why Hybrids?
 
    In broad terms, a PQ/T Hybrid can be used either to provide dual-
@@ -2626,6 +2631,14 @@ Table of Contents
               Draft, draft-ietf-pquip-pqt-hybrid-terminology-06, 10
               January 2025, <https://datatracker.ietf.org/doc/html/
               draft-ietf-pquip-pqt-hybrid-terminology-06>.
+
+   [I-D.sfluhrer-cfrg-ml-kem-security-considerations]
+              Fluhrer, S., Dang, Q., Mattsson, J. P., Milner, K., and D.
+              Shiu, "ML-KEM Security Considerations", Work in Progress,
+              Internet-Draft, draft-sfluhrer-cfrg-ml-kem-security-
+              considerations-03, 15 May 2025,
+              <https://datatracker.ietf.org/doc/html/draft-sfluhrer-
+              cfrg-ml-kem-security-considerations-03>.
 
    [RFC2986]  Nystrom, M. and B. Kaliski, "PKCS #10: Certification
               Request Syntax Specification Version 1.7", RFC 2986,
