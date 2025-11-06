@@ -658,8 +658,6 @@ Encap Process:
      return (ss, ct)
 ~~~
 
-Depending on the security needs of the application, it MAY be advantageous to perform steps 2, 3, and 5 in a timing-invariant way to prevent side-channel attackers from learning which component algorithm failed and from learning any of the inputs or output of the KEM combiner.
-
 The specific values for `Label` are defined per Composite ML-KEM algorithm in {{alg-params}}.
 
 Errors produced by the component `Encaps()` routines MUST be forwarded on to the calling application. Further discussion can be found below in {{sec-explicit-rejection}}.
