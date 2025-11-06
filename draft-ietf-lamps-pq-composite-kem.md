@@ -794,7 +794,7 @@ While ML-KEM has a single fixed-size representation for each of public key, priv
 * **ML-KEM**: MUST be encoded as specified in sections 7.1 and 7.2 of [FIPS.203], using a 64-byte seed as the private key.
 * **RSA**: the public key MUST be encoded as RSAPublicKey with the `(n,e)` public key representation as specified in A.1.1 of [RFC8017] and the private key representation as RSAPrivateKey specified in A.1.2 of [RFC8017] with version 0 and 'otherPrimeInfos' absent. An RSA-OAEP ciphertext MUST be encoded as specified in section 7.1.1 of {{RFC8017}}
 * **ECDH**: public key MUST be encoded as an uncompressed X9.62 [X9.62–2005], including the leading byte `0x04` indicating uncompressed. This is consistent with the encoding of `ECPoint` as specified in section 2.2 of [RFC5480] when no ASN.1 OCTET STRING wrapping is present. The private key MUST be encoded as ECPrivateKey specified in [RFC5915] with 'NamedCurve' parameter set to the OID of the curve, but without the 'publicKey' field. The ciphertext MUST be encoded in the same manner as the public key.
-* **X25519 and X448**: the public key MUST be encoded as per section 5 of [RFC7748] and the private key is a 32 or 57 byte raw value for Ed25519 and Ed448 respectively. The ciphertext MUST be encoded in the same manner as the public key.
+* **X25519 and X448**: the public key MUST be encoded as per section 5 of [RFC7748] and the private key is a 32 or 56 byte raw value for X25519 and X448 respectively. The ciphertext MUST be encoded in the same manner as the public key.
 
 All ASN.1 objects SHALL be encoded using DER on serialization.
 
