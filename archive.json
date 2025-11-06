@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-11-04T01:59:15.646710+00:00",
+  "timestamp": "2025-11-06T02:00:39.062295+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -3740,9 +3740,17 @@
       "labels": [],
       "body": "3. Section 3.1: The CMS comment below seems unnecessary, perhaps stop after \"does not have an assigned algorithm OID.\" or remove the paragraph.\n\n\n>    Note that, at least at the time of writing, the algorithm RSAOAEPKEM\n   is not defined as a standalone algorithm within PKIX standards and it\n   does not have an assigned algorithm OID, so it cannot be used\n   directly with CMS KEMRecipientInfo [RFC9629]; it is merely a building\n   block for the composite algorithm\n\nThe same comment applies to similar text in section 3.2",
       "createdAt": "2025-11-03T17:09:16Z",
-      "updatedAt": "2025-11-03T17:09:16Z",
+      "updatedAt": "2025-11-05T23:03:05Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "How strongly do you feel about removing this? I vote to keep it.",
+          "createdAt": "2025-11-05T23:03:05Z",
+          "updatedAt": "2025-11-05T23:03:05Z"
+        }
+      ]
     },
     {
       "number": 236,
@@ -3756,9 +3764,17 @@
       "labels": [],
       "body": "5. Section 4.3: How is ciphertext not attacker controlled?  If anything, this could say that because DER uses length-encoding these variations are benign (my PR says something similar a few lines up but I wanted to point this sentence out explicitly because of the \"attacker controlled\" part).\n\n\n>    Implementers should keep in\n   mind that some instances of tradCT and tradPK will be DER-encoded\n   which could introduce minor length variations such as dropping\n   leading zeroes; since these variations are not attacker-controlled\n   they are considered benign",
       "createdAt": "2025-11-03T17:10:05Z",
-      "updatedAt": "2025-11-03T17:10:05Z",
+      "updatedAt": "2025-11-05T23:30:46Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Yes, the full sentence is that the minor length variations such as dropping leading zeros are not attacker-controlled.\nBut I suppose you are right that in fact they could be.\nMaybe a better sentence would be:\n\n> Since the underlying KEMs are assumed to be IND-CCA secure, decapsulation against tampered ciphertexts or public keys is assumed to fail, these length differences are considered benign to the KEM combiner.",
+          "createdAt": "2025-11-05T23:30:46Z",
+          "updatedAt": "2025-11-05T23:30:46Z"
+        }
+      ]
     },
     {
       "number": 237,
@@ -3772,7 +3788,7 @@
       "labels": [],
       "body": "6. Section 10: Should there be a reference to sfluhrer-cfrg-ml-kem-security-considerations somewhere in the Security Considerations?",
       "createdAt": "2025-11-03T17:10:47Z",
-      "updatedAt": "2025-11-03T17:10:47Z",
+      "updatedAt": "2025-11-06T00:02:23Z",
       "closedAt": null,
       "comments": []
     },
@@ -3788,9 +3804,17 @@
       "labels": [],
       "body": "7. Section 10.4: Most or all other ML-KEM-related drafts throughout the IETF have stopped mentioning the probability of ML-KEM decapsulation failure because it is so vanishingly small.  I'd recommend removing this section.",
       "createdAt": "2025-11-03T17:11:39Z",
-      "updatedAt": "2025-11-03T17:11:39Z",
+      "updatedAt": "2025-11-06T00:02:27Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Heh. I think you added this originally. I certainly didn't write it. Removal upcoming.",
+          "createdAt": "2025-11-06T00:02:27Z",
+          "updatedAt": "2025-11-06T00:02:27Z"
+        }
+      ]
     },
     {
       "number": 239,
@@ -3807,6 +3831,92 @@
       "updatedAt": "2025-11-03T17:13:39Z",
       "closedAt": null,
       "comments": []
+    },
+    {
+      "number": 240,
+      "id": "I_kwDOKRPFO87V0dYt",
+      "title": "Put the private key back to `mlkemSeed || tradSK`",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/240",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "During LAMPS 124 there was consensus in the room to remove the tradPK from the (suggested) PKCS8 format.\n\nEssentially, we want to reverse the change made in #179 \n\n\nSuggested change:\n\n* Go back to `mlkemSeed || tradSK`\n* Add / expand / massage the Implementation Consideration text about what to do if your Decaps() implementation can't easily get access to the tradPK -- essentially saying that you may need extra application-layer stuff to get the public key, or an off-spec private key.",
+      "createdAt": "2025-11-04T16:21:25Z",
+      "updatedAt": "2025-11-05T08:12:26Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "danvangeest",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Spin new OIDs at the same time?",
+          "createdAt": "2025-11-04T17:21:00Z",
+          "updatedAt": "2025-11-04T17:21:00Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "NONE",
+          "body": "I am also for removing the tradPK from the secret key.\n \n- For the RSA key, the public key can be extracted (without any mathematical computation) from the RSAPrivateKey structure (defined in RFC 8017):\n```\n         RSAPrivateKey ::= SEQUENCE {\n             version           Version,\n             modulus           INTEGER,  -- n\n             publicExponent    INTEGER,  -- e\n             privateExponent   INTEGER,  -- d\n             prime1            INTEGER,  -- p\n             prime2            INTEGER,  -- q\n             exponent1         INTEGER,  -- d mod (p-1)\n             exponent2         INTEGER,  -- d mod (q-1)\n             coefficient       INTEGER,  -- (inverse of q) mod p\n             otherPrimeInfos   OtherPrimeInfos OPTIONAL\n         }\n```\n\n- For the Weierstrass EC key, the public can also be extracted the ECPrivateKey structure (defined in RFC 5915):\n```\n   ECPrivateKey ::= SEQUENCE {\n     version        INTEGER { ecPrivkeyVer1(1) } (ecPrivkeyVer1),\n     privateKey     OCTET STRING,\n     parameters [0] ECParameters {{ NamedCurve }} OPTIONAL,\n     publicKey  [1] BIT STRING OPTIONAL\n   }\n```\nThe \"publicKey\" field shall be usually available since:\n```\n- publicKey ...  Though the ASN.1 indicates\n      publicKey is OPTIONAL, implementations that conform to this\n      document SHOULD always include the publicKey field. ...\n```\n\n- For the X25519 and X448, if encoded in PKCS#8, the OneAsymmetricKey.publicKey can be used to carry the public key in the field, as mentioned in Section 7 of RFC 8410.",
+          "createdAt": "2025-11-05T08:11:24Z",
+          "updatedAt": "2025-11-05T08:12:26Z"
+        }
+      ]
+    },
+    {
+      "number": 241,
+      "id": "I_kwDOKRPFO87V93aF",
+      "title": "Incorrect text for the private key of X25519 and X448.",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/241",
+      "state": "OPEN",
+      "author": "xipki",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "```\n   *  *X25519 and X448*: the public key MUST be encoded as per section 5\n      of [RFC7748] and the private key is a 32 or 57 byte raw value for\n      Ed25519 and Ed448 respectively.  The ciphertext MUST be encoded in\n      the same manner as the public key.\n```\nShall be changed to (changes are enclosed with **)\n```\n   *  *X25519 and X448*: the public key MUST be encoded as per section 5\n      of [RFC7748] and the private key is a 32 or 5**6** byte raw value for\n      **X**25519 and **X**448 respectively.  The ciphertext MUST be encoded in\n      the same manner as the public key.\n```\n\nHere the text from section of [RFC7748]:\n```\n   The \"X25519\" and \"X448\" functions perform scalar multiplication on\n   the Montgomery form of the above curves.  (This is used when\n   implementing Diffie-Hellman.)  The functions take a scalar and a\n   u-coordinate as inputs and produce a u-coordinate as output.\n   Although the functions work internally with integers, the inputs and\n   outputs are 32-byte strings (for X25519) or 56-byte strings (for\n   X448) and this specification defines their encoding.\n```",
+      "createdAt": "2025-11-05T07:51:45Z",
+      "updatedAt": "2025-11-06T00:06:07Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Thank you for this! Good catch.",
+          "createdAt": "2025-11-06T00:06:07Z",
+          "updatedAt": "2025-11-06T00:06:07Z"
+        }
+      ]
+    },
+    {
+      "number": 242,
+      "id": "I_kwDOKRPFO87V-Vqw",
+      "title": "Optimization of the test vectors",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/242",
+      "state": "OPEN",
+      "author": "xipki",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "The text vectors need to be improved as follows:\n- Each run of the program will generate test vectors with different key-pairs, certificates, and cipher texts, even if the content are of the same. This makes the diff of two versions of drafts much more simpler. (similar as in composite-sigs (see https://github.com/lamps-wg/draft-composite-sigs/issues/311)\n- The symbols in test vectors differ from the normative text in other sections:\n  - `ek` vs `pk`\n  - `dk` vs `sk`\n  - `c` vs `ct`\n  - `k` vs `ss`\n\nAdditionally, the text vectors can be further optimized to reduce the size dramatically as follows:\n- Use traditional key (e.g. the Weierstrass EC or Edwards EC) for the cacert to reduce the signature size of the certificates.\n- Use always the same key content for the same ML-KEM and traditional algorithm.\n\nConsidering the points mentioned above, I generated the test vectors (see attachments) as reference. The wrapped test-vector file has only 1072 lines, while the original one has 2851 lines. Which means about 37 pages less.\n\n[testvectors_wrapped.json](https://github.com/user-attachments/files/23354649/testvectors_wrapped.json)\n[testvectors.json](https://github.com/user-attachments/files/23354648/testvectors.json)",
+      "createdAt": "2025-11-05T08:30:07Z",
+      "updatedAt": "2025-11-06T00:22:18Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Thank you for this feedback.\n\nGiven that this document has already passed WGLC, I think it is too late to make changes to the test vectors simply for presentation reasons (IE not due to a technical bug).\n\n\n> Use traditional key (e.g. the Weierstrass EC or Edwards EC) for the cacert to reduce the signature size of the certificates.\n\nI think it would be odd to use a traditional CA cert for a PQ end entity cert. Certainly that would send an odd message to people implementing this specification.\n\n\n> Use always the same key content for the same ML-KEM and traditional algorithm.\n\nBut the draft is extremely clear to always freshly generate all key material and to never re-use the same component keys between two different composites. So this would make our test vectors be in violation of the spec.\n",
+          "createdAt": "2025-11-06T00:21:32Z",
+          "updatedAt": "2025-11-06T00:21:32Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I will consider whether to make a consistent change across the document to use \"ek, dk, c, k\" instead of \"pk, sk, ct, ss\".",
+          "createdAt": "2025-11-06T00:22:17Z",
+          "updatedAt": "2025-11-06T00:22:17Z"
+        }
+      ]
     }
   ],
   "pulls": [
@@ -10096,20 +10206,48 @@
       "id": "PR_kwDOKRPFO86xOhEE",
       "title": "A merge error removed my change to remove the alg-specific KDF line. \u2026",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/232",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "danvangeest",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "\u2026 Fix that.",
       "createdAt": "2025-11-03T16:28:47Z",
-      "updatedAt": "2025-11-03T16:28:47Z",
+      "updatedAt": "2025-11-05T21:48:37Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "5a0264db70acffd04f3aab2e43ff925dd4be9458",
       "headRepository": "danvangeest/draft-composite-kem",
       "headRefName": "dvg/fix_merge_problem",
       "headRefOid": "a50309f5cd6d009bb5c77942f7d4e298a42dabc1",
+      "closedAt": "2025-11-05T21:48:37Z",
+      "mergedAt": "2025-11-05T21:48:37Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "28ebd7e4d90e69a7e2b1bf493d2a975e37ebbf0e"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 243,
+      "id": "PR_kwDOKRPFO86xwvTV",
+      "title": "WGLC2",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/243",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Closes #233\r\nCloses #234 \r\nCloses #236 \r\nCloses #237 \r\nCloses #238 \r\nCloses #241 ",
+      "createdAt": "2025-11-05T22:58:17Z",
+      "updatedAt": "2025-11-06T00:08:24Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "28ebd7e4d90e69a7e2b1bf493d2a975e37ebbf0e",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_wglc2",
+      "headRefOid": "41b70102cc0907fac7a693a0dc9ca70414e22434",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
