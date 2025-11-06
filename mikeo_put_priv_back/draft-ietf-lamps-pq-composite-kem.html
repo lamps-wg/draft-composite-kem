@@ -3455,7 +3455,7 @@ RSAPublicKey ::= SEQUENCE {
           <h4 id="name-deriving-the-public-ecpoint">
 <a href="#section-11.4.2" class="section-number selfRef">11.4.2. </a><a href="#name-deriving-the-public-ecpoint" class="section-name selfRef">Deriving the public ECPoint from ECPrivateKey</a>
           </h4>
-<p id="section-11.4.2-1">Unlike RSA, the ECPrivateKey does not contain sufficient information to simply extract the public key. Note that since a single unique encoding of the traditional public key is required, this specification forbids the optional <code>publicKey</code> field.<a href="#section-11.4.2-1" class="pilcrow">¶</a></p>
+<p id="section-11.4.2-1">Unlike RSA, the ECPrivateKey does not contain sufficient information to simply extract the public key. Note that in the interest of having a single unique encoding to foster interoperability, this specification forbids the optional <code>publicKey</code> field.<a href="#section-11.4.2-1" class="pilcrow">¶</a></p>
 <p id="section-11.4.2-2">That said, the EC public key can be derived from the private key in the following way:<a href="#section-11.4.2-2" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-11.4.2-3">
 <pre>
