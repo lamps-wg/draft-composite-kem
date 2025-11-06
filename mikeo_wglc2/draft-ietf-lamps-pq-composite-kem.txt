@@ -943,8 +943,8 @@ Table of Contents
       key.
 
    *  *X25519 and X448*: the public key MUST be encoded as per section 5
-      of [RFC7748] and the private key is a 32 or 57 byte raw value for
-      Ed25519 and Ed448 respectively.  The ciphertext MUST be encoded in
+      of [RFC7748] and the private key is a 32 or 56 byte raw value for
+      X25519 and X448 respectively.  The ciphertext MUST be encoded in
       the same manner as the public key.
 
    All ASN.1 objects SHALL be encoded using DER on serialization.
