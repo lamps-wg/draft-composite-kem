@@ -1506,7 +1506,7 @@ RSAPublicKey ::= SEQUENCE {
 
 ### Deriving the public ECPoint from ECPrivateKey {#sec-ec-pub-from-priv}
 
-Unlike RSA, the ECPrivateKey does not contain sufficient information to simply extract the public key. Note that since a single unique encoding of the traditional public key is required, this specification forbids the optional `publicKey` field.
+Unlike RSA, the ECPrivateKey does not contain sufficient information to simply extract the public key. Note that in the interest of having a single unique encoding to foster interoperability, this specification forbids the optional `publicKey` field.
 
 That said, the EC public key can be derived from the private key in the following way:
 
