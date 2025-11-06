@@ -113,8 +113,7 @@ Table of Contents
        10.2.2.  Second pre-image resistance of component KEMs
        10.2.3.  Generifying this construction
      10.3.  Key Reuse
-     10.4.  Decapsulation failure
-     10.5.  Policy for Deprecated and Acceptable Algorithms
+     10.4.  Policy for Deprecated and Acceptable Algorithms
    11. Implementation Considerations
      11.1.  FIPS Certification
        11.1.1.  Combiner Function
@@ -2202,43 +2201,7 @@ Table of Contents
    SHOULD also check both component keys independently to verify that
    the component keys have not been revoked.
 
-10.4.  Decapsulation failure
-
-   Provided all inputs are well-formed, the key establishment procedure
-   of ML-KEM will never explicitly fail.  Specifically, the ML-
-   KEM.Encaps() and ML-KEM.Decaps() algorithms from [FIPS.203] will
-   always output a value with the same data type as a shared secret key,
-   and will never output an error or failure symbol.  However, it is
-   possible (though extremely unlikely) that the process will fail in
-   the sense that ML-KEM.Encaps() and ML-KEM.Decaps() will produce
-   different outputs, even though both of them are behaving honestly and
-   no adversarial interference is present.  This is due to the lattice
-   arithmetic for decapsulation with the secret key having hit an
-   unrecoverable degenerate case that could not have been predicted by
-   the encapsulator without knowledge of the secret key.  In this case,
-   the sender and recipient clearly did not succeed in producing a
-   shared secret key.  This event is called a decapsulation failure.
-   Estimates for the decapsulation failure probability (or rate) for
-   each of the ML-KEM parameter sets are provided in Table 1 of
-   [FIPS.203] and reproduced here in Table 3.
-
-              +===============+============================+
-              | Parameter set | Decapsulation failure rate |
-              +===============+============================+
-              | ML-KEM-512    | 2^(-139)                   |
-              +---------------+----------------------------+
-              | ML-KEM-768    | 2^(-164)                   |
-              +---------------+----------------------------+
-              | ML-KEM-1024   | 2^(-174)                   |
-              +---------------+----------------------------+
-
-               Table 3: ML-KEM decapsulation failure rates
-
-   In the case of ML-KEM decapsulation failure, Composite ML-KEM MUST
-   preserve the same behavior and return a well-formed output shared
-   secret key.
-
-10.5.  Policy for Deprecated and Acceptable Algorithms
+10.4.  Policy for Deprecated and Acceptable Algorithms
 
    Traditionally, a public key or certificate contains a single
    cryptographic algorithm.  If and when an algorithm becomes deprecated
@@ -2788,7 +2751,7 @@ Appendix A.  Maximum Key and Ciphertext Sizes
     | P521-SHA3-256              |        |         |            |    |
     +----------------------------+--------+---------+------------+----+
 
-              Table 4: Maximum size values of composite ML-KEM
+              Table 3: Maximum size values of composite ML-KEM
 
 Appendix B.  Component Algorithm Reference
 
@@ -2815,7 +2778,7 @@ Appendix B.  Component Algorithm Reference
       | id-RSAES-OAEP  | 1.2.840.113549.1.1.7   | [RFC8017]         |
       +----------------+------------------------+-------------------+
 
-         Table 5: Component Encryption Algorithms used in Composite
+         Table 4: Component Encryption Algorithms used in Composite
                                Constructions
 
      +==================+=======================+===================+
@@ -2832,7 +2795,7 @@ Appendix B.  Component Algorithm Reference
      | brainpoolP384r1  | 1.3.36.3.3.2.8.1.1.11 | [RFC5639]         |
      +------------------+-----------------------+-------------------+
 
-         Table 6: Elliptic Curves used in Composite Constructions
+         Table 5: Elliptic Curves used in Composite Constructions
 
          +=============+========================+===============+
          | HashID      | OID                    | Specification |
@@ -2840,7 +2803,7 @@ Appendix B.  Component Algorithm Reference
          | id-sha3-256 | 2.16.840.1.101.3.4.2.8 | [FIPS.202]    |
          +-------------+------------------------+---------------+
 
-         Table 7: Hash algorithms used in Composite Constructions
+         Table 6: Hash algorithms used in Composite Constructions
 
 Appendix C.  Fixed Component Algorithm Identifiers
 

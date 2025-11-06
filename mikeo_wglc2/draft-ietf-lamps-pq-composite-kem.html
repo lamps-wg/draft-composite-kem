@@ -1297,10 +1297,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
                 <p id="section-toc.1-1.10.2.3.1"><a href="#section-10.3" class="auto internal xref">10.3</a>.  <a href="#name-key-reuse" class="internal xref">Key Reuse</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.4">
-                <p id="section-toc.1-1.10.2.4.1"><a href="#section-10.4" class="auto internal xref">10.4</a>.  <a href="#name-decapsulation-failure" class="internal xref">Decapsulation failure</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.5">
-                <p id="section-toc.1-1.10.2.5.1"><a href="#section-10.5" class="auto internal xref">10.5</a>.  <a href="#name-policy-for-deprecated-and-a" class="internal xref">Policy for Deprecated and Acceptable Algorithms</a></p>
+                <p id="section-toc.1-1.10.2.4.1"><a href="#section-10.4" class="auto internal xref">10.4</a>.  <a href="#name-policy-for-deprecated-and-a" class="internal xref">Policy for Deprecated and Acceptable Algorithms</a></p>
 </li>
             </ul>
 </li>
@@ -3337,50 +3334,13 @@ END
 <p id="section-10.3-4">In addition, there is a further implication to key reuse regarding certificate revocation. Upon receiving a new certificate enrolment request, many certification authorities will check if the requested public key has been previously revoked due to key compromise. Often a CA will perform this check by using the public key hash. Therefore, if one, or even both, components of a composite have been previously revoked, the CA may only check the hash of the combined composite key and not find the revocations. Therefore, because the possibility of key reuse exists even though forbidden in this specification, CAs performing revocation checks on a composite key SHOULD also check both component keys independently to verify that the component keys have not been revoked.<a href="#section-10.3-4" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="decapsulation-failure">
-<section id="section-10.4">
-        <h3 id="name-decapsulation-failure">
-<a href="#section-10.4" class="section-number selfRef">10.4. </a><a href="#name-decapsulation-failure" class="section-name selfRef">Decapsulation failure</a>
-        </h3>
-<p id="section-10.4-1">Provided all inputs are well-formed, the key establishment procedure of ML-KEM will never explicitly fail. Specifically, the <code>ML-KEM.Encaps()</code> and <code>ML-KEM.Decaps()</code> algorithms from <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span> will always output a value with the same data type as a shared secret key, and will never output an error or failure symbol. However, it is possible (though extremely unlikely) that the process will fail in the sense that <code>ML-KEM.Encaps()</code> and <code>ML-KEM.Decaps()</code> will produce different outputs, even though both of them are behaving honestly and no adversarial interference is present. This is due to the lattice arithmetic for decapsulation with the secret key having hit an unrecoverable degenerate case that could not have been predicted by the encapsulator without knowledge of the secret key. In this case, the sender and recipient clearly did not succeed in producing a shared secret key. This event is called a decapsulation failure. Estimates for the decapsulation failure probability (or rate) for each of the ML-KEM parameter sets are provided in Table 1  of <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span> and reproduced here in <a href="#tab-mlkem-failure-rate" class="auto internal xref">Table 3</a>.<a href="#section-10.4-1" class="pilcrow">¶</a></p>
-<span id="name-ml-kem-decapsulation-failur"></span><div id="tab-mlkem-failure-rate">
-<table class="center" id="table-3">
-          <caption>
-<a href="#table-3" class="selfRef">Table 3</a>:
-<a href="#name-ml-kem-decapsulation-failur" class="selfRef">ML-KEM decapsulation failure rates</a>
-          </caption>
-<thead>
-            <tr>
-              <th class="text-left" rowspan="1" colspan="1">Parameter set</th>
-              <th class="text-left" rowspan="1" colspan="1">Decapsulation failure rate</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="text-left" rowspan="1" colspan="1">ML-KEM-512</td>
-              <td class="text-left" rowspan="1" colspan="1">2^(-139)</td>
-            </tr>
-            <tr>
-              <td class="text-left" rowspan="1" colspan="1">ML-KEM-768</td>
-              <td class="text-left" rowspan="1" colspan="1">2^(-164)</td>
-            </tr>
-            <tr>
-              <td class="text-left" rowspan="1" colspan="1">ML-KEM-1024</td>
-              <td class="text-left" rowspan="1" colspan="1">2^(-174)</td>
-            </tr>
-          </tbody>
-        </table>
-</div>
-<p id="section-10.4-3">In the case of ML-KEM decapsulation failure, Composite ML-KEM MUST preserve the same behavior and return a well-formed output shared secret key.<a href="#section-10.4-3" class="pilcrow">¶</a></p>
-</section>
-</div>
 <div id="policy-for-deprecated-and-acceptable-algorithms">
-<section id="section-10.5">
+<section id="section-10.4">
         <h3 id="name-policy-for-deprecated-and-a">
-<a href="#section-10.5" class="section-number selfRef">10.5. </a><a href="#name-policy-for-deprecated-and-a" class="section-name selfRef">Policy for Deprecated and Acceptable Algorithms</a>
+<a href="#section-10.4" class="section-number selfRef">10.4. </a><a href="#name-policy-for-deprecated-and-a" class="section-name selfRef">Policy for Deprecated and Acceptable Algorithms</a>
         </h3>
-<p id="section-10.5-1">Traditionally, a public key or certificate contains a single cryptographic algorithm. If and when an algorithm becomes deprecated (for example, RSA-512, or SHA1), the path to deprecating it through policy and removing it from operational environments is, at least is principle, straightforward.<a href="#section-10.5-1" class="pilcrow">¶</a></p>
-<p id="section-10.5-2">In the composite model this is less obvious since a PQ/T hybrid is expected to still be considered valid after the traditional component is deprecated for individual use. As such, a single composite public key or certificate may contain a mixture of deprecated and non-deprecated algorithms. In general this should be manageable through policy by removing OIDs for the standalone component algorithms while still allowing OIDs for composite algorithms. However, complications may arise when the composite implementation needs to invoke the cryptographic module for a deprecated component algorithm. In particular, this could lead to complex Cryptographic Bills of Materials that show implementations of deprecated algorithms still present and being used.<a href="#section-10.5-2" class="pilcrow">¶</a></p>
+<p id="section-10.4-1">Traditionally, a public key or certificate contains a single cryptographic algorithm. If and when an algorithm becomes deprecated (for example, RSA-512, or SHA1), the path to deprecating it through policy and removing it from operational environments is, at least is principle, straightforward.<a href="#section-10.4-1" class="pilcrow">¶</a></p>
+<p id="section-10.4-2">In the composite model this is less obvious since a PQ/T hybrid is expected to still be considered valid after the traditional component is deprecated for individual use. As such, a single composite public key or certificate may contain a mixture of deprecated and non-deprecated algorithms. In general this should be manageable through policy by removing OIDs for the standalone component algorithms while still allowing OIDs for composite algorithms. However, complications may arise when the composite implementation needs to invoke the cryptographic module for a deprecated component algorithm. In particular, this could lead to complex Cryptographic Bills of Materials that show implementations of deprecated algorithms still present and being used.<a href="#section-10.4-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -3732,9 +3692,9 @@ id-MLKEM1024-ECDH-P384-SHA3-256
 <p id="appendix-A-4">Size values marked with an asterisk (*) in the table are not fixed but maximum possible values for the composite key or ciphertext. Implementations MUST NOT perform strict length checking based on such values.<a href="#appendix-A-4" class="pilcrow">¶</a></p>
 <p id="appendix-A-5">Non-hybrid ML-KEM is included for reference.<a href="#appendix-A-5" class="pilcrow">¶</a></p>
 <span id="name-maximum-size-values-of-comp"></span><div id="tab-size-values">
-<table class="center" id="table-4">
+<table class="center" id="table-3">
         <caption>
-<a href="#table-4" class="selfRef">Table 4</a>:
+<a href="#table-3" class="selfRef">Table 3</a>:
 <a href="#name-maximum-size-values-of-comp" class="selfRef">Maximum size values of composite ML-KEM</a>
         </caption>
 <thead>
@@ -3857,9 +3817,9 @@ id-MLKEM1024-ECDH-P384-SHA3-256
       </h2>
 <p id="appendix-B-1">This section provides references to the full specification of the algorithms used in the composite constructions.<a href="#appendix-B-1" class="pilcrow">¶</a></p>
 <span id="name-component-encryption-algori"></span><div id="tab-component-encr-algs">
-<table class="center" id="table-5">
+<table class="center" id="table-4">
         <caption>
-<a href="#table-5" class="selfRef">Table 5</a>:
+<a href="#table-4" class="selfRef">Table 4</a>:
 <a href="#name-component-encryption-algori" class="selfRef">Component Encryption Algorithms used in Composite Constructions</a>
         </caption>
 <thead>
@@ -3916,9 +3876,9 @@ id-MLKEM1024-ECDH-P384-SHA3-256
       </table>
 </div>
 <span id="name-elliptic-curves-used-in-com"></span><div id="tab-component-curve-algs">
-<table class="center" id="table-6">
+<table class="center" id="table-5">
         <caption>
-<a href="#table-6" class="selfRef">Table 6</a>:
+<a href="#table-5" class="selfRef">Table 5</a>:
 <a href="#name-elliptic-curves-used-in-com" class="selfRef">Elliptic Curves used in Composite Constructions</a>
         </caption>
 <thead>
@@ -3968,9 +3928,9 @@ id-MLKEM1024-ECDH-P384-SHA3-256
       </table>
 </div>
 <span id="name-hash-algorithms-used-in-com"></span><div id="tab-component-hash">
-<table class="center" id="table-7">
+<table class="center" id="table-6">
         <caption>
-<a href="#table-7" class="selfRef">Table 7</a>:
+<a href="#table-6" class="selfRef">Table 6</a>:
 <a href="#name-hash-algorithms-used-in-com" class="selfRef">Hash algorithms used in Composite Constructions</a>
         </caption>
 <thead>
