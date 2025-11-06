@@ -94,10 +94,12 @@ class Version(univ.Integer):
 
 class ECDSAPrivateKey(univ.Sequence):
     parameters = univ.ObjectIdentifier().subtype(explicitTag=tag.Tag(tag.tagClassContext, tag.tagFormatConstructed, 0))
+    publicKey = univ.BitString().subtype(explicitTag=tag.Tag(tag.tagClassContext, tag.tagFormatConstructed, 1))
     componentType = namedtype.NamedTypes(
         namedtype.NamedType('version', Version()),
         namedtype.NamedType('privateKey', univ.OctetString()),
-        namedtype.NamedType('parameters', parameters)
+        namedtype.NamedType('parameters', parameters),
+        namedtype.NamedType('publicKey', publicKey)
     )
 
 class ECDHKEM(KEM):
@@ -140,6 +142,7 @@ class ECDHKEM(KEM):
     prk['version'] = 1
     prk['privateKey'] = self.sk.private_numbers().private_value.to_bytes((self.sk.key_size + 7) // 8)
     prk['parameters'] = ECDSAPrivateKey.parameters.clone(self.curveOid)
+    prk['publicKey'] = univ.BitString(hexValue=self.public_key_bytes().hex())
     return der_encode(prk)
   
   def public_key_max_len(self):  
@@ -157,8 +160,8 @@ class ECDHKEM(KEM):
     maxLen = calculate_der_universal_sequence_max_length([
         calculate_der_universal_integer_max_length(max_size_in_bits=1),  # version must be 1
         calculate_der_universal_octet_string_max_length(size_in_bits_to_size_in_bytes(self.curve.key_size)),  # privateKey
-        len(der_encode(ECDSAPrivateKey.parameters.clone(self.curveOid))) # ECParameters
-        # publicKey is not allowed in Composite ML-DSA
+        len(der_encode(ECDSAPrivateKey.parameters.clone(self.curveOid))), # ECParameters
+        1 + 2 + self.public_key_max_len() # publicKey
     ])
     return (maxLen, True)
 
@@ -489,10 +492,8 @@ class CompositeKEM(KEM):
     (mlkemSeed, tradPK, tradSK) -> sk
     """
     mlkemSeed = self.mlkem.private_key_bytes()
-    tradPK = self.tradkem.public_key_bytes()
-    lenTradPK = len(tradPK).to_bytes(2, 'little')
     tradSK  = self.tradkem.private_key_bytes()
-    return mlkemSeed + lenTradPK + tradPK + tradSK
+    return mlkemSeed + tradSK
   
 
   def deserializePrivateKey(self, keyBytes):
@@ -501,12 +502,9 @@ class CompositeKEM(KEM):
     """
     assert isinstance(keyBytes, bytes)
     mlkemSeed = keyBytes[:64]
+    tradSK = keyBytes[64:]
 
-    lenTradPK = int.from_bytes(keyBytes[64:66], 'little')
-    tradPK = keyBytes[66: 66+lenTradPK]
-    tradSK = keyBytes[66+lenTradPK:]
-
-    return mlkemSeed, tradPK, tradSK
+    return mlkemSeed, tradSK
   
 
   def public_key_bytes(self):
@@ -564,8 +562,7 @@ class CompositeKEM(KEM):
   def private_key_max_len(self):
     (maxMLKEM, fixedSizeMLKEM) = self.mlkem.private_key_max_len()
     (maxTrad, fixedSizeTrad) = self.tradkem.private_key_max_len()
-    (maxTradPub, fixedSizeTradPub) = self.tradkem.public_key_max_len()
-    return (maxMLKEM + 2 + maxTradPub + maxTrad, fixedSizeMLKEM and fixedSizeTrad and fixedSizeTradPub)
+    return (maxMLKEM + maxTrad, fixedSizeMLKEM and fixedSizeTrad)
     
   def ct_max_len(self):
     (maxMLKEM, fixedSizeMLKEM) = self.mlkem.ct_max_len()

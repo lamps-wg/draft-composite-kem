@@ -288,37 +288,15 @@ This document defines combinations of ML-KEM [FIPS.203] in hybrid with tradition
 
 --- middle
 
-# Changes in version -08
+# Changes in version -09
 
 Interop-affecting changes:
 
-* Changed the private key serialization to carry the TradPK.
-* Fixed the ASN.1 module for the pk-CompositeKEM and kema-CompositeKEM to indicate no ASN.1 wrapping is used. This simply clarifies the intended encoding but could be an interop-affecting change for implementations that built encoders / decoders from the ASN.1 and ended up with a non-intended encoding.
-* Changed the domain separator strings to match draft-irtf-cfrg-concrete-hybrid-kems-00, but no reference to it because I don't want this to get stuck in MISREF.
-* Added a normative section saying that the composite MUST forward any errors produced by the component primitives.
-* Fully removed SHA2; changed all HMACSHA2 to SHA3.
+* Reverted back to the private key encoding `mlkemSeed || tradSK`.
 
 Editorial changes:
 
-* Clarified that the ECDSA public key is raw X9.62 with no OCTET STRING wrapping. Test vectors were already correct.
-
-
-A full review was performed of the encoding of each component:
-
-* ML-KEM:
-  * pub key, priv key, ct value: Raw, according to FIPS 203. Test vectors appear to match.
-* RSA:
-  * pub key: ASN.1 RSAPublicKey. Test vectors appear to match (manually inspected "id-MLKEM768-RSA2048-HMAC-SHA256")
-  * priv key: RSAPrivateKey (CRT). Test vectors appear to match (manually inspected "id-MLKEM768-RSA2048-HMAC-SHA256")
-  * ct value: length of ct for "id-MLKEM768-RSA2048-HMAC-SHA256" verified to be 256 bytes, format hard to manually inspect.
-* ECDH: Inspected test vector for "id-MLKEM768-ECDH-P256-HMAC-SHA256".
-  * pub key: The wording of the pub key format in Section 2.2 of RFC5480 is extremely confusing in how it would apply outside of a SubjectPublicKeyInfo. The Composite author's interpretation was for it to be raw X9.62, which is what is already in the test vectors: verified to be raw X9.62 with a leading byte of 0x04 (uncompressed). Normative text in Section 5 is incorrect and has been changed.
-* priv key: This is the ASN.1 structure ECPrivateKey [RFC5915] as intended, however, as Dan Van Geest points out, the `parameters` field, while marked OPTIONAL is actually required by Section 3 of RFC5915. That means the private keys here are invalid. This has been corrected in the test vectors.
-  * ct value: A raw X9.62 public key, as intended.
-* XDH:
-  * pub key: 32 byte raw.
-  * priv key: Had been wrapped in OCTET STRING to match CurvePrivateKey (RFC8410). This has been changed to 32/57 byte raw.
-  * ct value: 32 byte raw.
+* Added an Implementation Consideration section with a few suggested ways of acquiring the tradPK needed by the Decaps() routine.
 
 
 # Introduction {#sec-intro}
@@ -692,10 +670,8 @@ Implicit inputs mapped from <OID>:
 
   tradPK  The traditional public key is required for the KEM
           combiner.
-          The suggested algorithm below extracts the tradPK
-          from sk, however implementations that use a non-standard
-          private key encoding will need to obtain the traditional
-          public key some other way.
+          For discussion of where to get this value, see the
+          discussion below.
 
   Label   KEM Combiner Label value for binding the ciphertext to
           the Composite ML-KEM OID.
@@ -737,6 +713,8 @@ Decap Process:
 ~~~
 
 Steps 2, 3, and 4 SHOULD be performed in a timing-invariant way to prevent side-channel attackers from learning which component algorithm failed and from learning any of the inputs or output of the KEM combiner.
+
+Step 4 requires the `Decaps()` process to have access to `tradPK`, which is not carried in the private key format and therefore the implementation is required to acquire it from some out-of-band means. The Implementation Considerations {{impl-cons-decaps-pubkey}} provides further discussion on this.
 
 It is possible to use component private keys stored in separate software or hardware keystores. Variations in the process to accommodate particular private key storage mechanisms are considered to be conformant to this specification so long as it produces the same output and error handling as the process sketched above.
 
@@ -898,11 +876,6 @@ Explicit inputs:
 
   mlkemSeed  The ML-KEM private key, which is the bytes of the seed.
 
-  tradPK     The traditional public key in the appropriate
-             encoding for the underlying component algorithm.
-             This is required by the decapsulater for inclusion
-             in the KEM combiner.
-
   tradSK     The traditional private key in the appropriate
              encoding for the underlying component algorithm.
 
@@ -916,16 +889,10 @@ Output:
 
 Serialization Process:
 
-  1. Compute the length of tradPK
+  1. Combine and output the encoded private key.
 
-     lenTradPK = IntegerToBytes( len(tradPK), 2 )
-
-  2. Combine and output the encoded private key.
-
-     output mlkemSeed || lenTradPK || tradPK || tradSK
+     output mlkemSeed || tradSK
 ~~~
-
-The function `IntegerToBytes(x, a)` is defined in Algorithm 11 of [FIPS.204], which is the usual little-endian encoding of an integer. Encoding to 2 bytes allows for traditional public keys up to 65 kb.
 
 Deserialization reverses this process. Each component key is deserialized according to their respective specification as shown in {{appdx_components}}.
 
@@ -933,7 +900,7 @@ The following describes how to instantiate a `DeserializePrivateKey(bytes)` func
 
 ~~~
 Composite-ML-KEM.DeserializePrivateKey(bytes)
-                                    -> (mlkemSeed, tradPK, tradSK)
+                                    -> (mlkemSeed, tradSK)
 
 Explicit inputs:
 
@@ -957,22 +924,11 @@ Deserialization Process:
      for all parameter sets.
 
      mlkemSeed = bytes[:64]
-
-
-  2. Parse the traditional public and private key
-
-     lenTradPK = BytesToInteger( bytes[64:66] )
-     tradPK = bytes[66: 66+lenTradPK]
-
-     tradSK  = bytes[66+lenTradPK:]
-
-     Note that while ML-KEM has fixed-length keys, RSA
-     may not, depending on encoding, so rigorous length-checking
-     of the overall composite key is not always possible.
+     tradSK    = bytes[64:]
 
   2. Output the component private keys
 
-     output (mlkemSeed, tradPK, tradSK)
+     output (mlkemSeed,tradSK)
 ~~~
 
 
@@ -1508,9 +1464,62 @@ In applications that only allow NIST PQC Level 5, it is RECOMMENDED to focus imp
 
 ML-KEM always requires the public key in order to perform various steps of the Fujisaki-Okamoto decapsulation [FIPS.203], and for this reason the private key encoding specified in FIPS 203 includes the public key.
 
-Moreover, the KEM combiner as specified in {{sec-kem-combiner}} requires the public key of the traditional component in order to achieve the public-key binding property and ciphertext collision resistance as described in {{sec-cons-kem-combiner}}. For this reason, the private key serialization defined in {{sec-serialize-privkey}} carries the traditional public key so that it is easily available to the decapsulater.
+Moreover, the KEM combiner as specified in {{sec-kem-combiner}} requires the public key of the traditional component in order to achieve the public-key binding property and ciphertext collision resistance as described in {{sec-cons-kem-combiner}}. Since `tradPK` is not carried in the composite private key encoding, the implementation is required to obtain it from some out-of-band mechanism. This section discusses several options, but is a non-exhaustive list.
 
-Implementers who choose to use a different private key encoding than the one specified in this document MUST consider how to provide the component public keys to the decapsulate routine. This includes, for example, implementations that use a hardware security module to hold the private key. While some implementations might contain routines to computationally derive the public key from the private key, it is not guaranteed that all implementations will support this, or that they will then encode the public key in the correct format. In some implementations, the application might be required to cache the public key or certificate associated with the private key so that the public key can be retrieved for the purposes of decapsulation.
+1. Derive or extract from private key. Many cryptographic modules expose functionality to obtain an RSA or EC public key from the corresponding private key. For applications where such functionality does not exist, {{sec-rsa-pub-from-priv}} and {{sec-ec-pub-from-priv}} provide suggested mechanisms for extracting the public keys from private keys for RSA and ECDH respectively. It is assumed that this is not required for X25519 or X448 since those private keys are seeds from which the public key can be obtained.
+
+2. Fetch it from an external data source, for example from the public-key certificate corresponding to this private key.
+
+3. If the composite KEM private key is being carried within a PKCS#8 OneAsymmetricKey object, place the full composite public key within the optional OneAsymmetricKey.publicKey field, which allows extracting the tradPK (and re-encode as necessary for correctly using it in the KEM Combiner).
+
+4. Use an alternate private key encoding that explicitly carries the tradPK.
+
+
+### Extracting RSAPublicKey from RSAPrivateKey {#sec-rsa-pub-from-priv}
+
+Assuming that the RSA component of the composite private key is encoded as a RSAPrivateKey, as required by this specification, then, quoting from [RFC8017] you have:
+
+~~~
+RSAPrivateKey ::= SEQUENCE {
+    version           Version,
+    modulus           INTEGER,  -- n
+    publicExponent    INTEGER,  -- e
+    privateExponent   INTEGER,  -- d
+    prime1            INTEGER,  -- p
+    prime2            INTEGER,  -- q
+    exponent1         INTEGER,  -- d mod (p-1)
+    exponent2         INTEGER,  -- d mod (q-1)
+    coefficient       INTEGER,  -- (inverse of q) mod p
+    otherPrimeInfos   OtherPrimeInfos OPTIONAL
+}
+~~~
+
+This can trivially be converted into an RSAPublicKey through simple DER decoding / re-encoding since both required values are already present.
+
+~~~
+RSAPublicKey ::= SEQUENCE {
+    modulus           INTEGER,  -- n
+    publicExponent    INTEGER   -- e
+}
+~~~
+
+
+### Deriving the public ECPoint from ECPrivateKey {#sec-ec-pub-from-priv}
+
+Unlike RSA, the ECPrivateKey does not contain sufficient information to simply extract the public key. Note that in the interest of having a single unique encoding, this specification forbids the optional `publicKey` field.
+
+That said, the EC public key can be derived from the private key in the following way:
+
+~~~
+g = generator for the group P256r1, P384r1, etc.
+s = ECPrivateKey.getS()
+
+pubKey = ec_multiply_by_scalar(g, s)
+~~~
+
+where a recommended implementation of `ec_multiply_by_scalar()` can be found in [X9.62–2005].
+
+Then encode `pubKey` as X9.62 uncompressed point and place it into an ECPoint ASN.1 object.
 
 
 
