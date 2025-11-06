@@ -1347,7 +1347,7 @@ The KEM combiner from {{sec-kem-combiner}} is reproduced here for reference.
 {: #code-generic-kem-combiner title="KEM combiner construction"}
 
 
-The primary security property of the KEM combiner is that it preserves indistinguishable (adaptive) chosen-ciphertext (IND-CCA2) security of the overall Composite ML-KEM so long as at least one component is IND-CCA2 {{X-Wing}} [GHP18]. Additionally, we also need to consider the case where one of the component algorithms is completely broken; that the private key is known to an attacker, or worse that the public key, private key, and ciphertext are manipulated by the attacker. In this case, we rely on the construction of the KEM combiner to ensure that the value of the other shared secret key cannot be leaked or the combined shared secret key predicted via manipulation of the broken algorithm.
+The primary security property of the KEM combiner is that it preserves indistinguishable (adaptive) chosen-ciphertext (IND-CCA2) security of the overall Composite ML-KEM so long as at least one component is IND-CCA2 {{X-Wing}} [GHP18]. Additionally, we also need to consider the case where one of the component algorithms is completely broken; that the private key is known to an attacker. In this case, we rely on the construction of the KEM combiner to ensure that the value of the other shared secret key cannot be leaked or the combined shared secret key predicted via manipulation of the broken algorithm.
 
 
 Each registered Composite ML-KEM algorithm specifies a `Label` -- see {{alg-params}}. Given that each Composite ML-KEM algorithm fully specifies the component algorithms, including for example the size of the RSA modulus, all inputs to the KEM combiner are fixed-size and thus do not require length-prefixing.
