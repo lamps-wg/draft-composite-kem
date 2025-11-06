@@ -1466,7 +1466,7 @@ ML-KEM always requires the public key in order to perform various steps of the F
 
 Moreover, the KEM combiner as specified in {{sec-kem-combiner}} requires the public key of the traditional component in order to achieve the public-key binding property and ciphertext collision resistance as described in {{sec-cons-kem-combiner}}. Since `tradPK` is not carried in the composite private key encoding, the implementation is required to obtain it from some out-of-band mechanism. This section discusses several options, but is a non-exhaustive list.
 
-1. Derive or extract from private key. Many cryptographic modules expose functionality to obtain an RSA or EC public key from the corresponding private key. For applications where such functionality does not exist, {{sec-rsa-pub-from-priv}} and {{sec-ec-pub-from-priv}} provide suggested mechanisms for extracting the public keys from private keys for RSA and ECDH respectively. It is assumed that this is not required for X25519 or X448 since those private keys are seeds from which the public key can be obtained.
+1. Derive or extract from private key. Many cryptographic modules expose functionality to obtain an RSA or EC public key from the corresponding private key. For applications where such functionality does not exist, {{sec-rsa-pub-from-priv}} and {{sec-ec-pub-from-priv}} provide the suggested mechanisms for extracting the public keys from private keys for RSA and ECDH respectively. It is assumed that this is not required for X25519 or X448 since those private keys are seeds from which the public key can be obtained.
 
 2. Fetch it from an external data source, for example from the public-key certificate corresponding to this private key.
 
@@ -1506,7 +1506,7 @@ RSAPublicKey ::= SEQUENCE {
 
 ### Deriving the public ECPoint from ECPrivateKey {#sec-ec-pub-from-priv}
 
-Unlike RSA, the ECPrivateKey does not contain sufficient information to simply extract the public key. Note that in the interest of having a single unique encoding, this specification forbids the optional `publicKey` field.
+Unlike RSA, the ECPrivateKey does not contain sufficient information to simply extract the public key. Note that since a single unique encoding of the traditional public key is required, this specification forbids the optional `publicKey` field.
 
 That said, the EC public key can be derived from the private key in the following way:
 
