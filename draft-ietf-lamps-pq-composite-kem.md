@@ -671,7 +671,7 @@ Implicit inputs mapped from <OID>:
   tradPK  The traditional public key is required for the KEM
           combiner.
           For discussion of where to get this value, see the
-          discussion below.
+          Decapsulation Requires the Public Key section.
 
   Label   KEM Combiner Label value for binding the ciphertext to
           the Composite ML-KEM OID.
