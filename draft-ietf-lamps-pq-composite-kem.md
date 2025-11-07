@@ -1517,7 +1517,7 @@ s = ECPrivateKey.getS()
 pubKey = ec_multiply_by_scalar(g, s)
 ~~~
 
-where a recommended implementation of `ec_multiply_by_scalar()` can be found in [X9.62–2005].
+where a recommended implementation of `ec_multiply_by_scalar()` can be found in [SEC1].
 
 Then encode `pubKey` as X9.62 uncompressed point and place it into an ECPoint ASN.1 object.
 
