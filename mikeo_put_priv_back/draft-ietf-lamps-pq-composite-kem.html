@@ -2034,7 +2034,7 @@ Deserialization Process:
         <h3 id="name-serializeprivatekey-and-des">
 <a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-serializeprivatekey-and-des" class="section-name selfRef">SerializePrivateKey and DeserializePrivateKey</a>
         </h3>
-<p id="section-5.2-1">The serialization routine for keys simply concatenates the private keys of the component algorithms, including a length encoding for the public key, as defined below:<a href="#section-5.2-1" class="pilcrow">¶</a></p>
+<p id="section-5.2-1">The serialization routine for keys simply concatenates the private keys of the component algorithms, as defined below:<a href="#section-5.2-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-5.2-2">
 <pre>
 Composite-ML-KEM.SerializePrivateKey(mlkemSeed, tradPK, tradSK)
@@ -3422,7 +3422,7 @@ id-MLKEM1024-ECDH-P384-SHA3-256
           <h4 id="name-extracting-rsapublickey-fro">
 <a href="#section-11.4.1" class="section-number selfRef">11.4.1. </a><a href="#name-extracting-rsapublickey-fro" class="section-name selfRef">Extracting RSAPublicKey from RSAPrivateKey</a>
           </h4>
-<p id="section-11.4.1-1">Assuming that the RSA component of the composite private key is encoded as a RSAPrivateKey, as required by this specification, then, quoting from <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span> you have:<a href="#section-11.4.1-1" class="pilcrow">¶</a></p>
+<p id="section-11.4.1-1">Assuming that the RSA component of the composite private key is encoded as an RSAPrivateKey, as required by this specification, then, quoting from <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span> you have:<a href="#section-11.4.1-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-11.4.1-2">
 <pre>
 RSAPrivateKey ::= SEQUENCE {
