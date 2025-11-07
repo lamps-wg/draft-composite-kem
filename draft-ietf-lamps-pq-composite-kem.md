@@ -866,7 +866,7 @@ Deserialization Process:
 
 ## SerializePrivateKey and DeserializePrivateKey {#sec-serialize-privkey}
 
-The serialization routine for keys simply concatenates the private keys of the component algorithms, including a length encoding for the public key, as defined below:
+The serialization routine for keys simply concatenates the private keys of the component algorithms, as defined below:
 
 ~~~
 Composite-ML-KEM.SerializePrivateKey(mlkemSeed, tradPK, tradSK)
@@ -1477,7 +1477,7 @@ Moreover, the KEM combiner as specified in {{sec-kem-combiner}} requires the pub
 
 ### Extracting RSAPublicKey from RSAPrivateKey {#sec-rsa-pub-from-priv}
 
-Assuming that the RSA component of the composite private key is encoded as a RSAPrivateKey, as required by this specification, then, quoting from [RFC8017] you have:
+Assuming that the RSA component of the composite private key is encoded as an RSAPrivateKey, as required by this specification, then, quoting from [RFC8017] you have:
 
 ~~~
 RSAPrivateKey ::= SEQUENCE {
