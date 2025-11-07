@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 10 May 2026                                             M. Pala
+Expires: 11 May 2026                                             M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                         6 November 2025
+                                                         7 November 2025
 
 
       Composite ML-KEM for use in X.509 Public Key Infrastructure
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 10 May 2026.
+   This Internet-Draft will expire on 11 May 2026.
 
 Copyright Notice
 
@@ -2411,7 +2411,7 @@ Table of Contents
    pubKey = ec_multiply_by_scalar(g, s)
 
    where a recommended implementation of ec_multiply_by_scalar() can be
-   found in [X9.62_2005].
+   found in [SEC1].
 
    Then encode pubKey as X9.62 uncompressed point and place it into an
    ECPoint ASN.1 object.
