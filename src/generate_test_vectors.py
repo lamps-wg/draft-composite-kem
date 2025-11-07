@@ -94,12 +94,10 @@ class Version(univ.Integer):
 
 class ECDSAPrivateKey(univ.Sequence):
     parameters = univ.ObjectIdentifier().subtype(explicitTag=tag.Tag(tag.tagClassContext, tag.tagFormatConstructed, 0))
-    publicKey = univ.BitString().subtype(explicitTag=tag.Tag(tag.tagClassContext, tag.tagFormatConstructed, 1))
     componentType = namedtype.NamedTypes(
         namedtype.NamedType('version', Version()),
         namedtype.NamedType('privateKey', univ.OctetString()),
-        namedtype.NamedType('parameters', parameters),
-        namedtype.NamedType('publicKey', publicKey)
+        namedtype.NamedType('parameters', parameters)
     )
 
 class ECDHKEM(KEM):
@@ -142,7 +140,6 @@ class ECDHKEM(KEM):
     prk['version'] = 1
     prk['privateKey'] = self.sk.private_numbers().private_value.to_bytes((self.sk.key_size + 7) // 8)
     prk['parameters'] = ECDSAPrivateKey.parameters.clone(self.curveOid)
-    prk['publicKey'] = univ.BitString(hexValue=self.public_key_bytes().hex())
     return der_encode(prk)
   
   def public_key_max_len(self):  
@@ -160,8 +157,7 @@ class ECDHKEM(KEM):
     maxLen = calculate_der_universal_sequence_max_length([
         calculate_der_universal_integer_max_length(max_size_in_bits=1),  # version must be 1
         calculate_der_universal_octet_string_max_length(size_in_bits_to_size_in_bytes(self.curve.key_size)),  # privateKey
-        len(der_encode(ECDSAPrivateKey.parameters.clone(self.curveOid))), # ECParameters
-        1 + 2 + self.public_key_max_len() # publicKey
+        len(der_encode(ECDSAPrivateKey.parameters.clone(self.curveOid))) # ECParameters
     ])
     return (maxLen, True)
 
