@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-11-06T02:00:39.062295+00:00",
+  "timestamp": "2025-11-09T02:03:54.248449+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -3740,7 +3740,7 @@
       "labels": [],
       "body": "3. Section 3.1: The CMS comment below seems unnecessary, perhaps stop after \"does not have an assigned algorithm OID.\" or remove the paragraph.\n\n\n>    Note that, at least at the time of writing, the algorithm RSAOAEPKEM\n   is not defined as a standalone algorithm within PKIX standards and it\n   does not have an assigned algorithm OID, so it cannot be used\n   directly with CMS KEMRecipientInfo [RFC9629]; it is merely a building\n   block for the composite algorithm\n\nThe same comment applies to similar text in section 3.2",
       "createdAt": "2025-11-03T17:09:16Z",
-      "updatedAt": "2025-11-05T23:03:05Z",
+      "updatedAt": "2025-11-06T21:34:17Z",
       "closedAt": null,
       "comments": [
         {
@@ -3749,6 +3749,13 @@
           "body": "How strongly do you feel about removing this? I vote to keep it.",
           "createdAt": "2025-11-05T23:03:05Z",
           "updatedAt": "2025-11-05T23:03:05Z"
+        },
+        {
+          "author": "danvangeest",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "not strongly",
+          "createdAt": "2025-11-06T21:34:17Z",
+          "updatedAt": "2025-11-06T21:34:17Z"
         }
       ]
     },
@@ -3764,7 +3771,7 @@
       "labels": [],
       "body": "5. Section 4.3: How is ciphertext not attacker controlled?  If anything, this could say that because DER uses length-encoding these variations are benign (my PR says something similar a few lines up but I wanted to point this sentence out explicitly because of the \"attacker controlled\" part).\n\n\n>    Implementers should keep in\n   mind that some instances of tradCT and tradPK will be DER-encoded\n   which could introduce minor length variations such as dropping\n   leading zeroes; since these variations are not attacker-controlled\n   they are considered benign",
       "createdAt": "2025-11-03T17:10:05Z",
-      "updatedAt": "2025-11-05T23:30:46Z",
+      "updatedAt": "2025-11-06T21:35:59Z",
       "closedAt": null,
       "comments": [
         {
@@ -3773,6 +3780,13 @@
           "body": "Yes, the full sentence is that the minor length variations such as dropping leading zeros are not attacker-controlled.\nBut I suppose you are right that in fact they could be.\nMaybe a better sentence would be:\n\n> Since the underlying KEMs are assumed to be IND-CCA secure, decapsulation against tampered ciphertexts or public keys is assumed to fail, these length differences are considered benign to the KEM combiner.",
           "createdAt": "2025-11-05T23:30:46Z",
           "updatedAt": "2025-11-05T23:30:46Z"
+        },
+        {
+          "author": "danvangeest",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I think that is fine.  Ensure that you are consistent in using IND-CCA or IND-CCA2.",
+          "createdAt": "2025-11-06T21:35:59Z",
+          "updatedAt": "2025-11-06T21:35:59Z"
         }
       ]
     },
@@ -3804,7 +3818,7 @@
       "labels": [],
       "body": "7. Section 10.4: Most or all other ML-KEM-related drafts throughout the IETF have stopped mentioning the probability of ML-KEM decapsulation failure because it is so vanishingly small.  I'd recommend removing this section.",
       "createdAt": "2025-11-03T17:11:39Z",
-      "updatedAt": "2025-11-06T00:02:27Z",
+      "updatedAt": "2025-11-06T21:36:35Z",
       "closedAt": null,
       "comments": [
         {
@@ -3813,6 +3827,13 @@
           "body": "Heh. I think you added this originally. I certainly didn't write it. Removal upcoming.",
           "createdAt": "2025-11-06T00:02:27Z",
           "updatedAt": "2025-11-06T00:02:27Z"
+        },
+        {
+          "author": "danvangeest",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> Heh. I think you added this originally. I certainly didn't write it. Removal upcoming.\n\nI am often wrong!",
+          "createdAt": "2025-11-06T21:36:35Z",
+          "updatedAt": "2025-11-06T21:36:35Z"
         }
       ]
     },
@@ -3828,9 +3849,45 @@
       "labels": [],
       "body": "Peter C's WGLC comments: https://mailarchive.ietf.org/arch/msg/spasm/erQjg2YMk5hjpdZoJXiB0ophnUU/",
       "createdAt": "2025-11-03T17:13:39Z",
-      "updatedAt": "2025-11-03T17:13:39Z",
+      "updatedAt": "2025-11-07T16:13:42Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "feventura",
+          "authorAssociation": "NONE",
+          "body": "Summarizing Peter C non-minor comments in suggested actions:\n\n- [ ] Need proof.\n  - [ ] Suggest delaying WGLC if the proof is close to be done, so it can be reviewed. If is not add the accurate situation to Security Considerations and not point to a yet-not-existing proof.\n  - [ ] Does not prove that the ML-KEM ciphertext can be omitted in general. (Section 10.2.2)\n  - [ ] The X-Wing proof does not assume DH is IND-CCA. (Section 10.2.1)\n- [ ] No mention of input validation\n  -  This is important to FIPS certification\n- [ ] FIPS 203 considers cryptographic input validation to be external to ML-KEM key generation, encapsulation and decapsulation.  It may not be safe to assume that, for example, ML-KEM decapsulation will catch a malformed private key. (Section 5)\n- [x] Labels should be distinct.\n- [x] Comment about encaps side channel attack timing attack that would reveal which component algorithm fail does not help the attacker recover composite shared secret from a successful one because each call to the composite encapsulation algorithm uses fresh randomness, so they are mutually independent. (Section 4.2)\n- [x] All inputs are fixed, except when they are not. Suggestion to delete the fixed length text unless its needed for security (Section 4.3)\n- [ ] Comment about discovering which component fail by a timing attack. (Section 4.3)\n- [x] X-wing has LEAK-C2PRI not MAL-C2PRI (\"or wrose\" text). (Section 10.2) ",
+          "createdAt": "2025-11-06T21:46:27Z",
+          "updatedAt": "2025-11-07T16:13:42Z"
+        },
+        {
+          "author": "feventura",
+          "authorAssociation": "NONE",
+          "body": "> Section 4.3: \u201cIn order to properly achieve its security properties, then KEM combiner requires that all inputs are fixed-length [\u2026] all inputs should be fixed-length in non-error scenarios except for minor variations introduced by encoding.\u201d  There is a clear disconnect here: all inputs must be fixed length, but some might not be.  Unless fixed-length inputs are genuinely necessary for security, I would delete the first sentence.\n\nLater in the text its clarified that these minor variations are not a issue for the security properties:\n\n>In the cases where there are minor variations introduced by encoding, those encodings already have a fixed-length prefix followed by length-encoded data, so the requirements for the KEM combiner security properties hold (namely that the input is injective).\n\n>Implementers should keep in mind that some instances of `tradCT` and `tradPK` will be DER-encoded which could introduce minor length variations such as dropping leading zeroes; since these variations are not attacker-controlled they are considered benign.",
+          "createdAt": "2025-11-06T21:57:01Z",
+          "updatedAt": "2025-11-06T21:57:01Z"
+        },
+        {
+          "author": "feventura",
+          "authorAssociation": "NONE",
+          "body": ">Section 4.3: \u201cFor timing-invariance reasons, it is RECOMMENDED to perform both decapsulation operations and check for errors afterwards to prevent an attacker from using a timing channel to tell which component failed decapsulation\u201d.  What is the threat here?  Suppose that an attacker submits (c1, c2) for decapsulation and it fails.  The attacker can then submit (c1\u2019,  c2) and (c1, c2\u2019) for decapsulation, where c1\u2019 =/= c1 and c2\u2019 =/= c2, to test which component caused the failure.\n\nThe example wouldn't work because since c1' != c1 the (c1', c2) would fail because composite would not validate both trad and PQ, same for (c1, c2') with c2' != c2.",
+          "createdAt": "2025-11-06T22:00:23Z",
+          "updatedAt": "2025-11-06T22:00:23Z"
+        },
+        {
+          "author": "feventura",
+          "authorAssociation": "NONE",
+          "body": ">Section 4.2: \u201cDepending on the security needs of the application, it MAY be advantageous to perform steps 2, 3, and 5 in a timing-invariant way to prevent side-channel attackers from learning which component algorithm failed and from learning any of the inputs or output of the KEM combiner\u201d.  What is the threat here?  If each call to the composite encapsulation algorithm uses fresh randomness, then knowing which component encapsulation failed cannot help an attacker recover the composite shared secret from a successful composite encapsulation.\n\nThis argument make sense, removed this text in https://github.com/lamps-wg/draft-composite-kem/pull/245.",
+          "createdAt": "2025-11-06T22:03:57Z",
+          "updatedAt": "2025-11-06T22:07:21Z"
+        },
+        {
+          "author": "feventura",
+          "authorAssociation": "NONE",
+          "body": ">Section 10.2:  \u201cAdditionally, we also need to consider the case where one of the component algorithms is completely broken; that the private key is known to an attacker, or worse that the public key, private key, and ciphertext are manipulated by the attacker\u201d.  X-Wing style combiners require that the post-quantum KEM remains C2PRI secure.  This assumes that the adversary knows the post-quantum component private key, not that they get to choose it \u2013 in other words, LEAK-C2PRI not MAL-C2PRI.  It\u2019s possible that everything still holds with MAL-C2PRI, but I think that\u2019s going beyond the existing proof.\n\nThis argument make sense, removed the \"or worse\" text in https://github.com/lamps-wg/draft-composite-kem/pull/245.",
+          "createdAt": "2025-11-06T22:07:12Z",
+          "updatedAt": "2025-11-06T22:07:12Z"
+        }
+      ]
     },
     {
       "number": 240,
@@ -3844,7 +3901,7 @@
       "labels": [],
       "body": "During LAMPS 124 there was consensus in the room to remove the tradPK from the (suggested) PKCS8 format.\n\nEssentially, we want to reverse the change made in #179 \n\n\nSuggested change:\n\n* Go back to `mlkemSeed || tradSK`\n* Add / expand / massage the Implementation Consideration text about what to do if your Decaps() implementation can't easily get access to the tradPK -- essentially saying that you may need extra application-layer stuff to get the public key, or an off-spec private key.",
       "createdAt": "2025-11-04T16:21:25Z",
-      "updatedAt": "2025-11-05T08:12:26Z",
+      "updatedAt": "2025-11-06T22:35:52Z",
       "closedAt": null,
       "comments": [
         {
@@ -3860,6 +3917,20 @@
           "body": "I am also for removing the tradPK from the secret key.\n \n- For the RSA key, the public key can be extracted (without any mathematical computation) from the RSAPrivateKey structure (defined in RFC 8017):\n```\n         RSAPrivateKey ::= SEQUENCE {\n             version           Version,\n             modulus           INTEGER,  -- n\n             publicExponent    INTEGER,  -- e\n             privateExponent   INTEGER,  -- d\n             prime1            INTEGER,  -- p\n             prime2            INTEGER,  -- q\n             exponent1         INTEGER,  -- d mod (p-1)\n             exponent2         INTEGER,  -- d mod (q-1)\n             coefficient       INTEGER,  -- (inverse of q) mod p\n             otherPrimeInfos   OtherPrimeInfos OPTIONAL\n         }\n```\n\n- For the Weierstrass EC key, the public can also be extracted the ECPrivateKey structure (defined in RFC 5915):\n```\n   ECPrivateKey ::= SEQUENCE {\n     version        INTEGER { ecPrivkeyVer1(1) } (ecPrivkeyVer1),\n     privateKey     OCTET STRING,\n     parameters [0] ECParameters {{ NamedCurve }} OPTIONAL,\n     publicKey  [1] BIT STRING OPTIONAL\n   }\n```\nThe \"publicKey\" field shall be usually available since:\n```\n- publicKey ...  Though the ASN.1 indicates\n      publicKey is OPTIONAL, implementations that conform to this\n      document SHOULD always include the publicKey field. ...\n```\n\n- For the X25519 and X448, if encoded in PKCS#8, the OneAsymmetricKey.publicKey can be used to carry the public key in the field, as mentioned in Section 7 of RFC 8410.",
           "createdAt": "2025-11-05T08:11:24Z",
           "updatedAt": "2025-11-05T08:12:26Z"
+        },
+        {
+          "author": "wangweij",
+          "authorAssociation": "NONE",
+          "body": "I am the original reporter of https://github.com/lamps-wg/draft-composite-kem/issues/179.\n\nNow I realize this is not a key format issue but an algorithm issue. I reported the issue because in PKCS #11 we cannot always derive tradPK from tradSK, but obviously in that scenario we will not use this private key format at all and the private keys are only stored somewhere in the token(s).\n\nThe problem comes at the Decaps function where tradPK is needed. With the private keys inside the token, we can still perform Decaps on ML-KEM and DH on trad, but at the end, tradPK is needed in the combiner.\n\nI understand this was already a problem back in DHKEM in RFC 9180: it defined a pk(skX) function and we have difficulties implementing it on all platforms.\n\nSo I'm now OK with reverse the private key format change, but somewhere there needs a similar pk(skX) function defined.",
+          "createdAt": "2025-11-06T16:02:25Z",
+          "updatedAt": "2025-11-06T16:03:46Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "NONE",
+          "body": "For the PKCS#11 token, if the key is generated in the token, both private key and public key will be generated and stored in the token.",
+          "createdAt": "2025-11-06T22:35:52Z",
+          "updatedAt": "2025-11-06T22:35:52Z"
         }
       ]
     },
@@ -3892,22 +3963,22 @@
       "id": "I_kwDOKRPFO87V-Vqw",
       "title": "Optimization of the test vectors",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/242",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "xipki",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "The text vectors need to be improved as follows:\n- Each run of the program will generate test vectors with different key-pairs, certificates, and cipher texts, even if the content are of the same. This makes the diff of two versions of drafts much more simpler. (similar as in composite-sigs (see https://github.com/lamps-wg/draft-composite-sigs/issues/311)\n- The symbols in test vectors differ from the normative text in other sections:\n  - `ek` vs `pk`\n  - `dk` vs `sk`\n  - `c` vs `ct`\n  - `k` vs `ss`\n\nAdditionally, the text vectors can be further optimized to reduce the size dramatically as follows:\n- Use traditional key (e.g. the Weierstrass EC or Edwards EC) for the cacert to reduce the signature size of the certificates.\n- Use always the same key content for the same ML-KEM and traditional algorithm.\n\nConsidering the points mentioned above, I generated the test vectors (see attachments) as reference. The wrapped test-vector file has only 1072 lines, while the original one has 2851 lines. Which means about 37 pages less.\n\n[testvectors_wrapped.json](https://github.com/user-attachments/files/23354649/testvectors_wrapped.json)\n[testvectors.json](https://github.com/user-attachments/files/23354648/testvectors.json)",
       "createdAt": "2025-11-05T08:30:07Z",
-      "updatedAt": "2025-11-06T00:22:18Z",
-      "closedAt": null,
+      "updatedAt": "2025-11-06T22:36:21Z",
+      "closedAt": "2025-11-06T22:36:21Z",
       "comments": [
         {
           "author": "ounsworth",
           "authorAssociation": "CONTRIBUTOR",
-          "body": "Thank you for this feedback.\n\nGiven that this document has already passed WGLC, I think it is too late to make changes to the test vectors simply for presentation reasons (IE not due to a technical bug).\n\n\n> Use traditional key (e.g. the Weierstrass EC or Edwards EC) for the cacert to reduce the signature size of the certificates.\n\nI think it would be odd to use a traditional CA cert for a PQ end entity cert. Certainly that would send an odd message to people implementing this specification.\n\n\n> Use always the same key content for the same ML-KEM and traditional algorithm.\n\nBut the draft is extremely clear to always freshly generate all key material and to never re-use the same component keys between two different composites. So this would make our test vectors be in violation of the spec.\n",
+          "body": "Thank you for this feedback.\n\n> Use traditional key (e.g. the Weierstrass EC or Edwards EC) for the cacert to reduce the signature size of the certificates.\n\nI think it would be odd to use a traditional CA cert for a PQ end entity cert. Certainly that would send an odd message to people implementing this specification.\n\n\n> Use always the same key content for the same ML-KEM and traditional algorithm.\n\nBut the draft is extremely clear to always freshly generate all key material and to never re-use the same component keys between two different composites. So this would make our test vectors be in violation of the spec.\n",
           "createdAt": "2025-11-06T00:21:32Z",
-          "updatedAt": "2025-11-06T00:21:32Z"
+          "updatedAt": "2025-11-06T21:02:58Z"
         },
         {
           "author": "ounsworth",
@@ -3915,6 +3986,27 @@
           "body": "I will consider whether to make a consistent change across the document to use \"ek, dk, c, k\" instead of \"pk, sk, ct, ss\".",
           "createdAt": "2025-11-06T00:22:17Z",
           "updatedAt": "2025-11-06T00:22:17Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "NONE",
+          "body": "Then if possible, please consider the following optimization:\n- Use composite signature instead ML-DSA for all certificates (and composite key for the cacert)\n- Produce the same content after running the test-vector generation program.\n  - For a given KEM combination (mlkem + trad)\n    - Use the same keypair \n    - Produces the same shared-secret\n    - In certificate: Use deterministic notBefore, notAfter, serial number fields, and signature value.\n",
+          "createdAt": "2025-11-06T08:23:20Z",
+          "updatedAt": "2025-11-06T08:23:20Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I don't understand why this is helpful.\n\nUsing a composite signature would make the test vectors bigger, and would add a normative dependency between draft-ietf-lamps-pq-composite-kem and draft-ietf-lamps-pq-composite-sigs. Currently -kems does not reference -sigs, and I don't see a reason to couple them.\n\nWe are a few days away from submitting this document for publication as an RFC, after which point the test vectors will never change again. So I do not see that it is worth the time to completely re-do how the sample code works in order to have fixed keys.",
+          "createdAt": "2025-11-06T16:32:07Z",
+          "updatedAt": "2025-11-06T16:32:07Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "NONE",
+          "body": "It is fine to have the current test vectors due to the fact that it is short before the publication.\n\nMy idea to use the composite is that the composite-kems and -sigs belong to the same category.",
+          "createdAt": "2025-11-06T22:18:43Z",
+          "updatedAt": "2025-11-06T22:18:43Z"
         }
       ]
     }
@@ -10241,7 +10333,7 @@
       "labels": [],
       "body": "Closes #233\r\nCloses #234 \r\nCloses #236 \r\nCloses #237 \r\nCloses #238 \r\nCloses #241 ",
       "createdAt": "2025-11-05T22:58:17Z",
-      "updatedAt": "2025-11-06T00:08:24Z",
+      "updatedAt": "2025-11-07T15:09:40Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "28ebd7e4d90e69a7e2b1bf493d2a975e37ebbf0e",
@@ -10253,7 +10345,262 @@
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO87Mt0Cb",
+          "commit": {
+            "abbreviatedOid": "41b7010"
+          },
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "Read through the changes,  it looks good to me.  Thanks for addressing all these comments Mike.",
+          "createdAt": "2025-11-07T15:09:40Z",
+          "updatedAt": "2025-11-07T15:09:40Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 244,
+      "id": "PR_kwDOKRPFO86x_wFs",
+      "title": "Reverted priv key format to mlkemSeed || tradSK",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/244",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-11-06T21:06:21Z",
+      "updatedAt": "2025-11-07T16:34:05Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "28ebd7e4d90e69a7e2b1bf493d2a975e37ebbf0e",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_put_priv_back",
+      "headRefOid": "017b50e303ef111491bb5aa0ce0474135b2a6aa2",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Yes, I'll cycle them right now... ",
+          "createdAt": "2025-11-06T22:04:15Z",
+          "updatedAt": "2025-11-06T22:04:15Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO87Me43F",
+          "commit": {
+            "abbreviatedOid": "2f6c113"
+          },
+          "author": "danvangeest",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "cycle OIDs?",
+          "createdAt": "2025-11-06T21:33:20Z",
+          "updatedAt": "2025-11-06T21:33:20Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOKRPFO87MfYlk",
+          "commit": {
+            "abbreviatedOid": "e8073b1"
+          },
+          "author": "xipki",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-11-06T22:21:10Z",
+          "updatedAt": "2025-11-06T22:21:10Z",
+          "comments": [
+            {
+              "originalPosition": 146,
+              "body": "a RSAPrivateKey -> an RSAPrivateKey",
+              "createdAt": "2025-11-06T22:21:10Z",
+              "updatedAt": "2025-11-06T22:21:10Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO87MfcrP",
+          "commit": {
+            "abbreviatedOid": "e8073b1"
+          },
+          "author": "xipki",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-11-06T22:28:07Z",
+          "updatedAt": "2025-11-06T22:28:08Z",
+          "comments": [
+            {
+              "originalPosition": 175,
+              "body": "I do not understand why to forbid the optional publicKey field in this specification. RFC 5915 states: \"Though the ASN.1 indicates\r\npublicKey is OPTIONAL, implementations that conform to this\r\ndocument SHOULD always include the publicKey field.\"",
+              "createdAt": "2025-11-06T22:28:08Z",
+              "updatedAt": "2025-11-06T22:28:08Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO87Mfjas",
+          "commit": {
+            "abbreviatedOid": "e8073b1"
+          },
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-11-06T22:40:26Z",
+          "updatedAt": "2025-11-06T22:40:27Z",
+          "comments": [
+            {
+              "originalPosition": 175,
+              "body": "Thanks...   I think I messed that text up.  Since the private key isn't in the KEM combiner, the traditional public could be optional in the EC Private Key encoding.  However, if it is optional then it could make incompatibilities.  If an implementation becomes dependent on using it in the private key field, and then it is given one that does have it, will they fail?    Having a single encoding means there won't be two diverging code paths in an implementation waiting to cause an interop problem down the road.   ",
+              "createdAt": "2025-11-06T22:40:26Z",
+              "updatedAt": "2025-11-07T15:56:27Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO87Mu7Vq",
+          "commit": {
+            "abbreviatedOid": "e8073b1"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-11-07T15:58:18Z",
+          "updatedAt": "2025-11-07T15:58:18Z",
+          "comments": [
+            {
+              "originalPosition": 175,
+              "body": "Yeah. I think more simply: the LAMPS WG in Madrid was very clear that we should define a single encoding format for all the things: pub keys, ciphertexts, private keys. So we have been quite clear that anywhere where the existing RFCs allow more than one choice, we have profiled it down to a single choice. Here \"Don't include the public key\" is the obvious choice.",
+              "createdAt": "2025-11-07T15:58:18Z",
+              "updatedAt": "2025-11-07T15:58:18Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO87MvHpj",
+          "commit": {
+            "abbreviatedOid": "3f6ee16"
+          },
+          "author": "danvangeest",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-11-07T16:06:27Z",
+          "updatedAt": "2025-11-07T16:06:27Z",
+          "comments": [
+            {
+              "originalPosition": 50,
+              "body": "```suggestion\r\n          For discussion of where to get this value, see the\r\n          Decapsulation Requires the Public Key section.\r\n```",
+              "createdAt": "2025-11-07T16:06:27Z",
+              "updatedAt": "2025-11-07T16:06:28Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO87Mvex-",
+          "commit": {
+            "abbreviatedOid": "017b50e"
+          },
+          "author": "wangweij",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-11-07T16:22:06Z",
+          "updatedAt": "2025-11-07T16:22:06Z",
+          "comments": [
+            {
+              "originalPosition": 50,
+              "body": "`tradPK` cannot be mapped from `<OID>`.\r\n\r\nWhy not choose the RFC 9180 style to define a `pk(sk)` function?",
+              "createdAt": "2025-11-07T16:22:06Z",
+              "updatedAt": "2025-11-07T19:35:04Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO87Mvjid",
+          "commit": {
+            "abbreviatedOid": "017b50e"
+          },
+          "author": "wangweij",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-11-07T16:25:12Z",
+          "updatedAt": "2025-11-07T16:25:12Z",
+          "comments": [
+            {
+              "originalPosition": 1,
+              "body": "Left side no longer has `tradPK`.",
+              "createdAt": "2025-11-07T16:25:12Z",
+              "updatedAt": "2025-11-07T16:25:12Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO87Mvxl8",
+          "commit": {
+            "abbreviatedOid": "017b50e"
+          },
+          "author": "dconnolly",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-11-07T16:34:05Z",
+          "updatedAt": "2025-11-07T16:34:05Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 245,
+      "id": "PR_kwDOKRPFO86yAWf3",
+      "title": "Update draft-ietf-lamps-pq-composite-kem.md",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/245",
+      "state": "OPEN",
+      "author": "feventura",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "Removed \"timing-invariant way to prevent side-channel attackers\" text.",
+      "createdAt": "2025-11-06T22:00:55Z",
+      "updatedAt": "2025-11-07T16:12:28Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "28ebd7e4d90e69a7e2b1bf493d2a975e37ebbf0e",
+      "headRepository": "feventura/draft-composite-kem",
+      "headRefName": "main",
+      "headRefOid": "b0321489e1a40d536288514ba09a1692e29b8151",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO87Mt7sn",
+          "commit": {
+            "abbreviatedOid": "b032148"
+          },
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "I agree with these changes.  Either we explicitly state there is a timing attack, or just not include this text.    Also, I agree with the algorithm is completely broken that is bad enough to consider for the case",
+          "createdAt": "2025-11-07T15:14:54Z",
+          "updatedAt": "2025-11-07T16:12:28Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
