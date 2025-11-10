@@ -1182,7 +1182,7 @@ Each Composite ML-KEM algorithm has a unique Label which is used in constructing
 Label values are provided in two forms: where the label value is alphanumeric ASCII, they are represented below as strings.
 For example, "MLKEM768-RSAOAEP2048" below is equivalent to the hexadecimal value `4D4C4B454D3736382D5253414F41455032303438`.
 
-Some of the label values contain problematic characters, such as backslashes, that can cause issues displaying correctly in rendered documents or even in source code when the compiler interprets it as an escape character. Below, these are represented directly in hexadecimal. For example, the label for id-MLKEM768-X25519-SHA3-256 is "\\.//^\\", but to avoid transcription errors it is provided only in hexadecimal as "5c2e2f2f5e5c"
+Some of the label values contain problematic characters, such as backslashes, that can cause issues displaying correctly in rendered documents or even in source code when the compiler interprets it as an escape character. Below, these are represented directly in hexadecimal. For example, the label for id-MLKEM768-X25519-SHA3-256 is "\\.//^\\", but to avoid transcription errors it is provided only in hexadecimal as `5c2e2f2f5e5c`.
 
 EDNOTE: the OIDs listed below are prototyping OIDs defined in Entrust's 2.16.840.1.114027.80.9.1 arc but will be replaced by IANA.
 
