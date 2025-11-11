@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-11-09T02:03:54.248449+00:00",
+  "timestamp": "2025-11-11T02:01:22.130212+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -3849,7 +3849,7 @@
       "labels": [],
       "body": "Peter C's WGLC comments: https://mailarchive.ietf.org/arch/msg/spasm/erQjg2YMk5hjpdZoJXiB0ophnUU/",
       "createdAt": "2025-11-03T17:13:39Z",
-      "updatedAt": "2025-11-07T16:13:42Z",
+      "updatedAt": "2025-11-09T13:33:41Z",
       "closedAt": null,
       "comments": [
         {
@@ -3886,6 +3886,13 @@
           "body": ">Section 10.2:  \u201cAdditionally, we also need to consider the case where one of the component algorithms is completely broken; that the private key is known to an attacker, or worse that the public key, private key, and ciphertext are manipulated by the attacker\u201d.  X-Wing style combiners require that the post-quantum KEM remains C2PRI secure.  This assumes that the adversary knows the post-quantum component private key, not that they get to choose it \u2013 in other words, LEAK-C2PRI not MAL-C2PRI.  It\u2019s possible that everything still holds with MAL-C2PRI, but I think that\u2019s going beyond the existing proof.\n\nThis argument make sense, removed the \"or worse\" text in https://github.com/lamps-wg/draft-composite-kem/pull/245.",
           "createdAt": "2025-11-06T22:07:12Z",
           "updatedAt": "2025-11-06T22:07:12Z"
+        },
+        {
+          "author": "peterc-uk",
+          "authorAssociation": "NONE",
+          "body": "> > Section 4.3: \u201cFor timing-invariance reasons, it is RECOMMENDED to perform both decapsulation operations and check for errors afterwards to prevent an attacker from using a timing channel to tell which component failed decapsulation\u201d.  What is the threat here?  Suppose that an attacker submits (c1, c2) for decapsulation and it fails.  The attacker can then submit (c1\u2019,  c2) and (c1, c2\u2019) for decapsulation, where c1\u2019 =/= c1 and c2\u2019 =/= c2, to test which component caused the failure.\n> \n> The example wouldn't work because since c1' != c1 the (c1', c2) would fail because composite would not validate both trad and PQ, same for (c1, c2') with c2' != c2.\n\nThis is composite-kem, not composite-sigs, so I don't understand what you mean by \"validate\".",
+          "createdAt": "2025-11-09T13:33:40Z",
+          "updatedAt": "2025-11-09T13:33:40Z"
         }
       ]
     },
@@ -10601,6 +10608,32 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 246,
+      "id": "PR_kwDOKRPFO86ya1a_",
+      "title": "Break up a way-too-long sentence",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/246",
+      "state": "OPEN",
+      "author": "thomwiggers",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "I found this sentence with its many sub-clauses way too hard to read, so I broke it up.",
+      "createdAt": "2025-11-10T02:25:47Z",
+      "updatedAt": "2025-11-10T02:27:37Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "28ebd7e4d90e69a7e2b1bf493d2a975e37ebbf0e",
+      "headRepository": "thomwiggers/draft-composite-kem",
+      "headRefName": "thom-break-up-sentence",
+      "headRefOid": "c37e0890e35e1e7bf368b0fcfae747652a33b20a",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
