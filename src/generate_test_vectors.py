@@ -41,18 +41,18 @@ OID_TABLE = {
   "id-alg-ml-kem-512": univ.ObjectIdentifier((2,16,840,1,101,3,4,4,1)),
   "id-alg-ml-kem-768": univ.ObjectIdentifier((2,16,840,1,101,3,4,4,2)),
   "id-alg-ml-kem-1024": univ.ObjectIdentifier((2,16,840,1,101,3,4,4,3)),
-  "id-MLKEM768-RSA2048-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,74)),
-  "id-MLKEM768-RSA3072-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,75)),
-  "id-MLKEM768-RSA4096-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,76)),
-  "id-MLKEM768-X25519-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,77)),
-  "id-MLKEM768-ECDH-P256-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,78)),
-  "id-MLKEM768-ECDH-P384-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,79)),
-  "id-MLKEM768-ECDH-brainpoolP256r1-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,80)),
-  "id-MLKEM1024-RSA3072-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,81)),
-  "id-MLKEM1024-ECDH-P384-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,82)),
-  "id-MLKEM1024-ECDH-brainpoolP384r1-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,83)),
-  "id-MLKEM1024-X448-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,84)),
-  "id-MLKEM1024-ECDH-P521-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,85)),
+  "id-MLKEM768-RSA2048-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,86)),
+  "id-MLKEM768-RSA3072-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,87)),
+  "id-MLKEM768-RSA4096-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,88)),
+  "id-MLKEM768-X25519-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,89)),
+  "id-MLKEM768-ECDH-P256-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,90)),
+  "id-MLKEM768-ECDH-P384-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,91)),
+  "id-MLKEM768-ECDH-brainpoolP256r1-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,92)),
+  "id-MLKEM1024-RSA3072-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,93)),
+  "id-MLKEM1024-ECDH-P384-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,94)),
+  "id-MLKEM1024-ECDH-brainpoolP384r1-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,95)),
+  "id-MLKEM1024-X448-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,96)),
+  "id-MLKEM1024-ECDH-P521-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,97)),
 }
 
 REVERSE_OID_TABLE = {v: k for k, v in OID_TABLE.items()}
@@ -158,7 +158,6 @@ class ECDHKEM(KEM):
         calculate_der_universal_integer_max_length(max_size_in_bits=1),  # version must be 1
         calculate_der_universal_octet_string_max_length(size_in_bits_to_size_in_bytes(self.curve.key_size)),  # privateKey
         len(der_encode(ECDSAPrivateKey.parameters.clone(self.curveOid))) # ECParameters
-        # publicKey is not allowed in Composite ML-DSA
     ])
     return (maxLen, True)
 
@@ -489,10 +488,8 @@ class CompositeKEM(KEM):
     (mlkemSeed, tradPK, tradSK) -> sk
     """
     mlkemSeed = self.mlkem.private_key_bytes()
-    tradPK = self.tradkem.public_key_bytes()
-    lenTradPK = len(tradPK).to_bytes(2, 'little')
     tradSK  = self.tradkem.private_key_bytes()
-    return mlkemSeed + lenTradPK + tradPK + tradSK
+    return mlkemSeed + tradSK
   
 
   def deserializePrivateKey(self, keyBytes):
@@ -501,12 +498,9 @@ class CompositeKEM(KEM):
     """
     assert isinstance(keyBytes, bytes)
     mlkemSeed = keyBytes[:64]
+    tradSK = keyBytes[64:]
 
-    lenTradPK = int.from_bytes(keyBytes[64:66], 'little')
-    tradPK = keyBytes[66: 66+lenTradPK]
-    tradSK = keyBytes[66+lenTradPK:]
-
-    return mlkemSeed, tradPK, tradSK
+    return mlkemSeed, tradSK
   
 
   def public_key_bytes(self):
@@ -564,8 +558,7 @@ class CompositeKEM(KEM):
   def private_key_max_len(self):
     (maxMLKEM, fixedSizeMLKEM) = self.mlkem.private_key_max_len()
     (maxTrad, fixedSizeTrad) = self.tradkem.private_key_max_len()
-    (maxTradPub, fixedSizeTradPub) = self.tradkem.public_key_max_len()
-    return (maxMLKEM + 2 + maxTradPub + maxTrad, fixedSizeMLKEM and fixedSizeTrad and fixedSizeTradPub)
+    return (maxMLKEM + maxTrad, fixedSizeMLKEM and fixedSizeTrad)
     
   def ct_max_len(self):
     (maxMLKEM, fixedSizeMLKEM) = self.mlkem.ct_max_len()
