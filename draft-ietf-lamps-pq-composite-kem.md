@@ -677,7 +677,7 @@ Implicit inputs looked up from SK:
   tradPK  The traditional public key is required for the KEM
           combiner.
           For discussion of where to get this value, see the
-          discussion below.
+          Decapsulation Requires the Public Key section.
 
 Output:
 
@@ -868,7 +868,7 @@ Deserialization Process:
 
 ## SerializePrivateKey and DeserializePrivateKey {#sec-serialize-privkey}
 
-The serialization routine for keys simply concatenates the private keys of the component algorithms, including a length encoding for the public key, as defined below:
+The serialization routine for keys simply concatenates the private keys of the component algorithms, as defined below:
 
 ~~~
 Composite-ML-KEM.SerializePrivateKey(mlkemSeed, tradPK, tradSK)
