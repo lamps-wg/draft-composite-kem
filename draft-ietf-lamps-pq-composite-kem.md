@@ -668,14 +668,16 @@ Implicit inputs mapped from <OID>:
           parameter set, for example "RSA-OAEP"
           or "X25519".
 
+  Label   KEM Combiner Label value for binding the ciphertext to
+          the Composite ML-KEM OID.
+          See section on KEM Combiner Labels below.
+
+Implicit inputs looked up from SK:
+
   tradPK  The traditional public key is required for the KEM
           combiner.
           For discussion of where to get this value, see the
           discussion below.
-
-  Label   KEM Combiner Label value for binding the ciphertext to
-          the Composite ML-KEM OID.
-          See section on KEM Combiner Labels below.
 
 Output:
 
@@ -686,7 +688,7 @@ Decap Process:
 
   1. Separate the private keys and ciphertexts
 
-      (mlkemSeed, tradPK, tradSK) = DeserializePrivateKey(sk)
+      (mlkemSeed, tradSK) = DeserializePrivateKey(sk)
       (_, mlkemSK) = ML-KEM.KeyGen(mlkemSeed)
       (mlkemCT, tradCT) = DeserializeCiphertext(ct)
 
@@ -1464,7 +1466,7 @@ In applications that only allow NIST PQC Level 5, it is RECOMMENDED to focus imp
 
 ML-KEM always requires the public key in order to perform various steps of the Fujisaki-Okamoto decapsulation [FIPS.203], and for this reason the private key encoding specified in FIPS 203 includes the public key.
 
-Moreover, the KEM combiner as specified in {{sec-kem-combiner}} requires the public key of the traditional component in order to achieve the public-key binding property and ciphertext collision resistance as described in {{sec-cons-kem-combiner}}. Since `tradPK` is not carried in the composite private key encoding, the implementation is required to obtain it from some out-of-band mechanism. This section discusses several options, but is a non-exhaustive list.
+Moreover, the KEM combiner as specified in {{sec-kem-combiner}} requires the public key of the traditional component in order to achieve the public-key binding property and ciphertext collision resistance as described in {{sec-cons-kem-combiner}}. Since `tradPK` is not carried in the composite private key encoding, the implementation is required to obtain it from some out-of-band mechanism. This section discusses several options, but is a non-normative, non-exhaustive list.
 
 1. Derive or extract from private key. Many cryptographic modules expose functionality to obtain an RSA or EC public key from the corresponding private key. For applications where such functionality does not exist, {{sec-rsa-pub-from-priv}} and {{sec-ec-pub-from-priv}} provide the suggested mechanisms for extracting the public keys from private keys for RSA and ECDH respectively. It is assumed that this is not required for X25519 or X448 since those private keys are seeds from which the public key can be obtained.
 
@@ -1477,7 +1479,7 @@ Moreover, the KEM combiner as specified in {{sec-kem-combiner}} requires the pub
 
 ### Extracting RSAPublicKey from RSAPrivateKey {#sec-rsa-pub-from-priv}
 
-Assuming that the RSA component of the composite private key is encoded as a RSAPrivateKey, as required by this specification, then, quoting from [RFC8017] you have:
+Assuming that the RSA component of the composite private key is encoded as an RSAPrivateKey, as required by this specification, then, quoting from [RFC8017] you have:
 
 ~~~
 RSAPrivateKey ::= SEQUENCE {
@@ -1519,7 +1521,7 @@ pubKey = ec_multiply_by_scalar(g, s)
 
 where a recommended implementation of `ec_multiply_by_scalar()` can be found in [SEC1].
 
-Then encode `pubKey` as X9.62 uncompressed point and place it into an ECPoint ASN.1 object.
+Then encode `pubKey` as X9.62 uncompressed point.
 
 
 
@@ -1754,7 +1756,7 @@ DER:
 
 ## X-Wing
 
-This specification borrows extensively from the analysis and KEM combiner construction presented in [X-Wing]. In particular, X-Wing and id-MLKEM768-X25519-SHA3-256 are largely interchangeable. The one difference is that X-Wing uses a combined KeyGen function to generate the two component private keys from the same seed, which gives some additional binding properties. In order to allow for re-use of existing hardeneded certified  this specification keeps the key generation for both components separate and only loosely-specified so that implementers are free to use an existing certified hardware or software module for one or both components.
+This specification borrows extensively from the analysis and KEM combiner construction presented in [X-Wing]. In particular, X-Wing and id-MLKEM768-X25519-SHA3-256 are largely interchangeable. The one difference is that X-Wing uses a combined KeyGen function to generate the two component private keys from the same seed, which gives some additional binding properties. In order to allow for re-use of existing hardeneded certified cryptographic modules (for example, getting the RSA component from an existing smartcard), this specification keeps the key generation for both components separate and only loosely-specified so that implementers are free to use an existing certified hardware or software module for one or both components.
 
 
 ## ETSI CatKDF
