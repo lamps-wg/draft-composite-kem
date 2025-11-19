@@ -168,6 +168,7 @@ informative:
   RFC8551:
   I-D.draft-ietf-pquip-pqt-hybrid-terminology-06:
   I-D.draft-ietf-lamps-kyber-certificates-10:
+  I-D.draft-sfluhrer-cfrg-ml-kem-security-considerations-03:
   X-Wing:
     title: "X-Wing The Hybrid KEM You’ve Been Looking For"
     date: 2024-01-09
@@ -326,7 +327,7 @@ A full review was performed of the encoding of each component:
 The advent of quantum computing poses a significant threat to current cryptographic systems. Traditional cryptographic key establishment algorithms such as RSA-OAEP, Diffie-Hellman and its elliptic curve variants are vulnerable to quantum attacks. During the transition to post-quantum cryptography (PQC), there is considerable uncertainty regarding the robustness of both existing and new cryptographic algorithms. While we can no longer fully trust traditional cryptography, we also cannot immediately place complete trust in post-quantum replacements until they have undergone extensive scrutiny and real-world testing to uncover and rectify both algorithmic weaknesses as well as implementation flaws across all the new implementations.
 
 Unlike previous migrations between cryptographic algorithms, the decision of when to migrate and which algorithms to adopt is far from straightforward.
-For instance, the aggressive migration timelines may require deploying PQC algorithms before their implementations have been fully hardened or certified, and dual-algorithm data protection may be desirable over a longer time period to hedge against CVEs and other implementation flaws in the new implementations.
+For instance, the aggressive migration timelines may require deploying PQC algorithms before their implementations have been fully hardened or certified, and dual-algorithm data protection may be desirable over a longer time period to hedge against security vulnerabilities and other implementation flaws in the new implementations.
 
 Cautious implementers may opt to combine cryptographic algorithms in such a way that an attacker would need to break all of them simultaneously to compromise the protected data. These mechanisms are referred to as Post-Quantum/Traditional (PQ/T) Hybrids {{I-D.ietf-pquip-pqt-hybrid-terminology}}.
 
@@ -425,9 +426,6 @@ Composite Key Encapsulation Mechanisms are defined as cryptographic primitives t
       secret `ss`, or in some cases a distinguished error value.
       Note: this specification uses `Decap()` to conform to {{RFC9180}},
       but [FIPS.203] uses `Decaps()`.
-
-
-The KEM interface defined above differs from both traditional key transport mechanism (for example for use with KeyTransRecipientInfo defined in {{RFC5652}}), and key agreement (for example for use with KeyAgreeRecipientInfo defined in {{RFC5652}}) and thus Composite ML-KEM MUST be used with KEMRecipientInfo defined in {{RFC9629}}, however full conventions for use of Composite ML-KEM within the Cryptographic Message Syntax will be included in a separate specification.
 
 The KEM interface was chosen as the interface for a composite key establishment because it allows for arbitrary combinations of component algorithm types since both key transport and key agreement mechanisms can be promoted into KEMs as described in {{sec-RSAOAEPKEM}} and {{sec-DHKEM}} below.
 
@@ -738,7 +736,7 @@ Steps 2, 3, and 4 SHOULD be performed in a timing-invariant way to prevent side-
 
 It is possible to use component private keys stored in separate software or hardware keystores. Variations in the process to accommodate particular private key storage mechanisms are considered to be conformant to this specification so long as it produces the same output and error handling as the process sketched above.
 
-In order to properly achieve its security properties, the KEM combiner requires that all inputs are fixed-length or length-encoded. Since each Composite ML-KEM algorithm fully specifies its component algorithms, including key sizes, all inputs should be fixed-length in non-error scenarios except for minor variations introduced by encoding. In the cases where there are minor variations introduced by encoding, those encodings already have a fixed-length prefix followed by length-encoded data, so the requirements for the KEM combiner security properties hold (namely that the input is injective). However some implementations may choose to perform additional checking to handle certain error conditions. In particular, the KEM combiner step should not be performed if either of the component decapsulations returned an error condition indicating malformed inputs. For timing-invariance reasons, it is RECOMMENDED to perform both decapsulation operations and check for errors afterwards to prevent an attacker from using a timing channel to tell which component failed decapsulation. Also, RSA-based composites MUST ensure that the modulus size (i.e. the size of `tradCT` and `tradPK`) matches that specified for the given Composite ML-KEM algorithm in {{alg-params}}; depending on the cryptographic library used, this check may be done by the library or may require an explicit check as part of the `Composite-ML-KEM.Decap()` routine. Implementers should keep in mind that some instances of `tradCT` and `tradPK` will be DER-encoded which could introduce minor length variations such as dropping leading zeroes; since these variations are not attacker-controlled they are considered benign.
+In order to properly achieve its security properties, the KEM combiner requires that all inputs are fixed-length or length-encoded. Since each Composite ML-KEM algorithm fully specifies its component algorithms, including key sizes, all inputs should be fixed-length in non-error scenarios except for minor variations introduced by encoding. In the cases where there are minor variations introduced by encoding, those encodings already have a fixed-length prefix followed by length-encoded data, so the requirements for the KEM combiner security properties hold (namely that the input is injective). However some implementations may choose to perform additional checking to handle certain error conditions. In particular, the KEM combiner step should not be performed if either of the component decapsulations returned an error condition indicating malformed inputs. For timing-invariance reasons, it is RECOMMENDED to perform both decapsulation operations and check for errors afterwards to prevent an attacker from using a timing channel to tell which component failed decapsulation. Also, RSA-based composites MUST ensure that the modulus size (i.e. the size of `tradCT` and `tradPK`) matches that specified for the given Composite ML-KEM algorithm in {{alg-params}}; depending on the cryptographic library used, this check may be done by the library or may require an explicit check as part of the `Composite-ML-KEM.Decap()` routine. Implementers should keep in mind that some instances of `tradCT` and `tradPK` will be DER-encoded which could introduce minor length variations such as dropping leading zeroes; since the underlying KEMs are assumed to be IND-CCA secure, decapsulation against tampered ciphertexts or public keys is assumed to fail, these length differences are considered benign to the KEM combiner.
 
 Errors produced by the component `Decaps()` routines MUST be forwarded on to the calling application. Further discussion can be found below in {{sec-explicit-rejection}}.
 
@@ -794,7 +792,7 @@ While ML-KEM has a single fixed-size representation for each of public key, priv
 * **ML-KEM**: MUST be encoded as specified in sections 7.1 and 7.2 of [FIPS.203], using a 64-byte seed as the private key.
 * **RSA**: the public key MUST be encoded as RSAPublicKey with the `(n,e)` public key representation as specified in A.1.1 of [RFC8017] and the private key representation as RSAPrivateKey specified in A.1.2 of [RFC8017] with version 0 and 'otherPrimeInfos' absent. An RSA-OAEP ciphertext MUST be encoded as specified in section 7.1.1 of {{RFC8017}}
 * **ECDH**: public key MUST be encoded as an uncompressed X9.62 [X9.62–2005], including the leading byte `0x04` indicating uncompressed. This is consistent with the encoding of `ECPoint` as specified in section 2.2 of [RFC5480] when no ASN.1 OCTET STRING wrapping is present. The private key MUST be encoded as ECPrivateKey specified in [RFC5915] with 'NamedCurve' parameter set to the OID of the curve, but without the 'publicKey' field. The ciphertext MUST be encoded in the same manner as the public key.
-* **X25519 and X448**: the public key MUST be encoded as per section 5 of [RFC7748] and the private key is a 32 or 57 byte raw value for Ed25519 and Ed448 respectively. The ciphertext MUST be encoded in the same manner as the public key.
+* **X25519 and X448**: the public key MUST be encoded as per section 5 of [RFC7748] and the private key is a 32 or 56 byte raw value for X25519 and X448 respectively. The ciphertext MUST be encoded in the same manner as the public key.
 
 All ASN.1 objects SHALL be encoded using DER on serialization.
 
@@ -1329,6 +1327,9 @@ The following is to be registered in "SMI Security for PKIX Algorithms":
 
 # Security Considerations
 
+As this specification uses ML-KEM as a component of all composite algorithms, all security considerations from {{I-D.ietf-lamps-kyber-certificates}} and {{I-D.sfluhrer-cfrg-ml-kem-security-considerations}} apply.
+
+
 ## Why Hybrids?
 
 In broad terms, a PQ/T Hybrid can be used either to provide dual-algorithm security or to provide migration flexibility. Let's quickly explore both.
@@ -1392,21 +1393,6 @@ When using single-algorithm cryptography, the best practice is to always generat
 Within the broader context of PQ/T hybrids, we need to consider new attack surfaces that arise due to the hybrid constructions and did not exist in single-algorithm contexts. One of these is key reuse where the component keys within a hybrid are also used by themselves within a single-algorithm context. For example, it might be tempting for an operator to take already-deployed RSA keys and add an ML-KEM key to them to form a hybrid. Within a hybrid signature context this leads to a class of attacks referred to as "stripping attacks" where one component signature can be extracted and presented as a single-algorithm signature. Hybrid KEMs using a concatenation-style KEM combiner, as is done in this specification, do not have the analogous attack surface because even if an attacker is able to extract and decrypt one of the component ciphertexts, this will yield a different shared secret key than the overall shared secret key derived from the composite, so any subsequent symmetric cryptographic operations will fail.
 
 In addition, there is a further implication to key reuse regarding certificate revocation. Upon receiving a new certificate enrolment request, many certification authorities will check if the requested public key has been previously revoked due to key compromise. Often a CA will perform this check by using the public key hash. Therefore, if one, or even both, components of a composite have been previously revoked, the CA may only check the hash of the combined composite key and not find the revocations. Therefore, because the possibility of key reuse exists even though forbidden in this specification, CAs performing revocation checks on a composite key SHOULD also check both component keys independently to verify that the component keys have not been revoked.
-
-
-## Decapsulation failure
-
-Provided all inputs are well-formed, the key establishment procedure of ML-KEM will never explicitly fail. Specifically, the `ML-KEM.Encaps()` and `ML-KEM.Decaps()` algorithms from [FIPS.203] will always output a value with the same data type as a shared secret key, and will never output an error or failure symbol. However, it is possible (though extremely unlikely) that the process will fail in the sense that `ML-KEM.Encaps()` and `ML-KEM.Decaps()` will produce different outputs, even though both of them are behaving honestly and no adversarial interference is present. This is due to the lattice arithmetic for decapsulation with the secret key having hit an unrecoverable degenerate case that could not have been predicted by the encapsulator without knowledge of the secret key. In this case, the sender and recipient clearly did not succeed in producing a shared secret key. This event is called a decapsulation failure. Estimates for the decapsulation failure probability (or rate) for each of the ML-KEM parameter sets are provided in Table 1  of [FIPS.203] and reproduced here in {{tab-mlkem-failure-rate}}.
-
-
-| Parameter set     | Decapsulation failure rate  |
-|---------          | -----------------           |
-| ML-KEM-512        | 2^(-139)                    |
-| ML-KEM-768        | 2^(-164)                    |
-| ML-KEM-1024       | 2^(-174)                    |
-{: #tab-mlkem-failure-rate title="ML-KEM decapsulation failure rates"}
-
-In the case of ML-KEM decapsulation failure, Composite ML-KEM MUST preserve the same behavior and return a well-formed output shared secret key.
 
 
 ## Policy for Deprecated and Acceptable Algorithms
