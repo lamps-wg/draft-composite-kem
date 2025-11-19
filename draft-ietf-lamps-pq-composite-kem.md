@@ -1285,8 +1285,7 @@ The following is to be registered in "SMI Security for PKIX Algorithms":
 
 # Security Considerations
 
-As this specification uses ML-KEM as a component of all composite algorithms, all security considerations from {{I-D.ietf-lamps-kyber-certificates}} and {{I-D.sfluhrer-cfrg-ml-kem-security-considerations}} apply.
-
+As this specification uses ML-KEM as a component of all composite algorithms, all security considerations from {{I-D.ietf-lamps-kyber-certificates}} and {{I-D.sfluhrer-cfrg-ml-kem-security-considerations}} apply. Note in particular the "Encapsulation key check" in section 7.2 of [FIPS.203] and the "Decapsulation input check" in section 7.3 of [FIPS.203] which are required for correct and secure functioning of ML-KEM, but which are considered to be external to the `Encaps()` and `Decaps()` algorithms.
 
 ## Why Hybrids?
 
@@ -1378,6 +1377,8 @@ Implementers seeking FIPS certification of a composite KEM algorithm where only 
 The composite algorithm has been designed to treat the underlying primitives as "black-box implementations" and not impose any additional requirements on them that could require an existing implementation of an underlying primitive to run in a mode different from the one under which it was certified. For example, the `KeyGen` defined in {{sec-keygen}} invokes `ML-KEM.KeyGen(seed)` which might not be available in a cryptographic module running in FIPS-mode, but {{sec-keygen}} is only a suggested implementation and the composite KeyGen MAY be implemented using a different available interface for ML-KEM.KeyGen.
 
 The authors wish to note that composite algorithms provide a design pattern to provide utility in future situations that require care to remain FIPS-compliant, such as future cryptographic migrations as well as bridging across jurisdictions with non-intersecting cryptographic requirements.
+
+Successful FIPS certification will need to take into account the "Encapsulation key check" in section 7.2 of [FIPS.203] and the "Decapsulation input check" in section 7.3 of [FIPS.203] which are required for correct and secure functioning of ML-KEM, but which are considered to be external to the `Encaps()` and `Decaps()` algorithms.
 
 The following sections go into further detail on specific issues that relate to FIPS certification.
 
