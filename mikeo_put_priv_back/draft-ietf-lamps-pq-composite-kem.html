@@ -1057,7 +1057,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Ounsworth, et al.</td>
-<td class="center">Expires 11 May 2026</td>
+<td class="center">Expires 23 May 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1070,12 +1070,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-lamps-pq-composite-kem-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-11-07" class="published">7 November 2025</time>
+<time datetime="2025-11-19" class="published">19 November 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-05-11">11 May 2026</time></dd>
+<dd class="expires"><time datetime="2026-05-23">23 May 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1141,7 +1141,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 11 May 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 23 May 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1799,14 +1799,16 @@ Implicit inputs mapped from &lt;OID&gt;:
           parameter set, for example "RSA-OAEP"
           or "X25519".
 
+  Label   KEM Combiner Label value for binding the ciphertext to
+          the Composite ML-KEM OID.
+          See section on KEM Combiner Labels below.
+
+Implicit inputs looked up from SK:
+
   tradPK  The traditional public key is required for the KEM
           combiner.
           For discussion of where to get this value, see the
           Decapsulation Requires the Public Key section.
-
-  Label   KEM Combiner Label value for binding the ciphertext to
-          the Composite ML-KEM OID.
-          See section on KEM Combiner Labels below.
 
 Output:
 
@@ -1817,7 +1819,7 @@ Decap Process:
 
   1. Separate the private keys and ciphertexts
 
-      (mlkemSeed, tradPK, tradSK) = DeserializePrivateKey(sk)
+      (mlkemSeed, tradSK) = DeserializePrivateKey(sk)
       (_, mlkemSK) = ML-KEM.KeyGen(mlkemSeed)
       (mlkemCT, tradCT) = DeserializeCiphertext(ct)
 
@@ -3402,7 +3404,7 @@ id-MLKEM1024-ECDH-P384-SHA3-256
 <a href="#section-11.4" class="section-number selfRef">11.4. </a><a href="#name-decapsulation-requires-the-" class="section-name selfRef">Decapsulation Requires the Public Key</a>
         </h3>
 <p id="section-11.4-1">ML-KEM always requires the public key in order to perform various steps of the Fujisaki-Okamoto decapsulation <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span>, and for this reason the private key encoding specified in FIPS 203 includes the public key.<a href="#section-11.4-1" class="pilcrow">¶</a></p>
-<p id="section-11.4-2">Moreover, the KEM combiner as specified in <a href="#sec-kem-combiner" class="auto internal xref">Section 4.4</a> requires the public key of the traditional component in order to achieve the public-key binding property and ciphertext collision resistance as described in <a href="#sec-cons-kem-combiner" class="auto internal xref">Section 10.2</a>. Since <code>tradPK</code> is not carried in the composite private key encoding, the implementation is required to obtain it from some out-of-band mechanism. This section discusses several options, but is a non-exhaustive list.<a href="#section-11.4-2" class="pilcrow">¶</a></p>
+<p id="section-11.4-2">Moreover, the KEM combiner as specified in <a href="#sec-kem-combiner" class="auto internal xref">Section 4.4</a> requires the public key of the traditional component in order to achieve the public-key binding property and ciphertext collision resistance as described in <a href="#sec-cons-kem-combiner" class="auto internal xref">Section 10.2</a>. Since <code>tradPK</code> is not carried in the composite private key encoding, the implementation is required to obtain it from some out-of-band mechanism. This section discusses several options, but is a non-normative, non-exhaustive list.<a href="#section-11.4-2" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-11.4-3">
 <li id="section-11.4-3.1">
             <p id="section-11.4-3.1.1">Derive or extract from private key. Many cryptographic modules expose functionality to obtain an RSA or EC public key from the corresponding private key. For applications where such functionality does not exist, <a href="#sec-rsa-pub-from-priv" class="auto internal xref">Section 11.4.1</a> and <a href="#sec-ec-pub-from-priv" class="auto internal xref">Section 11.4.2</a> provide the suggested mechanisms for extracting the public keys from private keys for RSA and ECDH respectively. It is assumed that this is not required for X25519 or X448 since those private keys are seeds from which the public key can be obtained.<a href="#section-11.4-3.1.1" class="pilcrow">¶</a></p>
@@ -3466,7 +3468,7 @@ pubKey = ec_multiply_by_scalar(g, s)
 </pre><a href="#section-11.4.2-3" class="pilcrow">¶</a>
 </div>
 <p id="section-11.4.2-4">where a recommended implementation of <code>ec_multiply_by_scalar()</code> can be found in <span>[<a href="#SEC1" class="cite xref">SEC1</a>]</span>.<a href="#section-11.4.2-4" class="pilcrow">¶</a></p>
-<p id="section-11.4.2-5">Then encode <code>pubKey</code> as X9.62 uncompressed point and place it into an ECPoint ASN.1 object.<a href="#section-11.4.2-5" class="pilcrow">¶</a></p>
+<p id="section-11.4.2-5">Then encode <code>pubKey</code> as X9.62 uncompressed point.<a href="#section-11.4.2-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -4153,7 +4155,7 @@ DER:
         <h3 id="name-x-wing">
 <a href="#appendix-D.1" class="section-number selfRef">D.1. </a><a href="#name-x-wing" class="section-name selfRef">X-Wing</a>
         </h3>
-<p id="appendix-D.1-1">This specification borrows extensively from the analysis and KEM combiner construction presented in <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span>. In particular, X-Wing and id-MLKEM768-X25519-SHA3-256 are largely interchangeable. The one difference is that X-Wing uses a combined KeyGen function to generate the two component private keys from the same seed, which gives some additional binding properties. In order to allow for re-use of existing hardeneded certified  this specification keeps the key generation for both components separate and only loosely-specified so that implementers are free to use an existing certified hardware or software module for one or both components.<a href="#appendix-D.1-1" class="pilcrow">¶</a></p>
+<p id="appendix-D.1-1">This specification borrows extensively from the analysis and KEM combiner construction presented in <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span>. In particular, X-Wing and id-MLKEM768-X25519-SHA3-256 are largely interchangeable. The one difference is that X-Wing uses a combined KeyGen function to generate the two component private keys from the same seed, which gives some additional binding properties. In order to allow for re-use of existing hardeneded certified cryptographic modules (for example, getting the RSA component from an existing smartcard), this specification keeps the key generation for both components separate and only loosely-specified so that implementers are free to use an existing certified hardware or software module for one or both components.<a href="#appendix-D.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="etsi-catkdf">
