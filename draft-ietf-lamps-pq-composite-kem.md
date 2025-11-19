@@ -1285,8 +1285,7 @@ The following is to be registered in "SMI Security for PKIX Algorithms":
 
 # Security Considerations
 
-As this specification uses ML-KEM as a component of all composite algorithms, all security considerations from {{I-D.ietf-lamps-kyber-certificates}} and {{I-D.sfluhrer-cfrg-ml-kem-security-considerations}} apply.
-
+As this specification uses ML-KEM as a component of all composite algorithms, all security considerations from {{I-D.ietf-lamps-kyber-certificates}} and {{I-D.sfluhrer-cfrg-ml-kem-security-considerations}} apply. Note in particular the "Encapsulation key check" in section 7.2 of [FIPS.203] and the "Decapsulation input check" in section 7.3 of [FIPS.203] which are required for correct and secure functioning of ML-KEM, but which are considered to be external to the `Encaps()` and `Decaps()` algorithms.
 
 ## Why Hybrids?
 
@@ -1322,7 +1321,7 @@ Each registered Composite ML-KEM algorithm specifies a `Label` -- see {{alg-para
 
 Informally, a Composite ML-KEM algorithm is secure if the combiner (SHA3) is secure, and either ML-KEM is secure or the traditional component (RSA-OAEP, ECDH, X25519 or X448) is secure.
 
-The security of ML-KEM and DH hybrids is covered in [X-Wing] and requires that the first KEM component (ML-KEM in this construction) is IND-CCA2 and second ciphertext preimage resistant (C2PRI) and that the second traditional component is IND-CCA2. This design choice improves performance by not including the large ML-KEM public key and ciphertext, but means that an implementation error in the ML-KEM component that affects the ciphertext check step of the FO transform could result in the overall composite no longer achieving IND-CCA2 security. This solution remains IND-CCA2 due to binding the `tradPK` and `tradCT` in the KEM combiner.
+The security of ML-KEM and DH hybrids is covered in [X-Wing] and requires that the first KEM component (ML-KEM in this construction) is IND-CCA2 and second ciphertext preimage resistant (C2PRI) and that the DH component is nominal group; i.e. a well-behaved elliptic curve DH group, but does not require the traditional component to be IND-CCA. This design choice improves performance by not including the large ML-KEM public key and ciphertext, but means that an implementation error in the ML-KEM component that affects the ciphertext check step of the FO transform could result in the overall composite no longer achieving IND-CCA2 security. This solution remains IND-CCA2 due to binding the `tradPK` and `tradCT` in the KEM combiner.
 
 The QSF framework presented in [X-Wing] is extended to cover RSA-OAEP as the traditional algorithm in place of DH by noting that RSA-OAEP is also IND-CCA2 secure [RFC8017].
 
@@ -1378,6 +1377,8 @@ Implementers seeking FIPS certification of a composite KEM algorithm where only 
 The composite algorithm has been designed to treat the underlying primitives as "black-box implementations" and not impose any additional requirements on them that could require an existing implementation of an underlying primitive to run in a mode different from the one under which it was certified. For example, the `KeyGen` defined in {{sec-keygen}} invokes `ML-KEM.KeyGen(seed)` which might not be available in a cryptographic module running in FIPS-mode, but {{sec-keygen}} is only a suggested implementation and the composite KeyGen MAY be implemented using a different available interface for ML-KEM.KeyGen.
 
 The authors wish to note that composite algorithms provide a design pattern to provide utility in future situations that require care to remain FIPS-compliant, such as future cryptographic migrations as well as bridging across jurisdictions with non-intersecting cryptographic requirements.
+
+Successful FIPS certification will need to take into account the "Encapsulation key check" in section 7.2 of [FIPS.203] and the "Decapsulation input check" in section 7.3 of [FIPS.203] which are required for correct and secure functioning of ML-KEM, but which are considered to be external to the `Encaps()` and `Decaps()` algorithms.
 
 The following sections go into further detail on specific issues that relate to FIPS certification.
 
