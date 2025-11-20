@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-11-11T02:01:22.130212+00:00",
+  "timestamp": "2025-11-20T01:58:35.659139+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -3701,15 +3701,15 @@
       "id": "I_kwDOKRPFO87Vj63q",
       "title": "DVG WGLC comment: The TLA \"CVE\" is used but not defined",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/233",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "danvangeest",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2025-11-03T17:06:01Z",
-      "updatedAt": "2025-11-03T17:06:01Z",
-      "closedAt": null,
+      "updatedAt": "2025-11-19T15:34:36Z",
+      "closedAt": "2025-11-19T15:34:36Z",
       "comments": []
     },
     {
@@ -3717,15 +3717,15 @@
       "id": "I_kwDOKRPFO87Vj7ic",
       "title": "DVG WGLC comment: remove CMS paragraph",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/234",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "danvangeest",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "2. Section 3: The following paragraph seems unnecessary.  We don't say anything similar for kyber-certificates.  This was probably added when the CMS parts were split into a pending draft.\n\n\n>    The KEM interface defined above differs from both traditional key\n   transport mechanism (for example for use with KeyTransRecipientInfo\n   defined in [RFC5652]), and key agreement (for example for use with\n   KeyAgreeRecipientInfo defined in [RFC5652]) and thus Composite ML-KEM\n   MUST be used with KEMRecipientInfo defined in [RFC9629], however full\n   conventions for use of Composite ML-KEM within the Cryptographic\n   Message Syntax will be included in a separate specification.",
       "createdAt": "2025-11-03T17:06:56Z",
-      "updatedAt": "2025-11-03T17:06:56Z",
-      "closedAt": null,
+      "updatedAt": "2025-11-19T15:34:36Z",
+      "closedAt": "2025-11-19T15:34:36Z",
       "comments": []
     },
     {
@@ -3733,15 +3733,15 @@
       "id": "I_kwDOKRPFO87Vj9Q0",
       "title": "DVG WGLC comment: no need to mention KEMRecipientInfo",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/235",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "danvangeest",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "3. Section 3.1: The CMS comment below seems unnecessary, perhaps stop after \"does not have an assigned algorithm OID.\" or remove the paragraph.\n\n\n>    Note that, at least at the time of writing, the algorithm RSAOAEPKEM\n   is not defined as a standalone algorithm within PKIX standards and it\n   does not have an assigned algorithm OID, so it cannot be used\n   directly with CMS KEMRecipientInfo [RFC9629]; it is merely a building\n   block for the composite algorithm\n\nThe same comment applies to similar text in section 3.2",
       "createdAt": "2025-11-03T17:09:16Z",
-      "updatedAt": "2025-11-06T21:34:17Z",
-      "closedAt": null,
+      "updatedAt": "2025-11-19T16:02:35Z",
+      "closedAt": "2025-11-19T16:02:34Z",
       "comments": [
         {
           "author": "ounsworth",
@@ -3756,6 +3756,13 @@
           "body": "not strongly",
           "createdAt": "2025-11-06T21:34:17Z",
           "updatedAt": "2025-11-06T21:34:17Z"
+        },
+        {
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Resolved in #244 ",
+          "createdAt": "2025-11-19T16:02:34Z",
+          "updatedAt": "2025-11-19T16:02:34Z"
         }
       ]
     },
@@ -3764,15 +3771,15 @@
       "id": "I_kwDOKRPFO87Vj94-",
       "title": "DVG WGLC comment: how is ciphertext not attacker controlled?",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/236",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "danvangeest",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "5. Section 4.3: How is ciphertext not attacker controlled?  If anything, this could say that because DER uses length-encoding these variations are benign (my PR says something similar a few lines up but I wanted to point this sentence out explicitly because of the \"attacker controlled\" part).\n\n\n>    Implementers should keep in\n   mind that some instances of tradCT and tradPK will be DER-encoded\n   which could introduce minor length variations such as dropping\n   leading zeroes; since these variations are not attacker-controlled\n   they are considered benign",
       "createdAt": "2025-11-03T17:10:05Z",
-      "updatedAt": "2025-11-06T21:35:59Z",
-      "closedAt": null,
+      "updatedAt": "2025-11-19T15:34:36Z",
+      "closedAt": "2025-11-19T15:34:36Z",
       "comments": [
         {
           "author": "ounsworth",
@@ -3795,15 +3802,15 @@
       "id": "I_kwDOKRPFO87Vj-g8",
       "title": "DVG WGLC comment: Add Security Considerations reference to sfluhrer-cfrg-ml-kem-security-considerations",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/237",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "danvangeest",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "6. Section 10: Should there be a reference to sfluhrer-cfrg-ml-kem-security-considerations somewhere in the Security Considerations?",
       "createdAt": "2025-11-03T17:10:47Z",
-      "updatedAt": "2025-11-06T00:02:23Z",
-      "closedAt": null,
+      "updatedAt": "2025-11-19T15:34:37Z",
+      "closedAt": "2025-11-19T15:34:37Z",
       "comments": []
     },
     {
@@ -3811,15 +3818,15 @@
       "id": "I_kwDOKRPFO87Vj_eu",
       "title": "DVG WGLC comment: Remove section 10.4",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/238",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "danvangeest",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "7. Section 10.4: Most or all other ML-KEM-related drafts throughout the IETF have stopped mentioning the probability of ML-KEM decapsulation failure because it is so vanishingly small.  I'd recommend removing this section.",
       "createdAt": "2025-11-03T17:11:39Z",
-      "updatedAt": "2025-11-06T21:36:35Z",
-      "closedAt": null,
+      "updatedAt": "2025-11-19T15:34:37Z",
+      "closedAt": "2025-11-19T15:34:37Z",
       "comments": [
         {
           "author": "ounsworth",
@@ -3849,40 +3856,40 @@
       "labels": [],
       "body": "Peter C's WGLC comments: https://mailarchive.ietf.org/arch/msg/spasm/erQjg2YMk5hjpdZoJXiB0ophnUU/",
       "createdAt": "2025-11-03T17:13:39Z",
-      "updatedAt": "2025-11-09T13:33:41Z",
+      "updatedAt": "2025-11-19T22:40:55Z",
       "closedAt": null,
       "comments": [
         {
           "author": "feventura",
-          "authorAssociation": "NONE",
-          "body": "Summarizing Peter C non-minor comments in suggested actions:\n\n- [ ] Need proof.\n  - [ ] Suggest delaying WGLC if the proof is close to be done, so it can be reviewed. If is not add the accurate situation to Security Considerations and not point to a yet-not-existing proof.\n  - [ ] Does not prove that the ML-KEM ciphertext can be omitted in general. (Section 10.2.2)\n  - [ ] The X-Wing proof does not assume DH is IND-CCA. (Section 10.2.1)\n- [ ] No mention of input validation\n  -  This is important to FIPS certification\n- [ ] FIPS 203 considers cryptographic input validation to be external to ML-KEM key generation, encapsulation and decapsulation.  It may not be safe to assume that, for example, ML-KEM decapsulation will catch a malformed private key. (Section 5)\n- [x] Labels should be distinct.\n- [x] Comment about encaps side channel attack timing attack that would reveal which component algorithm fail does not help the attacker recover composite shared secret from a successful one because each call to the composite encapsulation algorithm uses fresh randomness, so they are mutually independent. (Section 4.2)\n- [x] All inputs are fixed, except when they are not. Suggestion to delete the fixed length text unless its needed for security (Section 4.3)\n- [ ] Comment about discovering which component fail by a timing attack. (Section 4.3)\n- [x] X-wing has LEAK-C2PRI not MAL-C2PRI (\"or wrose\" text). (Section 10.2) ",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Summarizing Peter C non-minor comments in suggested actions:\n\n- [ ] Need proof.\n  - [ ] Suggest delaying WGLC if the proof is close to be done, so it can be reviewed. If is not add the accurate situation to Security Considerations and not point to a yet-not-existing proof.\n  - [ ] Does not prove that the ML-KEM ciphertext can be omitted in general. (Section 10.2.2)\n  - [x] The X-Wing proof does not assume DH is IND-CCA. (Section 10.2.1)\n- [x] No mention of input validation\n  -  This is important to FIPS certification\n- [x] FIPS 203 considers cryptographic input validation to be external to ML-KEM key generation, encapsulation and decapsulation.  It may not be safe to assume that, for example, ML-KEM decapsulation will catch a malformed private key. (Section 5)\n- [x] Labels should be distinct.\n- [x] Comment about encaps side channel attack timing attack that would reveal which component algorithm fail does not help the attacker recover composite shared secret from a successful one because each call to the composite encapsulation algorithm uses fresh randomness, so they are mutually independent. (Section 4.2)\n- [x] All inputs are fixed, except when they are not. Suggestion to delete the fixed length text unless its needed for security (Section 4.3)\n- [x] Comment about discovering which component fail by a timing attack. (Section 4.3)\n- [x] X-wing has LEAK-C2PRI not MAL-C2PRI (\"or wrose\" text). (Section 10.2) ",
           "createdAt": "2025-11-06T21:46:27Z",
-          "updatedAt": "2025-11-07T16:13:42Z"
+          "updatedAt": "2025-11-19T20:23:05Z"
         },
         {
           "author": "feventura",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "body": "> Section 4.3: \u201cIn order to properly achieve its security properties, then KEM combiner requires that all inputs are fixed-length [\u2026] all inputs should be fixed-length in non-error scenarios except for minor variations introduced by encoding.\u201d  There is a clear disconnect here: all inputs must be fixed length, but some might not be.  Unless fixed-length inputs are genuinely necessary for security, I would delete the first sentence.\n\nLater in the text its clarified that these minor variations are not a issue for the security properties:\n\n>In the cases where there are minor variations introduced by encoding, those encodings already have a fixed-length prefix followed by length-encoded data, so the requirements for the KEM combiner security properties hold (namely that the input is injective).\n\n>Implementers should keep in mind that some instances of `tradCT` and `tradPK` will be DER-encoded which could introduce minor length variations such as dropping leading zeroes; since these variations are not attacker-controlled they are considered benign.",
           "createdAt": "2025-11-06T21:57:01Z",
           "updatedAt": "2025-11-06T21:57:01Z"
         },
         {
           "author": "feventura",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "body": ">Section 4.3: \u201cFor timing-invariance reasons, it is RECOMMENDED to perform both decapsulation operations and check for errors afterwards to prevent an attacker from using a timing channel to tell which component failed decapsulation\u201d.  What is the threat here?  Suppose that an attacker submits (c1, c2) for decapsulation and it fails.  The attacker can then submit (c1\u2019,  c2) and (c1, c2\u2019) for decapsulation, where c1\u2019 =/= c1 and c2\u2019 =/= c2, to test which component caused the failure.\n\nThe example wouldn't work because since c1' != c1 the (c1', c2) would fail because composite would not validate both trad and PQ, same for (c1, c2') with c2' != c2.",
           "createdAt": "2025-11-06T22:00:23Z",
           "updatedAt": "2025-11-06T22:00:23Z"
         },
         {
           "author": "feventura",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "body": ">Section 4.2: \u201cDepending on the security needs of the application, it MAY be advantageous to perform steps 2, 3, and 5 in a timing-invariant way to prevent side-channel attackers from learning which component algorithm failed and from learning any of the inputs or output of the KEM combiner\u201d.  What is the threat here?  If each call to the composite encapsulation algorithm uses fresh randomness, then knowing which component encapsulation failed cannot help an attacker recover the composite shared secret from a successful composite encapsulation.\n\nThis argument make sense, removed this text in https://github.com/lamps-wg/draft-composite-kem/pull/245.",
           "createdAt": "2025-11-06T22:03:57Z",
           "updatedAt": "2025-11-06T22:07:21Z"
         },
         {
           "author": "feventura",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "body": ">Section 10.2:  \u201cAdditionally, we also need to consider the case where one of the component algorithms is completely broken; that the private key is known to an attacker, or worse that the public key, private key, and ciphertext are manipulated by the attacker\u201d.  X-Wing style combiners require that the post-quantum KEM remains C2PRI secure.  This assumes that the adversary knows the post-quantum component private key, not that they get to choose it \u2013 in other words, LEAK-C2PRI not MAL-C2PRI.  It\u2019s possible that everything still holds with MAL-C2PRI, but I think that\u2019s going beyond the existing proof.\n\nThis argument make sense, removed the \"or worse\" text in https://github.com/lamps-wg/draft-composite-kem/pull/245.",
           "createdAt": "2025-11-06T22:07:12Z",
           "updatedAt": "2025-11-06T22:07:12Z"
@@ -3893,6 +3900,13 @@
           "body": "> > Section 4.3: \u201cFor timing-invariance reasons, it is RECOMMENDED to perform both decapsulation operations and check for errors afterwards to prevent an attacker from using a timing channel to tell which component failed decapsulation\u201d.  What is the threat here?  Suppose that an attacker submits (c1, c2) for decapsulation and it fails.  The attacker can then submit (c1\u2019,  c2) and (c1, c2\u2019) for decapsulation, where c1\u2019 =/= c1 and c2\u2019 =/= c2, to test which component caused the failure.\n> \n> The example wouldn't work because since c1' != c1 the (c1', c2) would fail because composite would not validate both trad and PQ, same for (c1, c2') with c2' != c2.\n\nThis is composite-kem, not composite-sigs, so I don't understand what you mean by \"validate\".",
           "createdAt": "2025-11-09T13:33:40Z",
           "updatedAt": "2025-11-09T13:33:40Z"
+        },
+        {
+          "author": "feventura",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> > > Section 4.3: \u201cFor timing-invariance reasons, it is RECOMMENDED to perform both decapsulation operations and check for errors afterwards to prevent an attacker from using a timing channel to tell which component failed decapsulation\u201d.  What is the threat here?  Suppose that an attacker submits (c1, c2) for decapsulation and it fails.  The attacker can then submit (c1\u2019,  c2) and (c1, c2\u2019) for decapsulation, where c1\u2019 =/= c1 and c2\u2019 =/= c2, to test which component caused the failure.\n> > \n> > \n> > The example wouldn't work because since c1' != c1 the (c1', c2) would fail because composite would not validate both trad and PQ, same for (c1, c2') with c2' != c2.\n> \n> This is composite-kem, not composite-sigs, so I don't understand what you mean by \"validate\".\n\nI reread your comment and I noticed that I had completely skipped your question and started to look at your example, sorry for that. \n\nSo answering your question:\nThe process of decaps is sequentially so first the decaps c1 using ML-KEM then decaps c2 using traditional KEM.\nAssuming a successful decaps takes X seconds and assuming that the implementation checks for error immediately after each component decaps.\nAn attacker can notice that the time for a fail decaps took less than X seconds, they can conclude that the c1 was the component that failed. Similar for the other case, if the time for a fail decaps is close to X seconds, they can conclude that the c2 was the component that fail.\nThis comment is tackling this situation by recommending to check for errors at the end of the implementation. So if c1 fails, the implementation will still decaps c2, and then check if either c1 or c2 failed, eliminating the time difference.\n\nAs for your example, the attacker wouldn't need to submit (c1\u2019,  c2) and (c1, c2\u2019), because they would already know which component failed as my previous example, but if they tried it:\n\n* (c1\u2019,  c2) would fail with a time lower than X giving no new information for the attacker.\n* (c1, c2\u2019) would have two cases\n  * c1 is the component that failed: in this case the decaps will fail with a time lower than X, giving the information that c1 is the component that failed.\n  * c2 is the component that failed: in this case the decaps will fail with a time close to X, giving the information that c2 is the component that failed.\n\nBut even in your example, if the recommendation suggested by the comment is done, no information would be given, because in all 3 cases ((c1\u2019,  c2), (c1, c2\u2019) with c1 being the component that failed and (c1, c2\u2019) with c2 being the component that failed) the time that composite decaps fail will be the same, because the check for errors is done at the end of the decaps.",
+          "createdAt": "2025-11-19T22:34:07Z",
+          "updatedAt": "2025-11-19T22:40:55Z"
         }
       ]
     },
@@ -3901,15 +3915,15 @@
       "id": "I_kwDOKRPFO87V0dYt",
       "title": "Put the private key back to `mlkemSeed || tradSK`",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/240",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "During LAMPS 124 there was consensus in the room to remove the tradPK from the (suggested) PKCS8 format.\n\nEssentially, we want to reverse the change made in #179 \n\n\nSuggested change:\n\n* Go back to `mlkemSeed || tradSK`\n* Add / expand / massage the Implementation Consideration text about what to do if your Decaps() implementation can't easily get access to the tradPK -- essentially saying that you may need extra application-layer stuff to get the public key, or an off-spec private key.",
       "createdAt": "2025-11-04T16:21:25Z",
-      "updatedAt": "2025-11-06T22:35:52Z",
-      "closedAt": null,
+      "updatedAt": "2025-11-19T16:02:00Z",
+      "closedAt": "2025-11-19T16:02:00Z",
       "comments": [
         {
           "author": "danvangeest",
@@ -3938,6 +3952,13 @@
           "body": "For the PKCS#11 token, if the key is generated in the token, both private key and public key will be generated and stored in the token.",
           "createdAt": "2025-11-06T22:35:52Z",
           "updatedAt": "2025-11-06T22:35:52Z"
+        },
+        {
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Just resolve this in #244 ",
+          "createdAt": "2025-11-19T16:02:00Z",
+          "updatedAt": "2025-11-19T16:02:00Z"
         }
       ]
     },
@@ -3946,15 +3967,15 @@
       "id": "I_kwDOKRPFO87V93aF",
       "title": "Incorrect text for the private key of X25519 and X448.",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/241",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "xipki",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "```\n   *  *X25519 and X448*: the public key MUST be encoded as per section 5\n      of [RFC7748] and the private key is a 32 or 57 byte raw value for\n      Ed25519 and Ed448 respectively.  The ciphertext MUST be encoded in\n      the same manner as the public key.\n```\nShall be changed to (changes are enclosed with **)\n```\n   *  *X25519 and X448*: the public key MUST be encoded as per section 5\n      of [RFC7748] and the private key is a 32 or 5**6** byte raw value for\n      **X**25519 and **X**448 respectively.  The ciphertext MUST be encoded in\n      the same manner as the public key.\n```\n\nHere the text from section of [RFC7748]:\n```\n   The \"X25519\" and \"X448\" functions perform scalar multiplication on\n   the Montgomery form of the above curves.  (This is used when\n   implementing Diffie-Hellman.)  The functions take a scalar and a\n   u-coordinate as inputs and produce a u-coordinate as output.\n   Although the functions work internally with integers, the inputs and\n   outputs are 32-byte strings (for X25519) or 56-byte strings (for\n   X448) and this specification defines their encoding.\n```",
       "createdAt": "2025-11-05T07:51:45Z",
-      "updatedAt": "2025-11-06T00:06:07Z",
-      "closedAt": null,
+      "updatedAt": "2025-11-19T15:34:37Z",
+      "closedAt": "2025-11-19T15:34:37Z",
       "comments": [
         {
           "author": "ounsworth",
@@ -4014,6 +4035,30 @@
           "body": "It is fine to have the current test vectors due to the fact that it is short before the publication.\n\nMy idea to use the composite is that the composite-kems and -sigs belong to the same category.",
           "createdAt": "2025-11-06T22:18:43Z",
           "updatedAt": "2025-11-06T22:18:43Z"
+        }
+      ]
+    },
+    {
+      "number": 247,
+      "id": "I_kwDOKRPFO87ZBA_d",
+      "title": "Add our algs to the CFRG concrete hybrid KEM IANA registry",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/247",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "CFRG will have an IANA registry for composite kem labels and other stuff. We don't need to document anything in our draft about this, but we do need to have our values added to the registry.\n\n(copied over from https://github.com/lamps-wg/draft-composite-sigs/issues/315)",
+      "createdAt": "2025-11-19T03:33:03Z",
+      "updatedAt": "2025-11-19T16:54:24Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@danvangeest Where is this registry, or which draft is creating it?",
+          "createdAt": "2025-11-19T16:54:24Z",
+          "updatedAt": "2025-11-19T16:54:24Z"
         }
       ]
     }
@@ -10333,24 +10378,26 @@
       "id": "PR_kwDOKRPFO86xwvTV",
       "title": "WGLC2",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/243",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Closes #233\r\nCloses #234 \r\nCloses #236 \r\nCloses #237 \r\nCloses #238 \r\nCloses #241 ",
       "createdAt": "2025-11-05T22:58:17Z",
-      "updatedAt": "2025-11-07T15:09:40Z",
+      "updatedAt": "2025-11-19T15:34:35Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "28ebd7e4d90e69a7e2b1bf493d2a975e37ebbf0e",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_wglc2",
       "headRefOid": "41b70102cc0907fac7a693a0dc9ca70414e22434",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-11-19T15:34:35Z",
+      "mergedAt": "2025-11-19T15:34:35Z",
+      "mergedBy": "johngray-dev",
+      "mergeCommit": {
+        "oid": "4bdf620f1227e73918ebf659b5e839e565e9731b"
+      },
       "comments": [],
       "reviews": [
         {
@@ -10373,24 +10420,26 @@
       "id": "PR_kwDOKRPFO86x_wFs",
       "title": "Reverted priv key format to mlkemSeed || tradSK",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/244",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2025-11-06T21:06:21Z",
-      "updatedAt": "2025-11-07T16:34:05Z",
+      "updatedAt": "2025-11-19T16:01:28Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "28ebd7e4d90e69a7e2b1bf493d2a975e37ebbf0e",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_put_priv_back",
-      "headRefOid": "017b50e303ef111491bb5aa0ce0474135b2a6aa2",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "4f4ba2a478f194b73826379397eb9b5d63fb3427",
+      "closedAt": "2025-11-19T16:01:23Z",
+      "mergedAt": "2025-11-19T16:01:22Z",
+      "mergedBy": "johngray-dev",
+      "mergeCommit": {
+        "oid": "d4fc53dc06aed07128c8e453b63ea4e36bebbca1"
+      },
       "comments": [
         {
           "author": "johngray-dev",
@@ -10566,33 +10615,83 @@
           "createdAt": "2025-11-07T16:34:05Z",
           "updatedAt": "2025-11-07T16:34:05Z",
           "comments": []
+        },
+        {
+          "id": "PRR_kwDOKRPFO87PoYOw",
+          "commit": {
+            "abbreviatedOid": "017b50e"
+          },
+          "author": "wangweij",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-11-19T15:44:25Z",
+          "updatedAt": "2025-11-19T15:44:25Z",
+          "comments": [
+            {
+              "originalPosition": 50,
+              "body": "But unlike the other 3 implicit inputs, there is no static map to find out `tradPK` from `<OID>`.\r\n\r\nRFC 9180 has\r\n> The notation pk(skX), depending on its use and the KEM and its implementation, is either the computation of the public key using the private key, or just syntax expressing the retrieval of the public key, assuming it is stored along with the private key object.\r\n\r\nI think this is exactly what is needed here. Not necessarily computed from the private key, it can also be stored along with it.",
+              "createdAt": "2025-11-19T15:44:25Z",
+              "updatedAt": "2025-11-19T15:44:25Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO87PokER",
+          "commit": {
+            "abbreviatedOid": "017b50e"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-11-19T15:53:56Z",
+          "updatedAt": "2025-11-19T15:53:56Z",
+          "comments": [
+            {
+              "originalPosition": 50,
+              "body": "(I deleted my previous comment).\r\n\r\nThanks. Adjusted.\r\n\r\nWe added a whole appendix talking about how to extract TradPK from Trad SK.",
+              "createdAt": "2025-11-19T15:53:56Z",
+              "updatedAt": "2025-11-19T15:53:56Z"
+            }
+          ]
         }
       ]
     },
     {
       "number": 245,
       "id": "PR_kwDOKRPFO86yAWf3",
-      "title": "Update draft-ietf-lamps-pq-composite-kem.md",
+      "title": "Removed text in accordance with WGLC comments",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/245",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "feventura",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Removed \"timing-invariant way to prevent side-channel attackers\" text.",
       "createdAt": "2025-11-06T22:00:55Z",
-      "updatedAt": "2025-11-07T16:12:28Z",
+      "updatedAt": "2025-11-19T15:26:44Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "28ebd7e4d90e69a7e2b1bf493d2a975e37ebbf0e",
       "headRepository": "feventura/draft-composite-kem",
       "headRefName": "main",
       "headRefOid": "b0321489e1a40d536288514ba09a1692e29b8151",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
-      "comments": [],
+      "closedAt": "2025-11-19T15:26:43Z",
+      "mergedAt": "2025-11-19T15:26:43Z",
+      "mergedBy": "johngray-dev",
+      "mergeCommit": {
+        "oid": "9bf15c0c0d89fd9012498cae0128a613545c93d2"
+      },
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Relates to, but does not completely close #239 ",
+          "createdAt": "2025-11-19T15:26:03Z",
+          "updatedAt": "2025-11-19T15:26:03Z"
+        }
+      ],
       "reviews": [
         {
           "id": "PRR_kwDOKRPFO87Mt7sn",
@@ -10606,6 +10705,19 @@
           "createdAt": "2025-11-07T15:14:54Z",
           "updatedAt": "2025-11-07T16:12:28Z",
           "comments": []
+        },
+        {
+          "id": "PRR_kwDOKRPFO87PoByi",
+          "commit": {
+            "abbreviatedOid": "b032148"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-11-19T15:26:27Z",
+          "updatedAt": "2025-11-19T15:26:27Z",
+          "comments": []
         }
       ]
     },
@@ -10614,20 +10726,48 @@
       "id": "PR_kwDOKRPFO86ya1a_",
       "title": "Break up a way-too-long sentence",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/246",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "thomwiggers",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "I found this sentence with its many sub-clauses way too hard to read, so I broke it up.",
       "createdAt": "2025-11-10T02:25:47Z",
-      "updatedAt": "2025-11-10T02:27:37Z",
+      "updatedAt": "2025-11-19T15:27:52Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "28ebd7e4d90e69a7e2b1bf493d2a975e37ebbf0e",
       "headRepository": "thomwiggers/draft-composite-kem",
       "headRefName": "thom-break-up-sentence",
       "headRefOid": "c37e0890e35e1e7bf368b0fcfae747652a33b20a",
+      "closedAt": "2025-11-19T15:27:51Z",
+      "mergedAt": "2025-11-19T15:27:51Z",
+      "mergedBy": "johngray-dev",
+      "mergeCommit": {
+        "oid": "ceffa217163d25bb7716d7cbe85f5e603f4d82d3"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 248,
+      "id": "PR_kwDOKRPFO860ZxeH",
+      "title": "Addressing PeterC's comments",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/248",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Closes #239 ",
+      "createdAt": "2025-11-19T17:00:16Z",
+      "updatedAt": "2025-11-19T20:23:01Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "d4fc53dc06aed07128c8e453b63ea4e36bebbca1",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_peterc_comments",
+      "headRefOid": "a1ade77aad0b1f758f3da880989e278c99d1cbbf",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
