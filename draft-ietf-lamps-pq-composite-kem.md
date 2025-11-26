@@ -1204,7 +1204,7 @@ While it may seem odd to use 256-bit outputs at all security levels, this aligns
 
 ##  Object Identifier Allocations
 
-IANA has registered the Object Identifiers in the "SMI Security for PKIX Algorithms" registry 
+IANA has registered the Object Identifiers in the "SMI Security for PKIX Algorithms" registry.
 
 ###  Module Registration
 
