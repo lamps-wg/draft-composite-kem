@@ -762,9 +762,9 @@ Table of Contents
    additional checking to handle certain error conditions.  In
    particular, the KEM combiner step should not be performed if either
    of the component decapsulations returned an error condition
-   indicating malformed inputs.  Also, RSA-based composites MUST ensure
-   that the modulus size (i.e. the size of tradCT and tradPK) matches
-   that specified for the given Composite ML-KEM algorithm in Section 7;
+   indicating malformed inputs.  RSA-based composites MUST ensure that
+   the modulus size (i.e. the size of tradCT and tradPK) matches that
+   specified for the given Composite ML-KEM algorithm in Section 7;
    depending on the cryptographic library used, this check may be done
    by the library or may require an explicit check as part of the
    Composite-ML-KEM.Decap() routine.  Implementers should keep in mind
