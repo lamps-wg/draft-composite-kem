@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-11-23T02:20:17.958646+00:00",
+  "timestamp": "2025-11-27T01:59:29.892355+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -3856,40 +3856,40 @@
       "labels": [],
       "body": "Peter C's WGLC comments: https://mailarchive.ietf.org/arch/msg/spasm/erQjg2YMk5hjpdZoJXiB0ophnUU/",
       "createdAt": "2025-11-03T17:13:39Z",
-      "updatedAt": "2025-11-20T12:01:42Z",
+      "updatedAt": "2025-11-26T15:43:54Z",
       "closedAt": null,
       "comments": [
         {
           "author": "feventura",
-          "authorAssociation": "CONTRIBUTOR",
+          "authorAssociation": "COLLABORATOR",
           "body": "Summarizing Peter C non-minor comments in suggested actions:\n\n- [ ] Need proof.\n  - [ ] Suggest delaying WGLC if the proof is close to be done, so it can be reviewed. If is not add the accurate situation to Security Considerations and not point to a yet-not-existing proof.\n  - [ ] Does not prove that the ML-KEM ciphertext can be omitted in general. (Section 10.2.2)\n  - [x] The X-Wing proof does not assume DH is IND-CCA. (Section 10.2.1)\n- [x] No mention of input validation\n  -  This is important to FIPS certification\n- [x] FIPS 203 considers cryptographic input validation to be external to ML-KEM key generation, encapsulation and decapsulation.  It may not be safe to assume that, for example, ML-KEM decapsulation will catch a malformed private key. (Section 5)\n- [x] Labels should be distinct.\n- [x] Comment about encaps side channel attack timing attack that would reveal which component algorithm fail does not help the attacker recover composite shared secret from a successful one because each call to the composite encapsulation algorithm uses fresh randomness, so they are mutually independent. (Section 4.2)\n- [x] All inputs are fixed, except when they are not. Suggestion to delete the fixed length text unless its needed for security (Section 4.3)\n- [x] Comment about discovering which component fail by a timing attack. (Section 4.3)\n- [x] X-wing has LEAK-C2PRI not MAL-C2PRI (\"or wrose\" text). (Section 10.2) ",
           "createdAt": "2025-11-06T21:46:27Z",
           "updatedAt": "2025-11-19T20:23:05Z"
         },
         {
           "author": "feventura",
-          "authorAssociation": "CONTRIBUTOR",
+          "authorAssociation": "COLLABORATOR",
           "body": "> Section 4.3: \u201cIn order to properly achieve its security properties, then KEM combiner requires that all inputs are fixed-length [\u2026] all inputs should be fixed-length in non-error scenarios except for minor variations introduced by encoding.\u201d  There is a clear disconnect here: all inputs must be fixed length, but some might not be.  Unless fixed-length inputs are genuinely necessary for security, I would delete the first sentence.\n\nLater in the text its clarified that these minor variations are not a issue for the security properties:\n\n>In the cases where there are minor variations introduced by encoding, those encodings already have a fixed-length prefix followed by length-encoded data, so the requirements for the KEM combiner security properties hold (namely that the input is injective).\n\n>Implementers should keep in mind that some instances of `tradCT` and `tradPK` will be DER-encoded which could introduce minor length variations such as dropping leading zeroes; since these variations are not attacker-controlled they are considered benign.",
           "createdAt": "2025-11-06T21:57:01Z",
           "updatedAt": "2025-11-06T21:57:01Z"
         },
         {
           "author": "feventura",
-          "authorAssociation": "CONTRIBUTOR",
+          "authorAssociation": "COLLABORATOR",
           "body": ">Section 4.3: \u201cFor timing-invariance reasons, it is RECOMMENDED to perform both decapsulation operations and check for errors afterwards to prevent an attacker from using a timing channel to tell which component failed decapsulation\u201d.  What is the threat here?  Suppose that an attacker submits (c1, c2) for decapsulation and it fails.  The attacker can then submit (c1\u2019,  c2) and (c1, c2\u2019) for decapsulation, where c1\u2019 =/= c1 and c2\u2019 =/= c2, to test which component caused the failure.\n\nThe example wouldn't work because since c1' != c1 the (c1', c2) would fail because composite would not validate both trad and PQ, same for (c1, c2') with c2' != c2.",
           "createdAt": "2025-11-06T22:00:23Z",
           "updatedAt": "2025-11-06T22:00:23Z"
         },
         {
           "author": "feventura",
-          "authorAssociation": "CONTRIBUTOR",
+          "authorAssociation": "COLLABORATOR",
           "body": ">Section 4.2: \u201cDepending on the security needs of the application, it MAY be advantageous to perform steps 2, 3, and 5 in a timing-invariant way to prevent side-channel attackers from learning which component algorithm failed and from learning any of the inputs or output of the KEM combiner\u201d.  What is the threat here?  If each call to the composite encapsulation algorithm uses fresh randomness, then knowing which component encapsulation failed cannot help an attacker recover the composite shared secret from a successful composite encapsulation.\n\nThis argument make sense, removed this text in https://github.com/lamps-wg/draft-composite-kem/pull/245.",
           "createdAt": "2025-11-06T22:03:57Z",
           "updatedAt": "2025-11-06T22:07:21Z"
         },
         {
           "author": "feventura",
-          "authorAssociation": "CONTRIBUTOR",
+          "authorAssociation": "COLLABORATOR",
           "body": ">Section 10.2:  \u201cAdditionally, we also need to consider the case where one of the component algorithms is completely broken; that the private key is known to an attacker, or worse that the public key, private key, and ciphertext are manipulated by the attacker\u201d.  X-Wing style combiners require that the post-quantum KEM remains C2PRI secure.  This assumes that the adversary knows the post-quantum component private key, not that they get to choose it \u2013 in other words, LEAK-C2PRI not MAL-C2PRI.  It\u2019s possible that everything still holds with MAL-C2PRI, but I think that\u2019s going beyond the existing proof.\n\nThis argument make sense, removed the \"or worse\" text in https://github.com/lamps-wg/draft-composite-kem/pull/245.",
           "createdAt": "2025-11-06T22:07:12Z",
           "updatedAt": "2025-11-06T22:07:12Z"
@@ -3903,7 +3903,7 @@
         },
         {
           "author": "feventura",
-          "authorAssociation": "CONTRIBUTOR",
+          "authorAssociation": "COLLABORATOR",
           "body": "> > > Section 4.3: \u201cFor timing-invariance reasons, it is RECOMMENDED to perform both decapsulation operations and check for errors afterwards to prevent an attacker from using a timing channel to tell which component failed decapsulation\u201d.  What is the threat here?  Suppose that an attacker submits (c1, c2) for decapsulation and it fails.  The attacker can then submit (c1\u2019,  c2) and (c1, c2\u2019) for decapsulation, where c1\u2019 =/= c1 and c2\u2019 =/= c2, to test which component caused the failure.\n> > \n> > \n> > The example wouldn't work because since c1' != c1 the (c1', c2) would fail because composite would not validate both trad and PQ, same for (c1, c2') with c2' != c2.\n> \n> This is composite-kem, not composite-sigs, so I don't understand what you mean by \"validate\".\n\nI reread your comment and I noticed that I had completely skipped your question and started to look at your example, sorry for that. \n\nSo answering your question:\nThe process of decaps is sequentially so first the decaps c1 using ML-KEM then decaps c2 using traditional KEM.\nAssuming a successful decaps takes X seconds and assuming that the implementation checks for error immediately after each component decaps.\nAn attacker can notice that the time for a fail decaps took less than X seconds, they can conclude that the c1 was the component that failed. Similar for the other case, if the time for a fail decaps is close to X seconds, they can conclude that the c2 was the component that fail.\nThis comment is tackling this situation by recommending to check for errors at the end of the implementation. So if c1 fails, the implementation will still decaps c2, and then check if either c1 or c2 failed, eliminating the time difference.\n\nAs for your example, the attacker wouldn't need to submit (c1\u2019,  c2) and (c1, c2\u2019), because they would already know which component failed as my previous example, but if they tried it:\n\n* (c1\u2019,  c2) would fail with a time lower than X giving no new information for the attacker.\n* (c1, c2\u2019) would have two cases\n  * c1 is the component that failed: in this case the decaps will fail with a time lower than X, giving the information that c1 is the component that failed.\n  * c2 is the component that failed: in this case the decaps will fail with a time close to X, giving the information that c2 is the component that failed.\n\nBut even in your example, if the recommendation suggested by the comment is done, no information would be given, because in all 3 cases ((c1\u2019,  c2), (c1, c2\u2019) with c1 being the component that failed and (c1, c2\u2019) with c2 being the component that failed) the time that composite decaps fail will be the same, because the check for errors is done at the end of the decaps.",
           "createdAt": "2025-11-19T22:34:07Z",
           "updatedAt": "2025-11-19T22:40:55Z"
@@ -3914,6 +3914,13 @@
           "body": "> > > > Section 4.3: \u201cFor timing-invariance reasons, it is RECOMMENDED to perform both decapsulation operations and check for errors afterwards to prevent an attacker from using a timing channel to tell which component failed decapsulation\u201d.  What is the threat here?  Suppose that an attacker submits (c1, c2) for decapsulation and it fails.  The attacker can then submit (c1\u2019,  c2) and (c1, c2\u2019) for decapsulation, where c1\u2019 =/= c1 and c2\u2019 =/= c2, to test which component caused the failure.\n> > > \n> > > \n> > > The example wouldn't work because since c1' != c1 the (c1', c2) would fail because composite would not validate both trad and PQ, same for (c1, c2') with c2' != c2.\n> > \n> > \n> > This is composite-kem, not composite-sigs, so I don't understand what you mean by \"validate\".\n> \n> I reread your comment and I noticed that I had completely skipped your question and started to look at your example, sorry for that.\n> \n> So answering your question: The process of decaps is sequentially so first the decaps c1 using ML-KEM then decaps c2 using traditional KEM. Assuming a successful decaps takes X seconds and assuming that the implementation checks for error immediately after each component decaps. An attacker can notice that the time for a fail decaps took less than X seconds, they can conclude that the c1 was the component that failed. Similar for the other case, if the time for a fail decaps is close to X seconds, they can conclude that the c2 was the component that fail. This comment is tackling this situation by recommending to check for errors at the end of the implementation. So if c1 fails, the implementation will still decaps c2, and then check if either c1 or c2 failed, eliminating the time difference.\n> \n> As for your example, the attacker wouldn't need to submit (c1\u2019, c2) and (c1, c2\u2019), because they would already know which component failed as my previous example, but if they tried it:\n> \n> * (c1\u2019,  c2) would fail with a time lower than X giving no new information for the attacker.\n> * (c1, c2\u2019) would have two cases\n>   \n>   * c1 is the component that failed: in this case the decaps will fail with a time lower than X, giving the information that c1 is the component that failed.\n>   * c2 is the component that failed: in this case the decaps will fail with a time close to X, giving the information that c2 is the component that failed.\n> \n> But even in your example, if the recommendation suggested by the comment is done, no information would be given, because in all 3 cases ((c1\u2019, c2), (c1, c2\u2019) with c1 being the component that failed and (c1, c2\u2019) with c2 being the component that failed) the time that composite decaps fail will be the same, because the check for errors is done at the end of the decaps.\n\nA timing side channel is not needed, the attacker only needs the abilitiy to distinguish between a successful decpasulation and a decapsulation failure.\n\nSuppose the attacker submitted (c1, c2) for decapsulation, which failed, and wants to determine which component caused the failure.\n\nThe attacker chooses new (valid) component ciphertexts c1' =/= c1 and c2' =/= c2 and submits both (c1', c2) and (c1, c2') for decapsulation.\n\nIf decapsulation of (c1', c2) succeeds, the attacker can conclude that the original failure was caused by c1.\n\nIf decapsulation of (c1, c2') succeeds, the attacker can conclude that the original failure was caused by c2.\n\nIt's possible that both (c1', c2) and (c1, c2') cause decapsulation failures, but the attacker can keep repeating this process with new component ciphertexts until one of them succeeds.  (If this doesn't happen after a sufficient number of attempts, the attacker can conclude with reasonable certainty that both c1 and c2 cause component decapsulation failures.)",
           "createdAt": "2025-11-20T09:13:59Z",
           "updatedAt": "2025-11-20T12:01:42Z"
+        },
+        {
+          "author": "feventura",
+          "authorAssociation": "COLLABORATOR",
+          "body": "> > > > > Section 4.3: \u201cFor timing-invariance reasons, it is RECOMMENDED to perform both decapsulation operations and check for errors afterwards to prevent an attacker from using a timing channel to tell which component failed decapsulation\u201d.  What is the threat here?  Suppose that an attacker submits (c1, c2) for decapsulation and it fails.  The attacker can then submit (c1\u2019,  c2) and (c1, c2\u2019) for decapsulation, where c1\u2019 =/= c1 and c2\u2019 =/= c2, to test which component caused the failure.\n> > > > \n> > > > \n> > > > The example wouldn't work because since c1' != c1 the (c1', c2) would fail because composite would not validate both trad and PQ, same for (c1, c2') with c2' != c2.\n> > > \n> > > \n> > > This is composite-kem, not composite-sigs, so I don't understand what you mean by \"validate\".\n> > \n> > \n> > I reread your comment and I noticed that I had completely skipped your question and started to look at your example, sorry for that.\n> > So answering your question: The process of decaps is sequentially so first the decaps c1 using ML-KEM then decaps c2 using traditional KEM. Assuming a successful decaps takes X seconds and assuming that the implementation checks for error immediately after each component decaps. An attacker can notice that the time for a fail decaps took less than X seconds, they can conclude that the c1 was the component that failed. Similar for the other case, if the time for a fail decaps is close to X seconds, they can conclude that the c2 was the component that fail. This comment is tackling this situation by recommending to check for errors at the end of the implementation. So if c1 fails, the implementation will still decaps c2, and then check if either c1 or c2 failed, eliminating the time difference.\n> > As for your example, the attacker wouldn't need to submit (c1\u2019, c2) and (c1, c2\u2019), because they would already know which component failed as my previous example, but if they tried it:\n> > \n> > * (c1\u2019,  c2) would fail with a time lower than X giving no new information for the attacker.\n> > * (c1, c2\u2019) would have two cases\n> >   \n> >   * c1 is the component that failed: in this case the decaps will fail with a time lower than X, giving the information that c1 is the component that failed.\n> >   * c2 is the component that failed: in this case the decaps will fail with a time close to X, giving the information that c2 is the component that failed.\n> > \n> > But even in your example, if the recommendation suggested by the comment is done, no information would be given, because in all 3 cases ((c1\u2019, c2), (c1, c2\u2019) with c1 being the component that failed and (c1, c2\u2019) with c2 being the component that failed) the time that composite decaps fail will be the same, because the check for errors is done at the end of the decaps.\n> \n> A timing side channel is not needed, the attacker only needs the abilitiy to distinguish between a successful decpasulation and a decapsulation failure.\n> \n> Suppose the attacker submitted (c1, c2) for decapsulation, which failed, and wants to determine which component caused the failure.\n> \n> The attacker chooses new (valid) component ciphertexts c1' =/= c1 and c2' =/= c2 and submits both (c1', c2) and (c1, c2') for decapsulation.\n> \n> If decapsulation of (c1', c2) succeeds, the attacker can conclude that the original failure was caused by c1.\n> \n> If decapsulation of (c1, c2') succeeds, the attacker can conclude that the original failure was caused by c2.\n> \n> It's possible that both (c1', c2) and (c1, c2') cause decapsulation failures, but the attacker can keep repeating this process with new component ciphertexts until one of them succeeds. (If this doesn't happen after a sufficient number of attempts, the attacker can conclude with reasonable certainty that both c1 and c2 cause component decapsulation failures.)\n\nThat's a great comment, so since it's possible to discover which component failed (without the timing side channel), the authors decided to remove the RECOMMENDED on 4.3 that you pointed in your initial review.\nI just remove it on #248 .",
+          "createdAt": "2025-11-26T15:38:00Z",
+          "updatedAt": "2025-11-26T15:43:54Z"
         }
       ]
     },
@@ -4068,6 +4075,22 @@
           "updatedAt": "2025-11-19T16:54:24Z"
         }
       ]
+    },
+    {
+      "number": 249,
+      "id": "I_kwDOKRPFO87aoTjF",
+      "title": "Update to final OIDs assigned by IANA",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/249",
+      "state": "OPEN",
+      "author": "johngray-dev",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "We got OIDs by IANA!   Yay... Now need to update the draft...\n\nhttps://www.iana.org/assignments/smi-numbers/smi-numbers.xhtml#smi-numbers-1.3.6.1.5.5.7.6\n",
+      "createdAt": "2025-11-26T15:31:32Z",
+      "updatedAt": "2025-11-26T15:31:32Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
@@ -10768,13 +10791,39 @@
       "labels": [],
       "body": "Closes #239 ",
       "createdAt": "2025-11-19T17:00:16Z",
-      "updatedAt": "2025-11-19T20:23:01Z",
+      "updatedAt": "2025-11-26T15:42:16Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "d4fc53dc06aed07128c8e453b63ea4e36bebbca1",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_peterc_comments",
-      "headRefOid": "a1ade77aad0b1f758f3da880989e278c99d1cbbf",
+      "headRefOid": "31738a959dc6fa027f185190f875b88280b02f56",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 250,
+      "id": "PR_kwDOKRPFO861s7w1",
+      "title": "Added the Final OID registrations assigned by IANA",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/250",
+      "state": "OPEN",
+      "author": "johngray-dev",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Added the Final OID registration",
+      "createdAt": "2025-11-26T17:48:10Z",
+      "updatedAt": "2025-11-26T17:48:10Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "4f345483b9b970da04ba16ea1aa35ad39582d69c",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "jg_updatedtoFinalOids",
+      "headRefOid": "b6a96d57b900c40bff2c0007bd17decf265f2bf8",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
