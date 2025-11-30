@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-11-27T01:59:29.892355+00:00",
+  "timestamp": "2025-11-30T02:19:04.818357+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -10817,7 +10817,7 @@
       "labels": [],
       "body": "Added the Final OID registration",
       "createdAt": "2025-11-26T17:48:10Z",
-      "updatedAt": "2025-11-26T17:48:10Z",
+      "updatedAt": "2025-11-28T18:30:21Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "4f345483b9b970da04ba16ea1aa35ad39582d69c",
@@ -10829,7 +10829,81 @@
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO87RyhcM",
+          "commit": {
+            "abbreviatedOid": "b6a96d5"
+          },
+          "author": "danvangeest",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "What's the difference between `src/generate_test_vectors.py` and `src/test/generate_test_vectors.py`?  `src/test/generate_test_vectors.py` has extra old OIDs, maybe that file should be removed entirely?",
+          "createdAt": "2025-11-28T18:27:29Z",
+          "updatedAt": "2025-11-28T18:30:21Z",
+          "comments": [
+            {
+              "originalPosition": 16,
+              "body": "10 lines up there's a VERSION_IMPLEMENTED variable which may as well be updated.",
+              "createdAt": "2025-11-28T18:27:29Z",
+              "updatedAt": "2025-11-28T18:30:21Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 251,
+      "id": "PR_kwDOKRPFO8616-qc",
+      "title": "Remove final spurious instances of 'tradPK' in serialize/deserialize",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/251",
+      "state": "OPEN",
+      "author": "danvangeest",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-11-27T18:47:25Z",
+      "updatedAt": "2025-11-28T17:05:12Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "4f345483b9b970da04ba16ea1aa35ad39582d69c",
+      "headRepository": "danvangeest/draft-composite-kem",
+      "headRefName": "dvg/remove_more_tradpk",
+      "headRefOid": "5b3fbcccce6d34bd9547a11f78f85d4c2828ef61",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO87Rutu0",
+          "commit": {
+            "abbreviatedOid": "5b3fbcc"
+          },
+          "author": "janklaussner",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "Looks good, thanks.",
+          "createdAt": "2025-11-28T11:57:13Z",
+          "updatedAt": "2025-11-28T11:57:13Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOKRPFO87RyFTI",
+          "commit": {
+            "abbreviatedOid": "5b3fbcc"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "Oops. Thanks Dan.",
+          "createdAt": "2025-11-28T17:05:12Z",
+          "updatedAt": "2025-11-28T17:05:12Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
