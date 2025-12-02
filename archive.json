@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-11-30T02:19:04.818357+00:00",
+  "timestamp": "2025-12-02T02:03:57.055361+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -10864,7 +10864,7 @@
       "labels": [],
       "body": "",
       "createdAt": "2025-11-27T18:47:25Z",
-      "updatedAt": "2025-11-28T17:05:12Z",
+      "updatedAt": "2025-12-01T15:03:57Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "4f345483b9b970da04ba16ea1aa35ad39582d69c",
@@ -10901,6 +10901,19 @@
           "body": "Oops. Thanks Dan.",
           "createdAt": "2025-11-28T17:05:12Z",
           "updatedAt": "2025-11-28T17:05:12Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOKRPFO87SInl6",
+          "commit": {
+            "abbreviatedOid": "5b3fbcc"
+          },
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "Thanks for finding this!",
+          "createdAt": "2025-12-01T15:03:57Z",
+          "updatedAt": "2025-12-01T15:03:57Z",
           "comments": []
         }
       ]
