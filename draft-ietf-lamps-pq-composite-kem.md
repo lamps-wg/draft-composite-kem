@@ -1138,8 +1138,6 @@ For example, "MLKEM768-RSAOAEP2048" below is equivalent to the hexadecimal value
 
 Some of the label values contain problematic characters, such as backslashes, that can cause issues displaying correctly in rendered documents or even in source code when the compiler interprets it as an escape character. Below, these are represented directly in hexadecimal. For example, the label for id-MLKEM768-X25519-SHA3-256 is "\\.//^\\", but to avoid transcription errors it is provided only in hexadecimal as `5c2e2f2f5e5c`.
 
-EDNOTE: the OIDs listed below are prototyping OIDs defined in Entrust's 2.16.840.1.114027.80.9.1 arc but will be replaced by IANA.
-
 Composite KEM algorithm list:
 
 <!-- Note to authors, this is not auto-generated on build;
@@ -1206,77 +1204,77 @@ While it may seem odd to use 256-bit outputs at all security levels, this aligns
 
 ##  Object Identifier Allocations
 
-EDNOTE to IANA: OIDs will need to be replaced in both the ASN.1 module and in {{alg-params}}.
+IANA has registered the Object Identifiers in the "SMI Security for PKIX Algorithms" registry.
 
 ###  Module Registration
 
 The following is to be registered in "SMI Security for PKIX Module Identifier":
 
 -  Decimal: IANA Assigned - **Replace TBDMOD**
--  Description: Composite-KEM-2023 - id-mod-composite-kems
+-  Description: Composite-MLKEM-2025 - id-mod-composite-mlkem-2025
 -  References: This Document
 
 ###  Object Identifier Registrations
 
-The following is to be registered in "SMI Security for PKIX Algorithms":
+The following are registered in the "SMI Security for PKIX Algorithms":
 
 - id-MLKEM768-RSA2048-SHA3-256
-  - Decimal: IANA Assigned
+  - Decimal: 1.3.6.1.5.5.7.6.55
   - Description: id-MLKEM768-RSA2048-SHA3-256
   - References: This Document
 
 - id-MLKEM768-RSA3072-SHA3-256
-  - Decimal: IANA Assigned
+  - Decimal: 1.3.6.1.5.5.7.6.56
   - Description: id-MLKEM768-RSA3072-SHA3-256
   - References: This Document
 
 - id-MLKEM768-RSA4096-SHA3-256
-  - Decimal: IANA Assigned
+  - Decimal: 1.3.6.1.5.5.7.6.57
   - Description: id-MLKEM768-RSA4096-SHA3-256
   - References: This Document
 
+- id-MLKEM768-X25519-SHA3-256
+  - Decimal: 1.3.6.1.5.5.7.6.58
+  - Description: id-MLKEM768-ECDH-P256-SHA3-256
+  - References: This Document
+
 - id-MLKEM768-ECDH-P256-SHA3-256
-  - Decimal: IANA Assigned
+  - Decimal: 1.3.6.1.5.5.7.6.59
   - Description: id-MLKEM768-ECDH-P256-SHA3-256
   - References: This Document
 
 - id-MLKEM768-ECDH-P384-SHA3-256
-  - Decimal: IANA Assigned
+  - Decimal: 1.3.6.1.5.5.7.6.60
   - Description: id-MLKEM768-ECDH-P384-SHA3-256
   - References: This Document
 
 - id-MLKEM768-ECDH-brainpoolP256r1-SHA3-256
-  - Decimal: IANA Assigned
+  - Decimal: 1.3.6.1.5.5.7.6.61
   - Description: id-MLKEM768-ECDH-brainpoolP256r1-SHA3-256
   - References: This Document
 
-- id-MLKEM768-X25519-SHA3-256
-  - Decimal: IANA Assigned
-  - Description: id-MLKEM768-X25519-SHA3-256
-  - References: This Document
-
 - id-MLKEM1024-RSA3072-SHA3-256
-  - Decimal: IANA Assigned
+  - Decimal: 1.3.6.1.5.5.7.6.62
   - Description: id-MLKEM1024-RSA3072-SHA3-256
   - References: This Document
 
 - id-MLKEM1024-ECDH-P384-SHA3-256
-  - Decimal: IANA Assigned
+  - Decimal: 1.3.6.1.5.5.7.6.63
   - Description: id-MLKEM1024-ECDH-P384-SHA3-256
   - References: This Document
 
 - id-MLKEM1024-ECDH-brainpoolP384r1-SHA3-256
-  - Decimal: IANA Assigned
+  - Decimal: 1.3.6.1.5.5.7.6.64
   - Description: id-MLKEM1024-ECDH-brainpoolP384r1-SHA3-256
   - References: This Document
 
 - id-MLKEM1024-X448-SHA3-256
-  - Decimal: IANA Assigned
+  - Decimal: 1.3.6.1.5.5.7.6.65
   - Description: id-MLKEM1024-X448-SHA3-256
   - References: This Document
 
 - id-MLKEM1024-ECDH-P521-SHA3-256
-  - Decimal: IANA Assigned
+  - Decimal: 1.3.6.1.5.5.7.6.66
   - Description: id-MLKEM1024-ECDH-P521-SHA3-256
   - References: This Document
 

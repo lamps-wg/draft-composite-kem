@@ -29,7 +29,7 @@ from pyasn1_alt_modules import rfc5280
 from pyasn1.codec.der.decoder import decode as der_decode
 from pyasn1.codec.der.encoder import encode as der_encode
 
-VERSION_IMPLEMENTED = "draft-ietf-lamps-pq-composite-kem-08"
+VERSION_IMPLEMENTED = "draft-ietf-lamps-pq-composite-kem-11"
 
 OID_TABLE = {
   "id-RSAES-OAEP": univ.ObjectIdentifier((1,2,840,113549,1,1,7)),
@@ -41,18 +41,18 @@ OID_TABLE = {
   "id-alg-ml-kem-512": univ.ObjectIdentifier((2,16,840,1,101,3,4,4,1)),
   "id-alg-ml-kem-768": univ.ObjectIdentifier((2,16,840,1,101,3,4,4,2)),
   "id-alg-ml-kem-1024": univ.ObjectIdentifier((2,16,840,1,101,3,4,4,3)),
-  "id-MLKEM768-RSA2048-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,86)),
-  "id-MLKEM768-RSA3072-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,87)),
-  "id-MLKEM768-RSA4096-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,88)),
-  "id-MLKEM768-X25519-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,89)),
-  "id-MLKEM768-ECDH-P256-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,90)),
-  "id-MLKEM768-ECDH-P384-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,91)),
-  "id-MLKEM768-ECDH-brainpoolP256r1-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,92)),
-  "id-MLKEM1024-RSA3072-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,93)),
-  "id-MLKEM1024-ECDH-P384-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,94)),
-  "id-MLKEM1024-ECDH-brainpoolP384r1-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,95)),
-  "id-MLKEM1024-X448-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,96)),
-  "id-MLKEM1024-ECDH-P521-SHA3-256": univ.ObjectIdentifier((2,16,840,1,114027,80,5,2,97)),
+  "id-MLKEM768-RSA2048-SHA3-256": univ.ObjectIdentifier((1,3,6,1,5,5,7,6,55)),
+  "id-MLKEM768-RSA3072-SHA3-256": univ.ObjectIdentifier((1,3,6,1,5,5,7,6,56)),
+  "id-MLKEM768-RSA4096-SHA3-256": univ.ObjectIdentifier((1,3,6,1,5,5,7,6,57)),
+  "id-MLKEM768-X25519-SHA3-256": univ.ObjectIdentifier((1,3,6,1,5,5,7,6,58)),
+  "id-MLKEM768-ECDH-P256-SHA3-256": univ.ObjectIdentifier((1,3,6,1,5,5,7,6,59)),
+  "id-MLKEM768-ECDH-P384-SHA3-256": univ.ObjectIdentifier((1,3,6,1,5,5,7,6,60)),
+  "id-MLKEM768-ECDH-brainpoolP256r1-SHA3-256": univ.ObjectIdentifier((1,3,6,1,5,5,7,6,61)),
+  "id-MLKEM1024-RSA3072-SHA3-256": univ.ObjectIdentifier((1,3,6,1,5,5,7,6,62)),
+  "id-MLKEM1024-ECDH-P384-SHA3-256": univ.ObjectIdentifier((1,3,6,1,5,5,7,6,63)),
+  "id-MLKEM1024-ECDH-brainpoolP384r1-SHA3-256": univ.ObjectIdentifier((1,3,6,1,5,5,7,6,64)),
+  "id-MLKEM1024-X448-SHA3-256": univ.ObjectIdentifier((1,3,6,1,5,5,7,6,65)),
+  "id-MLKEM1024-ECDH-P521-SHA3-256": univ.ObjectIdentifier((1,3,6,1,5,5,7,6,66)),
 }
 
 REVERSE_OID_TABLE = {v: k for k, v in OID_TABLE.items()}
