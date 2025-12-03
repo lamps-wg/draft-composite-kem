@@ -29,7 +29,7 @@ from pyasn1_alt_modules import rfc5280
 from pyasn1.codec.der.decoder import decode as der_decode
 from pyasn1.codec.der.encoder import encode as der_encode
 
-VERSION_IMPLEMENTED = "draft-ietf-lamps-pq-composite-kem-08"
+VERSION_IMPLEMENTED = "draft-ietf-lamps-pq-composite-kem-11"
 
 OID_TABLE = {
   "id-RSAES-OAEP": univ.ObjectIdentifier((1,2,840,113549,1,1,7)),
