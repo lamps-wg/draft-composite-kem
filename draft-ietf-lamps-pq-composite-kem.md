@@ -166,9 +166,9 @@ informative:
   RFC7296:
   RFC8446:
   RFC8551:
-  I-D.draft-ietf-pquip-pqt-hybrid-terminology-06:
-  I-D.draft-ietf-lamps-kyber-certificates-10:
-  I-D.draft-sfluhrer-cfrg-ml-kem-security-considerations-03:
+  RFC9794:
+  I-D.draft-ietf-lamps-kyber-certificates-11:
+  I-D.draft-sfluhrer-cfrg-ml-kem-security-considerations-04:
   X-Wing:
     title: "X-Wing The Hybrid KEM You’ve Been Looking For"
     date: 2024-01-09
@@ -307,7 +307,7 @@ The advent of quantum computing poses a significant threat to current cryptograp
 Unlike previous migrations between cryptographic algorithms, the decision of when to migrate and which algorithms to adopt is far from straightforward.
 For instance, the aggressive migration timelines may require deploying PQC algorithms before their implementations have been fully hardened or certified, and dual-algorithm data protection may be desirable over a longer time period to hedge against security vulnerabilities and other implementation flaws in the new implementations.
 
-Cautious implementers may opt to combine cryptographic algorithms in such a way that an attacker would need to break all of them simultaneously to compromise the protected data. These mechanisms are referred to as Post-Quantum/Traditional (PQ/T) Hybrids {{I-D.ietf-pquip-pqt-hybrid-terminology}}.
+Cautious implementers may opt to combine cryptographic algorithms in such a way that an attacker would need to break all of them simultaneously to compromise the protected data. These mechanisms are referred to as Post-Quantum/Traditional (PQ/T) Hybrids {{RFC9794}}.
 
 Certain jurisdictions are already recommending or mandating that PQC lattice schemes be used exclusively within a PQ/T hybrid framework. The use of a composite scheme provides a straightforward implementation of hybrid solutions compatible with (and advocated by) some governments and cybersecurity agencies [BSI2021], [ANSSI2024].
 
@@ -320,7 +320,7 @@ Composite ML-KEM is applicable in any PKIX-related application that would otherw
 
 {::boilerplate bcp14+}
 
-This specification is consistent with all terminology from {{I-D.ietf-pquip-pqt-hybrid-terminology}}.
+This specification is consistent with all terminology from {{RFC9794}}.
 In addition, the following terms are used in this specification:
 
 **ALGORITHM**:
@@ -330,7 +330,7 @@ In addition, the following terms are used in this specification:
           use within an ASN.1 AlgorithmIdentifier. This
           loosely, but not precisely, aligns with the
           definitions of "cryptographic algorithm" and
-          "cryptographic scheme" given in {{I-D.ietf-pquip-pqt-hybrid-terminology}}.
+          "cryptographic scheme" given in {{RFC9794}}.
 
 **COMBINER**:
   A combiner specifies how multiple shared secret keys are combined
@@ -375,7 +375,7 @@ The algorithm descriptions use python-like syntax. The following symbols deserve
 
 ## Composite Design Philosophy
 
-{{I-D.ietf-pquip-pqt-hybrid-terminology}} defines composites as:
+{{RFC9794}} defines composites as:
 
 >   *Composite Cryptographic Element*:  A cryptographic element that
 >      incorporates multiple component cryptographic elements of the same
