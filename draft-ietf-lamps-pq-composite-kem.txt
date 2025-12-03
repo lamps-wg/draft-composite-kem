@@ -762,21 +762,18 @@ Table of Contents
    additional checking to handle certain error conditions.  In
    particular, the KEM combiner step should not be performed if either
    of the component decapsulations returned an error condition
-   indicating malformed inputs.  For timing-invariance reasons, it is
-   RECOMMENDED to perform both decapsulation operations and check for
-   errors afterwards to prevent an attacker from using a timing channel
-   to tell which component failed decapsulation.  Also, RSA-based
-   composites MUST ensure that the modulus size (i.e. the size of tradCT
-   and tradPK) matches that specified for the given Composite ML-KEM
-   algorithm in Section 7; depending on the cryptographic library used,
-   this check may be done by the library or may require an explicit
-   check as part of the Composite-ML-KEM.Decap() routine.  Implementers
-   should keep in mind that some instances of tradCT and tradPK will be
-   DER-encoded which could introduce minor length variations such as
-   dropping leading zeroes; since the underlying KEMs are assumed to be
-   IND-CCA secure, decapsulation against tampered ciphertexts or public
-   keys is assumed to fail, these length differences are considered
-   benign to the KEM combiner.
+   indicating malformed inputs.  RSA-based composites MUST ensure that
+   the modulus size (i.e. the size of tradCT and tradPK) matches that
+   specified for the given Composite ML-KEM algorithm in Section 7;
+   depending on the cryptographic library used, this check may be done
+   by the library or may require an explicit check as part of the
+   Composite-ML-KEM.Decap() routine.  Implementers should keep in mind
+   that some instances of tradCT and tradPK will be DER-encoded which
+   could introduce minor length variations such as dropping leading
+   zeroes; since the underlying KEMs are assumed to be IND-CCA secure,
+   decapsulation against tampered ciphertexts or public keys is assumed
+   to fail, these length differences are considered benign to the KEM
+   combiner.
 
    Errors produced by the component Decaps() routines MUST be forwarded
    on to the calling application.  Further discussion can be found below
@@ -1922,7 +1919,12 @@ Table of Contents
    As this specification uses ML-KEM as a component of all composite
    algorithms, all security considerations from
    [I-D.ietf-lamps-kyber-certificates] and
-   [I-D.sfluhrer-cfrg-ml-kem-security-considerations] apply.
+   [I-D.sfluhrer-cfrg-ml-kem-security-considerations] apply.  Note in
+   particular the "Encapsulation key check" in section 7.2 of [FIPS.203]
+   and the "Decapsulation input check" in section 7.3 of [FIPS.203]
+   which are required for correct and secure functioning of ML-KEM, but
+   which are considered to be external to the Encaps() and Decaps()
+   algorithms.
 
 10.1.  Why Hybrids?
 
@@ -2004,13 +2006,15 @@ Table of Contents
    The security of ML-KEM and DH hybrids is covered in [X-Wing] and
    requires that the first KEM component (ML-KEM in this construction)
    is IND-CCA2 and second ciphertext preimage resistant (C2PRI) and that
-   the second traditional component is IND-CCA2.  This design choice
-   improves performance by not including the large ML-KEM public key and
-   ciphertext, but means that an implementation error in the ML-KEM
-   component that affects the ciphertext check step of the FO transform
-   could result in the overall composite no longer achieving IND-CCA2
-   security.  This solution remains IND-CCA2 due to binding the tradPK
-   and tradCT in the KEM combiner.
+   the DH component is nominal group; i.e. a well-behaved elliptic curve
+   DH group, but does not require the traditional component to be IND-
+   CCA.  This design choice improves performance by not including the
+   large ML-KEM public key and ciphertext, but means that an
+   implementation error in the ML-KEM component that affects the
+   ciphertext check step of the FO transform could result in the overall
+   composite no longer achieving IND-CCA2 security.  This solution
+   remains IND-CCA2 due to binding the tradPK and tradCT in the KEM
+   combiner.
 
    The QSF framework presented in [X-Wing] is extended to cover RSA-OAEP
    as the traditional algorithm in place of DH by noting that RSA-OAEP
@@ -2161,6 +2165,12 @@ Table of Contents
    remain FIPS-compliant, such as future cryptographic migrations as
    well as bridging across jurisdictions with non-intersecting
    cryptographic requirements.
+
+   Successful FIPS certification will need to take into account the
+   "Encapsulation key check" in section 7.2 of [FIPS.203] and the
+   "Decapsulation input check" in section 7.3 of [FIPS.203] which are
+   required for correct and secure functioning of ML-KEM, but which are
+   considered to be external to the Encaps() and Decaps() algorithms.
 
    The following sections go into further detail on specific issues that
    relate to FIPS certification.
