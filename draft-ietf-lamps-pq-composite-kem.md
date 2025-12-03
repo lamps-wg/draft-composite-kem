@@ -289,17 +289,6 @@ This document defines combinations of ML-KEM [FIPS.203] in hybrid with tradition
 
 --- middle
 
-# Changes in version -09
-
-Interop-affecting changes:
-
-* Reverted back to the private key encoding `mlkemSeed || tradSK`.
-
-Editorial changes:
-
-* Added an Implementation Consideration section with a few suggested ways of acquiring the tradPK needed by the Decaps() routine.
-
-
 # Introduction {#sec-intro}
 
 The advent of quantum computing poses a significant threat to current cryptographic systems. Traditional cryptographic key establishment algorithms such as RSA-OAEP, Diffie-Hellman and its elliptic curve variants are vulnerable to quantum attacks. During the transition to post-quantum cryptography (PQC), there is considerable uncertainty regarding the robustness of both existing and new cryptographic algorithms. While we can no longer fully trust traditional cryptography, we also cannot immediately place complete trust in post-quantum replacements until they have undergone extensive scrutiny and real-world testing to uncover and rectify both algorithmic weaknesses as well as implementation flaws across all the new implementations.
