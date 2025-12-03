@@ -345,11 +345,11 @@ Table of Contents
    *  DeserializeCiphertext(bytes) -> (mlkemCT, tradCT): Parse a byte
       string to recover the component ciphertexts.
 
-   *  SerializePrivateKey(mlkemSeed, tradPK, tradSK) -> bytes: Produce a
-      byte string encoding of the component private keys.
+   *  SerializePrivateKey(mlkemSeed, tradSK) -> bytes: Produce a byte
+      string encoding of the component private keys.
 
-   *  DeserializePrivateKey(bytes) -> (mlkemSeed, tradPK, tradSK): Parse
-      a byte string to recover the component private keys.
+   *  DeserializePrivateKey(bytes) -> (mlkemSeed, tradSK): Parse a byte
+      string to recover the component private keys.
 
    Full definitions of serialization and deserialization algorithms can
    be found in Section 5.
@@ -540,7 +540,7 @@ Table of Contents
      3. Output the composite public and private keys
 
        pk = SerializePublicKey(mlkemPK, tradPK)
-       sk = SerializePrivateKey(mlkemSeed, tradPK, tradSK)
+       sk = SerializePrivateKey(mlkemSeed, tradSK)
        return (pk, sk)
 
    In order to ensure fresh keys, the key generation functions MUST be
@@ -979,8 +979,7 @@ Table of Contents
    The serialization routine for keys simply concatenates the private
    keys of the component algorithms, as defined below:
 
-   Composite-ML-KEM.SerializePrivateKey(mlkemSeed, tradPK, tradSK)
-                                     -> bytes
+   Composite-ML-KEM.SerializePrivateKey(mlkemSeed, tradSK) -> bytes
 
    Explicit inputs:
 

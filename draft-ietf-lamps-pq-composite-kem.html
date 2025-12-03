@@ -1535,10 +1535,10 @@ but <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span> uses <code
           <p id="section-3-6.4.1"><code>DeserializeCiphertext(bytes) -&gt; (mlkemCT, tradCT)</code>: Parse a byte string to recover the component ciphertexts.<a href="#section-3-6.4.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-3-6.5">
-          <p id="section-3-6.5.1"><code>SerializePrivateKey(mlkemSeed, tradPK, tradSK) -&gt; bytes</code>: Produce a byte string encoding of the component private keys.<a href="#section-3-6.5.1" class="pilcrow">¶</a></p>
+          <p id="section-3-6.5.1"><code>SerializePrivateKey(mlkemSeed, tradSK) -&gt; bytes</code>: Produce a byte string encoding of the component private keys.<a href="#section-3-6.5.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-3-6.6">
-          <p id="section-3-6.6.1"><code>DeserializePrivateKey(bytes) -&gt; (mlkemSeed, tradPK, tradSK)</code>: Parse a byte string to recover the component private keys.<a href="#section-3-6.6.1" class="pilcrow">¶</a></p>
+          <p id="section-3-6.6.1"><code>DeserializePrivateKey(bytes) -&gt; (mlkemSeed, tradSK)</code>: Parse a byte string to recover the component private keys.<a href="#section-3-6.6.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <p id="section-3-7">Full definitions of serialization and deserialization algorithms can be found in <a href="#sec-serialization" class="auto internal xref">Section 5</a>.<a href="#section-3-7" class="pilcrow">¶</a></p>
@@ -1684,7 +1684,7 @@ Key Generation Process:
   3. Output the composite public and private keys
 
     pk = SerializePublicKey(mlkemPK, tradPK)
-    sk = SerializePrivateKey(mlkemSeed, tradPK, tradSK)
+    sk = SerializePrivateKey(mlkemSeed, tradSK)
     return (pk, sk)
 
 </pre><a href="#section-4.1-4" class="pilcrow">¶</a>
@@ -2034,8 +2034,7 @@ Deserialization Process:
 <p id="section-5.2-1">The serialization routine for keys simply concatenates the private keys of the component algorithms, as defined below:<a href="#section-5.2-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-5.2-2">
 <pre>
-Composite-ML-KEM.SerializePrivateKey(mlkemSeed, tradPK, tradSK)
-                                  -&gt; bytes
+Composite-ML-KEM.SerializePrivateKey(mlkemSeed, tradSK) -&gt; bytes
 
 Explicit inputs:
 
