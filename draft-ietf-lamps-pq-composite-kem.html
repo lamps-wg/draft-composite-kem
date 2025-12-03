@@ -1408,7 +1408,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <p id="section-2-1">The advent of quantum computing poses a significant threat to current cryptographic systems. Traditional cryptographic key establishment algorithms such as RSA-OAEP, Diffie-Hellman and its elliptic curve variants are vulnerable to quantum attacks. During the transition to post-quantum cryptography (PQC), there is considerable uncertainty regarding the robustness of both existing and new cryptographic algorithms. While we can no longer fully trust traditional cryptography, we also cannot immediately place complete trust in post-quantum replacements until they have undergone extensive scrutiny and real-world testing to uncover and rectify both algorithmic weaknesses as well as implementation flaws across all the new implementations.<a href="#section-2-1" class="pilcrow">¶</a></p>
 <p id="section-2-2">Unlike previous migrations between cryptographic algorithms, the decision of when to migrate and which algorithms to adopt is far from straightforward.
 For instance, the aggressive migration timelines may require deploying PQC algorithms before their implementations have been fully hardened or certified, and dual-algorithm data protection may be desirable over a longer time period to hedge against security vulnerabilities and other implementation flaws in the new implementations.<a href="#section-2-2" class="pilcrow">¶</a></p>
-<p id="section-2-3">Cautious implementers may opt to combine cryptographic algorithms in such a way that an attacker would need to break all of them simultaneously to compromise the protected data. These mechanisms are referred to as Post-Quantum/Traditional (PQ/T) Hybrids <span>[<a href="#I-D.ietf-pquip-pqt-hybrid-terminology" class="cite xref">I-D.ietf-pquip-pqt-hybrid-terminology</a>]</span>.<a href="#section-2-3" class="pilcrow">¶</a></p>
+<p id="section-2-3">Cautious implementers may opt to combine cryptographic algorithms in such a way that an attacker would need to break all of them simultaneously to compromise the protected data. These mechanisms are referred to as Post-Quantum/Traditional (PQ/T) Hybrids <span>[<a href="#RFC9794" class="cite xref">RFC9794</a>]</span>.<a href="#section-2-3" class="pilcrow">¶</a></p>
 <p id="section-2-4">Certain jurisdictions are already recommending or mandating that PQC lattice schemes be used exclusively within a PQ/T hybrid framework. The use of a composite scheme provides a straightforward implementation of hybrid solutions compatible with (and advocated by) some governments and cybersecurity agencies <span>[<a href="#BSI2021" class="cite xref">BSI2021</a>]</span>, <span>[<a href="#ANSSI2024" class="cite xref">ANSSI2024</a>]</span>.<a href="#section-2-4" class="pilcrow">¶</a></p>
 <p id="section-2-5">This specification defines a specific instantiation of the PQ/T Hybrid paradigm called "composite" where multiple cryptographic algorithms are combined to form a single key encapsulation mechanism (KEM) presenting a single public key and ciphertext such that it can be treated as a single atomic algorithm at the protocol level; a property referred to as "protocol backwards compatibility" since it can be applied to protocols that are not explicitly hybrid-aware. Composite algorithms retain some security even if one of their component algorithms is broken. Concrete instantiations of composite ML-KEM algorithms are provided based on ML-KEM, RSA-OAEP and ECDH. Backwards compatibility in the sense of upgraded systems continuing to inter-operate with legacy systems is not directly covered in this specification, but is the subject of <a href="#sec-backwards-compat" class="auto internal xref">Section 11.2</a>. The idea of a composite was first presented in <span>[<a href="#Bindel2017" class="cite xref">Bindel2017</a>]</span>.<a href="#section-2-5" class="pilcrow">¶</a></p>
 <p id="section-2-6">Composite ML-KEM is applicable in any PKIX-related application that would otherwise use ML-KEM.<a href="#section-2-6" class="pilcrow">¶</a></p>
@@ -1424,7 +1424,7 @@ described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</s
 appear in all capitals, as shown here.
 These words may also appear in this document in
 lower case as plain English words, absent their normative meanings.<a href="#section-2.1-1" class="pilcrow">¶</a></p>
-<p id="section-2.1-2">This specification is consistent with all terminology from <span>[<a href="#I-D.ietf-pquip-pqt-hybrid-terminology" class="cite xref">I-D.ietf-pquip-pqt-hybrid-terminology</a>]</span>.
+<p id="section-2.1-2">This specification is consistent with all terminology from <span>[<a href="#RFC9794" class="cite xref">RFC9794</a>]</span>.
 In addition, the following terms are used in this specification:<a href="#section-2.1-2" class="pilcrow">¶</a></p>
 <p id="section-2.1-3"><strong>ALGORITHM</strong>:
           The usage of the term "algorithm" within this
@@ -1433,7 +1433,7 @@ In addition, the following terms are used in this specification:<a href="#sectio
           use within an ASN.1 AlgorithmIdentifier. This
           loosely, but not precisely, aligns with the
           definitions of "cryptographic algorithm" and
-          "cryptographic scheme" given in <span>[<a href="#I-D.ietf-pquip-pqt-hybrid-terminology" class="cite xref">I-D.ietf-pquip-pqt-hybrid-terminology</a>]</span>.<a href="#section-2.1-3" class="pilcrow">¶</a></p>
+          "cryptographic scheme" given in <span>[<a href="#RFC9794" class="cite xref">RFC9794</a>]</span>.<a href="#section-2.1-3" class="pilcrow">¶</a></p>
 <p id="section-2.1-4"><strong>COMBINER</strong>:
   A combiner specifies how multiple shared secret keys are combined
   into a single shared secret key.<a href="#section-2.1-4" class="pilcrow">¶</a></p>
@@ -1479,7 +1479,7 @@ The algorithm descriptions use python-like syntax. The following symbols deserve
         <h3 id="name-composite-design-philosophy">
 <a href="#section-2.2" class="section-number selfRef">2.2. </a><a href="#name-composite-design-philosophy" class="section-name selfRef">Composite Design Philosophy</a>
         </h3>
-<p id="section-2.2-1"><span>[<a href="#I-D.ietf-pquip-pqt-hybrid-terminology" class="cite xref">I-D.ietf-pquip-pqt-hybrid-terminology</a>]</span> defines composites as:<a href="#section-2.2-1" class="pilcrow">¶</a></p>
+<p id="section-2.2-1"><span>[<a href="#RFC9794" class="cite xref">RFC9794</a>]</span> defines composites as:<a href="#section-2.2-1" class="pilcrow">¶</a></p>
 <ul class="normal ulEmpty">
 <li class="normal ulEmpty" id="section-2.2-2.1">
             <p id="section-2.2-2.1.1"><em>Composite Cryptographic Element</em>:  A cryptographic element that
@@ -3579,15 +3579,11 @@ pubKey = ec_multiply_by_scalar(g, s)
 <dd class="break"></dd>
 <dt id="I-D.ietf-lamps-kyber-certificates">[I-D.ietf-lamps-kyber-certificates]</dt>
         <dd>
-<span class="refAuthor">Turner, S.</span>, <span class="refAuthor">Kampanakis, P.</span>, <span class="refAuthor">Massimo, J.</span>, and <span class="refAuthor">B. Westerbaan</span>, <span class="refTitle">"Internet X.509 Public Key Infrastructure - Algorithm Identifiers for the Module-Lattice-Based Key-Encapsulation Mechanism (ML-KEM)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-lamps-kyber-certificates-10</span>, <time datetime="2025-04-16" class="refDate">16 April 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-lamps-kyber-certificates-10">https://datatracker.ietf.org/doc/html/draft-ietf-lamps-kyber-certificates-10</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="I-D.ietf-pquip-pqt-hybrid-terminology">[I-D.ietf-pquip-pqt-hybrid-terminology]</dt>
-        <dd>
-<span class="refAuthor">D, F.</span>, <span class="refAuthor">P, M.</span>, and <span class="refAuthor">B. Hale</span>, <span class="refTitle">"Terminology for Post-Quantum Traditional Hybrid Schemes"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-pquip-pqt-hybrid-terminology-06</span>, <time datetime="2025-01-10" class="refDate">10 January 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-pquip-pqt-hybrid-terminology-06">https://datatracker.ietf.org/doc/html/draft-ietf-pquip-pqt-hybrid-terminology-06</a>&gt;</span>. </dd>
+<span class="refAuthor">Turner, S.</span>, <span class="refAuthor">Kampanakis, P.</span>, <span class="refAuthor">Massimo, J.</span>, and <span class="refAuthor">B. Westerbaan</span>, <span class="refTitle">"Internet X.509 Public Key Infrastructure - Algorithm Identifiers for the Module-Lattice-Based Key-Encapsulation Mechanism (ML-KEM)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-lamps-kyber-certificates-11</span>, <time datetime="2025-07-22" class="refDate">22 July 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-lamps-kyber-certificates-11">https://datatracker.ietf.org/doc/html/draft-ietf-lamps-kyber-certificates-11</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.sfluhrer-cfrg-ml-kem-security-considerations">[I-D.sfluhrer-cfrg-ml-kem-security-considerations]</dt>
         <dd>
-<span class="refAuthor">Fluhrer, S.</span>, <span class="refAuthor">Dang, Q.</span>, <span class="refAuthor">Mattsson, J. P.</span>, <span class="refAuthor">Milner, K.</span>, and <span class="refAuthor">D. Shiu</span>, <span class="refTitle">"ML-KEM Security Considerations"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-sfluhrer-cfrg-ml-kem-security-considerations-03</span>, <time datetime="2025-05-15" class="refDate">15 May 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-sfluhrer-cfrg-ml-kem-security-considerations-03">https://datatracker.ietf.org/doc/html/draft-sfluhrer-cfrg-ml-kem-security-considerations-03</a>&gt;</span>. </dd>
+<span class="refAuthor">Fluhrer, S.</span>, <span class="refAuthor">Dang, Q.</span>, <span class="refAuthor">Mattsson, J. P.</span>, <span class="refAuthor">Milner, K.</span>, and <span class="refAuthor">D. Shiu</span>, <span class="refTitle">"ML-KEM Security Considerations"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-sfluhrer-cfrg-ml-kem-security-considerations-04</span>, <time datetime="2025-11-17" class="refDate">17 November 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-sfluhrer-cfrg-ml-kem-security-considerations-04">https://datatracker.ietf.org/doc/html/draft-sfluhrer-cfrg-ml-kem-security-considerations-04</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC2986">[RFC2986]</dt>
         <dd>
@@ -3636,6 +3632,10 @@ pubKey = ec_multiply_by_scalar(g, s)
 <dt id="RFC9180">[RFC9180]</dt>
         <dd>
 <span class="refAuthor">Barnes, R.</span>, <span class="refAuthor">Bhargavan, K.</span>, <span class="refAuthor">Lipp, B.</span>, and <span class="refAuthor">C. Wood</span>, <span class="refTitle">"Hybrid Public Key Encryption"</span>, <span class="seriesInfo">RFC 9180</span>, <span class="seriesInfo">DOI 10.17487/RFC9180</span>, <time datetime="2022-02" class="refDate">February 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc9180">https://www.rfc-editor.org/info/rfc9180</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9794">[RFC9794]</dt>
+        <dd>
+<span class="refAuthor">Driscoll, F.</span>, <span class="refAuthor">Parsons, M.</span>, and <span class="refAuthor">B. Hale</span>, <span class="refTitle">"Terminology for Post-Quantum Traditional Hybrid Schemes"</span>, <span class="seriesInfo">RFC 9794</span>, <span class="seriesInfo">DOI 10.17487/RFC9794</span>, <time datetime="2025-06" class="refDate">June 2025</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc9794">https://www.rfc-editor.org/info/rfc9794</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="SP800-131Ar2">[SP800-131Ar2]</dt>
         <dd>
