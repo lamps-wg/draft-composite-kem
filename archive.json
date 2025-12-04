@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-12-02T02:03:57.055361+00:00",
+  "timestamp": "2025-12-04T02:04:32.986348+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -3849,15 +3849,15 @@
       "id": "I_kwDOKRPFO87VkBVE",
       "title": "Address Peter C's WGLC comments",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/239",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "danvangeest",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Peter C's WGLC comments: https://mailarchive.ietf.org/arch/msg/spasm/erQjg2YMk5hjpdZoJXiB0ophnUU/",
       "createdAt": "2025-11-03T17:13:39Z",
-      "updatedAt": "2025-11-26T15:43:54Z",
-      "closedAt": null,
+      "updatedAt": "2025-12-03T15:17:11Z",
+      "closedAt": "2025-12-03T15:17:11Z",
       "comments": [
         {
           "author": "feventura",
@@ -4061,10 +4061,12 @@
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "Post-WGLC"
+      ],
       "body": "CFRG will have an IANA registry for composite kem labels and other stuff. We don't need to document anything in our draft about this, but we do need to have our values added to the registry.\n\n(copied over from https://github.com/lamps-wg/draft-composite-sigs/issues/315)",
       "createdAt": "2025-11-19T03:33:03Z",
-      "updatedAt": "2025-11-19T16:54:24Z",
+      "updatedAt": "2025-12-03T15:31:14Z",
       "closedAt": null,
       "comments": [
         {
@@ -4081,16 +4083,48 @@
       "id": "I_kwDOKRPFO87aoTjF",
       "title": "Update to final OIDs assigned by IANA",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/249",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "johngray-dev",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "We got OIDs by IANA!   Yay... Now need to update the draft...\n\nhttps://www.iana.org/assignments/smi-numbers/smi-numbers.xhtml#smi-numbers-1.3.6.1.5.5.7.6\n",
       "createdAt": "2025-11-26T15:31:32Z",
-      "updatedAt": "2025-11-26T15:31:32Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2025-12-03T15:19:33Z",
+      "closedAt": "2025-12-03T15:19:33Z",
+      "comments": [
+        {
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Updated the draft with the OID assignments",
+          "createdAt": "2025-12-03T15:19:33Z",
+          "updatedAt": "2025-12-03T15:19:33Z"
+        }
+      ]
+    },
+    {
+      "number": 252,
+      "id": "I_kwDOKRPFO87b4dR-",
+      "title": "Update References",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/252",
+      "state": "CLOSED",
+      "author": "janklaussner",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Hello I would like to point out that a few references to external documents need to be updated: \n[I-D.ietf-lamps-dilithium-certificates] -> RFC 9881 \n[I-D.ietf-pquip-hybrid-signature-spectrums] -> version 07 \n[I-D.ietf-lamps-kyber-certificates] -> version 11 \n[I-D.ietf-pquip-pqt-hybrid-terminology] -> RFC 9794 \n[I-D.sfluhrer-cfrg-ml-kem-security-considerations] -> version 04 \n\n\nSincerely, Piotr Popis\n",
+      "createdAt": "2025-12-03T08:13:51Z",
+      "updatedAt": "2025-12-03T15:30:21Z",
+      "closedAt": "2025-12-03T15:30:21Z",
+      "comments": [
+        {
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Updated the references as requested.",
+          "createdAt": "2025-12-03T15:30:21Z",
+          "updatedAt": "2025-12-03T15:30:21Z"
+        }
+      ]
     }
   ],
   "pulls": [
@@ -10784,24 +10818,26 @@
       "id": "PR_kwDOKRPFO860ZxeH",
       "title": "Addressing PeterC's comments",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/248",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Closes #239 ",
       "createdAt": "2025-11-19T17:00:16Z",
-      "updatedAt": "2025-11-26T15:42:16Z",
+      "updatedAt": "2025-12-03T15:17:10Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "d4fc53dc06aed07128c8e453b63ea4e36bebbca1",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_peterc_comments",
       "headRefOid": "31738a959dc6fa027f185190f875b88280b02f56",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-12-03T15:17:10Z",
+      "mergedAt": "2025-12-03T15:17:10Z",
+      "mergedBy": "johngray-dev",
+      "mergeCommit": {
+        "oid": "50a6fc97681034cced5aece8292bc139be6a2342"
+      },
       "comments": [],
       "reviews": []
     },
@@ -10810,24 +10846,26 @@
       "id": "PR_kwDOKRPFO861s7w1",
       "title": "Added the Final OID registrations assigned by IANA",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/250",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "johngray-dev",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Added the Final OID registration",
       "createdAt": "2025-11-26T17:48:10Z",
-      "updatedAt": "2025-11-28T18:30:21Z",
+      "updatedAt": "2025-12-03T15:16:27Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "4f345483b9b970da04ba16ea1aa35ad39582d69c",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "jg_updatedtoFinalOids",
-      "headRefOid": "b6a96d57b900c40bff2c0007bd17decf265f2bf8",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "09a83278b600006a3c92e6825089cc665fdfaa72",
+      "closedAt": "2025-12-03T15:16:27Z",
+      "mergedAt": "2025-12-03T15:16:27Z",
+      "mergedBy": "johngray-dev",
+      "mergeCommit": {
+        "oid": "1dcc9d0b885782fd1d228916e281e4f33abc5e24"
+      },
       "comments": [],
       "reviews": [
         {
@@ -10857,24 +10895,26 @@
       "id": "PR_kwDOKRPFO8616-qc",
       "title": "Remove final spurious instances of 'tradPK' in serialize/deserialize",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/251",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "danvangeest",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2025-11-27T18:47:25Z",
-      "updatedAt": "2025-12-01T15:03:57Z",
+      "updatedAt": "2025-12-03T15:17:47Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "4f345483b9b970da04ba16ea1aa35ad39582d69c",
       "headRepository": "danvangeest/draft-composite-kem",
       "headRefName": "dvg/remove_more_tradpk",
       "headRefOid": "5b3fbcccce6d34bd9547a11f78f85d4c2828ef61",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-12-03T15:17:47Z",
+      "mergedAt": "2025-12-03T15:17:47Z",
+      "mergedBy": "johngray-dev",
+      "mergeCommit": {
+        "oid": "5ed0eda52402194c53875fb20e7a2ba395b7d6ad"
+      },
       "comments": [],
       "reviews": [
         {
@@ -10917,6 +10957,62 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 253,
+      "id": "PR_kwDOKRPFO8622_gx",
+      "title": "Updated references #252",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/253",
+      "state": "MERGED",
+      "author": "johngray-dev",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-12-03T15:29:34Z",
+      "updatedAt": "2025-12-03T15:30:05Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "5ed0eda52402194c53875fb20e7a2ba395b7d6ad",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "jg_252_references",
+      "headRefOid": "ac6ac670f9910202f557f8d8f2848fa3593aa458",
+      "closedAt": "2025-12-03T15:30:05Z",
+      "mergedAt": "2025-12-03T15:30:05Z",
+      "mergedBy": "johngray-dev",
+      "mergeCommit": {
+        "oid": "91f36a06dc835d1bf1bb4fa6d1d07a8d96f1d2c6"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 254,
+      "id": "PR_kwDOKRPFO8623NqA",
+      "title": "Jg 252 references",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/254",
+      "state": "MERGED",
+      "author": "johngray-dev",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "removed change log",
+      "createdAt": "2025-12-03T15:46:11Z",
+      "updatedAt": "2025-12-03T15:47:23Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "91f36a06dc835d1bf1bb4fa6d1d07a8d96f1d2c6",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "jg_252_references",
+      "headRefOid": "56833d11049bc013afc7d97483c1302ef6fdcd79",
+      "closedAt": "2025-12-03T15:47:23Z",
+      "mergedAt": "2025-12-03T15:47:23Z",
+      "mergedBy": "johngray-dev",
+      "mergeCommit": {
+        "oid": "b1ce4386db5b54f998876a4a8320edb04418f513"
+      },
+      "comments": [],
+      "reviews": []
     }
   ]
 }
