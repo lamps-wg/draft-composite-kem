@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-12-04T02:04:32.986348+00:00",
+  "timestamp": "2025-12-07T02:19:44.861080+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -4125,6 +4125,22 @@
           "updatedAt": "2025-12-03T15:30:21Z"
         }
       ]
+    },
+    {
+      "number": 255,
+      "id": "I_kwDOKRPFO87cfnFk",
+      "title": "editorial fixes (typos, naming, anchors)",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/255",
+      "state": "OPEN",
+      "author": "idrassi",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "This issue tracks a small set of purely editorial fixes to `draft-ietf-lamps-pq-composite-kem`:\n\n1. Key Generation {#sec-keygen}:\n   Replace `mldsaSeed` with `mlkemSeed` in the paragraph describing use of `ML-KEM.KeyGen` (copy-paste artifact from ML-DSA text).\n\n2. SerializePrivateKey and DeserializePrivateKey {#sec-serialize-privkey}:\n   Remove the stray sentence about `BytesToInteger(x)` and FIPS.204: the function is not used in this draft and the reference appears unrelated (artifact from a composite ML-DSA draft)\n\n3. SerializeCiphertext and DeserializeCiphertext:\n   Fix the return variable name in the function DeserializeCiphertext signature from `mldkemCT` to `mlkemCT` for consistency with the rest of the draft.\n\n4. Object Identifier Registrations:\n   For OID `1.3.6.1.5.5.7.6.58` (`id-MLKEM768-X25519-SHA3-256`), change the Description from `id-MLKEM768-ECDH-P256-SHA3-256` to `id-MLKEM768-X25519-SHA3-256`.\n\n5. Serialization {#sec-serialization}:\n   Rename the table anchor `tab-mldsa-sizes` (used for \u201cML-KEM Sizes\u201d) to something like `tab-mlkem-sizes` to avoid confusion with ML-DSA.\n",
+      "createdAt": "2025-12-05T14:52:14Z",
+      "updatedAt": "2025-12-05T14:52:14Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
@@ -11011,6 +11027,32 @@
       "mergeCommit": {
         "oid": "b1ce4386db5b54f998876a4a8320edb04418f513"
       },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 256,
+      "id": "PR_kwDOKRPFO863UJly",
+      "title": "Fix minor editorial issues (typos, table anchor, IANA description) for #255",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/256",
+      "state": "OPEN",
+      "author": "idrassi",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "This PR addresses the minor editorial issues reported in https://github.com/lamps-wg/draft-composite-kem/issues/255:\r\n\r\n1. KeyGen text\r\n\r\n   * Fix typo in the example call to `ML-KEM.KeyGen`\r\n   * change `mldsaSeed` to `mlkemSeed`.\r\n\r\n2. ML-KEM size table anchor\r\n\r\n   * Rename the anchor from `#tab-mldsa-sizes` to `#tab-mlkem-sizes` to match the content (\"ML-KEM Sizes\") and avoid confusion with ML-DSA.\r\n\r\n3. SerializePrivateKey section\r\n\r\n   * Remove the stray sentence mentioning `BytesToInteger(x)` and FIPS.204 which is not used elsewhere in this draft.\r\n\r\n4. DeserializeCiphertext pseudocode\r\n\r\n   * Fix return variable name in the function signature: change `mldkemCT` to `mlkemCT`.\r\n\r\n5. Object Identifier Registrations\r\n\r\n   * Correct the Description for OID `1.3.6.1.5.5.7.6.58` from `id-MLKEM768-ECDH-P256-SHA3-256` to `id-MLKEM768-X25519-SHA3-256`.\r\n\r\n",
+      "createdAt": "2025-12-05T15:06:16Z",
+      "updatedAt": "2025-12-05T15:06:16Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "b1ce4386db5b54f998876a4a8320edb04418f513",
+      "headRepository": "idrassi/draft-composite-kem",
+      "headRefName": "editorial_fixes",
+      "headRefOid": "bbfb235491a3fe3d3c1ffc5e67d8edf84d7c2bd3",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
       "comments": [],
       "reviews": []
     }
