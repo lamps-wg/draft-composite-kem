@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 6 June 2026                                             M. Pala
+Expires: 13 June 2026                                            M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                         3 December 2025
+                                                        10 December 2025
 
 
       Composite ML-KEM for use in X.509 Public Key Infrastructure
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 6 June 2026.
+   This Internet-Draft will expire on 13 June 2026.
 
 Copyright Notice
 
@@ -539,7 +539,7 @@ Table of Contents
    Note that this keygen routine outputs a serialized composite key,
    which contains only the ML-KEM seed.  Implementations should feel
    free to modify this routine to additionally output the expanded
-   mlkemSK or to make free use of ML-KEM.KeyGen(mldsaSeed) as needed to
+   mlkemSK or to make free use of ML-KEM.KeyGen(mlkemSeed) as needed to
    expand the ML-KEM seed into an expanded key prior to performing a
    decapsulation operation.
 
@@ -1028,10 +1028,6 @@ Table of Contents
 
         output (mlkemSeed,tradSK)
 
-   The function BytesToInteger(x) is not defined in [FIPS.204], but is
-   the obvious inverse of the defined IntegerToBytes() which is the
-   usual little-endian encoding of an integer.
-
 4.3.  SerializeCiphertext and DeserializeCiphertext
 
    The serialization routine for the composite ciphertext value simply
@@ -1071,7 +1067,7 @@ Table of Contents
    represented by <OID>.
 
    Composite-ML-KEM<OID>.DeserializeCiphertext(bytes)
-                                             -> (mldkemCT, tradCT)
+                                             -> (mlkemCT, tradCT)
 
    Explicit inputs:
 
@@ -1831,7 +1827,7 @@ Table of Contents
 
       -  Decimal: 1.3.6.1.5.5.7.6.58
 
-      -  Description: id-MLKEM768-ECDH-P256-SHA3-256
+      -  Description: id-MLKEM768-X25519-SHA3-256
 
       -  References: This Document
 
