@@ -549,7 +549,7 @@ Key Generation Process:
 
 In order to ensure fresh keys, the key generation functions MUST be executed for both component algorithms. Compliant parties MUST NOT use, import or export component keys that are used in other contexts, combinations, or by themselves as keys for standalone algorithm use. For more details on the security considerations around key reuse, see {{sec-cons-key-reuse}}.
 
-Note that this keygen routine outputs a serialized composite key, which contains only the ML-KEM seed. Implementations should feel free to modify this routine to additionally output the expanded `mlkemSK` or to make free use of `ML-KEM.KeyGen(mldsaSeed)` as needed to expand the ML-KEM seed into an expanded key prior to performing a decapsulation operation.
+Note that this keygen routine outputs a serialized composite key, which contains only the ML-KEM seed. Implementations should feel free to modify this routine to additionally output the expanded `mlkemSK` or to make free use of `ML-KEM.KeyGen(mlkemSeed)` as needed to expand the ML-KEM seed into an expanded key prior to performing a decapsulation operation.
 
 Variations in the keygen process above and decapsulation processes below to accommodate particular private key storage mechanisms or alternate interfaces to the underlying cryptographic modules are considered to be conformant to this specification so long as they produce the same output and error handling.
 
@@ -752,7 +752,7 @@ Deserialization is possible because ML-KEM has fixed-length public keys, private
 | ----------- | ----------- | ----------- |  ----------- |
 | ML-KEM-768  |    1184     |     64      |     1088     |
 | ML-KEM-1024 |    1568     |     64      |     1568     |
-{: #tab-mldsa-sizes title="ML-KEM Sizes"}
+{: #tab-mlkem-sizes title="ML-KEM Sizes"}
 
 For all serialization routines below, when these values are required to be carried in an ASN.1 structure, they are wrapped as described in {{sec-encoding-to-der}}.
 
@@ -918,9 +918,6 @@ Deserialization Process:
 ~~~
 
 
-The function `BytesToInteger(x)` is not defined in [FIPS.204], but is the obvious inverse of the defined `IntegerToBytes()` which is the usual little-endian encoding of an integer.
-
-
 ## SerializeCiphertext and DeserializeCiphertext
 
 The serialization routine for the composite ciphertext value simply concatenates the fixed-length
@@ -960,7 +957,7 @@ The following describes how to instantiate a `DeserializeCiphertext(bytes)` func
 
 ~~~
 Composite-ML-KEM<OID>.DeserializeCiphertext(bytes)
-                                          -> (mldkemCT, tradCT)
+                                          -> (mlkemCT, tradCT)
 
 Explicit inputs:
 
@@ -1223,7 +1220,7 @@ The following are registered in the "SMI Security for PKIX Algorithms":
 
 - id-MLKEM768-X25519-SHA3-256
   - Decimal: 1.3.6.1.5.5.7.6.58
-  - Description: id-MLKEM768-ECDH-P256-SHA3-256
+  - Description: id-MLKEM768-X25519-SHA3-256
   - References: This Document
 
 - id-MLKEM768-ECDH-P256-SHA3-256
