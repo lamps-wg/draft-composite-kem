@@ -1171,13 +1171,16 @@ svg :is([fill="white"], [fill^="#fff"]) {
         </h2>
 <nav class="toc"><ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1">
-            <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="auto internal xref">1</a>.  <a href="#name-introduction" class="internal xref">Introduction</a></p>
+            <p id="section-toc.1-1.1.1"><a href="#section-1" class="auto internal xref">1</a>.  <a href="#name-introduction" class="internal xref">Introduction</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.1">
                 <p id="section-toc.1-1.1.2.1.1" class="keepWithNext"><a href="#section-1.1" class="auto internal xref">1.1</a>.  <a href="#name-conventions-and-terminology" class="internal xref">Conventions and Terminology</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.2">
-                <p id="section-toc.1-1.1.2.2.1" class="keepWithNext"><a href="#section-1.2" class="auto internal xref">1.2</a>.  <a href="#name-composite-design-philosophy" class="internal xref">Composite Design Philosophy</a></p>
+                <p id="section-toc.1-1.1.2.2.1" class="keepWithNext"><a href="#section-1.2" class="auto internal xref">1.2</a>.  <a href="#name-notation" class="internal xref">Notation</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.3">
+                <p id="section-toc.1-1.1.2.3.1" class="keepWithNext"><a href="#section-1.3" class="auto internal xref">1.3</a>.  <a href="#name-composite-design-philosophy" class="internal xref">Composite Design Philosophy</a></p>
 </li>
             </ul>
 </li>
@@ -1415,65 +1418,64 @@ In addition, the following terms are used in this specification:<a href="#sectio
           The usage of the term "algorithm" within this
           specification generally refers to any function which
           has a registered Object Identifier (OID) for
-          use within an ASN.1 AlgorithmIdentifier. This
-          loosely, but not precisely, aligns with the
-          definitions of "cryptographic algorithm" and
-          "cryptographic scheme" given in <span>[<a href="#RFC9794" class="cite xref">RFC9794</a>]</span>.<a href="#section-1.1-3" class="pilcrow">¶</a></p>
+          use within an ASN.1 AlgorithmIdentifier.<a href="#section-1.1-3" class="pilcrow">¶</a></p>
 <p id="section-1.1-4"><strong>COMBINER</strong>:
   A combiner specifies how multiple shared secret keys are combined
   into a single shared secret key.<a href="#section-1.1-4" class="pilcrow">¶</a></p>
-<p id="section-1.1-5"><strong>COMPONENT / PRIMITIVE</strong>:
+<p id="section-1.1-5"><strong>COMPOSITE CRYPTIGRAPHIC ELEMENT</strong>: <span>[<a href="#RFC9794" class="cite xref">RFC9794</a>]</span> defines composites as: A
+          cryptographic element that
+          incorporates multiple component cryptographic elements of the same
+          type in a multi-algorithm scheme.<a href="#section-1.1-5" class="pilcrow">¶</a></p>
+<p id="section-1.1-6"><strong>COMPONENT / PRIMITIVE</strong>:
   The words "component" or "primitive" are used interchangeably
   to refer to a cryptographic algorithm that is used internally
   within a composite algorithm. For example this could be an
-  asymmetric algorithm such as "ML-KEM-768" or "RSA-OAEP".<a href="#section-1.1-5" class="pilcrow">¶</a></p>
-<p id="section-1.1-6"><strong>DER:</strong>
-  Distinguished Encoding Rules as defined in <span>[<a href="#X.690" class="cite xref">X.690</a>]</span>.<a href="#section-1.1-6" class="pilcrow">¶</a></p>
-<p id="section-1.1-7"><strong>KEM:</strong>
-   A key encapsulation mechanism as defined in <a href="#sec-kems" class="auto internal xref">Section 2</a>.<a href="#section-1.1-7" class="pilcrow">¶</a></p>
-<p id="section-1.1-8"><strong>PKI:</strong>
-  Public Key Infrastructure, as defined in <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>.<a href="#section-1.1-8" class="pilcrow">¶</a></p>
-<p id="section-1.1-9"><strong>SHARED SECRET KEY:</strong>
+  asymmetric algorithm such as "ML-KEM-768" or "RSA-OAEP".<a href="#section-1.1-6" class="pilcrow">¶</a></p>
+<p id="section-1.1-7"><strong>DER:</strong>
+  Distinguished Encoding Rules as defined in <span>[<a href="#X.690" class="cite xref">X.690</a>]</span>.<a href="#section-1.1-7" class="pilcrow">¶</a></p>
+<p id="section-1.1-8"><strong>KEM:</strong>
+   A key encapsulation mechanism as defined in <a href="#sec-kems" class="auto internal xref">Section 2</a>.<a href="#section-1.1-8" class="pilcrow">¶</a></p>
+<p id="section-1.1-9"><strong>PKI:</strong>
+  Public Key Infrastructure, as defined in <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>.<a href="#section-1.1-9" class="pilcrow">¶</a></p>
+<p id="section-1.1-10"><strong>SHARED SECRET KEY:</strong>
   A value established between two communicating parties for use as
   cryptographic key material suitable for direct use by symmetric
   cryptographic algorithms. This specification is concerned with shared
-  secrets established via public key cryptographic operations.<a href="#section-1.1-9" class="pilcrow">¶</a></p>
-<p id="section-1.1-10">Notation:
-The algorithm descriptions use python-like syntax. The following symbols deserve special mention:<a href="#section-1.1-10" class="pilcrow">¶</a></p>
+  secrets established via public key cryptographic operations.<a href="#section-1.1-10" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="notation">
+<section id="section-1.2">
+        <h3 id="name-notation">
+<a href="#section-1.2" class="section-number selfRef">1.2. </a><a href="#name-notation" class="section-name selfRef">Notation</a>
+        </h3>
+<p id="section-1.2-1">The algorithm descriptions use python-like syntax. The following symbols deserve special mention:<a href="#section-1.2-1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-1.1-11.1">
-            <p id="section-1.1-11.1.1"><code>||</code> represents concatenation of two byte arrays.<a href="#section-1.1-11.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-1.2-2.1">
+            <p id="section-1.2-2.1.1"><code>||</code> represents concatenation of two byte arrays.<a href="#section-1.2-2.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-1.1-11.2">
-            <p id="section-1.1-11.2.1"><code>[:]</code> represents byte array slicing.<a href="#section-1.1-11.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-1.2-2.2">
+            <p id="section-1.2-2.2.1"><code>[:]</code> represents byte array slicing.<a href="#section-1.2-2.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-1.1-11.3">
-            <p id="section-1.1-11.3.1"><code>(a, b)</code> represents a pair of values <code>a</code> and <code>b</code>. Typically this indicates that a function returns multiple values; the exact conveyance mechanism -- tuple, struct, output parameters, etc -- is left to the implementer.<a href="#section-1.1-11.3.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-1.2-2.3">
+            <p id="section-1.2-2.3.1"><code>(a, b)</code> represents a pair of values <code>a</code> and <code>b</code>. Typically this indicates that a function returns multiple values; the exact conveyance mechanism -- tuple, struct, output parameters, etc -- is left to the implementer.<a href="#section-1.2-2.3.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-1.1-11.4">
-            <p id="section-1.1-11.4.1"><code>(a, _)</code>: represents a pair of values where one -- the second one in this case -- is ignored.<a href="#section-1.1-11.4.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-1.2-2.4">
+            <p id="section-1.2-2.4.1"><code>(a, _)</code>: represents a pair of values where one -- the second one in this case -- is ignored.<a href="#section-1.2-2.4.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-1.1-11.5">
-            <p id="section-1.1-11.5.1"><code>Func&lt;TYPE&gt;()</code>: represents a function that is parametrized by <code>&lt;TYPE&gt;</code> meaning that the function's implementation will have minor differences depending on the underlying TYPE. Typically this means that a function will need to look up different constants or use different underlying cryptographic primitives depending on which composite algorithm it is implementing.<a href="#section-1.1-11.5.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-1.2-2.5">
+            <p id="section-1.2-2.5.1"><code>Func&lt;TYPE&gt;()</code>: represents a function that is parametrized by <code>&lt;TYPE&gt;</code> meaning that the function's implementation will have minor differences depending on the underlying TYPE. Typically this means that a function will need to look up different constants or use different underlying cryptographic primitives depending on which composite algorithm it is implementing.<a href="#section-1.2-2.5.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
 </div>
 <div id="composite-design-philosophy">
-<section id="section-1.2">
+<section id="section-1.3">
         <h3 id="name-composite-design-philosophy">
-<a href="#section-1.2" class="section-number selfRef">1.2. </a><a href="#name-composite-design-philosophy" class="section-name selfRef">Composite Design Philosophy</a>
+<a href="#section-1.3" class="section-number selfRef">1.3. </a><a href="#name-composite-design-philosophy" class="section-name selfRef">Composite Design Philosophy</a>
         </h3>
-<p id="section-1.2-1"><span>[<a href="#RFC9794" class="cite xref">RFC9794</a>]</span> defines composites as:<a href="#section-1.2-1" class="pilcrow">¶</a></p>
-<ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-1.2-2.1">
-            <p id="section-1.2-2.1.1"><em>Composite Cryptographic Element</em>:  A cryptographic element that
-     incorporates multiple component cryptographic elements of the same
-     type in a multi-algorithm scheme.<a href="#section-1.2-2.1.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-<p id="section-1.2-3">Composite algorithms, as defined in this specification, follow this definition and should be regarded as a single key that performs a single cryptographic operation typical of a key establishment mechanism such as key generation, encapsulating, or decapsulating -- using its internal concatenation of component keys as if they form a single key. This generally means that the complexity of combining algorithms can and should be handled by the cryptographic library or cryptographic module, and the single composite public key, private key, and ciphertext can be carried in existing fields in protocols such as PKCS#10 <span>[<a href="#RFC2986" class="cite xref">RFC2986</a>]</span>, CMP <span>[<a href="#RFC4210" class="cite xref">RFC4210</a>]</span>, X.509 <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>, CMS <span>[<a href="#RFC5652" class="cite xref">RFC5652</a>]</span>, and the Trust Anchor Format <span>[<a href="#RFC5914" class="cite xref">RFC5914</a>]</span>. In this way, composites achieve "protocol backwards-compatibility" in that they will drop cleanly into any protocol that accepts an analogous single-algorithm cryptographic scheme without requiring any modification of the protocol to handle multiple algorithms.<a href="#section-1.2-3" class="pilcrow">¶</a></p>
-<p id="section-1.2-4">Discussion of the specific choices of algorithm pairings can be found in <a href="#sec-rationale" class="auto internal xref">Section 6.2</a>.<a href="#section-1.2-4" class="pilcrow">¶</a></p>
+<p id="section-1.3-1">Composite algorithms, as defined in this specification, follow the definition in <span>[<a href="#RFC9794" class="cite xref">RFC9794</a>]</span> and should be regarded as a single algorithm that performs a single cryptographic operation typical of a key establishment mechanism.This generally means that the complexity of combining algorithms can and should be handled by the cryptographic library or cryptographic module. The design intent is that protocols such as PKCS#10 <span>[<a href="#RFC2986" class="cite xref">RFC2986</a>]</span>, CMP <span>[<a href="#RFC4210" class="cite xref">RFC4210</a>]</span>, X.509 <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>, the CMS <span>[<a href="#RFC5652" class="cite xref">RFC5652</a>]</span>, and the Trust Anchor Format <span>[<a href="#RFC5914" class="cite xref">RFC5914</a>]</span> can treat composite algorithms as they would any other algorithm without the protocol layer to have any "hybrid-awareness". This is a property referred to as "protocol backwards-compatibility".<a href="#section-1.3-1" class="pilcrow">¶</a></p>
+<p id="section-1.3-2">Discussion of the specific choices of algorithm pairings can be found in <a href="#sec-rationale" class="auto internal xref">Section 6.2</a>.<a href="#section-1.3-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
