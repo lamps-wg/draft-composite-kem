@@ -1057,7 +1057,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Ounsworth, et al.</td>
-<td class="center">Expires 13 June 2026</td>
+<td class="center">Expires 15 June 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1070,12 +1070,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-lamps-pq-composite-kem-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-12-10" class="published">10 December 2025</time>
+<time datetime="2025-12-12" class="published">12 December 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-06-13">13 June 2026</time></dd>
+<dd class="expires"><time datetime="2026-06-15">15 June 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1141,7 +1141,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 13 June 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 15 June 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1419,29 +1419,33 @@ In addition, the following terms are used in this specification:<a href="#sectio
           specification generally refers to any function which
           has a registered Object Identifier (OID) for
           use within an ASN.1 AlgorithmIdentifier.<a href="#section-1.1-3" class="pilcrow">¶</a></p>
-<p id="section-1.1-4"><strong>COMBINER</strong>:
+<p id="section-1.1-4"><strong>Backwards Compatibility</strong>: This specification considers two types of backwards
+          compatibility. "Application Backwards Compatibility" is the usual definition, meaning whether an upgraded and non-upgraded application can successfully establish communication. This specification also defined "Protocol Backwards Compatibility" whereby a new feature can be added to a protocol without requiring any changes to the protocol's specification and only minimal changes to its implementations (such as adding new identifiers). This is notable because many PQ/T Hybrids require modification of the protocol to make it "hybrid aware", whereas this specification presents as a standalone algorithm and thus can take advantage of existing cryptographic agility mechanisms.<a href="#section-1.1-4" class="pilcrow">¶</a></p>
+<p id="section-1.1-5"><strong>COMBINER</strong>:
   A combiner specifies how multiple shared secret keys are combined
-  into a single shared secret key.<a href="#section-1.1-4" class="pilcrow">¶</a></p>
-<p id="section-1.1-5"><strong>COMPOSITE CRYPTIGRAPHIC ELEMENT</strong>: <span>[<a href="#RFC9794" class="cite xref">RFC9794</a>]</span> defines composites as: A
+  into a single shared secret key.<a href="#section-1.1-5" class="pilcrow">¶</a></p>
+<p id="section-1.1-6"><strong>COMPOSITE CRYPTOGRAPHIC ELEMENT</strong>: <span>[<a href="#RFC9794" class="cite xref">RFC9794</a>]</span> defines composites as: A
           cryptographic element that
           incorporates multiple component cryptographic elements of the same
-          type in a multi-algorithm scheme.<a href="#section-1.1-5" class="pilcrow">¶</a></p>
-<p id="section-1.1-6"><strong>COMPONENT / PRIMITIVE</strong>:
+          type in a multi-algorithm scheme.<a href="#section-1.1-6" class="pilcrow">¶</a></p>
+<p id="section-1.1-7"><strong>COMPONENT / PRIMITIVE</strong>:
   The words "component" or "primitive" are used interchangeably
   to refer to a cryptographic algorithm that is used internally
   within a composite algorithm. For example this could be an
-  asymmetric algorithm such as "ML-KEM-768" or "RSA-OAEP".<a href="#section-1.1-6" class="pilcrow">¶</a></p>
-<p id="section-1.1-7"><strong>DER:</strong>
-  Distinguished Encoding Rules as defined in <span>[<a href="#X.690" class="cite xref">X.690</a>]</span>.<a href="#section-1.1-7" class="pilcrow">¶</a></p>
-<p id="section-1.1-8"><strong>KEM:</strong>
-   A key encapsulation mechanism as defined in <a href="#sec-kems" class="auto internal xref">Section 2</a>.<a href="#section-1.1-8" class="pilcrow">¶</a></p>
-<p id="section-1.1-9"><strong>PKI:</strong>
-  Public Key Infrastructure, as defined in <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>.<a href="#section-1.1-9" class="pilcrow">¶</a></p>
-<p id="section-1.1-10"><strong>SHARED SECRET KEY:</strong>
+  asymmetric algorithm such as "ML-KEM-768" or "RSA-OAEP".<a href="#section-1.1-7" class="pilcrow">¶</a></p>
+<p id="section-1.1-8"><strong>DER:</strong>
+  Distinguished Encoding Rules as defined in <span>[<a href="#X.690" class="cite xref">X.690</a>]</span>.<a href="#section-1.1-8" class="pilcrow">¶</a></p>
+<p id="section-1.1-9"><strong>KEM:</strong>
+   A key encapsulation mechanism as defined in <a href="#sec-kems" class="auto internal xref">Section 2</a>.<a href="#section-1.1-9" class="pilcrow">¶</a></p>
+<p id="section-1.1-10"><strong>PKI:</strong>
+  Public Key Infrastructure, as defined in <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>.<a href="#section-1.1-10" class="pilcrow">¶</a></p>
+<p id="section-1.1-11"><strong>Post-Quantum Traditional (PQ/T) hybrid scheme</strong>:
+    A multi-algorithm scheme where at least one component algorithm is a post-quantum algorithm and at least one is a traditional algorithm.<a href="#section-1.1-11" class="pilcrow">¶</a></p>
+<p id="section-1.1-12"><strong>SHARED SECRET KEY:</strong>
   A value established between two communicating parties for use as
   cryptographic key material suitable for direct use by symmetric
   cryptographic algorithms. This specification is concerned with shared
-  secrets established via public key cryptographic operations.<a href="#section-1.1-10" class="pilcrow">¶</a></p>
+  secrets established via public key cryptographic operations.<a href="#section-1.1-12" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="notation">
@@ -1634,7 +1638,9 @@ DHKEM.Decap(skR, ct):
         <h3 id="name-key-generation">
 <a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-key-generation" class="section-name selfRef">Key Generation</a>
         </h3>
-<p id="section-3.1-1">In order to maintain security properties of the composite, applications that use composite keys MUST always perform fresh key generations of both component keys and MUST NOT reuse existing key material. See <a href="#sec-cons-key-reuse" class="auto internal xref">Section 9.3</a> for a discussion.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.1-1">In order to maintain security properties of the composite, this specification
+strictly forbids re-using component key material between composite and
+non-composite keys, or between multiple composite keys. This means that an invocation of <code>Composite-ML-KEM.KeyGen()</code> MUST perform, or otherwise guarantee, fresh generation of the key material for both underlying algorithms and MUST NOT reuse existing key material. See <a href="#sec-cons-key-reuse" class="auto internal xref">Section 9.3</a> for a discussion.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
 <p id="section-3.1-2">To generate a new keypair for composite schemes, the <code>KeyGen() -&gt; (pk, sk)</code> function is used. The KeyGen() function calls the two key generation functions of the component algorithms independently. Multi-threaded, multi-process, or multi-module applications might choose to execute the key generation functions in parallel for better key generation performance or architectural modularity.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
 <p id="section-3.1-3">The following describes how to instantiate a <code>KeyGen()</code> function for a given composite algorithm represented by <code>&lt;OID&gt;</code>.<a href="#section-3.1-3" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-3.1-4">
@@ -1882,11 +1888,11 @@ Process:
 <p id="section-4-1">This section presents routines for serializing and deserializing composite public keys, private keys, and ciphertext values to bytes.
 The functions defined in this section are considered internal implementation details and are referenced from within the public API definitions in <a href="#sec-composite-mlkem" class="auto internal xref">Section 3</a>.<a href="#section-4-1" class="pilcrow">¶</a></p>
 <p id="section-4-2">Deserialization is possible because ML-KEM has fixed-length public keys, private keys (seeds), and ciphertext values as shown in the following table.<a href="#section-4-2" class="pilcrow">¶</a></p>
-<span id="name-ml-kem-sizes"></span><div id="tab-mlkem-sizes">
+<span id="name-ml-kem-sizes-in-bytes"></span><div id="tab-mlkem-sizes">
 <table class="center" id="table-1">
         <caption>
 <a href="#table-1" class="selfRef">Table 1</a>:
-<a href="#name-ml-kem-sizes" class="selfRef">ML-KEM Sizes</a>
+<a href="#name-ml-kem-sizes-in-bytes" class="selfRef">ML-KEM Sizes in bytes</a>
         </caption>
 <thead>
           <tr>
@@ -3153,7 +3159,7 @@ END
         </h3>
 <p id="section-9.1-1">In broad terms, a PQ/T Hybrid can be used either to provide dual-algorithm security or to provide migration flexibility. Let's quickly explore both.<a href="#section-9.1-1" class="pilcrow">¶</a></p>
 <p id="section-9.1-2">Dual-algorithm security. The general idea is that the data is protected by two algorithms such that an attacker would need to break both in order to compromise the data. As with most of cryptography, this property is easy to state in general terms, but becomes more complicated when expressed in formalisms. The following sections go into more detail here.<a href="#section-9.1-2" class="pilcrow">¶</a></p>
-<p id="section-9.1-3">Migration flexibility. Some PQ/T hybrids exist to provide a sort of "OR" mode where the application can choose to use one algorithm or the other or both. The intention is that the PQ/T hybrid mechanism builds in backwards compatibility to allow legacy and upgraded applications to co-exist and communicate. The composite algorithms presented in this specification do not provide this since they operate in a strict "AND" mode. They do, however, provide codebase migration flexibility. Consider that an organization has today a mature, validated, certified, hardened implementation of RSA or ECC; composites allow them to add an ML-KEM implementation which immediately starts providing benefits against harvest-now-decrypt-later attacks even if that ML-KEM implementation is still an experimental, non-validated, non-certified, non-hardened implementation. More details of obtaining FIPS certification of a composite algorithm can be found in <a href="#sec-fips" class="auto internal xref">Section 10.1</a>.<a href="#section-9.1-3" class="pilcrow">¶</a></p>
+<p id="section-9.1-3">Migration flexibility. Some PQ/T hybrids exist to provide a sort of "OR" mode where the application can choose to use one algorithm or the other or both. The intention is that the PQ/T hybrid mechanism builds in application backwards compatibility to allow legacy and upgraded applications to co-exist and communicate. The composite algorithms presented in this specification do not provide this since they operate in a strict "AND" mode. They do, however, provide codebase migration flexibility. Consider that an organization has today a mature, validated, certified, hardened implementation of RSA or ECC; composites allow them to add an ML-KEM implementation which immediately starts providing benefits against harvest-now-decrypt-later attacks even if that ML-KEM implementation is still an experimental, non-validated, non-certified, non-hardened implementation. More details of obtaining FIPS certification of a composite algorithm can be found in <a href="#sec-fips" class="auto internal xref">Section 10.1</a>.<a href="#section-9.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-cons-kem-combiner">
@@ -3310,7 +3316,7 @@ establishment methods of SP 800-56A or SP 800-56B, or an approved KEM.<a href="#
         <h3 id="name-backwards-compatibility">
 <a href="#section-10.2" class="section-number selfRef">10.2. </a><a href="#name-backwards-compatibility" class="section-name selfRef">Backwards Compatibility</a>
         </h3>
-<p id="section-10.2-1">The term "backwards compatibility" is used here to mean that existing systems as they are deployed today can interoperate with the upgraded systems of the future.  This draft explicitly does not provide backwards compatibility, only upgraded systems will understand the OIDs defined in this specification.<a href="#section-10.2-1" class="pilcrow">¶</a></p>
+<p id="section-10.2-1">The term "application backwards compatibility" is used here to mean that existing systems as they are deployed today can interoperate with the upgraded systems of the future.  This draft explicitly does not provide application backwards compatibility, only upgraded systems will understand the OIDs defined in this specification.<a href="#section-10.2-1" class="pilcrow">¶</a></p>
 <p id="section-10.2-2">These migration and interoperability concerns need to be thought about in the context of various types of protocols that make use of X.509 and PKIX with relation to key establishment and content encryption, from online negotiated protocols such as TLS 1.3 <span>[<a href="#RFC8446" class="cite xref">RFC8446</a>]</span> and IKEv2 <span>[<a href="#RFC7296" class="cite xref">RFC7296</a>]</span>, to non-negotiated asynchronous protocols such as S/MIME signed email <span>[<a href="#RFC8551" class="cite xref">RFC8551</a>]</span>, as well as myriad other standardized and proprietary protocols and applications that leverage CMS <span>[<a href="#RFC5652" class="cite xref">RFC5652</a>]</span> encrypted structures.<a href="#section-10.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
