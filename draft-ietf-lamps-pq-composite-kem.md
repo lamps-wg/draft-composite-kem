@@ -326,8 +326,7 @@ In addition, the following terms are used in this specification:
           has a registered Object Identifier (OID) for
           use within an ASN.1 AlgorithmIdentifier.
 
-**Backwards Compatibility**: This specification considers two types of backwards
-          compatibility. "Application Backwards Compatibility" is the usual definition, meaning whether an upgraded and non-upgraded application can successfully establish communication. This specification also defined "Protocol Backwards Compatibility" whereby a new feature can be added to a protocol without requiring any changes to the protocol's specification and only minimal changes to its implementations (such as adding new identifiers). This is notable because many PQ/T Hybrids require modification of the protocol to make it "hybrid aware", whereas this specification presents as a standalone algorithm and thus can take advantage of existing cryptographic agility mechanisms.
+**Application Backwards Compatibility**: The usual definition of backwards compatibility, meaning whether an upgraded and non-upgraded application can successfully establish communication.
 
 **COMBINER**:
   A combiner specifies how multiple shared secret keys are combined
@@ -355,6 +354,8 @@ In addition, the following terms are used in this specification:
 
 **Post-Quantum Traditional (PQ/T) hybrid scheme**:
     A multi-algorithm scheme where at least one component algorithm is a post-quantum algorithm and at least one is a traditional algorithm.
+
+**Protocol Backwards Compatibility**: A property whereby a new feature can be added to a protocol without requiring any changes to the protocol's specification and only minimal changes to its implementations (such as adding new identifiers). This is notable because many PQ/T Hybrids require modification of the protocol to make it "hybrid aware", whereas this specification presents as a standalone algorithm and thus can take advantage of existing cryptographic agility mechanisms.
 
 **SHARED SECRET KEY:**
   A value established between two communicating parties for use as
