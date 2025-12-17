@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 15 June 2026                                            M. Pala
+Expires: 20 June 2026                                            M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                        12 December 2025
+                                                        17 December 2025
 
 
       Composite ML-KEM for use in X.509 Public Key Infrastructure
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 15 June 2026.
+   This Internet-Draft will expire on 20 June 2026.
 
 Copyright Notice
 
@@ -226,18 +226,9 @@ Table of Contents
    specification generally refers to any function which has a registered
    Object Identifier (OID) for use within an ASN.1 AlgorithmIdentifier.
 
-   *Backwards Compatibility*: This specification considers two types of
-   backwards compatibility.  "Application Backwards Compatibility" is
-   the usual definition, meaning whether an upgraded and non-upgraded
-   application can successfully establish communication.  This
-   specification also defined "Protocol Backwards Compatibility" whereby
-   a new feature can be added to a protocol without requiring any
-   changes to the protocol's specification and only minimal changes to
-   its implementations (such as adding new identifiers).  This is
-   notable because many PQ/T Hybrids require modification of the
-   protocol to make it "hybrid aware", whereas this specification
-   presents as a standalone algorithm and thus can take advantage of
-   existing cryptographic agility mechanisms.
+   *Application Backwards Compatibility*: The usual definition of
+   backwards compatibility, meaning whether an upgraded and non-upgraded
+   application can successfully establish communication.
 
    *COMBINER*: A combiner specifies how multiple shared secret keys are
    combined into a single shared secret key.
@@ -260,6 +251,15 @@ Table of Contents
    *Post-Quantum Traditional (PQ/T) hybrid scheme*: A multi-algorithm
    scheme where at least one component algorithm is a post-quantum
    algorithm and at least one is a traditional algorithm.
+
+   *Protocol Backwards Compatibility*: A property whereby a new feature
+   can be added to a protocol without requiring any changes to the
+   protocol's specification and only minimal changes to its
+   implementations (such as adding new identifiers).  This is notable
+   because many PQ/T Hybrids require modification of the protocol to
+   make it "hybrid aware", whereas this specification presents as a
+   standalone algorithm and thus can take advantage of existing
+   cryptographic agility mechanisms.
 
    *SHARED SECRET KEY:* A value established between two communicating
    parties for use as cryptographic key material suitable for direct use
