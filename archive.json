@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-12-14T02:20:35.881054+00:00",
+  "timestamp": "2025-12-18T02:04:27.178005+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -11100,13 +11100,13 @@
       "labels": [],
       "body": "First pass addresses her comments on sections 1 and 2 from this email:\r\n\r\nhttps://mailarchive.ietf.org/arch/msg/spasm/EsUQgnddXM83LVYqDgqUWcjagi0/\r\n",
       "createdAt": "2025-12-10T17:56:13Z",
-      "updatedAt": "2025-12-12T18:10:39Z",
+      "updatedAt": "2025-12-17T16:51:09Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "f7321f71f1bef0b8e8937fd2b24628ef7fa8b951",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_ad_comments",
-      "headRefOid": "0b605d6cb7d2f71e95650169f4b8d81fd241ece3",
+      "headRefOid": "5caffab329912fbe8dbe862ab7838085bbc01d9d",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
