@@ -169,6 +169,9 @@ informative:
   RFC9794:
   I-D.draft-ietf-lamps-kyber-certificates-11:
   I-D.draft-sfluhrer-cfrg-ml-kem-security-considerations-04:
+  TestVectors:
+    title: "Test vectors for Composite-ML-KEM"
+    target: https://github.com/lamps-wg/draft-composite-kem/tree/main/src
   X-Wing:
     title: "X-Wing The Hybrid KEM You’ve Been Looking For"
     date: 2024-01-09
@@ -562,13 +565,19 @@ Key Generation Process:
 
 In order to ensure fresh keys, the key generation functions MUST be executed for both component algorithms. Compliant parties MUST NOT use, import or export component keys that are used in other contexts, combinations, or by themselves as keys for standalone algorithm use. For more details on the security considerations around key reuse, see {{sec-cons-key-reuse}}.
 
-Note that this keygen routine outputs a serialized composite key, which contains only the ML-KEM seed. Implementations should feel free to modify this routine to additionally output the expanded `mlkemSK` or to make free use of `ML-KEM.KeyGen(mlkemSeed)` as needed to expand the ML-KEM seed into an expanded key prior to performing a decapsulation operation.
-
-Variations in the keygen process above and decapsulation processes below to accommodate particular private key storage mechanisms or alternate interfaces to the underlying cryptographic modules are considered to be conformant to this specification so long as they produce the same output and error handling.
-
-For example, component private keys stored in separate software or hardware modules where it is not possible to do a joint simultaneous keygen would be considered compliant so long as both keys are freshly generated. It is also possible that the underlying cryptographic module does not expose a `ML-KEM.KeyGen(seed)` that accepts an externally-generated seed, and instead an alternate keygen interface must be used. Note however that cryptographic modules that do not support seed-based ML-KEM key generation will be incapable of importing or exporting composite keys in the standard format since the private key serialization routines defined in {{sec-serialize-privkey}} only support ML-KEM keys as seeds.
-
 Errors produced by the component `KeyGen()` routines MUST be forwarded on to the calling application. Further discussion can be found below in {{sec-explicit-rejection}}.
+
+
+### Allowed Modifications to the Key Generation Process
+
+Key generation is a process that is entirely internal to a cryptographic module, and as such it is often customized to fit the performance or operational requirements of the module. In cases where the private keys never leave the module or are otherwise not required to interoperate with other cryptographic modules, it is not required for interoperability for the private keys to match the format described in this specification. Therefore, in general, implementations of Composite ML-KEM MAY use an alternate key generation process so long as it generates compatible public keys, and so long as both component keys are freshly-generated and not re-used in a standalone key or within another composite key. Below are some examples of modifications that an implementer MAY make to the key generation process.
+
+Implementations MAY modify this process to additionally output the expanded `mlkemSK` or to make use of `ML-KEM.KeyGen_internal(mlkemSeed)` as needed to expand the ML-KEM seed into an expanded key prior to performing a signing operation.
+
+In cases where it is desirable to have a deterministic KeyGen of one or both component keys from a seed, this process MAY be modified to expose an interface of `Composite-ML-KEM<OID>.KeyGen(seed)` such that one component algorithm is generated from the seed and the other from random, or the input seed is cryptohraphically expanded to produce seeds for both components. Security analysis of such a modified key generation process is outside the scope of this document.
+
+Where interoperable private keys are not required, implementations MAY choose to use a different private key representation than the one given in {{sec-serialize-privkey}}. For example, the component keys MAY be stored in separate cryptographic modules, or MAY be stored in separate PKCS#8 objects, or MAY be stored in a format that preserves the ML-KEM expanded key instead of the ML-KEM seed. The required modifications to the key generation process, as well as the signature generation process below,  to support these private key representations are considered compliant with this specification so long as they generate compatible public keys, and so long as both component keys are freshly-generated. Note that when implementing Composite ML-KEM with a private key format that does not preserve the ML-KEM seed, especially when implementing on top of a cryptographic module that does not support seeds, it will be impossible to reconstruct a compliant seed-based private key as described in {{sec-serialize-privkey}}
+
 
 
 ## Encapsulation
@@ -1820,9 +1829,7 @@ Implementers should be able to perform the following tests using the test vector
 Test vectors are provided for each underlying ML-KEM algorithm in isolation for the purposes of debugging.
 
 
-Due to the length of the test vectors, some readers will prefer to retrieve the non-word-wrapped copy from GitHub. The reference implementation written in python that generated them is also available.
-
-https://github.com/lamps-wg/draft-composite-kem/tree/main/src
+Due to the length of the test vectors, some readers will prefer to retrieve the non-word-wrapped copy from GitHub {{TestVectors}}. The reference implementation written in python that generated them is also available.
 
 ~~~
 {::include src/testvectors_wrapped.json}
