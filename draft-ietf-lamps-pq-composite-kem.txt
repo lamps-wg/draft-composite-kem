@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 13 June 2026                                            M. Pala
+Expires: 11 July 2026                                            M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                        10 December 2025
+                                                          7 January 2026
 
 
       Composite ML-KEM for use in X.509 Public Key Infrastructure
@@ -19,9 +19,9 @@ Expires: 13 June 2026                                            M. Pala
 
 Abstract
 
-   This document defines combinations of ML-KEM [FIPS.203] in hybrid
-   with traditional algorithms RSA-OAEP, ECDH, X25519, and X448.  These
-   combinations are tailored to meet security best practices and
+   This document defines combinations of US NIST ML-KEM [FIPS.203] in
+   hybrid with traditional algorithms RSA-OAEP, ECDH, X25519, and X448.
+   These combinations are tailored to meet security best practices and
    regulatory guidelines.  Composite ML-KEM is applicable in any
    application that uses X.509 or PKIX data structures that accept ML-
    KEM, but where the operator wants extra protection against breaks or
@@ -59,11 +59,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 13 June 2026.
+   This Internet-Draft will expire on 11 July 2026.
 
 Copyright Notice
 
-   Copyright (c) 2025 IETF Trust and the persons identified as the
+   Copyright (c) 2026 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -79,12 +79,14 @@ Table of Contents
 
    1.  Introduction
      1.1.  Conventions and Terminology
-     1.2.  Composite Design Philosophy
+     1.2.  Notation
+     1.3.  Composite Design Philosophy
    2.  Overview of the Composite ML-KEM Scheme
      2.1.  Promotion of RSA-OAEP into a KEM
      2.2.  Promotion of ECDH into a KEM
    3.  Composite ML-KEM Functions
      3.1.  Key Generation
+       3.1.1.  Allowed Modifications to the Key Generation Process
      3.2.  Encapsulation
      3.3.  Decapsulation
      3.4.  KEM Combiner Function
@@ -139,52 +141,71 @@ Table of Contents
 1.  Introduction
 
    The advent of quantum computing poses a significant threat to current
-   cryptographic systems.  Traditional cryptographic key establishment
-   algorithms such as RSA-OAEP, Diffie-Hellman and its elliptic curve
-   variants are vulnerable to quantum attacks.  During the transition to
-   post-quantum cryptography (PQC), there is considerable uncertainty
-   regarding the robustness of both existing and new cryptographic
-   algorithms.  While we can no longer fully trust traditional
-   cryptography, we also cannot immediately place complete trust in
-   post-quantum replacements until they have undergone extensive
-   scrutiny and real-world testing to uncover and rectify both
-   algorithmic weaknesses as well as implementation flaws across all the
-   new implementations.
-
-   Unlike previous migrations between cryptographic algorithms, the
-   decision of when to migrate and which algorithms to adopt is far from
-   straightforward.  For instance, the aggressive migration timelines
-   may require deploying PQC algorithms before their implementations
-   have been fully hardened or certified, and dual-algorithm data
-   protection may be desirable over a longer time period to hedge
-   against security vulnerabilities and other implementation flaws in
-   the new implementations.
+   cryptographic systems because traditional cryptographic key
+   establishment algorithms such as RSA-OAEP, Diffie-Hellman and its
+   elliptic curve variants will become vulnerable to quantum attacks.
+   Unlike previous migrations between cryptographic algorithms, this
+   migration gives us the foresight that traditional cryptographic
+   algorithms will be broken in the future, but will remain strong in
+   the interim, the only uncertainty is around the timing.  But there
+   are also some novel challenges.  For instance, the aggressive
+   migration timelines may require deploying PQC algorithms before their
+   implementations have been fully hardened or certified, and dual-
+   algorithm data protection may be desirable over a longer time period
+   to hedge against security vulnerabilities and other implementation
+   flaws in the new implementations.
 
    Cautious implementers may opt to combine cryptographic algorithms in
    such a way that an attacker would need to break all of them
    simultaneously to compromise the protected data.  These mechanisms
-   are referred to as Post-Quantum/Traditional (PQ/T) Hybrids [RFC9794].
-
-   Certain jurisdictions are already recommending or mandating that PQC
-   lattice schemes be used exclusively within a PQ/T hybrid framework.
-   The use of a composite scheme provides a straightforward
-   implementation of hybrid solutions compatible with (and advocated by)
-   some governments and cybersecurity agencies [BSI2021], [ANSSI2024].
+   are referred to as "Post-Quantum / Traditional (PQ/T) Hybrids"
+   [RFC9794].
 
    This specification defines a specific instantiation of the PQ/T
    Hybrid paradigm called "composite" where multiple cryptographic
    algorithms are combined to form a single key encapsulation mechanism
-   (KEM) presenting a single public key and ciphertext such that it can
-   be treated as a single atomic algorithm at the protocol level; a
-   property referred to as "protocol backwards compatibility" since it
-   can be applied to protocols that are not explicitly hybrid-aware.
-   Composite algorithms retain some security even if one of their
-   component algorithms is broken.  Concrete instantiations of composite
-   ML-KEM algorithms are provided based on ML-KEM, RSA-OAEP and ECDH.
-   Backwards compatibility in the sense of upgraded systems continuing
-   to inter-operate with legacy systems is not directly covered in this
-   specification, but is the subject of Section 10.2.  The idea of a
-   composite was first presented in [Bindel2017].
+   (KEM).  The composite KEM presents a single public key and ciphertext
+   such that it can be treated as a single atomic algorithm at the
+   protocol level.  This provides a property referred to as "protocol
+   backwards compatibility" since it can be applied to protocols that
+   are not explicitly hybrid-aware.  The idea of a composite was first
+   presented in [Bindel2017].  Composite algorithms retain some security
+   even if one of their component algorithms is broken, which is
+   discussed in detail in Section 9.  This specification creates PQ/T
+   Hybrids with ML-KEM, defined in [FIPS.203] as the PQ component.
+   Instantiations of the composite ML-KEM scheme are provided based on
+   ML-KEM, RSA-OAEP and ECDH.  The full list of algorithms registered by
+   this specification is in Section 6.  Backwards compatibility in the
+   sense of upgraded systems continuing to interoperate with legacy
+   systems is not directly covered in this specification, but is the
+   subject of Section 10.2.
+
+   Certain jurisdictions have recommended that ML-KEM be used
+   exclusively within a PQ/T hybrid framework.  The use of a composite
+   scheme provides a straightforward implementation of hybrid solutions
+   compatible with (and advocated by) some governments and cybersecurity
+   agencies [BSI2021], [ANSSI2024].
+
+   In some situations it might be possible to add Post-Quantum, via a
+   PQ/T Hybrid, to an already audited and compliant solution without
+   invalidating the existing certification, whereas a full replacement
+   of the traditional cryptography would almost certainly incur
+   regulatory and compliance delays.  In other words, PQ/T Hybrids can
+   allow for deploying Post-Quantum Cryptography before the PQ modules
+   and operational procedures are fully audited and certified.  This,
+   more than any other requirement, is what motivates the large number
+   of algorithm combinations in this specification: The intention is to
+   provide a stepping stone from which any cryptographic algorithm an
+   organization has deployed today can evolve or transition.
+
+   While this specification registers a large number of composite
+   algorithms, it is expected that organizations will choose to deploy a
+   single composite algorithm, or a small number of composite
+   algorithms, that meets the needs of their environment, and very few
+   implementers will need concern themselves with the entire list.  This
+   specification does not specify any mandatory-to-implement algorithms,
+   but Section 10.3 provides a short-list of recommended composite
+   algorithms for common use-cases.
 
    Composite ML-KEM is applicable in any PKIX-related application that
    would otherwise use ML-KEM.
@@ -205,12 +226,17 @@ Table of Contents
    *ALGORITHM*: The usage of the term "algorithm" within this
    specification generally refers to any function which has a registered
    Object Identifier (OID) for use within an ASN.1 AlgorithmIdentifier.
-   This loosely, but not precisely, aligns with the definitions of
-   "cryptographic algorithm" and "cryptographic scheme" given in
-   [RFC9794].
+
+   *Application Backwards Compatibility*: The usual definition of
+   backwards compatibility, meaning whether an upgraded and non-upgraded
+   application can successfully establish communication.
 
    *COMBINER*: A combiner specifies how multiple shared secret keys are
    combined into a single shared secret key.
+
+   *COMPOSITE CRYPTOGRAPHIC ELEMENT*: [RFC9794] defines composites as: A
+   cryptographic element that incorporates multiple component
+   cryptographic elements of the same type in a multi-algorithm scheme.
 
    *COMPONENT / PRIMITIVE*: The words "component" or "primitive" are
    used interchangeably to refer to a cryptographic algorithm that is
@@ -223,14 +249,29 @@ Table of Contents
 
    *PKI:* Public Key Infrastructure, as defined in [RFC5280].
 
+   *Post-Quantum Traditional (PQ/T) hybrid scheme*: A multi-algorithm
+   scheme where at least one component algorithm is a post-quantum
+   algorithm and at least one is a traditional algorithm.
+
+   *Protocol Backwards Compatibility*: A property whereby a new feature
+   can be added to a protocol without requiring any changes to the
+   protocol's specification and only minimal changes to its
+   implementations (such as adding new identifiers).  This is notable
+   because many PQ/T Hybrids require modification of the protocol to
+   make it "hybrid aware", whereas this specification presents as a
+   standalone algorithm and thus can take advantage of existing
+   cryptographic agility mechanisms.
+
    *SHARED SECRET KEY:* A value established between two communicating
    parties for use as cryptographic key material suitable for direct use
    by symmetric cryptographic algorithms.  This specification is
    concerned with shared secrets established via public key
    cryptographic operations.
 
-   Notation: The algorithm descriptions use python-like syntax.  The
-   following symbols deserve special mention:
+1.2.  Notation
+
+   The algorithm descriptions use python-like syntax.  The following
+   symbols deserve special mention:
 
    *  || represents concatenation of two byte arrays.
 
@@ -251,29 +292,19 @@ Table of Contents
       use different underlying cryptographic primitives depending on
       which composite algorithm it is implementing.
 
-1.2.  Composite Design Philosophy
+1.3.  Composite Design Philosophy
 
-   [RFC9794] defines composites as:
-
-      _Composite Cryptographic Element_: A cryptographic element that
-      incorporates multiple component cryptographic elements of the same
-      type in a multi-algorithm scheme.
-
-   Composite algorithms, as defined in this specification, follow this
-   definition and should be regarded as a single key that performs a
-   single cryptographic operation typical of a key establishment
-   mechanism such as key generation, encapsulating, or decapsulating --
-   using its internal concatenation of component keys as if they form a
-   single key.  This generally means that the complexity of combining
-   algorithms can and should be handled by the cryptographic library or
-   cryptographic module, and the single composite public key, private
-   key, and ciphertext can be carried in existing fields in protocols
-   such as PKCS#10 [RFC2986], CMP [RFC4210], X.509 [RFC5280], CMS
-   [RFC5652], and the Trust Anchor Format [RFC5914].  In this way,
-   composites achieve "protocol backwards-compatibility" in that they
-   will drop cleanly into any protocol that accepts an analogous single-
-   algorithm cryptographic scheme without requiring any modification of
-   the protocol to handle multiple algorithms.
+   Composite algorithms, as defined in this specification, follow the
+   definition in [RFC9794] and should be regarded as a single algorithm
+   that performs a single cryptographic operation typical of a key
+   establishment mechanism.This generally means that the complexity of
+   combining algorithms can and should be handled by the cryptographic
+   library or cryptographic module.  The design intent is that protocols
+   such as PKCS#10 [RFC2986], CMP [RFC4210], X.509 [RFC5280], the CMS
+   [RFC5652], and the Trust Anchor Format [RFC5914] can treat composite
+   algorithms as they would any other algorithm without the protocol
+   layer to have any "hybrid-awareness".  This is a property referred to
+   as "protocol backwards-compatibility".
 
    Discussion of the specific choices of algorithm pairings can be found
    in Section 6.2.
@@ -479,10 +510,13 @@ Table of Contents
 
 3.1.  Key Generation
 
-   In order to maintain security properties of the composite,
-   applications that use composite keys MUST always perform fresh key
-   generations of both component keys and MUST NOT reuse existing key
-   material.  See Section 9.3 for a discussion.
+   In order to maintain security properties of the composite, this
+   specification strictly forbids re-using component key material
+   between composite and non-composite keys, or between multiple
+   composite keys.  This means that an invocation of Composite-ML-
+   KEM.KeyGen() MUST perform, or otherwise guarantee, fresh generation
+   of the key material for both underlying algorithms and MUST NOT reuse
+   existing key material.  See Section 9.3 for a discussion.
 
    To generate a new keypair for composite schemes, the KeyGen() -> (pk,
    sk) function is used.  The KeyGen() function calls the two key
@@ -536,34 +570,55 @@ Table of Contents
    For more details on the security considerations around key reuse, see
    Section 9.3.
 
-   Note that this keygen routine outputs a serialized composite key,
-   which contains only the ML-KEM seed.  Implementations should feel
-   free to modify this routine to additionally output the expanded
-   mlkemSK or to make free use of ML-KEM.KeyGen(mlkemSeed) as needed to
-   expand the ML-KEM seed into an expanded key prior to performing a
-   decapsulation operation.
-
-   Variations in the keygen process above and decapsulation processes
-   below to accommodate particular private key storage mechanisms or
-   alternate interfaces to the underlying cryptographic modules are
-   considered to be conformant to this specification so long as they
-   produce the same output and error handling.
-
-   For example, component private keys stored in separate software or
-   hardware modules where it is not possible to do a joint simultaneous
-   keygen would be considered compliant so long as both keys are freshly
-   generated.  It is also possible that the underlying cryptographic
-   module does not expose a ML-KEM.KeyGen(seed) that accepts an
-   externally-generated seed, and instead an alternate keygen interface
-   must be used.  Note however that cryptographic modules that do not
-   support seed-based ML-KEM key generation will be incapable of
-   importing or exporting composite keys in the standard format since
-   the private key serialization routines defined in Section 4.2 only
-   support ML-KEM keys as seeds.
-
    Errors produced by the component KeyGen() routines MUST be forwarded
    on to the calling application.  Further discussion can be found below
    in Section 3.5.
+
+3.1.1.  Allowed Modifications to the Key Generation Process
+
+   Key generation is a process that is entirely internal to a
+   cryptographic module, and as such it is often customized to fit the
+   performance or operational requirements of the module.  In cases
+   where the private keys never leave the module or are otherwise not
+   required to interoperate with other cryptographic modules, it is not
+   required for interoperability for the private keys to match the
+   format described in this specification.  Therefore, in general,
+   implementations of Composite ML-KEM MAY use an alternate key
+   generation process so long as it generates compatible public keys,
+   and so long as both component keys are freshly-generated and not re-
+   used in a standalone key or within another composite key.  Below are
+   some examples of modifications that an implementer MAY make to the
+   key generation process.
+
+   Implementations MAY modify this process to additionally output the
+   expanded mlkemSK or to make use of ML-KEM.KeyGen_internal(mlkemSeed)
+   as needed to expand the ML-KEM seed into an expanded key prior to
+   performing a signing operation.
+
+   In cases where it is desirable to have a deterministic KeyGen of one
+   or both component keys from a seed, this process MAY be modified to
+   expose an interface of Composite-ML-KEM<OID>.KeyGen(seed) such that
+   one component algorithm is generated from the seed and the other from
+   random, or the input seed is cryptohraphically expanded to produce
+   seeds for both components.  Security analysis of such a modified key
+   generation process is outside the scope of this document.
+
+   Where interoperable private keys are not required, implementations
+   MAY choose to use a different private key representation than the one
+   given in Section 4.2.  For example, the component keys MAY be stored
+   in separate cryptographic modules, or MAY be stored in separate
+   PKCS#8 objects, or MAY be stored in a format that preserves the ML-
+   KEM expanded key instead of the ML-KEM seed.  The required
+   modifications to the key generation process, as well as the signature
+   generation process below, to support these private key
+   representations are considered compliant with this specification so
+   long as they generate compatible public keys, and so long as both
+   component keys are freshly-generated.  Note that when implementing
+   Composite ML-KEM with a private key format that does not preserve the
+   ML-KEM seed, especially when implementing on top of a cryptographic
+   module that does not support seeds, it will be impossible to
+   reconstruct a compliant seed-based private key as described in
+   Section 4.2
 
 3.2.  Encapsulation
 
@@ -830,7 +885,7 @@ Table of Contents
           | ML-KEM-1024 | 1568       | 64          | 1568       |
           +-------------+------------+-------------+------------+
 
-                           Table 1: ML-KEM Sizes
+                       Table 1: ML-KEM Sizes in bytes
 
    For all serialization routines below, when these values are required
    to be carried in an ASN.1 structure, they are wrapped as described in
@@ -1923,13 +1978,13 @@ Table of Contents
    Migration flexibility.  Some PQ/T hybrids exist to provide a sort of
    "OR" mode where the application can choose to use one algorithm or
    the other or both.  The intention is that the PQ/T hybrid mechanism
-   builds in backwards compatibility to allow legacy and upgraded
-   applications to co-exist and communicate.  The composite algorithms
-   presented in this specification do not provide this since they
-   operate in a strict "AND" mode.  They do, however, provide codebase
-   migration flexibility.  Consider that an organization has today a
-   mature, validated, certified, hardened implementation of RSA or ECC;
-   composites allow them to add an ML-KEM implementation which
+   builds in application backwards compatibility to allow legacy and
+   upgraded applications to co-exist and communicate.  The composite
+   algorithms presented in this specification do not provide this since
+   they operate in a strict "AND" mode.  They do, however, provide
+   codebase migration flexibility.  Consider that an organization has
+   today a mature, validated, certified, hardened implementation of RSA
+   or ECC; composites allow them to add an ML-KEM implementation which
    immediately starts providing benefits against harvest-now-decrypt-
    later attacks even if that ML-KEM implementation is still an
    experimental, non-validated, non-certified, non-hardened
@@ -2225,11 +2280,11 @@ Table of Contents
 
 10.2.  Backwards Compatibility
 
-   The term "backwards compatibility" is used here to mean that existing
-   systems as they are deployed today can interoperate with the upgraded
-   systems of the future.  This draft explicitly does not provide
-   backwards compatibility, only upgraded systems will understand the
-   OIDs defined in this specification.
+   The term "application backwards compatibility" is used here to mean
+   that existing systems as they are deployed today can interoperate
+   with the upgraded systems of the future.  This draft explicitly does
+   not provide application backwards compatibility, only upgraded
+   systems will understand the OIDs defined in this specification.
 
    These migration and interoperability concerns need to be thought
    about in the context of various types of protocols that make use of
@@ -2629,6 +2684,11 @@ Table of Contents
               Standards and Technology (NIST), "Recommendations for Key-
               Encapsulation Mechanisms", September 2025,
               <https://csrc.nist.gov/pubs/sp/800/227/final>.
+
+   [TestVectors]
+              "Test vectors for Composite-ML-KEM", n.d.,
+              <https://github.com/lamps-wg/draft-composite-
+              kem/tree/main/src>.
 
    [X-Wing]   Barbosa, M., Connolly, D., Duarte, J., Kaiser, A.,
               Schwabe, P., Varner, K., and B. Westerbaan, "X-Wing The
@@ -3159,11 +3219,9 @@ Appendix F.  Test Vectors
    isolation for the purposes of debugging.
 
    Due to the length of the test vectors, some readers will prefer to
-   retrieve the non-word-wrapped copy from GitHub.  The reference
-   implementation written in python that generated them is also
-   available.
-
-   https://github.com/lamps-wg/draft-composite-kem/tree/main/src
+   retrieve the non-word-wrapped copy from GitHub [TestVectors].  The
+   reference implementation written in python that generated them is
+   also available.
 
    {
    "cacert": "MIIVpzCCCKSgAwIBAgIUWbwKMXGQsN797exI+7pAKIF/tdkwCwYJYIZIA
