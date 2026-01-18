@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-01-08T02:11:09.178692+00:00",
+  "timestamp": "2026-01-18T02:26:55.852608+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -4149,6 +4149,60 @@
           "body": "John fixed these in commit [2add054](https://github.com/lamps-wg/draft-composite-kem/commit/2add054a25fd1802a6d7fd9154e0656f7bb8fb48)",
           "createdAt": "2026-01-07T23:00:09Z",
           "updatedAt": "2026-01-07T23:00:09Z"
+        }
+      ]
+    },
+    {
+      "number": 259,
+      "id": "I_kwDOKRPFO87jg_iT",
+      "title": "Clarify relationship to ML-KEM key generation interface",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/259",
+      "state": "OPEN",
+      "author": "optnfast",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [
+        "janklaussner"
+      ],
+      "labels": [],
+      "body": "In s3.1 of the -12 draft:\n\n```\n     1. Generate component keys\n\n       mlkemSeed = Random(64)\n       (mlkemPK, mlkemSK) = ML-KEM.KeyGen(mlkemSeed)\n       (tradPK, tradSK) = Trad.KeyGen()\n```\n\nIn s3.1.1:\n\n```\n   Implementations MAY modify this process to additionally output the\n   expanded mlkemSK or to make use of ML-KEM.KeyGen_internal(mlkemSeed)\n   as needed to expand the ML-KEM seed into an expanded key prior to\n   performing a signing operation.\n```\n\nIn s3.3:\n\n```\n     1. Separate the private keys and ciphertexts\n\n         (mlkemSeed, tradSK) = DeserializePrivateKey(sk)\n         (_, mlkemSK) = ML-KEM.KeyGen(mlkemSeed)\n         (mlkemCT, tradCT) = DeserializeCiphertext(ct)\n```\n\nIn s10.1:\n\n```\n   from the one under which it was certified.  For example, the KeyGen\n   defined in Section 3.1 invokes ML-KEM.KeyGen(seed) which might not be\n   available in a cryptographic module running in FIPS-mode, but\n   Section 3.1 is only a suggested implementation and the composite\n   KeyGen MAY be implemented using a different available interface for\n   ML-KEM.KeyGen.\n```\n\nML-KEM.KeyGen exists in FIPS-203, but it does not take any parameters. Probably what is meant is ML-KEM.KeyGen_internal, which takes _two_ parameters, d and z. Presumably mlkemSeed is meant to be the concatenation of these two values, in some order.\n\nI think the hybrid spec should use ML-KEM.KeyGen_internal intead of ML-KEM.KeyGen, and make explicit that mlkemSeed = d || z.",
+      "createdAt": "2026-01-15T11:07:10Z",
+      "updatedAt": "2026-01-16T09:21:17Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "janklaussner",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Thanks @optnfast your right. I created PR #260 that should fix this, you are free to check it.",
+          "createdAt": "2026-01-15T16:35:47Z",
+          "updatedAt": "2026-01-15T16:35:47Z"
+        },
+        {
+          "author": "optnfast",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@janklaussner  thankyou, that looks like what I envisaged.",
+          "createdAt": "2026-01-15T17:09:26Z",
+          "updatedAt": "2026-01-15T17:09:26Z"
+        },
+        {
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "body": "What if an implementation uses the ML-KEM implementation as a block-box and they don't have access to ML-KEM.KeyGen_internal but only ML-KEM.KeyGen()?    The ML-KEM.KeyGen() should be able to be used as well right?",
+          "createdAt": "2026-01-15T17:58:02Z",
+          "updatedAt": "2026-01-15T17:58:02Z"
+        },
+        {
+          "author": "janklaussner",
+          "authorAssociation": "COLLABORATOR",
+          "body": "@johngray-dev we already have a section on this topic: \"3.1.1 Allowed Modifications to the Key Generation Process\" where we say \"... implementations of Composite ML-KEM MAY use an alternate key generation process...\"\n\nThing is, without using KeyGen_internal, how to get the seed. FIPS.203 allows storing it but does not define an official API that we could refer to. ",
+          "createdAt": "2026-01-16T09:10:05Z",
+          "updatedAt": "2026-01-16T09:10:05Z"
+        },
+        {
+          "author": "optnfast",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@johngray-dev As it stands the draft re-derives `dk` twice, once in key generation and once in decapsulation. It can't use `ML-KEM.KeyGen()` in both since that API uses a fresh random seed each time and it would get different keys. So, either it references `ML-KEM.KeyGen_internal` instead or it relaxes the language about private key representation.\n\nImplementations will cope, either way. Black-box implementations which don't have access to `ML-KEM.KeyGen_internal` will store `dk` and will not be able to wrap/export private keys to implementations that expect `d || z`.\n\nThe hill I want to die on is that if this spec uses a name from FIPS-203 then it means the same as what it means in FIPS-203. Anything else just makes life unnecessarily hard for readers.",
+          "createdAt": "2026-01-16T09:20:56Z",
+          "updatedAt": "2026-01-16T09:21:17Z"
         }
       ]
     }
@@ -11123,6 +11177,61 @@
       },
       "comments": [],
       "reviews": []
+    },
+    {
+      "number": 260,
+      "id": "PR_kwDOKRPFO869aiQ3",
+      "title": "Adds explicit reference to ML-KEM seed (d, z).",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/260",
+      "state": "OPEN",
+      "author": "janklaussner",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "The text now refers to the seed definition (d, z) according to FIPS.203 and its usage in the internal KeyGen function.\r\n\r\nCloses #259",
+      "createdAt": "2026-01-15T15:55:09Z",
+      "updatedAt": "2026-01-15T17:57:08Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "d975a2174fc55c83f1d35acf983dde59ced49f36",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "259-clarify-relationship-to-ml-kem-key-generation-interface",
+      "headRefOid": "16d1299eb70b59b077c210deaaea6e54f517c735",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "optnfast",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "\u2705\u2705\u2705\u2705",
+          "createdAt": "2026-01-15T17:08:58Z",
+          "updatedAt": "2026-01-15T17:08:58Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO87akD6X",
+          "commit": {
+            "abbreviatedOid": "16d1299"
+          },
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-01-15T17:56:00Z",
+          "updatedAt": "2026-01-15T17:57:08Z",
+          "comments": [
+            {
+              "originalPosition": 14,
+              "body": "Couldn't it just use the ML-KEM.KeyGen() method without requiring the random input as well? That would work better for black-box implementations.  ",
+              "createdAt": "2026-01-15T17:56:00Z",
+              "updatedAt": "2026-01-15T17:56:34Z"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
