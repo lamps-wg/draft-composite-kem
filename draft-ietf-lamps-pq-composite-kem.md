@@ -523,6 +523,8 @@ non-composite keys, or between multiple composite keys. This means that an invoc
 
 To generate a new keypair for composite schemes, the `KeyGen() -> (pk, sk)` function is used. The KeyGen() function calls the two key generation functions of the component algorithms independently. Multi-threaded, multi-process, or multi-module applications might choose to execute the key generation functions in parallel for better key generation performance or architectural modularity.
 
+To generate an ML-KEM key pair this specification uses the function `ML-KEM.KeyGen_internal(d, z)`. According to [FIPS.203] d and z are two random 32 Byte values. This document combines both values in mlkemSeed by concatenating them so that `mlkemSeed = d || z`.
+
 The following describes how to instantiate a `KeyGen()` function for a given composite algorithm represented by `<OID>`.
 
 ~~~
@@ -548,7 +550,7 @@ Key Generation Process:
   1. Generate component keys
 
     mlkemSeed = Random(64)
-    (mlkemPK, mlkemSK) = ML-KEM.KeyGen(mlkemSeed)
+    (mlkemPK, mlkemSK) = ML-KEM.KeyGen_internal(mlkemSeed[:32], mlkemSeed[32:])
     (tradPK, tradSK) = Trad.KeyGen()
 
   2. Check for component key gen failure
@@ -572,7 +574,7 @@ Errors produced by the component `KeyGen()` routines MUST be forwarded on to the
 
 Key generation is a process that is entirely internal to a cryptographic module, and as such it is often customized to fit the performance or operational requirements of the module. In cases where the private keys never leave the module or are otherwise not required to interoperate with other cryptographic modules, it is not required for interoperability for the private keys to match the format described in this specification. Therefore, in general, implementations of Composite ML-KEM MAY use an alternate key generation process so long as it generates compatible public keys, and so long as both component keys are freshly-generated and not re-used in a standalone key or within another composite key. Below are some examples of modifications that an implementer MAY make to the key generation process.
 
-Implementations MAY modify this process to additionally output the expanded `mlkemSK` or to make use of `ML-KEM.KeyGen_internal(mlkemSeed)` as needed to expand the ML-KEM seed into an expanded key prior to performing a signing operation.
+Implementations MAY modify this process to additionally output the expanded `mlkemSK` or to make use of `ML-KEM.KeyGen_internal(d, z)` as needed to expand the ML-KEM seed `(d || z)` into an expanded key prior to performing a signing operation.
 
 In cases where it is desirable to have a deterministic KeyGen of one or both component keys from a seed, this process MAY be modified to expose an interface of `Composite-ML-KEM<OID>.KeyGen(seed)` such that one component algorithm is generated from the seed and the other from random, or the input seed is cryptohraphically expanded to produce seeds for both components. Security analysis of such a modified key generation process is outside the scope of this document.
 
@@ -696,7 +698,7 @@ Decap Process:
   1. Separate the private keys and ciphertexts
 
       (mlkemSeed, tradSK) = DeserializePrivateKey(sk)
-      (_, mlkemSK) = ML-KEM.KeyGen(mlkemSeed)
+      (_, mlkemSK) = ML-KEM.KeyGen(mlkemSeed[:32], mlkemSeed[32:])
       (mlkemCT, tradCT) = DeserializeCiphertext(ct)
 
   2.  Perform the respective component Decap operations according
@@ -780,7 +782,7 @@ For all serialization routines below, when these values are required to be carri
 
 While ML-KEM has a single fixed-size representation for each of public key, private key, and ciphertext, the traditional component might allow multiple valid encodings; for example an elliptic curve public key, and therefore also ciphertext, might be validly encoded as either compressed or uncompressed [SEC1], or an RSA private key could be encoded in Chinese Remainder Theorem form [RFC8017]. In order to obtain interoperability, composite algorithms MUST use the following encodings of the underlying components:
 
-* **ML-KEM**: MUST be encoded as specified in sections 7.1 and 7.2 of [FIPS.203], using a 64-byte seed as the private key.
+* **ML-KEM**: MUST be encoded as specified in sections 7.1 and 7.2 of [FIPS.203], using a 64-byte seed `(d || z)` as the private key.
 * **RSA**: the public key MUST be encoded as RSAPublicKey with the `(n,e)` public key representation as specified in A.1.1 of [RFC8017] and the private key representation as RSAPrivateKey specified in A.1.2 of [RFC8017] with version 0 and 'otherPrimeInfos' absent. An RSA-OAEP ciphertext MUST be encoded as specified in section 7.1.1 of {{RFC8017}}
 * **ECDH**: public key MUST be encoded as an uncompressed X9.62 [X9.62–2005], including the leading byte `0x04` indicating uncompressed. This is consistent with the encoding of `ECPoint` as specified in section 2.2 of [RFC5480] when no ASN.1 OCTET STRING wrapping is present. The private key MUST be encoded as ECPrivateKey specified in [RFC5915] with 'NamedCurve' parameter set to the OID of the curve, but without the 'publicKey' field. The ciphertext MUST be encoded in the same manner as the public key.
 * **X25519 and X448**: the public key MUST be encoded as per section 5 of [RFC7748] and the private key is a 32 or 56 byte raw value for X25519 and X448 respectively. The ciphertext MUST be encoded in the same manner as the public key.
@@ -882,7 +884,8 @@ Composite-ML-KEM.SerializePrivateKey(mlkemSeed, tradSK) -> bytes
 
 Explicit inputs:
 
-  mlkemSeed  The ML-KEM private key, which is the bytes of the seed.
+  mlkemSeed  The ML-KEM private key, which consists of 32 Byte seed value d
+             concatenated with 32 Byte seed value z.
 
   tradSK     The traditional private key in the appropriate
              encoding for the underlying component algorithm.
@@ -920,7 +923,8 @@ Implicit inputs:
 
 Output:
 
-  mlkemSeed  The ML-KEM private key, which is the bytes of the seed.
+  mlkemSeed  The ML-KEM private key, which consists of 32 Byte seed value d
+             concatenated with 32 Byte seed value z.
 
   tradSK    The traditional private key in the appropriate
              encoding for the underlying component algorithm.
@@ -1379,7 +1383,7 @@ This guidance is not authoritative and has not been endorsed by NIST.
 
 Implementers seeking FIPS certification of a composite KEM algorithm where only one of the component algorithms has been FIPS-validated or FIPS-approved should credit the FIPS-validated component algorithm with full security strength, the non-FIPS-validated component algorithm with zero security, and the overall composite should be considered at least as strong and thus FIPS-approved.
 
-The composite algorithm has been designed to treat the underlying primitives as "black-box implementations" and not impose any additional requirements on them that could require an existing implementation of an underlying primitive to run in a mode different from the one under which it was certified. For example, the `KeyGen` defined in {{sec-keygen}} invokes `ML-KEM.KeyGen(seed)` which might not be available in a cryptographic module running in FIPS-mode, but {{sec-keygen}} is only a suggested implementation and the composite KeyGen MAY be implemented using a different available interface for ML-KEM.KeyGen.
+The composite algorithm has been designed to treat the underlying primitives as "black-box implementations" and not impose any additional requirements on them that could require an existing implementation of an underlying primitive to run in a mode different from the one under which it was certified. For example, the `KeyGen` defined in {{sec-keygen}} invokes `ML-KEM.KeyGen_internal(d, z)` which might not be available in a cryptographic module running in FIPS-mode, but {{sec-keygen}} is only a suggested implementation and the composite KeyGen MAY be implemented using a different available interface for ML-KEM.KeyGen.
 
 The authors wish to note that composite algorithms provide a design pattern to provide utility in future situations that require care to remain FIPS-compliant, such as future cryptographic migrations as well as bridging across jurisdictions with non-intersecting cryptographic requirements.
 
