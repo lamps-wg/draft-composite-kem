@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-01-18T02:26:55.852608+00:00",
+  "timestamp": "2026-01-22T02:23:38.683669+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -4157,7 +4157,7 @@
       "id": "I_kwDOKRPFO87jg_iT",
       "title": "Clarify relationship to ML-KEM key generation interface",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/259",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "optnfast",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -4166,8 +4166,8 @@
       "labels": [],
       "body": "In s3.1 of the -12 draft:\n\n```\n     1. Generate component keys\n\n       mlkemSeed = Random(64)\n       (mlkemPK, mlkemSK) = ML-KEM.KeyGen(mlkemSeed)\n       (tradPK, tradSK) = Trad.KeyGen()\n```\n\nIn s3.1.1:\n\n```\n   Implementations MAY modify this process to additionally output the\n   expanded mlkemSK or to make use of ML-KEM.KeyGen_internal(mlkemSeed)\n   as needed to expand the ML-KEM seed into an expanded key prior to\n   performing a signing operation.\n```\n\nIn s3.3:\n\n```\n     1. Separate the private keys and ciphertexts\n\n         (mlkemSeed, tradSK) = DeserializePrivateKey(sk)\n         (_, mlkemSK) = ML-KEM.KeyGen(mlkemSeed)\n         (mlkemCT, tradCT) = DeserializeCiphertext(ct)\n```\n\nIn s10.1:\n\n```\n   from the one under which it was certified.  For example, the KeyGen\n   defined in Section 3.1 invokes ML-KEM.KeyGen(seed) which might not be\n   available in a cryptographic module running in FIPS-mode, but\n   Section 3.1 is only a suggested implementation and the composite\n   KeyGen MAY be implemented using a different available interface for\n   ML-KEM.KeyGen.\n```\n\nML-KEM.KeyGen exists in FIPS-203, but it does not take any parameters. Probably what is meant is ML-KEM.KeyGen_internal, which takes _two_ parameters, d and z. Presumably mlkemSeed is meant to be the concatenation of these two values, in some order.\n\nI think the hybrid spec should use ML-KEM.KeyGen_internal intead of ML-KEM.KeyGen, and make explicit that mlkemSeed = d || z.",
       "createdAt": "2026-01-15T11:07:10Z",
-      "updatedAt": "2026-01-16T09:21:17Z",
-      "closedAt": null,
+      "updatedAt": "2026-01-21T15:23:54Z",
+      "closedAt": "2026-01-21T15:23:54Z",
       "comments": [
         {
           "author": "janklaussner",
@@ -11183,24 +11183,26 @@
       "id": "PR_kwDOKRPFO869aiQ3",
       "title": "Adds explicit reference to ML-KEM seed (d, z).",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/260",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "janklaussner",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "The text now refers to the seed definition (d, z) according to FIPS.203 and its usage in the internal KeyGen function.\r\n\r\nCloses #259",
       "createdAt": "2026-01-15T15:55:09Z",
-      "updatedAt": "2026-01-15T17:57:08Z",
+      "updatedAt": "2026-01-21T15:23:52Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "d975a2174fc55c83f1d35acf983dde59ced49f36",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "259-clarify-relationship-to-ml-kem-key-generation-interface",
       "headRefOid": "16d1299eb70b59b077c210deaaea6e54f517c735",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2026-01-21T15:23:52Z",
+      "mergedAt": "2026-01-21T15:23:52Z",
+      "mergedBy": "johngray-dev",
+      "mergeCommit": {
+        "oid": "38790265a79de801cf6a32b5abbe1f7c517a7d31"
+      },
       "comments": [
         {
           "author": "optnfast",
@@ -11230,6 +11232,39 @@
               "updatedAt": "2026-01-15T17:56:34Z"
             }
           ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO87bYJyA",
+          "commit": {
+            "abbreviatedOid": "16d1299"
+          },
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-01-20T06:29:15Z",
+          "updatedAt": "2026-01-20T06:29:15Z",
+          "comments": [
+            {
+              "originalPosition": 14,
+              "body": "I guess the above is just a suggestion. A black box could still just to ML-KEM.KeyGen() and let the crypto module create the random data. ",
+              "createdAt": "2026-01-20T06:29:15Z",
+              "updatedAt": "2026-01-20T06:29:15Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKRPFO87bYKpY",
+          "commit": {
+            "abbreviatedOid": "16d1299"
+          },
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-01-20T06:30:18Z",
+          "updatedAt": "2026-01-20T06:30:18Z",
+          "comments": []
         }
       ]
     }
