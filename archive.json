@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-01-22T02:23:38.683669+00:00",
+  "timestamp": "2026-02-08T03:21:20.256156+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -4203,6 +4203,30 @@
           "body": "@johngray-dev As it stands the draft re-derives `dk` twice, once in key generation and once in decapsulation. It can't use `ML-KEM.KeyGen()` in both since that API uses a fresh random seed each time and it would get different keys. So, either it references `ML-KEM.KeyGen_internal` instead or it relaxes the language about private key representation.\n\nImplementations will cope, either way. Black-box implementations which don't have access to `ML-KEM.KeyGen_internal` will store `dk` and will not be able to wrap/export private keys to implementations that expect `d || z`.\n\nThe hill I want to die on is that if this spec uses a name from FIPS-203 then it means the same as what it means in FIPS-203. Anything else just makes life unnecessarily hard for readers.",
           "createdAt": "2026-01-16T09:20:56Z",
           "updatedAt": "2026-01-16T09:21:17Z"
+        }
+      ]
+    },
+    {
+      "number": 261,
+      "id": "I_kwDOKRPFO87o9hCl",
+      "title": "Incorrect CipherText in MLKEM768-RSA2048-SHA3-256 test vector",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/261",
+      "state": "CLOSED",
+      "author": "johngray-dev",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "The CipherText length in the MLKEM768-RSA2048-SHA3-256 test vector is 1293 bytes, but it is supposed to be 1344 bytes (1088+256) according to the table: in Appendix A:\n\n```\n   +============================+========+=========+============+====+\n    | Algorithm                  | Public | Private | Ciphertext | SS |\n    |                            | key    | key     |            |    |\n    +============================+========+=========+============+====+\n    | id-alg-ml-kem-768          | 1184   | 64      | 1088       | 32 |\n    +----------------------------+--------+---------+------------+----+\n    | id-alg-ml-kem-1024         | 1568   | 64      | 1568       | 32 |\n    +----------------------------+--------+---------+------------+----+\n    | id-                        | 1454*  | 1258*   | 1344       | 32 |\n    | MLKEM768-RSA2048-SHA3-256  |        |         |            |    |\n    +----------------------------+--------+---------+------------+----+\n```\n\nThis is the value in the JSON file for c for algorithm MLKEM768-RSA2048-SHA3-256 as of this writing:\n\n \"c\": \"C77RoUk+mlyrIKd280A8yghbR9VWIy4ybs+xy3eF/r4NJKDKIfhX99oGo/9lpU\n   Dqzzqx6l9YBevaIo13qDIxDSu0ILVxzgUL1SRgpJshxShp7IrKaiQyZfejt4M1I5DoaK\n   Y5a1AnVP8KzUxqwHfDLGHu5xDDMLyXfaQ7kpUHPI4CaCHJW7Y6TPFc0hMHmwCc1nNPDa\n   YY8BZYdpKlvW7zXQ2pQjiL8pR/9NE8o8q2aYpXDCRwXF6GIgmY8fs0zmbLxNjZLdexkE\n   O4/JfxGvsgN/UacR/qxcZvk+rRMsunJXlewbNtFCxy1BIG0KvQe/qgWaKPAIc+ujAmkA\n   deGExTmvNHcnIQaTXSuYMoxCIujEGdEtNRzzzG2xEsItn2935dWHoNIsBrKPRqLwKWwX\n   bzh/Bg8lqw7xUxk1DwCvbsD48pKwbm7g/NQg9t8aoBcHryakDM09L/Fp9DNl1q1bmygv\n   hWojFPs+y/AQ1KSWk1mrm1WJL0YqgnJ9MdMqFmOmMGV1iwJ10W54x5/Ro3ztGAL+2Fs/\n   BJBG2KKT+ALSU+XauWXL5CxL2bhO1/rQMkFj1WRbthfrNTxbZj+DSXzaRvahxjVk6aWl\n   nscwNl1q+/X5hRF2+Oa2jkmG1QTxu+rVh5256UDukarJbqf/sgiPjW0KKbECYJJ3kbd4\n   BD5k7GFMeJtQ1mVQeTzwKyASsp6yYVuLx+gUphhgw+Fqjc3ogAJbEzcOMUMGx+LbzcOW\n   5yXQ1u9ykVqFNLlNbxYmAj8e0NM380j/qFL6l7rDEd1lBQn8LdaKIs8Yf/Egwq/3kZyT\n   Kz9OUqXN9I/ZTAj7e5b9vdfdyFWPkAgPUUKEWMu8DY8GPKGKkIWD1Ggq8SQnqxrO6EiU\n   ElTg3Pu3frjkA8uWHNrW5Hbhqqnw9cM9wAhuXLiZuCDk/ZqWOX5+SKDoy8r2hFPDqgEe\n   fXy41D4ZP7TjYYwjva3frwzdaxSpnw71WtxOEZA9HSHy9RFa30JYBUSQKK0kD/wHhxDp\n   IcqMVr/5jPtJBiIPMQHp/XRWen90mBkVYGMzjX5p473opAnqAt++NygIQKJRrWLOitrp\n   QSb+MnvciRqjQic+GT1RH6Y7dCgME2Fpxs5stg+AmBj24gYHNYraRj1Xx3MNL6dt23/G\n   6D/j/6a0O4Cni8m/nn5lEsARJLSsi3j+2angv0bR/eW8gzU8P4ABQRQaK5eN7kzpP/Fc\n   //9fV5T3qPqPZuk13fii/ln4ru707snBiE5Ezpas/LNUhMKwj/B5itRFzSeclo9BSKs2\n   JSYRdsei3/08aQrBMsYkhlRdeQvA8EtS0AXLrQv+rMRhUe+QQ29S8PZDOxeiSCluyIid\n   Cq/odD4uNWEo6QH/yC4m1mMO6/1Rbt6wRTnO9Y5VT/MNFZozax2jMiK/wO1/D5XkM8Vq\n   XYTLLT6yotzSxQ//GYuPL2fZlDgL2aS8SizEvraW7Eh9IdWrXfT6+QdxP4qmn+Yn3qlV\n   E3dUM5HM1dzGbuFWfD8TvL6JpRyMQEH4F/ckup5pIxp//Q1veU49tPIcnQOSSb7f49PL\n   abRNXaFd3IQszDl3JKZPuVbEhRJddu7eiMu1l6m/zp07Wlume6vbLhDUg/Znc2vWhZvj\n   YSIqzoujMpG0BbrrgJhNOO+fQxVMz+GQ99B1l7BvmSh/odbaJuKe3iI5/WW84yCg+udV\n   ryIZj+MGIx9lleALmHFrvn5LTN/Eq8yRwXgx3Mzu+1pYuKbt7RxqFqYEpuSG4J6J04qR\n   gwoAlsLIuTnHHM7L3Je8MN52y51brT\",\n\nThe above is 1724 base64 bytes, so 1724*(3/4) =  1293\n\nThis is not the correct value (1088+256 = 1344)\n\n\n",
+      "createdAt": "2026-02-06T21:10:14Z",
+      "updatedAt": "2026-02-06T21:38:41Z",
+      "closedAt": "2026-02-06T21:38:41Z",
+      "comments": [
+        {
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Just confirmed this is NOT an issue...  It turns out the that one line in the CipherText starts with // and the JSON parser in my test code skipped that line and didn't include it...  \n\nI can independently confirm all the reference test vectors are correct!",
+          "createdAt": "2026-02-06T21:38:41Z",
+          "updatedAt": "2026-02-06T21:38:41Z"
         }
       ]
     }
