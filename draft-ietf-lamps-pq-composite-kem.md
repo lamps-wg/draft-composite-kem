@@ -285,7 +285,7 @@ informative:
 
 --- abstract
 
-This document defines combinations of US NIST ML-KEM [FIPS.203] in hybrid with traditional algorithms RSA-OAEP, ECDH, X25519, and X448. These combinations are tailored to meet security best practices and regulatory guidelines. Composite ML-KEM is applicable in any application that uses X.509 or PKIX data structures that accept ML-KEM, but where the operator wants extra protection against breaks or catastrophic bugs in ML-KEM.
+This document defines combinations of US NIST ML-KEM in hybrid with traditional algorithms RSA-OAEP, ECDH, X25519, and X448. These combinations are tailored to meet security best practices and regulatory guidelines. Composite ML-KEM is applicable in any application that uses X.509 or PKIX data structures that accept ML-KEM, but where the operator wants extra protection against breaks or catastrophic bugs in ML-KEM.
 
 <!-- End of Abstract -->
 
@@ -302,7 +302,7 @@ Cautious implementers may opt to combine cryptographic algorithms in such a way 
 
 This specification defines a specific instantiation of the PQ/T Hybrid paradigm called "composite" where multiple cryptographic algorithms are combined to form a single key encapsulation mechanism (KEM). The composite KEM presents a single public key and ciphertext such that it can be treated as a single atomic algorithm at the protocol level. This provides a property referred to as "protocol backwards compatibility" since it can be applied to protocols that are not explicitly hybrid-aware. The idea of a composite was first presented in {{Bindel2017}}.
 Composite algorithms retain some security even if one of their component algorithms is broken, which is discussed in detail in {{sec-cons}}.
-This specification creates PQ/T Hybrids with ML-KEM, defined in [FIPS.203] as the PQ component.
+This specification creates PQ/T Hybrids with the Module-Lattice-based Key Encapsulation Mechanism (ML-KEM), defined in [FIPS.203] as the PQ component.
 Instantiations of the composite ML-KEM scheme are provided based on ML-KEM, RSA-OAEP and ECDH.
 The full list of algorithms registered by this specification is in {{sec-alg-parms}}.
 Backwards compatibility in the sense of upgraded systems continuing to interoperate with legacy systems is not directly covered in this specification, but is the subject of {{sec-backwards-compat}}.
@@ -349,6 +349,8 @@ In addition, the following terms are used in this specification:
 **DER:**
   Distinguished Encoding Rules as defined in [X.690].
 
+**ECDH**: the Elliptic Curve Diffie-Hellman key agreement scheme defined in section 5.7.1.2 of [SP.800-56Ar3].
+
 **KEM:**
    A key encapsulation mechanism as defined in {{sec-kems}}.
 
@@ -360,11 +362,17 @@ In addition, the following terms are used in this specification:
 
 **Protocol Backwards Compatibility**: A property whereby a new feature can be added to a protocol without requiring any changes to the protocol's specification and only minimal changes to its implementations (such as adding new identifiers). This is notable because many PQ/T Hybrids require modification of the protocol to make it "hybrid aware", whereas this specification presents as a standalone algorithm and thus can take advantage of existing cryptographic agility mechanisms.
 
+**ML-KEM**: The Module-Lattice-based Key Encapsulation Mechanism algorithm defined in [FIPS.203]
+
+**RSA**: The Rivest-Shamir-Adleman cryptosystem, used in this specification as the RSA-OAEP (Optimal Asymmetric Encryption Padding) scheme defined in [RFC8017]. 
+
 **SHARED SECRET KEY:**
   A value established between two communicating parties for use as
   cryptographic key material suitable for direct use by symmetric
   cryptographic algorithms. This specification is concerned with shared
   secrets established via public key cryptographic operations.
+
+**X25519 and X448:** The Edwards Curve Diffie-Hellman scheme defined in [RFC7748] with pramater sets X25519 and X448.
 
 
 
