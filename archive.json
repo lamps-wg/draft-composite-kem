@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-03-01T02:55:39.809668+00:00",
+  "timestamp": "2026-03-08T02:45:37.824948+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -4271,6 +4271,22 @@
       "body": "Per https://github.com/lamps-wg/draft-composite-kem/issues/239#issuecomment-3961436274\n\nhttps://github.com/lamps-wg/draft-composite-kem/blob/e0a3c6f7329d7d1d053700e30303a71c49783520/draft-ietf-lamps-pq-composite-kem.md?plain=1#L734\n\nStates that in composite decapsulation implementations should be timing invariant w.r.t. which component decapsulation operation failed if one of the operations failed. But this seems to be an unnecessary requirement that the authors intended to remove as part of fixing #239.\n\nI think this line should probably just read:\n```\nSteps 2 and 4 SHOULD be performed in a timing-invariant way to prevent side-channel attackers from learning any of the inputs or output of the KEM combiner.\n```",
       "createdAt": "2026-02-27T00:23:59Z",
       "updatedAt": "2026-02-27T00:23:59Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 263,
+      "id": "I_kwDOKRPFO87wz4Kh",
+      "title": "Reference the StarHunters paper",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/263",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "https://eprint.iacr.org/2026/427\n\nAdd it to the references and update the Security Considerations to match.",
+      "createdAt": "2026-03-08T01:30:05Z",
+      "updatedAt": "2026-03-08T01:30:05Z",
       "closedAt": null,
       "comments": []
     }
