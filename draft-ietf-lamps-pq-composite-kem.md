@@ -85,7 +85,6 @@ normative:
   RFC8017:
   #RFC8174: -- does not need to be explicit; added by bcp14 boilerplateu
   RFC8410:
-  RFC8411:
   RFC9629:
   X.690:
       title: "Information technology - ASN.1 encoding Rules: Specification of Basic Encoding Rules (BER), Canonical Encoding Rules (CER) and Distinguished Encoding Rules (DER)"
@@ -156,17 +155,18 @@ normative:
 
 informative:
   RFC2986:
-  RFC4210:
   RFC4211:
   RFC5639:
   RFC5914:
-  RFC5990:
   RFC6090:
   RFC7292:
   RFC7296:
+  RFC8411:
   RFC8446:
   RFC8551:
+  RFC9690:
   RFC9794:
+  RFC9810:
   I-D.draft-ietf-lamps-kyber-certificates-11:
   I-D.draft-sfluhrer-cfrg-ml-kem-security-considerations-04:
   TestVectors:
@@ -259,16 +259,6 @@ informative:
       - name: Bertram Poettering
     date: 2018
     target: https://eprint.iacr.org/2018/024
-  Aviram22:
-    title: "Practical (Post-Quantum) Key Combiners from One-Wayness and Applications to TLS"
-    author:
-      - name: Nimrod Aviram
-      - name: Benjamin Dowling
-      - name: Ilan Komargodski
-      - name: Kenneth G. Paterson
-      - name: Eyal Ronen
-      - name: Eylon Yogev
-    target: https://eprint.iacr.org/2022/065
   FIPS-140-3-IG:
     title: Implementation Guidance for FIPS 140-3 and the Cryptographic Module Validation Program
     target: https://csrc.nist.gov/csrc/media/Projects/cryptographic-module-validation-program/documents/fips%20140-3/FIPS%20140-3%20IG.pdf
@@ -364,7 +354,7 @@ In addition, the following terms are used in this specification:
 
 **ML-KEM**: The Module-Lattice-based Key Encapsulation Mechanism algorithm defined in [FIPS.203]
 
-**RSA**: The Rivest-Shamir-Adleman cryptosystem, used in this specification as the RSA-OAEP (Optimal Asymmetric Encryption Padding) scheme defined in [RFC8017]. 
+**RSA**: The Rivest-Shamir-Adleman cryptosystem, used in this specification as the RSA-OAEP (Optimal Asymmetric Encryption Padding) scheme defined in [RFC8017].
 
 **SHARED SECRET KEY:**
   A value established between two communicating parties for use as
@@ -392,7 +382,7 @@ The algorithm descriptions use python-like syntax. The following symbols deserve
 
 ## Composite Design Philosophy
 
-Composite algorithms, as defined in this specification, follow the definition in [RFC9794] and should be regarded as a single algorithm that performs a single cryptographic operation typical of a key establishment mechanism.This generally means that the complexity of combining algorithms can and should be handled by the cryptographic library or cryptographic module. The design intent is that protocols such as PKCS#10 [RFC2986], CMP [RFC4210], X.509 [RFC5280], the CMS [RFC5652], and the Trust Anchor Format [RFC5914] can treat composite algorithms as they would any other algorithm without the protocol layer to have any "hybrid-awareness". This is a property referred to as "protocol backwards-compatibility".
+Composite algorithms, as defined in this specification, follow the definition in [RFC9794] and should be regarded as a single algorithm that performs a single cryptographic operation typical of a key establishment mechanism.This generally means that the complexity of combining algorithms can and should be handled by the cryptographic library or cryptographic module. The design intent is that protocols such as PKCS#10 [RFC2986], CMP [RFC9810], X.509 [RFC5280], the CMS [RFC5652], and the Trust Anchor Format [RFC5914] can treat composite algorithms as they would any other algorithm without the protocol layer to have any "hybrid-awareness". This is a property referred to as "protocol backwards-compatibility".
 
 Discussion of the specific choices of algorithm pairings can be found in {{sec-rationale}}.
 
@@ -469,7 +459,7 @@ RSAOAEPKEM.Decap(skR, enc):
 
 The encodings for the public key (`pkR`), private key (`skR`), and ciphertext (`enc`) are described in {{sec-serialization}}.
 
-A quick note on the choice of RSA-OAEP as the supported RSA encryption primitive. RSA-KEM [RFC5990] is cryptographically robust and is more straightforward to work with, but it has fairly limited adoption and therefore is of limited value as a PQ migration mechanism. Also, while RSA-PKCS#1v1.5 [RFC8017] is still widely used, it is hard to make secure and no longer FIPS-approved as of the end of 2023 [SP800-131Ar2], so it is of limited forwards value. This leaves RSA-OAEP [RFC8017] as the remaining choice. See {{sec-rationale}} for further discussion of algorithm choices.
+A quick note on the choice of RSA-OAEP as the supported RSA encryption primitive. RSA-KEM [RFC9690] is cryptographically robust and is more straightforward to work with, but it has fairly limited adoption and therefore is of limited value as a PQ migration mechanism. Also, while RSA-PKCS#1v1.5 [RFC8017] is still widely used, it is hard to make secure and no longer FIPS-approved as of the end of 2023 [SP800-131Ar2], so it is of limited forwards value. This leaves RSA-OAEP [RFC8017] as the remaining choice. See {{sec-rationale}} for further discussion of algorithm choices.
 
 Note that, at least at the time of writing, the algorithm `RSAOAEPKEM` is not defined as a standalone algorithm within PKIX standards and it does not have an assigned algorithm OID, so it cannot be used directly with CMS KEMRecipientInfo [RFC9629]; it is merely a building block for the composite algorithm.
 
@@ -792,7 +782,7 @@ While ML-KEM has a single fixed-size representation for each of public key, priv
 
 * **ML-KEM**: MUST be encoded as specified in sections 7.1 and 7.2 of [FIPS.203], using a 64-byte seed `(d || z)` as the private key.
 * **RSA**: the public key MUST be encoded as RSAPublicKey with the `(n,e)` public key representation as specified in A.1.1 of [RFC8017] and the private key representation as RSAPrivateKey specified in A.1.2 of [RFC8017] with version 0 and 'otherPrimeInfos' absent. An RSA-OAEP ciphertext MUST be encoded as specified in section 7.1.1 of {{RFC8017}}
-* **ECDH**: public key MUST be encoded as an uncompressed X9.62 [X9.62–2005], including the leading byte `0x04` indicating uncompressed. This is consistent with the encoding of `ECPoint` as specified in section 2.2 of [RFC5480] when no ASN.1 OCTET STRING wrapping is present. The private key MUST be encoded as ECPrivateKey specified in [RFC5915] with 'NamedCurve' parameter set to the OID of the curve, but without the 'publicKey' field. The ciphertext MUST be encoded in the same manner as the public key.
+* **ECDH**: public key MUST be encoded as an uncompressed elliptic curve point as in section 2.2 of [RFC5480], including the leading byte `0x04` indicating uncompressed encoding and without the ASN.1 OCTET STRING wrapper. This is consistent with the encoding of EC public keys in X9.62 [X9.62–2005]. The private key MUST be encoded as ECPrivateKey specified in [RFC5915] with 'NamedCurve' parameter set to the OID of the curve, but without the 'publicKey' field. The ciphertext MUST be encoded in the same manner as the public key.
 * **X25519 and X448**: the public key MUST be encoded as per section 5 of [RFC7748] and the private key is a 32 or 56 byte raw value for X25519 and X448 respectively. The ciphertext MUST be encoded in the same manner as the public key.
 
 All ASN.1 objects SHALL be encoded using DER on serialization.
@@ -1036,7 +1026,7 @@ Deserialization Process:
 
 The following sections provide processing logic and the necessary ASN.1 modules necessary to use composite ML-KEM within X.509 and PKIX protocols. Use within the Cryptographic Message Syntax (CMS) will be covered in a separate specification.
 
-While composite ML-KEM keys and ciphertext values MAY be used raw, the following sections provide conventions for using them within X.509 and other PKIX protocols such that Composite ML-KEM can be used as a drop-in replacement for KEM algorithms in PKCS#10 [RFC2986], CMP [RFC4210], X.509 [RFC5280], and related protocols.
+While composite ML-KEM keys and ciphertext values MAY be used raw, the following sections provide conventions for using them within X.509 and other PKIX protocols such that Composite ML-KEM can be used as a drop-in replacement for KEM algorithms in PKCS#10 [RFC2986], CMP [RFC9810], X.509 [RFC5280], and related protocols.
 
 
 ## Encoding to DER {#sec-encoding-to-der}
@@ -1113,7 +1103,7 @@ kema-MLKEM768-ECDH-P256-SHA3-256 KEM-ALGORITHM ::=
 The full set of key types defined by this specification can be found in the ASN.1 Module in {{sec-asn1-module}}.
 
 
-Use cases that require an interoperable encoding for composite private keys will often need to place a composite private key inside a `OneAsymmetricKey` structure defined in [RFC5958], such as when private keys are carried in PKCS #12 [RFC7292], CMP [RFC4210] or CRMF [RFC4211]. The definition of `OneAsymmetricKey` is copied here for convenience:
+Use cases that require an interoperable encoding for composite private keys will often need to place a composite private key inside a `OneAsymmetricKey` structure defined in [RFC5958], such as when private keys are carried in PKCS #12 [RFC7292], CMP [RFC9810] or CRMF [RFC4211]. The definition of `OneAsymmetricKey` is copied here for convenience:
 
 ~~~ ASN.1
  OneAsymmetricKey ::= SEQUENCE {
