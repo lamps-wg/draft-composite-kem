@@ -364,7 +364,7 @@ In addition, the following terms are used in this specification:
 
 **ML-KEM**: The Module-Lattice-based Key Encapsulation Mechanism algorithm defined in [FIPS.203]
 
-**RSA**: The Rivest-Shamir-Adleman cryptosystem, used in this specification as the RSA-OAEP (Optimal Asymmetric Encryption Padding) scheme defined in [RFC8017]. 
+**RSA**: The Rivest-Shamir-Adleman cryptosystem, used in this specification as the RSA-OAEP (Optimal Asymmetric Encryption Padding) scheme defined in [RFC8017].
 
 **SHARED SECRET KEY:**
   A value established between two communicating parties for use as
