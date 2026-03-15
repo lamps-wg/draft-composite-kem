@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-03-08T02:45:37.824948+00:00",
+  "timestamp": "2026-03-15T03:17:49.513846+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -4289,6 +4289,30 @@
       "updatedAt": "2026-03-08T01:30:05Z",
       "closedAt": null,
       "comments": []
+    },
+    {
+      "number": 264,
+      "id": "I_kwDOKRPFO87yTFiI",
+      "title": "Change Reference of ECDH Key Encoding to IETF document",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/264",
+      "state": "OPEN",
+      "author": "janklaussner",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Russ on IETF LAMPS 09.03.2026:\n\nI am concerned with this paragraph:\n\n   *  *ECDH*: public key MUST be encoded as an uncompressed X9.62\n      [X9.62_2005], including the leading byte 0x04 indicating\n      uncompressed.  This is consistent with the encoding of ECPoint as\n      specified in section 2.2 of [RFC5480] when no ASN.1 OCTET STRING\n      wrapping is present.  The private key MUST be encoded as\n      ECPrivateKey specified in [RFC5915] with 'NamedCurve' parameter\n      set to the OID of the curve, but without the 'publicKey' field.\n      The ciphertext MUST be encoded in the same manner as the public\n      key.\n\nThe MUST statement refers to [X9.62_2005], which is not a readily available specification.\n\nI suggest that the MUST statement point to Section 2.2 of [RFC5480], and then provide an informative statement that it is consistent with [X9.62_2005].  In this way, all normative references are publicly available.\n",
+      "createdAt": "2026-03-12T14:30:21Z",
+      "updatedAt": "2026-03-12T15:26:39Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "janklaussner",
+          "authorAssociation": "COLLABORATOR",
+          "body": "further comments from Russ: \n\n* Unused Reference to 'Aviram22'; please remove it.\n* Obsolete informational reference to RFC 4210; it is Obsoleted by RFC 9810.\n* Obsolete informational reference RFC 5990; it is Obsoleted by RFC 9690.\n* Reference to RFC 8411 should be informative, not normative.\n",
+          "createdAt": "2026-03-12T15:26:39Z",
+          "updatedAt": "2026-03-12T15:26:39Z"
+        }
+      ]
     }
   ],
   "pulls": [
@@ -11351,6 +11375,32 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 265,
+      "id": "PR_kwDOKRPFO87KEEje",
+      "title": "Changes normative reference of ECDH Point Encoding.",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/265",
+      "state": "OPEN",
+      "author": "janklaussner",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Refer to RFC-5480 first, then hint to X9.62.\r\n\r\nCloses #264",
+      "createdAt": "2026-03-12T14:46:55Z",
+      "updatedAt": "2026-03-12T15:48:01Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "e0a3c6f7329d7d1d053700e30303a71c49783520",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "264-change-reference-of-ecdh-key-encoding-to-ietf-document",
+      "headRefOid": "3c04e7da71e36d6a31a3a72703738ba908bac7ee",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
