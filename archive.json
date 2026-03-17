@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-03-15T03:17:49.513846+00:00",
+  "timestamp": "2026-03-17T02:43:24.873171+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -4286,9 +4286,17 @@
       "labels": [],
       "body": "https://eprint.iacr.org/2026/427\n\nAdd it to the references and update the Security Considerations to match.",
       "createdAt": "2026-03-08T01:30:05Z",
-      "updatedAt": "2026-03-08T01:30:05Z",
+      "updatedAt": "2026-03-15T06:29:55Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Also reference https://eprint.iacr.org/2026/407\n\nI need to go read the RSA-OAEP section again, but from my first skim, I believe the summary is that our construction that binds both the RSA-OAEP PK and CT is overkill for achieving IND-CCA2 and the desired bending properties.",
+          "createdAt": "2026-03-15T06:29:55Z",
+          "updatedAt": "2026-03-15T06:29:55Z"
+        }
+      ]
     },
     {
       "number": 264,
