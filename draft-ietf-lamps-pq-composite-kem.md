@@ -259,6 +259,23 @@ informative:
       - name: Bertram Poettering
     date: 2018
     target: https://eprint.iacr.org/2018/024
+  Starhunters:
+    title: StarHunters— Secure Hybrid Post-Quantum KEMs From IND-CCA2 PKEs
+    author:
+      - name: Deirdre Connolly
+      - name: Mike Ounsworth
+      - name: Sophie Schmieg
+      - name: Douglas Stebila
+    date: 2026
+    target: https://eprint.iacr.org/2026/427
+  KWW2026:
+    title: On the Binding Security of KEMs based on RSA and DH
+    author:
+      - name: Juliane Krämer
+      - name: Maximiliane Weishäupl
+      - name: SStefan Winderl
+    date: 2026
+    target: https://eprint.iacr.org/2026/407
   FIPS-140-3-IG:
     title: Implementation Guidance for FIPS 140-3 and the Cryptographic Module Validation Program
     target: https://csrc.nist.gov/csrc/media/Projects/cryptographic-module-validation-program/documents/fips%20140-3/FIPS%20140-3%20IG.pdf
@@ -1330,7 +1347,7 @@ Informally, a Composite ML-KEM algorithm is secure if the combiner (SHA3) is sec
 
 The security of ML-KEM and DH hybrids is covered in [X-Wing] and requires that the first KEM component (ML-KEM in this construction) is IND-CCA2 and second ciphertext preimage resistant (C2PRI) and that the DH component is nominal group; i.e. a well-behaved elliptic curve DH group, but does not require the traditional component to be IND-CCA. This design choice improves performance by not including the large ML-KEM public key and ciphertext, but means that an implementation error in the ML-KEM component that affects the ciphertext check step of the FO transform could result in the overall composite no longer achieving IND-CCA2 security. This solution remains IND-CCA2 due to binding the `tradPK` and `tradCT` in the KEM combiner.
 
-The QSF framework presented in [X-Wing] is extended to cover RSA-OAEP as the traditional algorithm in place of DH by noting that RSA-OAEP is also IND-CCA2 secure [RFC8017].
+The QSF framework presented in [X-Wing] is extended to cover RSA-OAEP as the traditional algorithm in place of DH. Informally we note that that RSA-OAEP is IND-CCA2 secure [RFC8017] but is not C2PRI(aka ciphertext binding) or public key binding since it is mathematically possibly to construct two RSA-OAEP ciphertexts that decapsulate to the same shared secret under the same public key or under different public keys. Binding the RSA-OAEP ciphertext and public key to the internal KDF restores these properties. Formally, [Starhunters] ports the proof of [X-Wing] to cover RSA-OAEP as the traditional compenent in a QSF construction. [KWW2026] goes further, analyzing a range of different RSA-based KEMs, including the RSA-OAEP-KEM construction used in this specification, concluding that it achieves LEAK-BIND-K,PK-CT and C2PRI when the ciphertext is included in the post-processing KDF.
 
 The composite combiner cannot be assumed to be secure when used with different KEMs and a more cautious approach would bind the public key and ciphertext of the first KEM as well.
 
