@@ -738,7 +738,8 @@ Decap Process:
      return ss
 ~~~
 
-Steps 2, 3, and 4 SHOULD be performed in a timing-invariant way to prevent side-channel attackers from learning which component algorithm failed and from learning any of the inputs or output of the KEM combiner.
+Steps 2 and 4 SHOULD be performed in a timing-invariant way to prevent side-channel attackers from learning any of the inputs or output of the KEM combiner.
+
 
 Step 4 requires the `Decaps()` process to have access to `tradPK`, which is not carried in the private key format and therefore the implementation is required to acquire it from some out-of-band means. The Implementation Considerations {{impl-cons-decaps-pubkey}} provides further discussion on this.
 
