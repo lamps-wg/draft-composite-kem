@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-03-17T02:43:24.873171+00:00",
+  "timestamp": "2026-03-26T02:55:33.111418+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -4270,9 +4270,17 @@
       "labels": [],
       "body": "Per https://github.com/lamps-wg/draft-composite-kem/issues/239#issuecomment-3961436274\n\nhttps://github.com/lamps-wg/draft-composite-kem/blob/e0a3c6f7329d7d1d053700e30303a71c49783520/draft-ietf-lamps-pq-composite-kem.md?plain=1#L734\n\nStates that in composite decapsulation implementations should be timing invariant w.r.t. which component decapsulation operation failed if one of the operations failed. But this seems to be an unnecessary requirement that the authors intended to remove as part of fixing #239.\n\nI think this line should probably just read:\n```\nSteps 2 and 4 SHOULD be performed in a timing-invariant way to prevent side-channel attackers from learning any of the inputs or output of the KEM combiner.\n```",
       "createdAt": "2026-02-27T00:23:59Z",
-      "updatedAt": "2026-02-27T00:23:59Z",
+      "updatedAt": "2026-03-25T15:43:16Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Thanks @samuel-lee-msft !",
+          "createdAt": "2026-03-25T15:43:16Z",
+          "updatedAt": "2026-03-25T15:43:16Z"
+        }
+      ]
     },
     {
       "number": 263,
@@ -4303,15 +4311,15 @@
       "id": "I_kwDOKRPFO87yTFiI",
       "title": "Change Reference of ECDH Key Encoding to IETF document",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/264",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "janklaussner",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Russ on IETF LAMPS 09.03.2026:\n\nI am concerned with this paragraph:\n\n   *  *ECDH*: public key MUST be encoded as an uncompressed X9.62\n      [X9.62_2005], including the leading byte 0x04 indicating\n      uncompressed.  This is consistent with the encoding of ECPoint as\n      specified in section 2.2 of [RFC5480] when no ASN.1 OCTET STRING\n      wrapping is present.  The private key MUST be encoded as\n      ECPrivateKey specified in [RFC5915] with 'NamedCurve' parameter\n      set to the OID of the curve, but without the 'publicKey' field.\n      The ciphertext MUST be encoded in the same manner as the public\n      key.\n\nThe MUST statement refers to [X9.62_2005], which is not a readily available specification.\n\nI suggest that the MUST statement point to Section 2.2 of [RFC5480], and then provide an informative statement that it is consistent with [X9.62_2005].  In this way, all normative references are publicly available.\n",
       "createdAt": "2026-03-12T14:30:21Z",
-      "updatedAt": "2026-03-12T15:26:39Z",
-      "closedAt": null,
+      "updatedAt": "2026-03-25T14:12:46Z",
+      "closedAt": "2026-03-25T14:12:46Z",
       "comments": [
         {
           "author": "janklaussner",
@@ -11389,20 +11397,62 @@
       "id": "PR_kwDOKRPFO87KEEje",
       "title": "Changes normative reference of ECDH Point Encoding.",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/265",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "janklaussner",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Refer to RFC-5480 first, then hint to X9.62.\r\n\r\nCloses #264",
       "createdAt": "2026-03-12T14:46:55Z",
-      "updatedAt": "2026-03-12T15:48:01Z",
+      "updatedAt": "2026-03-25T14:12:57Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "e0a3c6f7329d7d1d053700e30303a71c49783520",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "264-change-reference-of-ecdh-key-encoding-to-ietf-document",
       "headRefOid": "3c04e7da71e36d6a31a3a72703738ba908bac7ee",
+      "closedAt": "2026-03-25T14:12:45Z",
+      "mergedAt": "2026-03-25T14:12:45Z",
+      "mergedBy": "johngray-dev",
+      "mergeCommit": {
+        "oid": "bf33bbc8486345fc8d82921da50541f2068f5cce"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO87u1h0G",
+          "commit": {
+            "abbreviatedOid": "3c04e7d"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-03-25T14:12:43Z",
+          "updatedAt": "2026-03-25T14:12:43Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 266,
+      "id": "PR_kwDOKRPFO87NZS1K",
+      "title": "Proof papers",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/266",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "* Referenced RSA proof papers. Closes #263 and #54\r\n* Tweaked text of decaps timing-invariance. Closes #262 ",
+      "createdAt": "2026-03-25T15:40:18Z",
+      "updatedAt": "2026-03-25T15:47:02Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "bf33bbc8486345fc8d82921da50541f2068f5cce",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo_proof_paper",
+      "headRefOid": "2a0497d9bef0e1e0e6d16615f43e2ad15bb3c1ba",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
