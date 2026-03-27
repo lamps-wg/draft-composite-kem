@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 26 September 2026                                       M. Pala
+Expires: 28 September 2026                                       M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                           25 March 2026
+                                                           27 March 2026
 
 
       Composite ML-KEM for use in X.509 Public Key Infrastructure
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 26 September 2026.
+   This Internet-Draft will expire on 28 September 2026.
 
 Copyright Notice
 
@@ -792,10 +792,9 @@ Key Generation Process:
 
         return ss
 
-   Steps 2, 3, and 4 SHOULD be performed in a timing-invariant way to
-   prevent side-channel attackers from learning which component
-   algorithm failed and from learning any of the inputs or output of the
-   KEM combiner.
+   Steps 2 and 4 SHOULD be performed in a timing-invariant way to
+   prevent side-channel attackers from learning any of the inputs or
+   output of the KEM combiner.
 
    Step 4 requires the Decaps() process to have access to tradPK, which
    is not carried in the private key format and therefore the
@@ -2074,8 +2073,19 @@ Deserialization Process:
    combiner.
 
    The QSF framework presented in [X-Wing] is extended to cover RSA-OAEP
-   as the traditional algorithm in place of DH by noting that RSA-OAEP
-   is also IND-CCA2 secure [RFC8017].
+   as the traditional algorithm in place of DH.  Informally we note that
+   that RSA-OAEP is IND-CCA2 secure [RFC8017] but is not C2PRI(aka
+   ciphertext binding) or public key binding since it is mathematically
+   possibly to construct two RSA-OAEP ciphertexts that decapsulate to
+   the same shared secret under the same public key or under different
+   public keys.  Binding the RSA-OAEP ciphertext and public key to the
+   internal KDF restores these properties.  Formally, [Starhunters]
+   ports the proof of [X-Wing] to cover RSA-OAEP as the traditional
+   compenent in a QSF construction.  [KWW2026] goes further, analyzing a
+   range of different RSA-based KEMs, including the RSA-OAEP-KEM
+   construction used in this specification, concluding that it achieves
+   LEAK-BIND-K,PK-CT and C2PRI when the ciphertext is included in the
+   post-processing KDF.
 
    The composite combiner cannot be assumed to be secure when used with
    different KEMs and a more cautious approach would bind the public key
@@ -2618,6 +2628,10 @@ Deserialization Process:
               <https://datatracker.ietf.org/doc/html/draft-sfluhrer-
               cfrg-ml-kem-security-considerations-04>.
 
+   [KWW2026]  Krämer, J., Weishäupl, M., and S. Winderl, "On the Binding
+              Security of KEMs based on RSA and DH", 2026,
+              <https://eprint.iacr.org/2026/407>.
+
    [RFC2986]  Nystrom, M. and B. Kaliski, "PKCS #10: Certification
               Request Syntax Specification Version 1.7", RFC 2986,
               DOI 10.17487/RFC2986, November 2000,
@@ -2699,6 +2713,11 @@ Deserialization Process:
               Standards and Technology (NIST), "Recommendations for Key-
               Encapsulation Mechanisms", September 2025,
               <https://csrc.nist.gov/pubs/sp/800/227/final>.
+
+   [Starhunters]
+              Connolly, D., Ounsworth, M., Schmieg, S., and D. Stebila,
+              "StarHunters— Secure Hybrid Post-Quantum KEMs From IND-
+              CCA2 PKEs", 2026, <https://eprint.iacr.org/2026/427>.
 
    [TestVectors]
               "Test vectors for Composite-ML-KEM", n.d.,

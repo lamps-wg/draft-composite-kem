@@ -1059,7 +1059,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Ounsworth, et al.</td>
-<td class="center">Expires 26 September 2026</td>
+<td class="center">Expires 28 September 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1072,12 +1072,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-lamps-pq-composite-kem-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-03-25" class="published">25 March 2026</time>
+<time datetime="2026-03-27" class="published">27 March 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-09-26">26 September 2026</time></dd>
+<dd class="expires"><time datetime="2026-09-28">28 September 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1143,7 +1143,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 26 September 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 28 September 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1853,7 +1853,7 @@ Decap Process:
      return ss
 </pre><a href="#section-3.3-3" class="pilcrow">¶</a>
 </div>
-<p id="section-3.3-4">Steps 2, 3, and 4 SHOULD be performed in a timing-invariant way to prevent side-channel attackers from learning which component algorithm failed and from learning any of the inputs or output of the KEM combiner.<a href="#section-3.3-4" class="pilcrow">¶</a></p>
+<p id="section-3.3-4">Steps 2 and 4 SHOULD be performed in a timing-invariant way to prevent side-channel attackers from learning any of the inputs or output of the KEM combiner.<a href="#section-3.3-4" class="pilcrow">¶</a></p>
 <p id="section-3.3-5">Step 4 requires the <code>Decaps()</code> process to have access to <code>tradPK</code>, which is not carried in the private key format and therefore the implementation is required to acquire it from some out-of-band means. The Implementation Considerations <a href="#impl-cons-decaps-pubkey" class="auto internal xref">Section 10.4</a> provides further discussion on this.<a href="#section-3.3-5" class="pilcrow">¶</a></p>
 <p id="section-3.3-6">It is possible to use component private keys stored in separate software or hardware keystores. Variations in the process to accommodate particular private key storage mechanisms are considered to be conformant to this specification so long as it produces the same output and error handling as the process sketched above.<a href="#section-3.3-6" class="pilcrow">¶</a></p>
 <p id="section-3.3-7">In order to properly achieve its security properties, the KEM combiner requires that all inputs are fixed-length or length-encoded. Since each Composite ML-KEM algorithm fully specifies its component algorithms, including key sizes, all inputs should be fixed-length in non-error scenarios except for minor variations introduced by encoding. In the cases where there are minor variations introduced by encoding, those encodings already have a fixed-length prefix followed by length-encoded data, so the requirements for the KEM combiner security properties hold (namely that the input is injective). However some implementations may choose to perform additional checking to handle certain error conditions. In particular, the KEM combiner step should not be performed if either of the component decapsulations returned an error condition indicating malformed inputs. RSA-based composites MUST ensure that the modulus size (i.e. the size of <code>tradCT</code> and <code>tradPK</code>) matches that specified for the given Composite ML-KEM algorithm in <a href="#sec-alg-parms" class="auto internal xref">Section 6</a>; depending on the cryptographic library used, this check may be done by the library or may require an explicit check as part of the <code>Composite-ML-KEM.Decap()</code> routine. Implementers should keep in mind that some instances of <code>tradCT</code> and <code>tradPK</code> will be DER-encoded which could introduce minor length variations such as dropping leading zeroes; since the underlying KEMs are assumed to be IND-CCA secure, decapsulation against tampered ciphertexts or public keys is assumed to fail, these length differences are considered benign to the KEM combiner.<a href="#section-3.3-7" class="pilcrow">¶</a></p>
@@ -3227,7 +3227,7 @@ END
           </h4>
 <p id="section-9.2.1-1">Informally, a Composite ML-KEM algorithm is secure if the combiner (SHA3) is secure, and either ML-KEM is secure or the traditional component (RSA-OAEP, ECDH, X25519 or X448) is secure.<a href="#section-9.2.1-1" class="pilcrow">¶</a></p>
 <p id="section-9.2.1-2">The security of ML-KEM and DH hybrids is covered in <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span> and requires that the first KEM component (ML-KEM in this construction) is IND-CCA2 and second ciphertext preimage resistant (C2PRI) and that the DH component is nominal group; i.e. a well-behaved elliptic curve DH group, but does not require the traditional component to be IND-CCA. This design choice improves performance by not including the large ML-KEM public key and ciphertext, but means that an implementation error in the ML-KEM component that affects the ciphertext check step of the FO transform could result in the overall composite no longer achieving IND-CCA2 security. This solution remains IND-CCA2 due to binding the <code>tradPK</code> and <code>tradCT</code> in the KEM combiner.<a href="#section-9.2.1-2" class="pilcrow">¶</a></p>
-<p id="section-9.2.1-3">The QSF framework presented in <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span> is extended to cover RSA-OAEP as the traditional algorithm in place of DH by noting that RSA-OAEP is also IND-CCA2 secure <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span>.<a href="#section-9.2.1-3" class="pilcrow">¶</a></p>
+<p id="section-9.2.1-3">The QSF framework presented in <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span> is extended to cover RSA-OAEP as the traditional algorithm in place of DH. Informally we note that that RSA-OAEP is IND-CCA2 secure <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span> but is not C2PRI(aka ciphertext binding) or public key binding since it is mathematically possibly to construct two RSA-OAEP ciphertexts that decapsulate to the same shared secret under the same public key or under different public keys. Binding the RSA-OAEP ciphertext and public key to the internal KDF restores these properties. Formally, <span>[<a href="#Starhunters" class="cite xref">Starhunters</a>]</span> ports the proof of <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span> to cover RSA-OAEP as the traditional compenent in a QSF construction. <span>[<a href="#KWW2026" class="cite xref">KWW2026</a>]</span> goes further, analyzing a range of different RSA-based KEMs, including the RSA-OAEP-KEM construction used in this specification, concluding that it achieves LEAK-BIND-K,PK-CT and C2PRI when the ciphertext is included in the post-processing KDF.<a href="#section-9.2.1-3" class="pilcrow">¶</a></p>
 <p id="section-9.2.1-4">The composite combiner cannot be assumed to be secure when used with different KEMs and a more cautious approach would bind the public key and ciphertext of the first KEM as well.<a href="#section-9.2.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -3591,6 +3591,10 @@ pubKey = ec_multiply_by_scalar(g, s)
         <dd>
 <span class="refAuthor">Fluhrer, S.</span>, <span class="refAuthor">Dang, Q.</span>, <span class="refAuthor">Mattsson, J. P.</span>, <span class="refAuthor">Milner, K.</span>, and <span class="refAuthor">D. Shiu</span>, <span class="refTitle">"ML-KEM Security Considerations"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-sfluhrer-cfrg-ml-kem-security-considerations-04</span>, <time datetime="2025-11-17" class="refDate">17 November 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-sfluhrer-cfrg-ml-kem-security-considerations-04">https://datatracker.ietf.org/doc/html/draft-sfluhrer-cfrg-ml-kem-security-considerations-04</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="KWW2026">[KWW2026]</dt>
+        <dd>
+<span class="refAuthor">Krämer, J.</span>, <span class="refAuthor">Weishäupl, M.</span>, and <span class="refAuthor">S. Winderl</span>, <span class="refTitle">"On the Binding Security of KEMs based on RSA and DH"</span>, <time datetime="2026" class="refDate">2026</time>, <span>&lt;<a href="https://eprint.iacr.org/2026/407">https://eprint.iacr.org/2026/407</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC2986">[RFC2986]</dt>
         <dd>
 <span class="refAuthor">Nystrom, M.</span> and <span class="refAuthor">B. Kaliski</span>, <span class="refTitle">"PKCS #10: Certification Request Syntax Specification Version 1.7"</span>, <span class="seriesInfo">RFC 2986</span>, <span class="seriesInfo">DOI 10.17487/RFC2986</span>, <time datetime="2000-11" class="refDate">November 2000</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc2986">https://www.rfc-editor.org/info/rfc2986</a>&gt;</span>. </dd>
@@ -3654,6 +3658,10 @@ pubKey = ec_multiply_by_scalar(g, s)
 <dt id="SP800-227">[SP800-227]</dt>
         <dd>
 <span class="refAuthor">Alagic, G.</span>, <span class="refAuthor">Barker, E.</span>, <span class="refAuthor">Chen, L.</span>, <span class="refAuthor">Moody, D.</span>, <span class="refAuthor">Robinson, A.</span>, <span class="refAuthor">Silberg, H.</span>, <span class="refAuthor">Waller, N.</span>, and <span class="refAuthor">National Institute of Standards and Technology (NIST)</span>, <span class="refTitle">"Recommendations for Key-Encapsulation Mechanisms"</span>, <time datetime="2025-09" class="refDate">September 2025</time>, <span>&lt;<a href="https://csrc.nist.gov/pubs/sp/800/227/final">https://csrc.nist.gov/pubs/sp/800/227/final</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="Starhunters">[Starhunters]</dt>
+        <dd>
+<span class="refAuthor">Connolly, D.</span>, <span class="refAuthor">Ounsworth, M.</span>, <span class="refAuthor">Schmieg, S.</span>, and <span class="refAuthor">D. Stebila</span>, <span class="refTitle">"StarHunters— Secure Hybrid Post-Quantum KEMs From IND-CCA2 PKEs"</span>, <time datetime="2026" class="refDate">2026</time>, <span>&lt;<a href="https://eprint.iacr.org/2026/427">https://eprint.iacr.org/2026/427</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="TestVectors">[TestVectors]</dt>
         <dd>
