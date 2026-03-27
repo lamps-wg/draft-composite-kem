@@ -2565,11 +2565,6 @@ Deserialization Process:
               Encoding Rules (CER) and Distinguished Encoding Rules
               (DER)", ISO/IEC 8825-1:2015, November 2015.
 
-   [X9.62_2005]
-              "Public Key Cryptography for the Financial Services
-              Industry, The Elliptic Curve Digital Signature Algorithm
-              (ECDSA)", November 2005.
-
 11.2.  Informative References
 
    [ANSSI2024]
@@ -2728,6 +2723,11 @@ Deserialization Process:
               Schwabe, P., Varner, K., and B. Westerbaan, "X-Wing The
               Hybrid KEM You’ve Been Looking For", 9 January 2024,
               <https://eprint.iacr.org/2024/039.pdf>.
+
+   [X9.62_2005]
+              "Public Key Cryptography for the Financial Services
+              Industry, The Elliptic Curve Digital Signature Algorithm
+              (ECDSA)", November 2005.
 
 Appendix A.  Maximum Key and Ciphertext Sizes
 
