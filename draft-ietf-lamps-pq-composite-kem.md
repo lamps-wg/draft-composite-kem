@@ -93,11 +93,6 @@ normative:
         - org: ITU-T
       seriesinfo:
         ISO/IEC: 8825-1:2015
-  X9.62–2005:
-       title: "Public Key Cryptography for the Financial Services Industry, The Elliptic Curve Digital Signature Algorithm (ECDSA)"
-       date: November 16, 2005
-       author:
-         -org: ITU-T
   SEC1:
     title: "SEC 1: Elliptic Curve Cryptography"
     date: May 21, 2009
@@ -172,6 +167,11 @@ informative:
   TestVectors:
     title: "Test vectors for Composite-ML-KEM"
     target: https://github.com/lamps-wg/draft-composite-kem/tree/main/src
+  X9.62–2005:
+       title: "Public Key Cryptography for the Financial Services Industry, The Elliptic Curve Digital Signature Algorithm (ECDSA)"
+       date: November 16, 2005
+       author:
+         -org: ITU-T
   X-Wing:
     title: "X-Wing The Hybrid KEM You’ve Been Looking For"
     date: 2024-01-09
