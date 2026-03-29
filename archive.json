@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-03-26T02:55:33.111418+00:00",
+  "timestamp": "2026-03-29T03:21:06.048602+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -952,7 +952,7 @@
       "id": "I_kwDOKRPFO86RpPjG",
       "title": "Should we have a security proof for the ML-KEM+RSA-OAEP composite KEM?",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/54",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "johngray-dev",
       "authorAssociation": "COLLABORATOR",
       "assignees": [
@@ -961,8 +961,8 @@
       "labels": [],
       "body": "For a security proof of the ML-KEM + ECDH combos, we can point to the X-Wing paper. We should have a similar proof for the RSA-OAEP combos. Not sure how to go about attracting someone to help with this, or if we should attempt proof-writing ourselves.",
       "createdAt": "2024-08-01T21:31:58Z",
-      "updatedAt": "2025-08-28T14:48:06Z",
-      "closedAt": null,
+      "updatedAt": "2026-03-27T14:27:52Z",
+      "closedAt": "2026-03-27T14:27:52Z",
       "comments": [
         {
           "author": "ounsworth",
@@ -1026,6 +1026,13 @@
           "body": "Sophie suggests this as a starting point for a proof:\n\n> yeah, this definitely requires a proof, especially since you are using a\nnon-standard construction to turn OAEP into a KEM (you could use the FO\ntransform, but it would be overkill). The first step is proofing that an\nIND-CCA PKE can be turned into a KEM by encrypting a randomly chosen byte\nstring, which should be a straight-forward reduction: Assume an attacker A\non the KEM exists, construct an attacker A' on the PKE by forwarding any\ndecaps queries A makes to the decrypt oracle (neither are allowed to query\nthe challenge ciphertext). Give A the two plaintexts as challenge, when A\nguesses one of the plaintexts as the shared secret, guess that plaintext as\nwell. This makes A' an attacker on the PKE and therefore reduce the IND-CCA\nsecurity of the KEM to the IND-CCA security of the PKE (no ROM model\nneeded, as we are already assuming the PKE to be IND-CCA).\n>From there you just need to prove the IND-CCAness of the combiner, which\nyou should be able to find somewhere in the literature for two IND-CCA KEMs.",
           "createdAt": "2025-08-12T20:31:42Z",
           "updatedAt": "2025-08-12T20:31:42Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Done!",
+          "createdAt": "2026-03-27T14:27:52Z",
+          "updatedAt": "2026-03-27T14:27:52Z"
         }
       ]
     },
@@ -4263,15 +4270,15 @@
       "id": "I_kwDOKRPFO87uUuiY",
       "title": "Confused statement on timing in latest",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/262",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "samuel-lee-msft",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "Per https://github.com/lamps-wg/draft-composite-kem/issues/239#issuecomment-3961436274\n\nhttps://github.com/lamps-wg/draft-composite-kem/blob/e0a3c6f7329d7d1d053700e30303a71c49783520/draft-ietf-lamps-pq-composite-kem.md?plain=1#L734\n\nStates that in composite decapsulation implementations should be timing invariant w.r.t. which component decapsulation operation failed if one of the operations failed. But this seems to be an unnecessary requirement that the authors intended to remove as part of fixing #239.\n\nI think this line should probably just read:\n```\nSteps 2 and 4 SHOULD be performed in a timing-invariant way to prevent side-channel attackers from learning any of the inputs or output of the KEM combiner.\n```",
       "createdAt": "2026-02-27T00:23:59Z",
-      "updatedAt": "2026-03-25T15:43:16Z",
-      "closedAt": null,
+      "updatedAt": "2026-03-27T14:26:46Z",
+      "closedAt": "2026-03-27T14:26:46Z",
       "comments": [
         {
           "author": "ounsworth",
@@ -4287,15 +4294,15 @@
       "id": "I_kwDOKRPFO87wz4Kh",
       "title": "Reference the StarHunters paper",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/263",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "https://eprint.iacr.org/2026/427\n\nAdd it to the references and update the Security Considerations to match.",
       "createdAt": "2026-03-08T01:30:05Z",
-      "updatedAt": "2026-03-15T06:29:55Z",
-      "closedAt": null,
+      "updatedAt": "2026-03-27T14:26:45Z",
+      "closedAt": "2026-03-27T14:26:45Z",
       "comments": [
         {
           "author": "ounsworth",
@@ -11439,24 +11446,26 @@
       "id": "PR_kwDOKRPFO87NZS1K",
       "title": "Proof papers",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/266",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "* Referenced RSA proof papers. Closes #263 and #54\r\n* Tweaked text of decaps timing-invariance. Closes #262 ",
       "createdAt": "2026-03-25T15:40:18Z",
-      "updatedAt": "2026-03-25T15:47:02Z",
+      "updatedAt": "2026-03-27T14:27:30Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "bf33bbc8486345fc8d82921da50541f2068f5cce",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "mikeo_proof_paper",
       "headRefOid": "2a0497d9bef0e1e0e6d16615f43e2ad15bb3c1ba",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2026-03-27T14:26:44Z",
+      "mergedAt": "2026-03-27T14:26:44Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "3ce708fe27c2f08369f8e64e2b7187afd30b1d93"
+      },
       "comments": [],
       "reviews": []
     }
