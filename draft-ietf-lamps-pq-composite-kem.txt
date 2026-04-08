@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 28 September 2026                                       M. Pala
+Expires: 10 October 2026                                         M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                           27 March 2026
+                                                            8 April 2026
 
 
       Composite ML-KEM for use in X.509 Public Key Infrastructure
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 28 September 2026.
+   This Internet-Draft will expire on 10 October 2026.
 
 Copyright Notice
 
@@ -115,7 +115,7 @@ Table of Contents
        9.2.3.  Generifying this construction
      9.3.  Key Reuse
      9.4.  Policy for Deprecated and Acceptable Algorithms
-   10. Implementation Considerations
+   10. Operational Considerations
      10.1.  FIPS Certification
        10.1.1.  Combiner Function
        10.1.2.  Order of KDF inputs with Non-Approved Algorithms
@@ -124,6 +124,7 @@ Table of Contents
      10.4.  Decapsulation Requires the Public Key
        10.4.1.  Extracting RSAPublicKey from RSAPrivateKey
        10.4.2.  Deriving the public ECPoint from ECPrivateKey
+     10.5.  Interoperability of legacy algorithms
    11. References
      11.1.  Normative References
      11.2.  Informative References
@@ -176,10 +177,10 @@ Table of Contents
    (ML-KEM), defined in [FIPS.203] as the PQ component.  Instantiations
    of the composite ML-KEM scheme are provided based on ML-KEM, RSA-OAEP
    and ECDH.  The full list of algorithms registered by this
-   specification is in Section 6.  Backwards compatibility in the sense
-   of upgraded systems continuing to interoperate with legacy systems is
-   not directly covered in this specification, but is the subject of
-   Section 10.2.
+   specification is in Section 6.  Application backwards compatibility
+   in the sense of upgraded systems continuing to interoperate with
+   legacy systems is not provided by the mechanisms defined in in this
+   specification; this is discussed further in Section 10.2.
 
    Certain jurisdictions have recommended that ML-KEM be used
    exclusively within a PQ/T hybrid framework.  The use of a composite
@@ -222,27 +223,28 @@ Table of Contents
    meanings.
 
    This specification is consistent with all terminology from [RFC9794].
-   In addition, the following terms are used in this specification:
+   Some relevant definitions from [RFC9794] are copied here for easier
+   reading.  In addition, the following terms are used in this
+   specification:
 
    *ALGORITHM*: The usage of the term "algorithm" within this
    specification generally refers to any function which has a registered
    Object Identifier (OID) for use within an ASN.1 AlgorithmIdentifier.
 
-   *Application Backwards Compatibility*: The usual definition of
-   backwards compatibility, meaning whether an upgraded and non-upgraded
-   application can successfully establish communication.
+   *APPLICATION BACKWARDS COMPATIBILITY*: A property indicating whether
+   an upgraded and non-upgraded application can successfully establish
+   communication.
 
    *COMBINER*: A combiner specifies how multiple shared secret keys are
    combined into a single shared secret key.
 
    *COMPOSITE CRYPTOGRAPHIC ELEMENT*: [RFC9794] defines composites as: A
    cryptographic element that incorporates multiple component
-   cryptographic elements of the same type in a multi-algorithm scheme.
-
-   *COMPONENT / PRIMITIVE*: The words "component" or "primitive" are
-   used interchangeably to refer to a cryptographic algorithm that is
-   used internally within a composite algorithm.  For example this could
-   be an asymmetric algorithm such as "ML-KEM-768" or "RSA-OAEP".
+   cryptographic elements of the same type for use in a multi-algorithm
+   scheme, such that the resulting composite cryptographic element is
+   exposed as a singular interface of the same type as the component
+   cryptographic elements.  For example this could be an asymmetric
+   algorithm such as "ML-KEM-768" or "RSA-OAEP".
 
    *DER:* Distinguished Encoding Rules as defined in [X.690].
 
@@ -253,18 +255,21 @@ Table of Contents
 
    *PKI:* Public Key Infrastructure, as defined in [RFC5280].
 
-   *Post-Quantum Traditional (PQ/T) hybrid scheme*: A multi-algorithm
-   scheme where at least one component algorithm is a post-quantum
-   algorithm and at least one is a traditional algorithm.
+   *POST-QUANTUM TRADITIONAL (PQ/T) HYBRID SCHEME*: [RFC9794] defines a
+   PQ/T Hybrid Scheme as: A multi-algorithm scheme where at least one
+   component algorithm is a post-quantum algorithm and at least one is a
+   traditional algorithm.
 
-   *Protocol Backwards Compatibility*: A property whereby a new feature
+   *PROTOCOL BACKWARDS COMPATIBILITY*: A property whereby a new feature
    can be added to a protocol without requiring any changes to the
    protocol's specification and only minimal changes to its
-   implementations (such as adding new identifiers).  This is notable
-   because many PQ/T Hybrids require modification of the protocol to
-   make it "hybrid aware", whereas this specification presents as a
-   standalone algorithm and thus can take advantage of existing
-   cryptographic agility mechanisms.
+   implementations (such as adding new identifiers).  Typically this
+   means that the new feature fits within a defined extension point of
+   the protocol instead of requiring a structural change to the
+   protocol.  This is notable because many PQ/T Hybrids require
+   modification of the protocol to make it "hybrid aware", whereas this
+   specification presents as a standalone algorithm and thus can take
+   advantage of existing cryptographic agility mechanisms.
 
    *ML-KEM*: The Module-Lattice-based Key Encapsulation Mechanism
    algorithm defined in [FIPS.203]
@@ -298,6 +303,9 @@ Table of Contents
 
    *  (a, _): represents a pair of values where one -- the second one in
       this case -- is ignored.
+
+   *  func(a) -> b: represents a function named func that takes a as
+      input and produces b.
 
    *  Func<TYPE>(): represents a function that is parametrized by <TYPE>
       meaning that the function's implementation will have minor
@@ -589,9 +597,9 @@ Key Generation Process:
    For more details on the security considerations around key reuse, see
    Section 9.3.
 
-   Errors produced by the component KeyGen() routines MUST be forwarded
-   on to the calling application.  Further discussion can be found below
-   in Section 3.5.
+   If one of the component KeyGen() routines returns an error, then this
+   error MUST be propagated by the Composite-ML-KEM.KeyGen() routine.
+   Further discussion can be found below in Section 3.5.
 
 3.1.1.  Allowed Modifications to the Key Generation Process
 
@@ -799,7 +807,7 @@ Key Generation Process:
    Step 4 requires the Decaps() process to have access to tradPK, which
    is not carried in the private key format and therefore the
    implementation is required to acquire it from some out-of-band means.
-   The Implementation Considerations Section 10.4 provides further
+   The Operational Considerations Section 10.4 provides further
    discussion on this.
 
    It is possible to use component private keys stored in separate
@@ -893,7 +901,8 @@ Key Generation Process:
 
    Deserialization is possible because ML-KEM has fixed-length public
    keys, private keys (seeds), and ciphertext values as shown in the
-   following table.
+   following table, which is similar to Table 3 from [FIPS.203], but
+   with a different private key representation.
 
           +=============+============+=============+============+
           | Algorithm   | Public Key | Private Key | Ciphertext |
@@ -2200,7 +2209,7 @@ Deserialization Process:
    Materials that show implementations of deprecated algorithms still
    present and being used.
 
-10.  Implementation Considerations
+10.  Operational Considerations
 
 10.1.  FIPS Certification
 
@@ -2440,6 +2449,21 @@ Deserialization Process:
    found in [SEC1].
 
    Then encode pubKey as X9.62 uncompressed point.
+
+10.5.  Interoperability of legacy algorithms
+
+   The legacy component algorithms, particularly RSA and ECDSA can
+   themselves have interoperability issues which will propagate to
+   become interoperability issues in the composite.  For example, this
+   specification RECOMMENDS an RSA expenent of 65537, but other values
+   are possible.  Similarly, due to the details of DER encoding, keys
+   that happen to have leading zeros could appear to be smaller than the
+   required key size even though they are actually acceptable.
+
+   Implementations are encouraged to be lenient when parsing the key
+   material of the legacy algorithm.  In particilar, the recommendation
+   is to use existing implementations of the legacy algorithms that
+   already handle all the variation seen in the wild.
 
 11.  References
 

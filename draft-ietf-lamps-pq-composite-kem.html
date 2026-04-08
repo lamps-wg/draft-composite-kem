@@ -1055,11 +1055,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">Composite ML-KEM</td>
-<td class="right">March 2026</td>
+<td class="right">April 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Ounsworth, et al.</td>
-<td class="center">Expires 28 September 2026</td>
+<td class="center">Expires 10 October 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1072,12 +1072,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-lamps-pq-composite-kem-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-03-27" class="published">27 March 2026</time>
+<time datetime="2026-04-08" class="published">8 April 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-09-28">28 September 2026</time></dd>
+<dd class="expires"><time datetime="2026-10-10">10 October 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1143,7 +1143,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 28 September 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 10 October 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1309,7 +1309,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
-            <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-implementation-consideratio" class="internal xref">Implementation Considerations</a></p>
+            <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-operational-considerations" class="internal xref">Operational Considerations</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.1">
                 <p id="section-toc.1-1.10.2.1.1"><a href="#section-10.1" class="auto internal xref">10.1</a>.  <a href="#name-fips-certification" class="internal xref">FIPS Certification</a></p>
@@ -1338,6 +1338,9 @@ svg :is([fill="white"], [fill^="#fff"]) {
                     <p id="section-toc.1-1.10.2.4.2.2.1"><a href="#section-10.4.2" class="auto internal xref">10.4.2</a>.  <a href="#name-deriving-the-public-ecpoint" class="internal xref">Deriving the public ECPoint from ECPrivateKey</a></p>
 </li>
                 </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.5">
+                <p id="section-toc.1-1.10.2.5.1"><a href="#section-10.5" class="auto internal xref">10.5</a>.  <a href="#name-interoperability-of-legacy-" class="internal xref">Interoperability of legacy algorithms</a></p>
 </li>
             </ul>
 </li>
@@ -1402,7 +1405,7 @@ Composite algorithms retain some security even if one of their component algorit
 This specification creates PQ/T Hybrids with the Module-Lattice-based Key Encapsulation Mechanism (ML-KEM), defined in <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span> as the PQ component.
 Instantiations of the composite ML-KEM scheme are provided based on ML-KEM, RSA-OAEP and ECDH.
 The full list of algorithms registered by this specification is in <a href="#sec-alg-parms" class="auto internal xref">Section 6</a>.
-Backwards compatibility in the sense of upgraded systems continuing to interoperate with legacy systems is not directly covered in this specification, but is the subject of <a href="#sec-backwards-compat" class="auto internal xref">Section 10.2</a>.<a href="#section-1-3" class="pilcrow">¶</a></p>
+Application backwards compatibility in the sense of upgraded systems continuing to interoperate with legacy systems is not provided by the mechanisms defined in in this specification; this is discussed further in <a href="#sec-backwards-compat" class="auto internal xref">Section 10.2</a>.<a href="#section-1-3" class="pilcrow">¶</a></p>
 <p id="section-1-4">Certain jurisdictions have recommended that ML-KEM be used exclusively within a PQ/T hybrid framework. The use of a composite scheme provides a straightforward implementation of hybrid solutions compatible with (and advocated by) some governments and cybersecurity agencies <span>[<a href="#BSI2021" class="cite xref">BSI2021</a>]</span>, <span>[<a href="#ANSSI2024" class="cite xref">ANSSI2024</a>]</span>.<a href="#section-1-4" class="pilcrow">¶</a></p>
 <p id="section-1-5">In some situations it might be possible to add Post-Quantum, via a PQ/T Hybrid, to an already audited and compliant solution without invalidating the existing certification, whereas a full replacement of the traditional cryptography would almost certainly incur regulatory and compliance delays. In other words, PQ/T Hybrids can allow for deploying Post-Quantum Cryptography before the PQ modules and operational procedures are fully audited and certified. This, more than any other requirement, is what motivates the large number of algorithm combinations in this specification: The intention is to provide a stepping stone from which any cryptographic algorithm an organization has deployed today can evolve or transition.<a href="#section-1-5" class="pilcrow">¶</a></p>
 <p id="section-1-6">While this specification registers a large number of composite algorithms, it is expected that organizations will choose to deploy a single composite algorithm, or a small number of composite algorithms, that meets the needs of their environment, and very few implementers will need concern themselves with the entire list. This specification does not specify any mandatory-to-implement algorithms, but <a href="#sec-impl-profile" class="auto internal xref">Section 10.3</a> provides a short-list of recommended composite algorithms for common use-cases.<a href="#section-1-6" class="pilcrow">¶</a></p>
@@ -1420,43 +1423,57 @@ appear in all capitals, as shown here.
 These words may also appear in this document in
 lower case as plain English words, absent their normative meanings.<a href="#section-1.1-1" class="pilcrow">¶</a></p>
 <p id="section-1.1-2">This specification is consistent with all terminology from <span>[<a href="#RFC9794" class="cite xref">RFC9794</a>]</span>.
+Some relevant definitions from <span>[<a href="#RFC9794" class="cite xref">RFC9794</a>]</span> are copied here for easier reading.
 In addition, the following terms are used in this specification:<a href="#section-1.1-2" class="pilcrow">¶</a></p>
 <p id="section-1.1-3"><strong>ALGORITHM</strong>:
           The usage of the term "algorithm" within this
           specification generally refers to any function which
           has a registered Object Identifier (OID) for
           use within an ASN.1 AlgorithmIdentifier.<a href="#section-1.1-3" class="pilcrow">¶</a></p>
-<p id="section-1.1-4"><strong>Application Backwards Compatibility</strong>: The usual definition of backwards compatibility, meaning whether an upgraded and non-upgraded application can successfully establish communication.<a href="#section-1.1-4" class="pilcrow">¶</a></p>
+<p id="section-1.1-4"><strong>APPLICATION BACKWARDS COMPATIBILITY</strong>:
+ A property indicating whether an upgraded and non-upgraded application can successfully establish communication.<a href="#section-1.1-4" class="pilcrow">¶</a></p>
 <p id="section-1.1-5"><strong>COMBINER</strong>:
   A combiner specifies how multiple shared secret keys are combined
   into a single shared secret key.<a href="#section-1.1-5" class="pilcrow">¶</a></p>
-<p id="section-1.1-6"><strong>COMPOSITE CRYPTOGRAPHIC ELEMENT</strong>: <span>[<a href="#RFC9794" class="cite xref">RFC9794</a>]</span> defines composites as: A
-          cryptographic element that
-          incorporates multiple component cryptographic elements of the same
-          type in a multi-algorithm scheme.<a href="#section-1.1-6" class="pilcrow">¶</a></p>
-<p id="section-1.1-7"><strong>COMPONENT / PRIMITIVE</strong>:
-  The words "component" or "primitive" are used interchangeably
-  to refer to a cryptographic algorithm that is used internally
-  within a composite algorithm. For example this could be an
-  asymmetric algorithm such as "ML-KEM-768" or "RSA-OAEP".<a href="#section-1.1-7" class="pilcrow">¶</a></p>
-<p id="section-1.1-8"><strong>DER:</strong>
-  Distinguished Encoding Rules as defined in <span>[<a href="#X.690" class="cite xref">X.690</a>]</span>.<a href="#section-1.1-8" class="pilcrow">¶</a></p>
-<p id="section-1.1-9"><strong>ECDH</strong>: the Elliptic Curve Diffie-Hellman key agreement scheme defined in section 5.7.1.2 of <span>[<a href="#SP.800-56Ar3" class="cite xref">SP.800-56Ar3</a>]</span>.<a href="#section-1.1-9" class="pilcrow">¶</a></p>
-<p id="section-1.1-10"><strong>KEM:</strong>
-   A key encapsulation mechanism as defined in <a href="#sec-kems" class="auto internal xref">Section 2</a>.<a href="#section-1.1-10" class="pilcrow">¶</a></p>
-<p id="section-1.1-11"><strong>PKI:</strong>
-  Public Key Infrastructure, as defined in <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>.<a href="#section-1.1-11" class="pilcrow">¶</a></p>
-<p id="section-1.1-12"><strong>Post-Quantum Traditional (PQ/T) hybrid scheme</strong>:
-    A multi-algorithm scheme where at least one component algorithm is a post-quantum algorithm and at least one is a traditional algorithm.<a href="#section-1.1-12" class="pilcrow">¶</a></p>
-<p id="section-1.1-13"><strong>Protocol Backwards Compatibility</strong>: A property whereby a new feature can be added to a protocol without requiring any changes to the protocol's specification and only minimal changes to its implementations (such as adding new identifiers). This is notable because many PQ/T Hybrids require modification of the protocol to make it "hybrid aware", whereas this specification presents as a standalone algorithm and thus can take advantage of existing cryptographic agility mechanisms.<a href="#section-1.1-13" class="pilcrow">¶</a></p>
-<p id="section-1.1-14"><strong>ML-KEM</strong>: The Module-Lattice-based Key Encapsulation Mechanism algorithm defined in <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span><a href="#section-1.1-14" class="pilcrow">¶</a></p>
-<p id="section-1.1-15"><strong>RSA</strong>: The Rivest-Shamir-Adleman cryptosystem, used in this specification as the RSA-OAEP (Optimal Asymmetric Encryption Padding) scheme defined in <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span>.<a href="#section-1.1-15" class="pilcrow">¶</a></p>
-<p id="section-1.1-16"><strong>SHARED SECRET KEY:</strong>
+<p id="section-1.1-6"><strong>COMPOSITE CRYPTOGRAPHIC ELEMENT</strong>: <span>[<a href="#RFC9794" class="cite xref">RFC9794</a>]</span> defines composites as:
+    A cryptographic element that incorporates multiple component
+    cryptographic elements of the same type for use in a
+    multi-algorithm scheme, such that the resulting composite
+    cryptographic element is exposed as a singular interface
+    of the same type as the component cryptographic elements.
+    For example this could be an asymmetric algorithm such as
+    "ML-KEM-768" or "RSA-OAEP".<a href="#section-1.1-6" class="pilcrow">¶</a></p>
+<p id="section-1.1-7"><strong>DER:</strong>
+  Distinguished Encoding Rules as defined in <span>[<a href="#X.690" class="cite xref">X.690</a>]</span>.<a href="#section-1.1-7" class="pilcrow">¶</a></p>
+<p id="section-1.1-8"><strong>ECDH</strong>: the Elliptic Curve Diffie-Hellman key agreement scheme defined in section 5.7.1.2 of <span>[<a href="#SP.800-56Ar3" class="cite xref">SP.800-56Ar3</a>]</span>.<a href="#section-1.1-8" class="pilcrow">¶</a></p>
+<p id="section-1.1-9"><strong>KEM:</strong>
+   A key encapsulation mechanism as defined in <a href="#sec-kems" class="auto internal xref">Section 2</a>.<a href="#section-1.1-9" class="pilcrow">¶</a></p>
+<p id="section-1.1-10"><strong>PKI:</strong>
+  Public Key Infrastructure, as defined in <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>.<a href="#section-1.1-10" class="pilcrow">¶</a></p>
+<p id="section-1.1-11"><strong>POST-QUANTUM TRADITIONAL (PQ/T) HYBRID SCHEME</strong>:
+  <span>[<a href="#RFC9794" class="cite xref">RFC9794</a>]</span> defines a PQ/T Hybrid Scheme as:
+  A multi-algorithm scheme where at least one component algorithm
+  is a post-quantum algorithm and at least one is a traditional algorithm.<a href="#section-1.1-11" class="pilcrow">¶</a></p>
+<p id="section-1.1-12"><strong>PROTOCOL BACKWARDS COMPATIBILITY</strong>:
+  A property whereby a new feature
+  can be added to a protocol without requiring any changes to the
+  protocol's specification and only minimal changes to its
+  implementations (such as adding new identifiers).
+  Typically this means that the new feature fits within a defined
+  extension point of the protocol instead of requiring a structural
+  change to the protocol.
+  This is notable because many PQ/T Hybrids require modification of
+  the protocol to make it "hybrid aware", whereas this specification
+  presents as a standalone algorithm and thus can take advantage of
+  existing cryptographic agility mechanisms.<a href="#section-1.1-12" class="pilcrow">¶</a></p>
+<p id="section-1.1-13"><strong>ML-KEM</strong>: The Module-Lattice-based Key Encapsulation Mechanism algorithm defined in <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span><a href="#section-1.1-13" class="pilcrow">¶</a></p>
+<p id="section-1.1-14"><strong>RSA</strong>: The Rivest-Shamir-Adleman cryptosystem, used in this specification as the RSA-OAEP (Optimal Asymmetric Encryption Padding) scheme defined in <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span>.<a href="#section-1.1-14" class="pilcrow">¶</a></p>
+<p id="section-1.1-15"><strong>SHARED SECRET KEY:</strong>
   A value established between two communicating parties for use as
   cryptographic key material suitable for direct use by symmetric
   cryptographic algorithms. This specification is concerned with shared
-  secrets established via public key cryptographic operations.<a href="#section-1.1-16" class="pilcrow">¶</a></p>
-<p id="section-1.1-17"><strong>X25519 and X448:</strong> The Edwards Curve Diffie-Hellman scheme defined in <span>[<a href="#RFC7748" class="cite xref">RFC7748</a>]</span> with pramater sets X25519 and X448.<a href="#section-1.1-17" class="pilcrow">¶</a></p>
+  secrets established via public key cryptographic operations.<a href="#section-1.1-15" class="pilcrow">¶</a></p>
+<p id="section-1.1-16"><strong>X25519 and X448:</strong> The Edwards Curve Diffie-Hellman scheme defined in <span>[<a href="#RFC7748" class="cite xref">RFC7748</a>]</span> with pramater sets X25519 and X448.<a href="#section-1.1-16" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="notation">
@@ -1479,7 +1496,10 @@ In addition, the following terms are used in this specification:<a href="#sectio
             <p id="section-1.2-2.4.1"><code>(a, _)</code>: represents a pair of values where one -- the second one in this case -- is ignored.<a href="#section-1.2-2.4.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-1.2-2.5">
-            <p id="section-1.2-2.5.1"><code>Func&lt;TYPE&gt;()</code>: represents a function that is parametrized by <code>&lt;TYPE&gt;</code> meaning that the function's implementation will have minor differences depending on the underlying TYPE. Typically this means that a function will need to look up different constants or use different underlying cryptographic primitives depending on which composite algorithm it is implementing.<a href="#section-1.2-2.5.1" class="pilcrow">¶</a></p>
+            <p id="section-1.2-2.5.1"><code>func(a) -&gt; b</code>: represents a function named <code>func</code> that takes <code>a</code> as input and produces <code>b</code>.<a href="#section-1.2-2.5.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-1.2-2.6">
+            <p id="section-1.2-2.6.1"><code>Func&lt;TYPE&gt;()</code>: represents a function that is parametrized by <code>&lt;TYPE&gt;</code> meaning that the function's implementation will have minor differences depending on the underlying TYPE. Typically this means that a function will need to look up different constants or use different underlying cryptographic primitives depending on which composite algorithm it is implementing.<a href="#section-1.2-2.6.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
@@ -1695,7 +1715,7 @@ Key Generation Process:
 </pre><a href="#section-3.1-5" class="pilcrow">¶</a>
 </div>
 <p id="section-3.1-6">In order to ensure fresh keys, the key generation functions MUST be executed for both component algorithms. Compliant parties MUST NOT use, import or export component keys that are used in other contexts, combinations, or by themselves as keys for standalone algorithm use. For more details on the security considerations around key reuse, see <a href="#sec-cons-key-reuse" class="auto internal xref">Section 9.3</a>.<a href="#section-3.1-6" class="pilcrow">¶</a></p>
-<p id="section-3.1-7">Errors produced by the component <code>KeyGen()</code> routines MUST be forwarded on to the calling application. Further discussion can be found below in <a href="#sec-explicit-rejection" class="auto internal xref">Section 3.5</a>.<a href="#section-3.1-7" class="pilcrow">¶</a></p>
+<p id="section-3.1-7">If one of the component <code>KeyGen()</code> routines returns an error, then this error MUST be propagated by the <code>Composite-ML-KEM.KeyGen()</code> routine. Further discussion can be found below in <a href="#sec-explicit-rejection" class="auto internal xref">Section 3.5</a>.<a href="#section-3.1-7" class="pilcrow">¶</a></p>
 <div id="allowed-modifications-to-the-key-generation-process">
 <section id="section-3.1.1">
           <h4 id="name-allowed-modifications-to-th">
@@ -1854,7 +1874,7 @@ Decap Process:
 </pre><a href="#section-3.3-3" class="pilcrow">¶</a>
 </div>
 <p id="section-3.3-4">Steps 2 and 4 SHOULD be performed in a timing-invariant way to prevent side-channel attackers from learning any of the inputs or output of the KEM combiner.<a href="#section-3.3-4" class="pilcrow">¶</a></p>
-<p id="section-3.3-5">Step 4 requires the <code>Decaps()</code> process to have access to <code>tradPK</code>, which is not carried in the private key format and therefore the implementation is required to acquire it from some out-of-band means. The Implementation Considerations <a href="#impl-cons-decaps-pubkey" class="auto internal xref">Section 10.4</a> provides further discussion on this.<a href="#section-3.3-5" class="pilcrow">¶</a></p>
+<p id="section-3.3-5">Step 4 requires the <code>Decaps()</code> process to have access to <code>tradPK</code>, which is not carried in the private key format and therefore the implementation is required to acquire it from some out-of-band means. The Operational Considerations <a href="#impl-cons-decaps-pubkey" class="auto internal xref">Section 10.4</a> provides further discussion on this.<a href="#section-3.3-5" class="pilcrow">¶</a></p>
 <p id="section-3.3-6">It is possible to use component private keys stored in separate software or hardware keystores. Variations in the process to accommodate particular private key storage mechanisms are considered to be conformant to this specification so long as it produces the same output and error handling as the process sketched above.<a href="#section-3.3-6" class="pilcrow">¶</a></p>
 <p id="section-3.3-7">In order to properly achieve its security properties, the KEM combiner requires that all inputs are fixed-length or length-encoded. Since each Composite ML-KEM algorithm fully specifies its component algorithms, including key sizes, all inputs should be fixed-length in non-error scenarios except for minor variations introduced by encoding. In the cases where there are minor variations introduced by encoding, those encodings already have a fixed-length prefix followed by length-encoded data, so the requirements for the KEM combiner security properties hold (namely that the input is injective). However some implementations may choose to perform additional checking to handle certain error conditions. In particular, the KEM combiner step should not be performed if either of the component decapsulations returned an error condition indicating malformed inputs. RSA-based composites MUST ensure that the modulus size (i.e. the size of <code>tradCT</code> and <code>tradPK</code>) matches that specified for the given Composite ML-KEM algorithm in <a href="#sec-alg-parms" class="auto internal xref">Section 6</a>; depending on the cryptographic library used, this check may be done by the library or may require an explicit check as part of the <code>Composite-ML-KEM.Decap()</code> routine. Implementers should keep in mind that some instances of <code>tradCT</code> and <code>tradPK</code> will be DER-encoded which could introduce minor length variations such as dropping leading zeroes; since the underlying KEMs are assumed to be IND-CCA secure, decapsulation against tampered ciphertexts or public keys is assumed to fail, these length differences are considered benign to the KEM combiner.<a href="#section-3.3-7" class="pilcrow">¶</a></p>
 <p id="section-3.3-8">Errors produced by the component <code>Decaps()</code> routines MUST be forwarded on to the calling application. Further discussion can be found below in <a href="#sec-explicit-rejection" class="auto internal xref">Section 3.5</a>.<a href="#section-3.3-8" class="pilcrow">¶</a></p>
@@ -1907,7 +1927,7 @@ Process:
       </h2>
 <p id="section-4-1">This section presents routines for serializing and deserializing composite public keys, private keys, and ciphertext values to bytes.
 The functions defined in this section are considered internal implementation details and are referenced from within the public API definitions in <a href="#sec-composite-mlkem" class="auto internal xref">Section 3</a>.<a href="#section-4-1" class="pilcrow">¶</a></p>
-<p id="section-4-2">Deserialization is possible because ML-KEM has fixed-length public keys, private keys (seeds), and ciphertext values as shown in the following table.<a href="#section-4-2" class="pilcrow">¶</a></p>
+<p id="section-4-2">Deserialization is possible because ML-KEM has fixed-length public keys, private keys (seeds), and ciphertext values as shown in the following table, which is similar to Table 3 from <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span>, but with a different private key representation.<a href="#section-4-2" class="pilcrow">¶</a></p>
 <span id="name-ml-kem-sizes-in-bytes"></span><div id="tab-mlkem-sizes">
 <table class="center" id="table-1">
         <caption>
@@ -3275,8 +3295,8 @@ END
 </div>
 <div id="sec-in-pract">
 <section id="section-10">
-      <h2 id="name-implementation-consideratio">
-<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-implementation-consideratio" class="section-name selfRef">Implementation Considerations</a>
+      <h2 id="name-operational-considerations">
+<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-operational-considerations" class="section-name selfRef">Operational Considerations</a>
       </h2>
 <div id="sec-fips">
 <section id="section-10.1">
@@ -3439,6 +3459,15 @@ pubKey = ec_multiply_by_scalar(g, s)
 <p id="section-10.4.2-5">Then encode <code>pubKey</code> as X9.62 uncompressed point.<a href="#section-10.4.2-5" class="pilcrow">¶</a></p>
 </section>
 </div>
+</section>
+</div>
+<div id="interoperability-of-legacy-algorithms">
+<section id="section-10.5">
+        <h3 id="name-interoperability-of-legacy-">
+<a href="#section-10.5" class="section-number selfRef">10.5. </a><a href="#name-interoperability-of-legacy-" class="section-name selfRef">Interoperability of legacy algorithms</a>
+        </h3>
+<p id="section-10.5-1">The legacy component algorithms, particularly RSA and ECDSA can themselves have interoperability issues which will propagate to become interoperability issues in the composite. For example, this specification RECOMMENDS an RSA expenent of 65537, but other values are possible. Similarly, due to the details of DER encoding, keys that happen to have leading zeros could appear to be smaller than the required key size even though they are actually acceptable.<a href="#section-10.5-1" class="pilcrow">¶</a></p>
+<p id="section-10.5-2">Implementations are encouraged to be lenient when parsing the key material of the legacy algorithm. In particilar, the recommendation is to use existing implementations of the legacy algorithms that already handle all the variation seen in the wild.<a href="#section-10.5-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
