@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-03-29T03:21:06.048602+00:00",
+  "timestamp": "2026-06-04T04:48:55.188942+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -11468,6 +11468,48 @@
       },
       "comments": [],
       "reviews": []
+    },
+    {
+      "number": 267,
+      "id": "PR_kwDOKRPFO87h2yfv",
+      "title": "Fix ML-KEM automated verifier",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/267",
+      "state": "MERGED",
+      "author": "danvangeest",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-06-02T15:26:42Z",
+      "updatedAt": "2026-06-02T18:27:36Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "448e71787d5b301ff2e4d351d7344e6c10d6d409",
+      "headRepository": "danvangeest/draft-composite-kem",
+      "headRefName": "dvg/fix_automated_verifier",
+      "headRefOid": "56ba1333578ff1eed826221e9c87fb1a29fc5096",
+      "closedAt": "2026-06-02T18:27:36Z",
+      "mergedAt": "2026-06-02T18:27:36Z",
+      "mergedBy": "johngray-dev",
+      "mergeCommit": {
+        "oid": "ceea828c165384f0553151d3a603263d4240c270"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO88AAAABBv4ZBQ",
+          "commit": {
+            "abbreviatedOid": "56ba133"
+          },
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "Thanks for the fix Dan.  It looks good to me.",
+          "createdAt": "2026-06-02T17:51:54Z",
+          "updatedAt": "2026-06-02T17:51:54Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
