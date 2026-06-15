@@ -334,12 +334,12 @@ Table of Contents
 2.  Overview of the Composite ML-KEM Scheme
 
    Composite ML-KEM is a PQ/T hybrid Key Encapsulation Mechanism (KEM)
-   which combines ML-KEM as specified in [FIPS.203] and
-   [I-D.ietf-lamps-kyber-certificates] with one of RSA-OAEP defined in
-   [RFC8017], the Elliptic Curve Diffie-Hellman key agreement schemes
-   ECDH defined in section 5.7.1.2 of [SP.800-56Ar3], and X25519 / X448
-   defined in [RFC8410].  A KEM combiner function is used to combine the
-   two component shared secret keys into a single shared secret key.
+   which combines ML-KEM as specified in [FIPS.203] and [RFC9935] with
+   one of RSA-OAEP defined in [RFC8017], the Elliptic Curve Diffie-
+   Hellman key agreement schemes ECDH defined in section 5.7.1.2 of
+   [SP.800-56Ar3], and X25519 / X448 defined in [RFC8410].  A KEM
+   combiner function is used to combine the two component shared secret
+   keys into a single shared secret key.
 
    Composite Key Encapsulation Mechanisms are defined as cryptographic
    primitives that consist of three algorithms.  These definitions are
@@ -1999,8 +1999,7 @@ Deserialization Process:
 9.  Security Considerations
 
    As this specification uses ML-KEM as a component of all composite
-   algorithms, all security considerations from
-   [I-D.ietf-lamps-kyber-certificates] and
+   algorithms, all security considerations from [RFC9935] and
    [I-D.sfluhrer-cfrg-ml-kem-security-considerations] apply.  Note in
    particular the "Encapsulation key check" in section 7.2 of [FIPS.203]
    and the "Decapsulation input check" in section 7.3 of [FIPS.203]
@@ -2498,11 +2497,6 @@ Deserialization Process:
               <https://nvlpubs.nist.gov/nistpubs/FIPS/
               NIST.FIPS.203.pdf>.
 
-   [FIPS.204] National Institute of Standards and Technology (NIST),
-              "Module-Lattice-Based Digital Signature Standard", August
-              2024, <https://nvlpubs.nist.gov/nistpubs/FIPS/
-              NIST.FIPS.204.pdf>.
-
    [RFC2104]  Krawczyk, H., Bellare, M., and R. Canetti, "HMAC: Keyed-
               Hashing for Message Authentication", RFC 2104,
               DOI 10.17487/RFC2104, February 1997,
@@ -2647,15 +2641,6 @@ Deserialization Process:
    [GHP18]    Giacon, F., Heuer, F., and B. Poettering, "KEM Combiners",
               2018, <https://eprint.iacr.org/2018/024>.
 
-   [I-D.ietf-lamps-kyber-certificates]
-              Turner, S., Kampanakis, P., Massimo, J., and B.
-              Westerbaan, "Internet X.509 Public Key Infrastructure -
-              Algorithm Identifiers for the Module-Lattice-Based Key-
-              Encapsulation Mechanism (ML-KEM)", Work in Progress,
-              Internet-Draft, draft-ietf-lamps-kyber-certificates-11, 22
-              July 2025, <https://datatracker.ietf.org/doc/html/draft-
-              ietf-lamps-kyber-certificates-11>.
-
    [I-D.sfluhrer-cfrg-ml-kem-security-considerations]
               Fluhrer, S., Dang, Q., Mattsson, J. P., Milner, K., and D.
               Shiu, "ML-KEM Security Considerations", Work in Progress,
@@ -2735,6 +2720,13 @@ Deserialization Process:
               Management Protocol (CMP)", RFC 9810,
               DOI 10.17487/RFC9810, July 2025,
               <https://www.rfc-editor.org/info/rfc9810>.
+
+   [RFC9935]  Turner, S., Kampanakis, P., Massimo, J., and B. E.
+              Westerbaan, "Internet X.509 Public Key Infrastructure -
+              Algorithm Identifiers for the Module-Lattice-Based Key-
+              Encapsulation Mechanism (ML-KEM)", RFC 9935,
+              DOI 10.17487/RFC9935, March 2026,
+              <https://www.rfc-editor.org/info/rfc9935>.
 
    [SP800-131Ar2]
               Barker, E., Roginksy, A., and National Institute of
