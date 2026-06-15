@@ -141,12 +141,6 @@ normative:
     author:
       - org: "National Institute of Standards and Technology (NIST)"
     target: https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.203.pdf
-  FIPS.204:
-    title: "Module-Lattice-Based Digital Signature Standard"
-    date: August 13, 2024
-    author:
-      - org: "National Institute of Standards and Technology (NIST)"
-    target: https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.204.pdf
 
 informative:
   RFC2986:
@@ -162,7 +156,7 @@ informative:
   RFC9690:
   RFC9794:
   RFC9810:
-  I-D.draft-ietf-lamps-kyber-certificates-11:
+  RFC9935:
   I-D.draft-sfluhrer-cfrg-ml-kem-security-considerations-04:
   TestVectors:
     title: "Test vectors for Composite-ML-KEM"
@@ -420,7 +414,7 @@ Discussion of the specific choices of algorithm pairings can be found in {{sec-r
 
 # Overview of the Composite ML-KEM Scheme {#sec-kems}
 
-Composite ML-KEM is a PQ/T hybrid Key Encapsulation Mechanism (KEM) which combines ML-KEM as specified in [FIPS.203] and {{I-D.ietf-lamps-kyber-certificates}} with one of RSA-OAEP defined in [RFC8017], the Elliptic Curve Diffie-Hellman key agreement schemes ECDH defined in section 5.7.1.2 of [SP.800-56Ar3], and X25519 / X448 defined in [RFC8410]. A KEM combiner function is used to combine the two component shared secret keys into a single shared secret key.
+Composite ML-KEM is a PQ/T hybrid Key Encapsulation Mechanism (KEM) which combines ML-KEM as specified in [FIPS.203] and {{RFC9935}} with one of RSA-OAEP defined in [RFC8017], the Elliptic Curve Diffie-Hellman key agreement schemes ECDH defined in section 5.7.1.2 of [SP.800-56Ar3], and X25519 / X448 defined in [RFC8410]. A KEM combiner function is used to combine the two component shared secret keys into a single shared secret key.
 
 Composite Key Encapsulation Mechanisms are defined as cryptographic primitives that consist of three algorithms. These definitions are borrowed from {{RFC9180}}.
 
@@ -1325,7 +1319,7 @@ The following are registered in the "SMI Security for PKIX Algorithms":
 
 # Security Considerations {#sec-cons}
 
-As this specification uses ML-KEM as a component of all composite algorithms, all security considerations from {{I-D.ietf-lamps-kyber-certificates}} and {{I-D.sfluhrer-cfrg-ml-kem-security-considerations}} apply. Note in particular the "Encapsulation key check" in section 7.2 of [FIPS.203] and the "Decapsulation input check" in section 7.3 of [FIPS.203] which are required for correct and secure functioning of ML-KEM, but which are considered to be external to the `Encaps()` and `Decaps()` algorithms.
+As this specification uses ML-KEM as a component of all composite algorithms, all security considerations from {{RFC9935}} and {{I-D.sfluhrer-cfrg-ml-kem-security-considerations}} apply. Note in particular the "Encapsulation key check" in section 7.2 of [FIPS.203] and the "Decapsulation input check" in section 7.3 of [FIPS.203] which are required for correct and secure functioning of ML-KEM, but which are considered to be external to the `Encaps()` and `Decaps()` algorithms.
 
 ## Why Hybrids?
 
