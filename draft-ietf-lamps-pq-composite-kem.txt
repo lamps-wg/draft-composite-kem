@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 17 December 2026                                        M. Pala
+Expires: 18 December 2026                                        M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                            15 June 2026
+                                                            16 June 2026
 
 
       Composite ML-KEM for use in X.509 Public Key Infrastructure
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 17 December 2026.
+   This Internet-Draft will expire on 18 December 2026.
 
 Copyright Notice
 
@@ -555,40 +555,42 @@ Table of Contents
    The following describes how to instantiate a KeyGen() function for a
    given composite algorithm represented by <OID>.
 
-Composite-ML-KEM<OID>.KeyGen() -> (pk, sk)
+   Composite-ML-KEM<OID>.KeyGen() -> (pk, sk)
 
-Explicit Inputs:
-     None
+   Explicit Inputs:
+        None
 
-Implicit Inputs mapped from <OID>:
+   Implicit Inputs mapped from <OID>:
 
-  ML-KEM     The underlying ML-KEM algorithm and
-             parameter set, for example "ML-KEM-768".
+     ML-KEM     The underlying ML-KEM algorithm and
+                parameter set, for example "ML-KEM-768".
 
-  Trad       The underlying traditional algorithm and
-             parameter, for example "RSA-OAEP"
-             or "X25519".
+     Trad       The underlying traditional algorithm and
+                parameter, for example "RSA-OAEP"
+                or "X25519".
 
-Output:
-  (pk, sk)  The composite keypair.
+   Output:
+     (pk, sk)  The composite keypair.
 
-Key Generation Process:
+   Key Generation Process:
 
-  1. Generate component keys
+     1. Generate component keys
 
-    mlkemSeed = Random(64)
-    (mlkemPK, mlkemSK) = ML-KEM.KeyGen_internal(mlkemSeed[:32], mlkemSeed[32:])
-    (tradPK, tradSK) = Trad.KeyGen()
+       mlkemSeed = Random(64)
+       (mlkemPK, mlkemSK) = ML-KEM.KeyGen_internal(
+                                         mlkemSeed[:32],
+                                         mlkemSeed[32:] )
+       (tradPK, tradSK) = Trad.KeyGen()
 
-  2. Check for component key gen failure
-    if NOT (mlkemPK, mlkemSK) or NOT (tradPK, tradSK):
-      output "Key generation error"
+     2. Check for component key gen failure
+       if NOT (mlkemPK, mlkemSK) or NOT (tradPK, tradSK):
+         output "Key generation error"
 
-  3. Output the composite public and private keys
+     3. Output the composite public and private keys
 
-    pk = SerializePublicKey(mlkemPK, tradPK)
-    sk = SerializePrivateKey(mlkemSeed, tradSK)
-    return (pk, sk)
+       pk = SerializePublicKey(mlkemPK, tradPK)
+       sk = SerializePrivateKey(mlkemSeed, tradSK)
+       return (pk, sk)
 
    In order to ensure fresh keys, the key generation functions MUST be
    executed for both component algorithms.  Compliant parties MUST NOT
@@ -1047,29 +1049,29 @@ Key Generation Process:
    The serialization routine for keys simply concatenates the private
    keys of the component algorithms, as defined below:
 
-Composite-ML-KEM.SerializePrivateKey(mlkemSeed, tradSK) -> bytes
+   Composite-ML-KEM.SerializePrivateKey(mlkemSeed, tradSK) -> bytes
 
-Explicit inputs:
+   Explicit inputs:
 
-  mlkemSeed  The ML-KEM private key, which consists of 32 Byte seed value d
-             concatenated with 32 Byte seed value z.
+     mlkemSeed  The ML-KEM private key, which consists of a 32 Byte seed
+                value d concatenated with a 32 Byte seed value z.
 
-  tradSK     The traditional private key in the appropriate
-             encoding for the underlying component algorithm.
+     tradSK     The traditional private key in the appropriate
+                encoding for the underlying component algorithm.
 
-Implicit inputs:
+   Implicit inputs:
 
-  None
+     None
 
-Output:
+   Output:
 
-  bytes   The encoded composite private key.
+     bytes   The encoded composite private key.
 
-Serialization Process:
+   Serialization Process:
 
-  1. Combine and output the encoded private key.
+     1. Combine and output the encoded private key.
 
-     output mlkemSeed || tradSK
+        output mlkemSeed || tradSK
 
    Deserialization reverses this process.  Each component key is
    deserialized according to their respective specification as shown in
@@ -1080,37 +1082,37 @@ Serialization Process:
    64 bytes for all parameter sets, this function does not need to be
    parametrized.
 
-Composite-ML-KEM.DeserializePrivateKey(bytes)
-                                    -> (mlkemSeed, tradSK)
+   Composite-ML-KEM.DeserializePrivateKey(bytes)
+                                       -> (mlkemSeed, tradSK)
 
-Explicit inputs:
+   Explicit inputs:
 
-  bytes   An encoded composite private key.
+     bytes   An encoded composite private key.
 
-Implicit inputs:
+   Implicit inputs:
 
-  That an ML-KEM private key is 64 bytes for all parameter sets.
+     That an ML-KEM private key is 64 bytes for all parameter sets.
 
-Output:
+   Output:
 
-  mlkemSeed  The ML-KEM private key, which consists of 32 Byte seed value d
-             concatenated with 32 Byte seed value z.
+     mlkemSeed  The ML-KEM private key, which consists of a 32 Byte seed
+                value d concatenated with a 32 Byte seed value z.
 
-  tradSK    The traditional private key in the appropriate
-             encoding for the underlying component algorithm.
+     tradSK    The traditional private key in the appropriate
+                encoding for the underlying component algorithm.
 
 
-Deserialization Process:
+   Deserialization Process:
 
-  1. Parse the ML-KEM seed, which is always a 64 byte seed
-     for all parameter sets.
+     1. Parse the ML-KEM seed, which is always a 64 byte seed
+        for all parameter sets.
 
-     mlkemSeed = bytes[:64]
-     tradSK    = bytes[64:]
+        mlkemSeed = bytes[:64]
+        tradSK    = bytes[64:]
 
-  2. Output the component private keys
+     2. Output the component private keys
 
-     output (mlkemSeed,tradSK)
+        output (mlkemSeed,tradSK)
 
 4.3.  SerializeCiphertext and DeserializeCiphertext
 
