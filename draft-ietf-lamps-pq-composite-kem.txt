@@ -1003,46 +1003,46 @@ Table of Contents
    DeserializePublicKey(bytes) function for a given composite algorithm
    represented by <OID>.
 
-  Composite-ML-KEM<OID>.DeserializePublicKey(bytes) -> (mlkemPK, tradPK)
+   Composite-ML-KEM<OID>.DeserializePublicKey(bytes) ->(mlkemPK, tradPK)
 
-  Explicit inputs:
+   Explicit inputs:
 
-    bytes   An encoded composite public key.
+     bytes   An encoded composite public key.
 
-  Implicit inputs mapped from <OID>:
+   Implicit inputs mapped from <OID>:
 
-    ML-KEM   The underlying ML-KEM algorithm and
-             parameter, for example, could be "ML-KEM-768".
+     ML-KEM   The underlying ML-KEM algorithm and
+              parameter, for example, could be "ML-KEM-768".
 
-  Output:
+   Output:
 
-    mlkemPK  The ML-KEM public key, which is bytes.
+     mlkemPK  The ML-KEM public key, which is bytes.
 
-    tradPK   The traditional public key in the appropriate
-             encoding for the underlying component algorithm.
+     tradPK   The traditional public key in the appropriate
+              encoding for the underlying component algorithm.
 
 
-  Deserialization Process:
+   Deserialization Process:
 
-    1. Parse each constituent encoded public key.
-         The length of the mlkemPK is known based on the size of
-         the ML-KEM component key length specified by the Object ID.
+     1. Parse each constituent encoded public key.
+          The length of the mlkemPK is known based on the size of
+          the ML-KEM component key length specified by the Object ID.
 
-       switch ML-KEM do
-          case ML-KEM-768:
-            mlkemPK = bytes[:1184]
-            tradPK  = bytes[1184:]
-          case ML-KEM-1024:
-            mlkemPK = bytes[:1568]
-            tradPK  = bytes[1568:]
+        switch ML-KEM do
+           case ML-KEM-768:
+             mlkemPK = bytes[:1184]
+             tradPK  = bytes[1184:]
+           case ML-KEM-1024:
+             mlkemPK = bytes[:1568]
+             tradPK  = bytes[1568:]
 
-       Note that while ML-KEM has fixed-length keys, RSA
-       may not, depending on encoding, so rigorous length-checking
-       of the overall composite key is not always possible.
+        Note that while ML-KEM has fixed-length keys, RSA
+        may not, depending on encoding, so rigorous length-checking
+        of the overall composite key is not always possible.
 
-    2. Output the component public keys
+     2. Output the component public keys
 
-       output (mlkemPK, tradPK)
+        output (mlkemPK, tradPK)
 
 4.2.  SerializePrivateKey and DeserializePrivateKey
 
@@ -1306,9 +1306,9 @@ Table of Contents
 
      ...
      PrivateKey ::= OCTET STRING
-                           -- Content varies based on type of key.  The
-                           -- algorithm identifier dictates the format of
-                           -- the key.
+                         -- Content varies based on type of key.  The
+                         -- algorithm identifier dictates the format of
+                         -- the key.
 
              Figure 2: OneAsymmetricKey as defined in [RFC5958]
 
@@ -2923,29 +2923,29 @@ Appendix C.  Fixed Component Algorithm Identifiers
 
    *RSA-OAEP - all sizes*
 
- ASN.1:
-   algorithm AlgorithmIdentifier ::= {
-     algorithm id-RSAES-OAEP,   -- (1.2.840.113549.1.1.7)
-     parameters RSAES-OAEP-params {
-          hashFunc      [0] id-sha256,  -- (2.16.840.1.101.3.4.2.1)
-          maskGenFunc   [1] mgf1SHA256Identifier,
-          pSourceFunc   [2] pSpecifiedEmpty  }
-     }
+   ASN.1:
+     algorithm AlgorithmIdentifier ::= {
+       algorithm id-RSAES-OAEP,   -- (1.2.840.113549.1.1.7)
+       parameters RSAES-OAEP-params {
+            hashFunc      [0] id-sha256,  -- (2.16.840.1.101.3.4.2.1)
+            maskGenFunc   [1] mgf1SHA256Identifier,
+            pSourceFunc   [2] pSpecifiedEmpty  }
+       }
 
 
- where
-       mgf1SHA256Identifier  AlgorithmIdentifier  ::=  {
+   where
+         mgf1SHA256Identifier  AlgorithmIdentifier  ::=  {
                            algorithm id-mgf1,  -- (1.2.840.113549.1.1.8)
                            parameters sha256Identifier }
 
 
-       sha256Identifier  AlgorithmIdentifier  ::=  { id-sha256, NULL }
+         sha256Identifier  AlgorithmIdentifier  ::=  { id-sha256, NULL }
 
- DER:
-  30 4D 06 09 2A 86 48 86 F7 0D 01 01 07 30 40 A0 0F 30 0D 06 09 60 86
-  48 01 65 03 04 02 01 05 00 A1 1C 30 1A 06 09 2A 86 48 86 F7 0D 01 01
-  08 30 0D 06 09 60 86 48 01 65 03 04 02 01 05 00 A2 0F 30 0D 06 09 2A
-  86 48 86 F7 0D 01 01 09 04 00
+   DER:
+    30 4D 06 09 2A 86 48 86 F7 0D 01 01 07 30 40 A0 0F 30 0D 06 09 60 86
+    48 01 65 03 04 02 01 05 00 A1 1C 30 1A 06 09 2A 86 48 86 F7 0D 01 01
+    08 30 0D 06 09 60 86 48 01 65 03 04 02 01 05 00 A2 0F 30 0D 06 09 2A
+    86 48 86 F7 0D 01 01 09 04 00
 
    *ECDH NIST-P-256*
 
@@ -3063,14 +3063,14 @@ D.2.  ETSI CatKDF
 
    [ETSI.TS.103.744] section 8.2.3 defines CatKDF as:
 
-  1) Form secret = psk || k1 || k2.
-  2) Set context = f(info, MA, MB), where f is a context formatting
-     function.
-  3) key_material = KDF(secret, label, context, length).
-  4) Return key_material.
+   1) Form secret = psk || k1 || k2.
+   2) Set context = f(info, MA, MB), where f is a context formatting
+      function.
+   3) key_material = KDF(secret, label, context, length).
+   4) Return key_material.
 
-  MA shall contain all of the public keys.
-  MB shall contain all of the corresponding public keys and ciphertexts.
+   MA shall contain all of the public keys.
+   MB shall contain all of the corresponding public keys and ciphertexts
 
    The main difference between the Composite ML-KEM combiner and the
    ETSI CatKDF combiner is that CatKDF makes the more conservative
