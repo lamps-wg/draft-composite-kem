@@ -911,8 +911,8 @@ Composite-ML-KEM.SerializePrivateKey(mlkemSeed, tradSK) -> bytes
 
 Explicit inputs:
 
-  mlkemSeed  The ML-KEM private key, which consists of 32 Byte seed 
-             value d concatenated with 32 Byte seed value z.
+  mlkemSeed  The ML-KEM private key, which consists of a 32 Byte seed
+             value d concatenated with a 32 Byte seed value z.
 
   tradSK     The traditional private key in the appropriate
              encoding for the underlying component algorithm.
@@ -950,8 +950,8 @@ Implicit inputs:
 
 Output:
 
-  mlkemSeed  The ML-KEM private key, which consists of 32 Byte seed
-             value d concatenated with 32 Byte seed value z.
+  mlkemSeed  The ML-KEM private key, which consists of a 32 Byte seed
+             value d concatenated with a 32 Byte seed value z.
 
   tradSK    The traditional private key in the appropriate
              encoding for the underlying component algorithm.
