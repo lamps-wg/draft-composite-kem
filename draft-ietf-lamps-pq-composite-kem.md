@@ -857,7 +857,7 @@ Deserialization reverses this process. Each component key is deserialized accord
 The following describes how to instantiate a `DeserializePublicKey(bytes)` function for a given composite algorithm represented by `<OID>`.
 
 ~~~
-Composite-ML-KEM<OID>.DeserializePublicKey(bytes) -> (mlkemPK, tradPK)
+Composite-ML-KEM<OID>.DeserializePublicKey(bytes) ->(mlkemPK, tradPK)
 
 Explicit inputs:
 
@@ -1147,9 +1147,9 @@ Use cases that require an interoperable encoding for composite private keys will
 
   ...
   PrivateKey ::= OCTET STRING
-                        -- Content varies based on type of key.  The
-                        -- algorithm identifier dictates the format of
-                        -- the key.
+                      -- Content varies based on type of key.  The
+                      -- algorithm identifier dictates the format of
+                      -- the key.
 ~~~
 {: artwork-name="RFC5958-OneAsymmetricKey-asn.1-structure" title="OneAsymmetricKey as defined in [RFC5958]"}
 
@@ -1655,8 +1655,8 @@ ASN.1:
 
 where
       mgf1SHA256Identifier  AlgorithmIdentifier  ::=  {
-                          algorithm id-mgf1,  -- (1.2.840.113549.1.1.8)
-                          parameters sha256Identifier }
+                        algorithm id-mgf1,  -- (1.2.840.113549.1.1.8)
+                        parameters sha256Identifier }
 
 
       sha256Identifier  AlgorithmIdentifier  ::=  { id-sha256, NULL }
@@ -1797,7 +1797,7 @@ This specification borrows extensively from the analysis and KEM combiner constr
 4) Return key_material.
 
 MA shall contain all of the public keys.
-MB shall contain all of the corresponding public keys and ciphertexts.
+MB shall contain all of the corresponding public keys and ciphertexts
 ~~~
 
 The main difference between the Composite ML-KEM combiner and the ETSI CatKDF combiner is that CatKDF makes the more conservative choice to bind the public keys and ciphertexts of both components, while Composite ML-KEM follows the analysis presented in [X-Wing] that while preserving the security properties of the traditional component requires binding the public key and ciphertext of the traditional component, it is not necessary to do so for ML-KEM thanks to the rejection sampling step of the Fujisaki-Okamoto transform.
