@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-06-14T04:51:56.232069+00:00",
+  "timestamp": "2026-06-16T05:10:57.741836+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -4336,6 +4336,22 @@
           "updatedAt": "2026-03-12T15:26:39Z"
         }
       ]
+    },
+    {
+      "number": 269,
+      "id": "I_kwDOKRPFO88AAAABFkk3Cg",
+      "title": "Deb Early IESG comments",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/269",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Early comments:\nI've looked at idnits (the experimental version), it complains\nabout a bunch of things - mostly in error (like spelling 'public key',\nhuh....).  Some of these might need a tweak, but nothing huge:\n\n- idnits claims that FIPS 204 is in the references but never referenced.\nSeems odd...\n- the kyber certs draft has been published - RFC 9935\n-3 lines longer than 72 characters.\n\nI'm hoping to have comments to you all by the end of this week or early\nnext week.  [I will be on vacation from 26 June - 4 July with no laptop (!)\nand probably only my phone (and a bike).]\n\nI also realize that you have a PR/suggestion from Daniel Van Geest, but\nthat looks like 'formating' type stuff, which I won't really be looking at\nanyway.  Correct me if I'm wrong here.",
+      "createdAt": "2026-06-15T21:00:22Z",
+      "updatedAt": "2026-06-15T21:00:22Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
@@ -11516,24 +11532,26 @@
       "id": "PR_kwDOKRPFO87lthrQ",
       "title": "Add PublicKeys ObjectSet, allowing PublicKeyAlgorithms from RFC 5912 \u2026",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/268",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "danvangeest",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "\u2026to be expanded easily.",
       "createdAt": "2026-06-12T10:20:32Z",
-      "updatedAt": "2026-06-12T15:24:23Z",
+      "updatedAt": "2026-06-15T15:00:10Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "ceea828c165384f0553151d3a603263d4240c270",
       "headRepository": "danvangeest/draft-composite-kem",
       "headRefName": "dvg/asn1",
       "headRefOid": "df7bf7654945d1f9150ce89715d9b59a61efb3da",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2026-06-15T15:00:09Z",
+      "mergedAt": "2026-06-15T15:00:09Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "a587049f0906851dc640d806e810be13634d9f8d"
+      },
       "comments": [
         {
           "author": "russhousley",
