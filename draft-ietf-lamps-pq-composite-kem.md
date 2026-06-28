@@ -262,12 +262,20 @@ informative:
       - name: Douglas Stebila
     date: 2026
     target: https://eprint.iacr.org/2026/427
+  CDM24:
+    title: "Keeping Up with the KEMs: Stronger Security Notions for KEMs and Automated Analysis of KEM-based Protocols"
+    author:
+      - name: Cas Cremers
+      - name: Alexander Dax
+      - name: Niklas Medinger
+    date: 2024
+    target: https://dl.acm.org/doi/abs/10.1145/3658644.3670283
   KWW2026:
     title: On the Binding Security of KEMs based on RSA and DH
     author:
       - name: Juliane Krämer
       - name: Maximiliane Weishäupl
-      - name: SStefan Winderl
+      - name: Stefan Winderl
     date: 2026
     target: https://eprint.iacr.org/2026/407
   FIPS-140-3-IG:
@@ -282,6 +290,11 @@ informative:
     author:
       - org: ETSI
     date: 2025-03
+  IND-CCA:
+    title: Ciphertext indistinguishability
+    target: https://en.wikipedia.org/wiki/Ciphertext_indistinguishability
+    author: Wikipedia contributors
+    date: 27 May 2026
 
 
 --- abstract
@@ -1354,6 +1367,15 @@ Each registered Composite ML-KEM algorithm specifies a `Label` -- see {{sec-alg-
 
 
 ### IND-CCA2 Security of the hybrid scheme {#sec-hybrid-security}
+
+#### Mini glossary of KEM security notions
+
+**IND-CCA2**: indistinguishability under adaptive chosen ciphertext attack {{IND-CCA}}.
+**C2PRI**: second ciphertext preimage resistance. A property defined in [X-Wing] that it is computationally difficult to find two different ciphertexts that produce the same shared secret key.
+**QSF framework**: the hybrid KEM construction defined in [X-Wing] that combines an IND-CCA2 KEM with a C2PRI DH scheme via the combiner `SHA3-256(mlkemSS || tradSS || tradCT || tradPK || Label)`. The QSF framework is used as the basis for this specification with only cosmetic differences such as moving the label to the end in order to be FIPS-compliant (whereas X-Wing has it at the beginning).
+**Binding properties**: a hierarchy of properties introduced in [CDM24] of the form `X-BIND-P-Q` were `𝑋 ∈ {HON, LEAK, MAL}` indicates the strength of the attacker, and `P, Q ∈ {PK, CT, K}` indicates that for a given `P`, it is computationally difficult to find a collision in `Q` with respect to decapsulation with the KEM.
+
+End of mini glossary.
 
 Informally, a Composite ML-KEM algorithm is secure if the combiner (SHA3) is secure, and either ML-KEM is secure or the traditional component (RSA-OAEP, ECDH, X25519 or X448) is secure.
 
