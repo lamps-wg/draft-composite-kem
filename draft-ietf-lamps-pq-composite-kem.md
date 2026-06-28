@@ -293,7 +293,8 @@ informative:
   IND-CCA:
     title: Ciphertext indistinguishability
     target: https://en.wikipedia.org/wiki/Ciphertext_indistinguishability
-    author: Wikipedia contributors
+    author:
+      -org: Wikipedia contributors
     date: 27 May 2026
 
 
