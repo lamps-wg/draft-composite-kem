@@ -17,24 +17,25 @@
 
 
     " name="description">
-<meta content="xml2rfc 3.32.0" name="generator">
+<meta content="xml2rfc 3.34.0" name="generator">
 <meta content="X.509" name="keyword">
 <meta content="Post-Quantum" name="keyword">
 <meta content="KEM" name="keyword">
 <meta content="draft-ietf-lamps-pq-composite-kem-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.32.0
-    Python 3.12.12
-    ConfigArgParse 1.7
+  xml2rfc 3.34.0
+    Python 3.14.5
+    ConfigArgParse 1.7.5
     google-i18n-address 3.1.1
     intervaltree 3.2.1
     Jinja2 3.1.6
-    lxml 6.0.2
-    platformdirs 4.9.4
+    lxml 6.1.1
+    natsort 8.4.0
+    platformdirs 4.10.0
     pycountry 24.6.1
     PyYAML 6.0.3
-    requests 2.32.5
-    wcwidth 0.6.0
+    requests 2.33.1
+    wcwidth 0.8.1
 -->
 <link href="draft-ietf-lamps-pq-composite-kem.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -301,16 +302,19 @@ h1, h2, h3, h4, h5, h6 {
   font-size-adjust: 0.5;
   color: var(--title-color);
 }
-h1#title {
-  font-size: 32px;
-  line-height: 40px;
-  clear: both;
-}
-h1#title, h1#rfcnum {
-  margin: 1.5em 0 0.2em;
-}
-h1#rfcnum + h1#title {
-  margin: 0.2em 0;
+h1 {
+  &#title {
+    font-size: 32px;
+    line-height: 40px;
+    clear: both;
+    margin: 1.5em 0 0.2em;
+  }
+  &#rfcnum {
+    margin: 1.5em 0 0.2em;
+    & + h1#title {
+      margin: 0.2em 0;
+    }
+  }
 }
 
 h1, h2, h3 {
@@ -330,10 +334,10 @@ h4, h5, h6 {
 #abstract+p {
   font-size: 18px;
   line-height: 24px;
-}
-#abstract+p code, #abstract+p samp, #abstract+p tt {
-  font-size: 16px;
-  line-height: 0;
+  & code, & samp, & tt {
+    font-size: 16px;
+    line-height: 0;
+  }
 }
 
 p {
@@ -344,59 +348,59 @@ p {
 div {
   margin: 0;
 }
-.alignRight.art-text {
-  background-color: var(--highlight-color);
-  border: 1px solid var(--line-color);
-  border-radius: 3px;
-  padding: 0.5em 1em 0;
-  margin-bottom: 0.5em;
-}
-.alignRight.art-text pre {
-  padding: 0;
-  width: auto;
-}
 .alignRight {
   margin: 1em 0;
-}
-.alignRight > *:first-child {
-  border: none;
-  margin: 0;
-  float: right;
-  clear: both;
-}
-.alignRight > *:nth-child(2) {
-  clear: both;
-  display: block;
-  border: none;
+  &.art-text {
+    background-color: var(--highlight-color);
+    border: 1px solid var(--line-color);
+    border-radius: 3px;
+    padding: 0.5em 1em 0;
+    margin-bottom: 0.5em;
+    & pre {
+      padding: 0;
+      width: auto;
+    }
+  }
+  & > *:first-child {
+    border: none;
+    margin: 0;
+    float: right;
+    clear: both;
+  }
+  & > *:nth-child(2) {
+    clear: both;
+    display: block;
+    border: none;
+  }
 }
 svg {
   display: block;
-}
-/* font-family isn't space-separated, but =~ will have to do */
-svg[font-family~="monospace" i], svg [font-family~="monospace" i] {
-  font-family: var(--font-mono);
-}
-.alignCenter.art-text {
-  background-color: var(--highlight-color);
-  border: 1px solid var(--line-color);
-  border-radius: 3px;
-  padding: 0.5em 1em 0;
-  margin-bottom: 0.5em;
-}
-.alignCenter.art-text pre {
-  padding: 0;
-  width: auto;
+  /* font-family isn't space-separated, but =~ will have to do */
+  &[font-family~="monospace" i], & [font-family~="monospace" i] {
+    font-family: var(--font-mono);
+  }
 }
 .alignCenter {
   margin: 1em 0;
-}
-.alignCenter > *:first-child {
-  border: none;
-  /* this isn't optimal, but it's an existence proof.  PrinceXML doesn't
-     support flexbox yet.
-  */
-  display: table;
-  margin: 0 auto;
+  &.art-text {
+    background-color: var(--highlight-color);
+    border: 1px solid var(--line-color);
+    border-radius: 3px;
+    padding: 0.5em 1em 0;
+    margin-bottom: 0.5em;
+    & pre {
+      padding: 0;
+      width: auto;
+    }
+  }
+  & > *:first-child {
+    border: none;
+    /* this isn't optimal, but it's an existence proof.  PrinceXML doesn't
+       support flexbox yet.
+    */
+    display: table;
+    margin: 0 auto;
+  }
 }
 
 /* lists */
@@ -434,26 +438,25 @@ dl {
     --indent: 5ch;
     & > dt {
       min-width: calc(var(--indent) - 2ch);
+      float: none;
     }
-  }
-  &.olPercent > dt {
-    float: none;
   }
 
   dl > dd > & {
     margin-top: 0.5em;
     margin-bottom: 0;
   }
-}
-dl:not(.dlNewline) > dt {
-  float: left;
-  margin-right: 2ch;
-  min-width: 8ch;
-}
-dl > dd {
-  margin-bottom: .8em;
-  margin-left: var(--indent) !important; /* stupid element overrides */
-  min-height: 2ex;
+
+  &:not(.dlNewline) > dt {
+    float: left;
+    margin-right: 2ch;
+    min-width: 8ch;
+  }
+  & > dd {
+    margin-bottom: .8em;
+    margin-left: var(--indent) !important; /* stupid element overrides */
+    min-height: 2ex;
+  }
 }
 :is(dl.compact, .dlCompact) > dd {
   margin-bottom: 0;
@@ -469,20 +472,22 @@ dl > dd {
 }
 
 /* links */
-a, a[href].selfRef:hover {
+a {
   text-decoration: none;
+  &[href] {
+    color: var(--link-color);
+    &:hover { text-decoration: underline; }
+    &.selfRef {
+      color: var(--text-color);
+      &:hover {
+        text-decoration: none;
+        background-color: var(--highlight-color);
+      }
+    }
+  }
 }
-a[href] {
-  color: var(--link-color);
-}
-a[href].selfRef, .iref + a[href].internal {
+.iref + a[href].internal {
   color: var(--text-color);
-}
-a[href]:hover {
-  text-decoration: underline;
-}
-a[href].selfRef:hover {
-  background-color: var(--highlight-color);
 }
 a.xref:is(.cite, .auto), :is(#status-of-memo, #copyright) a {
   white-space: nowrap;
@@ -518,9 +523,9 @@ img {
 figure {
   margin: 0.5em 0;
   padding: 0;
-}
-figure blockquote {
-  margin: 0.8em 0.4em 0.4em;
+  & blockquote {
+    margin: 0.8em 0.4em 0.4em;
+  }
 }
 figcaption, caption {
   font-style: italic;
@@ -530,17 +535,19 @@ figcaption, caption {
 }
 @media screen {
   /* Auto-collapse boilerplate. */
-  :is(#status-of-memo, #copyright) p {
-    margin: -2px 0;
-    max-height: 0;
-    transition: max-height 2s ease, margin 0.5s ease 0.5s;
-    overflow: hidden;
-  }
-  :is(#status-of-memo, #copyright):hover p,
-  :is(#status-of-memo, #copyright) h2:target ~ p {
-    margin: 0.5em 0;
-    max-height: 500px;
-    overflow: auto;
+  :is(#status-of-memo, #copyright) {
+    & p {
+      margin: -2px 0;
+      max-height: 0;
+      transition: max-height 2s ease, margin 0.5s ease 0.5s;
+      overflow: hidden;
+    }
+    &:hover p,
+    & h2:target ~ p {
+      margin: 0.5em 0;
+      max-height: 500px;
+      overflow: auto;
+    }
   }
   pre, svg {
     display: inline-block;
@@ -590,25 +597,17 @@ table {
   max-width: 100%;
   margin: 0 0 1em;
   border-collapse: collapse;
-}
-table.right {
-  margin-left: auto;
-}
-table.center {
-  margin-left: auto;
-  margin-right: auto;
-}
-table.left {
-  margin-right: auto;
-}
-table .text-left {
-  text-align: left;
-}
-table .text-center {
-  text-align: center;
-}
-table .text-right {
-  text-align: right;
+  &.right { margin-left: auto; }
+  &.center { margin-left: auto; margin-right: auto; }
+  &.left { margin-right: auto; }
+  & .text-left { text-align: left; }
+  & .text-center { text-align: center; }
+  & .text-right { text-align: right; }
+  & caption {
+    margin: 0;
+    padding: 3px 0 3px 1em;
+  }
+  & p { margin: 0; }
 }
 
 thead, tbody {
@@ -628,13 +627,6 @@ th {
 :is(tr:nth-child(2n+1), thead+tbody > tr:nth-child(2n)) > td {
   background-color: var(--highlight-color);
 }
-table caption {
-  margin: 0;
-  padding: 3px 0 3px 1em;
-}
-table p {
-  margin: 0;
-}
 
 /* pilcrow */
 a.pilcrow {
@@ -645,18 +637,16 @@ a.pilcrow {
     color: var(--pilcrow-weak);
     &:hover { text-decoration: none; }
   }
-}
-@media not print {
-  :hover > a.pilcrow, a.pilcrow:focus {
-    opacity: 1;
+  @media not print {
+    :hover > &, &:focus {
+      opacity: 1;
+    }
+    &[href]:hover {
+      color: var(--pilcrow-strong);
+      background-color: transparent;
+    }
   }
-  a.pilcrow[href]:hover {
-    color: var(--pilcrow-strong);
-    background-color: transparent;
-  }
-}
-@media print {
-  a.pilcrow {
+  @media print {
     display: none;
   }
 }
@@ -715,9 +705,9 @@ sub, sup {
   font-size: 0.9em;
   font-style: italic;
   margin-top: 2em;
-}
-.docInfo .prepared {
-  float: right;
+  & .prepared {
+    float: right;
+  }
 }
 
 /* table of contents */
@@ -807,23 +797,27 @@ hr.addr {
   max-width: calc(100% - 16px);
 }
 @media (min-width: 500px) {
-  #authors-addresses > section {
-    column-count: 2;
-    column-gap: 20px;
-  }
-  #authors-addresses > section > h2 {
-    column-span: all;
-  }
-  /* hack for break-inside: avoid-column */
-  #authors-addresses address {
-    display: inline-block;
-    break-inside: avoid-column;
+  #authors-addresses {
+    & > section {
+      column-count: 2;
+      column-gap: 20px;
+    }
+    & > section > h2 {
+      column-span: all;
+    }
+    /* hack for break-inside: avoid-column */
+    & address {
+      display: inline-block;
+      break-inside: avoid-column;
+    }
   }
 }
 
 /* Comments */
-.rfcEditorRemove p:first-of-type {
-  font-style: italic;
+.rfcEditorRemove {
+  & p:first-of-type {
+    font-style: italic;
+  }
 }
 .cref {
   background-color: rgba(249, 232, 105, 0.3);
@@ -834,19 +828,21 @@ hr.addr {
 }
 
 @media screen {
-  #toc nav {
-    font-family: var(--font-title);
-    font-weight: 360;
-    & > ul { margin-bottom: 2em; }
-    & ul {
-      margin: 0 0 0 4px;
-      & :is(p, li) {
-        margin: 2px 0;
+  #toc {
+    & nav {
+      font-family: var(--font-title);
+      font-weight: 360;
+      & > ul { margin-bottom: 2em; }
+      & ul {
+        margin: 0 0 0 4px;
+        & :is(p, li) {
+          margin: 2px 0;
+        }
       }
     }
-  }
-  #toc a.toplink {
-    float: right;
+    & a.toplink {
+      float: right;
+    }
   }
 }
 @media not screen {
@@ -867,54 +863,54 @@ hr.addr {
     margin: 0;
     border-bottom: 1px solid #ccc;
     opacity: 0.6;
-  }
-  #toc h2 {
-    margin: 0;
-    padding: 2px 0 2px 6px;
-    padding-right: 1em;
-    font-size: 18px;
-    line-height: 24px;
-    min-width: 190px;
-    text-align: right;
-    background-color: #444;
-    color: white;
-    cursor: pointer;
-    &::before { /* css hamburger */
-      float: right;
-      position: relative;
-      width: 1em;
-      height: 1px;
-      left: -164px;
-      margin: 8px 0 0 0;
-      background: white none repeat scroll 0 0;
-      box-shadow: 0 4px 0 0 white, 0 8px 0 0 white;
-      content: "";
+    & h2 {
+      margin: 0;
+      padding: 2px 0 2px 6px;
+      padding-right: 1em;
+      font-size: 18px;
+      line-height: 24px;
+      min-width: 190px;
+      text-align: right;
+      background-color: #444;
+      color: white;
+      cursor: pointer;
+      &::before { /* css hamburger */
+        float: right;
+        position: relative;
+        width: 1em;
+        height: 1px;
+        left: -164px;
+        margin: 8px 0 0 0;
+        background: white none repeat scroll 0 0;
+        box-shadow: 0 4px 0 0 white, 0 8px 0 0 white;
+        content: "";
+      }
     }
-  }
-  #toc nav {
-    display: none;
-    background-color: var(--background-color);
-    padding: 0.5em 1em 1em;
-    overflow: auto;
-    overscroll-behavior: contain;
-    height: calc(100vh - 48px);
-    border-left: 1px solid #ddd;
-  }
-  #toc.active {
-    opacity: 1;
-    & nav { display: block; }
-  }
-  /* Make the collapsed ToC header render white on gray also when it's a link */
-  #toc h2 a,
-  #toc h2 a:is(:link, :focus, :hover),
-  #toc a.toplink,
-  #toc a.toplink:hover {
-    color: white;
-    background-color: #444;
-    text-decoration: none;
-  }
-  #toc a.toplink {
-    margin: 2px 0.5em 0;
+    & nav {
+      display: none;
+      background-color: var(--background-color);
+      padding: 0.5em 1em 1em;
+      overflow: auto;
+      overscroll-behavior: contain;
+      height: calc(100vh - 48px);
+      border-left: 1px solid #ddd;
+    }
+    &.active {
+      opacity: 1;
+      & nav { display: block; }
+    }
+    /* Make the collapsed ToC header render white on gray also when it's a link */
+    & h2 a,
+    & h2 a:is(:link, :focus, :hover),
+    & a.toplink,
+    & a.toplink:hover {
+      color: white;
+      background-color: #444;
+      text-decoration: none;
+    }
+    & a.toplink {
+      margin: 2px 0.5em 0;
+    }
   }
 }
 
@@ -933,26 +929,26 @@ hr.addr {
     margin: 0;
     padding: 0;
     z-index: 1;
-  }
-  #toc h2 {
-    margin: 0;
-    padding: 0.25em 1em 1em 0;
-  }
-  #toc nav {
-    display: block;
-    height: calc(90vh - 84px);
-    bottom: 0;
-    padding: 0.5em 0 2em;
-    overflow: auto;
-    overscroll-behavior: contain;
-    scrollbar-width: thin;
+    & h2 {
+      margin: 0;
+      padding: 0.25em 1em 1em 0;
+    }
+    & nav {
+      display: block;
+      height: calc(90vh - 84px);
+      bottom: 0;
+      padding: 0.5em 0 2em;
+      overflow: auto;
+      overscroll-behavior: contain;
+      scrollbar-width: thin;
+    }
+    & a.toplink {
+      margin: 8px 0.5em 0;
+    }
   }
   img { /* future proofing */
     max-width: 100%;
     height: auto;
-  }
-  #toc a.toplink {
-    margin: 8px 0.5em 0;
   }
 }
 
@@ -968,12 +964,13 @@ hr.addr {
   #n-copyright-notice {
     border-bottom: none;
   }
-  #toc, #n-introduction {
-    page-break-before: always;
-  }
   #toc {
+    page-break-before: always;
     border-top: none;
     padding-top: 0;
+  }
+  #n-introduction {
+    page-break-before: always;
   }
   figure, pre, .vcard {
     page-break-inside: avoid;
@@ -1035,17 +1032,19 @@ hr.addr {
 }
 
 /* SVG Trick: a prefix match works because only black and white are allowed */
-svg :is([stroke="black"], [stroke^="#000"]) {
-  stroke: var(--text-color);
-}
-svg :is([stroke="white"], [stroke^="#fff"]) {
-  stroke: var(--background-color);
-}
-svg :is([fill="black"], [fill^="#000"], :not([fill])) {
-  fill: var(--text-color);
-}
-svg :is([fill="white"], [fill^="#fff"]) {
-  fill: var(--background-color);
+svg {
+  & :is([stroke="black"], [stroke^="#000"]) {
+    stroke: var(--text-color);
+  }
+  & :is([stroke="white"], [stroke^="#fff"]) {
+    stroke: var(--background-color);
+  }
+  & :is([fill="black"], [fill^="#000"], :not([fill])) {
+    fill: var(--text-color);
+  }
+  & :is([fill="white"], [fill^="#fff"]) {
+    fill: var(--background-color);
+  }
 }
 </style>
 
@@ -1055,11 +1054,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">Composite ML-KEM</td>
-<td class="right">March 2026</td>
+<td class="right">June 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Ounsworth, et al.</td>
-<td class="center">Expires 28 September 2026</td>
+<td class="center">Expires 30 December 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1072,12 +1071,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-lamps-pq-composite-kem-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-03-27" class="published">27 March 2026</time>
+<time datetime="2026-06-28" class="published">28 June 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-09-28">28 September 2026</time></dd>
+<dd class="expires"><time datetime="2026-12-30">30 December 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1143,7 +1142,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 28 September 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 30 December 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1309,7 +1308,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
-            <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-implementation-consideratio" class="internal xref">Implementation Considerations</a></p>
+            <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-operational-considerations" class="internal xref">Operational Considerations</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.1">
                 <p id="section-toc.1-1.10.2.1.1"><a href="#section-10.1" class="auto internal xref">10.1</a>.  <a href="#name-fips-certification" class="internal xref">FIPS Certification</a></p>
@@ -1338,6 +1337,9 @@ svg :is([fill="white"], [fill^="#fff"]) {
                     <p id="section-toc.1-1.10.2.4.2.2.1"><a href="#section-10.4.2" class="auto internal xref">10.4.2</a>.  <a href="#name-deriving-the-public-ecpoint" class="internal xref">Deriving the public ECPoint from ECPrivateKey</a></p>
 </li>
                 </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.5">
+                <p id="section-toc.1-1.10.2.5.1"><a href="#section-10.5" class="auto internal xref">10.5</a>.  <a href="#name-interoperability-of-legacy-" class="internal xref">Interoperability of legacy algorithms</a></p>
 </li>
             </ul>
 </li>
@@ -1402,7 +1404,7 @@ Composite algorithms retain some security even if one of their component algorit
 This specification creates PQ/T Hybrids with the Module-Lattice-based Key Encapsulation Mechanism (ML-KEM), defined in <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span> as the PQ component.
 Instantiations of the composite ML-KEM scheme are provided based on ML-KEM, RSA-OAEP and ECDH.
 The full list of algorithms registered by this specification is in <a href="#sec-alg-parms" class="auto internal xref">Section 6</a>.
-Backwards compatibility in the sense of upgraded systems continuing to interoperate with legacy systems is not directly covered in this specification, but is the subject of <a href="#sec-backwards-compat" class="auto internal xref">Section 10.2</a>.<a href="#section-1-3" class="pilcrow">¶</a></p>
+Application backwards compatibility in the sense of upgraded systems continuing to interoperate with legacy systems is not provided by the mechanisms defined in in this specification; this is discussed further in <a href="#sec-backwards-compat" class="auto internal xref">Section 10.2</a>.<a href="#section-1-3" class="pilcrow">¶</a></p>
 <p id="section-1-4">Certain jurisdictions have recommended that ML-KEM be used exclusively within a PQ/T hybrid framework. The use of a composite scheme provides a straightforward implementation of hybrid solutions compatible with (and advocated by) some governments and cybersecurity agencies <span>[<a href="#BSI2021" class="cite xref">BSI2021</a>]</span>, <span>[<a href="#ANSSI2024" class="cite xref">ANSSI2024</a>]</span>.<a href="#section-1-4" class="pilcrow">¶</a></p>
 <p id="section-1-5">In some situations it might be possible to add Post-Quantum, via a PQ/T Hybrid, to an already audited and compliant solution without invalidating the existing certification, whereas a full replacement of the traditional cryptography would almost certainly incur regulatory and compliance delays. In other words, PQ/T Hybrids can allow for deploying Post-Quantum Cryptography before the PQ modules and operational procedures are fully audited and certified. This, more than any other requirement, is what motivates the large number of algorithm combinations in this specification: The intention is to provide a stepping stone from which any cryptographic algorithm an organization has deployed today can evolve or transition.<a href="#section-1-5" class="pilcrow">¶</a></p>
 <p id="section-1-6">While this specification registers a large number of composite algorithms, it is expected that organizations will choose to deploy a single composite algorithm, or a small number of composite algorithms, that meets the needs of their environment, and very few implementers will need concern themselves with the entire list. This specification does not specify any mandatory-to-implement algorithms, but <a href="#sec-impl-profile" class="auto internal xref">Section 10.3</a> provides a short-list of recommended composite algorithms for common use-cases.<a href="#section-1-6" class="pilcrow">¶</a></p>
@@ -1420,43 +1422,57 @@ appear in all capitals, as shown here.
 These words may also appear in this document in
 lower case as plain English words, absent their normative meanings.<a href="#section-1.1-1" class="pilcrow">¶</a></p>
 <p id="section-1.1-2">This specification is consistent with all terminology from <span>[<a href="#RFC9794" class="cite xref">RFC9794</a>]</span>.
+Some relevant definitions from <span>[<a href="#RFC9794" class="cite xref">RFC9794</a>]</span> are copied here for easier reading.
 In addition, the following terms are used in this specification:<a href="#section-1.1-2" class="pilcrow">¶</a></p>
 <p id="section-1.1-3"><strong>ALGORITHM</strong>:
           The usage of the term "algorithm" within this
           specification generally refers to any function which
           has a registered Object Identifier (OID) for
           use within an ASN.1 AlgorithmIdentifier.<a href="#section-1.1-3" class="pilcrow">¶</a></p>
-<p id="section-1.1-4"><strong>Application Backwards Compatibility</strong>: The usual definition of backwards compatibility, meaning whether an upgraded and non-upgraded application can successfully establish communication.<a href="#section-1.1-4" class="pilcrow">¶</a></p>
+<p id="section-1.1-4"><strong>APPLICATION BACKWARDS COMPATIBILITY</strong>:
+ A property indicating whether an upgraded and non-upgraded application can successfully establish communication.<a href="#section-1.1-4" class="pilcrow">¶</a></p>
 <p id="section-1.1-5"><strong>COMBINER</strong>:
   A combiner specifies how multiple shared secret keys are combined
   into a single shared secret key.<a href="#section-1.1-5" class="pilcrow">¶</a></p>
-<p id="section-1.1-6"><strong>COMPOSITE CRYPTOGRAPHIC ELEMENT</strong>: <span>[<a href="#RFC9794" class="cite xref">RFC9794</a>]</span> defines composites as: A
-          cryptographic element that
-          incorporates multiple component cryptographic elements of the same
-          type in a multi-algorithm scheme.<a href="#section-1.1-6" class="pilcrow">¶</a></p>
-<p id="section-1.1-7"><strong>COMPONENT / PRIMITIVE</strong>:
-  The words "component" or "primitive" are used interchangeably
-  to refer to a cryptographic algorithm that is used internally
-  within a composite algorithm. For example this could be an
-  asymmetric algorithm such as "ML-KEM-768" or "RSA-OAEP".<a href="#section-1.1-7" class="pilcrow">¶</a></p>
-<p id="section-1.1-8"><strong>DER:</strong>
-  Distinguished Encoding Rules as defined in <span>[<a href="#X.690" class="cite xref">X.690</a>]</span>.<a href="#section-1.1-8" class="pilcrow">¶</a></p>
-<p id="section-1.1-9"><strong>ECDH</strong>: the Elliptic Curve Diffie-Hellman key agreement scheme defined in section 5.7.1.2 of <span>[<a href="#SP.800-56Ar3" class="cite xref">SP.800-56Ar3</a>]</span>.<a href="#section-1.1-9" class="pilcrow">¶</a></p>
-<p id="section-1.1-10"><strong>KEM:</strong>
-   A key encapsulation mechanism as defined in <a href="#sec-kems" class="auto internal xref">Section 2</a>.<a href="#section-1.1-10" class="pilcrow">¶</a></p>
-<p id="section-1.1-11"><strong>PKI:</strong>
-  Public Key Infrastructure, as defined in <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>.<a href="#section-1.1-11" class="pilcrow">¶</a></p>
-<p id="section-1.1-12"><strong>Post-Quantum Traditional (PQ/T) hybrid scheme</strong>:
-    A multi-algorithm scheme where at least one component algorithm is a post-quantum algorithm and at least one is a traditional algorithm.<a href="#section-1.1-12" class="pilcrow">¶</a></p>
-<p id="section-1.1-13"><strong>Protocol Backwards Compatibility</strong>: A property whereby a new feature can be added to a protocol without requiring any changes to the protocol's specification and only minimal changes to its implementations (such as adding new identifiers). This is notable because many PQ/T Hybrids require modification of the protocol to make it "hybrid aware", whereas this specification presents as a standalone algorithm and thus can take advantage of existing cryptographic agility mechanisms.<a href="#section-1.1-13" class="pilcrow">¶</a></p>
-<p id="section-1.1-14"><strong>ML-KEM</strong>: The Module-Lattice-based Key Encapsulation Mechanism algorithm defined in <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span><a href="#section-1.1-14" class="pilcrow">¶</a></p>
-<p id="section-1.1-15"><strong>RSA</strong>: The Rivest-Shamir-Adleman cryptosystem, used in this specification as the RSA-OAEP (Optimal Asymmetric Encryption Padding) scheme defined in <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span>.<a href="#section-1.1-15" class="pilcrow">¶</a></p>
-<p id="section-1.1-16"><strong>SHARED SECRET KEY:</strong>
+<p id="section-1.1-6"><strong>COMPOSITE CRYPTOGRAPHIC ELEMENT</strong>: <span>[<a href="#RFC9794" class="cite xref">RFC9794</a>]</span> defines composites as:
+    A cryptographic element that incorporates multiple component
+    cryptographic elements of the same type for use in a
+    multi-algorithm scheme, such that the resulting composite
+    cryptographic element is exposed as a singular interface
+    of the same type as the component cryptographic elements.
+    For example this could be an asymmetric algorithm such as
+    "ML-KEM-768" or "RSA-OAEP".<a href="#section-1.1-6" class="pilcrow">¶</a></p>
+<p id="section-1.1-7"><strong>DER:</strong>
+  Distinguished Encoding Rules as defined in <span>[<a href="#X.690" class="cite xref">X.690</a>]</span>.<a href="#section-1.1-7" class="pilcrow">¶</a></p>
+<p id="section-1.1-8"><strong>ECDH</strong>: the Elliptic Curve Diffie-Hellman key agreement scheme defined in section 5.7.1.2 of <span>[<a href="#SP.800-56Ar3" class="cite xref">SP.800-56Ar3</a>]</span>.<a href="#section-1.1-8" class="pilcrow">¶</a></p>
+<p id="section-1.1-9"><strong>KEM:</strong>
+   A key encapsulation mechanism as defined in <a href="#sec-kems" class="auto internal xref">Section 2</a>.<a href="#section-1.1-9" class="pilcrow">¶</a></p>
+<p id="section-1.1-10"><strong>PKI:</strong>
+  Public Key Infrastructure, as defined in <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>.<a href="#section-1.1-10" class="pilcrow">¶</a></p>
+<p id="section-1.1-11"><strong>POST-QUANTUM TRADITIONAL (PQ/T) HYBRID SCHEME</strong>:
+  <span>[<a href="#RFC9794" class="cite xref">RFC9794</a>]</span> defines a PQ/T Hybrid Scheme as:
+  A multi-algorithm scheme where at least one component algorithm
+  is a post-quantum algorithm and at least one is a traditional algorithm.<a href="#section-1.1-11" class="pilcrow">¶</a></p>
+<p id="section-1.1-12"><strong>PROTOCOL BACKWARDS COMPATIBILITY</strong>:
+  A property whereby a new feature
+  can be added to a protocol without requiring any changes to the
+  protocol's specification and only minimal changes to its
+  implementations (such as adding new identifiers).
+  Typically this means that the new feature fits within a defined
+  extension point of the protocol instead of requiring a structural
+  change to the protocol.
+  This is notable because many PQ/T Hybrids require modification of
+  the protocol to make it "hybrid aware", whereas this specification
+  presents as a standalone algorithm and thus can take advantage of
+  existing cryptographic agility mechanisms.<a href="#section-1.1-12" class="pilcrow">¶</a></p>
+<p id="section-1.1-13"><strong>ML-KEM</strong>: The Module-Lattice-based Key Encapsulation Mechanism algorithm defined in <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span><a href="#section-1.1-13" class="pilcrow">¶</a></p>
+<p id="section-1.1-14"><strong>RSA</strong>: The Rivest-Shamir-Adleman cryptosystem, used in this specification as the RSA-OAEP (Optimal Asymmetric Encryption Padding) scheme defined in <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span>.<a href="#section-1.1-14" class="pilcrow">¶</a></p>
+<p id="section-1.1-15"><strong>SHARED SECRET KEY:</strong>
   A value established between two communicating parties for use as
   cryptographic key material suitable for direct use by symmetric
   cryptographic algorithms. This specification is concerned with shared
-  secrets established via public key cryptographic operations.<a href="#section-1.1-16" class="pilcrow">¶</a></p>
-<p id="section-1.1-17"><strong>X25519 and X448:</strong> The Edwards Curve Diffie-Hellman scheme defined in <span>[<a href="#RFC7748" class="cite xref">RFC7748</a>]</span> with pramater sets X25519 and X448.<a href="#section-1.1-17" class="pilcrow">¶</a></p>
+  secrets established via public key cryptographic operations.<a href="#section-1.1-15" class="pilcrow">¶</a></p>
+<p id="section-1.1-16"><strong>X25519 and X448:</strong> The Edwards Curve Diffie-Hellman scheme defined in <span>[<a href="#RFC7748" class="cite xref">RFC7748</a>]</span> with pramater sets X25519 and X448.<a href="#section-1.1-16" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="notation">
@@ -1479,7 +1495,10 @@ In addition, the following terms are used in this specification:<a href="#sectio
             <p id="section-1.2-2.4.1"><code>(a, _)</code>: represents a pair of values where one -- the second one in this case -- is ignored.<a href="#section-1.2-2.4.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-1.2-2.5">
-            <p id="section-1.2-2.5.1"><code>Func&lt;TYPE&gt;()</code>: represents a function that is parametrized by <code>&lt;TYPE&gt;</code> meaning that the function's implementation will have minor differences depending on the underlying TYPE. Typically this means that a function will need to look up different constants or use different underlying cryptographic primitives depending on which composite algorithm it is implementing.<a href="#section-1.2-2.5.1" class="pilcrow">¶</a></p>
+            <p id="section-1.2-2.5.1"><code>func(a) -&gt; b</code>: represents a function named <code>func</code> that takes <code>a</code> as input and produces <code>b</code>.<a href="#section-1.2-2.5.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-1.2-2.6">
+            <p id="section-1.2-2.6.1"><code>Func&lt;TYPE&gt;()</code>: represents a function that is parametrized by <code>&lt;TYPE&gt;</code> meaning that the function's implementation will have minor differences depending on the underlying TYPE. Typically this means that a function will need to look up different constants or use different underlying cryptographic primitives depending on which composite algorithm it is implementing.<a href="#section-1.2-2.6.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
@@ -1500,7 +1519,7 @@ In addition, the following terms are used in this specification:<a href="#sectio
       <h2 id="name-overview-of-the-composite-m">
 <a href="#section-2" class="section-number selfRef">2. </a><a href="#name-overview-of-the-composite-m" class="section-name selfRef">Overview of the Composite ML-KEM Scheme</a>
       </h2>
-<p id="section-2-1">Composite ML-KEM is a PQ/T hybrid Key Encapsulation Mechanism (KEM) which combines ML-KEM as specified in <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span> and <span>[<a href="#I-D.ietf-lamps-kyber-certificates" class="cite xref">I-D.ietf-lamps-kyber-certificates</a>]</span> with one of RSA-OAEP defined in <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span>, the Elliptic Curve Diffie-Hellman key agreement schemes ECDH defined in section 5.7.1.2 of <span>[<a href="#SP.800-56Ar3" class="cite xref">SP.800-56Ar3</a>]</span>, and X25519 / X448 defined in <span>[<a href="#RFC8410" class="cite xref">RFC8410</a>]</span>. A KEM combiner function is used to combine the two component shared secret keys into a single shared secret key.<a href="#section-2-1" class="pilcrow">¶</a></p>
+<p id="section-2-1">Composite ML-KEM is a PQ/T hybrid Key Encapsulation Mechanism (KEM) which combines ML-KEM as specified in <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span> and <span>[<a href="#RFC9935" class="cite xref">RFC9935</a>]</span> with one of RSA-OAEP defined in <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span>, the Elliptic Curve Diffie-Hellman key agreement schemes ECDH defined in section 5.7.1.2 of <span>[<a href="#SP.800-56Ar3" class="cite xref">SP.800-56Ar3</a>]</span>, and X25519 / X448 defined in <span>[<a href="#RFC8410" class="cite xref">RFC8410</a>]</span>. A KEM combiner function is used to combine the two component shared secret keys into a single shared secret key.<a href="#section-2-1" class="pilcrow">¶</a></p>
 <p id="section-2-2">Composite Key Encapsulation Mechanisms are defined as cryptographic primitives that consist of three algorithms. These definitions are borrowed from <span>[<a href="#RFC9180" class="cite xref">RFC9180</a>]</span>.<a href="#section-2-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-2-3.1">
@@ -1679,7 +1698,9 @@ Key Generation Process:
   1. Generate component keys
 
     mlkemSeed = Random(64)
-    (mlkemPK, mlkemSK) = ML-KEM.KeyGen_internal(mlkemSeed[:32], mlkemSeed[32:])
+    (mlkemPK, mlkemSK) = ML-KEM.KeyGen_internal(
+                                      mlkemSeed[:32],
+                                      mlkemSeed[32:] )
     (tradPK, tradSK) = Trad.KeyGen()
 
   2. Check for component key gen failure
@@ -1695,7 +1716,7 @@ Key Generation Process:
 </pre><a href="#section-3.1-5" class="pilcrow">¶</a>
 </div>
 <p id="section-3.1-6">In order to ensure fresh keys, the key generation functions MUST be executed for both component algorithms. Compliant parties MUST NOT use, import or export component keys that are used in other contexts, combinations, or by themselves as keys for standalone algorithm use. For more details on the security considerations around key reuse, see <a href="#sec-cons-key-reuse" class="auto internal xref">Section 9.3</a>.<a href="#section-3.1-6" class="pilcrow">¶</a></p>
-<p id="section-3.1-7">Errors produced by the component <code>KeyGen()</code> routines MUST be forwarded on to the calling application. Further discussion can be found below in <a href="#sec-explicit-rejection" class="auto internal xref">Section 3.5</a>.<a href="#section-3.1-7" class="pilcrow">¶</a></p>
+<p id="section-3.1-7">If one of the component <code>KeyGen()</code> routines returns an error, then this error MUST be propagated by the <code>Composite-ML-KEM.KeyGen()</code> routine. Further discussion can be found below in <a href="#sec-explicit-rejection" class="auto internal xref">Section 3.5</a>.<a href="#section-3.1-7" class="pilcrow">¶</a></p>
 <div id="allowed-modifications-to-the-key-generation-process">
 <section id="section-3.1.1">
           <h4 id="name-allowed-modifications-to-th">
@@ -1854,7 +1875,7 @@ Decap Process:
 </pre><a href="#section-3.3-3" class="pilcrow">¶</a>
 </div>
 <p id="section-3.3-4">Steps 2 and 4 SHOULD be performed in a timing-invariant way to prevent side-channel attackers from learning any of the inputs or output of the KEM combiner.<a href="#section-3.3-4" class="pilcrow">¶</a></p>
-<p id="section-3.3-5">Step 4 requires the <code>Decaps()</code> process to have access to <code>tradPK</code>, which is not carried in the private key format and therefore the implementation is required to acquire it from some out-of-band means. The Implementation Considerations <a href="#impl-cons-decaps-pubkey" class="auto internal xref">Section 10.4</a> provides further discussion on this.<a href="#section-3.3-5" class="pilcrow">¶</a></p>
+<p id="section-3.3-5">Step 4 requires the <code>Decaps()</code> process to have access to <code>tradPK</code>, which is not carried in the private key format and therefore the implementation is required to acquire it from some out-of-band means. The Operational Considerations <a href="#impl-cons-decaps-pubkey" class="auto internal xref">Section 10.4</a> provides further discussion on this.<a href="#section-3.3-5" class="pilcrow">¶</a></p>
 <p id="section-3.3-6">It is possible to use component private keys stored in separate software or hardware keystores. Variations in the process to accommodate particular private key storage mechanisms are considered to be conformant to this specification so long as it produces the same output and error handling as the process sketched above.<a href="#section-3.3-6" class="pilcrow">¶</a></p>
 <p id="section-3.3-7">In order to properly achieve its security properties, the KEM combiner requires that all inputs are fixed-length or length-encoded. Since each Composite ML-KEM algorithm fully specifies its component algorithms, including key sizes, all inputs should be fixed-length in non-error scenarios except for minor variations introduced by encoding. In the cases where there are minor variations introduced by encoding, those encodings already have a fixed-length prefix followed by length-encoded data, so the requirements for the KEM combiner security properties hold (namely that the input is injective). However some implementations may choose to perform additional checking to handle certain error conditions. In particular, the KEM combiner step should not be performed if either of the component decapsulations returned an error condition indicating malformed inputs. RSA-based composites MUST ensure that the modulus size (i.e. the size of <code>tradCT</code> and <code>tradPK</code>) matches that specified for the given Composite ML-KEM algorithm in <a href="#sec-alg-parms" class="auto internal xref">Section 6</a>; depending on the cryptographic library used, this check may be done by the library or may require an explicit check as part of the <code>Composite-ML-KEM.Decap()</code> routine. Implementers should keep in mind that some instances of <code>tradCT</code> and <code>tradPK</code> will be DER-encoded which could introduce minor length variations such as dropping leading zeroes; since the underlying KEMs are assumed to be IND-CCA secure, decapsulation against tampered ciphertexts or public keys is assumed to fail, these length differences are considered benign to the KEM combiner.<a href="#section-3.3-7" class="pilcrow">¶</a></p>
 <p id="section-3.3-8">Errors produced by the component <code>Decaps()</code> routines MUST be forwarded on to the calling application. Further discussion can be found below in <a href="#sec-explicit-rejection" class="auto internal xref">Section 3.5</a>.<a href="#section-3.3-8" class="pilcrow">¶</a></p>
@@ -1907,7 +1928,7 @@ Process:
       </h2>
 <p id="section-4-1">This section presents routines for serializing and deserializing composite public keys, private keys, and ciphertext values to bytes.
 The functions defined in this section are considered internal implementation details and are referenced from within the public API definitions in <a href="#sec-composite-mlkem" class="auto internal xref">Section 3</a>.<a href="#section-4-1" class="pilcrow">¶</a></p>
-<p id="section-4-2">Deserialization is possible because ML-KEM has fixed-length public keys, private keys (seeds), and ciphertext values as shown in the following table.<a href="#section-4-2" class="pilcrow">¶</a></p>
+<p id="section-4-2">Deserialization is possible because ML-KEM has fixed-length public keys, private keys (seeds), and ciphertext values as shown in the following table, which is similar to Table 3 from <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span>, but with a different private key representation.<a href="#section-4-2" class="pilcrow">¶</a></p>
 <span id="name-ml-kem-sizes-in-bytes"></span><div id="tab-mlkem-sizes">
 <table class="center" id="table-1">
         <caption>
@@ -1995,7 +2016,7 @@ Serialization Process:
 <p id="section-4.1-4">The following describes how to instantiate a <code>DeserializePublicKey(bytes)</code> function for a given composite algorithm represented by <code>&lt;OID&gt;</code>.<a href="#section-4.1-4" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-4.1-5">
 <pre>
-Composite-ML-KEM&lt;OID&gt;.DeserializePublicKey(bytes) -&gt; (mlkemPK, tradPK)
+Composite-ML-KEM&lt;OID&gt;.DeserializePublicKey(bytes) -&gt;(mlkemPK, tradPK)
 
 Explicit inputs:
 
@@ -2051,8 +2072,8 @@ Composite-ML-KEM.SerializePrivateKey(mlkemSeed, tradSK) -&gt; bytes
 
 Explicit inputs:
 
-  mlkemSeed  The ML-KEM private key, which consists of 32 Byte seed value d
-             concatenated with 32 Byte seed value z.
+  mlkemSeed  The ML-KEM private key, which consists of a 32 Byte seed
+             value d concatenated with a 32 Byte seed value z.
 
   tradSK     The traditional private key in the appropriate
              encoding for the underlying component algorithm.
@@ -2089,8 +2110,8 @@ Implicit inputs:
 
 Output:
 
-  mlkemSeed  The ML-KEM private key, which consists of 32 Byte seed value d
-             concatenated with 32 Byte seed value z.
+  mlkemSeed  The ML-KEM private key, which consists of a 32 Byte seed
+             value d concatenated with a 32 Byte seed value z.
 
   tradSK    The traditional private key in the appropriate
              encoding for the underlying component algorithm.
@@ -2300,9 +2321,9 @@ kema-MLKEM768-ECDH-P256-SHA3-256 KEM-ALGORITHM ::=
 
   ...
   PrivateKey ::= OCTET STRING
-                        -- Content varies based on type of key.  The
-                        -- algorithm identifier dictates the format of
-                        -- the key.
+                      -- Content varies based on type of key.  The
+                      -- algorithm identifier dictates the format of
+                      -- the key.
 </pre>
 </div>
 <figcaption><a href="#figure-2" class="selfRef">Figure 2</a>:
@@ -2948,6 +2969,23 @@ kema-MLKEM1024-ECDH-P521-SHA3-256 KEM-ALGORITHM ::=
       id-MLKEM1024-ECDH-P521-SHA3-256,
       pk-MLKEM1024-ECDH-P521-SHA3-256 }
 
+PublicKeys PUBLIC-KEY ::= {
+   -- This expands PublicKeyAlgorithms from [RFC 5912]
+   pk-MLKEM768-RSA2048-SHA3-256 |
+   pk-MLKEM768-RSA3072-SHA3-256 |
+   pk-MLKEM768-RSA4096-SHA3-256 |
+   pk-MLKEM768-X25519-SHA3-256 |
+   pk-MLKEM768-ECDH-P256-SHA3-256 |
+   pk-MLKEM768-ECDH-P384-SHA3-256 |
+   pk-MLKEM768-ECDH-brainpoolP256r1-SHA3-256 |
+   pk-MLKEM1024-RSA3072-SHA3-256 |
+   pk-MLKEM1024-ECDH-P384-SHA3-256 |
+   pk-MLKEM1024-ECDH-brainpoolP384r1-SHA3-256 |
+   pk-MLKEM1024-X448-SHA3-256 |
+   pk-MLKEM1024-ECDH-P521-SHA3-256,
+   ...
+}
+
 END
 
 &lt;CODE ENDS&gt;
@@ -3173,7 +3211,7 @@ END
       <h2 id="name-security-considerations">
 <a href="#section-9" class="section-number selfRef">9. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
-<p id="section-9-1">As this specification uses ML-KEM as a component of all composite algorithms, all security considerations from <span>[<a href="#I-D.ietf-lamps-kyber-certificates" class="cite xref">I-D.ietf-lamps-kyber-certificates</a>]</span> and <span>[<a href="#I-D.sfluhrer-cfrg-ml-kem-security-considerations" class="cite xref">I-D.sfluhrer-cfrg-ml-kem-security-considerations</a>]</span> apply. Note in particular the "Encapsulation key check" in section 7.2 of <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span> and the "Decapsulation input check" in section 7.3 of <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span> which are required for correct and secure functioning of ML-KEM, but which are considered to be external to the <code>Encaps()</code> and <code>Decaps()</code> algorithms.<a href="#section-9-1" class="pilcrow">¶</a></p>
+<p id="section-9-1">As this specification uses ML-KEM as a component of all composite algorithms, all security considerations from <span>[<a href="#RFC9935" class="cite xref">RFC9935</a>]</span> and <span>[<a href="#I-D.sfluhrer-cfrg-ml-kem-security-considerations" class="cite xref">I-D.sfluhrer-cfrg-ml-kem-security-considerations</a>]</span> apply. Note in particular the "Encapsulation key check" in section 7.2 of <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span> and the "Decapsulation input check" in section 7.3 of <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span> which are required for correct and secure functioning of ML-KEM, but which are considered to be external to the <code>Encaps()</code> and <code>Decaps()</code> algorithms.<a href="#section-9-1" class="pilcrow">¶</a></p>
 <div id="why-hybrids">
 <section id="section-9.1">
         <h3 id="name-why-hybrids">
@@ -3225,10 +3263,22 @@ END
           <h4 id="name-ind-cca2-security-of-the-hy">
 <a href="#section-9.2.1" class="section-number selfRef">9.2.1. </a><a href="#name-ind-cca2-security-of-the-hy" class="section-name selfRef">IND-CCA2 Security of the hybrid scheme</a>
           </h4>
-<p id="section-9.2.1-1">Informally, a Composite ML-KEM algorithm is secure if the combiner (SHA3) is secure, and either ML-KEM is secure or the traditional component (RSA-OAEP, ECDH, X25519 or X448) is secure.<a href="#section-9.2.1-1" class="pilcrow">¶</a></p>
-<p id="section-9.2.1-2">The security of ML-KEM and DH hybrids is covered in <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span> and requires that the first KEM component (ML-KEM in this construction) is IND-CCA2 and second ciphertext preimage resistant (C2PRI) and that the DH component is nominal group; i.e. a well-behaved elliptic curve DH group, but does not require the traditional component to be IND-CCA. This design choice improves performance by not including the large ML-KEM public key and ciphertext, but means that an implementation error in the ML-KEM component that affects the ciphertext check step of the FO transform could result in the overall composite no longer achieving IND-CCA2 security. This solution remains IND-CCA2 due to binding the <code>tradPK</code> and <code>tradCT</code> in the KEM combiner.<a href="#section-9.2.1-2" class="pilcrow">¶</a></p>
-<p id="section-9.2.1-3">The QSF framework presented in <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span> is extended to cover RSA-OAEP as the traditional algorithm in place of DH. Informally we note that that RSA-OAEP is IND-CCA2 secure <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span> but is not C2PRI(aka ciphertext binding) or public key binding since it is mathematically possibly to construct two RSA-OAEP ciphertexts that decapsulate to the same shared secret under the same public key or under different public keys. Binding the RSA-OAEP ciphertext and public key to the internal KDF restores these properties. Formally, <span>[<a href="#Starhunters" class="cite xref">Starhunters</a>]</span> ports the proof of <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span> to cover RSA-OAEP as the traditional compenent in a QSF construction. <span>[<a href="#KWW2026" class="cite xref">KWW2026</a>]</span> goes further, analyzing a range of different RSA-based KEMs, including the RSA-OAEP-KEM construction used in this specification, concluding that it achieves LEAK-BIND-K,PK-CT and C2PRI when the ciphertext is included in the post-processing KDF.<a href="#section-9.2.1-3" class="pilcrow">¶</a></p>
-<p id="section-9.2.1-4">The composite combiner cannot be assumed to be secure when used with different KEMs and a more cautious approach would bind the public key and ciphertext of the first KEM as well.<a href="#section-9.2.1-4" class="pilcrow">¶</a></p>
+<div id="mini-glossary-of-kem-security-notions">
+<section id="section-9.2.1.1">
+            <h5 id="name-mini-glossary-of-kem-securi">
+<a href="#section-9.2.1.1" class="section-number selfRef">9.2.1.1. </a><a href="#name-mini-glossary-of-kem-securi" class="section-name selfRef">Mini glossary of KEM security notions</a>
+            </h5>
+<p id="section-9.2.1.1-1"><strong>IND-CCA2</strong>: indistinguishability under adaptive chosen ciphertext attack <span>[<a href="#IND-CCA" class="cite xref">IND-CCA</a>]</span>.
+<strong>C2PRI</strong>: second ciphertext preimage resistance. A property defined in <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span> that it is computationally difficult to find two different ciphertexts that produce the same shared secret key.
+<strong>QSF framework</strong>: the hybrid KEM construction defined in <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span> that combines an IND-CCA2 KEM with a C2PRI DH scheme via the combiner <code>SHA3-256(mlkemSS || tradSS || tradCT || tradPK || Label)</code>. The QSF framework is used as the basis for this specification with only cosmetic differences such as moving the label to the end in order to be FIPS-compliant (whereas X-Wing has it at the beginning).
+<strong>Binding properties</strong>: a hierarchy of properties introduced in <span>[<a href="#CDM24" class="cite xref">CDM24</a>]</span> of the form <code>X-BIND-P-Q</code> were <code>𝑋 ∈ {HON, LEAK, MAL}</code> indicates the strength of the attacker, and <code>P, Q ∈ {PK, CT, K}</code> indicates that for a given <code>P</code>, it is computationally difficult to find a collision in <code>Q</code> with respect to decapsulation with the KEM.<a href="#section-9.2.1.1-1" class="pilcrow">¶</a></p>
+<p id="section-9.2.1.1-2">End of mini glossary.<a href="#section-9.2.1.1-2" class="pilcrow">¶</a></p>
+<p id="section-9.2.1.1-3">Informally, a Composite ML-KEM algorithm is secure if the combiner (SHA3) is secure, and either ML-KEM is secure or the traditional component (RSA-OAEP, ECDH, X25519 or X448) is secure.<a href="#section-9.2.1.1-3" class="pilcrow">¶</a></p>
+<p id="section-9.2.1.1-4">The security of ML-KEM and DH hybrids is covered in <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span> and requires that the first KEM component (ML-KEM in this construction) is IND-CCA2 and second ciphertext preimage resistant (C2PRI) and that the DH component is nominal group; i.e. a well-behaved elliptic curve DH group, but does not require the traditional component to be IND-CCA. This design choice improves performance by not including the large ML-KEM public key and ciphertext, but means that an implementation error in the ML-KEM component that affects the ciphertext check step of the FO transform could result in the overall composite no longer achieving IND-CCA2 security. This solution remains IND-CCA2 due to binding the <code>tradPK</code> and <code>tradCT</code> in the KEM combiner.<a href="#section-9.2.1.1-4" class="pilcrow">¶</a></p>
+<p id="section-9.2.1.1-5">The QSF framework presented in <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span> is extended to cover RSA-OAEP as the traditional algorithm in place of DH. Informally we note that that RSA-OAEP is IND-CCA2 secure <span>[<a href="#RFC8017" class="cite xref">RFC8017</a>]</span> but is not C2PRI(aka ciphertext binding) or public key binding since it is mathematically possibly to construct two RSA-OAEP ciphertexts that decapsulate to the same shared secret under the same public key or under different public keys. Binding the RSA-OAEP ciphertext and public key to the internal KDF restores these properties. Formally, <span>[<a href="#Starhunters" class="cite xref">Starhunters</a>]</span> ports the proof of <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span> to cover RSA-OAEP as the traditional compenent in a QSF construction. <span>[<a href="#KWW2026" class="cite xref">KWW2026</a>]</span> goes further, analyzing a range of different RSA-based KEMs, including the RSA-OAEP-KEM construction used in this specification, concluding that it achieves LEAK-BIND-K,PK-CT and C2PRI when the ciphertext is included in the post-processing KDF.<a href="#section-9.2.1.1-5" class="pilcrow">¶</a></p>
+<p id="section-9.2.1.1-6">The composite combiner cannot be assumed to be secure when used with different KEMs and a more cautious approach would bind the public key and ciphertext of the first KEM as well.<a href="#section-9.2.1.1-6" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="sec-cons-ct-collision">
@@ -3275,8 +3325,8 @@ END
 </div>
 <div id="sec-in-pract">
 <section id="section-10">
-      <h2 id="name-implementation-consideratio">
-<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-implementation-consideratio" class="section-name selfRef">Implementation Considerations</a>
+      <h2 id="name-operational-considerations">
+<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-operational-considerations" class="section-name selfRef">Operational Considerations</a>
       </h2>
 <div id="sec-fips">
 <section id="section-10.1">
@@ -3441,6 +3491,15 @@ pubKey = ec_multiply_by_scalar(g, s)
 </div>
 </section>
 </div>
+<div id="interoperability-of-legacy-algorithms">
+<section id="section-10.5">
+        <h3 id="name-interoperability-of-legacy-">
+<a href="#section-10.5" class="section-number selfRef">10.5. </a><a href="#name-interoperability-of-legacy-" class="section-name selfRef">Interoperability of legacy algorithms</a>
+        </h3>
+<p id="section-10.5-1">The legacy component algorithms, particularly RSA and ECDSA can themselves have interoperability issues which will propagate to become interoperability issues in the composite. For example, this specification RECOMMENDS an RSA expenent of 65537, but other values are possible. Similarly, due to the details of DER encoding, keys that happen to have leading zeros could appear to be smaller than the required key size even though they are actually acceptable.<a href="#section-10.5-1" class="pilcrow">¶</a></p>
+<p id="section-10.5-2">Implementations are encouraged to be lenient when parsing the key material of the legacy algorithm. In particilar, the recommendation is to use existing implementations of the legacy algorithms that already handle all the variation seen in the wild.<a href="#section-10.5-2" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="sec-combined-references">
@@ -3461,10 +3520,6 @@ pubKey = ec_multiply_by_scalar(g, s)
 <dt id="FIPS.203">[FIPS.203]</dt>
         <dd>
 <span class="refAuthor">National Institute of Standards and Technology (NIST)</span>, <span class="refTitle">"Module-Lattice-based Key-Encapsulation Mechanism Standard"</span>, <time datetime="2024-08" class="refDate">August 2024</time>, <span>&lt;<a href="https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.203.pdf">https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.203.pdf</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="FIPS.204">[FIPS.204]</dt>
-        <dd>
-<span class="refAuthor">National Institute of Standards and Technology (NIST)</span>, <span class="refTitle">"Module-Lattice-Based Digital Signature Standard"</span>, <time datetime="2024-08" class="refDate">August 2024</time>, <span>&lt;<a href="https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.204.pdf">https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.204.pdf</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC2104">[RFC2104]</dt>
         <dd>
@@ -3526,10 +3581,6 @@ pubKey = ec_multiply_by_scalar(g, s)
         <dd>
 <span class="refAuthor">Certicom Research</span>, <span class="refTitle">"SEC 2: Recommended Elliptic Curve Domain Parameters"</span>, <time datetime="2010-01" class="refDate">January 2010</time>, <span>&lt;<a href="https://www.secg.org/sec2-v2.pdf">https://www.secg.org/sec2-v2.pdf</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="SP.800-185">[SP.800-185]</dt>
-        <dd>
-<span class="refAuthor">National Institute of Standards and Technology (NIST)</span>, <span class="refTitle">"SHA-3 Derived Functions: cSHAKE, KMAC, TupleHash, and ParallelHash"</span>, <time datetime="2016-12" class="refDate">December 2016</time>, <span>&lt;<a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-185.pdf">https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-185.pdf</a>&gt;</span>. </dd>
-<dd class="break"></dd>
 <dt id="SP.800-56Ar3">[SP.800-56Ar3]</dt>
         <dd>
 <span class="refAuthor">National Institute of Standards and Technology (NIST)</span>, <span class="refTitle">"Recommendation for Pair-Wise Key-Establishment Schemes Using Discrete Logarithm Cryptography"</span>, <time datetime="2018-04" class="refDate">April 2018</time>, <span>&lt;<a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-56Ar3.pdf">https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-56Ar3.pdf</a>&gt;</span>. </dd>
@@ -3542,13 +3593,13 @@ pubKey = ec_multiply_by_scalar(g, s)
         <dd>
 <span class="refAuthor">National Institute of Standards and Technology (NIST)</span>, <span class="refTitle">"Recommendation for Key Management: Part 1 – General"</span>, <time datetime="2020-05" class="refDate">May 2020</time>, <span>&lt;<a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-57pt1r5.pdf">https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-57pt1r5.pdf</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="X.690">[X.690]</dt>
+<dt id="SP.800-185">[SP.800-185]</dt>
         <dd>
-<span class="refAuthor">ITU-T</span>, <span class="refTitle">"Information technology - ASN.1 encoding Rules: Specification of Basic Encoding Rules (BER), Canonical Encoding Rules (CER) and Distinguished Encoding Rules (DER)"</span>, <span class="seriesInfo">ISO/IEC 8825-1:2015</span>, <time datetime="2015-11" class="refDate">November 2015</time>. </dd>
+<span class="refAuthor">National Institute of Standards and Technology (NIST)</span>, <span class="refTitle">"SHA-3 Derived Functions: cSHAKE, KMAC, TupleHash, and ParallelHash"</span>, <time datetime="2016-12" class="refDate">December 2016</time>, <span>&lt;<a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-185.pdf">https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-185.pdf</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="X9.62_2005">[X9.62_2005]</dt>
+<dt id="X.690">[X.690]</dt>
       <dd>
-<span class="refTitle">"Public Key Cryptography for the Financial Services Industry, The Elliptic Curve Digital Signature Algorithm (ECDSA)"</span>, <time datetime="2005-11" class="refDate">November 2005</time>. </dd>
+<span class="refAuthor">ITU-T</span>, <span class="refTitle">"Information technology - ASN.1 encoding Rules: Specification of Basic Encoding Rules (BER), Canonical Encoding Rules (CER) and Distinguished Encoding Rules (DER)"</span>, <span class="seriesInfo">ISO/IEC 8825-1:2015</span>, <time datetime="2015-11" class="refDate">November 2015</time>. </dd>
 <dd class="break"></dd>
 </dl>
 </section>
@@ -3571,6 +3622,10 @@ pubKey = ec_multiply_by_scalar(g, s)
         <dd>
 <span class="refAuthor">Federal Office for Information Security (BSI)</span>, <span class="refTitle">"Quantum-safe cryptography - fundamentals, current developments and recommendations"</span>, <time datetime="2021-10" class="refDate">October 2021</time>, <span>&lt;<a href="https://www.bsi.bund.de/SharedDocs/Downloads/EN/BSI/Publications/Brochure/quantum-safe-cryptography.pdf">https://www.bsi.bund.de/SharedDocs/Downloads/EN/BSI/Publications/Brochure/quantum-safe-cryptography.pdf</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="CDM24">[CDM24]</dt>
+        <dd>
+<span class="refAuthor">Cremers, C.</span>, <span class="refAuthor">Dax, A.</span>, and <span class="refAuthor">N. Medinger</span>, <span class="refTitle">"Keeping Up with the KEMs: Stronger Security Notions for KEMs and Automated Analysis of KEM-based Protocols"</span>, <time datetime="2024" class="refDate">2024</time>, <span>&lt;<a href="https://dl.acm.org/doi/abs/10.1145/3658644.3670283">https://dl.acm.org/doi/abs/10.1145/3658644.3670283</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="ETSI.TS.103.744">[ETSI.TS.103.744]</dt>
         <dd>
 <span class="refAuthor">ETSI</span>, <span class="refTitle">"ETSI TS 103 744 V1.2.1 CYBER-QSC; Quantum-safe Hybrid Key Establishment"</span>, <time datetime="2025-03" class="refDate">March 2025</time>, <span>&lt;<a href="https://www.etsi.org/deliver/etsi_ts/103700_103799/103744/01.02.01_60/ts_103744v010201p.pdf">https://www.etsi.org/deliver/etsi_ts/103700_103799/103744/01.02.01_60/ts_103744v010201p.pdf</a>&gt;</span>. </dd>
@@ -3583,13 +3638,13 @@ pubKey = ec_multiply_by_scalar(g, s)
         <dd>
 <span class="refAuthor">Giacon, F.</span>, <span class="refAuthor">Heuer, F.</span>, and <span class="refAuthor">B. Poettering</span>, <span class="refTitle">"KEM Combiners"</span>, <time datetime="2018" class="refDate">2018</time>, <span>&lt;<a href="https://eprint.iacr.org/2018/024">https://eprint.iacr.org/2018/024</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="I-D.ietf-lamps-kyber-certificates">[I-D.ietf-lamps-kyber-certificates]</dt>
-        <dd>
-<span class="refAuthor">Turner, S.</span>, <span class="refAuthor">Kampanakis, P.</span>, <span class="refAuthor">Massimo, J.</span>, and <span class="refAuthor">B. Westerbaan</span>, <span class="refTitle">"Internet X.509 Public Key Infrastructure - Algorithm Identifiers for the Module-Lattice-Based Key-Encapsulation Mechanism (ML-KEM)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-lamps-kyber-certificates-11</span>, <time datetime="2025-07-22" class="refDate">22 July 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-lamps-kyber-certificates-11">https://datatracker.ietf.org/doc/html/draft-ietf-lamps-kyber-certificates-11</a>&gt;</span>. </dd>
-<dd class="break"></dd>
 <dt id="I-D.sfluhrer-cfrg-ml-kem-security-considerations">[I-D.sfluhrer-cfrg-ml-kem-security-considerations]</dt>
         <dd>
 <span class="refAuthor">Fluhrer, S.</span>, <span class="refAuthor">Dang, Q.</span>, <span class="refAuthor">Mattsson, J. P.</span>, <span class="refAuthor">Milner, K.</span>, and <span class="refAuthor">D. Shiu</span>, <span class="refTitle">"ML-KEM Security Considerations"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-sfluhrer-cfrg-ml-kem-security-considerations-04</span>, <time datetime="2025-11-17" class="refDate">17 November 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-sfluhrer-cfrg-ml-kem-security-considerations-04">https://datatracker.ietf.org/doc/html/draft-sfluhrer-cfrg-ml-kem-security-considerations-04</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="IND-CCA">[IND-CCA]</dt>
+        <dd>
+<span class="refTitle">"Ciphertext indistinguishability"</span>, <time datetime="2026-05" class="refDate">May 2026</time>, <span>&lt;<a href="https://en.wikipedia.org/wiki/Ciphertext_indistinguishability">https://en.wikipedia.org/wiki/Ciphertext_indistinguishability</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="KWW2026">[KWW2026]</dt>
         <dd>
@@ -3651,6 +3706,10 @@ pubKey = ec_multiply_by_scalar(g, s)
         <dd>
 <span class="refAuthor">Brockhaus, H.</span>, <span class="refAuthor">von Oheimb, D.</span>, <span class="refAuthor">Ounsworth, M.</span>, and <span class="refAuthor">J. Gray</span>, <span class="refTitle">"Internet X.509 Public Key Infrastructure -- Certificate Management Protocol (CMP)"</span>, <span class="seriesInfo">RFC 9810</span>, <span class="seriesInfo">DOI 10.17487/RFC9810</span>, <time datetime="2025-07" class="refDate">July 2025</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc9810">https://www.rfc-editor.org/info/rfc9810</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="RFC9935">[RFC9935]</dt>
+        <dd>
+<span class="refAuthor">Turner, S.</span>, <span class="refAuthor">Kampanakis, P.</span>, <span class="refAuthor">Massimo, J.</span>, and <span class="refAuthor">B. E. Westerbaan</span>, <span class="refTitle">"Internet X.509 Public Key Infrastructure - Algorithm Identifiers for the Module-Lattice-Based Key-Encapsulation Mechanism (ML-KEM)"</span>, <span class="seriesInfo">RFC 9935</span>, <span class="seriesInfo">DOI 10.17487/RFC9935</span>, <time datetime="2026-03" class="refDate">March 2026</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc9935">https://www.rfc-editor.org/info/rfc9935</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="SP800-131Ar2">[SP800-131Ar2]</dt>
         <dd>
 <span class="refAuthor">Barker, E.</span>, <span class="refAuthor">Roginksy, A.</span>, and <span class="refAuthor">National Institute of Standards and Technology (NIST)</span>, <span class="refTitle">"Transitioning the Use of Cryptographic Algorithms and Key Lengths"</span>, <span>n.d.</span>, <span>&lt;<a href="https://nvlpubs.nist.gov/nistpubs/specialpublications/nist.sp.800-131ar2.pdf">https://nvlpubs.nist.gov/nistpubs/specialpublications/nist.sp.800-131ar2.pdf</a>&gt;</span>. </dd>
@@ -3666,6 +3725,10 @@ pubKey = ec_multiply_by_scalar(g, s)
 <dt id="TestVectors">[TestVectors]</dt>
         <dd>
 <span class="refTitle">"Test vectors for Composite-ML-KEM"</span>, <span>n.d.</span>, <span>&lt;<a href="https://github.com/lamps-wg/draft-composite-kem/tree/main/src">https://github.com/lamps-wg/draft-composite-kem/tree/main/src</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="X9.62_2005">[X9.62_2005]</dt>
+        <dd>
+<span class="refTitle">"Public Key Cryptography for the Financial Services Industry, The Elliptic Curve Digital Signature Algorithm (ECDSA)"</span>, <time datetime="2005-11" class="refDate">November 2005</time>. </dd>
 <dd class="break"></dd>
 <dt id="X-Wing">[X-Wing]</dt>
       <dd>
@@ -4001,8 +4064,8 @@ ASN.1:
 
 where
       mgf1SHA256Identifier  AlgorithmIdentifier  ::=  {
-                          algorithm id-mgf1,  -- (1.2.840.113549.1.1.8)
-                          parameters sha256Identifier }
+                        algorithm id-mgf1,  -- (1.2.840.113549.1.1.8)
+                        parameters sha256Identifier }
 
 
       sha256Identifier  AlgorithmIdentifier  ::=  { id-sha256, NULL }
@@ -4153,7 +4216,7 @@ DER:
 4) Return key_material.
 
 MA shall contain all of the public keys.
-MB shall contain all of the corresponding public keys and ciphertexts.
+MB shall contain all of the corresponding public keys and ciphertexts
 </pre><a href="#appendix-D.2-2" class="pilcrow">¶</a>
 </div>
 <p id="appendix-D.2-3">The main difference between the Composite ML-KEM combiner and the ETSI CatKDF combiner is that CatKDF makes the more conservative choice to bind the public keys and ciphertexts of both components, while Composite ML-KEM follows the analysis presented in <span>[<a href="#X-Wing" class="cite xref">X-Wing</a>]</span> that while preserving the security properties of the traditional component requires binding the public key and ciphertext of the traditional component, it is not necessary to do so for ML-KEM thanks to the rejection sampling step of the Fujisaki-Okamoto transform.<a href="#appendix-D.2-3" class="pilcrow">¶</a></p>
