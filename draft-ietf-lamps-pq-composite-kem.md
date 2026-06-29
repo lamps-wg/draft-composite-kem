@@ -203,7 +203,7 @@ informative:
   RFC9794:
   RFC9810:
   RFC9935:
-  I-D.draft-irtf-cfrg-hybrid-kems:
+  I-D.draft-irtf-cfrg-hybrid-kems-05:
   TestVectors:
     title: "Test vectors for Composite-ML-KEM"
     target: https://github.com/lamps-wg/draft-composite-kem/tree/main/src
