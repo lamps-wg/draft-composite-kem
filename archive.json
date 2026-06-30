@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-06-16T05:10:57.741836+00:00",
+  "timestamp": "2026-06-30T04:11:50.858501+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -4342,16 +4342,24 @@
       "id": "I_kwDOKRPFO88AAAABFkk3Cg",
       "title": "Deb Early IESG comments",
       "url": "https://github.com/lamps-wg/draft-composite-kem/issues/269",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Early comments:\nI've looked at idnits (the experimental version), it complains\nabout a bunch of things - mostly in error (like spelling 'public key',\nhuh....).  Some of these might need a tweak, but nothing huge:\n\n- idnits claims that FIPS 204 is in the references but never referenced.\nSeems odd...\n- the kyber certs draft has been published - RFC 9935\n-3 lines longer than 72 characters.\n\nI'm hoping to have comments to you all by the end of this week or early\nnext week.  [I will be on vacation from 26 June - 4 July with no laptop (!)\nand probably only my phone (and a bike).]\n\nI also realize that you have a PR/suggestion from Daniel Van Geest, but\nthat looks like 'formating' type stuff, which I won't really be looking at\nanyway.  Correct me if I'm wrong here.",
       "createdAt": "2026-06-15T21:00:22Z",
-      "updatedAt": "2026-06-15T21:00:22Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2026-06-28T23:41:50Z",
+      "closedAt": "2026-06-28T23:41:50Z",
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Corrected in -16, published 15 June 2026",
+          "createdAt": "2026-06-28T23:41:50Z",
+          "updatedAt": "2026-06-28T23:41:50Z"
+        }
+      ]
     }
   ],
   "pulls": [
@@ -11561,6 +11569,34 @@
           "updatedAt": "2026-06-12T15:24:23Z"
         }
       ],
+      "reviews": []
+    },
+    {
+      "number": 270,
+      "id": "PR_kwDOKRPFO87rkNzl",
+      "title": "Deb IESG comments",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/270",
+      "state": "MERGED",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "added mini-glossary to sec-cons",
+      "createdAt": "2026-06-28T23:32:11Z",
+      "updatedAt": "2026-06-29T04:02:03Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "056e5930ffcbf2dc9e5e8c918b8ac98ccc555215",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "deb_comments_jun28",
+      "headRefOid": "cc8aafff0eb013cab7acd49a8b495f2bf1ecde62",
+      "closedAt": "2026-06-29T04:01:54Z",
+      "mergedAt": "2026-06-29T04:01:53Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "8cf7d5d3b2b758bbf9cdcc8d31167c09a8af22b0"
+      },
+      "comments": [],
       "reviews": []
     }
   ]
