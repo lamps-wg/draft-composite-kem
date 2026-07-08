@@ -441,8 +441,9 @@ Composite Key Encapsulation Mechanisms are defined as cryptographic primitives t
 
    *  `Encaps(pk) -> (ss, ct)`: A probabilistic encapsulation algorithm,
       which takes as input a public key `pk` and outputs a ciphertext `ct`
-      and shared secret key `ss`. Note: this specification uses `Encaps()` to conform to {{?RFC9180}},
-      but [FIPS.203] uses `Encaps()`.
+      and shared secret key `ss`.
+      Note: this specification uses `Encaps()` to conform to
+      [FIPS.203], while {{RFC9180}} uses `Encap()`.
 
    *  `Decaps(sk, ct) -> ss`: A decapsulation algorithm, which takes as
       input a secret key `sk` and ciphertext `ct` and outputs a shared
@@ -452,7 +453,7 @@ Composite Key Encapsulation Mechanisms are defined as cryptographic primitives t
       shared secret key to mask from an attacker than an error occured
       ("implicit rejection").
       Note: this specification uses `Decaps()` to match [FIPS.203],
-      while {{RFC9180}},uses `Decap()`.
+      while {{RFC9180}} uses `Decap()`.
 
 The KEM interface was chosen as the interface for a composite key establishment because it allows for arbitrary combinations of component algorithm types since both key transport and key agreement mechanisms can be promoted into KEMs as described in {{sec-RSAOAEPKEM}} and {{sec-DHKEM}} below.
 
@@ -1381,16 +1382,17 @@ Each registered Composite ML-KEM algorithm specifies a `Label` -- see {{sec-alg-
 * `Label` is a fixed value specified in this document.
 
 
-### IND-CCA2 Security of the hybrid scheme {#sec-hybrid-security}
 
-#### Mini glossary of KEM security notions
+### Mini glossary of KEM security notions
+
+This mini-glossary contains definitions of security notions that are relevant for the security considerations sections that follow.
 
 **IND-CCA2**: indistinguishability under adaptive chosen ciphertext attack {{IND-CCA}}.
 **C2PRI**: second ciphertext preimage resistance. A property defined in [X-Wing] that it is computationally difficult to find two different ciphertexts that produce the same shared secret key.
 **QSF framework**: the hybrid KEM construction defined in [X-Wing] that combines an IND-CCA2 KEM with a C2PRI DH scheme via the combiner `SHA3-256(mlkemSS || tradSS || tradCT || tradPK || Label)`. The QSF framework is used as the basis for this specification with only cosmetic differences such as moving the label to the end in order to be FIPS-compliant (whereas X-Wing has it at the beginning).
 **Binding properties**: a hierarchy of properties introduced in [CDM24] of the form `X-BIND-P-Q` were `𝑋 ∈ {HON, LEAK, MAL}` indicates the strength of the attacker, and `P, Q ∈ {PK, CT, K}` indicates that for a given `P`, it is computationally difficult to find a collision in `Q` with respect to decapsulation with the KEM.
 
-End of mini glossary.
+### IND-CCA2 Security of the hybrid scheme {#sec-hybrid-security}
 
 Informally, a Composite ML-KEM algorithm is secure if the combiner (SHA3) is secure, and either ML-KEM is secure or the traditional component (RSA-OAEP, ECDH, X25519 or X448) is secure.
 
@@ -1398,7 +1400,7 @@ The security of ML-KEM and DH hybrids is covered in [X-Wing] and requires that t
 
 The QSF framework presented in [X-Wing] is extended to cover RSA-OAEP as the traditional algorithm in place of DH. Informally we note that that RSA-OAEP is IND-CCA2 secure [RFC8017] but is not C2PRI(aka ciphertext binding) or public key binding since it is mathematically possibly to construct two RSA-OAEP ciphertexts that decapsulate to the same shared secret under the same public key or under different public keys. Binding the RSA-OAEP ciphertext and public key to the internal KDF restores these properties. Formally, [Starhunters] ports the proof of [X-Wing] to cover RSA-OAEP as the traditional compenent in a QSF construction. [KWW2026] goes further, analyzing a range of different RSA-based KEMs, including the RSA-OAEP-KEM construction used in this specification, concluding that it achieves LEAK-BIND-K,PK-CT and C2PRI when the ciphertext is included in the post-processing KDF.
 
-The combiner from the QSF framework cannot be assumed to be secure when used with other KEMs not covered by the above analysis. See {{I-D.irtf-cfrg-hybrid-kems}} for a survey of different KEM combiners offering different security properties.
+The combiner from the QSF framework cannot be assumed to be secure when used with other KEMs not covered by the above analysis. For example, see {{I-D.irtf-cfrg-hybrid-kems}} for a survey of different KEM combiners offering different security properties.
 
 
 ### Second pre-image resistance of component KEMs {#sec-cons-ct-collision}
@@ -1572,7 +1574,7 @@ Then encode `pubKey` as X9.62 uncompressed point.
 
 The legacy component algorithms, particularly RSA and ECDSA can themselves have interoperability issues which will propagate to become interoperability issues in the composite. For example, this specification RECOMMENDS an RSA exponent of 65537, but other values are possible. Similarly, due to the details of DER encoding, keys that happen to have leading zeros could appear to be smaller than the required key size even though they are actually acceptable.
 
-Implementations are encouraged to be lenient when parsing the key material of the legacy algorithm. In partucilar, the recommendation is to use existing implementations of the legacy algorithms that already handle all the variations seen in the wild.
+Implementations are encouraged to be lenient when parsing the key material of the legacy algorithm. In particular, the recommendation is to use existing implementations of the legacy algorithms that already handle all the variations seen in the wild.
 
 <!-- End of Implementation Considerations section -->
 
