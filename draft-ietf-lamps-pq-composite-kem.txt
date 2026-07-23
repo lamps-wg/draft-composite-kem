@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 31 December 2026                                        M. Pala
+Expires: 24 January 2027                                         M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                            29 June 2026
+                                                            23 July 2026
 
 
       Composite ML-KEM for use in X.509 Public Key Infrastructure
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 31 December 2026.
+   This Internet-Draft will expire on 24 January 2027.
 
 Copyright Notice
 
@@ -110,9 +110,10 @@ Table of Contents
    9.  Security Considerations
      9.1.  Why Hybrids?
      9.2.  KEM Combiner
-       9.2.1.  IND-CCA2 Security of the hybrid scheme
-       9.2.2.  Second pre-image resistance of component KEMs
-       9.2.3.  Generifying this construction
+       9.2.1.  Mini glossary of KEM security notions
+       9.2.2.  IND-CCA2 Security of the hybrid scheme
+       9.2.3.  Second pre-image resistance of component KEMs
+       9.2.4.  Generifying this construction
      9.3.  Key Reuse
        9.3.1.  Guidance for CAs checking for previous key revocation
      9.4.  Policy for Deprecated and Acceptable Algorithms
@@ -357,7 +358,7 @@ Table of Contents
    *  Encaps(pk) -> (ss, ct): A probabilistic encapsulation algorithm,
       which takes as input a public key pk and outputs a ciphertext ct
       and shared secret key ss.  Note: this specification uses Encaps()
-      to conform to [RFC9180], but [FIPS.203] uses Encaps().
+      to conform to [FIPS.203], while [RFC9180] uses Encap().
 
    *  Decaps(sk, ct) -> ss: A decapsulation algorithm, which takes as
       input a secret key sk and ciphertext ct and outputs a shared
@@ -366,7 +367,7 @@ Table of Contents
       rejection"),while others will return a pseudorandomized shared
       secret key to mask from an attacker than an error occured
       ("implicit rejection").  Note: this specification uses Decaps() to
-      match [FIPS.203], while [RFC9180],uses Decap().
+      match [FIPS.203], while [RFC9180] uses Decap().
 
    The KEM interface was chosen as the interface for a composite key
    establishment because it allows for arbitrary combinations of
@@ -2091,9 +2092,10 @@ Table of Contents
 
    *  Label is a fixed value specified in this document.
 
-9.2.1.  IND-CCA2 Security of the hybrid scheme
+9.2.1.  Mini glossary of KEM security notions
 
-9.2.1.1.  Mini glossary of KEM security notions
+   This mini-glossary contains definitions of security notions that are
+   relevant for the security considerations sections that follow.
 
    *IND-CCA2*: indistinguishability under adaptive chosen ciphertext
    attack [IND-CCA]. *C2PRI*: second ciphertext preimage resistance.  A
@@ -2111,7 +2113,7 @@ Table of Contents
    is computationally difficult to find a collision in Q with respect to
    decapsulation with the KEM.
 
-   End of mini glossary.
+9.2.2.  IND-CCA2 Security of the hybrid scheme
 
    Informally, a Composite ML-KEM algorithm is secure if the combiner
    (SHA3) is secure, and either ML-KEM is secure or the traditional
@@ -2146,11 +2148,11 @@ Table of Contents
    post-processing KDF.
 
    The combiner from the QSF framework cannot be assumed to be secure
-   when used with other KEMs not covered by the above analysis.  See
-   [I-D.irtf-cfrg-hybrid-kems] for a survey of different KEM combiners
-   offering different security properties.
+   when used with other KEMs not covered by the above analysis.  For
+   example, see [I-D.irtf-cfrg-hybrid-kems] for a survey of different
+   KEM combiners offering different security properties.
 
-9.2.2.  Second pre-image resistance of component KEMs
+9.2.3.  Second pre-image resistance of component KEMs
 
    The notion of a "ciphertext second pre-image resistant KEM" is
    defined in [X-Wing] as being the property that it is computationally
@@ -2184,7 +2186,7 @@ Table of Contents
    that c != c' will yield a unique ciphertext, and thus restoring
    second pre-image resistance to the overall Composite ML-KEM.
 
-9.2.3.  Generifying this construction
+9.2.4.  Generifying this construction
 
    It should be clear that the security analysis of the presented KEM
    combiner construction relies heavily on the specific choices of
@@ -2472,7 +2474,7 @@ Table of Contents
    required key size even though they are actually acceptable.
 
    Implementations are encouraged to be lenient when parsing the key
-   material of the legacy algorithm.  In partucilar, the recommendation
+   material of the legacy algorithm.  In particular, the recommendation
    is to use existing implementations of the legacy algorithms that
    already handle all the variations seen in the wild.
 
