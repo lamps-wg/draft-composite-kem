@@ -316,9 +316,9 @@ This document defines combinations of US NIST ML-KEM in hybrid with traditional 
 
 The advent of quantum computing poses a significant threat to current cryptographic systems because traditional cryptographic key establishment algorithms in common use -- namely the Rivest–Shamir–Adleman cryptosystem in the Optimal Asymmetric Encryption Padding mode (RSA-OAEP), and elliptic curve Diffie-Hellman (ECDH) -- will become vulnerable to quantum attacks.
 Unlike previous migrations between cryptographic algorithms, this migration gives us the foresight that traditional cryptographic algorithms will be broken in the future, but will remain strong in the interim, the only uncertainty is around the timing. But there are also some novel challenges.
-For instance, the aggressive migration timelines may require deploying PQC algorithms before their implementations have been fully hardened or certified, and dual-algorithm data protection may be desirable over a longer time period to hedge against security vulnerabilities and other implementation flaws in the new implementations.
+For instance, the aggressive migration timelines may require deploying Post-Quantum Cryptographic algorithms (PQC) before their implementations have been fully hardened or certified, and dual-algorithm data protection may be desirable over a longer time period to hedge against security vulnerabilities and other implementation flaws in the new implementations.
 
-Cautious implementers may opt to combine cryptographic algorithms in such a way that an attacker would need to break all of them simultaneously to compromise the protected data. These mechanisms are referred to as "Post-Quantum / Traditional (PQ/T) Hybrids" {{RFC9794}}.
+Cautious implementers may opt to combine cryptographic algorithms in such a way that an attacker would need to break all of them simultaneously to compromise the protected data. These mechanisms are referred to as "Post-Quantum / Traditional (PQ/T) Hybrids" {{RFC9794}}. Further discussion of PQ/T Hybrids can be found in {{sec-cons-why-hybrids}}.
 
 This specification defines a specific instantiation of the PQ/T Hybrid paradigm called "composite" where multiple cryptographic algorithms are combined to form a single key encapsulation mechanism (KEM). The composite KEM presents a single public key and ciphertext such that it can be treated as a single atomic algorithm at the protocol level. This provides a property referred to as "protocol backwards compatibility" since it can be applied to protocols that are not explicitly hybrid-aware. The idea of a composite was first presented in {{Bindel2017}}.
 Composite algorithms retain some security even if one of their component algorithms is broken, which is discussed in detail in {{sec-cons}}.
@@ -405,7 +405,7 @@ In addition, the following terms are used in this specification:
   cryptographic algorithms. This specification is concerned with shared
   secrets established via public key cryptographic operations.
 
-**X25519 and X448:** The Edwards Curve Diffie-Hellman scheme defined in [RFC7748] with pramater sets X25519 and X448.
+**X25519 and X448:** The Edwards Curve Diffie-Hellman scheme defined in [RFC7748] with paramater sets X25519 and X448.
 
 
 
@@ -520,7 +520,7 @@ A "key agreement" or "Diffie-Hellman (DH)" type algorithm is a key establishment
 
 In this specification, we consider only the elliptic curve Diffie-Hellman algorithm identified by the OID `id-ecDH` as defined in [RFC5480] and [SEC1].
 
-Note the difference between the API of `DH(skX, pkY) -> ss` and `KEM.Encaps(pk) -> (ss, ct)` presented above. For this reason, a Diffie-Hellman key exchange cannot be directly combined with ML-KEM. Fortunately, a Diffie-Hellman key agreement can be easily promoted into a KEM `Encaps(pk) -> (ss, ct)` by having the sender generate an ephemeral keypair for themself and sending their public key as the ciphertext `ct`. Composite ML-KEM uses a simplified version of the DHKEM definition from [RFC9180]:
+Note the difference between the API of `DH(skX, pkY) -> ss` and `KEM.Encaps(pk) -> (ss, ct)` presented above. For this reason, a Diffie-Hellman key exchange cannot be directly combined with ML-KEM. Fortunately, a Diffie-Hellman key agreement can be easily promoted into a `KEM.Encaps(pk) -> (ss, ct)` by having the sender generate an ephemeral keypair for themself and sending their public key as the ciphertext `ct`. Composite ML-KEM uses a simplified version of the DHKEM definition from [RFC9180]:
 
 ~~~
 DHKEM.Encaps(pkR):
@@ -1353,7 +1353,7 @@ The following are registered in the "SMI Security for PKIX Algorithms":
 
 The primary security considerations when implementing a composite algorithm are to ensure that the security considerations of all component algorithms have been adhered to, including all recommendations for private key storage and error handling.
 
-## Why Hybrids?
+## Why Hybrids? {#sec-cons-why-hybrids}
 
 In broad terms, a PQ/T Hybrid can be used either to provide dual-algorithm security or to provide migration flexibility. Let's quickly explore both.
 
