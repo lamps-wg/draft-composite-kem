@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 24 January 2027                                         M. Pala
+Expires: 14 February 2027                                        M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                            23 July 2026
+                                                          13 August 2026
 
 
       Composite ML-KEM for use in X.509 Public Key Infrastructure
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 24 January 2027.
+   This Internet-Draft will expire on 14 February 2027.
 
 Copyright Notice
 
@@ -154,17 +154,18 @@ Table of Contents
    broken in the future, but will remain strong in the interim, the only
    uncertainty is around the timing.  But there are also some novel
    challenges.  For instance, the aggressive migration timelines may
-   require deploying PQC algorithms before their implementations have
-   been fully hardened or certified, and dual-algorithm data protection
-   may be desirable over a longer time period to hedge against security
-   vulnerabilities and other implementation flaws in the new
-   implementations.
+   require deploying Post-Quantum Cryptographic algorithms (PQC) before
+   their implementations have been fully hardened or certified, and
+   dual-algorithm data protection may be desirable over a longer time
+   period to hedge against security vulnerabilities and other
+   implementation flaws in the new implementations.
 
    Cautious implementers may opt to combine cryptographic algorithms in
    such a way that an attacker would need to break all of them
    simultaneously to compromise the protected data.  These mechanisms
    are referred to as "Post-Quantum / Traditional (PQ/T) Hybrids"
-   [RFC9794].
+   [RFC9794].  Further discussion of PQ/T Hybrids can be found in
+   Section 9.1.
 
    This specification defines a specific instantiation of the PQ/T
    Hybrid paradigm called "composite" where multiple cryptographic
@@ -183,7 +184,7 @@ Table of Contents
    and ECDH.  The full list of algorithms registered by this
    specification is in Section 6.  Application backwards compatibility
    in the sense of upgraded systems continuing to interoperate with
-   legacy systems is not provided by the mechanisms defined in in this
+   legacy systems is not provided by the mechanisms defined in this
    specification; this is discussed further in Section 10.2.
 
    Certain jurisdictions have recommended that ML-KEM be used
@@ -289,7 +290,7 @@ Table of Contents
    cryptographic operations.
 
    *X25519 and X448:* The Edwards Curve Diffie-Hellman scheme defined in
-   [RFC7748] with pramater sets X25519 and X448.
+   [RFC7748] with paramater sets X25519 and X448.
 
 1.2.  Notation
 
@@ -478,7 +479,7 @@ Table of Contents
    KEM.Encaps(pk) -> (ss, ct) presented above.  For this reason, a
    Diffie-Hellman key exchange cannot be directly combined with ML-KEM.
    Fortunately, a Diffie-Hellman key agreement can be easily promoted
-   into a KEM Encaps(pk) -> (ss, ct) by having the sender generate an
+   into a KEM.Encaps(pk) -> (ss, ct) by having the sender generate an
    ephemeral keypair for themself and sending their public key as the
    ciphertext ct.  Composite ML-KEM uses a simplified version of the
    DHKEM definition from [RFC9180]:

@@ -31,7 +31,7 @@
     Jinja2 3.1.6
     lxml 6.1.1
     natsort 8.4.0
-    platformdirs 4.10.1
+    platformdirs 4.11.0
     pycountry 24.6.1
     PyYAML 6.0.3
     requests 2.33.1
@@ -71,7 +71,6 @@
   src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-latin-ext.woff2') format('woff2');
   unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
-
 @font-face {
   font-family: 'Lora';
   font-style: italic;
@@ -120,7 +119,6 @@
   src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-latin.woff2') format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
-
 @font-face {
   font-family: 'Lora';
   font-style: normal;
@@ -185,7 +183,6 @@
   font-display: swap;
   src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin.woff2') format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
 }
 
 @font-face {
@@ -1054,11 +1051,11 @@ svg {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">Composite ML-KEM</td>
-<td class="right">July 2026</td>
+<td class="right">August 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Ounsworth, et al.</td>
-<td class="center">Expires 24 January 2027</td>
+<td class="center">Expires 14 February 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1071,12 +1068,12 @@ svg {
 <dd class="internet-draft">draft-ietf-lamps-pq-composite-kem-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-07-23" class="published">23 July 2026</time>
+<time datetime="2026-08-13" class="published">13 August 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-01-24">24 January 2027</time></dd>
+<dd class="expires"><time datetime="2027-02-14">14 February 2027</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1142,7 +1139,7 @@ svg {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 24 January 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 14 February 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1405,14 +1402,14 @@ svg {
       </h2>
 <p id="section-1-1">The advent of quantum computing poses a significant threat to current cryptographic systems because traditional cryptographic key establishment algorithms in common use -- namely the Rivest–Shamir–Adleman cryptosystem in the Optimal Asymmetric Encryption Padding mode (RSA-OAEP), and elliptic curve Diffie-Hellman (ECDH) -- will become vulnerable to quantum attacks.
 Unlike previous migrations between cryptographic algorithms, this migration gives us the foresight that traditional cryptographic algorithms will be broken in the future, but will remain strong in the interim, the only uncertainty is around the timing. But there are also some novel challenges.
-For instance, the aggressive migration timelines may require deploying PQC algorithms before their implementations have been fully hardened or certified, and dual-algorithm data protection may be desirable over a longer time period to hedge against security vulnerabilities and other implementation flaws in the new implementations.<a href="#section-1-1" class="pilcrow">¶</a></p>
-<p id="section-1-2">Cautious implementers may opt to combine cryptographic algorithms in such a way that an attacker would need to break all of them simultaneously to compromise the protected data. These mechanisms are referred to as "Post-Quantum / Traditional (PQ/T) Hybrids" <span>[<a href="#RFC9794" class="cite xref">RFC9794</a>]</span>.<a href="#section-1-2" class="pilcrow">¶</a></p>
+For instance, the aggressive migration timelines may require deploying Post-Quantum Cryptographic algorithms (PQC) before their implementations have been fully hardened or certified, and dual-algorithm data protection may be desirable over a longer time period to hedge against security vulnerabilities and other implementation flaws in the new implementations.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2">Cautious implementers may opt to combine cryptographic algorithms in such a way that an attacker would need to break all of them simultaneously to compromise the protected data. These mechanisms are referred to as "Post-Quantum / Traditional (PQ/T) Hybrids" <span>[<a href="#RFC9794" class="cite xref">RFC9794</a>]</span>. Further discussion of PQ/T Hybrids can be found in <a href="#sec-cons-why-hybrids" class="auto internal xref">Section 9.1</a>.<a href="#section-1-2" class="pilcrow">¶</a></p>
 <p id="section-1-3">This specification defines a specific instantiation of the PQ/T Hybrid paradigm called "composite" where multiple cryptographic algorithms are combined to form a single key encapsulation mechanism (KEM). The composite KEM presents a single public key and ciphertext such that it can be treated as a single atomic algorithm at the protocol level. This provides a property referred to as "protocol backwards compatibility" since it can be applied to protocols that are not explicitly hybrid-aware. The idea of a composite was first presented in <span>[<a href="#Bindel2017" class="cite xref">Bindel2017</a>]</span>.
 Composite algorithms retain some security even if one of their component algorithms is broken, which is discussed in detail in <a href="#sec-cons" class="auto internal xref">Section 9</a>.
 This specification creates PQ/T Hybrids with the Module-Lattice-based Key Encapsulation Mechanism (ML-KEM), defined in <span>[<a href="#FIPS.203" class="cite xref">FIPS.203</a>]</span> as the PQ component.
 Instantiations of the composite ML-KEM scheme are provided based on ML-KEM, RSA-OAEP and ECDH.
 The full list of algorithms registered by this specification is in <a href="#sec-alg-parms" class="auto internal xref">Section 6</a>.
-Application backwards compatibility in the sense of upgraded systems continuing to interoperate with legacy systems is not provided by the mechanisms defined in in this specification; this is discussed further in <a href="#sec-backwards-compat" class="auto internal xref">Section 10.2</a>.<a href="#section-1-3" class="pilcrow">¶</a></p>
+Application backwards compatibility in the sense of upgraded systems continuing to interoperate with legacy systems is not provided by the mechanisms defined in this specification; this is discussed further in <a href="#sec-backwards-compat" class="auto internal xref">Section 10.2</a>.<a href="#section-1-3" class="pilcrow">¶</a></p>
 <p id="section-1-4">Certain jurisdictions have recommended that ML-KEM be used exclusively within a PQ/T hybrid framework. The use of a composite scheme provides a straightforward implementation of hybrid solutions compatible with (and advocated by) some governments and cybersecurity agencies <span>[<a href="#BSI2021" class="cite xref">BSI2021</a>]</span>, <span>[<a href="#ANSSI2024" class="cite xref">ANSSI2024</a>]</span>.<a href="#section-1-4" class="pilcrow">¶</a></p>
 <p id="section-1-5">In some situations it might be possible to add Post-Quantum, via a PQ/T Hybrid, to an already audited and compliant solution without invalidating the existing certification, whereas a full replacement of the traditional cryptography would almost certainly incur regulatory and compliance delays. In other words, PQ/T Hybrids can allow for deploying Post-Quantum Cryptography before the PQ modules and operational procedures are fully audited and certified. This, more than any other requirement, is what motivates the large number of algorithm combinations in this specification: The intention is to provide a stepping stone from which any cryptographic algorithm an organization has deployed today can evolve or transition.<a href="#section-1-5" class="pilcrow">¶</a></p>
 <p id="section-1-6">While this specification registers a large number of composite algorithms, it is expected that organizations will choose to deploy a single composite algorithm, or a small number of composite algorithms, that meets the needs of their environment, and very few implementers will need concern themselves with the entire list. This specification does not specify any mandatory-to-implement algorithms, but <a href="#sec-impl-profile" class="auto internal xref">Section 10.3</a> provides a short-list of recommended composite algorithms for common use-cases.<a href="#section-1-6" class="pilcrow">¶</a></p>
@@ -1480,7 +1477,7 @@ In addition, the following terms are used in this specification:<a href="#sectio
   cryptographic key material suitable for direct use by symmetric
   cryptographic algorithms. This specification is concerned with shared
   secrets established via public key cryptographic operations.<a href="#section-1.1-15" class="pilcrow">¶</a></p>
-<p id="section-1.1-16"><strong>X25519 and X448:</strong> The Edwards Curve Diffie-Hellman scheme defined in <span>[<a href="#RFC7748" class="cite xref">RFC7748</a>]</span> with pramater sets X25519 and X448.<a href="#section-1.1-16" class="pilcrow">¶</a></p>
+<p id="section-1.1-16"><strong>X25519 and X448:</strong> The Edwards Curve Diffie-Hellman scheme defined in <span>[<a href="#RFC7748" class="cite xref">RFC7748</a>]</span> with paramater sets X25519 and X448.<a href="#section-1.1-16" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="notation">
@@ -1628,7 +1625,7 @@ RSAOAEPKEM.Decaps(skR, enc):
 </li>
         </ul>
 <p id="section-2.2-3">In this specification, we consider only the elliptic curve Diffie-Hellman algorithm identified by the OID <code>id-ecDH</code> as defined in <span>[<a href="#RFC5480" class="cite xref">RFC5480</a>]</span> and <span>[<a href="#SEC1" class="cite xref">SEC1</a>]</span>.<a href="#section-2.2-3" class="pilcrow">¶</a></p>
-<p id="section-2.2-4">Note the difference between the API of <code>DH(skX, pkY) -&gt; ss</code> and <code>KEM.Encaps(pk) -&gt; (ss, ct)</code> presented above. For this reason, a Diffie-Hellman key exchange cannot be directly combined with ML-KEM. Fortunately, a Diffie-Hellman key agreement can be easily promoted into a KEM <code>Encaps(pk) -&gt; (ss, ct)</code> by having the sender generate an ephemeral keypair for themself and sending their public key as the ciphertext <code>ct</code>. Composite ML-KEM uses a simplified version of the DHKEM definition from <span>[<a href="#RFC9180" class="cite xref">RFC9180</a>]</span>:<a href="#section-2.2-4" class="pilcrow">¶</a></p>
+<p id="section-2.2-4">Note the difference between the API of <code>DH(skX, pkY) -&gt; ss</code> and <code>KEM.Encaps(pk) -&gt; (ss, ct)</code> presented above. For this reason, a Diffie-Hellman key exchange cannot be directly combined with ML-KEM. Fortunately, a Diffie-Hellman key agreement can be easily promoted into a <code>KEM.Encaps(pk) -&gt; (ss, ct)</code> by having the sender generate an ephemeral keypair for themself and sending their public key as the ciphertext <code>ct</code>. Composite ML-KEM uses a simplified version of the DHKEM definition from <span>[<a href="#RFC9180" class="cite xref">RFC9180</a>]</span>:<a href="#section-2.2-4" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-2.2-5">
 <pre>
 DHKEM.Encaps(pkR):
@@ -3230,7 +3227,7 @@ END
 <a href="#section-9" class="section-number selfRef">9. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
 <p id="section-9-1">The primary security considerations when implementing a composite algorithm are to ensure that the security considerations of all component algorithms have been adhered to, including all recommendations for private key storage and error handling.<a href="#section-9-1" class="pilcrow">¶</a></p>
-<div id="why-hybrids">
+<div id="sec-cons-why-hybrids">
 <section id="section-9.1">
         <h3 id="name-why-hybrids">
 <a href="#section-9.1" class="section-number selfRef">9.1. </a><a href="#name-why-hybrids" class="section-name selfRef">Why Hybrids?</a>
