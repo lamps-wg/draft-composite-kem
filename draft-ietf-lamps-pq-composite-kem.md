@@ -325,7 +325,7 @@ Composite algorithms retain some security even if one of their component algorit
 This specification creates PQ/T Hybrids with the Module-Lattice-based Key Encapsulation Mechanism (ML-KEM), defined in [FIPS.203] as the PQ component.
 Instantiations of the composite ML-KEM scheme are provided based on ML-KEM, RSA-OAEP and ECDH.
 The full list of algorithms registered by this specification is in {{sec-alg-parms}}.
-Application backwards compatibility in the sense of upgraded systems continuing to interoperate with legacy systems is not provided by the mechanisms defined in in this specification; this is discussed further in {{sec-backwards-compat}}.
+Application backwards compatibility in the sense of upgraded systems continuing to interoperate with legacy systems is not provided by the mechanisms defined in this specification; this is discussed further in {{sec-backwards-compat}}.
 
 Certain jurisdictions have recommended that ML-KEM be used exclusively within a PQ/T hybrid framework. The use of a composite scheme provides a straightforward implementation of hybrid solutions compatible with (and advocated by) some governments and cybersecurity agencies [BSI2021], [ANSSI2024].
 
