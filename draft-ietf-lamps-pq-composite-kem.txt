@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 14 February 2027                                        M. Pala
+Expires: 28 February 2027                                        M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                          13 August 2026
+                                                          27 August 2026
 
 
       Composite ML-KEM for use in X.509 Public Key Infrastructure
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 14 February 2027.
+   This Internet-Draft will expire on 28 February 2027.
 
 Copyright Notice
 
@@ -113,7 +113,7 @@ Table of Contents
        9.2.1.  Mini glossary of KEM security notions
        9.2.2.  IND-CCA2 Security of the hybrid scheme
        9.2.3.  Second pre-image resistance of component KEMs
-       9.2.4.  Generifying this construction
+       9.2.4.  Applicability to other component algorithms
      9.3.  Key Reuse
        9.3.1.  Guidance for CAs checking for previous key revocation
      9.4.  Policy for Deprecated and Acceptable Algorithms
@@ -324,7 +324,7 @@ Table of Contents
    Composite algorithms, as defined in this specification, follow the
    definition in [RFC9794] and should be regarded as a single algorithm
    that performs a single cryptographic operation typical of a key
-   establishment mechanism.This generally means that the complexity of
+   establishment mechanism.  This generally means that the complexity of
    combining algorithms can and should be handled by the cryptographic
    library or cryptographic module.  The design intent is that protocols
    such as PKCS#10 [RFC2986], CMP [RFC9810], X.509 [RFC5280], the CMS
@@ -366,7 +366,7 @@ Table of Contents
       secret ss.  Different KEM algorithms differ in how they handle
       decapsulation errors; some will return an error code ("explicit
       rejection"),while others will return a pseudorandomized shared
-      secret key to mask from an attacker than an error occured
+      secret key to mask from an attacker than an error occurred
       ("implicit rejection").  Note: this specification uses Decaps() to
       match [FIPS.203], while [RFC9180] uses Decap().
 
@@ -639,7 +639,7 @@ Table of Contents
    or both component keys from a seed, this process MAY be modified to
    expose an interface of Composite-ML-KEM<OID>.KeyGen(seed) such that
    one component algorithm is generated from the seed and the other from
-   random, or the input seed is cryptohraphically expanded to produce
+   random, or the input seed is cryptographically expanded to produce
    seeds for both components.  Security analysis of such a modified key
    generation process is outside the scope of this document.
 
@@ -2142,7 +2142,7 @@ Table of Contents
    public keys.  Binding the RSA-OAEP ciphertext and public key to the
    internal KDF restores these properties.  Formally, [Starhunters]
    ports the proof of [X-Wing] to cover RSA-OAEP as the traditional
-   compenent in a QSF construction.  [KWW2026] goes further, analyzing a
+   component in a QSF construction.  [KWW2026] goes further, analyzing a
    range of different RSA-based KEMs, including the RSA-OAEP-KEM
    construction used in this specification, concluding that it achieves
    LEAK-BIND-K,PK-CT and C2PRI when the ciphertext is included in the
@@ -2187,12 +2187,12 @@ Table of Contents
    that c != c' will yield a unique ciphertext, and thus restoring
    second pre-image resistance to the overall Composite ML-KEM.
 
-9.2.4.  Generifying this construction
+9.2.4.  Applicability to other component algorithms
 
    It should be clear that the security analysis of the presented KEM
    combiner construction relies heavily on the specific choices of
    component algorithms and combiner KDF, and this combiner construction
-   SHOULD NOT by applied to any other combination of ciphers without
+   SHOULD NOT be applied to any other combination of ciphers without
    performing the appropriate security analysis.
 
 9.3.  Key Reuse
@@ -2247,7 +2247,7 @@ Table of Contents
    Traditionally, a public key or certificate contains a single
    cryptographic algorithm.  If and when an algorithm becomes deprecated
    (for example, RSA-512, or SHA1), the path to deprecating it through
-   policy and removing it from operational environments is, at least is
+   policy and removing it from operational environments is, at least in
    principle, straightforward.
 
    In the composite model this is less obvious since a PQ/T hybrid is
@@ -2319,7 +2319,7 @@ Table of Contents
    status on the strength of the ML-KEM component.  Third, while this is
    outside the scope of this specification, the general composite
    construction could be used to create FIPS certified algorithms that
-   contain a component algorithm from a different jurisdiction.  Third,
+   contain a component algorithm from a different jurisdiction.  Fourth,
    a composite where both components are FIPS-certified could allow an
    implementer to patch one component algorithm while awaiting re-
    certification while continuing to use the overall composite in FIPS
@@ -3097,9 +3097,9 @@ E.1.  X-Wing
    combined KeyGen function to generate the two component private keys
    from the same seed, which gives some additional binding properties.
    This specification takes a more flexible approach of assuming that
-   each component algorithm is generated indpendently is this is
-   expected to be required in many migration scenarios, or where the
-   component primitives are independently validated and certified.
+   each component algorithm is generated independently, which is
+   expected to be required in many migration scenarios, such as where
+   the component primitives are independently validated and certified.
    However, the X-Wing style joint keygen is also allowed, and therefore
    an X-Wing implementation is considered to be a compliant
    implementation of id-MLKEM768-X25519-SHA3-256, but id-
