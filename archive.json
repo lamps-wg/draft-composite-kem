@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-06-30T04:11:50.858501+00:00",
+  "timestamp": "2026-08-27T08:47:34.680929+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -4358,6 +4358,30 @@
           "body": "Corrected in -16, published 15 June 2026",
           "createdAt": "2026-06-28T23:41:50Z",
           "updatedAt": "2026-06-28T23:41:50Z"
+        }
+      ]
+    },
+    {
+      "number": 271,
+      "id": "I_kwDOKRPFO88AAAABOaPI4A",
+      "title": "Linda Dunbar SECDIR Review",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/271",
+      "state": "CLOSED",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "The document is well written, but has many typos.\n\nMinor Issues:\n- Section 3.1.1 allows a modified deterministic\nComposite-ML-KEM<OID>.KeyGen(seed) interface where one component may be\ngenerated from the seed and the other from random, or the input seed may be\ncryptographically expanded to produce seeds for both components. It then says\nthe security analysis of such a modified process is outside the document\u2019s\nscope. Given the strict requirement that both component keys be freshly\ngenerated and not reused, this seems like an important security-sensitive\nextension. It would be nice to add minimum guidance that seed expansion, if\nused, must provide domain separation between component algorithms and composite\nalgorithm identifiers, and must use an approved KDF or DRBG suitable for\ngenerating independent component seeds.\n\n- The draft clearly states that component keys must be freshly generated and\nmust not be reused in standalone or other composite contexts. However, Section\n9.3 says designers are aware that some implementers may be forced to break this\nrule. That is useful realism, but it may read as permission.\n\nNITS:\n  s/pramater sets X25519 and X448/parameter sets X25519 and X448/\n\n  Need a space before \"this\": \u201cmechanism.This generally means\u201d\n\n  s/defined in in this specification/defined in this specification/\n\n  s/than an error occured/that an error occurred/?\n\n  s/cryptohraphically expanded/cryptographically expanded/\n\n  s/SHOULD NOT by applied/SHOULD NOT be applied/?\n\n  s/at least is principle/at least in principle/?\n\n  s/traditional compenent/traditional component/\n\n  What do you mean by saying \"Generifying this construction\"?\n\n  In Section 10.1.1, \u201cThird\u201d appears twice in the sequence of reasons. The\n  second one should probably be \u201cFourth.\n\n  s/ammendments/amendments/\n\n  In Appendix E.1, \u201cindpendently is this is expected\u201d appears to have multiple\n  typos.\n\nBest Regards,\nLinda Dunbar",
+      "createdAt": "2026-08-26T22:29:59Z",
+      "updatedAt": "2026-08-27T01:28:22Z",
+      "closedAt": "2026-08-27T01:28:22Z",
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Response:\n\nHi Linda,\n\nThank you for the careful review of our very long document :)\n\nAbout the split-vs-combined keygen text -- that was a careful balance between people who felt strongly that the composite key should be a single object all the way down into the HSM, people who wanted to continue using their legacy HSM and simply add a PQ HSM next to it, and people who wanted the hybrid KEMs defined in draft-irtf-cfrg-hybrid-kems to be considered compatible and identical to this spec, which required allowing the single-seed keygen. This text was much-bashed during WG and this text is what resulted. As Russ says: \"A compromise is successful when all parties are equally unhappy\". Specifically, I would be hesitant to add any KDF guidance out of fear of subtly disallowing something that the CFRG draft needs.\n\nAbout:\n> That is useful realism, but it may read as permission.\n\nYeah. I also, personally, agree with that comment and would love to rip out that text, but as a compromise to someone who told us point-blank that they are going to do that, they wanted us to clearly document the consequences of violating that normative requirement.\n\nThanks for pointing out all the typos. I'm about to publish -XX which fixes all of those.",
+          "createdAt": "2026-08-26T22:41:02Z",
+          "updatedAt": "2026-08-26T22:43:27Z"
         }
       ]
     }
