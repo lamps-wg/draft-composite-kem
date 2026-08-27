@@ -427,7 +427,7 @@ The algorithm descriptions use python-like syntax. The following symbols deserve
 
 ## Composite Design Philosophy
 
-Composite algorithms, as defined in this specification, follow the definition in [RFC9794] and should be regarded as a single algorithm that performs a single cryptographic operation typical of a key establishment mechanism.This generally means that the complexity of combining algorithms can and should be handled by the cryptographic library or cryptographic module. The design intent is that protocols such as PKCS#10 [RFC2986], CMP [RFC9810], X.509 [RFC5280], the CMS [RFC5652], and the Trust Anchor Format [RFC5914] can treat composite algorithms as they would any other algorithm without the protocol layer to have any "hybrid-awareness". This is a property referred to as "protocol backwards-compatibility".
+Composite algorithms, as defined in this specification, follow the definition in [RFC9794] and should be regarded as a single algorithm that performs a single cryptographic operation typical of a key establishment mechanism. This generally means that the complexity of combining algorithms can and should be handled by the cryptographic library or cryptographic module. The design intent is that protocols such as PKCS#10 [RFC2986], CMP [RFC9810], X.509 [RFC5280], the CMS [RFC5652], and the Trust Anchor Format [RFC5914] can treat composite algorithms as they would any other algorithm without the protocol layer to have any "hybrid-awareness". This is a property referred to as "protocol backwards-compatibility".
 
 Discussion of the specific choices of algorithm pairings can be found in {{sec-rationale}}.
 
@@ -451,7 +451,7 @@ Composite Key Encapsulation Mechanisms are defined as cryptographic primitives t
       secret `ss`. Different KEM algorithms differ in how they handle
       decapsulation errors; some will return an error code
       ("explicit rejection"),while others will return a pseudorandomized
-      shared secret key to mask from an attacker than an error occured
+      shared secret key to mask from an attacker than an error occurred
       ("implicit rejection").
       Note: this specification uses `Decaps()` to match [FIPS.203],
       while {{RFC9180}} uses `Decap()`.
@@ -627,7 +627,7 @@ Key generation is a process that is entirely internal to a cryptographic module,
 
 Implementations MAY modify this process to additionally output the expanded `mlkemSK` or to make use of `ML-KEM.KeyGen_internal(d, z)` as needed to expand the ML-KEM seed `(d || z)` into an expanded key prior to performing a signing operation.
 
-In cases where it is desirable to have a deterministic KeyGen of one or both component keys from a seed, this process MAY be modified to expose an interface of `Composite-ML-KEM<OID>.KeyGen(seed)` such that one component algorithm is generated from the seed and the other from random, or the input seed is cryptohraphically expanded to produce seeds for both components. Security analysis of such a modified key generation process is outside the scope of this document.
+In cases where it is desirable to have a deterministic KeyGen of one or both component keys from a seed, this process MAY be modified to expose an interface of `Composite-ML-KEM<OID>.KeyGen(seed)` such that one component algorithm is generated from the seed and the other from random, or the input seed is cryptographically expanded to produce seeds for both components. Security analysis of such a modified key generation process is outside the scope of this document.
 
 Where interoperable private keys are not required, implementations MAY choose to use a different private key representation than the one given in {{sec-serialize-privkey}}. For example, the component keys MAY be stored in separate cryptographic modules, or MAY be stored in separate PKCS#8 objects, or MAY be stored in a format that preserves the ML-KEM expanded key instead of the ML-KEM seed. The required modifications to the key generation process, as well as the signature generation process below,  to support these private key representations are considered compliant with this specification so long as they generate compatible public keys, and so long as both component keys are freshly-generated. Note that when implementing Composite ML-KEM with a private key format that does not preserve the ML-KEM seed, especially when implementing on top of a cryptographic module that does not support seeds, it will be impossible to reconstruct a compliant seed-based private key as described in {{sec-serialize-privkey}}
 
@@ -1399,7 +1399,7 @@ Informally, a Composite ML-KEM algorithm is secure if the combiner (SHA3) is sec
 
 The security of ML-KEM and DH hybrids is covered in [X-Wing] and requires that the first KEM component (ML-KEM in this construction) is IND-CCA2 and second ciphertext preimage resistant (C2PRI) and that the DH component is nominal group; i.e. a well-behaved elliptic curve DH group, but does not require the traditional component to be IND-CCA. This design choice improves performance by not including the large ML-KEM public key and ciphertext, but means that an implementation error in the ML-KEM component that affects the ciphertext check step of the Fujisaki-Okamoto fujisaki (FO) transform could result in the overall composite no longer achieving IND-CCA2 security. This solution remains IND-CCA2 due to binding the `tradPK` and `tradCT` in the KEM combiner.
 
-The QSF framework presented in [X-Wing] is extended to cover RSA-OAEP as the traditional algorithm in place of DH. Informally we note that that RSA-OAEP is IND-CCA2 secure [RFC8017] but is not C2PRI(aka ciphertext binding) or public key binding since it is mathematically possibly to construct two RSA-OAEP ciphertexts that decapsulate to the same shared secret under the same public key or under different public keys. Binding the RSA-OAEP ciphertext and public key to the internal KDF restores these properties. Formally, [Starhunters] ports the proof of [X-Wing] to cover RSA-OAEP as the traditional compenent in a QSF construction. [KWW2026] goes further, analyzing a range of different RSA-based KEMs, including the RSA-OAEP-KEM construction used in this specification, concluding that it achieves LEAK-BIND-K,PK-CT and C2PRI when the ciphertext is included in the post-processing KDF.
+The QSF framework presented in [X-Wing] is extended to cover RSA-OAEP as the traditional algorithm in place of DH. Informally we note that that RSA-OAEP is IND-CCA2 secure [RFC8017] but is not C2PRI(aka ciphertext binding) or public key binding since it is mathematically possibly to construct two RSA-OAEP ciphertexts that decapsulate to the same shared secret under the same public key or under different public keys. Binding the RSA-OAEP ciphertext and public key to the internal KDF restores these properties. Formally, [Starhunters] ports the proof of [X-Wing] to cover RSA-OAEP as the traditional component in a QSF construction. [KWW2026] goes further, analyzing a range of different RSA-based KEMs, including the RSA-OAEP-KEM construction used in this specification, concluding that it achieves LEAK-BIND-K,PK-CT and C2PRI when the ciphertext is included in the post-processing KDF.
 
 The combiner from the QSF framework cannot be assumed to be secure when used with other KEMs not covered by the above analysis. For example, see {{I-D.irtf-cfrg-hybrid-kems}} for a survey of different KEM combiners offering different security properties.
 
@@ -1413,9 +1413,9 @@ In [X-Wing] it is proven that ML-KEM is a second pre-image resistant KEM and the
 However, since neither RSA-OAEP nor DH guarantee second pre-image resistance at all, even in a correct implementation, these ciphertexts are bound to the key derivation in order to guarantee that `c != c'` will yield a unique ciphertext, and thus restoring second pre-image resistance to the overall Composite ML-KEM.
 
 
-### Generifying this construction
+### Applicability to other component algorithms
 
-It should be clear that the security analysis of the presented KEM combiner construction relies heavily on the specific choices of component algorithms and combiner KDF, and this combiner construction SHOULD NOT by applied to any other combination of ciphers without performing the appropriate security analysis.
+It should be clear that the security analysis of the presented KEM combiner construction relies heavily on the specific choices of component algorithms and combiner KDF, and this combiner construction SHOULD NOT be applied to any other combination of ciphers without performing the appropriate security analysis.
 
 ## Key Reuse {#sec-cons-key-reuse}
 
@@ -1432,7 +1432,7 @@ There is a further implication to key reuse regarding certificate revocation. Up
 
 ## Policy for Deprecated and Acceptable Algorithms
 
-Traditionally, a public key or certificate contains a single cryptographic algorithm. If and when an algorithm becomes deprecated (for example, RSA-512, or SHA1), the path to deprecating it through policy and removing it from operational environments is, at least is principle, straightforward.
+Traditionally, a public key or certificate contains a single cryptographic algorithm. If and when an algorithm becomes deprecated (for example, RSA-512, or SHA1), the path to deprecating it through policy and removing it from operational environments is, at least in principle, straightforward.
 
 In the composite model this is less obvious since a PQ/T hybrid is expected to still be considered valid after the traditional component is deprecated for individual use. As such, a single composite public key or certificate may contain a mixture of deprecated and non-deprecated algorithms. In general this should be manageable through policy by removing OIDs for the standalone component algorithms while still allowing OIDs for composite algorithms. However, complications may arise when the composite implementation needs to invoke the cryptographic module for a deprecated component algorithm. In particular, this could lead to complex Cryptographic Bills of Materials that show implementations of deprecated algorithms still present and being used.
 
@@ -1477,7 +1477,7 @@ The Composite ML-KEM algorithms use SHA3, and so can be certified under [SP.800-
 > least one shared secret (i.e., S_j for some j) is a shared secret generated from the key-
 > establishment methods of SP 800-56A or SP 800-56B, or an approved KEM.
 
-This means that although Composite ML-KEM always places the shared secret key from ML-KEM in the first slot, a Composite ML-KEM can be FIPS certified so long as either component is FIPS certified. This is important for several reasons. First, in the early stages of PQC migration, composites allow for a non-FIPS certified ML-KEM implementation to be added to a module that already has a FIPS certified traditional component, and the resulting composite can be FIPS certified. Second, when eventually RSA and Elliptic Curve are no longer FIPS-allowed, the composite can retain its FIPS certified status on the strength of the ML-KEM component. Third, while this is outside the scope of this specification, the general composite construction could be used to create FIPS certified algorithms that contain a component algorithm from a different jurisdiction. Third, a composite where both components are FIPS-certified could allow an implementer to patch one component algorithm while awaiting re-certification while continuing to use the overall composite in FIPS mode.
+This means that although Composite ML-KEM always places the shared secret key from ML-KEM in the first slot, a Composite ML-KEM can be FIPS certified so long as either component is FIPS certified. This is important for several reasons. First, in the early stages of PQC migration, composites allow for a non-FIPS certified ML-KEM implementation to be added to a module that already has a FIPS certified traditional component, and the resulting composite can be FIPS certified. Second, when eventually RSA and Elliptic Curve are no longer FIPS-allowed, the composite can retain its FIPS certified status on the strength of the ML-KEM component. Third, while this is outside the scope of this specification, the general composite construction could be used to create FIPS certified algorithms that contain a component algorithm from a different jurisdiction. Fourth, a composite where both components are FIPS-certified could allow an implementer to patch one component algorithm while awaiting re-certification while continuing to use the overall composite in FIPS mode.
 
 Note that before [SP800-227] was in force, [SP.800-56Cr2] required the shared secret key from the certified algorithm to be in the first slot and therefore a Composite ML-KEM implementation using a FIPS-certified traditional component and a non-FIPS certified ML-KEM is not believed to be certifiable under [SP.800-56Cr2] alone, and requires the ammendments made by [SP800-227].
 
@@ -1825,7 +1825,7 @@ The following sections go into further detail on specific issues that relate to 
 ## X-Wing
 
 This specification borrows extensively from the analysis and KEM combiner construction presented in [X-Wing]. In particular, X-Wing and id-MLKEM768-X25519-SHA3-256 (specified in this document) are largely interchangeable. The one difference is that X-Wing uses a combined KeyGen function to generate the two component private keys from the same seed, which gives some additional binding properties.
-This specification takes a more flexible approach of assuming that each component algorithm is generated indpendently is this is expected to be required in many migration scenarios, or where the component primitives are independently validated and certified.
+This specification takes a more flexible approach of assuming that each component algorithm is generated independently, which is expected to be required in many migration scenarios, such as where the component primitives are independently validated and certified.
 However, the X-Wing style joint keygen is also allowed, and therefore an X-Wing implementation is considered to be a compliant implementation of id-MLKEM768-X25519-SHA3-256, but id-MLKEM768-X25519-SHA3-256 might not be considered a compliant implementation of X-Wing.
 See {{sec-keygen-mods}} for more discussion.
 
