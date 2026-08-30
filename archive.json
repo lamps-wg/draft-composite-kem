@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-08-27T08:47:34.680929+00:00",
+  "timestamp": "2026-08-30T04:58:30.210890+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -11620,6 +11620,32 @@
       "mergeCommit": {
         "oid": "8cf7d5d3b2b758bbf9cdcc8d31167c09a8af22b0"
       },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 272,
+      "id": "PR_kwDOKRPFO88AAAABBUo0uQ",
+      "title": "Nits flagged in Med's IESG review",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/272",
+      "state": "OPEN",
+      "author": "boucadair",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "* fixed some nits\r\n* better rendering of links to specific sections in a cited RFC\r\n",
+      "createdAt": "2026-08-28T10:00:49Z",
+      "updatedAt": "2026-08-28T10:00:49Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "14f44f4d7b808ceb4cb9474c79833c89a8fdc2b5",
+      "headRepository": "boucadair/draft-composite-kem",
+      "headRefName": "main",
+      "headRefOid": "842121e6224d4af845d9869feb2b01770ce45e2b",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
       "comments": [],
       "reviews": []
     }
