@@ -204,7 +204,7 @@ informative:
   RFC9794:
   RFC9810:
   RFC9935:
-  I-D.draft-irtf-cfrg-hybrid-kems-05:
+  I-D.irtf-cfrg-hybrid-kems:
   TestVectors:
     title: "Test vectors for Composite-ML-KEM"
     target: https://github.com/lamps-wg/draft-composite-kem/tree/main/src
@@ -314,22 +314,23 @@ This document defines combinations of US NIST ML-KEM in hybrid with traditional 
 
 # Introduction {#sec-intro}
 
-The advent of quantum computing poses a significant threat to current cryptographic systems because traditional cryptographic key establishment algorithms in common use -- namely the Rivest–Shamir–Adleman cryptosystem in the Optimal Asymmetric Encryption Padding mode (RSA-OAEP), and elliptic curve Diffie-Hellman (ECDH) -- will become vulnerable to quantum attacks.
-Unlike previous migrations between cryptographic algorithms, this migration gives us the foresight that traditional cryptographic algorithms will be broken in the future, but will remain strong in the interim, the only uncertainty is around the timing. But there are also some novel challenges.
-For instance, the aggressive migration timelines may require deploying Post-Quantum Cryptographic algorithms (PQC) before their implementations have been fully hardened or certified, and dual-algorithm data protection may be desirable over a longer time period to hedge against security vulnerabilities and other implementation flaws in the new implementations.
+The advent of quantum computing poses a significant threat to cryptographic systems because traditional cryptographic key establishment algorithms -- namely the Rivest–Shamir–Adleman (RSA) cryptosystem in the Optimal Asymmetric Encryption Padding mode (RSA-OAEP), and elliptic curve Diffie-Hellman (ECDH) -- will become vulnerable to quantum attacks ({{Section 3 of ?RFC9958}}).
+Unlike previous migrations between cryptographic algorithms, this migration anticipates that traditional cryptographic algorithms will be broken in the future, but will remain strong in the interim, the only uncertainty is around the timing. But there are also some novel challenges.
+For instance, the aggressive migration timelines may require deploying Post-Quantum Cryptographic (PQC) algorithms before their implementations have been fully hardened or certified, and dual-algorithm data protection may be desirable over a longer time period to hedge against security vulnerabilities and other implementation flaws in the new implementations.
 
 Cautious implementers may opt to combine cryptographic algorithms in such a way that an attacker would need to break all of them simultaneously to compromise the protected data. These mechanisms are referred to as "Post-Quantum / Traditional (PQ/T) Hybrids" {{RFC9794}}. Further discussion of PQ/T Hybrids can be found in {{sec-cons-why-hybrids}}.
 
-This specification defines a specific instantiation of the PQ/T Hybrid paradigm called "composite" where multiple cryptographic algorithms are combined to form a single key encapsulation mechanism (KEM). The composite KEM presents a single public key and ciphertext such that it can be treated as a single atomic algorithm at the protocol level. This provides a property referred to as "protocol backwards compatibility" since it can be applied to protocols that are not explicitly hybrid-aware. The idea of a composite was first presented in {{Bindel2017}}.
+This specification defines a specific instantiation of the PQ/T Hybrid approach called "composite" where multiple cryptographic algorithms are combined to form a single key encapsulation mechanism (KEM). The composite KEM presents a single public key and ciphertext such that it can be treated as a single atomic algorithm at the protocol level. This provides a property referred to as "protocol backwards compatibility" since it can be applied to protocols that are not explicitly hybrid-aware. The idea of a composite was first presented in {{Bindel2017}}.
 Composite algorithms retain some security even if one of their component algorithms is broken, which is discussed in detail in {{sec-cons}}.
 This specification creates PQ/T Hybrids with the Module-Lattice-based Key Encapsulation Mechanism (ML-KEM), defined in [FIPS.203] as the PQ component.
 Instantiations of the composite ML-KEM scheme are provided based on ML-KEM, RSA-OAEP and ECDH.
-The full list of algorithms registered by this specification is in {{sec-alg-parms}}.
+The full list of algorithms registered by this specification is provided in {{sec-alg-parms}}.
+
 Application backwards compatibility in the sense of upgraded systems continuing to interoperate with legacy systems is not provided by the mechanisms defined in this specification; this is discussed further in {{sec-backwards-compat}}.
 
-Certain jurisdictions have recommended that ML-KEM be used exclusively within a PQ/T hybrid framework. The use of a composite scheme provides a straightforward implementation of hybrid solutions compatible with (and advocated by) some governments and cybersecurity agencies [BSI2021], [ANSSI2024].
+Certain jurisdictions have recommended that ML-KEM be used exclusively within a PQ/T hybrid framework. The use of a composite scheme provides a straightforward implementation of hybrid solutions compatible with (and advocated by) some governments and cybersecurity agencies (e.g., [BSI2021] and [ANSSI2024]).
 
-In some situations it might be possible to add Post-Quantum, via a PQ/T Hybrid, to an already audited and compliant solution without invalidating the existing certification, whereas a full replacement of the traditional cryptography would almost certainly incur regulatory and compliance delays. In other words, PQ/T Hybrids can allow for deploying Post-Quantum Cryptography before the PQ modules and operational procedures are fully audited and certified. This, more than any other requirement, is what motivates the large number of algorithm combinations in this specification: The intention is to provide a stepping stone from which any cryptographic algorithm an organization has deployed today can evolve or transition.
+In some situations it might be possible to add Post-Quantum, via a PQ/T Hybrid, to an already audited and compliant solution without invalidating the existing certification, whereas a full replacement of the traditional cryptography would almost certainly incur regulatory and compliance delays. In other words, PQ/T Hybrids can allow for deploying PQC before the PQ modules and operational procedures are fully audited and certified. This, more than any other requirement, is what motivates the large number of algorithm combinations in this specification: The intention is to provide a stepping stone from which any cryptographic algorithm an organization has deployed today can evolve or transition.
 
 While this specification registers a large number of composite algorithms, it is expected that organizations will choose to deploy a single composite algorithm, or a small number of composite algorithms, that meets the needs of their environment, and very few implementers will need concern themselves with the entire list. This specification does not specify any mandatory-to-implement algorithms, but {{sec-impl-profile}} provides a short-list of recommended composite algorithms for common use-cases.
 
@@ -369,7 +370,7 @@ In addition, the following terms are used in this specification:
 **DER:**
   Distinguished Encoding Rules as defined in [X.690].
 
-**ECDH**: the Elliptic Curve Diffie-Hellman key agreement scheme defined in section 5.7.1.2 of [SP.800-56Ar3].
+**ECDH**: The Elliptic Curve Diffie-Hellman key agreement scheme defined in Section 5.7.1.2 of [SP.800-56Ar3].
 
 **KEM:**
    A key encapsulation mechanism as defined in {{sec-kems}}.
@@ -433,9 +434,9 @@ Discussion of the specific choices of algorithm pairings can be found in {{sec-r
 
 # Overview of the Composite ML-KEM Scheme {#sec-kems}
 
-Composite ML-KEM is a PQ/T hybrid Key Encapsulation Mechanism (KEM) which combines ML-KEM as specified in [FIPS.203] and {{RFC9935}} with one of RSA-OAEP defined in [RFC8017], the Elliptic Curve Diffie-Hellman key agreement schemes ECDH defined in section 5.7.1.2 of [SP.800-56Ar3], and X25519 / X448 defined in [RFC8410]. A KEM combiner function is used to combine the two component shared secret keys into a single shared secret key.
+Composite ML-KEM is a PQ/T hybrid Key Encapsulation Mechanism (KEM) which combines ML-KEM as specified in [FIPS.203] and {{RFC9935}} with one of RSA-OAEP defined in [RFC8017], the Elliptic Curve Diffie-Hellman key agreement schemes ECDH defined in Section 5.7.1.2 of [SP.800-56Ar3], and X25519 / X448 defined in [RFC8410]. A KEM combiner function is used to combine the two component shared secret keys into a single shared secret key.
 
-Composite Key Encapsulation Mechanisms are defined as cryptographic primitives that consist of three algorithms. These definitions are borrowed from {{RFC9180}}.
+Composite KEMs are defined as cryptographic primitives that consist of three algorithms. These definitions are borrowed from {{RFC9180}}:
 
    *  `KeyGen() -> (pk, sk)`: A probabilistic key generation algorithm,
       which generates a public key `pk` and a secret key `sk`. Some cryptographic modules may also expose a `KeyGen(seed) -> (pk, sk)`, which generates `pk` and `sk` deterministically from a seed. This specification assumes a seed-based keygen for ML-KEM.
@@ -478,13 +479,13 @@ Full definitions of serialization and deserialization algorithms can be found in
 
 ## Promotion of RSA-OAEP into a KEM {#sec-RSAOAEPKEM}
 
-The RSA Optimal Asymmetric Encryption Padding (OAEP), as defined in section 7.1 of [RFC8017] is a public key encryption algorithm used to transport key material from a sender to a receiver. A "key transport" type algorithm has the following API:
+The RSA-OAEP, as defined in {{Section 7.1 of RFC8017}} is a public key encryption algorithm used to transport key material from a sender to a receiver. A "key transport" type algorithm has the following API:
 
    * `Encrypt(pk, ss) -> ct`: Take an existing shared secret key `ss` and encrypt it for `pk`.
 
    * `Decrypt(sk, ct) -> ss`: Decrypt the ciphertext `ct` to recover `ss`.
 
-Note the difference between the API of `RSA.Encrypt(pk, ss) -> ct` and `KEM.Encaps(pk) -> (ss, ct)` presented above. For this reason, RSA-OAEP cannot be directly combined with ML-KEM. Fortunately, a key transport mechanism such as RSA-OAEP can be easily promoted into a KEM by having the sender generate a random 256 bit shared secret key and encrypt it.
+Note the difference between the API of `RSA.Encrypt(pk, ss) -> ct` and `KEM.Encaps(pk) -> (ss, ct)` presented above. For this reason, RSA-OAEP cannot be directly combined with ML-KEM. Fortunately, a key transport mechanism such as RSA-OAEP can be easily promoted into a KEM by having the sender generate a random 256-bit shared secret key and encrypt it.
 
 ~~~
 RSAOAEPKEM.Encaps(pkR):
@@ -531,7 +532,7 @@ DHKEM.Encaps(pkR):
   return ss, ct
 ~~~
 
-`Decaps(sk, ct) -> ss` is accomplished in the analogous way.
+`Decaps(sk, ct) -> ss` is accomplished in the analogous way:
 
 ~~~
 DHKEM.Decaps(skR, ct):
@@ -543,9 +544,9 @@ DHKEM.Decaps(skR, ct):
 
 This construction applies for all variants of elliptic curve Diffie-Hellman used in this specification: ECDH, X25519, and X448.
 
-For ECDH, `DH()` yields the value `Z` as described in section 5.7.1.2 of [SP.800-56Ar3].
+For ECDH, `DH()` yields the value `Z` as described in Section 5.7.1.2 of [SP.800-56Ar3].
 
-For X25519 and X448, `DH()` yields the value `K` as described in section 6 of [RFC7748].
+For X25519 and X448, `DH()` yields the value `K` as described in Section 6 of [RFC7748].
 
 The encodings for the public key (`pkR`), private key (`skR`), and ciphertext (`pkE`) are described in {{sec-serialization}}.
 
@@ -562,7 +563,7 @@ Note that, at least at the time of writing, the algorithm `DHKEM` is not defined
 
 # Composite ML-KEM Functions {#sec-composite-mlkem}
 
-This section describes the composite ML-KEM functions needed to instantiate the public API of a Key Encapsulation Mechanism as defined in {{sec-kems}}.
+This section describes the composite ML-KEM functions needed to instantiate the public API of a KEM as defined in {{sec-kems}}.
 
 ## Key Generation {#sec-keygen}
 
@@ -588,7 +589,7 @@ Implicit Inputs mapped from <OID>:
              parameter set, for example "ML-KEM-768".
 
   Trad       The underlying traditional algorithm and
-             parameter, for example "RSA-OAEP"
+             parameter, for example, "RSA-OAEP"
              or "X25519".
 
 Output:
@@ -605,6 +606,7 @@ Key Generation Process:
     (tradPK, tradSK) = Trad.KeyGen()
 
   2. Check for component key gen failure
+
     if NOT (mlkemPK, mlkemSK) or NOT (tradPK, tradSK):
       output "Key generation error"
 
@@ -616,7 +618,7 @@ Key Generation Process:
 
 ~~~
 
-In order to ensure fresh keys, the key generation functions MUST be executed for both component algorithms. Compliant parties MUST NOT use, import or export component keys that are used in other contexts, combinations, or by themselves as keys for standalone algorithm use. For more details on the security considerations around key reuse, see {{sec-cons-key-reuse}}.
+In order to ensure fresh keys, the key generation functions MUST be executed for both component algorithms. Compliant parties MUST NOT use, import, or export component keys that are used in other contexts, combinations, or by themselves as keys for standalone algorithm use. For more details on the security considerations around key reuse, see {{sec-cons-key-reuse}}.
 
 If one of the component `KeyGen()` routines returns an error, then this error MUST be propagated by the `Composite-ML-KEM.KeyGen()` routine. Further discussion can be found below in {{sec-explicit-rejection}}.
 
@@ -701,7 +703,7 @@ Encap Process:
 
 The specific values for `OID` and `Label` are defined per Composite ML-KEM algorithm in {{sec-alg-parms}}.
 
-Errors produced by the component `Encaps()` routines MUST be forwarded on to the calling application. Further discussion can be found below in {{sec-explicit-rejection}}.
+Errors produced by the component `Encaps()` routines MUST be forwarded on to the calling application. Further discussion can be found in {{sec-explicit-rejection}}.
 
 
 ## Decapsulation {#sect-composite-decaps}
@@ -726,7 +728,7 @@ Implicit inputs mapped from <OID>:
           parameter set, for example "ML-KEM-768".
 
   Trad    The underlying traditional algorithm and
-          parameter set, for example "RSA-OAEP"
+          parameter set, for example, "RSA-OAEP"
           or "X25519".
 
   Label   KEM Combiner Label value for binding the ciphertext to the
@@ -738,7 +740,7 @@ Implicit inputs looked up from SK:
   tradPK  The traditional public key is required for the KEM
           combiner.
           For discussion of where to get this value, see the
-          Operational Consideration section 10.4:
+          Operational Considerations Section (Section 10.4):
           "Decapsulation Requires the Public Key" for more discussion
           on this point.
 
@@ -839,10 +841,10 @@ For all serialization routines below, when these values are required to be carri
 
 While ML-KEM has a single fixed-size representation for each of public key, private key, and ciphertext, the traditional component might allow multiple valid encodings; for example an elliptic curve public key, and therefore also ciphertext, might be validly encoded as either compressed or uncompressed [SEC1], or an RSA private key could be encoded in Chinese Remainder Theorem form [RFC8017]. In order to obtain interoperability, composite algorithms MUST use the following encodings of the underlying components:
 
-* **ML-KEM**: MUST be encoded as specified in sections 7.1 and 7.2 of [FIPS.203], using a 64-byte seed `(d || z)` as the private key.
-* **RSA**: the public key MUST be encoded as RSAPublicKey with the `(n,e)` public key representation as specified in A.1.1 of [RFC8017] and the private key representation as RSAPrivateKey specified in A.1.2 of [RFC8017] with version 0 and 'otherPrimeInfos' absent. An RSA-OAEP ciphertext MUST be encoded as specified in section 7.1.1 of {{RFC8017}}
-* **ECDH**: public key MUST be encoded as an uncompressed elliptic curve point as in section 2.2 of [RFC5480], including the leading byte `0x04` indicating uncompressed encoding and without the ASN.1 OCTET STRING wrapper. This is consistent with the encoding of EC public keys in X9.62 [X9.62–2005]. The private key MUST be encoded as ECPrivateKey specified in [RFC5915] with 'NamedCurve' parameter set to the OID of the curve, but without the 'publicKey' field. The ciphertext MUST be encoded in the same manner as the public key.
-* **X25519 and X448**: the public key MUST be encoded as per section 5 of [RFC7748] and the private key is a 32 or 56 byte raw value for X25519 and X448 respectively. The ciphertext MUST be encoded in the same manner as the public key.
+* **ML-KEM**: MUST be encoded as specified in Sections 7.1 and 7.2 of [FIPS.203], using a 64-byte seed `(d || z)` as the private key.
+* **RSA**: the public key MUST be encoded as RSAPublicKey with the `(n,e)` public key representation as specified in Appendix A.1.1 of [RFC8017] and the private key representation as RSAPrivateKey specified in Appendix A.1.2 of [RFC8017] with version 0 and 'otherPrimeInfos' absent. An RSA-OAEP ciphertext MUST be encoded as specified in Section 7.1.1 of {{RFC8017}}
+* **ECDH**: public key MUST be encoded as an uncompressed elliptic curve point as in {{Section 2.2 of RFC5480}}, including the leading byte `0x04` indicating uncompressed encoding and without the ASN.1 OCTET STRING wrapper. This is consistent with the encoding of EC public keys in X9.62 [X9.62–2005]. The private key MUST be encoded as ECPrivateKey specified in [RFC5915] with 'NamedCurve' parameter set to the OID of the curve, but without the 'publicKey' field. The ciphertext MUST be encoded in the same manner as the public key.
+* **X25519 and X448**: the public key MUST be encoded as per {{Section 5 of RFC7748}} and the private key is a 32- or 56-byte raw value for X25519 and X448 respectively. The ciphertext MUST be encoded in the same manner as the public key.
 
 All ASN.1 objects SHALL be encoded using DER on serialization.
 
@@ -941,8 +943,8 @@ Composite-ML-KEM.SerializePrivateKey(mlkemSeed, tradSK) -> bytes
 
 Explicit inputs:
 
-  mlkemSeed  The ML-KEM private key, which consists of a 32 Byte seed
-             value d concatenated with a 32 Byte seed value z.
+  mlkemSeed  The ML-KEM private key, which consists of a 32-byte seed
+             value d concatenated with a 32-byte seed value z.
 
   tradSK     The traditional private key in the appropriate
              encoding for the underlying component algorithm.
@@ -980,8 +982,8 @@ Implicit inputs:
 
 Output:
 
-  mlkemSeed  The ML-KEM private key, which consists of a 32 Byte seed
-             value d concatenated with a 32 Byte seed value z.
+  mlkemSeed  The ML-KEM private key, which consists of a 32-byte seed
+             value d concatenated with a 32-byte seed value z.
 
   tradSK    The traditional private key in the appropriate
              encoding for the underlying component algorithm.
@@ -989,7 +991,7 @@ Output:
 
 Deserialization Process:
 
-  1. Parse the ML-KEM seed, which is always a 64 byte seed
+  1. Parse the ML-KEM seed, which is always a 64-byte seed
      for all parameter sets.
 
      mlkemSeed = bytes[:64]
@@ -1162,7 +1164,7 @@ kema-MLKEM768-ECDH-P256-SHA3-256 KEM-ALGORITHM ::=
 The full set of key types defined by this specification can be found in the ASN.1 Module in {{sec-asn1-module}}.
 
 
-Use cases that require an interoperable encoding for composite private keys will often need to place a composite private key inside a `OneAsymmetricKey` structure defined in [RFC5958], such as when private keys are carried in PKCS #12 [RFC7292], CMP [RFC9810] or CRMF [RFC4211]. The definition of `OneAsymmetricKey` is copied here for convenience:
+Use cases that require an interoperable encoding for composite private keys will often need to place a composite private key inside a `OneAsymmetricKey` structure defined in [RFC5958], such as when private keys are carried in PKCS #12 [RFC7292], CMP [RFC9810], or CRMF [RFC4211]. The definition of `OneAsymmetricKey` is copied here for convenience:
 
 ~~~ ASN.1
  OneAsymmetricKey ::= SEQUENCE {
@@ -1243,7 +1245,7 @@ Full specifications for the referenced algorithms can be found in {{appdx_compon
 Note: The mask length, according to [RFC8017], is `k - hLen - 1`, where `k` is the size of the RSA modulus. Since the choice of hash function and the RSA key size is fixed for each composite algorithm, implementations could choose to pre-compute and hard-code the mask length.
 
 
-## Rationale for choices {#sec-rationale}
+## Rationale for Choices {#sec-rationale}
 
 
 In generating the list of composite algorithms, the idea was to provide composite algorithms at various security levels with varying performance characteristics.
@@ -1384,7 +1386,7 @@ Each registered Composite ML-KEM algorithm specifies a `Label` -- see {{sec-alg-
 
 
 
-### Mini glossary of KEM security notions
+### Mini Glossary of KEM Security Notions
 
 This mini-glossary contains definitions of security notions that are relevant for the security considerations sections that follow.
 
@@ -1393,9 +1395,9 @@ This mini-glossary contains definitions of security notions that are relevant fo
 **QSF framework**: the hybrid KEM construction defined in [X-Wing] that combines an IND-CCA2 KEM with a C2PRI DH scheme via the combiner `SHA3-256(mlkemSS || tradSS || tradCT || tradPK || Label)`. The QSF framework is used as the basis for this specification with only cosmetic differences such as moving the label to the end in order to be FIPS-compliant (whereas X-Wing has it at the beginning).
 **Binding properties**: a hierarchy of properties introduced in [CDM24] of the form `X-BIND-P-Q` were `𝑋 ∈ {HON, LEAK, MAL}` indicates the strength of the attacker, and `P, Q ∈ {PK, CT, K}` indicates that for a given `P`, it is computationally difficult to find a collision in `Q` with respect to decapsulation with the KEM.
 
-### IND-CCA2 Security of the hybrid scheme {#sec-hybrid-security}
+### IND-CCA2 Security of the Hybrid Scheme {#sec-hybrid-security}
 
-Informally, a Composite ML-KEM algorithm is secure if the combiner (SHA3) is secure, and either ML-KEM is secure or the traditional component (RSA-OAEP, ECDH, X25519 or X448) is secure.
+Informally, a Composite ML-KEM algorithm is secure if the combiner (SHA3) is secure, and either ML-KEM is secure or the traditional component (RSA-OAEP, ECDH, X25519, or X448) is secure.
 
 The security of ML-KEM and DH hybrids is covered in [X-Wing] and requires that the first KEM component (ML-KEM in this construction) is IND-CCA2 and second ciphertext preimage resistant (C2PRI) and that the DH component is nominal group; i.e. a well-behaved elliptic curve DH group, but does not require the traditional component to be IND-CCA. This design choice improves performance by not including the large ML-KEM public key and ciphertext, but means that an implementation error in the ML-KEM component that affects the ciphertext check step of the Fujisaki-Okamoto fujisaki (FO) transform could result in the overall composite no longer achieving IND-CCA2 security. This solution remains IND-CCA2 due to binding the `tradPK` and `tradCT` in the KEM combiner.
 
@@ -1485,7 +1487,7 @@ Note that before [SP800-227] was in force, [SP.800-56Cr2] required the shared se
 
 The term "application backwards compatibility" is used here to mean that existing systems as they are deployed today can interoperate with the upgraded systems of the future.  This draft explicitly does not provide application backwards compatibility, only upgraded systems will understand the OIDs defined in this specification.
 
-These migration and interoperability concerns need to be thought about in the context of various types of protocols that make use of X.509 and PKIX with relation to key establishment and content encryption, from online negotiated protocols such as TLS 1.3 [RFC8446] and IKEv2 [RFC7296], to non-negotiated asynchronous protocols such as S/MIME signed email [RFC8551], as well as myriad other standardized and proprietary protocols and applications that leverage CMS [RFC5652] encrypted structures.
+These migration and interoperability concerns need to be thought about in the context of various types of protocols that make use of X.509 and PKIX with relation to key establishment and content encryption, from online negotiated protocols such as TLS 1.3 {{?RFC9846}} and IKEv2 [RFC7296], to non-negotiated asynchronous protocols such as S/MIME signed email [RFC8551], as well as myriad other standardized and proprietary protocols and applications that leverage CMS [RFC5652] encrypted structures.
 
 
 
@@ -1511,13 +1513,13 @@ In applications that only allow NIST PQC Level 5, it is RECOMMENDED to focus imp
 
 ## Decapsulation Requires the Public Key {#impl-cons-decaps-pubkey}
 
-ML-KEM always requires the public key in order to perform various steps of the Fujisaki-Okamoto decapsulation [FIPS.203], and for this reason the private key encoding specified in FIPS 203 includes the public key.
+ML-KEM always requires the public key in order to perform various steps of the Fujisaki-Okamoto decapsulation [FIPS.203], and for this reason the private key encoding specified in {{FIPS.203}} includes the public key.
 
-Moreover, the KEM combiner as specified in {{sec-kem-combiner}} requires the public key of the traditional component in order to achieve the public-key binding property and ciphertext collision resistance as described in {{sec-cons-kem-combiner}}. Since `tradPK` is not carried in the composite private key encoding, the implementation is required to obtain it from some out-of-band mechanism. This section discusses several options, but is a non-normative, non-exhaustive list.
+Moreover, the KEM combiner as specified in {{sec-kem-combiner}} requires the public key of the traditional component in order to achieve the public-key binding property and ciphertext collision resistance as described in {{sec-cons-kem-combiner}}. Since `tradPK` is not carried in the composite private key encoding, the implementation is required to obtain it from some out-of-band mechanism. This section discusses several options, but is a non-normative, non-exhaustive list:
 
 1. Derive or extract from private key. Many cryptographic modules expose functionality to obtain an RSA or EC public key from the corresponding private key. For applications where such functionality does not exist, {{sec-rsa-pub-from-priv}} and {{sec-ec-pub-from-priv}} provide the suggested mechanisms for extracting the public keys from private keys for RSA and ECDH respectively. It is assumed that this is not required for X25519 or X448 since those private keys are seeds from which the public key can be obtained.
 
-2. Fetch it from an external data source, for example from the public-key certificate corresponding to this private key.
+2. Fetch it from an external data source, for example, from the public-key certificate corresponding to this private key.
 
 3. If the composite KEM private key is being carried within a PKCS#8 OneAsymmetricKey object, place the full composite public key within the optional OneAsymmetricKey.publicKey field, which allows extracting the tradPK (and re-encode as necessary for correctly using it in the KEM Combiner).
 
@@ -1526,7 +1528,7 @@ Moreover, the KEM combiner as specified in {{sec-kem-combiner}} requires the pub
 
 ### Extracting RSAPublicKey from RSAPrivateKey {#sec-rsa-pub-from-priv}
 
-Assuming that the RSA component of the composite private key is encoded as an RSAPrivateKey, as required by this specification, then, quoting from [RFC8017] you have:
+Assuming that the RSA component of the composite private key is encoded as an RSAPrivateKey, as required by this specification, then, quoting from [RFC8017]:
 
 ~~~
 RSAPrivateKey ::= SEQUENCE {
@@ -1543,7 +1545,7 @@ RSAPrivateKey ::= SEQUENCE {
 }
 ~~~
 
-This can trivially be converted into an RSAPublicKey through simple DER decoding / re-encoding since both required values are already present.
+This can be converted into an RSAPublicKey through simple DER decoding / re-encoding since both required values are already present:
 
 ~~~
 RSAPublicKey ::= SEQUENCE {
