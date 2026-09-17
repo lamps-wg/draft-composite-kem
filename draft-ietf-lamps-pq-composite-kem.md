@@ -79,6 +79,7 @@ normative:
   RFC5480:
   RFC5652:
   RFC5869:
+  RFC5912:
   RFC5915:
   RFC5958:
   RFC7748:
@@ -86,6 +87,17 @@ normative:
   #RFC8174: -- does not need to be explicit; added by bcp14 boilerplateu
   RFC8410:
   RFC9629:
+  X680:
+    target: https://www.itu.int/rec/T-REC-X.680
+    title: >
+      Information technology - Abstract Syntax Notation One (ASN.1):
+      Specification of basic notation
+    date: 2021-02
+    author:
+    -  org: ITU-T
+    seriesinfo:
+      ITU-T Recommendation: X.680
+      ISO/IEC: 8824-1:2021
   X.690:
       title: "Information technology - ASN.1 encoding Rules: Specification of Basic Encoding Rules (BER), Canonical Encoding Rules (CER) and Distinguished Encoding Rules (DER)"
       date: November 2015
@@ -1258,6 +1270,7 @@ While it may seem odd to use 256-bit outputs at all security levels, this aligns
 
 
 # ASN.1 Module {#sec-asn1-module}
+This section includes the ASN.1 module [X680] for Composite ML-KEM and uses the Basic Encoding Rules (BER) and the Distinguished Encoding Rules (DER) [X690]. This module imports objects from [RFC5912] and [RFC9629].
 
 ~~~ ASN.1
 
