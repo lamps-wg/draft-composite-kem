@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-09-03T04:01:46.309635+00:00",
+  "timestamp": "2026-09-20T04:32:43.655307+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -4382,6 +4382,32 @@
           "body": "Response:\n\nHi Linda,\n\nThank you for the careful review of our very long document :)\n\nAbout the split-vs-combined keygen text -- that was a careful balance between people who felt strongly that the composite key should be a single object all the way down into the HSM, people who wanted to continue using their legacy HSM and simply add a PQ HSM next to it, and people who wanted the hybrid KEMs defined in draft-irtf-cfrg-hybrid-kems to be considered compatible and identical to this spec, which required allowing the single-seed keygen. This text was much-bashed during WG and this text is what resulted. As Russ says: \"A compromise is successful when all parties are equally unhappy\". Specifically, I would be hesitant to add any KDF guidance out of fear of subtly disallowing something that the CFRG draft needs.\n\nAbout:\n> That is useful realism, but it may read as permission.\n\nYeah. I also, personally, agree with that comment and would love to rip out that text, but as a compromise to someone who told us point-blank that they are going to do that, they wanted us to clearly document the consequences of violating that normative requirement.\n\nThanks for pointing out all the typos. I'm about to publish -XX which fixes all of those.",
           "createdAt": "2026-08-26T22:41:02Z",
           "updatedAt": "2026-08-26T22:43:27Z"
+        }
+      ]
+    },
+    {
+      "number": 273,
+      "id": "I_kwDOKRPFO88AAAABR2glfw",
+      "title": "Address DISCUSS from Eric and Roman",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/273",
+      "state": "OPEN",
+      "author": "johngray-dev",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [
+        "johngray-dev"
+      ],
+      "labels": [],
+      "body": "See:  [https://datatracker.ietf.org/doc/draft-ietf-lamps-pq-composite-kem/ballot/__;!!FJ-Y8qCqXTj2!ZL-5Mt6UIfjx8S1elvoLfNlmY5iA6gi9hxXvEuGEJwRObxlh5k-rw1enoLMYlNksUnFnMevB_B6ccKVENSs$](https://urldefense.com/v3/__https://datatracker.ietf.org/doc/draft-ietf-lamps-pq-composite-kem/ballot/__;!!FJ-Y8qCqXTj2!ZL-5Mt6UIfjx8S1elvoLfNlmY5iA6gi9hxXvEuGEJwRObxlh5k-rw1enoLMYlNksUnFnMevB_B6ccKVENSs$)\n\nRuss\n\nWe can address the DISCUSS from Eric Vyncke with an update or do nothing.\u00a0 \u00a0At most we can add a clarifying sentence in the appendix stating that normative text is used.\u00a0\n\nThe argument for doing nothing (in regard to the DISCUSS):\u00a0 \u00a0I read through both RFC 2119 and 8174 and It doesn't say normative text can't be used in appendixes, and it doesn't say that by default appendixes don't use normative text (from my read BCP14 says nothing about use in appendices).\u00a0 Maybe that has become a convention for most documents, but it isn't spelled out anywhere that I can see.\u00a0 \u00a0The text below is already in the document:\n\nThe key words \"MUST\", \"MUST NOT\", \"REQUIRED\", \"SHALL\", \"SHALL\n \u00a0 \u00a0 \u00a0NOT\", \"SHOULD\", \"SHOULD NOT\", \"RECOMMENDED\", \"NOT RECOMMENDED\",\n \u00a0 \u00a0 \u00a0\"MAY\", and \"OPTIONAL\" in this document are to be interpreted as\n \u00a0 \u00a0 \u00a0described in BCP 14 [RFC2119] [RFC8174] when, and only when, they\n \u00a0 \u00a0 \u00a0appear in all capitals, as shown here.  These words may also appear in this\n \u00a0 document in lower case as plain English words, absent their normative\n \u00a0 meanings.\n\nAnyway, we can add a sentence if that helps make it read more clearly.\u00a0 \u00a0That should address Eric's DISCUSS\n\nWe will address the nits with an update.\u00a0\n\nI see Roman has one about the ASN.1:\u00a0 I think we just do as he suggests and add those references to [X680]",
+      "createdAt": "2026-09-17T21:38:29Z",
+      "updatedAt": "2026-09-17T22:53:22Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I added the DISCUSS changes by ROMAN in a pull request",
+          "createdAt": "2026-09-17T22:53:22Z",
+          "updatedAt": "2026-09-17T22:53:22Z"
         }
       ]
     }
@@ -11648,6 +11674,32 @@
       "mergeCommit": {
         "oid": "eaa0674e3fc2deb3d3aa057cdfa53a2d11750c8b"
       },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 274,
+      "id": "PR_kwDOKRPFO88AAAABEAPUew",
+      "title": "DISCUSS Changes suggested by Roman",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/274",
+      "state": "OPEN",
+      "author": "johngray-dev",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Discuss changes by Roman",
+      "createdAt": "2026-09-17T22:54:37Z",
+      "updatedAt": "2026-09-17T22:54:38Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "eaa0674e3fc2deb3d3aa057cdfa53a2d11750c8b",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "273_Roman",
+      "headRefOid": "ca39489fae82bb6071ee492bab2071c7275bf1e9",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
       "comments": [],
       "reviews": []
     }
