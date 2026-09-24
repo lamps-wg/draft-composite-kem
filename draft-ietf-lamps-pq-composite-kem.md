@@ -1606,7 +1606,7 @@ The sizes listed below are maximum values: several factors could cause fluctuati
 
 By contrast, ML-KEM values are always fixed size, so composite values can always be correctly de-serialized based on the size of the ML-KEM component.
 
-Size values marked with an asterisk (*) in the table are not fixed but maximum possible values for the composite key or ciphertext. Implementations MUST NOT perform strict length checking based on such values.
+Size values marked with an asterisk (*) in the table are not fixed but maximum possible values for the composite key or ciphertext. Implementations should be careful when performing length checking based on such values.
 
 Non-hybrid ML-KEM is included for reference.
 
