@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 5 March 2027                                            M. Pala
+Expires: 28 March 2027                                           M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                        1 September 2026
+                                                       24 September 2026
 
 
       Composite ML-KEM for use in X.509 Public Key Infrastructure
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 5 March 2027.
+   This Internet-Draft will expire on 28 March 2027.
 
 Copyright Notice
 
@@ -1633,6 +1633,11 @@ Table of Contents
 
 7.  ASN.1 Module
 
+   This section includes the ASN.1 module [X680] for Composite ML-KEM
+   and uses the Basic Encoding Rules (BER) and the Distinguished
+   Encoding Rules (DER) [X690].  This module imports objects from
+   [RFC5912] and [RFC9629].
+
    <CODE STARTS>
 
    Composite-MLKEM-2025
@@ -2529,6 +2534,11 @@ Table of Contents
               DOI 10.17487/RFC5869, May 2010,
               <https://www.rfc-editor.org/info/rfc5869>.
 
+   [RFC5912]  Hoffman, P. and J. Schaad, "New ASN.1 Modules for the
+              Public Key Infrastructure Using X.509 (PKIX)", RFC 5912,
+              DOI 10.17487/RFC5912, June 2010,
+              <https://www.rfc-editor.org/info/rfc5912>.
+
    [RFC5915]  Turner, S. and D. Brown, "Elliptic Curve Private Key
               Structure", RFC 5915, DOI 10.17487/RFC5915, June 2010,
               <https://www.rfc-editor.org/info/rfc5915>.
@@ -2601,6 +2611,11 @@ Table of Contents
               Connolly, D., Ounsworth, M., Schmieg, S., and D. Stebila,
               "StarHunters— Secure Hybrid Post-Quantum KEMs From IND-
               CCA2 PKEs", 2026, <https://eprint.iacr.org/2026/427>.
+
+   [X680]     ITU-T, "Information technology - Abstract Syntax Notation
+              One (ASN.1): Specification of basic notation", ITU-T
+              Recommendation X.680, ISO/IEC 8824-1:2021, February 2021,
+              <https://www.itu.int/rec/T-REC-X.680>.
 
    [X-Wing]   Barbosa, M., Connolly, D., Duarte, J., Kaiser, A.,
               Schwabe, P., Varner, K., and B. Westerbaan, "X-Wing The
