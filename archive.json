@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-09-20T04:32:43.655307+00:00",
+  "timestamp": "2026-09-27T04:55:33.041752+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -11682,25 +11682,83 @@
       "id": "PR_kwDOKRPFO88AAAABEAPUew",
       "title": "DISCUSS Changes suggested by Roman",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/274",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "johngray-dev",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Discuss changes by Roman",
       "createdAt": "2026-09-17T22:54:37Z",
-      "updatedAt": "2026-09-17T22:54:38Z",
+      "updatedAt": "2026-09-24T16:00:01Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "eaa0674e3fc2deb3d3aa057cdfa53a2d11750c8b",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "273_Roman",
       "headRefOid": "ca39489fae82bb6071ee492bab2071c7275bf1e9",
+      "closedAt": "2026-09-24T15:59:28Z",
+      "mergedAt": "2026-09-24T15:59:28Z",
+      "mergedBy": "johngray-dev",
+      "mergeCommit": {
+        "oid": "98611ae13e3184997117ece57ae0f9b4410f9d3d"
+      },
+      "comments": [
+        {
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I merged it.  Thanks Mike.\r\n\r\nJohn Gray\r\n\r\n________________________________\r\nFrom: Mike Ounsworth ***@***.***>\r\nSent: Thursday, September 24, 2026 11:56 AM\r\nTo: lamps-wg/draft-composite-kem ***@***.***>\r\nCc: John Gray ***@***.***>; Author ***@***.***>\r\nSubject: [EXTERNAL] Re: [lamps-wg/draft-composite-kem] DISCUSS Changes suggested by Roman (PR #274)\r\n\r\n@\u200aounsworth approved this pull request. Easy change. Merge it! \u2014 Reply to this email directly, view it on GitHub, or unsubscribe. Triage notifications, keep track of coding agent tasks and review pull requests on the go with GitHub Mobile\r\n\r\n\r\n@ounsworth approved this pull request.\r\n\r\nEasy change. Merge it!\r\n\r\n\u2014\r\nReply to this email directly, view it on GitHub<https://urldefense.com/v3/__https://github.com/lamps-wg/draft-composite-kem/pull/274?email_source=notifications&email_token=ANFGAWNF4O6G3BVYCVSEKAL5QU72PA5CNFSNUABKM5UWIORPF5TWS5BNNB2WEL2QOVWGYUTFOF2WK43UKJSXM2LFO4XTKMZQGY4DKMRTHA22M4TFMFZW63VGMF2XI2DPOKSWK5TFNZ2KYZTPN52GK4S7MNWGSY3L*pullrequestreview-5306852385__;Iw!!FJ-Y8qCqXTj2!ZvhZ4Ag_Cp3R0d3cPKoFDelGE2tNqkgvFoLYULAolIhH3M4T14GtR0SQ8dntcqtunGAH2CJluSgXavv6eiJshHLK1Q$>, or unsubscribe<https://urldefense.com/v3/__https://github.com/notifications/unsubscribe-auth/ANFGAWI6NSKWZH76RTBZLML5QU72PAVCNFSNUABFKJSXA33TNF2G64TZHM3DQOJRGYYTKMZRHNEXG43VMU5TKNBZGM2TCNBUG4Z2C5QC__;!!FJ-Y8qCqXTj2!ZvhZ4Ag_Cp3R0d3cPKoFDelGE2tNqkgvFoLYULAolIhH3M4T14GtR0SQ8dntcqtunGAH2CJluSgXavv6eiJvgktbDg$>.\r\nTriage notifications, keep track of coding agent tasks and review pull requests on the go with GitHub Mobile for iOS<https://urldefense.com/v3/__https://github.com/notifications/mobile/ios/ANFGAWKOV3CEV2YHG5L7JST5QU72PA5CNFSNUABKM5UWIORPF5TWS5BNNB2WEL2QOVWGYUTFOF2WK43UKJSXM2LFO4XTKMZQGY4DKMRTHA22M4TFMFZW63VGMF2XI2DPOKSWK5TFNZ2KUZTPN52GK4S7NFXXG__;!!FJ-Y8qCqXTj2!ZvhZ4Ag_Cp3R0d3cPKoFDelGE2tNqkgvFoLYULAolIhH3M4T14GtR0SQ8dntcqtunGAH2CJluSgXavv6eiIZFiTaeQ$> and Android<https://urldefense.com/v3/__https://github.com/notifications/mobile/android/ANFGAWLGPSHDWQH4X5STW435QU72PA5CNFSNUABKM5UWIORPF5TWS5BNNB2WEL2QOVWGYUTFOF2WK43UKJSXM2LFO4XTKMZQGY4DKMRTHA22M4TFMFZW63VGMF2XI2DPOKSWK5TFNZ2K4ZTPN52GK4S7MFXGI4TPNFSA__;!!FJ-Y8qCqXTj2!ZvhZ4Ag_Cp3R0d3cPKoFDelGE2tNqkgvFoLYULAolIhH3M4T14GtR0SQ8dntcqtunGAH2CJluSgXavv6eiLQLqxaSA$>. Download it today!\r\nYou are receiving this because you authored the thread.Message ID: ***@***.***>\r\n\r\nAny email and files/attachments transmitted with it are intended solely for the use of the individual or entity to whom they are addressed. If this message has been sent to you in error, you must not copy, distribute or disclose of the information it contains. Please notify Entrust immediately and delete the message from your system.\r\n\r\n",
+          "createdAt": "2026-09-24T16:00:01Z",
+          "updatedAt": "2026-09-24T16:00:01Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO88AAAABPFAkIQ",
+          "commit": {
+            "abbreviatedOid": "ca39489"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "Easy change. Merge it!",
+          "createdAt": "2026-09-24T15:56:02Z",
+          "updatedAt": "2026-09-24T15:56:02Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 275,
+      "id": "PR_kwDOKRPFO88AAAABE91qfg",
+      "title": "Addressing \u00c9ric Vyncke's DISCUSS about a MUST NOT in appdx",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/275",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-09-24T16:11:10Z",
+      "updatedAt": "2026-09-24T18:16:06Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "98611ae13e3184997117ece57ae0f9b4410f9d3d",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "ounsworth-iesg-eric",
+      "headRefOid": "323f980a7f9e3f9387cdac8edf7c16f459588200",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "areolamos",
+          "authorAssociation": "NONE",
+          "body": "Hi everyone,\r\n\r\nRegarding \u00c9ric Vyncke's point on issue #275 about why a specific \"MUST NOT\" (N\u00c3O DEVE) practice should remain strictly outside of appendices:\r\n\r\nI completely agree with this approach. Appendices are often treated as optional or supplementary reading, which risks diluting the critical importance of a strict restriction. \r\n\r\nTo put this into perspective, we can think of it like **electrical safety standards**. In electrical engineering and installations, critical safety rules\u2014such as grounding requirements or handling high-voltage equipment\u2014are never left to \"optional notes\" or appendices. They are placed front and center because lacking proper knowledge or bypassing standard protocols directly compromises structural security and human life. \r\n\r\nThe same level of discipline applies here. By keeping this \"MUST NOT\" directive in the core framework rather than burying it in an appendix, we ensure that:\r\n* **Awareness is guaranteed:** Everyone reading the documentation encounters the restriction immediately.\r\n* **Safety and compliance are non-negotiable:** It prevents developers or technicians from skipping vital boundaries.\r\n\r\nA clean, safe, and robust implementation depends entirely on this visibility. Looking forward to hearing more thoughts on this!\r\n",
+          "createdAt": "2026-09-24T18:16:05Z",
+          "updatedAt": "2026-09-24T18:16:05Z"
+        }
+      ],
       "reviews": []
     }
   ]
