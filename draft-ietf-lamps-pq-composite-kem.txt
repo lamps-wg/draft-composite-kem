@@ -471,9 +471,9 @@ Table of Contents
    *  DH(skX, pkY) -> ss: Each party combines their secret key skX with
       the other party's public key pkY.
 
-   In this specification, we consider only the elliptic curve Diffie-
-   Hellman algorithm identified by the OID id-ecDH as defined in
-   [RFC5480] and [SEC1].
+   This specification only considers the elliptic curve Diffie-Hellman
+   algorithm identified by the OID id-ecDH as defined in [RFC5480] and
+   [SEC1].
 
    Note the difference between the API of DH(skX, pkY) -> ss and
    KEM.Encaps(pk) -> (ss, ct) presented above.  For this reason, a
@@ -2067,13 +2067,12 @@ Table of Contents
    The primary security property of the KEM combiner is that it
    preserves indistinguishable (adaptive) chosen-ciphertext (IND-CCA2)
    security of the overall Composite ML-KEM so long as at least one
-   component is IND-CCA2 [X-Wing] [GHP18].  Additionally, we also need
-   to consider the case where one of the component algorithms is
-   completely broken; that the private key is known to an attacker.  In
-   this case, we rely on the construction of the KEM combiner to ensure
-   that the value of the other shared secret key cannot be leaked or the
-   combined shared secret key predicted via manipulation of the broken
-   algorithm.
+   component is IND-CCA2 [X-Wing] [GHP18].  Additionally, also consider
+   the case where one of the component algorithms is completely broken;
+   that the private key is known to an attacker.  In this case, rely on
+   the construction of the KEM combiner to ensure that the value of the
+   other shared secret key cannot be leaked or the combined shared
+   secret key predicted via manipulation of the broken algorithm.
 
    Each registered Composite ML-KEM algorithm specifies a Label -- see
    Section 6.  Given that each Composite ML-KEM algorithm fully
@@ -2139,19 +2138,18 @@ Table of Contents
    and tradCT in the KEM combiner.
 
    The QSF framework presented in [X-Wing] is extended to cover RSA-OAEP
-   as the traditional algorithm in place of DH.  Informally we note that
-   that RSA-OAEP is IND-CCA2 secure [RFC8017] but is not C2PRI(aka
-   ciphertext binding) or public key binding since it is mathematically
-   possibly to construct two RSA-OAEP ciphertexts that decapsulate to
-   the same shared secret under the same public key or under different
-   public keys.  Binding the RSA-OAEP ciphertext and public key to the
-   internal KDF restores these properties.  Formally, [Starhunters]
-   ports the proof of [X-Wing] to cover RSA-OAEP as the traditional
-   component in a QSF construction.  [KWW2026] goes further, analyzing a
-   range of different RSA-based KEMs, including the RSA-OAEP-KEM
-   construction used in this specification, concluding that it achieves
-   LEAK-BIND-K,PK-CT and C2PRI when the ciphertext is included in the
-   post-processing KDF.
+   as the traditional algorithm in place of DH.  Informally, RSA-OAEP is
+   IND-CCA2 secure [RFC8017] but is not C2PRI(aka ciphertext binding) or
+   public key binding since it is mathematically possibly to construct
+   two RSA-OAEP ciphertexts that decapsulate to the same shared secret
+   under the same public key or under different public keys.  Binding
+   the RSA-OAEP ciphertext and public key to the internal KDF restores
+   these properties.  Formally, [Starhunters] ports the proof of
+   [X-Wing] to cover RSA-OAEP as the traditional component in a QSF
+   construction.  [KWW2026] goes further, analyzing a range of different
+   RSA-based KEMs, including the RSA-OAEP-KEM construction used in this
+   specification, concluding that it achieves LEAK-BIND-K,PK-CT and
+   C2PRI when the ciphertext is included in the post-processing KDF.
 
    The combiner from the QSF framework cannot be assumed to be secure
    when used with other KEMs not covered by the above analysis.  For
@@ -2165,9 +2163,9 @@ Table of Contents
    difficult to find two different ciphertexts c != c' that will
    decapsulate to the same shared secret key under the same public key.
    For the purposes of a hybrid KEM combiner, this property means that
-   given two composite ciphertexts (c1, c2) and (c1', c2'), we must
-   obtain a unique overall shared secret key so long as either c1 != c1'
-   or c2 != c2' -- i.e. the overall Composite ML-KEM is ciphertext
+   given two composite ciphertexts (c1, c2) and (c1', c2'), a unique
+   overall shared secret key must be obtained so long as either c1 !=
+   c1' or c2 != c2' -- i.e. the overall Composite ML-KEM is ciphertext
    second pre-image resistant, and therefore secure so long as one of
    the component KEMs is secure.
 
@@ -2215,15 +2213,15 @@ Table of Contents
    security and therefore often tolerated.  However this reasoning does
    not hold in the PQ/T hybrid setting.
 
-   Within the broader context of PQ/T hybrids, we need to consider new
-   attack surfaces that arise due to the hybrid constructions and did
-   not exist in single-algorithm contexts.  One of these is key reuse
-   where the component keys within a hybrid are also used by themselves
-   within a single-algorithm context.  For example, it might be tempting
-   for an operator to take already-deployed RSA keys and add an ML-KEM
-   key to them to form a hybrid.  Within a hybrid signature context this
-   leads to a class of attacks referred to as "stripping attacks" where
-   one component signature can be extracted and presented as a single-
+   Within the broader context of PQ/T hybrids, new attack surfaces need
+   to be considered due to the hybrid constructions that did not exist
+   in single-algorithm contexts.  One of these is key reuse where the
+   component keys within a hybrid are also used by themselves within a
+   single-algorithm context.  For example, it might be tempting for an
+   operator to take already-deployed RSA keys and add an ML-KEM key to
+   them to form a hybrid.  Within a hybrid signature context this leads
+   to a class of attacks referred to as "stripping attacks" where one
+   component signature can be extracted and presented as a single-
    algorithm signature.  Hybrid KEMs using a concatenation-style KEM
    combiner, as is done in this specification, do not have the analogous
    attack surface because even if an attacker is able to extract and
