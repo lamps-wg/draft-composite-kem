@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-09-27T04:55:33.041752+00:00",
+  "timestamp": "2026-10-08T05:39:00.085226+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -4410,6 +4410,22 @@
           "updatedAt": "2026-09-17T22:53:22Z"
         }
       ]
+    },
+    {
+      "number": 276,
+      "id": "I_kwDOKRPFO88AAAABVYl1NQ",
+      "title": "Wrong OID DER encoding (from Manuel Krebs on Mailing List)",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/issues/276",
+      "state": "CLOSED",
+      "author": "janklaussner",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "I might have found an inconsistency in the draft in Appendix C. The given DER encodings of the algorithm identifiers there for ML-KEM-768 and ML-KEM-1024 seem to be invalid, e.g. \n*ML-KEM-768*\n\n   ASN.1:\n     algorithm AlgorithmIdentifier ::= {\n       algorithm id-alg-ml-kem-768   -- (2.16.840.1.101.3.4.4.2)\n       }\n\n   DER:\n     30 0B 06 *07* 60 86 48 01 65 03 04 04 02\n\n\nHere, the length byte of the encoded OID value is wrong. It should read \"09\" instead of \"07\". The ML-KEM-1024 algorithm is also affected.\n\n",
+      "createdAt": "2026-10-06T14:22:08Z",
+      "updatedAt": "2026-10-06T14:38:10Z",
+      "closedAt": "2026-10-06T14:38:10Z",
+      "comments": []
     }
   ],
   "pulls": [
@@ -11732,33 +11748,63 @@
       "id": "PR_kwDOKRPFO88AAAABE91qfg",
       "title": "Addressing \u00c9ric Vyncke's DISCUSS about a MUST NOT in appdx",
       "url": "https://github.com/lamps-wg/draft-composite-kem/pull/275",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "ounsworth",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2026-09-24T16:11:10Z",
-      "updatedAt": "2026-09-24T18:16:06Z",
+      "updatedAt": "2026-10-06T14:15:04Z",
       "baseRepository": "lamps-wg/draft-composite-kem",
       "baseRefName": "main",
       "baseRefOid": "98611ae13e3184997117ece57ae0f9b4410f9d3d",
       "headRepository": "lamps-wg/draft-composite-kem",
       "headRefName": "ounsworth-iesg-eric",
       "headRefOid": "323f980a7f9e3f9387cdac8edf7c16f459588200",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2026-10-06T14:15:04Z",
+      "mergedAt": "2026-10-06T14:15:03Z",
+      "mergedBy": "johngray-dev",
+      "mergeCommit": {
+        "oid": "30a68d51bba06cf5690c5023cea69b408f09e16a"
+      },
       "comments": [
         {
-          "author": "areolamos",
+          "author": null,
           "authorAssociation": "NONE",
           "body": "Hi everyone,\r\n\r\nRegarding \u00c9ric Vyncke's point on issue #275 about why a specific \"MUST NOT\" (N\u00c3O DEVE) practice should remain strictly outside of appendices:\r\n\r\nI completely agree with this approach. Appendices are often treated as optional or supplementary reading, which risks diluting the critical importance of a strict restriction. \r\n\r\nTo put this into perspective, we can think of it like **electrical safety standards**. In electrical engineering and installations, critical safety rules\u2014such as grounding requirements or handling high-voltage equipment\u2014are never left to \"optional notes\" or appendices. They are placed front and center because lacking proper knowledge or bypassing standard protocols directly compromises structural security and human life. \r\n\r\nThe same level of discipline applies here. By keeping this \"MUST NOT\" directive in the core framework rather than burying it in an appendix, we ensure that:\r\n* **Awareness is guaranteed:** Everyone reading the documentation encounters the restriction immediately.\r\n* **Safety and compliance are non-negotiable:** It prevents developers or technicians from skipping vital boundaries.\r\n\r\nA clean, safe, and robust implementation depends entirely on this visibility. Looking forward to hearing more thoughts on this!\r\n",
           "createdAt": "2026-09-24T18:16:05Z",
           "updatedAt": "2026-09-24T18:16:05Z"
         }
       ],
+      "reviews": []
+    },
+    {
+      "number": 277,
+      "id": "PR_kwDOKRPFO88AAAABG7qvkA",
+      "title": "Fixes OID DER encodings for ML-KEM-786 and ML-KEM-1024.",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/277",
+      "state": "MERGED",
+      "author": "janklaussner",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-10-06T14:27:54Z",
+      "updatedAt": "2026-10-06T14:38:09Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "30a68d51bba06cf5690c5023cea69b408f09e16a",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "276-wrong-oid-der-encoding-from-manuel-krebs-on-mailing-list",
+      "headRefOid": "741cf1926e5bdbbcb0db71cd841f25927018fe46",
+      "closedAt": "2026-10-06T14:38:09Z",
+      "mergedAt": "2026-10-06T14:38:09Z",
+      "mergedBy": "johngray-dev",
+      "mergeCommit": {
+        "oid": "93caabe3866c0c17155062509c2741162cc5adc6"
+      },
+      "comments": [],
       "reviews": []
     }
   ]
