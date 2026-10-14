@@ -209,7 +209,6 @@ informative:
   RFC7292:
   RFC7296:
   RFC8411:
-  RFC8446:
   RFC8551:
   RFC9180:
   RFC9690:
@@ -1270,7 +1269,7 @@ While it may seem odd to use 256-bit outputs at all security levels, this aligns
 
 
 # ASN.1 Module {#sec-asn1-module}
-This section includes the ASN.1 module [X680] for Composite ML-KEM and uses the Basic Encoding Rules (BER) and the Distinguished Encoding Rules (DER) [X690]. This module imports objects from [RFC5912] and [RFC9629].
+This section includes the ASN.1 module [X680] for Composite ML-KEM and uses the Basic Encoding Rules (BER) and the Distinguished Encoding Rules (DER) [X.690]. This module imports objects from [RFC5912] and [RFC9629].
 
 ~~~ ASN.1
 
