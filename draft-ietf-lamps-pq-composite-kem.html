@@ -1055,7 +1055,7 @@ svg {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Ounsworth, et al.</td>
-<td class="center">Expires 9 April 2027</td>
+<td class="center">Expires 17 April 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1068,12 +1068,12 @@ svg {
 <dd class="internet-draft">draft-ietf-lamps-pq-composite-kem-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-10-06" class="published">6 October 2026</time>
+<time datetime="2026-10-14" class="published">14 October 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-04-09">9 April 2027</time></dd>
+<dd class="expires"><time datetime="2027-04-17">17 April 2027</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1139,7 +1139,7 @@ svg {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 9 April 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 17 April 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -2247,7 +2247,7 @@ Deserialization Process:
 public key appears outside of a <code>SubjectPublicKeyInfo</code> type in an
 environment that uses ASN.1 encoding, it could be encoded as an OCTET
 STRING by using the Composite-ML-KEM-PublicKey type defined below.<a href="#section-5.1-2" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.1-3">
+<div class="lang-asn.1 sourcecode" id="section-5.1-3">
 <pre>
 Composite-ML-KEM-PublicKey ::= OCTET STRING
 </pre><a href="#section-5.1-3" class="pilcrow">¶</a>
@@ -2261,7 +2261,7 @@ Composite-ML-KEM-PublicKey ::= OCTET STRING
 <a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-key-usage-bits" class="section-name selfRef">Key Usage Bits</a>
         </h3>
 <p id="section-5.2-1">When any Composite ML-KEM Object Identifier appears within the <code>SubjectPublicKeyInfo.AlgorithmIdentifier</code> field of an X.509 certificate <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>, the key usage certificate extension MUST only contain:<a href="#section-5.2-1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.2-2">
+<div class="lang-asn.1 sourcecode" id="section-5.2-2">
 <pre>
 keyEncipherment
 </pre><a href="#section-5.2-2" class="pilcrow">¶</a>
@@ -2280,7 +2280,7 @@ the post-quantum algorithms do not and therefore the overall composite algorithm
 <p id="section-5.3-2">The following ASN.1 Information Object Classes are defined to allow for compact definitions of each composite algorithm, leading to a smaller overall ASN.1 module.<a href="#section-5.3-2" class="pilcrow">¶</a></p>
 <span id="name-asn1-object-information-cla"></span><div id="asn1-info-classes">
 <figure id="figure-1">
-          <div class="lang-ASN.1 sourcecode" id="section-5.3-3.1">
+          <div class="lang-asn.1 sourcecode" id="section-5.3-3.1">
 <pre>
 pk-CompositeKEM {OBJECT IDENTIFIER:id}
   PUBLIC-KEY ::= {
@@ -2308,7 +2308,7 @@ kema-CompositeKEM {
           </figcaption></figure>
 </div>
 <p id="section-5.3-4">As an example, the public key and KEM algorithm types associated with <code>id-MLKEM768-ECDH-P256-SHA3-256</code> are defined as:<a href="#section-5.3-4" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.3-5">
+<div class="lang-asn.1 sourcecode" id="section-5.3-5">
 <pre>
 pk-MLKEM768-ECDH-P256-SHA3-256 PUBLIC-KEY ::=
   pk-CompositeKEM {
@@ -2323,7 +2323,7 @@ kema-MLKEM768-ECDH-P256-SHA3-256 KEM-ALGORITHM ::=
 <p id="section-5.3-6">The full set of key types defined by this specification can be found in the ASN.1 Module in <a href="#sec-asn1-module" class="auto internal xref">Section 7</a>.<a href="#section-5.3-6" class="pilcrow">¶</a></p>
 <p id="section-5.3-7">Use cases that require an interoperable encoding for composite private keys will often need to place a composite private key inside a <code>OneAsymmetricKey</code> structure defined in <span>[<a href="#RFC5958" class="cite xref">RFC5958</a>]</span>, such as when private keys are carried in PKCS #12 <span>[<a href="#RFC7292" class="cite xref">RFC7292</a>]</span>, CMP <span>[<a href="#RFC9810" class="cite xref">RFC9810</a>]</span>, or CRMF <span>[<a href="#RFC4211" class="cite xref">RFC4211</a>]</span>. The definition of <code>OneAsymmetricKey</code> is copied here for convenience:<a href="#section-5.3-7" class="pilcrow">¶</a></p>
 <span id="name-oneasymmetrickey-as-defined"></span><figure id="figure-2">
-          <div class="lang-ASN.1 sourcecode" id="section-5.3-8.1">
+          <div class="lang-asn.1 sourcecode" id="section-5.3-8.1">
 <pre>
  OneAsymmetricKey ::= SEQUENCE {
        version                   Version,
@@ -2741,8 +2741,8 @@ For example, "MLKEM768-RSAOAEP2048" below is equivalent to the hexadecimal value
       <h2 id="name-asn1-module">
 <a href="#section-7" class="section-number selfRef">7. </a><a href="#name-asn1-module" class="section-name selfRef">ASN.1 Module</a>
       </h2>
-<p id="section-7-1">This section includes the ASN.1 module <span>[<a href="#X680" class="cite xref">X680</a>]</span> for Composite ML-KEM and uses the Basic Encoding Rules (BER) and the Distinguished Encoding Rules (DER) [X690]. This module imports objects from <span>[<a href="#RFC5912" class="cite xref">RFC5912</a>]</span> and <span>[<a href="#RFC9629" class="cite xref">RFC9629</a>]</span>.<a href="#section-7-1" class="pilcrow">¶</a></p>
-<div class="breakable lang-ASN.1 sourcecode" id="section-7-2">
+<p id="section-7-1">This section includes the ASN.1 module <span>[<a href="#X680" class="cite xref">X680</a>]</span> for Composite ML-KEM and uses the Basic Encoding Rules (BER) and the Distinguished Encoding Rules (DER) <span>[<a href="#X.690" class="cite xref">X.690</a>]</span>. This module imports objects from <span>[<a href="#RFC5912" class="cite xref">RFC5912</a>]</span> and <span>[<a href="#RFC9629" class="cite xref">RFC9629</a>]</span>.<a href="#section-7-1" class="pilcrow">¶</a></p>
+<div class="breakable lang-asn.1 sourcecode" id="section-7-2">
 <pre>
 &lt;CODE STARTS&gt;
 
@@ -3006,7 +3006,6 @@ PublicKeys PUBLIC-KEY ::= {
 END
 
 &lt;CODE ENDS&gt;
-
 </pre><a href="#section-7-2" class="pilcrow">¶</a>
 </div>
 </section>
@@ -3707,10 +3706,6 @@ pubKey = ec_multiply_by_scalar(g, s)
 <dt id="RFC8411">[RFC8411]</dt>
         <dd>
 <span class="refAuthor">Schaad, J.</span> and <span class="refAuthor">R. Andrews</span>, <span class="refTitle">"IANA Registration for the Cryptographic Algorithm Object Identifier Range"</span>, <span class="seriesInfo">RFC 8411</span>, <span class="seriesInfo">DOI 10.17487/RFC8411</span>, <time datetime="2018-08" class="refDate">August 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8411">https://www.rfc-editor.org/info/rfc8411</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC8446">[RFC8446]</dt>
-        <dd>
-<span class="refAuthor">Rescorla, E.</span>, <span class="refTitle">"The Transport Layer Security (TLS) Protocol Version 1.3"</span>, <span class="seriesInfo">RFC 8446</span>, <span class="seriesInfo">DOI 10.17487/RFC8446</span>, <time datetime="2018-08" class="refDate">August 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8446">https://www.rfc-editor.org/info/rfc8446</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8551">[RFC8551]</dt>
         <dd>

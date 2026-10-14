@@ -5,13 +5,13 @@
 LAMPS                                                       M. Ounsworth
 Internet-Draft                                                   J. Gray
 Intended status: Standards Track                                 Entrust
-Expires: 9 April 2027                                            M. Pala
+Expires: 17 April 2027                                           M. Pala
                                                              OpenCA Labs
                                                             J. Klaussner
                                                     Bundesdruckerei GmbH
                                                               S. Fluhrer
                                                            Cisco Systems
-                                                          6 October 2026
+                                                         14 October 2026
 
 
       Composite ML-KEM for use in X.509 Public Key Infrastructure
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 9 April 2027.
+   This Internet-Draft will expire on 17 April 2027.
 
 Copyright Notice
 
@@ -1635,7 +1635,7 @@ Table of Contents
 
    This section includes the ASN.1 module [X680] for Composite ML-KEM
    and uses the Basic Encoding Rules (BER) and the Distinguished
-   Encoding Rules (DER) [X690].  This module imports objects from
+   Encoding Rules (DER) [X.690].  This module imports objects from
    [RFC5912] and [RFC9629].
 
    <CODE STARTS>
@@ -2720,10 +2720,6 @@ Table of Contents
               Cryptographic Algorithm Object Identifier Range",
               RFC 8411, DOI 10.17487/RFC8411, August 2018,
               <https://www.rfc-editor.org/info/rfc8411>.
-
-   [RFC8446]  Rescorla, E., "The Transport Layer Security (TLS) Protocol
-              Version 1.3", RFC 8446, DOI 10.17487/RFC8446, August 2018,
-              <https://www.rfc-editor.org/info/rfc8446>.
 
    [RFC8551]  Schaad, J., Ramsdell, B., and S. Turner, "Secure/
               Multipurpose Internet Mail Extensions (S/MIME) Version 4.0
