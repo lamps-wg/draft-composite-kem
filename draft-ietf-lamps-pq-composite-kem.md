@@ -1110,7 +1110,7 @@ public key appears outside of a `SubjectPublicKeyInfo` type in an
 environment that uses ASN.1 encoding, it could be encoded as an OCTET
 STRING by using the Composite-ML-KEM-PublicKey type defined below.
 
-~~~
+~~~ asn.1
 Composite-ML-KEM-PublicKey ::= OCTET STRING
 ~~~
 
@@ -1120,7 +1120,7 @@ Size constraints MAY be enforced, as appropriate as per {{sec-sizetable}}.
 
 When any Composite ML-KEM Object Identifier appears within the `SubjectPublicKeyInfo.AlgorithmIdentifier` field of an X.509 certificate [RFC5280], the key usage certificate extension MUST only contain:
 
-~~~
+~~~ asn.1
 keyEncipherment
 ~~~
 
@@ -1135,7 +1135,7 @@ Composite ML-KEM uses a substantially non-ASN.1 based encoding, as specified in 
 
 The following ASN.1 Information Object Classes are defined to allow for compact definitions of each composite algorithm, leading to a smaller overall ASN.1 module.
 
-~~~ ASN.1
+~~~ asn.1
 pk-CompositeKEM {OBJECT IDENTIFIER:id}
   PUBLIC-KEY ::= {
     IDENTIFIER id
@@ -1160,7 +1160,7 @@ kema-CompositeKEM {
 
 As an example, the public key and KEM algorithm types associated with `id-MLKEM768-ECDH-P256-SHA3-256` are defined as:
 
-~~~
+~~~ asn.1
 pk-MLKEM768-ECDH-P256-SHA3-256 PUBLIC-KEY ::=
   pk-CompositeKEM {
     id-MLKEM768-ECDH-P256-SHA3-256 }
@@ -1177,7 +1177,7 @@ The full set of key types defined by this specification can be found in the ASN.
 
 Use cases that require an interoperable encoding for composite private keys will often need to place a composite private key inside a `OneAsymmetricKey` structure defined in [RFC5958], such as when private keys are carried in PKCS #12 [RFC7292], CMP [RFC9810], or CRMF [RFC4211]. The definition of `OneAsymmetricKey` is copied here for convenience:
 
-~~~ ASN.1
+~~~ asn.1
  OneAsymmetricKey ::= SEQUENCE {
        version                   Version,
        privateKeyAlgorithm       PrivateKeyAlgorithmIdentifier,
@@ -1271,14 +1271,12 @@ While it may seem odd to use 256-bit outputs at all security levels, this aligns
 # ASN.1 Module {#sec-asn1-module}
 This section includes the ASN.1 module [X680] for Composite ML-KEM and uses the Basic Encoding Rules (BER) and the Distinguished Encoding Rules (DER) [X.690]. This module imports objects from [RFC5912] and [RFC9629].
 
-~~~ ASN.1
-
+~~~ asn.1
 <CODE STARTS>
 
 {::include Composite-MLKEM-2025.asn}
 
 <CODE ENDS>
-
 ~~~
 
 
