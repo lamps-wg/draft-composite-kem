@@ -774,6 +774,12 @@ UjmopwKBgAqB2KYYMUqAOvYcBnEfLDmyZv9BTVNHbR2lKkMYqv5LlvDaBxVfilE0
 
 
 
+def _sha1(data: bytes) -> bytes:
+  h = hashes.Hash(hashes.SHA1())
+  h.update(data)
+  return h.finalize()
+
+
 def createCA():
   caPK, caSK = ML_DSA_65.keygen()
 
@@ -801,6 +807,10 @@ def createCA():
 
   x509_builder = x509_builder.add_extension( x509.BasicConstraints(ca=True, path_length=2), critical=True)
 
+  # The builder's public key is the RSA dummy, so compute the SKI explicitly
+  # from the real ML-DSA public key: SHA-1 of the subjectPublicKey BIT STRING contents.
+  x509_builder = x509_builder.add_extension( x509.SubjectKeyIdentifier(_sha1(caPK)), critical=False)
+
   caCert = x509_builder.sign(_RSA_DUMMY_KEY, hashes.SHA256())
 
 
@@ -826,7 +836,7 @@ def createCA():
 
 
 
-def signKemCert(caSK, kem):
+def signKemCert(caSK, caCert, kem):
   x509_builder = x509.CertificateBuilder()
   x509_builder = x509_builder.subject_name(x509.Name(
     [
@@ -856,6 +866,10 @@ def signKemCert(caSK, kem):
                                 decipher_only=False ), critical=True)
 
   # x509_builder = x509_builder.add_extension( x509.BasicConstraints(ca=True, path_length=None), critical=True)
+
+  # AKI points at the CA's SubjectKeyIdentifier
+  caSKI = caCert.extensions.get_extension_for_class(x509.SubjectKeyIdentifier).value
+  x509_builder = x509_builder.add_extension( x509.AuthorityKeyIdentifier(caSKI.digest, None, None), critical=False)
 
   kemCert = x509_builder.sign(_RSA_DUMMY_KEY, hashes.SHA256())
 
@@ -1139,7 +1153,7 @@ def formatResults(kem, caSK, ct, ss ):
   jsonTest['tcId'] = kem.id
   jsonTest['ek'] = base64.b64encode(kem.public_key_bytes()).decode('ascii')
 
-  kemCert = signKemCert(caSK, kem)
+  kemCert = signKemCert(caSK, caCert, kem)
   jsonTest['x5c'] = base64.b64encode(kemCert.public_bytes(encoding=serialization.Encoding.DER)).decode('ascii')
 
 
