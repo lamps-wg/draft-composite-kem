@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-10-08T05:39:00.085226+00:00",
+  "timestamp": "2026-11-17T07:33:17.975273+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -11804,6 +11804,32 @@
       "mergeCommit": {
         "oid": "93caabe3866c0c17155062509c2741162cc5adc6"
       },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 278,
+      "id": "PR_kwDOKRPFO88AAAABPpxZxA",
+      "title": "Adding AuthorityKeyIdentifier / SubjectKeyIdentifier",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/278",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "to make Corey's Infrared linter happy.\r\n\r\nTo test this, you can run the new `testvectors_to_pem.py` to extract all the certs from `testvectors.json` and stick them into PEM files, then either look at them in a usual cert viewer (OS, openssl, etc), or in Corey's tool:\r\n\r\nhttps://infrared.turbolightsolutions.com/certificates/",
+      "createdAt": "2026-11-16T21:23:19Z",
+      "updatedAt": "2026-11-16T21:24:58Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "efdc41b2136f334b5b43f3def92e396e4e6a13af",
+      "headRepository": "lamps-wg/draft-composite-kem",
+      "headRefName": "mikeo/cacert_aki",
+      "headRefOid": "aa63ff113dcc97963d052d4ab4b3f9b19250bf12",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
       "comments": [],
       "reviews": []
     }
