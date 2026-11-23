@@ -111,7 +111,8 @@ class ECDHKEM(KEM):
 
   def loadKeyPair(self, private_bytes: bytes) -> None:
     key = load_der_private_key(data=private_bytes, password=None)
-    assert isinstance(key, EllipticCurvePrivateKey)
+    if not isinstance(key, EllipticCurvePrivateKey) or key.curve.name != self.curve.name:
+      raise ValueError("Expected an ECDH " + self.curve.name + " private key")
     self.sk = key
     self.pk = key.public_key()
 
@@ -271,7 +272,8 @@ class RSAOAPKEM(KEM):
 
   def loadKeyPair(self, private_bytes: bytes) -> None:
     key = load_der_private_key(data=private_bytes, password=None)
-    assert isinstance(key, RSAPrivateKey)
+    if not isinstance(key, RSAPrivateKey) or key.key_size != self.key_size:
+      raise ValueError("Expected an RSA-" + str(self.key_size) + " private key")
     self.sk = key
     self.pk = key.public_key()
 
@@ -462,6 +464,11 @@ class CompositeKEM(KEM):
     mlkem_private_bytes, traditional_private_bytes = self.deserializePrivateKey(private_bytes)
     self.mlkem.loadKeyPair(mlkem_private_bytes)
     self.tradkem.loadKeyPair(traditional_private_bytes)
+    # The component parsers accept more than Section 4 allows, for example an
+    # ECPrivateKey with the publicKey field. Section 4 defines a single
+    # encoding, so the key must re-serialize to its input.
+    if self.serializePrivateKey() != private_bytes:
+      raise ValueError("Private key is not encoded as specified in Section 4")
 
   def serializePublicKey(self):
     """

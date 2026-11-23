@@ -89,9 +89,13 @@ if __name__ == "__main__":
         # the actual validation
         try:
             validation_result = generate_test_vectors.validatePrivateKey(priv_der, cert_bytes, ciphertext_bytes, shared_secret_bytes)
-        except Exception as e:
-            print(f"Exception during validation: {e}")
+        except LookupError as e:
+            print(e)
             continue
+        except Exception as e:
+            # e.g. a private key not encoded as specified in Section 4
+            print(f"Exception during validation: {e!r}")
+            validation_result = False
 
         # report result
         print(f"\tPrivate key validation result: {str(validation_result)}")
