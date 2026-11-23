@@ -8,7 +8,6 @@ import zipfile
 from glob import glob
 
 from pyasn1.type import univ
-from pyasn1.type.univ import ObjectIdentifier
 
 import generate_test_vectors
 from generate_test_vectors import REVERSE_OID_TABLE
@@ -50,35 +49,55 @@ if __name__ == "__main__":
 
     # Extract the artifacts zip
     # do a recursive search to be robust to extra layers of folders in the zip
-    for filename in glob(tmpdir+'/**/*_priv.der', recursive=True):
+    # R5 format, see http://github.com/IETF-Hackathon/pqc-certificates?tab=readme-ov-file#zip-format-r5
 
-        # support only single format private keys (<friendlyname>-<oid>_priv.der)
-        if "_expandedkey_priv.der" in filename or \
-           "_both_priv.der" in filename:
-            print(f"skipping multiformat private key... filename={filename}")
-            continue
-
+    # The certs: <friendlyname>-<oid>_ee.der
+    for filename in sorted(glob(tmpdir+'/**/*_ee.der', recursive=True)):
         try:
-            OID_str = re.search(r'(.*)-(([0-9]+\.?)*)_.*', filename).groups()[1]
-        except:
+            OID_str = re.search(r'.*-(([0-9]+\.?)*)_ee\.der$', filename).group(1)
+        except AttributeError:
             print(f"Could not parse this file name, skipping. {filename}")
             continue
 
-        # check if the OID in the file name is a supported composite
-        OID: ObjectIdentifier = univ.ObjectIdentifier(OID_str)
-        algorithm_name = REVERSE_OID_TABLE.get(OID)
+        print(f"\nProcessing cert {filename}")
+        try:
+            result = generate_test_vectors.verifyCert(read_bytes(filename))
+        except LookupError as e:
+            print(e)
+            continue
+        except Exception as e:
+            print(f"\tCert failed: {e!r}")
+            result = False
+        print(f"\tCert result: {result}")
+        compatMatrixFile.write(OID_str+",cert,"+("Y" if result else "N")+"\n")
 
+    # The private keys: <friendlyname>-<oid>_[<type>_]priv.der, tested against
+    # <friendlyname>-<oid>_ee.der, _ciphertext.bin and _ss.bin
+    consistent = {}
+    for filename in sorted(glob(tmpdir+'/**/*_priv.der', recursive=True)):
+        try:
+            filenameprefix, OID_str, keyType = re.search(r'(.*-(([0-9]+\.?)*))_(([a-z]+)_)?priv\.der$', filename).group(1, 2, 5)
+        except AttributeError:
+            print(f"Could not parse this file name, skipping. {filename}")
+            continue
+        keyType = keyType or "priv"
+
+        algorithm_name = REVERSE_OID_TABLE.get(univ.ObjectIdentifier(OID_str))
         if algorithm_name is None:
-            print(f"DEBUG: OID does not represent a composite (at least not of this version of the draft): {OID}")
+            print(f"DEBUG: OID does not represent a composite (at least not of this version of the draft): {OID_str}")
+            continue
+        # Section 4 defines one private key form for a composite, the seed form,
+        # so any other (e.g. _expandedkey_priv.der) is expected to fail to load
+        # and is reported as N. Pure ML-KEM also has expanded forms, which this
+        # implementation does not read, so those are skipped.
+        if keyType in ("expandedkey", "both") and \
+           not isinstance(generate_test_vectors.getNewInstanceByName(algorithm_name), generate_test_vectors.CompositeKEM):
+            print(f"skipping multiformat private key... filename={filename}")
             continue
 
-        print(f"\n{algorithm_name}")
-
-        # read artifacts
+        print(f"\nProcessing private key {filename}")
         try:
-            # R5 format, see http://github.com/IETF-Hackathon/pqc-certificates?tab=readme-ov-file#zip-format-r5
             priv_der = read_bytes(filename)
-            filenameprefix = re.search(r'(.*-'+re.escape(OID_str) + r')_.*', filename)[1]
             cert_bytes = read_bytes(f"{filenameprefix}_ee.der")
             ciphertext_bytes = read_bytes(f"{filenameprefix}_ciphertext.bin")
             shared_secret_bytes = read_bytes(f"{filenameprefix}_ss.bin")
@@ -86,23 +105,15 @@ if __name__ == "__main__":
             print(f"Failed to read artifacts for OID {OID_str}: {e}")
             continue
 
-        # the actual validation
         try:
-            validation_result = generate_test_vectors.validatePrivateKey(priv_der, cert_bytes, ciphertext_bytes, shared_secret_bytes)
-        except Exception as e:
-            print(f"Exception during validation: {e}")
+            priv, cons = generate_test_vectors.checkPrivateKey(priv_der, cert_bytes, ciphertext_bytes, shared_secret_bytes)
+        except LookupError as e:
+            print(e)
             continue
+        print(f"\tPrivate key passed: {priv}, consistent with the cert: {cons}")
 
-        # report result
-        print(f"\tPrivate key validation result: {str(validation_result)}")
-        
-        if validation_result:
-            compatMatrixFile.write(OID_str+",cert,Y\n")
-        else:
-            compatMatrixFile.write(OID_str+",cert,N\n")
+        compatMatrixFile.write(OID_str+","+keyType+","+("Y" if priv else "N")+"\n")
+        consistent[OID_str] = consistent.get(OID_str, True) and cons
 
-        if filename.endswith('_seed_priv.der'):
-            if validation_result:
-                compatMatrixFile.write(OID_str+",seed,Y\n")
-            else:
-                compatMatrixFile.write(OID_str+",seed,N\n")
+    for OID_str, cons in consistent.items():
+        compatMatrixFile.write(OID_str+",consistent,"+("Y" if cons else "N")+"\n")

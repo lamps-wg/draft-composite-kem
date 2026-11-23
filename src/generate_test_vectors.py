@@ -26,6 +26,7 @@ from zipfile import ZipFile
 from pyasn1.type import univ, tag, namedtype
 from pyasn1_alt_modules import rfc5208
 from pyasn1_alt_modules import rfc5280
+from pyasn1_alt_modules import rfc5958
 from pyasn1.codec.der.decoder import decode as der_decode
 from pyasn1.codec.der.encoder import encode as der_encode
 
@@ -70,6 +71,9 @@ class KEM:
   def loadKeyPair(self, private_bytes: bytes) -> None:
     pass
 
+  def loadPK(self, public_bytes: bytes) -> None:
+    raise Exception("Not implemented")
+
   # returns (ct, ss)
   def encap(self):
     if self.pk == None:
@@ -111,9 +115,13 @@ class ECDHKEM(KEM):
 
   def loadKeyPair(self, private_bytes: bytes) -> None:
     key = load_der_private_key(data=private_bytes, password=None)
-    assert isinstance(key, EllipticCurvePrivateKey)
+    if not isinstance(key, EllipticCurvePrivateKey) or key.curve.name != self.curve.name:
+      raise ValueError("Expected an ECDH " + self.curve.name + " private key")
     self.sk = key
     self.pk = key.public_key()
+
+  def loadPK(self, public_bytes: bytes) -> None:
+    self.pk = ec.EllipticCurvePublicKey.from_encoded_point(self.curve, public_bytes)
 
   def encap(self):
     esk = ec.generate_private_key(self.curve)
@@ -205,6 +213,9 @@ class XKEM(KEM):
     self.sk = key
     self.pk = key.public_key()
 
+  def loadPK(self, public_bytes: bytes) -> None:
+    self.pk = self.curvePubKey.from_public_bytes(public_bytes)
+
   def encap(self):
     esk = self.curvePrivKey.generate()
     ss = esk.exchange(self.pk)
@@ -271,9 +282,17 @@ class RSAOAPKEM(KEM):
 
   def loadKeyPair(self, private_bytes: bytes) -> None:
     key = load_der_private_key(data=private_bytes, password=None)
-    assert isinstance(key, RSAPrivateKey)
+    if not isinstance(key, RSAPrivateKey) or key.key_size != self.key_size:
+      raise ValueError("Expected an RSA-" + str(self.key_size) + " private key")
     self.sk = key
     self.pk = key.public_key()
+
+  def loadPK(self, public_bytes: bytes) -> None:
+    # RSAPublicKey (PKCS #1)
+    key = serialization.load_der_public_key(public_bytes)
+    if not isinstance(key, rsa.RSAPublicKey) or key.key_size != self.key_size:
+      raise ValueError("Expected an RSA-" + str(self.key_size) + " public key")
+    self.pk = key
 
 # returns (ct, ss)
   def encap(self):
@@ -390,6 +409,9 @@ class MLKEM(KEM):
     self.sk = private_bytes
     self.pk, _ = self.mlkem_class.key_derive(private_bytes)
 
+  def loadPK(self, public_bytes: bytes) -> None:
+    self.pk = public_bytes
+
   # returns (ct, ss)
   def encap(self):
     (ss, ct) = self.mlkem_class.encaps(self.pk)
@@ -462,6 +484,21 @@ class CompositeKEM(KEM):
     mlkem_private_bytes, traditional_private_bytes = self.deserializePrivateKey(private_bytes)
     self.mlkem.loadKeyPair(mlkem_private_bytes)
     self.tradkem.loadKeyPair(traditional_private_bytes)
+    # The component parsers accept more than Section 4 allows, for example an
+    # ECPrivateKey with the publicKey field. Section 4 defines a single
+    # encoding, so the key must re-serialize to its input.
+    if self.serializePrivateKey() != private_bytes:
+      raise ValueError("Private key is not encoded as specified in Section 4")
+
+  def loadPK(self, public_bytes: bytes) -> None:
+    mlkem_public_bytes, traditional_public_bytes = self.deserializePublicKey(public_bytes)
+    self.mlkem.loadPK(mlkem_public_bytes)
+    self.tradkem.loadPK(traditional_public_bytes)
+    self.pk = self.serializePublicKey()
+    # As in loadKeyPair(): e.g. a compressed EC point, or trailing bytes after
+    # an RSAPublicKey, loads.
+    if self.pk != public_bytes:
+      raise ValueError("Public key is not encoded as specified in Section 4")
 
   def serializePublicKey(self):
     """
@@ -1086,14 +1123,11 @@ def getNewInstanceByName(oidName: str) -> KEM | None:
       return MLKEM1024_ECDH_P521_SHA3_256()
 
 
-def validatePrivateKey(priv_der: bytes, cert_bytes: bytes, encapsulation_bytes: bytes, shared_secret_bytes: bytes) -> bool:
+def _loadKEMCert(cert_bytes: bytes):
   """
-  0. Load the private key from :priv_bytes:
-  1. Check that decapsulating :encapsulation_bytes: with the private key results into :shared_secret_bytes:
-  2. Check that public key derived from the private key equals the public key from :cert_bytes:
+  Returns (x509obj, OID, algorithmName, the raw public key) of a KEM cert, in DER or PEM.
+  Raises LookupError if its key is not a KEM of this version.
   """
-
-  # 0. Load the private key from :priv_bytes:
   try:
     x509obj = x509.load_der_x509_certificate(cert_bytes)
   except:
@@ -1104,33 +1138,79 @@ def validatePrivateKey(priv_der: bytes, cert_bytes: bytes, encapsulation_bytes: 
 
   OID = univ.ObjectIdentifier(x509obj.public_key_algorithm_oid.dotted_string)
   algorithmName = REVERSE_OID_TABLE.get(OID)
-  if algorithmName is None:
+  if algorithmName is None or getNewInstanceByName(algorithmName) is None:
     raise LookupError(f"OID does not represent a composite (at least not in {VERSION_IMPLEMENTED}): {str(OID)}")
 
-  kem: KEM = getNewInstanceByName(algorithmName)
-  privateKeyInfo, _ = der_decode(priv_der, rfc5208.PrivateKeyInfo())
-  privateBytes = privateKeyInfo["privateKey"].asOctets()
-  kem.loadKeyPair(private_bytes=privateBytes)
+  asn1Certificate, _ = der_decode(x509obj.public_bytes(serialization.Encoding.DER), rfc5280.Certificate())
+  certPublicKey = asn1Certificate["tbsCertificate"]["subjectPublicKeyInfo"]["subjectPublicKey"].asOctets()
+  return x509obj, OID, algorithmName, certPublicKey
 
-  # 1. Check that decapsulating :encapsulation_bytes: with the private key results into :shared_secret_bytes:
-  decapsulationBytes: bytes = kem.decap(encapsulation_bytes)
-  if decapsulationBytes != shared_secret_bytes:
+
+def verifyCert(cert_bytes: bytes) -> bool:
+  """
+  Checks that the cert's public key is encoded as specified in Section 4 (for a
+  composite) and can be encapsulated to.
+  Raises LookupError if the cert's key is not a KEM of this version.
+  """
+  _, _, algorithmName, certPublicKey = _loadKEMCert(cert_bytes)
+
+  kem: KEM = getNewInstanceByName(algorithmName)
+  try:
+    kem.loadPK(certPublicKey)
+    kem.encap()
+  except Exception as e:
+    print(f"\tCert public key check failed: {e!r}")
+    return False
+  return True
+
+
+def checkPrivateKey(priv_der: bytes, cert_bytes: bytes, encapsulation_bytes: bytes, shared_secret_bytes: bytes) -> tuple[bool, bool]:
+  """
+  Checks a private key, a DER OneAsymmetricKey, against the cert that holds its
+  public key. Returns (priv, consistent):
+    priv:       the private key loads (for a composite: encoded as specified in
+                Sections 4 and 5), and decapsulating :encapsulation_bytes: with
+                it gives :shared_secret_bytes:
+    consistent: the public key derived from the private key equals the cert's
+  Raises LookupError if the cert's key is not a KEM of this version.
+  """
+  _, OID, algorithmName, certPublicKey = _loadKEMCert(cert_bytes)
+
+  kem: KEM = getNewInstanceByName(algorithmName)
+  try:
+    oak, rest = der_decode(priv_der, asn1Spec=rfc5958.OneAsymmetricKey())
+    if rest:
+      raise ValueError("Trailing data after the OneAsymmetricKey")
+    algId = oak["privateKeyAlgorithm"]
+    if algId["algorithm"] != OID:
+      raise ValueError(f"Private key algorithm {algId['algorithm']} does not match the cert's {OID}")
+    if algId["parameters"].isValue:
+      raise ValueError("Private key AlgorithmIdentifier parameters must be absent (Section 5.3)")
+    kem.loadKeyPair(private_bytes=oak["privateKey"].asOctets())
+    if oak["publicKey"].isValue and oak["publicKey"].asOctets() != kem.public_key_bytes():
+      raise ValueError("OneAsymmetricKey publicKey does not match the private key")
+  except Exception as e:
+    print(f"\tPrivate key could not be loaded: {e!r}")
+    return (False, False)
+
+  consistent = kem.public_key_bytes() == certPublicKey
+  if not consistent:
+    print( "\tPublic key check failed.")
+    print(f"\t\tPublic key in the certificate:                  {certPublicKey.hex()}")
+    print(f"\t\tPublic key derived from the loaded private key: {kem.public_key_bytes().hex()}")
+
+  try:
+    decapsulationBytes: bytes = kem.decap(encapsulation_bytes)
+  except Exception as e:
+    print(f"\tDecapsulation failed: {e!r}")
+    return (False, consistent)
+  priv = decapsulationBytes == shared_secret_bytes
+  if not priv:
     print( "\tDecapsulation check failed.")
     print(f"\t\tExpected shared secret: {shared_secret_bytes.hex()}")
     print(f"\t\tActual:                 {decapsulationBytes.hex()}")
-    return False
 
-  # 2. Check that public key derived from the private key equals the public key from :cert_bytes:
-  asn1Certificate, _ = der_decode(cert_bytes, rfc5280.Certificate())
-  loadedPublicKey = kem.public_key_bytes()
-  certPublicKey = asn1Certificate["tbsCertificate"]["subjectPublicKeyInfo"]["subjectPublicKey"].asOctets()
-  if loadedPublicKey != certPublicKey:
-    print( "\tPublic key check failed.")
-    print(f"\t\tPublic key in the certificate:                  {certPublicKey.hex()}")
-    print(f"\t\tPublic key derived from the loaded private key: {loadedPublicKey.hex()}")
-    return False
-
-  return True
+  return (priv, consistent)
 
 
 def formatResults(kem, caSK, ct, ss ):
