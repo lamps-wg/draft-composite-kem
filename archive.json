@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-11-17T07:33:17.975273+00:00",
+  "timestamp": "2026-11-24T09:29:45.681938+00:00",
   "repo": "lamps-wg/draft-composite-kem",
   "labels": [
     {
@@ -11832,6 +11832,48 @@
       "mergeCommit": null,
       "comments": [],
       "reviews": []
+    },
+    {
+      "number": 279,
+      "id": "PR_kwDOKRPFO88AAAABRQ1jiA",
+      "title": "Report cert, priv and consistent separately in `test_artifacts_r5.py`",
+      "url": "https://github.com/lamps-wg/draft-composite-kem/pull/279",
+      "state": "MERGED",
+      "author": "danvangeest",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "The hackathon checker (`composite-ref-impl` in pqc-certificates CI) wrote the private key result as the `cert` row, never tested the certificate itself, dropped keys that failed to load, and accepted private keys Section 4 doesn't allow.\n\n- `validatePrivateKey()` is split into `verifyCert()` (the cert's key loads canonically and can be encapsulated to) and `checkPrivateKey()` (`priv`: decapsulation gives `_ss.bin`; `consistent`: the derived public key equals the cert's).\n- Public and private keys must re-serialize to their input (e.g. no compressed ECDH point, no ECPrivateKey `publicKey`); ECDH and RSA-OAEP keys must have the expected curve or size.\n- Failures, including a composite's `_expandedkey`/`_both` keys, are recorded as N.\n\nRun on all current hackathon artifacts: every composite ML-KEM artifact passes, and the new checks reject deliberately broken keys.\n\nCompanion PR: lamps-wg/draft-composite-sigs (same branch name).\n",
+      "createdAt": "2026-11-23T12:52:25Z",
+      "updatedAt": "2026-11-23T23:11:09Z",
+      "baseRepository": "lamps-wg/draft-composite-kem",
+      "baseRefName": "main",
+      "baseRefOid": "efdc41b2136f334b5b43f3def92e396e4e6a13af",
+      "headRepository": "danvangeest/draft-composite-kem",
+      "headRefName": "dvg/strict-artifact-tests",
+      "headRefOid": "d0c58f5d7167280e40759b825ba811b00ec531e4",
+      "closedAt": "2026-11-23T18:14:55Z",
+      "mergedAt": "2026-11-23T18:14:55Z",
+      "mergedBy": "ounsworth",
+      "mergeCommit": {
+        "oid": "9437c2c91f99f9bc07350f98e93d309a1bfe3698"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKRPFO88AAAABZz0DmQ",
+          "commit": {
+            "abbreviatedOid": "d0c58f5"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-11-23T18:14:24Z",
+          "updatedAt": "2026-11-23T18:14:24Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
